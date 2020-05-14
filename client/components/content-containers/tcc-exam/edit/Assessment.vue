@@ -7,16 +7,15 @@
     :expanded="expanded"
     :draggable="true">
     <template v-slot:header="{ isEditing }">
-      <v-row v-if="objectives.length" justify="end" no-gutters class="pa-0 mt-2">
-        <v-col cols="4">
-          <multiselect
+      <v-row v-if="objectives.length" justify="end" no-gutters class="mt-2">
+        <v-col cols="5">
+          <v-autocomplete
             v-model="objective"
-            :options="objectives"
-            :searchable="true"
+            :items="objectives"
+            item-text="data.name"
             :disabled="!isEditing"
-            :custom-label="getCustomLabel"
             :placeholder="objectiveLabel"
-            track-by="id" />
+            return-object />
         </v-col>
       </v-row>
     </template>
@@ -27,7 +26,6 @@
 import AssessmentItem from 'tce-core/AssessmentItem';
 import find from 'lodash/find';
 import get from 'lodash/get';
-import Multiselect from '@/components/common/Select';
 import set from 'lodash/set';
 
 export default {
@@ -55,8 +53,7 @@ export default {
     this.objective = find(this.objectives, { id: objectiveId });
   },
   components: {
-    AssessmentItem,
-    Multiselect
+    AssessmentItem
   }
 };
 </script>

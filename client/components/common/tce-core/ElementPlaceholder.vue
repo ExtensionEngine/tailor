@@ -1,20 +1,25 @@
 <template>
-  <v-sheet class="pa-12 transparent grey--text text--darken-4">
+  <v-sheet
+    :class="dense ? 'pa-2': 'pa-12'"
+    class="transparent grey--text text--darken-4">
     <v-avatar
-      :color="isDisabled ? 'grey darken-2' : 'blue-grey darken-4'"
-      size="60">
+      :size="dense ? 40 : 60"
+      :color="isDisabled ? 'grey darken-2' : 'blue-grey darken-4'">
       <v-icon
-        :size="isFocused ? 38 : 30"
+        :size="iconSize"
         :color="isFocused ? activeColor : '#fff'">
         {{ icon }}
       </v-icon>
     </v-avatar>
     <div
-      :class="isDisabled ? 'text--darken-2' : 'text--darken-4' "
+      :class="[
+        isDisabled ? 'text--darken-2' : 'text--darken-4',
+        dense ? 'my-2 subtitle-2' : 'my-4 headline'
+      ]"
       class="my-4 headline grey--text">
       {{ name }} component
     </div>
-    <div v-if="!isDisabled" class="subtitle-1">
+    <div v-if="!dense && !isDisabled" class="subtitle-1">
       <template v-if="!isFocused">{{ placeholder }}</template>
       <template v-else>
         <span>{{ activePlaceholder }}</span>
@@ -40,7 +45,14 @@ export default {
     activeIcon: { type: String, default: null },
     activeColor: { type: String, default: '#fff' },
     isDisabled: { type: Boolean, default: false },
-    isFocused: { type: Boolean, default: false }
+    isFocused: { type: Boolean, default: false },
+    dense: { type: Boolean, default: false }
+  },
+  computed: {
+    iconSize() {
+      if (this.dense) return this.isFocused ? 24 : 20;
+      return this.isFocused ? 38 : 30;
+    }
   }
 };
 </script>
