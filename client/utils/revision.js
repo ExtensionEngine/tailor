@@ -87,7 +87,7 @@ export function getRevisionColor(rev) {
   switch (rev.entity) {
     case 'ACTIVITY': {
       const level = getLevel(rev.state.type);
-      return level ? level.color : DEFAULT_COLOR;
+      return !isEmpty(level) ? level.color : DEFAULT_COLOR;
     }
     case 'REPOSITORY':
       return '#00BCD4';
