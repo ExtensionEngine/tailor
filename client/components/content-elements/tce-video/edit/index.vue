@@ -9,8 +9,10 @@
       active-placeholder="Use toolbar to upload the video"
       active-icon="mdi-arrow-up" />
     <div v-else>
-      <div v-if="!isFocused" class="overlay">
-        <div class="message secondary--text">Double click to preview</div>
+      <div v-if="!isDisabled && !isFocused" class="overlay">
+        <div class="message grey--text text--lighten-2">
+          Double click to preview
+        </div>
       </div>
       <div v-if="showError" class="overlay">
         <div class="message secondary--text">
@@ -127,7 +129,7 @@ function mimetype({ pathname }) {
   .message {
     position: relative;
     top: 45%;
-    font-size: 1.25rem !important;
+    font-size: 1.125rem !important;
   }
 }
 
