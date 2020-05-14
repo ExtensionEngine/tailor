@@ -1,10 +1,10 @@
 <template>
   <v-sheet
-    :class="dense ? 'pa-2': 'pa-12'"
+    :class="dense ? 'pt-3': 'pa-12'"
     class="transparent grey--text text--darken-4">
     <v-avatar
       :size="dense ? 40 : 60"
-      :color="isDisabled ? 'grey darken-2' : 'blue-grey darken-4'">
+      :color="isDisabled ? 'grey darken-3' : 'blue-grey darken-4'">
       <v-icon
         :size="iconSize"
         :color="isFocused ? activeColor : '#fff'">
@@ -12,10 +12,14 @@
       </v-icon>
     </v-avatar>
     <div
-      :class="[dense ? 'subtitle-2 my-2' : 'headline my-4']">
+      :class="[
+        isDisabled ? 'text--darken-3' : 'text--darken-4',
+        dense ? 'my-2 subtitle-2' : 'my-4 headline'
+      ]"
+      class="grey--text">
       {{ name }} component
     </div>
-    <div v-if="!dense" class="subtitle-1">
+    <div v-if="!dense && !isDisabled" class="subtitle-1">
       <template v-if="!isFocused">{{ placeholder }}</template>
       <template v-else>
         <span>{{ activePlaceholder }}</span>
@@ -40,8 +44,8 @@ export default {
     activePlaceholder: { type: String, default: 'Use toolbar to edit' },
     activeIcon: { type: String, default: null },
     activeColor: { type: String, default: '#fff' },
-    isFocused: { type: Boolean, default: false },
     isDisabled: { type: Boolean, default: false },
+    isFocused: { type: Boolean, default: false },
     dense: { type: Boolean, default: false }
   },
   computed: {

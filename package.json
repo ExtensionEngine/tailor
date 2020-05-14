@@ -36,7 +36,7 @@
     "postshrinkwrap": "rewrite-lockfile package-lock.json"
   },
   "dependencies": {
-    "@extensionengine/tce-jodit": "github:extensionengine/tce-jodit#3da232f0f4b5",
+    "@extensionengine/tce-jodit": "github:extensionengine/tce-jodit#eede0d3b144c29b",
     "@mdi/font": "^4.8.95",
     "auto-bind": "^3.0.0",
     "aws-sdk": "^2.610.0",

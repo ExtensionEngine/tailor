@@ -16,8 +16,7 @@ export default {
   name: 'table-cell',
   props: {
     cell: { type: Object, required: true },
-    table: { type: Object, required: true },
-    disabled: { type: Boolean, default: false }
+    table: { type: Object, required: true }
   },
   methods: {
     save(data) {

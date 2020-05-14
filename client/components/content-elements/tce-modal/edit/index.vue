@@ -6,12 +6,12 @@
       dark
       class="text-left elevation-5">
       <span class="subtitle-2 mr-4">Modal</span>
-      <span class="text-truncate">
+      <span v-if="!isDisabled" class="text-truncate">
         Use toolbar to toggle between edit and preview state
       </span>
     </v-toolbar>
     <div class="px-8 py-3 blue-grey lighten-5">
-      <template v-if="isEditing">
+      <template v-if="!isDisabled && isEditing">
         <v-alert
           v-if="!hasElements"
           color="blue-grey darken-2"
@@ -44,7 +44,8 @@ export default {
   inject: ['$elementBus'],
   props: {
     element: { type: Object, required: true },
-    isFocused: { type: Boolean, required: true }
+    isFocused: { type: Boolean, required: true },
+    isDisabled: { type: Boolean, default: false }
   },
   data() {
     return { isEditing: !this.hasElements };
