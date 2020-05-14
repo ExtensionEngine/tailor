@@ -1,7 +1,7 @@
 <template>
   <v-carousel-item class="blue-grey lighten-5">
     <v-alert
-      v-if="!hasElements"
+      v-if="!hasElements && !isDisabled"
       color="blue-grey darken-2"
       icon="mdi-information-variant"
       text prominent

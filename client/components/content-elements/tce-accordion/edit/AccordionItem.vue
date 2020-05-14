@@ -39,7 +39,7 @@
     </v-expansion-panel-header>
     <v-expansion-panel-content color="blue-grey lighten-5">
       <v-alert
-        v-if="!hasElements"
+        v-if="!hasElements && !isDisabled"
         color="blue-grey darken-2"
         icon="mdi-information-variant"
         text prominent
