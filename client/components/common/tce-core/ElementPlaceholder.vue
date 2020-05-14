@@ -1,6 +1,6 @@
 <template>
   <v-sheet
-    :class="dense ? 'pa-2': 'pa-12'"
+    :class="dense ? 'pt-3': 'pa-12'"
     class="transparent grey--text text--darken-4">
     <v-avatar
       :size="dense ? 40 : 60"
@@ -14,7 +14,7 @@
     <div
       :class="[
         isDisabled ? 'text--darken-3' : 'text--darken-4',
-        dense ? 'my-2 subtitle-2' : 'my-4 headline'
+        dense ? 'mt-2 mb-2 subtitle-2' : 'my-4 headline'
       ]"
       class="my-4 headline grey--text">
       {{ name }} component
