@@ -1,6 +1,7 @@
+import { lower, sentence } from 'to-case';
 import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
-import { lower } from 'to-case';
+import isEmpty from 'lodash/isEmpty';
 import reduce from 'lodash/reduce';
 import { typeInfo } from './assessment';
 
@@ -23,26 +24,35 @@ function getAction(operation) {
 }
 
 function getActivityText(activity) {
-  return activity ? ` within '${activity.data.name}' ${lower(activity.label)}` : '';
+  if (!activity) return '';
+  const name = get(activity, 'data.name');
+  const activityConfig = getLevel(activity.type);
+  const typeLabel = !isEmpty(activityConfig)
+    ? activityConfig.label
+    : sentence(activity.type);
+  return `within ${name} ${typeLabel}`;
 }
 
 function describeActivityRevision(rev, activity) {
   const { type } = rev.state;
-  let name = get(rev, 'state.data.name');
-  name = name ? `'${name}' ` : '';
-  const level = getLevel(type);
-  const label = level ? level.label : type;
+  const activityConfig = getLevel(type);
+  const label = !isEmpty(activityConfig) ? activityConfig.label : sentence(type);
+  const name = get(rev, 'state.data.name', '');
   const action = getAction(rev.operation);
-  const activityText = getActivityText(activity);
-  return `${action} ${name}${lower(label)}${activityText}`;
+  const activityText = activityConfig.level !== 1
+    ? getActivityText(activity)
+    : '';
+  return `${action} ${name} ${lower(label)} ${activityText}`;
 }
 
 function describeElementRevision(rev, activity) {
   const { type, data } = rev.state;
   const title = type === 'ASSESSMENT' ? typeInfo[data.type].title : type;
   const action = getAction(rev.operation);
-  const activityText = getActivityText(activity);
-  return `${action} ${lower(title)} element${activityText}`;
+  const activityText = activity
+    ? getActivityText(activity)
+    : 'within deleted container';
+  return `${action} ${lower(title)} element ${activityText}`;
 }
 
 function describeRepositoryRevision(rev) {
