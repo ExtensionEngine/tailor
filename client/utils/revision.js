@@ -23,26 +23,29 @@ function getAction(operation) {
   }
 }
 
+function getActivityTypeLabel(activity) {
+  const activityConfig = getLevel(activity.type);
+  return !isEmpty(activityConfig)
+    ? activityConfig.label
+    : toTitleCase(activity.type);
+}
+
 function getActivityText(activity) {
   if (!activity) return '';
   const name = get(activity, 'data.name');
-  const activityConfig = getLevel(activity.type);
-  const typeLabel = !isEmpty(activityConfig)
-    ? activityConfig.label
-    : toTitleCase(activity.type);
+  const typeLabel = getActivityTypeLabel(activity);
   return `within ${name} ${typeLabel}`;
 }
 
 function describeActivityRevision(rev, activity) {
-  const { type } = rev.state;
-  const activityConfig = getLevel(type);
-  const label = !isEmpty(activityConfig) ? activityConfig.label : toTitleCase(type);
   const name = get(rev, 'state.data.name', '');
+  const typeLabel = getActivityTypeLabel(activity);
   const action = getAction(rev.operation);
+  const activityConfig = getLevel(activity.type);
   const activityText = activityConfig.level !== 1
     ? getActivityText(activity)
     : '';
-  return `${action} ${name} ${lower(label)} ${activityText}`;
+  return `${action} ${name} ${lower(typeLabel)} ${activityText}`;
 }
 
 function describeElementRevision(rev, activity) {
