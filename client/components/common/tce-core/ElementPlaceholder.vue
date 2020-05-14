@@ -14,9 +14,9 @@
     <div
       :class="[
         isDisabled ? 'text--darken-3' : 'text--darken-4',
-        dense ? 'mt-2 mb-2 subtitle-2' : 'my-4 headline'
+        dense ? 'my-2 subtitle-2' : 'my-4 headline'
       ]"
-      class="my-4 headline grey--text">
+      class="grey--text">
       {{ name }} component
     </div>
     <div v-if="!dense && !isDisabled" class="subtitle-1">
