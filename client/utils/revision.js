@@ -1,4 +1,4 @@
-import { lower, sentence } from 'to-case';
+import { lower, title as toTitleCase } from 'to-case';
 import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
 import isEmpty from 'lodash/isEmpty';
@@ -29,14 +29,14 @@ function getActivityText(activity) {
   const activityConfig = getLevel(activity.type);
   const typeLabel = !isEmpty(activityConfig)
     ? activityConfig.label
-    : sentence(activity.type);
+    : toTitleCase(activity.type);
   return `within ${name} ${typeLabel}`;
 }
 
 function describeActivityRevision(rev, activity) {
   const { type } = rev.state;
   const activityConfig = getLevel(type);
-  const label = !isEmpty(activityConfig) ? activityConfig.label : sentence(type);
+  const label = !isEmpty(activityConfig) ? activityConfig.label : toTitleCase(type);
   const name = get(rev, 'state.data.name', '');
   const action = getAction(rev.operation);
   const activityText = activityConfig.level !== 1
@@ -86,8 +86,8 @@ export function getRevisionColor(rev) {
   const DEFAULT_COLOR = '#ccc';
   switch (rev.entity) {
     case 'ACTIVITY': {
-      const level = getLevel(rev.state.type);
-      return !isEmpty(level) ? level.color : DEFAULT_COLOR;
+      const config = getLevel(rev.state.type);
+      return !isEmpty(config) ? config.color : DEFAULT_COLOR;
     }
     case 'REPOSITORY':
       return '#00BCD4';
