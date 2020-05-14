@@ -3,6 +3,7 @@
     <element-placeholder
       v-if="showPlaceholder"
       :is-focused="isFocused"
+      :is-disabled="isDisabled"
       name="Video"
       icon="mdi-video-image"
       active-placeholder="Use toolbar to upload the video"
@@ -59,7 +60,8 @@ export default {
   props: {
     element: { type: Object, required: true },
     isFocused: { type: Boolean, default: false },
-    isDragged: { type: Boolean, default: false }
+    isDragged: { type: Boolean, default: false },
+    isDisabled: { type: Boolean, default: false }
   },
   data: () => ({ error: null, switchingVideo: false }),
   computed: {

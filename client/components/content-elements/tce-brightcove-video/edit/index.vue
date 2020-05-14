@@ -3,6 +3,7 @@
     <element-placeholder
       v-if="showPlaceholder"
       :is-focused="isFocused"
+      :is-disabled="isDisabled"
       name="Brightcove video"
       icon="mdi-video"
       active-placeholder="Use toolbar to set the video parameters"
@@ -28,7 +29,8 @@ export default {
   name: 'tce-brightcove-video',
   props: {
     element: { type: Object, required: true },
-    isFocused: { type: Boolean, default: false }
+    isFocused: { type: Boolean, default: false },
+    isDisabled: { type: Boolean, default: false }
   },
   computed: {
     showPlaceholder() {

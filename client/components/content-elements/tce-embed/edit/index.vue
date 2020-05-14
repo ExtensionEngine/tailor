@@ -3,6 +3,7 @@
     <element-placeholder
       v-if="showPlaceholder"
       :is-focused="isFocused"
+      :is-disabled="isDisabled"
       name="Embed"
       icon="mdi-iframe"
       active-placeholder="Use toolbar to enter the url"
@@ -35,7 +36,8 @@ export default {
   props: {
     element: { type: Object, required: true },
     isFocused: { type: Boolean, default: false },
-    isDragged: { type: Boolean, default: false }
+    isDragged: { type: Boolean, default: false },
+    isDisabled: { type: Boolean, default: false }
   },
   computed: {
     url: vm => vm.element.data.url,

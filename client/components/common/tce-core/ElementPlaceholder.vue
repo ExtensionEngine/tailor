@@ -9,7 +9,11 @@
         {{ icon }}
       </v-icon>
     </v-avatar>
-    <div class="headline my-4">{{ name }} component</div>
+    <div
+      :class="isDisabled ? 'text--darken-2' : 'text--darken-4' "
+      class="my-4 headline grey--text">
+      {{ name }} component
+    </div>
     <div v-if="!isDisabled" class="subtitle-1">
       <template v-if="!isFocused">{{ placeholder }}</template>
       <template v-else>
