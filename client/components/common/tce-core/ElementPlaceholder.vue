@@ -4,7 +4,7 @@
     class="transparent grey--text text--darken-4">
     <v-avatar
       :size="dense ? 40 : 60"
-      :color="isDisabled ? 'grey darken-2' : 'blue-grey darken-4'">
+      :color="isDisabled ? 'grey darken-3' : 'blue-grey darken-4'">
       <v-icon
         :size="iconSize"
         :color="isFocused ? activeColor : '#fff'">
@@ -13,7 +13,7 @@
     </v-avatar>
     <div
       :class="[
-        isDisabled ? 'text--darken-2' : 'text--darken-4',
+        isDisabled ? 'text--darken-3' : 'text--darken-4',
         dense ? 'my-2 subtitle-2' : 'my-4 headline'
       ]"
       class="my-4 headline grey--text">
