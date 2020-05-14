@@ -9,8 +9,8 @@
       active-placeholder="Use toolbar to upload the pdf"
       active-icon="mdi-arrow-up" />
     <div v-show="!showPlaceholder">
-      <div v-if="!isFocused" class="overlay">
-        <div class="message">Click to preview</div>
+      <div v-if="!isDisabled && !isFocused" class="overlay">
+        <div class="message grey--text text--lighten-2">Click to preview</div>
       </div>
       <div class="loader-outer">
         <div class="loader-inner">
@@ -121,14 +121,13 @@ export default {
   z-index: 3;
   width: 100%;
   height: 100%;
-  background-color: #333;
+  background-color: #111;
   opacity: 0.9;
 
   .message {
     position: relative;
     top: 45%;
-    color: #d81a60;
-    font-size: 1.25rem;
+    font-size: 1.125rem;
   }
 }
 
