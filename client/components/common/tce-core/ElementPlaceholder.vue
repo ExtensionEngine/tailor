@@ -1,6 +1,8 @@
 <template>
   <v-sheet class="pa-12 transparent grey--text text--darken-4">
-    <v-avatar size="60" color="blue-grey darken-4">
+    <v-avatar
+      :color="isDisabled ? 'grey darken-2' : 'blue-grey darken-4'"
+      size="60">
       <v-icon
         :size="isFocused ? 38 : 30"
         :color="isFocused ? activeColor : '#fff'">
