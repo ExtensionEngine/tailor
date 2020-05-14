@@ -24,13 +24,14 @@ function getAction(operation) {
 }
 
 function getActivityTypeLabel(activity) {
+  if (!activity) return '';
   const activityConfig = getLevel(activity.type);
   return !isEmpty(activityConfig)
     ? activityConfig.label
     : toTitleCase(activity.type);
 }
 
-function getActivityText(activity) {
+function getContainerContext(activity) {
   if (!activity) return '';
   const name = get(activity, 'data.name');
   const typeLabel = getActivityTypeLabel(activity);
@@ -39,11 +40,11 @@ function getActivityText(activity) {
 
 function describeActivityRevision(rev, activity) {
   const name = get(rev, 'state.data.name', '');
-  const typeLabel = getActivityTypeLabel(activity);
+  const typeLabel = getActivityTypeLabel(rev.state);
   const action = getAction(rev.operation);
-  const activityConfig = getLevel(activity.type);
+  const activityConfig = getLevel(rev.state.type);
   const activityText = activityConfig.level !== 1
-    ? getActivityText(activity)
+    ? getContainerContext(activity)
     : '';
   return `${action} ${name} ${lower(typeLabel)} ${activityText}`;
 }
@@ -53,7 +54,7 @@ function describeElementRevision(rev, activity) {
   const title = type === 'ASSESSMENT' ? typeInfo[data.type].title : type;
   const action = getAction(rev.operation);
   const activityText = activity
-    ? getActivityText(activity)
+    ? getContainerContext(activity)
     : 'within deleted container';
   return `${action} ${lower(title)} element ${activityText}`;
 }
