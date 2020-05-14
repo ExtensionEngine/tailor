@@ -7,7 +7,7 @@
         @click.stop
         @keyup.space.prevent
         hide-details filled dense />
-      <div v-else class="pl-3">{{ item.header }}</div>
+      <div v-else class="pl-3 text-truncate">{{ item.header }}</div>
       <template v-if="!isDisabled">
         <div v-if="isEditingHeader" class="actions">
           <v-btn @click.stop="saveHeader" color="green darken-2" icon>
@@ -115,8 +115,8 @@ export default {
 
 <style lang="scss" scoped>
 .actions {
-  width: 5.5rem;
-  max-width: 5.5rem;
+  width: 6rem;
+  max-width: 6rem;
   padding-left: 0.5rem;
 }
 </style>
