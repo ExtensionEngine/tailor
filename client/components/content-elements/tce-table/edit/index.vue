@@ -1,5 +1,5 @@
 <template>
-  <div class="tce-table">
+  <div :class="{ disabled: isDisabled }" class="tce-table">
     <div
       v-for="row in table"
       :key="row.id"
@@ -9,8 +9,7 @@
         :key="cell.id"
         @save="saveCell"
         :cell="embeds[cell.id]"
-        :table="element"
-        :disabled="disabled" />
+        :table="element" />
     </div>
   </div>
 </template>
@@ -61,7 +60,7 @@ export default {
   inject: ['$elementBus'],
   props: {
     element: { type: Object, required: true },
-    disabled: { type: Boolean, default: false }
+    isDisabled: { type: Boolean, default: false }
   },
   computed: {
     table() {
@@ -183,5 +182,9 @@ export default {
   .table-row {
     display: table-row;
   }
+}
+
+.disabled {
+  pointer-events: none;
 }
 </style>
