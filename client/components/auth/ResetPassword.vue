@@ -26,8 +26,8 @@
         :error-messages="vErrors.collect('passwordConfirmation')"
         type="password"
         name="passwordConfirmation"
-        label="Please re-enter your password"
-        placeholder="Password"
+        label="Re-enter password"
+        placeholder="Password confirmation"
         data-vv-as="password"
         prepend-inner-icon="mdi-lock-outline"
         outlined />
@@ -72,3 +72,10 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.v-input ::v-deep label {
+  padding-right: 0.25rem;
+  background: #fff;
+}
+</style>
