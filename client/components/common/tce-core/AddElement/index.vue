@@ -3,7 +3,7 @@
     <v-btn
       v-if="large"
       @click.stop="isVisible = true"
-      color="blue-grey darken-3"
+      :color="color"
       text
       class="mt-3 mb-4">
       <v-icon class="pr-2">{{ icon }}</v-icon>{{ label }}
@@ -11,9 +11,8 @@
     <v-btn
       v-else
       @click.stop="isVisible = true"
-      icon
-      text
-      color="blue-grey darken-3">
+      :color="color"
+      icon>
       <v-icon>{{ icon }}</v-icon>
     </v-btn>
     <v-bottom-sheet v-model="isVisible" max-width="1240" inset>
@@ -93,7 +92,8 @@ export default {
     include: { type: Array, default: null },
     large: { type: Boolean, default: false },
     label: { type: String, default: 'Add content' },
-    icon: { type: String, default: 'mdi-plus' }
+    icon: { type: String, default: 'mdi-plus' },
+    color: { type: String, default: 'blue-grey darken-3' }
   },
   data() {
     return {
