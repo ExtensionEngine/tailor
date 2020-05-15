@@ -53,7 +53,7 @@ import map from 'lodash/map';
 
 const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
 const blankRegex = /(@blank)/g;
-const htmlRegex = /<\/?[^>]+(>|$)/g;
+const htmlRegex = /(<\/?[^>]+(>|$))|&nbsp;/g;
 
 const getTextAssets = item => filter(item, it => TEXT_CONTAINERS.includes(it.type));
 
