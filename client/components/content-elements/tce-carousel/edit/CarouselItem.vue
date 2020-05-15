@@ -1,5 +1,5 @@
 <template>
-  <v-carousel-item class="blue-grey lighten-5">
+  <v-carousel-item class="carousel-item blue-grey lighten-5">
     <v-alert
       v-if="!hasElements && !isDisabled"
       color="blue-grey darken-2"
@@ -51,7 +51,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.disabled .add-element {
-  display: none;
+.carousel-item ::v-deep .v-responsive__content {
+  padding-bottom: 2rem;
+  overflow-y: auto;
 }
 </style>

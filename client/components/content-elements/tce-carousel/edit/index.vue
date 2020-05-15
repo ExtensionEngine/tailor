@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="tce-carousel">
     <v-toolbar
       v-if="hasItems"
       height="32"
@@ -120,3 +120,9 @@ export default {
   components: { CarouselItem, ElementPlaceholder }
 };
 </script>
+
+<style lang="scss" scoped>
+.tce-carousel {
+  overflow: hidden;
+}
+</style>
