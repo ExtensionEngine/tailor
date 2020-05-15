@@ -35,7 +35,7 @@
           @click="removeAnswer(idx)"
           :disabled="disabled"
           icon>
-          <v-icon small>mdi-delete</v-icon>
+          <v-icon>mdi-delete</v-icon>
         </v-btn>
       </v-col>
     </v-row>
@@ -43,10 +43,10 @@
       <v-btn
         v-if="isEditing"
         @click="addAnswer"
-        color="blue-grey darken-3"
+        color="grey darken-4"
         text
-        class="px-2">
-        <v-icon small>mdi-plus</v-icon>
+        class="mb-2 px-2">
+        <v-icon>mdi-plus</v-icon>
         Add answer
       </v-btn>
     </div>
@@ -56,7 +56,7 @@
       color="red darken-4"
       prominent text
       class="mt-5">
-      Only numerical input allowed, if decimal number is needed please
+      Please input correct answers. If decimal number is needed please
       use . to separate numbers (e.g. '3.14').
     </v-alert>
   </div>
