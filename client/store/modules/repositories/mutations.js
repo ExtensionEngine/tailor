@@ -1,4 +1,5 @@
 import { add, fetch, remove, reset, setEndpoint } from '@/store/helpers/mutations';
+import filter from 'lodash/filter';
 import find from 'lodash/find';
 import Vue from 'vue';
 
@@ -57,6 +58,9 @@ const addTag = (state, { tag, repositoryId }) => {
 const removeTag = (state, { tagId, repositoryId }) => {
   const repository = find(state.items, { id: repositoryId });
   repository.tags = repository.tags.filter(it => it.id !== tagId);
+  if (!state.tagFilter.length) return;
+  const hasFilterTag = state.tagFilter.some(item => find(repository.tags, { id: item.id }));
+  if (!hasFilterTag) state.items = filter(state.items, it => it.id !== repositoryId);
 };
 
 const toggleTagFilter = (state, tag) => {
