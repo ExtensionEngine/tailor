@@ -31,15 +31,16 @@ export default {
     element: { type: Object, required: true },
     isDisabled: { type: Boolean, default: false },
     isDragged: { type: Boolean, default: false },
-    setWidth: { type: Boolean, default: true }
+    setWidth: { type: Boolean, default: true },
+    dense: { type: Boolean, default: false }
   },
   data() {
     return { isHovered: false };
   },
   computed: {
     bindings() {
-      const { element, isDisabled, isDragged, $attrs: attrs } = this;
-      return { element, isDisabled, isDragged, ...attrs };
+      const { element, isDisabled, isDragged, dense, $attrs: attrs } = this;
+      return { element, isDisabled, isDragged, dense, ...attrs };
     },
     widthClass() {
       const { element, setWidth } = this;

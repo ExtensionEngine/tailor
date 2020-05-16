@@ -1,7 +1,7 @@
 <template>
-  <v-carousel-item class="blue-grey lighten-5">
+  <v-carousel-item class="carousel-item blue-grey lighten-5">
     <v-alert
-      v-if="!hasElements"
+      v-if="!hasElements && !isDisabled"
       color="blue-grey darken-2"
       icon="mdi-information-variant"
       text prominent
@@ -11,7 +11,8 @@
     <embedded-container
       @save="({ embeds }) => save(item, embeds)"
       @delete="deleteEmbed($event)"
-      :container="{ embeds }" />
+      :container="{ embeds }"
+      :is-disabled="isDisabled" />
   </v-carousel-item>
 </template>
 
@@ -25,7 +26,8 @@ export default {
   name: 'carousel-item',
   props: {
     item: { type: Object, required: true },
-    embeds: { type: Object, default: () => ({}) }
+    embeds: { type: Object, default: () => ({}) },
+    isDisabled: { type: Boolean, default: false }
   },
   computed: {
     hasElements: vm => !isEmpty(vm.embeds)
@@ -49,7 +51,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.disabled .add-element {
-  display: none;
+.carousel-item ::v-deep .v-responsive__content {
+  padding-bottom: 2rem;
+  overflow-y: auto;
 }
 </style>

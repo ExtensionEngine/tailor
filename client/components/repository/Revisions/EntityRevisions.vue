@@ -5,7 +5,7 @@
         <content-element
           v-if="selectedRevision.resolved"
           :element="selectedRevision.state"
-          :disabled="true" />
+          is-disabled />
       </div>
       <entity-sidebar
         v-show="expanded"
@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import ContentElement from 'components/editor/ContentElement';
+import ContentElement from 'tce-core/ContentElement';
 import contentElementApi from '@/api/contentElement';
 import EntitySidebar from './EntitySidebar';
 import first from 'lodash/first';
@@ -68,7 +68,7 @@ export default {
       if (revision.resolved) return;
       this.$set(revision, 'loading', true);
       return revisionApi.get(this.repositoryId, revision.id).then(data => {
-        Object.assign(revision, { ...data, resolved: true });
+        Object.assign(revision, { state: data.state, resolved: true });
         this.$set(this.selectedRevision, revision);
         return Promise.delay(600);
       }).then(() => this.$set(revision, 'loading', false));

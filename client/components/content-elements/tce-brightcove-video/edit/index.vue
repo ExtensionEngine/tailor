@@ -3,13 +3,14 @@
     <element-placeholder
       v-if="showPlaceholder"
       :is-focused="isFocused"
+      :is-disabled="isDisabled"
       name="Brightcove video"
       icon="mdi-video"
       active-placeholder="Use toolbar to set the video parameters"
       active-icon="mdi-arrow-up" />
     <div v-else>
-      <div v-if="!isFocused" class="overlay">
-        <div class="message">Double click to preview</div>
+      <div v-if="!isDisabled && !isFocused" class="overlay">
+        <div class="message grey--text text--lighten-2">Double click to preview</div>
       </div>
       <brightcove-player
         ref="player"
@@ -28,7 +29,8 @@ export default {
   name: 'tce-brightcove-video',
   props: {
     element: { type: Object, required: true },
-    isFocused: { type: Boolean, default: false }
+    isFocused: { type: Boolean, default: false },
+    isDisabled: { type: Boolean, default: false }
   },
   computed: {
     showPlaceholder() {
@@ -58,14 +60,13 @@ export default {
   z-index: 3;
   width: 100%;
   height: 100%;
-  background-color: #333;
+  background-color: #111;
   opacity: 0.9;
 
   .message {
     position: relative;
     top: 45%;
-    color: #d81b60;
-    font-size: 1.25rem;
+    font-size: 1.125rem;
   }
 }
 

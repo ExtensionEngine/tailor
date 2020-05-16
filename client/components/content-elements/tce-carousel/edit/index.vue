@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="tce-carousel">
     <v-toolbar
       v-if="hasItems"
       height="32"
@@ -14,6 +14,7 @@
     <element-placeholder
       v-if="!hasItems"
       :is-focused="isFocused"
+      :is-disabled="isDisabled"
       name="Carousel"
       icon="mdi-view-carousel"
       active-placeholder="Use toolbar to add the first slide to the carousel"
@@ -27,7 +28,8 @@
         :key="item.id"
         @save="saveItem"
         :item="item"
-        :embeds="embedsByItem[item.id]" />
+        :embeds="embedsByItem[item.id]"
+        :is-disabled="isDisabled" />
     </v-carousel>
   </div>
 </template>
@@ -51,7 +53,8 @@ export default {
   inject: ['$elementBus'],
   props: {
     element: { type: Object, required: true },
-    isFocused: { type: Boolean, required: true }
+    isFocused: { type: Boolean, required: true },
+    isDisabled: { type: Boolean, default: false }
   },
   data() {
     return {
@@ -117,3 +120,9 @@ export default {
   components: { CarouselItem, ElementPlaceholder }
 };
 </script>
+
+<style lang="scss" scoped>
+.tce-carousel {
+  overflow: hidden;
+}
+</style>

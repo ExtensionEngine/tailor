@@ -64,6 +64,12 @@ export default {
   watch: {
     selectedActivity(val) {
       if (val) this.lastSelectedActivity = val;
+    },
+    $route({ name, query }) {
+      if (query.activityId) return;
+      const { lastSelectedActivity: lastActivity } = this;
+      const activityView = (name === 'repository') || (name === 'tree-view');
+      if (activityView && lastActivity) this.selectActivity(lastActivity.id);
     }
   },
   async created() {

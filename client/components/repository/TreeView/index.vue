@@ -24,6 +24,7 @@ import { mapGetters } from 'vuex';
 import reduce from 'lodash/reduce';
 import selectActivity from '@/components/repository/common/selectActivity';
 import Sidebar from 'components/repository/common/Sidebar';
+import sortBy from 'lodash/sortBy';
 import TreeGraph from './TreeGraph';
 
 const isActivityNode = node => node.depth > 0;
@@ -54,7 +55,9 @@ export default {
     graphData() {
       // TODO: Make sure repository is always available!
       if (!this.outlineActivities) return {};
-      const repositoryTree = tree(this.outlineActivities, this.structure);
+      // Render graph only for persisted activities
+      const savedActivities = this.outlineActivities.filter(it => it.id);
+      const repositoryTree = tree(sortBy(savedActivities, 'id'), this.structure);
       const repositoryColor = get(this.repository, 'data.color', '#FFFFFF');
       return {
         ...this.repository,

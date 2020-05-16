@@ -18,6 +18,7 @@ const line = require('d3-shape').line();
 const isNativeEvent = (e, type) => get(e.sourceEvent, 'type') === type;
 const isDragStart = e => e.type === 'start' && isNativeEvent(e, 'mousedown');
 const isDragEnd = e => e.type === 'end' && isNativeEvent(e, 'mouseup');
+const isRepositoryNode = node => !!node.data.schema;
 
 const zoomOptions = {
   min: 0.3,
@@ -124,7 +125,7 @@ export default {
       const node = graph.selectAll('.node')
         .data(data).enter().append('g')
         .attr('class', d => `node depth-${d.depth}`)
-        .attr('id', d => `activity${d.data.id}`)
+        .attr('id', d => isRepositoryNode(d) ? 'repository' : `activity${d.data.id}`)
         .attr('transform', d => `translate(${d.x}, ${d.y})`);
 
       // Append label.

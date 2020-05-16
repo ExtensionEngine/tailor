@@ -5,50 +5,39 @@
     :class="{ hover }"
     class="list-group-item assessment-item elevation-1">
     <span v-if="draggable" class="drag-handle">
-      <span class="mdi mdi-drag-vertical"></span>
+      <v-icon>mdi-drag-vertical</v-icon>
     </span>
     <tce-question-container
       v-if="expanded"
-      @selected="$emit('selected')"
-      @delete="$emit('delete')"
       @save="save"
-      :element="assessment">
+      @delete="$emit('delete')"
+      :element="assessment"
+      class="question-container">
       <template v-slot:default="{ isEditing }">
-        <div class="pb-5">
-          <v-row no-gutters>
-            <v-col class="text-left grow">
-              <v-chip
-                color="blue-grey darken-1"
-                label
-                dark
-                small
-                class="text-uppercase">
-                {{ elementConfig.name }}
-              </v-chip>
-            </v-col>
-            <v-col class="shrink">
-              <v-btn
-                @click="$emit('selected')"
-                text
-                small
-                class="ma-0 pa-0">
-                Collapse
-              </v-btn>
-            </v-col>
-          </v-row>
+        <div class="px-6 d-flex justify-end">
+          <v-btn
+            @click="$emit('selected')"
+            text small
+            class="px-2">
+            <v-icon dense class="mr-2">mdi-arrow-collapse</v-icon>
+            Collapse
+          </v-btn>
+        </div>
+        <div class="d-flex pb-4 px-6">
           <slot :isEditing="isEditing" name="header"></slot>
         </div>
       </template>
     </tce-question-container>
     <div v-else @click="$emit('selected')" class="minimized">
-      <v-chip color="blue-grey darken-1" label dark small>
+      <v-chip
+        color="blue-grey darken-3"
+        label dark small>
         {{ elementConfig.subtype }}
       </v-chip>
       <span class="question">{{ question | truncate(50) }}</span>
       <v-btn
         @click.stop="$emit('delete')"
         color="primary"
-        text
         icon
         class="delete">
         <v-icon>mdi-close</v-icon>
@@ -64,7 +53,7 @@ import map from 'lodash/map';
 
 const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
 const blankRegex = /(@blank)/g;
-const htmlRegex = /<\/?[^>]+(>|$)/g;
+const htmlRegex = /(<\/?[^>]+(>|$))|&nbsp;/g;
 
 const getTextAssets = item => filter(item, it => TEXT_CONTAINERS.includes(it.type));
 
@@ -101,11 +90,11 @@ export default {
 
 <style lang="scss" scoped>
 .assessment-item {
-  margin-bottom: 10px;
+  margin-bottom: 0.625rem;
   padding: 0;
 
   .v-chip {
-    min-width: 30px;
+    min-width: 1.875rem;
   }
 
   .drag-handle {
@@ -127,21 +116,21 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px 22px;
+    padding: 0.375rem 1.375rem;
     cursor: pointer;
 
     .question {
       display: inline-block;
       max-width: 80%;
-      min-height: 30px;
+      min-height: 1.875rem;
       color: #444;
-      font-size: 16px;
+      font-size: 1rem;
       font-weight: 400;
-      line-height: 34px;
+      line-height: 2.125rem;
     }
 
     .v-chip {
-      margin-top: 5px;
+      margin-top: 0.125rem;
     }
   }
 
@@ -152,5 +141,9 @@ export default {
   &.hover:not(.sortable-chosen) .delete {
     opacity: 1;
   }
+}
+
+.question-container {
+  margin: 0 !important;
 }
 </style>

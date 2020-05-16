@@ -19,6 +19,7 @@
 
 <script>
 import { getElementId, isQuestion } from 'tce-core/utils';
+import { mapActions, mapGetters } from 'vuex';
 import ContentContainers from '../structure/ContentContainers';
 import ContentLoader from './Loader';
 import debounce from 'lodash/debounce';
@@ -26,9 +27,9 @@ import EventBus from 'EventBus';
 import find from 'lodash/find';
 import flatMap from 'lodash/flatMap';
 import get from 'lodash/get';
+import { getDescendants } from 'client/utils/activity';
 import { getSupportedContainers } from 'shared/activities';
 import map from 'lodash/map';
-import { mapActions } from 'vuex';
 import Promise from 'bluebird';
 import throttle from 'lodash/throttle';
 
@@ -52,6 +53,7 @@ export default {
     focusedElement: null
   }),
   computed: {
+    ...mapGetters('repository', ['activities']),
     containerConfigs: vm => getSupportedContainers(vm.activity.type)
   },
   methods: {
@@ -108,7 +110,11 @@ export default {
   async created() {
     // Reset element focus
     this.$emit('selected', null);
-    const ids = flatMap(this.contentContainers, it => map(it, 'id'));
+    const rootContainerIds = flatMap(this.contentContainers, it => map(it, 'id'));
+    const childContainerIds = rootContainerIds.reduce((acc, id) => {
+      return acc.concat(getDescendants(this.activities, { id }).map(it => it.id));
+    }, []);
+    const ids = rootContainerIds.concat(childContainerIds);
     if (ids.length) {
       await Promise.all([
         this.getContentElements({ ids }),

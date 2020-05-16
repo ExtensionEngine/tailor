@@ -12,7 +12,9 @@
       v-bind="$attrs"
       :element="element"
       :is-focused="isFocused"
-      :is-dragged="isDragged" />
+      :is-dragged="isDragged"
+      :is-disabled="isDisabled"
+      :dense="dense" />
   </div>
 </template>
 
@@ -28,7 +30,8 @@ export default {
     parent: { type: Object, default: null },
     isDragged: { type: Boolean, default: false },
     isDisabled: { type: Boolean, default: false },
-    frame: { type: Boolean, default: true }
+    frame: { type: Boolean, default: true },
+    dense: { type: Boolean, default: false }
   },
   data() {
     return {
