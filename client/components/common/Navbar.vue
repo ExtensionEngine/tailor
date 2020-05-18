@@ -3,7 +3,7 @@
     color="blue-grey darken-3"
     app fixed dense
     class="elevation-0">
-    <router-link :to="{ name: 'catalog' }" tag="span" class="app-brand">
+    <router-link :to="{ name: 'catalog' }" tag="a" class="app-brand">
       <v-avatar color="primary lighten-1" size="34" class="mt-1 pa-2">
         <img :src="logo" alt="Logo">
       </v-avatar>
