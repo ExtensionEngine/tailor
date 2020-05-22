@@ -204,8 +204,7 @@ $disabled-color: #a1a1a1;
   line-height: 1.75rem;
   text-align: left;
 
-  .v-icon,
-  span {
+  .v-icon, span {
     line-height: 1.75rem;
     vertical-align: middle;
   }
