@@ -84,15 +84,19 @@ const ELEMENT_GROUPS = [
 
 export default {
   name: 'add-element',
-  inject: ['$teRegistry'],
+  inject: {
+    $teRegistry: '$teRegistry',
+    buttonLarge: { default: false },
+    buttonLabel: { default: 'Add content' }
+  },
   props: {
     show: { type: Boolean, default: false },
     activity: { type: Object, default: null },
     position: { type: Number, default: null },
     layout: { type: Boolean, default: true },
     include: { type: Array, default: null },
-    large: { type: Boolean, default: false },
-    label: { type: String, default: 'Add content' },
+    large: { type: Boolean, default() { return this.buttonLarge; } },
+    label: { type: String, default() { return this.buttonLabel; } },
     icon: { type: String, default: 'mdi-plus' }
   },
   data() {
