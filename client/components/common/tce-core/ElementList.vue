@@ -9,7 +9,7 @@
       class="row">
       <div
         v-for="(element, index) in elements"
-        :key="getElementId(element.id)"
+        :key="getElementId(element)"
         @dragstart="dragElementIndex = index"
         @dragend="dragElementIndex = -1"
         :class="`col-xs-${get(element, 'data.width', 12)}`">
