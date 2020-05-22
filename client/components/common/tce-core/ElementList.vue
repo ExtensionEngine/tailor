@@ -27,7 +27,8 @@
       :include="supportedTypes"
       :activity="activity"
       :position="nextPosition"
-      :layout="layout" />
+      :layout="layout"
+      v-bind="$attrs" />
   </div>
 </template>
 

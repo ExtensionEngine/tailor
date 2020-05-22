@@ -4,7 +4,8 @@
     @update="reorderItem"
     :elements="embeds"
     :supported-types="types"
-    :enable-add="!isDisabled && enableAdd">
+    :enable-add="!isDisabled && enableAdd"
+    v-bind="$attrs">
     <template v-slot:list-item="{ element, isDragged }">
       <contained-content
         @save="save(element, 'data', $event)"
