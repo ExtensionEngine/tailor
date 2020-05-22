@@ -86,8 +86,8 @@ export default {
   name: 'add-element',
   inject: {
     $teRegistry: '$teRegistry',
-    buttonLarge: { default: false },
-    buttonLabel: { default: 'Add content' }
+    addBtnLarge: { default: false },
+    addBtnLabel: { default: 'Add content' }
   },
   props: {
     show: { type: Boolean, default: false },
@@ -95,8 +95,8 @@ export default {
     position: { type: Number, default: null },
     layout: { type: Boolean, default: true },
     include: { type: Array, default: null },
-    large: { type: Boolean, default() { return this.buttonLarge; } },
-    label: { type: String, default() { return this.buttonLabel; } },
+    large: { type: Boolean, default() { return this.addBtnLarge; } },
+    label: { type: String, default() { return this.addBtnLabel; } },
     icon: { type: String, default: 'mdi-plus' }
   },
   data() {
@@ -204,7 +204,8 @@ $disabled-color: #a1a1a1;
   line-height: 1.75rem;
   text-align: left;
 
-  .v-icon, span {
+  .v-icon,
+  span {
     line-height: 1.75rem;
     vertical-align: middle;
   }
