@@ -10,52 +10,61 @@
     </template>
     <template v-slot:header>Change Password</template>
     <template v-slot:body>
-      <v-text-field
-        v-model="currentPassword"
-        v-validate="{ required: true }"
-        :error-messages="vErrors.first('currentPassword')"
-        type="password"
-        label="Current password"
-        placeholder="Enter current password..."
-        data-vv-name="currentPassword"
-        data-vv-as="Current Password"
-        outlined
-        class="my-4" />
-      <v-text-field
-        ref="newPassword"
-        v-model="newPassword"
-        v-validate="{
-          required: true,
-          is_not: currentPassword,
-          alphanumerical: true,
-          min: 6
-        }"
-        :error-messages="vErrors.first('newPassword')"
-        type="password"
-        label="New password"
-        placeholder="Enter new password..."
-        data-vv-name="newPassword"
-        data-vv-as="New password"
-        outlined
-        class="mb-4" />
-      <v-text-field
-        v-model="passwordConfirmation"
-        v-validate="{ required: true, confirmed: 'newPassword' }"
-        :error-messages="vErrors.first('passwordConfirmation')"
-        type="password"
-        label="Confirm new password"
-        placeholder="Confirm new password..."
-        data-vv-name="passwordConfirmation"
-        data-vv-as="Password confirmation"
-        outlined
-        class="mb-4" />
+      <validation-observer ref="form">
+        <validation-provider
+          v-slot="{ errors }"
+          name="currentPassword"
+          rules="required">
+          <v-text-field
+            v-model="currentPassword"
+            :error-messages="errors"
+            type="password"
+            label="Current password"
+            placeholder="Enter current password..."
+            data-vv-name="currentPassword"
+            data-vv-as="Current Password"
+            outlined
+            class="my-4" />
+        </validation-provider>
+        <validation-provider
+          v-slot="{ errors }"
+          name="newPassword"
+          rules="required|alphanumerical|min:3|is_not:@currentPassword">
+          <v-text-field
+            ref="newPassword"
+            v-model="newPassword"
+            :error-messages="errors"
+            type="password"
+            label="New password"
+            placeholder="Enter new password..."
+            data-vv-name="newPassword"
+            data-vv-as="New password"
+            outlined
+            class="mb-4" />
+        </validation-provider>
+        <validation-provider
+          v-slot="{ errors }"
+          name="passwordConfirmation"
+          rules="required|confirmed:newPassword">
+          <v-text-field
+            v-model="passwordConfirmation"
+            :error-messages="errors"
+            type="password"
+            label="Confirm new password"
+            placeholder="Confirm new password..."
+            data-vv-name="passwordConfirmation"
+            data-vv-as="Password confirmation"
+            outlined
+            class="mb-4" />
+        </validation-provider>
+      </validation-observer>
       <div class="pl-2 py-4">
         <router-link :to="{ name: 'forgot-password' }" class="float-left">
           Forgot password ?
         </router-link>
         <div class="float-right">
           <v-btn @click="hide" text>Cancel</v-btn>
-          <v-btn @click="submit" :disabled="vErrors.any()" color="primary" text>
+          <v-btn @click="submit" color="primary" text>
             Update
           </v-btn>
         </div>
@@ -67,7 +76,6 @@
 <script>
 import { mapActions } from 'vuex';
 import TailorDialog from '@/components/common/TailorDialog';
-import { withValidation } from 'utils/validation';
 
 const defaultData = () => ({
   currentPassword: null,
@@ -77,7 +85,6 @@ const defaultData = () => ({
 
 export default {
   name: 'change-password-dialog',
-  mixins: [withValidation()],
   data: () => ({ ...defaultData(), isVisible: false }),
   methods: {
     ...mapActions(['changePassword', 'logout']),
@@ -86,11 +93,11 @@ export default {
       return this.reset();
     },
     reset() {
-      this.$validator.reset();
+      this.$refs.form.reset();
       return Object.assign(this, defaultData());
     },
     async submit() {
-      const isValid = await this.$validator.validateAll();
+      const isValid = await this.$refs.form.validate();
       if (!isValid) return;
       const { currentPassword, newPassword } = this;
       return this.changePassword({ currentPassword, newPassword })
