@@ -7,35 +7,37 @@
       class="mb-5">
       {{ error || 'Sending reset email...' }}
     </v-alert>
-    <form v-if="!error" @submit.prevent="submit">
-      <v-text-field
-        v-model="email"
-        v-validate="{ required: true, email: true }"
-        :error-messages="vErrors.collect('email')"
-        type="email"
-        name="email"
-        label="Email"
-        placeholder="Email"
-        prepend-inner-icon="mdi-email-outline"
-        outlined />
-      <div class="d-flex">
-        <v-btn
-          @click="$router.go(-1)"
-          tag="a"
-          text
-          class="px-1">
-          <v-icon>mdi-chevron-left</v-icon>
-          Back
-        </v-btn>
-        <v-spacer />
-        <v-btn
-          :disabled="!isValid || showMessage"
-          type="submit"
-          color="primary darken-1">
-          Send reset email
-        </v-btn>
-      </div>
-    </form>
+    <ValidationObserver v-if="!error" v-slot="{ invalid }">
+      <form @submit.prevent="submit">
+        <ValidationProvider v-slot="{ errors }" rules="required|email" name="email">
+          <v-text-field
+            v-model="email"
+            :error-messages="errors"
+            type="email"
+            label="Email"
+            placeholder="Email"
+            prepend-inner-icon="mdi-email-outline"
+            outlined />
+        </ValidationProvider>
+        <div class="d-flex">
+          <v-btn
+            @click="$router.go(-1)"
+            tag="a"
+            text
+            class="px-1">
+            <v-icon>mdi-chevron-left</v-icon>
+            Back
+          </v-btn>
+          <v-spacer />
+          <v-btn
+            :disabled="invalid || showMessage"
+            type="submit"
+            color="primary darken-1">
+            Send reset email
+          </v-btn>
+        </div>
+      </form>
+    </ValidationObserver>
     <v-btn v-else @click.stop="resetInput" text>
       Retry
     </v-btn>
@@ -45,7 +47,6 @@
 <script>
 import { delay } from 'bluebird';
 import { mapActions } from 'vuex';
-import { withValidation } from 'utils/validation';
 
 const getDefaultData = () => ({
   email: '',
@@ -54,11 +55,7 @@ const getDefaultData = () => ({
 });
 
 export default {
-  mixins: [withValidation()],
   data: () => getDefaultData(),
-  computed: {
-    isValid: vm => vm.email && vm.vErrors.count() === 0
-  },
   methods: {
     ...mapActions(['forgotPassword']),
     submit() {
