@@ -8,61 +8,66 @@
       class="mb-7 text-left">
       {{ message }}
     </v-alert>
-    <form @submit.prevent="submit" novalidate>
-      <v-text-field
-        v-model="email"
-        v-validate="{ required: true, email: true }"
-        :error-messages="vErrors.collect('email')"
-        type="email"
-        name="email"
-        label="Email"
-        placeholder="Email"
-        autocomplete="username"
-        prepend-inner-icon="mdi-email-outline"
-        outlined
-        class="mb-1" />
-      <v-text-field
-        v-model="password"
-        v-validate="{ required: true }"
-        :error-messages="vErrors.collect('password')"
-        type="password"
-        name="password"
-        label="Password"
-        placeholder="Password"
-        prepend-inner-icon="mdi-lock-outline"
-        autocomplete="current-password"
-        outlined />
-      <div class="d-flex">
-        <v-spacer />
-        <v-btn :disabled="!isValid" type="submit" color="primary darken-1">
-          Log in
-        </v-btn>
-      </div>
-      <div class="options">
-        <router-link :to="{ name: 'forgot-password' }">
-          Forgot password ?
-        </router-link>
-      </div>
-    </form>
+    <validation-observer v-slot="{ invalid }">
+      <form @submit.prevent="submit" novalidate>
+        <validation-provider
+          v-slot="{ errors }"
+          name="email"
+          rules="required|email">
+          <v-text-field
+            v-model="email"
+            :error-messages="errors"
+            type="email"
+            name="email"
+            label="Email"
+            placeholder="Email"
+            autocomplete="username"
+            prepend-inner-icon="mdi-email-outline"
+            outlined
+            class="mb-1" />
+        </validation-provider>
+        <validation-provider
+          v-slot="{ errors }"
+          name="password"
+          rules="required">
+          <v-text-field
+            v-model="password"
+            :error-messages="errors"
+            type="password"
+            name="password"
+            label="Password"
+            placeholder="Password"
+            prepend-inner-icon="mdi-lock-outline"
+            autocomplete="current-password"
+            outlined />
+        </validation-provider>
+        <div class="d-flex">
+          <v-spacer />
+          <v-btn :disabled="invalid" type="submit" color="primary darken-1">
+            Log in
+          </v-btn>
+        </div>
+        <div class="options">
+          <router-link :to="{ name: 'forgot-password' }">
+            Forgot password ?
+          </router-link>
+        </div>
+      </form>
+    </validation-observer>
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex';
-import { withValidation } from 'utils/validation';
 const LOGIN_ERR_MESSAGE = 'The email or password you entered is incorrect.';
 
 export default {
   name: 'user-login',
-  mixins: [withValidation()],
   data: () => ({
     email: '',
     password: '',
     message: ''
   }),
-  computed: {
-    isValid: vm => vm.email && vm.password && (vm.vErrors.count() === 0)
-  },
   methods: {
     ...mapActions(['login']),
     submit() {
