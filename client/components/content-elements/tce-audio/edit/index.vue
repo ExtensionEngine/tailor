@@ -4,7 +4,7 @@
       v-if="showPlaceholder"
       :is-focused="isFocused"
       :is-disabled="isDisabled"
-      name="Audio"
+      name="Audio component"
       icon="mdi-speaker"
       active-placeholder="Use toolbar to upload the audio file"
       active-icon="mdi-arrow-up"
