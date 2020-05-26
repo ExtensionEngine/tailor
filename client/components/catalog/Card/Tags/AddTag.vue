@@ -5,19 +5,23 @@
     header-icon="mdi-tag-outline">
     <template #header>Add Tag</template>
     <template #body>
-      <v-combobox
-        v-model="tagInput"
-        v-validate="'required|min:2|max:20'"
-        @keydown.enter="submit"
-        :items="availableTags"
-        :error-messages="vErrors.collect('name')"
+      <ValidationProvider
+        ref="provider"
+        v-slot="{ errors }"
         name="name"
-        label="Select a tag or add a new one"
-        outlined />
+        rules="required|min:2|max:20">
+        <v-combobox
+          v-model="tagInput"
+          @keydown.enter="submit"
+          :items="availableTags"
+          :error-messages="errors"
+          label="Select a tag or add a new one"
+          outlined />
+      </ValidationProvider>
     </template>
     <template #actions>
       <v-btn @click="hide" text>Cancel</v-btn>
-      <v-btn @click="submit" :disabled="vErrors.any()" color="primary" text>
+      <v-btn @click="submit" color="primary" text>
         Save
       </v-btn>
     </template>
@@ -25,16 +29,15 @@
 </template>
 
 <script>
+import '@/utils/validation';
 import api from '@/api/tag';
 import differenceBy from 'lodash/differenceBy';
 import map from 'lodash/map';
 import { mapActions } from 'vuex';
 import TailorDialog from '@/components/common/TailorDialog';
-import { withValidation } from 'utils/validation';
 
 export default {
   name: 'add-tag',
-  mixins: [withValidation()],
   props: {
     repository: { type: Object, required: true }
   },
@@ -51,8 +54,8 @@ export default {
     async submit() {
       // Temp timeout due to https://github.com/vuetifyjs/vuetify/issues/4679
       setTimeout(async () => {
-        const isValid = await this.$validator.validateAll();
-        if (!isValid) return;
+        const { valid } = await this.$refs.provider.validate();
+        if (!valid) return;
         const data = { name: this.tagInput, repositoryId: this.repository.id };
         await this.addTag(data);
         this.hide();
