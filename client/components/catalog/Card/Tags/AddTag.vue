@@ -5,7 +5,7 @@
     header-icon="mdi-tag-outline">
     <template #header>Add Tag</template>
     <template #body>
-      <ValidationProvider
+      <validation-provider
         ref="provider"
         v-slot="{ errors }"
         name="name"
@@ -17,7 +17,7 @@
           :error-messages="errors"
           label="Select a tag or add a new one"
           outlined />
-      </ValidationProvider>
+      </validation-provider>
     </template>
     <template #actions>
       <v-btn @click="hide" text>Cancel</v-btn>
