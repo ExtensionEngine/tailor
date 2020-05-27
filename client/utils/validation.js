@@ -23,7 +23,7 @@ extend('uniqueEmail', {
   params: ['userData'],
   validate: (email, { userData }) => {
     if (userData && email === userData.email) return true;
-    return userApi.fetch({ email }).then(({ total }) => ({ invalid: total }));
+    return userApi.fetch({ email }).then(({ total }) => { return !total; });
   },
   message: fieldName => {
     return `The ${fieldName} is not unique.`;
