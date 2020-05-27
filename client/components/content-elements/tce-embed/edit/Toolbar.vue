@@ -30,7 +30,7 @@
           prepend-icon="mdi-link"
           data-vv-delay="0"
           hide-details dense filled />
-          </validation-provider>
+      </validation-provider>
     </div>
   </v-toolbar>
 </template>
