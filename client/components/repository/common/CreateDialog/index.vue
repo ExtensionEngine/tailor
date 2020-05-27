@@ -36,7 +36,6 @@ import { isSameLevel } from 'utils/activity';
 import MetaInput from 'components/common/Meta';
 import TailorDialog from '@/components/common/TailorDialog';
 import TypeSelect from './TypeSelect';
-import { withValidation } from 'utils/validation';
 
 const initActivityState = (repositoryId, levels) => ({
   repositoryId,
@@ -46,7 +45,6 @@ const initActivityState = (repositoryId, levels) => ({
 
 export default {
   name: 'create-activity-dialog',
-  mixins: [withValidation()],
   props: {
     repositoryId: { type: Number, required: true },
     levels: { type: Array, required: true },
@@ -78,8 +76,6 @@ export default {
       this.activity.data[key] = val;
     },
     async create() {
-      const isValid = await this.$validator.validateAll();
-      if (!isValid) return;
       const { activity, anchor } = this;
       if (anchor) {
         activity.parentId = isSameLevel(activity, anchor)
