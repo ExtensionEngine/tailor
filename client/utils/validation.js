@@ -20,9 +20,10 @@ extend('alphanumerical', {
 });
 
 extend('uniqueEmail', {
-  validate: (email, user) => {
-    if (user && email === user.email) return true;
-    return userApi.fetch({ email }).then(({ total }) => ({ valid: !total }));
+  params: ['userData'],
+  validate: (email, { userData }) => {
+    if (userData && email === userData.email) return true;
+    return userApi.fetch({ email }).then(({ total }) => ({ invalid: total }));
   },
   message: fieldName => {
     return `The ${fieldName} is not unique.`;
