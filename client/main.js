@@ -11,7 +11,7 @@ import QuestionContainer from 'tce-core/QuestionContainer';
 import request from './api/request';
 import { sync } from 'vuex-router-sync';
 import Timeago from 'vue-timeago';
-import VeeValidate from './utils/validation';
+import { ValidationProvider, ValidationObserver } from 'vee-validate';
 import Vue from 'vue';
 import VueClipboard from 'vue-clipboard2';
 import VueCroppa from 'vue-croppa';
@@ -30,12 +30,8 @@ Vue.use(FileFilter);
 Vue.use(VueHotkey);
 Vue.use(VueClipboard);
 Vue.use(VueCroppa);
-Vue.use(VeeValidate, {
-  delay: 700,
-  fieldsBagName: 'vFields',
-  errorBagName: 'vErrors',
-  inject: false
-});
+Vue.component('ValidationProvider', ValidationProvider);
+Vue.component('ValidationObserver', ValidationObserver);
 Vue.use(Timeago, {
   locale: 'en-US',
   locales: {
