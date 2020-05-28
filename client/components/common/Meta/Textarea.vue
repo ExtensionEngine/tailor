@@ -1,25 +1,28 @@
 <template>
-  <v-textarea
-    v-model="value"
-    v-validate="meta.validate"
-    @change="onChange"
-    :name="meta.key"
-    :data-vv-as="meta.label"
-    :label="meta.label"
-    :placeholder="meta.placeholder"
-    :error-messages="vErrors.collect(meta.key)"
-    :rows="rows"
-    auto-grow
-    outlined
-    class="my-2" />
+  <validation-provider
+    ref="metaKey"
+    v-slot="{ errors }"
+    name="metaKey"
+    :rules="meta.validate">
+    <v-textarea
+      v-model="value"
+      @change="onChange"
+      :name="meta.key"
+      :data-vv-as="meta.label"
+      :label="meta.label"
+      :placeholder="meta.placeholder"
+      :error-messages="errors"
+      :rows="rows"
+      auto-grow
+      outlined
+      class="my-2" />
+  </validation-provider>
 </template>
 
 <script>
-import { withValidation } from 'utils/validation';
 
 export default {
   name: 'meta-textarea',
-  mixins: [withValidation({ inherit: true })],
   props: {
     meta: { type: Object, default: () => ({ value: null }) },
     rows: { type: Number, default: 2 }
@@ -31,8 +34,8 @@ export default {
   },
   methods: {
     async onChange() {
-      const isValid = await this.$validator.validate(this.meta.key);
-      if (!isValid) return;
+      const { valid } = await this.$refs.metaKey.validate();
+      if (!valid) return;
       if (this.value === this.meta.value) return;
       this.$emit('update', this.meta.key, this.value);
     }
