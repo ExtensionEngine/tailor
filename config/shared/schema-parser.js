@@ -34,6 +34,7 @@ function processRepositoryConfig(schema) {
       type: 'COLOR', key: 'color', label: 'Label color', colors: LABEL_COLORS
     });
   }
+  if (schema.workflow) { processRepositoryWorkflow(schema); }
   schema.defaultMeta = getMetaDefaults(schema.meta);
 }
 
@@ -57,6 +58,11 @@ function processActivityConfig(schema, activity) {
   if (examObjectives) {
     activity.exams.objectives = map(examObjectives, it => processType(schema, it));
   }
+}
+
+function processRepositoryWorkflow(schema) {
+  const trackedActivities = get(schema, 'workflow.trackedActivities', []);
+  schema.workflow.trackedActivities = map(trackedActivities, it => processType(schema, it));
 }
 
 function processType(schema, type) {
