@@ -14,25 +14,35 @@
     </template>
     <template v-slot:header>Add user</template>
     <template v-slot:body>
-      <v-combobox
-        v-model="email"
-        v-validate="{ required: true, email: true }"
-        @update:search-input="fetchUsers"
-        :items="suggestedUsers"
-        :error-messages="vErrors.collect('email')"
-        label="Email"
-        placeholder="Enter email..."
-        data-vv-name="email"
-        outlined />
-      <v-select
-        v-model="role"
-        v-validate="{ required: true }"
-        :items="roles"
-        :error-messages="vErrors.collect('role')"
-        label="Role"
-        placeholder="Role..."
-        data-vv-name="role"
-        outlined />
+      <validation-observer ref="form">
+        <validation-provider
+          v-slot="{ errors }"
+          name="email"
+          rules="required|email">
+          <v-combobox
+            v-model="email"
+            @update:search-input="fetchUsers"
+            :items="suggestedUsers"
+            :error-messages="errors"
+            label="Email"
+            placeholder="Enter email..."
+            data-vv-name="email"
+            outlined />
+        </validation-provider>
+        <validation-provider
+          v-slot="{ errors }"
+          name="role"
+          rules="required">
+          <v-select
+            v-model="role"
+            :items="roles"
+            :error-messages="errors"
+            label="Role"
+            placeholder="Role..."
+            data-vv-name="role"
+            outlined />
+        </validation-provider>
+      </validation-observer>
     </template>
     <template v-slot:actions>
       <v-btn @click="close" :disabled="isSaving" text>Cancel</v-btn>
@@ -52,7 +62,6 @@ import api from '@/api/user';
 import { mapActions } from 'vuex';
 import TailorDialog from '@/components/common/TailorDialog';
 import throttle from 'lodash/throttle';
-import { withValidation } from 'utils/validation';
 
 function getDefaultData(roles) {
   return { email: '', role: roles[0].value };
@@ -60,7 +69,6 @@ function getDefaultData(roles) {
 
 export default {
   name: 'add-user-dialog',
-  mixins: [withValidation()],
   props: {
     roles: { type: Array, required: true }
   },
@@ -76,8 +84,8 @@ export default {
     ...mapActions('repository', ['upsertUser']),
     addUser() {
       setTimeout(async () => {
-        const isValid = await this.$validator.validateAll();
-        if (!isValid) return;
+        const valid = await this.$refs.form.validate();
+        if (!valid) return;
         this.isSaving = true;
         const { email, role, $route: { params: { repositoryId } } } = this;
         await this.upsertUser({ repositoryId, email, role });
@@ -96,12 +104,8 @@ export default {
     }, 350),
     close() {
       this.isVisible = false;
+      this.$refs.form.reset();
       Object.assign(this, getDefaultData(this.roles));
-    }
-  },
-  watch: {
-    isVisible(val) {
-      if (val) this.$validator.reset();
     }
   },
   components: { TailorDialog }
