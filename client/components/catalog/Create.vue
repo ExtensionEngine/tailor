@@ -14,45 +14,61 @@
     </template>
     <template v-slot:header>New</template>
     <template v-slot:body>
-      <v-alert
-        :value="vErrors.has('default')"
-        color="error"
-        icon="mdi-alert-outline"
-        outlined>
-        {{ vErrors.first('default') }}
-      </v-alert>
-      <v-select
-        v-model="repository.schema"
-        v-validate="'required'"
-        :items="schemas"
-        :error-messages="vErrors.collect('schema')"
-        item-value="id"
-        item-text="name"
-        data-vv-name="schema"
-        outlined
-        class="mb-3" />
-      <v-text-field
-        v-model.trim="repository.name"
-        v-validate="{ required: true, min: 2, max: 250 }"
-        :error-messages="vErrors.collect('name')"
-        label="Name"
-        placeholder="Enter name..."
-        data-vv-name="name"
-        outlined />
-      <v-textarea
-        v-model.trim="repository.description"
-        v-validate="{ required: true, min: 2, max: 2000 }"
-        :error-messages="vErrors.collect('description')"
-        label="Description"
-        placeholder="Enter description..."
-        data-vv-name="description"
-        outlined />
+      <validation-observer ref="form">
+        <validation-provider
+          name="alert">
+          <v-alert
+            :value="errorAlert.show"
+            color="error"
+            icon="mdi-alert-outline"
+            outlined>
+            {{ errorAlert.message }}
+          </v-alert>
+        </validation-provider>
+        <validation-provider
+          v-slot="{ errors }"
+          name="schema"
+          rules="required">
+          <v-select
+            v-model="repository.schema"
+            :items="schemas"
+            :error-messages="errors"
+            item-value="id"
+            item-text="name"
+            data-vv-name="schema"
+            outlined
+            class="mb-3" />
+        </validation-provider>
+        <validation-provider
+          v-slot="{ errors }"
+          name="repositoryName"
+          rules="required|min:2|max:250">
+          <v-text-field
+            v-model.trim="repository.name"
+            :error-messages="errors"
+            label="Name"
+            placeholder="Enter name..."
+            data-vv-name="name"
+            outlined />
+        </validation-provider>
+        <validation-provider
+          v-slot="{ errors }"
+          name="description"
+          rules="required|min:2|max:2000">
+          <v-textarea
+            v-model.trim="repository.description"
+            :error-messages="errors"
+            label="Description"
+            placeholder="Enter description..."
+            data-vv-name="description"
+            outlined />
+        </validation-provider>
+      </validation-observer>
     </template>
     <template v-slot:actions>
       <v-btn @click="hide" :disabled="showLoader" text>Cancel</v-btn>
       <v-btn
         @click="submit"
-        :disabled="vErrors.any()"
         :loading="showLoader"
         color="blue-grey darken-4"
         text>
@@ -67,7 +83,6 @@ import api from '@/api/repository';
 import { mapGetters } from 'vuex';
 import { SCHEMAS } from 'shared/activities';
 import TailorDialog from '@/components/common/TailorDialog';
-import { withValidation } from 'utils/validation';
 
 const resetData = () => ({
   schema: SCHEMAS[0].id,
@@ -77,11 +92,14 @@ const resetData = () => ({
 
 export default {
   name: 'create-repository',
-  mixins: [withValidation()],
   data: () => ({
     repository: resetData(),
     isVisible: false,
-    showLoader: false
+    showLoader: false,
+    errorAlert: {
+      show: false,
+      message: 'An error has occurred!'
+    }
   }),
   computed: {
     ...mapGetters(['isAdmin']),
@@ -89,23 +107,18 @@ export default {
   },
   methods: {
     async submit() {
-      const isValid = await this.$validator.validateAll();
+      const isValid = await this.$refs.form.validate();
       if (!isValid) return;
       this.showLoader = true;
       return api.save(this.repository)
         .then(() => this.$emit('created') && this.hide())
-        .catch(() => this.vErrors.add('default', 'An error has occurred!'));
+        .catch(() => (this.errorAlert.show = true));
     },
     hide() {
       this.repository = resetData();
+      this.$refs.form.reset();
       this.showLoader = false;
       this.isVisible = false;
-    }
-  },
-  watch: {
-    isVisible(val) {
-      if (!val) return;
-      setTimeout(() => this.$validator.reset(), 60);
     }
   },
   components: { TailorDialog }
