@@ -1,15 +1,18 @@
 <template>
   <div class="file-upload">
     <form @submit.prevent class="upload-form">
-      <input
-        :ref="id"
-        v-filefilter="'auto'"
-        v-validate="validate"
-        @change="upload"
-        :id="id"
-        :name="id"
-        type="file"
-        class="upload-input">
+      <validation-provider
+        ref="provider"
+        :rules="validate">
+        <input
+          :ref="id"
+          v-filefilter="'auto'"
+          @change="upload"
+          :id="id"
+          :name="id"
+          type="file"
+          class="upload-input">
+      </validation-provider>
       <v-btn
         v-if="!fileKey"
         @click="$refs[id].click()"
@@ -31,19 +34,17 @@
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </form>
-    <span class="help-block">{{ vErrors.first(id) }}</span>
   </div>
 </template>
 
 <script>
 import uniqueId from 'lodash/uniqueId';
 import uploadMixin from '@/components/common/mixins/upload';
-import { withValidation } from 'utils/validation';
 
 export default {
   name: 'upload-btn',
   inject: ['$storageService'],
-  mixins: [uploadMixin, withValidation()],
+  mixins: [uploadMixin],
   props: {
     id: { type: String, default: () => uniqueId('file_') },
     fileName: { type: String, default: '' },
