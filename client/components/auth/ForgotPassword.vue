@@ -9,7 +9,10 @@
     </v-alert>
     <validation-observer v-if="!error" v-slot="{ invalid }">
       <form @submit.prevent="submit">
-        <validation-provider v-slot="{ errors }" rules="required|email" name="email">
+        <validation-provider
+          v-slot="{ errors }"
+          name="email"
+          rules="required|email">
           <v-text-field
             v-model="email"
             :error-messages="errors"
