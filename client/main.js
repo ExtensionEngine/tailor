@@ -1,6 +1,7 @@
 /* eslint-disable sort-imports */
 import './polyfills';
 import 'bootstrap-sass/assets/javascripts/bootstrap';
+import '@/utils/validation';
 
 import assetsApi from '@/api/asset';
 import ContentPluginRegistry from './content-plugins';

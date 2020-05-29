@@ -29,7 +29,6 @@
 </template>
 
 <script>
-import '@/utils/validation';
 import api from '@/api/tag';
 import differenceBy from 'lodash/differenceBy';
 import map from 'lodash/map';
