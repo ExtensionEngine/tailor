@@ -7,9 +7,9 @@
       class="mb-5">
       {{ error || 'Sending reset email...' }}
     </v-alert>
-    <ValidationObserver v-if="!error" v-slot="{ invalid }">
+    <validation-observer v-if="!error" v-slot="{ invalid }">
       <form @submit.prevent="submit">
-        <ValidationProvider v-slot="{ errors }" rules="required|email" name="email">
+        <validation-provider v-slot="{ errors }" rules="required|email" name="email">
           <v-text-field
             v-model="email"
             :error-messages="errors"
@@ -18,7 +18,7 @@
             placeholder="Email"
             prepend-inner-icon="mdi-email-outline"
             outlined />
-        </ValidationProvider>
+        </validation-provider>
         <div class="d-flex">
           <v-btn
             @click="$router.go(-1)"
@@ -37,7 +37,7 @@
           </v-btn>
         </div>
       </form>
-    </ValidationObserver>
+    </validation-observer>
     <v-btn v-else @click.stop="resetInput" text>
       Retry
     </v-btn>
