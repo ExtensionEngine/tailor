@@ -29,3 +29,12 @@ extend('uniqueEmail', {
     return `The ${fieldName} is not unique.`;
   }
 });
+
+extend('url', {
+  validate: value => {
+    return /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/.test(value);
+  },
+  message: fieldName => {
+    return `The ${fieldName} is invalid.`;
+  }
+});
