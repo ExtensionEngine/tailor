@@ -17,7 +17,7 @@
           <v-icon class="pr-2">mdi-{{ tab.icon }}</v-icon>{{ tab.name }}
         </v-tab>
       </v-tabs>
-      <active-users :users="getActiveUsers('repository', repositoryId)" />
+      <active-users :users="activeUsers" />
     </div>
     <div class="tab-content" infinite-wrapper>
       <router-view :show-loader="showLoader" :repository-id="repositoryId" />
@@ -43,6 +43,9 @@ export default {
     ...mapGetters('activeUsers', ['getActiveUsers']),
     ...mapGetters(['isAdmin']),
     ...mapGetters('repository', ['repository', 'activities', 'isRepositoryAdmin']),
+    activeUsers() {
+      return this.getActiveUsers('repository', this.repositoryId);
+    },
     tabs() {
       const query = { activityId: get(this.lastSelectedActivity, 'id') };
       const items = [
