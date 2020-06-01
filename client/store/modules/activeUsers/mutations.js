@@ -22,9 +22,8 @@ const sseAdd = (state, { user, context }) => {
 const sseRemove = (state, { user, context: sourceContext }) => {
   const existingUser = state.activeUsers[user.id];
   if (!existingUser) return;
-  const index = existingUser.contexts.findIndex(targetContext => {
-    return isContextEqual(sourceContext, targetContext);
-  });
+  const index = existingUser.contexts.findIndex(targetContext =>
+    isContextEqual(sourceContext, targetContext));
   if (index === -1) return;
   existingUser.contexts.splice(index, 1);
 };
