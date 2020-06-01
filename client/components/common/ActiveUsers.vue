@@ -8,20 +8,21 @@
       :size="size">
       <img v-if="profileImage" :src="profileImage">
       <span v-else :style="{ color: palette.text }">
-        {{ email[0].toUpperCase() }}
+        {{ email[0] | capitalize }}
       </span>
     </v-avatar>
   </div>
 </template>
 
 <script>
+import capitalize from 'lodash/capitalize';
+
 export default {
   name: 'active-users',
   props: {
     users: { type: Array, default: () => [] },
     size: { type: Number, default: 30 },
-    vertical: { type: Boolean, default: false },
-    tooltipRight: { type: Boolean, default: false }
+    vertical: { type: Boolean, default: false }
   },
   data: () => ({ activeUsers: [] }),
   methods: {
@@ -40,6 +41,9 @@ export default {
       },
       immediate: true
     }
+  },
+  filters: {
+    capitalize
   }
 };
 </script>
