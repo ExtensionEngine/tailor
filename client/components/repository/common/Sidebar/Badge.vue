@@ -1,5 +1,5 @@
 <template>
-  <v-tooltip open-delay="100" max-width="300" left>
+  <v-tooltip open-delay="100" max-width="300" v-bind="position">
     <template v-slot:activator="{ on }">
       <span v-on="on">
         <v-badge :color="badgeColor" inline dot />
@@ -21,9 +21,8 @@ import pluralize from 'pluralize';
 const getDescriptor = (count, type) => `${count} ${pluralize(type, count)}`;
 const arrayToSentence = arr => arr.join(', ').replace(/, ([^,]*)$/, ' and $1');
 
-const getActivityInfo = (hasChanges, label) => hasChanges
-  ? `${label} has unpublished changes. `
-  : `${label} is published. `;
+const getActivityInfo = (hasChanges, label) =>
+  hasChanges ? `${label} has unpublished changes. ` : `${label} is published. `;
 
 const getDescendantsInfo = (descendants, count, label) => {
   return `${descendants} within this ${label} ${pluralize('has', count)}
@@ -32,10 +31,15 @@ const getDescendantsInfo = (descendants, count, label) => {
 
 export default {
   props: {
-    activity: { type: Object, default: () => ({}) }
+    activity: { type: Object, default: () => ({}) },
+    top: { type: Boolean, default: false }
   },
   computed: {
     ...mapGetters('repository', { outline: 'outlineActivities' }),
+    position() {
+      if (this.top) return { top: true };
+      return { left: true };
+    },
     label() {
       return getLabel(this.activity);
     },
