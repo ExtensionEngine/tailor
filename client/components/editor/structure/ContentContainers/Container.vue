@@ -95,7 +95,7 @@ export default {
     },
     hasActiveUsers(elementId) {
       const activeUsers = this.getActiveUsers('element', elementId);
-      return activeUsers.length;
+      return !!activeUsers.length;
     },
     getElementStyle(elementId) {
       const activeUsers = this.getActiveUsers('element', elementId);
@@ -116,16 +116,16 @@ export default {
   margin-bottom: 0.5rem;
 }
 
-// /deep/ .active-users-wrapper {
-//   position: absolute;
-//   right: -1.25rem;
-//   margin-top: 1rem;
-//   transition: all 0.5s ease;
+::v-deep .active-users-wrapper {
+  position: absolute;
+  right: -1.25rem;
+  margin-top: 1rem;
+  transition: all 0.5s ease;
 
-//   &.inactive {
-//     opacity: 0;
-//     transition: all 0.5s ease;
-//   }
-//   .active-users { margin-right: 0; }
-// }
+  &.inactive {
+    opacity: 0;
+    transition: all 0.5s ease;
+  }
+  .active-users { margin-right: 0; }
+}
 </style>

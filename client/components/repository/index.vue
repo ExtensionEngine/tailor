@@ -1,6 +1,6 @@
 <template>
   <div class="repo-container">
-    <div class="repository-header primary elevation-2">
+    <div class="d-flex justify-space-between primary elevation-2">
       <v-tabs
         background-color="blue-grey darken-3"
         slider-color="grey lighten-2"
@@ -100,11 +100,6 @@ export default {
 .repo-container {
   display: flex;
   flex-direction: column;
-
-  .repository-header {
-    display: flex;
-    justify-content: space-between;
-  }
 
   .tab-content {
     overflow-y: scroll;
