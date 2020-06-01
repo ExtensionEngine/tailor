@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ vertical }" class="active-users">
+  <div :class="{ vertical }" class="d-flex align-center active-users">
     <v-avatar
       v-for="{ id, email, palette, profileImage } in activeUsers"
       :key="id"
@@ -50,9 +50,6 @@ export default {
 
 <style scoped lang="scss">
 .active-users {
-  display: flex;
-  align-items: center;
-
   div {
     margin-left: -5px;
     transition: all 0.2s;
