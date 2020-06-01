@@ -39,8 +39,7 @@
               v-if="getActiveUsers('element', item.contentId)"
               :users="getActiveUsers('element', item.contentId)"
               :size="26"
-              vertical
-              tooltip-right />
+              vertical />
           </div>
         </content-element>
       </template>
