@@ -42,7 +42,7 @@ export default {
       const query = { activityId: get(this.lastSelectedActivity, 'id') };
       const items = [
         { name: 'Structure', route: 'repository', icon: 'file-tree', query },
-        { name: 'Board', route: 'board', icon: 'view-dashboard-variant', query },
+        { name: 'Board', route: 'board', icon: 'view-dashboard-variant' },
         { name: 'Graph View', route: 'tree-view', icon: 'graph-outline', query },
         { name: 'History', route: 'revisions', icon: 'history' },
         { name: 'Settings', route: 'repository-info', icon: 'settings-outline' }
