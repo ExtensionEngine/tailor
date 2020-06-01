@@ -71,12 +71,12 @@ export default {
         .map(it => {
           const { name } = it.data;
           const type = this.structure.find(({ type }) => type === it.type);
+          const workflowState = find(this.states, { id: it.data.stateId });
           return {
             ...it,
             ...pick(type, ['label', 'color']),
             name,
-            // TODO remove and pull real state
-            workflowState: find(this.states, { id: it.data.stateId }) || this.states[0]
+            workflowState
           };
         })
         .filter(({ type }) => this.workflowActivities.find(it => it.type === type));
