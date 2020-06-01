@@ -11,98 +11,111 @@
         </v-avatar>
       </div>
       <v-btn
-        @click="filterOwn"
-        :elevation="0"
-        class="filters__btn text-capitalize mx-3">
-        Only my issues
-      </v-btn>
-      <v-btn
         @click="filterRecentlyUpdated"
         :elevation="0"
-        class="filters__btn text-capitalize mx-3">
+        class="mx-3 filters__btn text-capitalize">
         Recently updated
       </v-btn>
     </div>
-    <div class="layout ma-4">
-      <div v-for="status in statuses" :key="status.id" class="column grey lighten-3 d-flex flex-column px-3">
-        <h5 class="text-uppercase align-self-start">
-          {{ status.label }}
+    <div class="layout mt-4 mx-4 flex-grow-0">
+      <div v-for="state in states" :key="state.id" class="column grey lighten-3 d-flex flex-column">
+        <h5 class="px-3 text-uppercase align-self-start">
+          {{ state.label }}
         </h5>
-        <card
-          v-for="activity in getActivitiesByStatus(status.id)"
-          :key="activity.id"
-          v-bind="activity" />
+        <div class="cards d-flex flex-column align-center">
+          <card
+            v-for="activity in getActivitiesByState(state.id)"
+            :key="activity.id"
+            :activity="activity"
+            :assignee="user" />
+        </div>
       </div>
     </div>
+    <sidebar empty-message="Please select Item on the left to view and edit it's details here." />
   </div>
 </template>
 
 <script>
 import { mapGetters, mapState } from 'vuex';
 import Card from './Card';
+import find from 'lodash/find';
 import get from 'lodash/get';
 import { getSchema } from 'shared/activities';
 import groupBy from 'lodash/groupBy';
-import sample from 'lodash/sample';
+import pick from 'lodash/pick';
+import selectActivity from '../common/selectActivity';
+import Sidebar from '../common/Sidebar';
 
 export default {
   name: 'workflow-board',
+  mixins: [selectActivity],
   computed: {
     ...mapState({
       user: state => state.auth.user
     }),
-    ...mapGetters('repository', ['repository', 'structure', 'activities']),
+    ...mapGetters('repository', [
+      'repository',
+      'structure',
+      'workflowActivities',
+      'activities'
+    ]),
     schema() {
       const { schema: schemaId } = this.repository || {};
       return schemaId ? getSchema(schemaId) : null;
     },
-    statuses() {
-      return get(this.schema, 'workflow.statuses', []);
+    states() {
+      return get(this.schema, 'workflow.states', []);
     },
     groupedActivities() {
-      if (!this.schema) return [];
-      const { workflow } = this.schema;
       const mock = this.activities
         .map(it => {
           const { name } = it.data;
           const type = this.structure.find(({ type }) => type === it.type);
-          const label = get(type, 'label');
           return {
             ...it,
+            ...pick(type, ['label', 'color']),
             name,
-            label,
-            workflowStatus: sample(this.statuses)
+            // TODO remove and pull real state
+            workflowState: find(this.states, { id: it.data.stateId }) || this.states[0]
           };
         })
-        .filter(({ type }) => workflow.trackedActivities.includes(type));
-      return groupBy(mock, 'workflowStatus.id');
+        .filter(({ type }) => this.workflowActivities.find(it => it.type === type));
+      return groupBy(mock, 'workflowState.id');
     }
   },
   methods: {
-    getActivitiesByStatus(statusId) {
-      return get(this.groupedActivities, statusId, []);
-    },
-    filterOwn() {
-      // TODO
+    getActivitiesByState(stateId) {
+      return get(this.groupedActivities, stateId, []);
     },
     filterRecentlyUpdated() {
       // TODO
     }
   },
-  components: { Card }
+  components: { Card, Sidebar }
 };
 </script>
 
 <style lang="scss" scoped>
   .board {
+    position: relative;
     height: 100%;
   }
 
   .layout {
     display: grid;
-    grid: 1fr / auto-flow 250px;
+    max-width: calc(100% - 435px);
+    grid: 1fr / auto-flow 228px;
     gap: 1rem;
     overflow-x: scroll;
+  }
+
+  .column {
+    overflow-y: hidden;
+  }
+
+  .cards {
+    height: 100%;
+    overflow-y: scroll;
   }
 
   .search-field {

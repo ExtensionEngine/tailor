@@ -49,6 +49,11 @@ export const selectedActivity = (_state, getters, rootState) => {
   return find(getters.activities, { id: parseInt(activityId, 10) });
 };
 
+export const workflowActivities = (_state, { structure }) => {
+  if (!structure) return [];
+  return structure.filter(activity => activity.isTrackedInWorkflow);
+};
+
 export const isCollapsed = state => {
   return activity => activity && !state.outline.expanded[activity._cid];
 };
