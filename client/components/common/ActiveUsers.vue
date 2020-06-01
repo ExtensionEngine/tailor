@@ -50,14 +50,11 @@ export default {
 
 <style scoped lang="scss">
 .active-users {
-  .v-avatar {
-    margin-left: -5px;
-    transition: all 0.2s;
+  padding: 0 0.25rem;
 
-    &:hover {
-      margin-top: -5px;
-      margin-left: 5px;
-    }
+  .v-avatar:first-of-type {
+    margin-left: 0;
+    transition: all 0.2s;
   }
 
   &.vertical {
