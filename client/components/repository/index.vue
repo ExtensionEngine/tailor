@@ -58,7 +58,6 @@ export default {
   },
   methods: {
     ...mapActions('repository', ['initialize', 'expandParents']),
-    ...mapActions('activeUsers', { setupActivityUsersApi: 'setEndpoint' }),
     ...mapMutations('repository', ['selectActivity'])
   },
   watch: {
@@ -75,7 +74,6 @@ export default {
   async created() {
     const { repositoryId } = this;
     await this.initialize(repositoryId);
-    this.setupActivityUsersApi(`/repository/${repositoryId}/active-users`);
     this.showLoader = false;
     if (!this.activities.length) return;
     if (!this.selectedActivity) {

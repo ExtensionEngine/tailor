@@ -46,12 +46,10 @@ export default {
     ...mapGetters('editor', ['activity', 'contentContainers'])
   },
   methods: {
-    ...mapActions('activeUsers', { setupActivityUsersApi: 'setEndpoint' }),
     ...mapActions('repository', ['initialize'])
   },
   async created() {
     const { repositoryId: currentRepositoryId, repository: storeRepository } = this;
-    this.setupActivityUsersApi(`/repository/${currentRepositoryId}/active-users`);
     const repositoryLoaded = !!storeRepository;
     const repositoryChanged = get(storeRepository, 'id') !== currentRepositoryId;
     if (!repositoryLoaded || repositoryChanged) {
