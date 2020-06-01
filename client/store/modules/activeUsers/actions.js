@@ -3,7 +3,7 @@ import find from 'lodash/find';
 import forEach from 'lodash/forEach';
 import generateActions from '@/store/helpers/actions';
 import { getUsedPalettes } from './getters';
-import palette from 'utils/palette';
+import palette from 'utils/avatarPalette';
 import sample from 'lodash/sample';
 import SSEClient from '@/SSEClient';
 import urlJoin from 'url-join';
