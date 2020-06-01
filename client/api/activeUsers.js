@@ -1,7 +1,8 @@
 import request from './request';
 
 const url = {
-  root: repositoryId => `/repositories/${repositoryId}/active-users`
+  root: repositoryId => `/repositories/${repositoryId}/active-users`,
+  subscribe: repositoryId => `/repositories/${repositoryId}/active-users/subscribe`
 };
 
 function fetch(repositoryId) {

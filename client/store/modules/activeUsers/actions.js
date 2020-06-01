@@ -21,7 +21,7 @@ const Events = {
 const subscribe = ({ state, commit, rootState }) => {
   const { repositoryId } = rootState.route.params;
   const params = { token: rootState.auth.token };
-  const url = urlJoin(baseUrl, api.url.root(repositoryId), '/subscribe');
+  const url = urlJoin(baseUrl, api.url.subscribe(repositoryId));
   if (feed.isConnected) return;
   feed
     .connect(url, { params })
