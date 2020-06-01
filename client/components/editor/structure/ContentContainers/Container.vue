@@ -33,7 +33,6 @@
           :element="item"
           :element-style="getElementStyle(item.contentId)">
           <div
-            :class="{ inactive: !hasActiveUsers(item.contentId) }"
             class="active-users-wrapper">
             <active-users
               v-if="getActiveUsers('element', item.contentId)"
@@ -92,10 +91,6 @@ export default {
       const context = { items, newPosition, isFirstChild, insert: true };
       this.insertElement({ element, context });
     },
-    hasActiveUsers(elementId) {
-      const activeUsers = this.getActiveUsers('element', elementId);
-      return !!activeUsers.length;
-    },
     getElementStyle(elementId) {
       const activeUsers = this.getActiveUsers('element', elementId);
       if (!activeUsers.length) return;
@@ -121,10 +116,6 @@ export default {
   margin-top: 1rem;
   transition: all 0.5s ease;
 
-  &.inactive {
-    opacity: 0;
-    transition: all 0.5s ease;
-  }
   .active-users { margin-right: 0; }
 }
 </style>
