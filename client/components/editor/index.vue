@@ -3,7 +3,7 @@
     <template v-if="!isLoading">
       <toolbar :element="selectedElement" />
       <template slot="active-users">
-        <active-users :users="getActiveUsers('activity', activityId)" />
+        <active-users :users="activeUsers" />
       </template>
       <sidebar
         :repository="repository"
@@ -43,7 +43,10 @@ export default {
   computed: {
     ...mapGetters('activeUsers', ['getActiveUsers']),
     ...mapGetters('repository', ['repository', 'outlineActivities']),
-    ...mapGetters('editor', ['activity', 'contentContainers'])
+    ...mapGetters('editor', ['activity', 'contentContainers']),
+    activeUsers() {
+      return this.getActiveUsers('activity', this.activityId);
+    }
   },
   methods: {
     ...mapActions('repository', ['initialize'])
