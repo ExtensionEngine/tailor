@@ -18,17 +18,17 @@
       </v-btn>
     </div>
     <div class="layout mt-4 mx-4 flex-grow-0">
-      <div v-for="state in states" :key="state.id" class="column grey lighten-3 d-flex flex-column">
-        <h5 class="px-3 text-uppercase align-self-start">
-          {{ state.label }}
-        </h5>
-        <div class="cards d-flex flex-column align-center">
-          <card
-            v-for="activity in getActivitiesByState(state.id)"
-            :key="activity.id"
-            :activity="activity"
-            :assignee="user" />
-        </div>
+      <h5 v-for="state in states" :key="state.id" class="state-title pa-3 grey lighten-3 text-uppercase align-self-start">
+        {{ state.label }}
+      </h5>
+    </div>
+    <div class="columns mx-4 flex-grow-0">
+      <div v-for="state in states" :key="state.id" class="cards d-flex flex-column align-center grey lighten-3">
+        <card
+          v-for="activity in getActivitiesByState(state.id)"
+          :key="activity.id"
+          :activity="activity"
+          :assignee="user" />
       </div>
     </div>
     <sidebar empty-message="Please select Item on the left to view and edit it's details here." />
@@ -96,38 +96,45 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .board {
-    position: relative;
-    height: 100%;
-  }
+%board-layout {
+  display: grid;
+  max-width: calc(100% - 435px);
+  grid: auto / auto-flow 228px;
+  gap: 0 1rem;
+}
 
-  .layout {
-    display: grid;
-    max-width: calc(100% - 435px);
-    grid: 1fr / auto-flow 228px;
-    gap: 1rem;
-    overflow-x: scroll;
-  }
+.board {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
 
-  .column {
-    overflow-y: hidden;
-  }
+.layout {
+  @extend %board-layout;
 
-  .cards {
-    height: 100%;
-    overflow-y: scroll;
-  }
+  overflow-x: scroll;
+}
 
-  .search-field {
-    max-width: 400px;
-  }
+.columns {
+  @extend %board-layout;
 
-  .avatar.v-avatar {
-    border: 2px solid;
-    border-color: var(--v-white) !important;
-  }
+  overflow-y: scroll;
+}
 
-  .filters__btn {
-    letter-spacing: inherit;
-  }
+.state-title {
+  margin: 0;
+}
+
+.search-field {
+  max-width: 400px;
+}
+
+.avatar.v-avatar {
+  border: 2px solid;
+  border-color: var(--v-white) !important;
+}
+
+.filters__btn {
+  letter-spacing: inherit;
+}
 </style>
