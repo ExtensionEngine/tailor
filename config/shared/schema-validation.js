@@ -12,9 +12,13 @@ const meta = yup.array().of(yup.object().shape({
   validate: yup.object()
 }));
 
+const workflowState = yup.object().shape({
+  id: yup.string().required(),
+  label: yup.string().required()
+});
+
 const workflow = yup.object().shape({
-  trackedActivities: yup.array().of(yup.string()).min(1),
-  statuses: yup.array().of(yup.string()).min(1)
+  states: yup.array().of(workflowState).min(1)
 });
 
 const relationships = yup.array().of(yup.object().shape({
@@ -44,6 +48,7 @@ const schema = yup.object().shape({
     contentContainers: yup.array().of(activityType),
     hasAssessments: yup.boolean(),
     hasExams: yup.boolean(),
+    isTrackedInWorkflow: yup.boolean(),
     exams: yup.object().shape({ objectives: yup.array().of(activityType) }),
     relationships,
     meta

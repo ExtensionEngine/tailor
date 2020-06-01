@@ -2,6 +2,7 @@
 
 const find = require('lodash/find');
 const get = require('lodash/get');
+const { getWorkflowMeta } = require('./workflow');
 const map = require('lodash/map');
 const transform = require('lodash/transform');
 const validate = require('./schema-validation');
@@ -34,7 +35,6 @@ function processRepositoryConfig(schema) {
       type: 'COLOR', key: 'color', label: 'Label color', colors: LABEL_COLORS
     });
   }
-  if (schema.workflow) { processRepositoryWorkflow(schema); }
   schema.defaultMeta = getMetaDefaults(schema.meta);
 }
 
@@ -53,16 +53,14 @@ function processActivityConfig(schema, activity) {
       validate: { required: true, min: 2, max: 250 }
     });
   }
+  if (activity.isTrackedInWorkflow) {
+    activity.meta.push(...getWorkflowMeta(schema));
+  }
   activity.defaultMeta = getMetaDefaults(activity.meta);
   const examObjectives = get(activity, 'exams.objectives');
   if (examObjectives) {
     activity.exams.objectives = map(examObjectives, it => processType(schema, it));
   }
-}
-
-function processRepositoryWorkflow(schema) {
-  const trackedActivities = get(schema, 'workflow.trackedActivities', []);
-  schema.workflow.trackedActivities = map(trackedActivities, it => processType(schema, it));
 }
 
 function processType(schema, type) {
