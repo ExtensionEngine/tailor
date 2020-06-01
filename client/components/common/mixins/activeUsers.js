@@ -1,7 +1,11 @@
 import { mapActions, mapState } from 'vuex';
+import has from 'lodash/has';
 import pickBy from 'lodash/pickBy';
 
-const trackedRoutes = ['repository', 'editor'];
+const trackedRoutes = {
+  repository: 'repository',
+  editor: 'editor'
+};
 
 export default {
   computed: {
@@ -39,12 +43,12 @@ export default {
     this.fetchActiveUsers(this.repositoryId);
   },
   beforeRouteLeave(to, from, next) {
-    if (!trackedRoutes.includes(to.name)) {
+    if (!has(trackedRoutes, to.name)) {
       this.unsubscribeFromActiveUsers(this.context);
     }
     // Remove context when leaving route except when navigating
     // to course route (Outline component)
-    if (to.name === 'repository') this.removeContext(this.context);
+    if (to.name === trackedRoutes.repository) this.removeContext(this.context);
     next();
   }
 };
