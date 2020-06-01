@@ -50,7 +50,7 @@ export default {
 
 <style scoped lang="scss">
 .active-users {
-  div {
+  .v-avatar {
     margin-left: -5px;
     transition: all 0.2s;
 
