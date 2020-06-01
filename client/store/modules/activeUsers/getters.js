@@ -34,12 +34,12 @@ function mapContext(activeUsers, user, context) {
 }
 
 function setEntityActivity(activeUsers, entity, entityId, user) {
-  const { id, email, palette, created } = user;
-  if (activeUsers[entity][entityId]) {
-    const user = find(activeUsers[entity][entityId], { id });
-    if (user) return;
-    activeUsers[entity][entityId].push({ id, email, palette, created });
+  const activityData = pick(user, ['id', 'email', 'palette', 'created']);
+  const activeUsersOnEntity = activeUsers[entity][entityId];
+  if (!activeUsersOnEntity) {
+    activeUsers[entity][entityId] = [activityData];
     return;
   }
-  activeUsers[entity][entityId] = [{ id, email, palette, created }];
+  if (find(activeUsersOnEntity, { id: user.id })) return;
+  activeUsersOnEntity.push(activityData);
 }
