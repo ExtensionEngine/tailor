@@ -57,11 +57,8 @@ export default {
     &:hover {
       margin-top: -5px;
       margin-left: 5px;
-      z-index: 1;
     }
   }
-  &.shadow-grey div { box-shadow: 0 0 0 1px #d0d0d0; }
-  &.shadow-blue-grey div { box-shadow: 0 0 0 2px #4d626b; }
 
   &.vertical {
     flex-direction: column-reverse;
