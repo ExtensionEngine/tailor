@@ -6,13 +6,14 @@ import orderBy from 'lodash/orderBy';
 import pick from 'lodash/pick';
 
 export const activeUsers = state => {
-  const activeUsersMap = { repository: {}, activity: {}, element: {} };
-  Object.keys(state.activeUsers).forEach(userId => {
-    state.activeUsers[userId].contexts.forEach(context => {
-      mapContext(activeUsersMap, state.activeUsers[userId], context);
+  const result = { repository: {}, activity: {}, element: {} };
+  const activeUsers = Object.values(state.activeUsers);
+  activeUsers.forEach(({ contexts, ...user }) => {
+    contexts.forEach(context => {
+      setUserActivityForContext(result, user, context);
     });
   });
-  return activeUsersMap;
+  return result;
 };
 
 export const getUsedPalettes = state => {
@@ -25,7 +26,7 @@ export const getActiveUsers = (_state, getters) => {
   };
 };
 
-function mapContext(activeUsers, user, context) {
+function setUserActivityForContext(activeUsers, user, context) {
   const { repositoryId, activityId, elementId, created } = context;
   const userData = { ...pick(user, ['id', 'email', 'palette']), created };
   setEntityActivity(activeUsers, 'repository', repositoryId, userData);
