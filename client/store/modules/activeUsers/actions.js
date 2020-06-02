@@ -1,6 +1,8 @@
 import api from '@/api/activeUsers';
 import forEach from 'lodash/forEach';
 import generateActions from '@/store/helpers/actions';
+import palette from 'utils/avatarPalette';
+import sample from 'lodash/sample';
 import SSEClient from '@/SSEClient';
 import urlJoin from 'url-join';
 
@@ -69,15 +71,7 @@ export {
   unsubscribe
 };
 
-function assignPalette(user, activeUsers) {
-  const randomId = Math.floor(Math.random() * 1000);
-  const randomBackground = Math.floor(Math.random() * 16777215).toString(16);
-  const randomBorder = Math.floor(Math.random() * 16777215).toString(16);
-  const colorPalette = {
-    id: randomId,
-    background: '#' + randomBackground,
-    text: '#fff',
-    border: '#' + randomBorder
-  };
+function assignPalette(user) {
+  const colorPalette = sample(palette);
   user.palette = colorPalette;
 }
