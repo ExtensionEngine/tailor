@@ -19,7 +19,6 @@ import { mapActions, mapMutations, mapState } from 'vuex';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
 import EventBus from 'EventBus';
-// import omit from 'lodash/omit';
 import throttle from 'lodash/throttle';
 
 export default {
