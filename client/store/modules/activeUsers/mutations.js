@@ -10,13 +10,13 @@ import Vue from 'vue';
 const save = (state, user) => {
   const { activeUsers } = state;
   user.contexts.forEach(context => {
-    setUserActivity(Vue, activeUsers, user, context);
+    setUserActivity(activeUsers, user, context);
   });
 };
 
 const sseAdd = (state, { user, context }) => {
   const { activeUsers } = state;
-  setUserActivity(Vue, activeUsers, user, context);
+  setUserActivity(activeUsers, user, context);
 };
 
 const sseRemove = (state, { user, context: sourceContext }) => {
@@ -55,10 +55,10 @@ export {
   resetActiveUsers
 };
 
-function setUserActivity(_vue, activeUsers, user, context) {
+function setUserActivity(activeUsers, user, context) {
   const existingUser = activeUsers[user.id];
   if (!existingUser) {
-    _vue.set(activeUsers, user.id, { ...user, contexts: [context] });
+    Vue.set(activeUsers, user.id, { ...user, contexts: [context] });
     return;
   }
   const existingContext = find(existingUser.contexts, omit(context, ['created']));
