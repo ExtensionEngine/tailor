@@ -14,7 +14,7 @@ const defaultListQuery = {
   paranoid: false
 };
 
-router.get('/repository/:repositoryId/comments/subscribe', sse, createFeed);
+router.get('/subscribe', sse, createFeed);
 
 router.param('commentId', getComment);
 
