@@ -1,6 +1,6 @@
 import colors from 'vuetify/es5/util/colors';
 import Vue from 'vue';
-import Vuetify from 'vuetify';
+import Vuetify from 'vuetify/lib';
 import VuetifySnackbar from '@/plugins/vuetify-snackbar';
 
 Vue.use(Vuetify);

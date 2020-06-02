@@ -151,6 +151,7 @@
     "@types/poi": "^12.5.0",
     "@types/webpack": "^4.41.0",
     "babel-eslint": "^10.1.0",
+    "babel-plugin-transform-imports": "^2.0.0",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^5.0.5",
     "dargs": "^7.0.0",
@@ -176,7 +177,8 @@
     "stylelint": "^13.0.0",
     "umzug": "^2.2.0",
     "val-loader": "^1.1.1",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.11",
+    "vuetify-loader": "^1.4.4"
   },
   "engines": {
     "node": ">= 10.17.0",

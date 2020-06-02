@@ -51,6 +51,7 @@ module.exports = {
     '@poi/eslint',
     '@poi/bundle-report',
     require.resolve('./build/plugins/stats'),
+    { resolve: require.resolve('./build/plugins/poi-vuetify-loader') },
     {
       resolve: require.resolve('./build/plugins/output-filenames'),
       options: {

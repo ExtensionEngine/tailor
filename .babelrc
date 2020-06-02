@@ -1,0 +1,11 @@
+{
+  "presets": ["poi/babel"],
+  "plugins": [
+    ["transform-imports", {
+      "vuetify": {
+        "transform": "vuetify/lib/components/${member}",
+        "preventFullImport": true
+      }
+    }]
+  ]
+}
