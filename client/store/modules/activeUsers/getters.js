@@ -1,7 +1,4 @@
-import filter from 'lodash/filter';
 import find from 'lodash/find';
-import get from 'lodash/get';
-import map from 'lodash/map';
 import orderBy from 'lodash/orderBy';
 import pick from 'lodash/pick';
 
@@ -14,10 +11,6 @@ export const activeUsers = state => {
     });
   });
   return result;
-};
-
-export const getUsedPalettes = state => {
-  return filter(map(state.activeUsers, user => get(user.palette, 'id', null)));
 };
 
 export const getActiveUsers = (_state, getters) => {

@@ -1,10 +1,6 @@
 import api from '@/api/activeUsers';
-import find from 'lodash/find';
 import forEach from 'lodash/forEach';
 import generateActions from '@/store/helpers/actions';
-import { getUsedPalettes } from './getters';
-import palette from 'utils/avatarPalette';
-import sample from 'lodash/sample';
 import SSEClient from '@/SSEClient';
 import urlJoin from 'url-join';
 
@@ -26,8 +22,7 @@ const subscribe = ({ state, commit, rootState }) => {
   feed
     .connect(url, { params })
     .subscribe(Events.Add, ({ user, context }) => {
-      const usedPalettes = getUsedPalettes(state);
-      assignPalette(user, usedPalettes);
+      assignPalette(user);
       commit('sseAdd', { user, context });
     })
     .subscribe(Events.Remove, ({ user, context }) => {
@@ -47,12 +42,11 @@ const unsubscribe = ({ commit }) => {
   commit('setSseId', null);
 };
 
-const fetch = ({ state, commit }, repositoryId) => {
+const fetch = ({ commit }, repositoryId) => {
   return api.fetch(repositoryId)
     .then(({ activeUsers }) => {
       forEach(activeUsers, user => {
-        const usedPalettes = getUsedPalettes(state);
-        assignPalette(user, usedPalettes, activeUsers);
+        assignPalette(user);
         commit('save', user);
       });
     });
@@ -75,8 +69,15 @@ export {
   unsubscribe
 };
 
-function assignPalette(user, usedPalettes) {
-  const availablePalette = find(palette, p => !usedPalettes.includes(p.id));
-  const colorPalette = availablePalette || sample(palette);
+function assignPalette(user, activeUsers) {
+  const randomId = Math.floor(Math.random() * 1000);
+  const randomBackground = Math.floor(Math.random() * 16777215).toString(16);
+  const randomBorder = Math.floor(Math.random() * 16777215).toString(16);
+  const colorPalette = {
+    id: randomId,
+    background: '#' + randomBackground,
+    text: '#fff',
+    border: '#' + randomBorder
+  };
   user.palette = colorPalette;
 }
