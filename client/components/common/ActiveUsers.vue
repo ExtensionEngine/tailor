@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex align-center active-users">
+  <div class="d-flex align-center px-2">
     <v-avatar
       v-for="{ id, email, palette, profileImage } in users"
       :key="id"
@@ -30,12 +30,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.active-users {
-  padding: 0 0.25rem;
-
-  .v-avatar:first-of-type {
-    margin-left: 0;
-    transition: all 0.2s;
-  }
+.v-avatar:first-of-type {
+  margin-left: 0;
+  transition: all 0.2s;
 }
 </style>
