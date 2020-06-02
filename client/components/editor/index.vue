@@ -1,10 +1,11 @@
 <template>
   <div class="editor-container">
     <template v-if="!isLoading">
-      <toolbar :element="selectedElement" />
-      <template slot="active-users">
-        <active-users :users="activeUsers" />
-      </template>
+      <toolbar :element="selectedElement">
+        <template slot="active-users">
+          <active-users :users="activeUsers" />
+        </template>
+      </toolbar>
       <sidebar
         :repository="repository"
         :activities="outlineActivities"
