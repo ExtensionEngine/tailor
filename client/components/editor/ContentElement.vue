@@ -19,7 +19,7 @@ import { mapActions, mapMutations, mapState } from 'vuex';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
 import EventBus from 'EventBus';
-import omit from 'lodash/omit';
+// import omit from 'lodash/omit';
 import throttle from 'lodash/throttle';
 
 export default {
@@ -84,9 +84,6 @@ export default {
     EventBus.on('element:focus', element => {
       this.isFocused = !!element && (element.id === this.element.id);
     });
-  },
-  beforeDestroy() {
-    this.removeActiveUserContext(omit(this.context, 'created'));
   },
   components: { ContainedContent }
 };
