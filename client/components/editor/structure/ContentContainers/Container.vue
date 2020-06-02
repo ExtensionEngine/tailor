@@ -37,8 +37,7 @@
             <active-users
               v-if="getActiveUsers('element', item.contentId)"
               :users="getActiveUsers('element', item.contentId)"
-              :size="26"
-              vertical />
+              :size="26" />
           </div>
         </content-element>
       </template>

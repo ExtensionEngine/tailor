@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ vertical }" class="d-flex align-center active-users">
+  <div class="d-flex align-center active-users">
     <v-avatar
       v-for="{ id, email, palette, profileImage } in activeUsers"
       :key="id"
@@ -21,8 +21,7 @@ export default {
   name: 'active-users',
   props: {
     users: { type: Array, default: () => [] },
-    size: { type: Number, default: 30 },
-    vertical: { type: Boolean, default: false }
+    size: { type: Number, default: 30 }
   },
   data: () => ({ activeUsers: [] }),
   methods: {
@@ -55,19 +54,6 @@ export default {
   .v-avatar:first-of-type {
     margin-left: 0;
     transition: all 0.2s;
-  }
-
-  &.vertical {
-    flex-direction: column-reverse;
-
-    div {
-      margin-top: -5px;
-      margin-left: 0;
-    }
-
-    div:hover {
-      margin-right: -5px;
-    }
   }
 }
 </style>
