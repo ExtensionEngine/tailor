@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex align-center active-users">
     <v-avatar
-      v-for="{ id, email, palette, profileImage } in activeUsers"
+      v-for="{ id, email, palette, profileImage } in users"
       :key="id"
       :color="palette.background"
       :style="{ boxShadow: `0 0 0 2px ${palette.border}` }"
@@ -22,24 +22,6 @@ export default {
   props: {
     users: { type: Array, default: () => [] },
     size: { type: Number, default: 30 }
-  },
-  data: () => ({ activeUsers: [] }),
-  methods: {
-    setActiveUsers(users) {
-      this.activeUsers = users;
-    }
-  },
-  watch: {
-    users: {
-      handler() {
-        if (!this.activeUsers.length) {
-          this.activeUsers = this.users;
-          return;
-        }
-        this.setActiveUsers(this.users);
-      },
-      immediate: true
-    }
   },
   filters: {
     capitalize
