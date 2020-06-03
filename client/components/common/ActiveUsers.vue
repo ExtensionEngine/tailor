@@ -1,12 +1,12 @@
 <template>
   <div class="d-flex align-center px-2">
     <v-avatar
-      v-for="{ id, email, palette, profileImage } in users"
+      v-for="{ id, email, palette, imgUrl } in users"
       :key="id"
       :color="palette.background"
       :style="{ boxShadow: `0 0 0 2px ${palette.border}` }"
       :size="size">
-      <img v-if="profileImage" :src="profileImage">
+      <img v-if="imgUrl" :src="imgUrl">
       <span v-else :style="{ color: palette.text }">
         {{ email[0] | capitalize }}
       </span>

@@ -16,7 +16,7 @@ function fetch(_req, res) {
 function add({ body, user }, res) {
   res.end();
   const { context } = body;
-  user = pick(user, ['id', 'email', 'firstName', 'lastName']);
+  user = pick(user, ['id', 'email', 'firstName', 'lastName', 'imgUrl']);
   ActiveUsers.addContext(user, context);
   const channel = sse.channel(context.repositoryId);
   if (channel) channel.send(Events.Add, { user, context });
@@ -26,7 +26,7 @@ function remove({ body, user }, res) {
   res.end();
   const { context } = body;
   const { created, ...targetContext } = context;
-  user = pick(user, ['id', 'email', 'firstName', 'lastName']);
+  user = pick(user, ['id', 'email', 'firstName', 'lastName', 'imgUrl']);
   ActiveUsers.removeContext(user, ({ created, ...context }) => {
     return isEqual(context, targetContext);
   });
