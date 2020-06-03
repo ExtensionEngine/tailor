@@ -110,11 +110,8 @@ export default {
 }
 
 ::v-deep .active-users-wrapper {
-  position: absolute;
-  right: -1.25rem;
-  margin-top: 1rem;
-  transition: all 0.5s ease;
-
-  .active-users { margin-right: 0; }
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
 }
 </style>
