@@ -20,15 +20,16 @@ export const getActiveUsers = (_state, getters) => {
 };
 
 function setUserActivityForContext(activeUsers, user, context) {
+  console.log('Ovo je user: ', user);
   const { repositoryId, activityId, elementId, created } = context;
-  const userData = { ...pick(user, ['id', 'email', 'palette', 'imgUrl']), created };
+  const userData = { ...pick(user, ['id', 'fullName', 'email', 'palette', 'imgUrl']), created };
   setEntityActivity(activeUsers, 'repository', repositoryId, userData);
   if (activityId) setEntityActivity(activeUsers, 'activity', activityId, userData);
   if (elementId) setEntityActivity(activeUsers, 'element', elementId, userData);
 }
 
 function setEntityActivity(activeUsers, entity, entityId, user) {
-  const activityData = pick(user, ['id', 'email', 'palette', 'created', 'imgUrl']);
+  const activityData = pick(user, ['id', 'fullName', 'email', 'palette', 'created', 'imgUrl']);
   const activeUsersOnEntity = activeUsers[entity][entityId];
   if (!activeUsersOnEntity) {
     activeUsers[entity][entityId] = [activityData];

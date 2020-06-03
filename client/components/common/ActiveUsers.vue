@@ -1,15 +1,17 @@
 <template>
   <div class="d-flex align-center px-2">
     <v-avatar
-      v-for="{ id, email, palette, imgUrl } in users"
+      v-for="{ id, fullName, email, palette, imgUrl } in users"
       :key="id"
       :color="palette.background"
       :style="{ boxShadow: `0 0 0 2px ${palette.border}` }"
       :size="size">
-      <img v-if="imgUrl" :src="imgUrl">
-      <span v-else :style="{ color: palette.text }">
-        {{ email[0] | capitalize }}
-      </span>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+          <img v-if="imgUrl" v-on="on" :src="imgUrl">
+        </template>
+        <span>{{ fullName }}</span>
+      </v-tooltip>
     </v-avatar>
   </div>
 </template>
