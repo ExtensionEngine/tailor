@@ -1,7 +1,7 @@
 <template>
   <div
     :key="id"
-    class="element-toolbar-wrapper grey lighten-5 elevation-3">
+    class="d-flex justify-space-between align-center grey lighten-5 elevation-3">
     <component
       :is="componentName"
       v-if="componentExists"
@@ -17,7 +17,6 @@
         @click="requestDeleteConfirmation"
         color="secondary darken-1"
         dark fab small
-        absolute right top
         class="mr-8">
         <v-icon color="grey lighten-3">mdi-delete</v-icon>
       </v-btn>
@@ -99,11 +98,3 @@ export default {
   components: { DefaultToolbar }
 };
 </script>
-
-<style lang="scss" scoped>
-.element-toolbar-wrapper {
-  position: absolute;
-  width: 100%;
-  min-height: 3.5rem;
-}
-</style>
