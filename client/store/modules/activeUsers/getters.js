@@ -20,7 +20,6 @@ export const getActiveUsers = (_state, getters) => {
 };
 
 function setUserActivityForContext(activeUsers, user, context) {
-  console.log('Ovo je user: ', user);
   const { repositoryId, activityId, elementId, created } = context;
   const userData = { ...pick(user, ['id', 'fullName', 'email', 'palette', 'imgUrl']), created };
   setEntityActivity(activeUsers, 'repository', repositoryId, userData);
