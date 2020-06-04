@@ -9,7 +9,8 @@ export const initialize = ({ commit, dispatch }, id) => {
     activities: 'activities',
     contentElements: 'content-elements',
     revisions: 'revisions',
-    comments: 'comments'
+    comments: 'comments',
+    tasks: 'tasks'
   };
   // Reset store and setup api endpoints
   each(modules, (path, module) => {

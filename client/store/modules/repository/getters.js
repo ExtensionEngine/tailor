@@ -2,6 +2,7 @@ import { getOutlineLevels, getSchema } from 'shared/activities';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
+import { getWorkflow } from 'shared/workflow';
 import Hashids from 'hashids';
 import map from 'lodash/map';
 import { role } from 'shared';
@@ -24,6 +25,14 @@ export const schema = (_state, { repository }) => {
   return repository && getSchema(repository.schema).name;
 };
 
+export const workflow = (_state, { repository }) => {
+  if (!repository) return null;
+  const schema = getSchema(repository.schema);
+  return getWorkflow(schema.workflowId);
+};
+
+export const hasWorkflow = (_state, { workflow }) => !!workflow;
+
 export const structure = (_, { repository }) => {
   return repository && getOutlineLevels(repository.schema);
 };
@@ -37,6 +46,15 @@ export const activities = (_state, getters, rootState) => {
   }));
 };
 
+export const tasks = (_state, getters, rootState) => {
+  if (!getters.repository) return [];
+  const { repository: { tasks: { items } } } = rootState;
+  return map(items, it => ({
+    ...it,
+    shortId: `T-${hashids.encode(it.id)}`
+  }));
+};
+
 export const outlineActivities = (_state, getters) => {
   const { activities, structure } = getters;
   const outlineTypes = map(structure, 'type');
@@ -47,6 +65,12 @@ export const selectedActivity = (_state, getters, rootState) => {
   const { route: { query: { activityId } } } = rootState;
   if (!activityId) return;
   return find(getters.activities, { id: parseInt(activityId, 10) });
+};
+
+export const selectedTask = (_state, getters, rootState) => {
+  const { route: { query: { taskId } } } = rootState;
+  if (!taskId) return;
+  return find(getters.tasks, { id: parseInt(taskId, 10) });
 };
 
 export const workflowActivities = (_state, { structure }) => {

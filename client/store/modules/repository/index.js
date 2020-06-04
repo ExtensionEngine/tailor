@@ -5,6 +5,7 @@ import activities from './activities';
 import comments from './comments';
 import contentElements from './content-elements';
 import revisions from './revisions';
+import tasks from './tasks';
 
 const state = {
   outline: { expanded: {} },
@@ -22,6 +23,7 @@ export default {
     activities,
     comments,
     contentElements,
+    tasks,
     revisions
   }
 };
