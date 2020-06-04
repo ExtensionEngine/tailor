@@ -1,3 +1,4 @@
+import filter from 'lodash/filter';
 import find from 'lodash/find';
 import orderBy from 'lodash/orderBy';
 import pick from 'lodash/pick';
@@ -13,9 +14,11 @@ export const activeUsers = state => {
   return result;
 };
 
-export const getActiveUsers = (_state, getters) => {
+export const getActiveUsers = (_state, getters, { auth: { user } }) => {
   return (entity, entityId) => {
-    return orderBy(getters.activeUsers[entity][entityId], 'created', 'desc') || [];
+    const activeUsers = orderBy(getters.activeUsers[entity][entityId], 'created', 'desc') || [];
+    const filteredUsers = filter(activeUsers, item => item.email !== user.email);
+    return filteredUsers;
   };
 };
 
