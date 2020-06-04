@@ -1,13 +1,20 @@
 <template>
   <svg
-    xmlns="http://www.w3.org/2000/svg" width="48.998" height="8mm" version="1.0"
-    viewBox="0 0 98.9 61.03"
-    shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd"
+    xmlns="http://www.w3.org/2000/svg"
+    width="13.676"
+    height="8.71"
+    version="1.0"
+    viewBox="0 0 1.07 0.68"
+    shape-rendering="geometricPrecision"
+    text-rendering="geometricPrecision"
+    image-rendering="optimizeQuality"
+    fill-rule="evenodd"
     clip-rule="evenodd">
-    <g id="Layer_x0020_1">
-      <path d="M5.34 0h4.58c2.94 0 5.34 2.4 5.34 5.34v50.35c0 2.94-2.4 5.34-5.34 5.34H5.34C2.4 61.03 0 58.63 0 55.69V5.34C0 2.4 2.4 0 5.34 0z" fill="#66c3ee"></path><path d="M26.25 0h4.58c2.94 0 5.34 2.4 5.34 5.34v50.35c0 2.94-2.4 5.34-5.34 5.34h-4.58c-2.94 0-5.34-2.4-5.34-5.34V5.34c0-2.94 2.4-5.34 5.34-5.34z" fill="#049be6"></path><path fill="#efeded" d="M47.16 0h4.58c2.94 0 5.34 2.4 5.34 5.34v50.35c0 2.94-2.4 5.34-5.34 5.34h-4.58c-2.94 0-5.34-2.4-5.34-5.34V5.34c0-2.94 2.4-5.34 5.34-5.34zM68.07 0h4.58c2.94 0 5.34 2.4 5.34 5.34v50.35c0 2.94-2.4 5.34-5.34 5.34h-4.58c-2.94 0-5.34-2.4-5.34-5.34V5.34c0-2.94 2.4-5.34 5.34-5.34zM88.98 0h4.58c2.94 0 5.34 2.4 5.34 5.34v50.35c0 2.94-2.4 5.34-5.34 5.34h-4.58c-2.94 0-5.34-2.4-5.34-5.34V5.34c0-2.94 2.4-5.34 5.34-5.34z">
-      </path>
-    </g>
+    <path
+      d="M1.07.08v.16c0 .03-.02.05-.04.07L.57.67C.55.69.52.69.49.67L.03.31C.01.29-.01.27-.01.24V.08c0-.03.01-.05.04-.07.02-.01.06-.02.08 0l.38.31c.02.02.06.02.08 0L.95.01c.02-.02.05-.01.08 0 .02.01.04.04.04.07z"
+      fill="#429f48"
+      fill-rule="nonzero">
+    </path>
   </svg>
 </template>
 

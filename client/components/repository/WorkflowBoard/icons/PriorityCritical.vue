@@ -1,14 +1,19 @@
 <template>
   <svg
-    xmlns="http://www.w3.org/2000/svg" width="48.998" height="8mm" version="1.0"
-    viewBox="0 0 98.9 61.03"
-    shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd"
+    xmlns="http://www.w3.org/2000/svg"
+    width="13.676"
+    height="16.603"
+    version="1.0"
+    viewBox="0 0 1.07 1.29"
+    shape-rendering="geometricPrecision"
+    text-rendering="geometricPrecision"
+    image-rendering="optimizeQuality"
+    fill-rule="evenodd"
     clip-rule="evenodd">
-    <path d="M5.34 0h4.58c2.94 0 5.34 2.4 5.34 5.34v50.35c0 2.94-2.4 5.34-5.34 5.34H5.34C2.4 61.03 0 58.63 0 55.69V5.34C0 2.4 2.4 0 5.34 0z" fill="#fad7d6"></path>
-    <path d="M26.25 0h4.58c2.94 0 5.34 2.4 5.34 5.34v50.35c0 2.94-2.4 5.34-5.34 5.34h-4.58c-2.94 0-5.34-2.4-5.34-5.34V5.34c0-2.94 2.4-5.34 5.34-5.34z" fill="#f4afad"></path>
-    <path d="M47.16 0h4.58c2.94 0 5.34 2.4 5.34 5.34v50.35c0 2.94-2.4 5.34-5.34 5.34h-4.58c-2.94 0-5.34-2.4-5.34-5.34V5.34c0-2.94 2.4-5.34 5.34-5.34z" fill="#f08886"></path>
-    <path d="M68.07 0h4.58c2.94 0 5.34 2.4 5.34 5.34v50.35c0 2.94-2.4 5.34-5.34 5.34h-4.58c-2.94 0-5.34-2.4-5.34-5.34V5.34c0-2.94 2.4-5.34 5.34-5.34z" fill="#ea615e"></path>
-    <path d="M88.98 0h4.58c2.94 0 5.34 2.4 5.34 5.34v50.35c0 2.94-2.4 5.34-5.34 5.34h-4.58c-2.94 0-5.34-2.4-5.34-5.34V5.34c0-2.94 2.4-5.34 5.34-5.34z" fill="#e43935"></path>
+    <g>
+      <path fill="#e43935" d="M0 .6V.44C0 .41.02.39.04.37L.49.02C.51 0 .54 0 .57.02l.45.35c.02.02.04.04.04.07V.6c0 .03-.01.05-.04.07C1 .68.96.69.94.67L.56.36a.06.06 0 00-.08 0L.1.67C.08.69.05.68.02.67A.084.084 0 01-.02.6z"></path><path class="fil0" d="M0 1.21v-.16C0 1.02.02 1 .04.98L.49.63C.51.61.54.61.57.63l.45.35c.02.02.04.04.04.07v.16c0 .03-.01.05-.04.07-.02.01-.06.02-.08 0L.56.97a.06.06 0 00-.08 0l-.38.31c-.02.02-.05.01-.08 0a.084.084 0 01-.04-.07z">
+      </path>
+    </g>
   </svg>
 </template>
 

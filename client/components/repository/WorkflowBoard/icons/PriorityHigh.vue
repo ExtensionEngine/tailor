@@ -1,18 +1,19 @@
 <template>
   <svg
-    xmlns="http://www.w3.org/2000/svg" width="48.998" height="8mm" version="1.0"
-    viewBox="0 0 98.9 61.03"
-    shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd"
+    xmlns="http://www.w3.org/2000/svg"
+    width="13.676"
+    height="8.71"
+    version="1.0"
+    viewBox="0 0 0.92 0.58"
+    shape-rendering="geometricPrecision"
+    text-rendering="geometricPrecision"
+    image-rendering="optimizeQuality"
+    fill-rule="evenodd"
     clip-rule="evenodd">
-    <path d="M5.34 0h4.58c2.94 0 5.34 2.4 5.34 5.34v50.35c0 2.94-2.4 5.34-5.34 5.34H5.34C2.4 61.03 0 58.63 0 55.69V5.34C0 2.4 2.4 0 5.34 0z" fill="#feefaf">
-    </path>
-    <path d="M26.25 0h4.58c2.94 0 5.34 2.4 5.34 5.34v50.35c0 2.94-2.4 5.34-5.34 5.34h-4.58c-2.94 0-5.34-2.4-5.34-5.34V5.34c0-2.94 2.4-5.34 5.34-5.34z" fill="#fde786">
-    </path>
-    <path d="M47.16 0h4.58c2.94 0 5.34 2.4 5.34 5.34v50.35c0 2.94-2.4 5.34-5.34 5.34h-4.58c-2.94 0-5.34-2.4-5.34-5.34V5.34c0-2.94 2.4-5.34 5.34-5.34z" fill="#fcd834">
-    </path>
-    <path d="M68.07 0h4.58c2.94 0 5.34 2.4 5.34 5.34v50.35c0 2.94-2.4 5.34-5.34 5.34h-4.58c-2.94 0-5.34-2.4-5.34-5.34V5.34c0-2.94 2.4-5.34 5.34-5.34z" fill="#fbd736">
-    </path>
-    <path d="M88.98 0h4.58c2.94 0 5.34 2.4 5.34 5.34v50.35c0 2.94-2.4 5.34-5.34 5.34h-4.58c-2.94 0-5.34-2.4-5.34-5.34V5.34c0-2.94 2.4-5.34 5.34-5.34z" fill="#efeded">
+    <path
+      d="M0 .51V.37C0 .35.01.33.03.31l.39-.3C.44 0 .47 0 .49.01l.39.3C.9.33.91.34.91.37v.14C.91.53.9.56.88.57.86.58.83.59.81.57L.49.3a.048.048 0 00-.07 0L.1.57C.08.59.05.58.03.57.01.56 0 .54 0 .51z"
+      fill="#fbd736"
+      fill-rule="nonzero">
     </path>
   </svg>
 </template>
