@@ -1,8 +1,9 @@
 import api from '@/api/activeUsers';
+import find from 'lodash/find';
 import forEach from 'lodash/forEach';
 import generateActions from '@/store/helpers/actions';
 import palette from 'utils/avatarPalette';
-import sample from 'lodash/sample';
+// import sample from 'lodash/sample';
 import SSEClient from '@/SSEClient';
 import urlJoin from 'url-join';
 
@@ -24,7 +25,7 @@ const subscribe = ({ state, commit, rootState }) => {
   feed
     .connect(url, { params })
     .subscribe(Events.Add, ({ user, context }) => {
-      assignPalette(user);
+      assignPalette(user, 0);
       commit('sseAdd', { user, context });
     })
     .subscribe(Events.Remove, ({ user, context }) => {
@@ -47,8 +48,8 @@ const unsubscribe = ({ commit }) => {
 const fetch = ({ commit }, repositoryId) => {
   return api.fetch(repositoryId)
     .then(({ activeUsers }) => {
-      forEach(activeUsers, user => {
-        assignPalette(user);
+      forEach(activeUsers, (user, index) => {
+        assignPalette(user, index);
         commit('save', user);
       });
     });
@@ -71,7 +72,8 @@ export {
   unsubscribe
 };
 
-function assignPalette(user) {
-  const colorPalette = sample(palette);
+function assignPalette(user, index) {
+  const colorIndex = index % 5;
+  const colorPalette = find(palette, { id: colorIndex });
   user.palette = colorPalette;
 }
