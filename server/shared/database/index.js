@@ -24,6 +24,7 @@ const ContentElement = require('../../content-element/content-element.model');
 const Revision = require('../../revision/revision.model');
 const Comment = require('../../comment/comment.model');
 const Tag = require('../../tag/tag.model');
+const Task = require('../../task/task.model');
 /* eslint-enable */
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -81,7 +82,8 @@ const models = {
   Revision: defineModel(Revision),
   ContentElement: defineModel(ContentElement),
   Comment: defineModel(Comment),
-  Tag: defineModel(Tag)
+  Tag: defineModel(Tag),
+  Task: defineModel(Task)
 };
 
 function defineModel(Model, connection = sequelize) {

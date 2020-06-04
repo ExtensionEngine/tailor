@@ -90,13 +90,21 @@ class User extends Model {
     };
   }
 
-  static associate({ Comment, Repository, RepositoryUser }) {
+  static associate({ Comment, Repository, RepositoryUser, Task }) {
     this.hasMany(Comment, {
       foreignKey: { name: 'authorId', field: 'author_id' }
     });
     this.belongsToMany(Repository, {
       through: RepositoryUser,
       foreignKey: { name: 'userId', field: 'user_id' }
+    });
+    this.hasMany(Task, {
+      as: 'CreatedTasks',
+      foreignKey: { name: 'authorId', field: 'author_id' }
+    });
+    this.hasMany(Task, {
+      as: 'AssignedTasks',
+      foreignKey: { name: 'authorId', field: 'author_id' }
     });
   }
 

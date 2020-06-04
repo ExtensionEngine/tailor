@@ -64,7 +64,7 @@ class Activity extends Model {
     };
   }
 
-  static associate({ ContentElement, Comment, Repository }) {
+  static associate({ ContentElement, Comment, Repository, Task }) {
     this.hasMany(ContentElement, {
       foreignKey: { name: 'activityId', field: 'activity_id' }
     });
@@ -81,6 +81,9 @@ class Activity extends Model {
     this.hasMany(this, {
       as: 'children',
       foreignKey: { name: 'parentId', field: 'parent_id' }
+    });
+    this.belongsTo(Task, {
+      foreignKey: { name: 'taskId', field: 'task_id' }
     });
   }
 
