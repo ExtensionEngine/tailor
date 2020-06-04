@@ -37,6 +37,7 @@ module.exports = {
         type: Sequelize.STRING(50),
         allowNull: false
       },
+      description: Sequelize.TEXT,
       archivedAt: {
         type: Sequelize.DATE,
         field: 'archived_at'
