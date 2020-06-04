@@ -8,7 +8,7 @@
       :size="size">
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
-          <img v-if="imgUrl" v-on="on" :src="imgUrl">
+          <img v-if="imgUrl" v-on="on" :src="imgUrl" tabindex="0">
         </template>
         <span>{{ fullName }}</span>
       </v-tooltip>
