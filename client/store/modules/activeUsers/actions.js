@@ -25,7 +25,7 @@ const subscribe = ({ state, commit, rootState }) => {
   feed
     .connect(url, { params })
     .subscribe(Events.Add, ({ user, context }) => {
-      assignPalette(user, 0);
+      assignPalette(user, 8);
       commit('sseAdd', { user, context });
     })
     .subscribe(Events.Remove, ({ user, context }) => {

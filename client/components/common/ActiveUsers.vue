@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex align-center px-2">
+  <div class="d-flex align-center px-2 avatar-wrapper">
     <v-avatar
       v-for="{ id, fullName, email, palette, imgUrl } in users"
       :key="id"
@@ -32,6 +32,13 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.avatar-wrapper {
+  &:hover, &:focus-within {
+    transform: scale(1.2);
+    z-index: 1;
+  }
+}
+
 .v-avatar:first-of-type {
   margin-left: 0;
   transition: all 0.2s;
