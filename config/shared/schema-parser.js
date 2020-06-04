@@ -2,7 +2,6 @@
 
 const find = require('lodash/find');
 const get = require('lodash/get');
-const { getWorkflowMeta } = require('./workflow');
 const map = require('lodash/map');
 const transform = require('lodash/transform');
 const validate = require('./schema-validation');
@@ -52,9 +51,6 @@ function processActivityConfig(schema, activity) {
       placeholder: 'Click to add...',
       validate: { required: true, min: 2, max: 250 }
     });
-  }
-  if (activity.isTrackedInWorkflow) {
-    activity.meta.push(...getWorkflowMeta(schema));
   }
   activity.defaultMeta = getMetaDefaults(activity.meta);
   const examObjectives = get(activity, 'exams.objectives');

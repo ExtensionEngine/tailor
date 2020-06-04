@@ -12,15 +12,6 @@ const meta = yup.array().of(yup.object().shape({
   validate: yup.object()
 }));
 
-const workflowState = yup.object().shape({
-  id: yup.string().required(),
-  label: yup.string().required()
-});
-
-const workflow = yup.object().shape({
-  states: yup.array().of(workflowState).min(1)
-});
-
 const relationships = yup.array().of(yup.object().shape({
   type: yup.string().min(2).max(100).required(),
   label: yup.string().min(2).max(100).required(),
@@ -37,7 +28,7 @@ const schema = yup.object().shape({
   id: yup.string().min(2).max(20).required(),
   name: yup.string().min(2).max(200).required(),
   meta,
-  workflow,
+  workflowId: yup.string(),
   structure: yup.array().of(yup.object().shape({
     level: yup.number().integer().min(1).max(10).required(),
     type: activityType.required(),

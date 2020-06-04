@@ -1,5 +1,9 @@
 'use strict';
 
+const find = require('lodash/find');
+const validateWorkflow = require('./workflow-validation');
+const { WORKFLOWS } = require('./activities-rc.load')();
+
 const priorities = [
   { id: 'TRIVIAL', label: 'Trivial', icon: 'priorityTrivial' },
   { id: 'LOW', label: 'Low', icon: 'priorityLow' },
@@ -19,8 +23,8 @@ const meta = {
     placeholder: 'Click to assign...',
     validate: { required: false }
   },
-  STATE: {
-    key: 'stateId',
+  STATUS: {
+    key: 'statusId',
     type: 'SELECT',
     label: 'Status',
     options: [],
@@ -45,16 +49,10 @@ const meta = {
   }
 };
 
-function getWorkflowMeta(schema) {
-  const workflowOptions = schema.workflow.states.map(it => ({ value: it.id, label: it.label }));
-  return Object.values(meta).map(it => {
-    if (it.key !== meta.STATE.key) return it;
-    return {
-      ...it,
-      options: workflowOptions,
-      defaultValue: workflowOptions[0]
-    };
-  });
+function getWorkflow(id) {
+  return find(WORKFLOWS, { id });
 }
 
-module.exports = { meta, priorities, getWorkflowMeta };
+validateWorkflow(WORKFLOWS);
+
+module.exports = { meta, priorities, getWorkflow, WORKFLOWS };
