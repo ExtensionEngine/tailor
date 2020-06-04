@@ -37,6 +37,7 @@ module.exports = {
         type: Sequelize.STRING(50),
         allowNull: false
       },
+      name: Sequelize.STRING,
       description: Sequelize.TEXT,
       archivedAt: {
         type: Sequelize.DATE,

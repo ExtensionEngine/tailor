@@ -18,6 +18,9 @@ class Task extends Model {
       status: {
         type: STRING
       },
+      name: {
+        type: STRING
+      },
       description: {
         type: TEXT
       },
