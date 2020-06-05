@@ -34,6 +34,8 @@ export default {
 
 <style scoped lang="scss">
 .avatar {
+  transition: all 0.2s;
+
   &:hover, &:focus-within {
     transform: scale(1.1);
     z-index: 1;
@@ -43,9 +45,5 @@ export default {
     }
   }
 
-  &:first-of-type {
-    margin-left: 0;
-    transition: all 0.2s;
-  }
 }
 </style>
