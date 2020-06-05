@@ -9,7 +9,12 @@
       class="avatar">
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
-          <img v-if="imgUrl" v-on="on" :src="imgUrl" tabindex="0">
+          <img
+            v-if="imgUrl"
+            v-on="on"
+            :src="imgUrl"
+            :alt="fullName"
+            tabindex="0">
         </template>
         <span>{{ fullName }}</span>
       </v-tooltip>
