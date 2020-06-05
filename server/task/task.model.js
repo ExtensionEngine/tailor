@@ -49,11 +49,11 @@ class Task extends Model {
     this.hasMany(Activity);
     this.belongsTo(Repository);
     this.belongsTo(User, {
-      as: 'Assignee',
+      as: 'assignee',
       foreignKey: { name: 'assigneeId', field: 'assignee_id' }
     });
     this.belongsTo(User, {
-      as: 'Author',
+      as: 'author',
       foreignKey: { name: 'authorId', field: 'author_id' }
     });
   }
