@@ -6,8 +6,12 @@
         prepend-inner-icon="mdi-magnify"
         placeholder="Search" />
       <div class="ml-5 mr-3">
-        <v-avatar :size="34" color="avatar grey lighten2 white--text">
-          <img :src="user.imgUrl">
+        <v-avatar
+          v-for="{id, imgUrl} in assignees"
+          :key="`assignee-${id}`"
+          :size="34"
+          color="avatar grey lighten2 white--text">
+          <img :src="imgUrl">
         </v-avatar>
       </div>
       <v-btn
@@ -17,79 +21,55 @@
         Recently updated
       </v-btn>
     </div>
-    <div class="layout mt-4 mx-4 flex-grow-0">
-      <h5 v-for="state in states" :key="state.id" class="state-title pa-3 grey lighten-3 text-uppercase align-self-start">
-        {{ state.label }}
+    <div v-if="workflow" class="layout mt-4 mx-4 flex-grow-0">
+      <h5 v-for="status in workflow.statuses" :key="status.id" class="status-title pa-3 grey lighten-3 text-uppercase align-self-start">
+        {{ status.label }}
       </h5>
     </div>
-    <div class="columns mx-4 flex-grow-0">
-      <div v-for="state in states" :key="state.id" class="cards d-flex flex-column align-center grey lighten-3">
+    <div v-if="workflow" class="columns mx-4 flex-grow-0">
+      <div v-for="status in workflow.statuses" :key="status.id" class="cards d-flex flex-column align-center grey lighten-3">
         <card
-          v-for="activity in getActivitiesByState(state.id)"
-          :key="activity.id"
-          :activity="activity"
-          :assignee="user" />
+          v-for="task in getTasksByStatus(status.id)"
+          :key="task.id"
+          @click="selectTask"
+          :task="task" />
       </div>
     </div>
-    <sidebar empty-message="Please select Item on the left to view and edit it's details here." />
+    <sidebar />
   </div>
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import Card from './Card';
-import find from 'lodash/find';
 import get from 'lodash/get';
-import { getSchema } from 'shared/activities';
 import groupBy from 'lodash/groupBy';
-import pick from 'lodash/pick';
-import selectActivity from '../common/selectActivity';
-import Sidebar from '../common/Sidebar';
+import selectTask from '../common/selectTask';
+import Sidebar from './Sidebar';
 
 export default {
   name: 'workflow-board',
-  mixins: [selectActivity],
+  mixins: [selectTask],
   computed: {
-    ...mapState({
-      user: state => state.auth.user
-    }),
-    ...mapGetters('repository', [
-      'repository',
-      'structure',
-      'workflowActivities',
-      'activities'
-    ]),
-    schema() {
-      const { schema: schemaId } = this.repository || {};
-      return schemaId ? getSchema(schemaId) : null;
+    ...mapGetters('repository', ['repository', 'workflow', 'tasks']),
+    groupedTasks() {
+      return groupBy(this.tasks, 'status');
     },
-    states() {
-      return get(this.schema, 'workflow.states', []);
-    },
-    groupedActivities() {
-      const mock = this.activities
-        .map(it => {
-          const { name } = it.data;
-          const type = this.structure.find(({ type }) => type === it.type);
-          const workflowState = find(this.states, { id: it.data.stateId });
-          return {
-            ...it,
-            ...pick(type, ['label', 'color']),
-            name,
-            workflowState
-          };
-        })
-        .filter(({ type }) => this.workflowActivities.find(it => it.type === type));
-      return groupBy(mock, 'workflowState.id');
+    assignees() {
+      return this.tasks.map(it => it.assignee);
     }
   },
   methods: {
-    getActivitiesByState(stateId) {
-      return get(this.groupedActivities, stateId, []);
+    ...mapActions('repository/tasks', ['fetch']),
+    getTasksByStatus(statusId) {
+      return get(this.groupedTasks, statusId, []);
     },
     filterRecentlyUpdated() {
       // TODO
     }
+  },
+  created() {
+    this.fetch();
   },
   components: { Card, Sidebar }
 };
@@ -121,7 +101,7 @@ export default {
   overflow-y: scroll;
 }
 
-.state-title {
+.status-title {
   margin: 0;
 }
 
