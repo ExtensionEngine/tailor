@@ -16,7 +16,7 @@
           <v-icon class="pr-2">mdi-{{ tab.icon }}</v-icon>{{ tab.name }}
         </v-tab>
       </v-tabs>
-      <active-users class="blue-grey darken-3 active-users" :users="activeUsers" />
+      <active-users class="blue-grey darken-3" :users="activeUsers" />
     </div>
     <div class="tab-content" infinite-wrapper>
       <router-view :show-loader="showLoader" :repository-id="repositoryId" />
