@@ -1,6 +1,6 @@
 <template>
   <div class="repo-container">
-    <div class="d-flex justify-space-between primary elevation-2 active-user">
+    <div class="repo-toolbar d-flex justify-space-between primary elevation-1">
       <v-tabs
         background-color="blue-grey darken-3"
         slider-color="grey lighten-2"
@@ -16,7 +16,7 @@
           <v-icon class="pr-2">mdi-{{ tab.icon }}</v-icon>{{ tab.name }}
         </v-tab>
       </v-tabs>
-      <active-users :users="activeUsers" />
+      <active-users class="blue-grey darken-3 active-users" :users="activeUsers" />
     </div>
     <div class="tab-content" infinite-wrapper>
       <router-view :show-loader="showLoader" :repository-id="repositoryId" />
@@ -107,9 +107,11 @@ export default {
   }
 }
 
-.v-tabs {
+.repo-toolbar {
   z-index: 2;
+}
 
+.v-tabs {
   ::v-deep .v-tabs-bar.theme--dark .v-tab {
     &.v-tab--active {
       color: rgba(255, 255, 255, 0.6);
@@ -119,9 +121,5 @@ export default {
       opacity: 1;
     }
   }
-}
-
-.primary.active-user {
-  background: #37474f !important;
 }
 </style>
