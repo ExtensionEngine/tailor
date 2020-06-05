@@ -1,12 +1,11 @@
 <template>
   <div class="repo-container">
-    <div class="d-flex justify-space-between primary elevation-2">
+    <div class="d-flex justify-space-between primary elevation-2 active-user">
       <v-tabs
         background-color="blue-grey darken-3"
         slider-color="grey lighten-2"
         slider-size="3"
-        dark
-        class="elevation-1">
+        dark>
         <v-tab
           v-for="tab in tabs"
           :key="tab.name"
@@ -120,5 +119,9 @@ export default {
       opacity: 1;
     }
   }
+}
+
+.primary.active-user {
+  background: #37474f !important;
 }
 </style>
