@@ -1,6 +1,13 @@
 import generateActions from '@/store/helpers/actions';
 
-const { fetch, reset, save, setEndpoint, update, remove } = generateActions();
+const { api, fetch, reset, save, setEndpoint, update, remove } = generateActions();
+
+const archive = ({ commit }, model) => {
+  if (!model.id) return commit('archive', model);
+  return api.patch(`${model.id}/archive`).then(() => {
+    commit('archive', model);
+  });
+};
 
 export {
   fetch,
@@ -8,5 +15,6 @@ export {
   reset,
   save,
   setEndpoint,
-  update
+  update,
+  archive
 };

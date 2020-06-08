@@ -1,5 +1,10 @@
 import {
   add, fetch, remove, reset, save, setEndpoint
 } from '@/store/helpers/mutations';
+import Vue from 'vue';
 
-export { fetch, add, remove, reset, save, setEndpoint };
+const archive = (state, model) => {
+  Vue.delete(state.items, model._cid);
+};
+
+export { fetch, add, archive, remove, reset, save, setEndpoint };

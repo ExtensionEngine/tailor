@@ -22,7 +22,7 @@
         Copy link
       </v-btn>
     </div>
-    <v-btn class="px-0 py-1 my-5" text small>
+    <v-btn @click="archive(task)" class="px-0 py-1 my-5" text small>
       <v-icon>mdi-package-down</v-icon> Archive
     </v-btn>
     <div class="my-1">Created at {{ task.createdAt | formatDate }}</div>
@@ -32,6 +32,7 @@
 
 <script>
 import Chip from '../Chip';
+import { mapActions } from 'vuex';
 
 export default {
   props: {
@@ -40,6 +41,7 @@ export default {
   computed: {
     taskUrl: () => window.location.href
   },
+  methods: mapActions('repository/tasks', ['archive']),
   components: { Chip }
 };
 </script>
