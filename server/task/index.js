@@ -1,12 +1,27 @@
 'use strict';
 
+const { createError } = require('../shared/error/helpers');
 const ctrl = require('./task.controller');
+const { NOT_FOUND } = require('http-status-codes');
+const { Task } = require('../shared/database');
 const router = require('express').Router();
 
+router.param('taskId', getTask);
+
 router
-  .get('/', ctrl.list);
+  .get('/', ctrl.list)
+  .patch('/:taskId', ctrl.patch);
 
 module.exports = {
   path: '/tasks',
   router
 };
+
+function getTask(req, _res, next, taskId) {
+  return Task.findByPk(taskId, { paranoid: false })
+  .then(task => task || createError(NOT_FOUND, 'Task not found'))
+  .then(task => {
+    req.task = task;
+    next();
+  });
+}
