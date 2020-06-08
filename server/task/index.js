@@ -10,7 +10,8 @@ router.param('taskId', getTask);
 
 router
   .get('/', ctrl.list)
-  .patch('/:taskId', ctrl.patch);
+  .patch('/:taskId', ctrl.patch)
+  .patch('/:taskId/archive', ctrl.archive);
 
 module.exports = {
   path: '/tasks',
