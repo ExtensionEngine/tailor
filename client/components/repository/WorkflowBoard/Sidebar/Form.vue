@@ -1,19 +1,28 @@
 <template>
   <section class="mt-9 mb-4">
-    <v-text-field v-model="task.status" label="Status" outlined />
     <v-select
-      :value="task.assignee.id"
-      :items="assigneeOptions"
-      label="Assignee"
+      @change="updateTask('status', $event)"
+      :value="task.status"
+      :items="workflow.statuses"
+      label="Status"
+      item-value="id"
       item-text="label"
-      item-value="value"
       outlined />
     <v-select
+      @change="updateTask('assigneeId', $event)"
+      :value="task.assigneeId"
+      :items="users"
+      label="Assignee"
+      item-text="fullName"
+      item-value="id"
+      outlined />
+    <v-select
+      @change="updateTask('priority', $event)"
       :value="task.priority"
       :items="priorities"
       label="Priority"
       item-text="label"
-      item-value="value"
+      item-value="id"
       outlined />
     <v-menu
       v-model="showDialog"
@@ -30,7 +39,7 @@
           readonly />
       </template>
       <v-date-picker
-        @input="$emit('change', $event);"
+        @input="updateTask('dueDate', $event)"
         @change="showDialog = false"
         :value="task.dueDate | formatDate('YYYY-MM-DD')"
         color="primary"
@@ -48,18 +57,15 @@ export default {
   props: {
     task: { type: Object, default: () => ({}) }
   },
-  data: () => ({ showDialog: false }),
-  computed: {
-    ...mapGetters('repository', ['users']),
-    assigneeOptions() {
-      return this.users.map(it => ({ value: it.id, label: it.fullName }));
-    },
-    priorities() {
-      return priorities.map(it => ({ value: it.id, label: it.label }));
-    }
-  },
+  data: () => ({ showDialog: false, priorities }),
+  computed: mapGetters('repository', ['users', 'workflow']),
   methods: {
-    ...mapActions('repository', ['getUsers'])
+    ...mapActions('repository', ['getUsers']),
+    ...mapActions('repository/tasks', ['update']),
+    async updateTask(key, value) {
+      await this.update({ ...this.task, [key]: value });
+      this.$snackbar.show(`${this.task.name} saved`);
+    }
   },
   created() {
     this.getUsers();
