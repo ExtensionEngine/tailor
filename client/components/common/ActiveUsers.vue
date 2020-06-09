@@ -12,12 +12,12 @@
           <img
             v-if="imgUrl"
             v-on="on"
-            aria-describedby="active_user"
+            :aria-describedby="`active-user-${ id }`"
             :src="imgUrl"
             :alt="fullName"
             tabindex="0">
         </template>
-        <span id="active_user">{{ fullName }} </span>
+        <span :id="`active-user-${ id }`">{{ fullName }} </span>
       </v-tooltip>
     </v-avatar>
   </div>
