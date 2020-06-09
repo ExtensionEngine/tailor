@@ -2,7 +2,7 @@
   <v-card
     @click="$emit('click', task.id)"
     elevation="4"
-    class="card d-flex flex-column align-start px-4 py-3 my-2"
+    class="card d-flex flex-column align-start px-4 py-3 my-2 mx-3"
     :class="{ 'selected': isSelected }">
     <chip :id="task.shortId" />
     <h4 class="text-left card-title">
@@ -12,7 +12,7 @@
       <v-avatar :size="34" color="avatar d-flex grey lighten2 white--text">
         <img :src="task.assignee.imgUrl">
       </v-avatar>
-      <v-icon class="mx-3" small>$vuetify.icons.{{ icon }}</v-icon>
+      <v-icon class="priority-icon mx-3">$vuetify.icons.{{ icon }}</v-icon>
       <span class="caption grey--text lighten2">{{ task.dueDate | formatDate('MM/DD/YY') }}</span>
     </div>
   </v-card>
@@ -41,15 +41,16 @@ export default {
 
 <style lang="scss" scoped>
   .card.v-card {
-    width: calc(100% - 2 * 12px);
-    min-height: 180px;
-
-    &.selected {
-      border-left-width: 12px;
-    }
+    min-height: 10rem;
+    flex: 0;
+    align-self: stretch;
 
     .avatar.v-avatar {
       border-radius: 50%;
+    }
+
+    .priority-icon {
+      width: 1rem;
     }
   }
 </style>
