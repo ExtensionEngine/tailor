@@ -16,14 +16,10 @@
       item-text="fullName"
       item-value="id"
       outlined />
-    <v-select
+    <select-priority
       @change="updateTask('priority', $event)"
       :value="task.priority"
-      :items="priorities"
-      label="Priority"
-      item-text="label"
-      item-value="id"
-      outlined />
+      :items="priorities" />
     <v-menu
       v-model="showDialog"
       :close-on-content-click="false"
@@ -51,6 +47,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import { priorities } from 'shared/workflow';
+import SelectPriority from './SelectPriority';
 
 export default {
   name: 'workflow-board-task-form',
@@ -69,6 +66,7 @@ export default {
   },
   created() {
     this.getUsers();
-  }
+  },
+  components: { SelectPriority }
 };
 </script>
