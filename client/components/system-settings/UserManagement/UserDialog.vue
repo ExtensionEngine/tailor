@@ -6,7 +6,7 @@
         <validation-provider
           v-slot="{ errors }"
           name="email"
-          :rules="{ required: true, email: true, uniqueEmail: { userData: userData } }">
+          :rules="{ required: true, email: true, unique_email: { userData: userData } }">
           <v-text-field
             v-model="user.email"
             :error-messages="errors"

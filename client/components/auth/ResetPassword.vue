@@ -65,7 +65,7 @@ export default {
     ...mapActions(['resetPassword']),
     async submit() {
       const { token } = this.$route.params;
-      const { valid } = this.$refs.form.validate();
+      const { valid } = await this.$refs.form.validate();
       if (!valid) return;
       return this.resetPassword({ password: this.password, token })
         .then(() => this.$router.push('/'))

@@ -1,40 +1,43 @@
-import * as rules from 'vee-validate/dist/rules';
+import { confirmed, email, max, min, numeric, required } from 'vee-validate/dist/rules';
 import { extend } from 'vee-validate';
-import { messages } from 'vee-validate/dist/locale/en.json';
+import forEach from 'lodash/forEach';
+import snakeCase from 'lodash/snakeCase';
 import userApi from '@/api/user';
 
-Object.keys(rules).forEach(rule => {
-  extend(rule, {
-    ...rules[rule], // copies rule configuration
-    message: messages[rule] // assign message
-  });
-});
+const URL_REGEX = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/;
 
-extend('alphanumerical', {
-  validate(value) {
-    return (/\d/.test(value) && /[a-zA-Z]/.test(value));
-  },
-  message: fieldName => {
-    return `The ${fieldName} field must contain at least 1 letter and 1 numeric value.`;
-  }
-});
+const alphanumerical = {
+  validate: value => (/\d/.test(value) && /[a-zA-Z]/.test(value)),
+  message: 'The {_field_} field must contain at least 1 letter and 1 numeric value.'
+};
 
-extend('uniqueEmail', {
+const uniqueEmail = {
   params: ['userData'],
   validate: (email, { userData }) => {
     if (userData && email === userData.email) return true;
     return userApi.fetch({ email }).then(({ total }) => { return !total; });
   },
-  message: fieldName => {
-    return `The ${fieldName} is not unique.`;
-  }
-});
+  message: 'The {_field_} is not unique.'
+};
 
-extend('url', {
-  validate: value => {
-    return /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/.test(value);
-  },
-  message: fieldName => {
-    return `The ${fieldName} is invalid.`;
-  }
-});
+const url = {
+  validate: value => URL_REGEX.test(value),
+  message: 'The {_field_} is invalid.'
+};
+
+const rules = {
+  alphanumerical,
+  uniqueEmail,
+  url,
+  confirmed,
+  email,
+  // isNot,
+  max,
+  // maxValue,
+  min,
+  // minValue,
+  numeric,
+  required
+};
+
+forEach(rules, (rule, name) => extend(snakeCase(name), rule));
