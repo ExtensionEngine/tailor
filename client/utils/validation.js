@@ -1,4 +1,14 @@
-import { confirmed, email, max, min, numeric, required } from 'vee-validate/dist/rules';
+import {
+  confirmed,
+  email,
+  is_not as isNot,
+  max,
+  max_value as maxValue,
+  min,
+  min_value as minValue,
+  numeric,
+  required
+} from 'vee-validate/dist/rules';
 import { extend } from 'vee-validate';
 import forEach from 'lodash/forEach';
 import snakeCase from 'lodash/snakeCase';
@@ -27,17 +37,17 @@ const url = {
 
 const rules = {
   alphanumerical,
-  uniqueEmail,
-  url,
   confirmed,
   email,
-  // isNot,
+  isNot,
   max,
-  // maxValue,
+  maxValue,
   min,
-  // minValue,
+  minValue,
   numeric,
-  required
+  required,
+  uniqueEmail,
+  url
 };
 
 forEach(rules, (rule, name) => extend(snakeCase(name), rule));
