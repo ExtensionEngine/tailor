@@ -1,11 +1,12 @@
+import cuid from 'cuid';
 import generateActions from '@/store/helpers/actions';
 
 const { api, fetch, reset, save, setEndpoint, update, remove } = generateActions();
 
 const create = ({ commit, dispatch }, data) => {
-  return api.save(data)
+  const model = { ...data, _cid: cuid() };
+  return api.save(model)
     .then(model => {
-      api.setCid(model);
       commit('add', model);
       dispatch('repository/activities/reset', null, { root: true });
       return model;
