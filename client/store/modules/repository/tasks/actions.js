@@ -5,6 +5,7 @@ const { api, fetch, reset, save, setEndpoint, update, remove } = generateActions
 const create = ({ commit, dispatch }, data) => {
   return api.save(data)
     .then(model => {
+      api.setCid(model);
       commit('add', model);
       dispatch('repository/activities/reset', null, { root: true });
       return model;
