@@ -3,7 +3,8 @@
     @click="$emit('click', task.id)"
     elevation="4"
     class="card d-flex flex-column align-start px-4 py-3 my-2 mx-3"
-    :class="{ 'selected': isSelected }">
+    :class="{ 'selected': isSelected }"
+    :ripple="false">
     <chip :id="task.shortId" />
     <h4 class="text-left card-title">
       {{ task.name }}
