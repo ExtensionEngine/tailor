@@ -6,7 +6,7 @@
         class="search-field"
         prepend-inner-icon="mdi-magnify"
         placeholder="Search by ID or name" />
-      <div class="ml-5 mr-3">
+      <div v-if="assignees.length" class="ml-5 mr-3">
         <v-avatar
           v-for="{ id, isActive, imgUrl } in assignees"
           :key="`assignee-${id}`"
@@ -85,14 +85,17 @@ export default {
       return groupBy(this.filteredTasks, 'status');
     },
     assignees() {
-      return uniqBy(this.tasks.map(it => ({
-        ...it.assignee,
-        isActive: this.assigneesShown.includes(it.assignee.id)
-      })), 'id');
+      const assignees = this.tasks.reduce((all, { assignee }) => {
+        if (!assignee) return all;
+        const isActive = this.assigneesShown.includes(assignee.id);
+        return [...all, { ...assignee, isActive }];
+      }, []);
+      return uniqBy(assignees, 'id');
     }
   },
   methods: {
-    ...mapActions('repository/tasks', ['fetch']),
+    ...mapActions('repository', ['getUsers']),
+    ...mapActions('repository/tasks', { getTasks: 'fetch' }),
     getTasksByStatus(statusId) {
       return get(this.groupedTasks, statusId, []);
     },
@@ -113,7 +116,8 @@ export default {
     }
   },
   created() {
-    this.fetch();
+    this.getTasks();
+    this.getUsers();
   },
   components: { Card, Sidebar }
 };
