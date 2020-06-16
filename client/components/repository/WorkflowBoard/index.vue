@@ -26,18 +26,27 @@
       </v-btn>
     </div>
     <div v-if="workflow" class="layout mt-4 mx-4 flex-grow-0">
-      <h5 v-for="status in workflow.statuses" :key="status.id" class="status-title pa-3 grey lighten-3 text-uppercase align-self-start">
+      <h5
+        v-for="status in workflow.statuses"
+        :key="status.id"
+        class="status-title pa-3 grey lighten-3 text-uppercase align-self-start">
         {{ status.label }}
       </h5>
     </div>
     <div v-if="workflow" class="columns mx-4 flex-grow-0">
-      <div v-for="status in workflow.statuses" :key="status.id" class="cards d-flex flex-column align-center grey lighten-3">
+      <draggable
+        v-for="status in workflow.statuses"
+        :key="status.id"
+        @change="setTaskStatus($event, status.id)"
+        :list="getTasksByStatus(status.id)"
+        group="tasks"
+        class="cards d-flex flex-column align-center grey lighten-3">
         <card
           v-for="task in getTasksByStatus(status.id)"
           :key="task.id"
           @click="selectTask"
           :task="task" />
-      </div>
+      </draggable>
     </div>
     <sidebar />
   </div>
@@ -47,6 +56,7 @@
 import { mapActions, mapGetters } from 'vuex';
 import Card from './Card';
 import conforms from 'lodash/conforms';
+import Draggable from 'vuedraggable';
 import get from 'lodash/get';
 import groupBy from 'lodash/groupBy';
 import isAfter from 'date-fns/isAfter';
@@ -95,7 +105,7 @@ export default {
   },
   methods: {
     ...mapActions('repository', ['getUsers']),
-    ...mapActions('repository/tasks', { getTasks: 'fetch' }),
+    ...mapActions('repository/tasks', { getTasks: 'fetch', updateTask: 'save' }),
     getTasksByStatus(statusId) {
       return get(this.groupedTasks, statusId, []);
     },
@@ -113,13 +123,18 @@ export default {
     },
     filterBySearchText(searchableText) {
       return searchableText.indexOf(this.searchText.toLowerCase()) !== -1;
+    },
+    setTaskStatus(update, status) {
+      if (!update.added) return;
+      const { element: task } = update.added;
+      return this.updateTask({ ...task, status });
     }
   },
   created() {
     this.getTasks();
     this.getUsers();
   },
-  components: { Card, Sidebar }
+  components: { Card, Draggable, Sidebar }
 };
 </script>
 
@@ -131,6 +146,10 @@ $sidebar-width: 435px;
   max-width: calc(100% - #{$sidebar-width});
   grid: auto / auto-flow 228px;
   gap: 0 1rem;
+}
+
+%btn--active {
+  box-shadow: var(--v-info-base) 0 0 0 2px !important;
 }
 
 .board {
@@ -168,7 +187,7 @@ $sidebar-width: 435px;
   }
 
   &.active {
-    box-shadow: var(--v-info-base) 0 0 0 2px;
+    @extend %btn--active;
   }
 
   &:hover {
@@ -182,7 +201,7 @@ $sidebar-width: 435px;
   letter-spacing: inherit;
 
   &.active {
-    box-shadow: var(--v-info-base) 0 0 0 2px;
+    @extend %btn--active;
   }
 }
 </style>
