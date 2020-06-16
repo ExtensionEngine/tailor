@@ -51,6 +51,10 @@
         @update="updateActivity"
         :meta="it" />
     </div>
+    <activity-tasks
+      v-if="config.isTrackedInWorkflow"
+      :activity="activity"
+      class="mb-12" />
     <div>
       <relationship
         v-for="relationship in config.relationships"
@@ -65,6 +69,7 @@
 <script>
 import { getActivityMetadata, getLevel } from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex';
+import ActivityTasks from './Tasks';
 import Discussion from './Discussion';
 import Meta from 'components/common/Meta';
 import Relationship from './Relationship';
@@ -90,6 +95,7 @@ export default {
     }
   },
   components: {
+    ActivityTasks,
     Discussion,
     Relationship,
     MetaInput: Meta

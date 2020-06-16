@@ -9,11 +9,12 @@
       {{ task.name }}
     </h4>
     <div class="d-flex align-center mt-auto">
-      <v-avatar :size="34" color="avatar d-flex grey lighten2 white--text">
-        <img :src="task.assignee.imgUrl">
+      <v-avatar :size="34" color="avatar grey lighten-3 d-flex white--text">
+        <img v-if="task.assignee" :src="task.assignee.imgUrl">
+        <v-icon v-else>mdi-account</v-icon>
       </v-avatar>
       <v-icon class="priority-icon mx-3">$vuetify.icons.{{ icon }}</v-icon>
-      <span class="caption grey--text lighten2">{{ task.dueDate | formatDate('MM/DD/YY') }}</span>
+      <span class="caption grey--text">{{ task.dueDate | formatDate('MM/DD/YY') }}</span>
     </div>
   </v-card>
 </template>
