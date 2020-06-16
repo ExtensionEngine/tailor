@@ -1,5 +1,15 @@
 <template>
   <section class="mt-9 mb-4">
+    <v-text-field
+      @change="updateTask('name', $event)"
+      :value="task.name"
+      label="Name"
+      outlined />
+    <v-text-field
+      @change="updateTask('description', $event)"
+      :value="task.description"
+      label="Description"
+      outlined />
     <v-select
       @change="updateTask('status', $event)"
       :value="task.status"
