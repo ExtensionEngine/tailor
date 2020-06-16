@@ -53,9 +53,9 @@ export default {
   computed: mapGetters('repository', ['users', 'workflow']),
   methods: {
     ...mapActions('repository', ['getUsers']),
-    ...mapActions('repository/tasks', ['update']),
+    ...mapActions('repository/tasks', ['save']),
     async updateTask(key, value) {
-      await this.update({ ...this.task, [key]: value || null });
+      await this.save({ ...this.task, [key]: value || null });
       this.$snackbar.show(`${this.task.name} saved`);
     }
   },
