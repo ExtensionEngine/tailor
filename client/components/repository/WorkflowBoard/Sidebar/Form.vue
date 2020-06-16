@@ -30,32 +30,16 @@
       @change="updateTask('priority', $event)"
       :value="task.priority"
       :items="priorities" />
-    <v-menu
-      v-model="showDialog"
-      :close-on-content-click="false"
-      min-width="290px"
-      transition="scale-transition">
-      <template v-slot:activator="{ on }">
-        <v-text-field
-          v-on="on"
-          @click:append="showDialog = true"
-          :value="task.dueDate | formatDate('MMM D, YYYY')"
-          label="Due date"
-          outlined
-          readonly />
-      </template>
-      <v-date-picker
-        @input="updateTask('dueDate', $event)"
-        @change="showDialog = false"
-        :value="task.dueDate | formatDate('YYYY-MM-DD')"
-        color="primary"
-        no-title />
-    </v-menu>
+    <date-picker
+      @input="updateTask('dueDate', $event)"
+      :value="task.dueDate"
+      label="Due date" />
   </section>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import DatePicker from '@/components/common/DatePicker';
 import { priorities } from 'shared/workflow';
 import SelectPriority from './SelectPriority';
 
@@ -64,7 +48,7 @@ export default {
   props: {
     task: { type: Object, default: () => ({}) }
   },
-  data: () => ({ showDialog: false, priorities }),
+  data: () => ({ showDatePicker: false, priorities }),
   computed: mapGetters('repository', ['users', 'workflow']),
   methods: {
     ...mapActions('repository', ['getUsers']),
@@ -77,6 +61,6 @@ export default {
   created() {
     this.getUsers();
   },
-  components: { SelectPriority }
+  components: { DatePicker, SelectPriority }
 };
 </script>
