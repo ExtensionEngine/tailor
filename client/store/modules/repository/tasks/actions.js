@@ -8,7 +8,7 @@ const create = ({ commit, dispatch }, data) => {
   return api.save(model)
     .then(model => {
       commit('add', model);
-      dispatch('repository/activities/reset', null, { root: true });
+      dispatch('repository/activities/get', data.activityId, { root: true });
       return model;
     });
 };
