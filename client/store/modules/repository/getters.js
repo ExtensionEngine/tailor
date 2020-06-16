@@ -46,11 +46,13 @@ export const activities = (_state, getters, rootState) => {
   }));
 };
 
-export const tasks = (_state, getters, rootState) => {
+export const tasks = (state, getters, rootState) => {
   if (!getters.repository) return [];
   const { repository: { tasks: { items } } } = rootState;
   return map(items, it => ({
     ...it,
+    assignee: get(state.users, it.assigneeId),
+    author: get(state.users, it.authorId),
     shortId: `T-${hashids.encode(it.id)}`
   }));
 };

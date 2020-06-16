@@ -9,10 +9,6 @@ const ATTRIBUTES = [
 
 async function list({ repository }, res) {
   const data = await repository.getTasks({
-    include: [
-      { model: User, as: 'author' },
-      { model: User, as: 'assignee' }
-    ],
     where: { archivedAt: null }
   });
   return res.json({ data });
@@ -35,15 +31,8 @@ async function create({ body, repository, user }, res) {
 }
 
 async function patch({ task, body }, res) {
-  await task.update(body);
-  const author = await task.getAuthor();
-  const assignee = await task.getAssignee();
-  const data = {
-    ...task.toJSON(),
-    assignee,
-    author
-  };
-  return res.json({ data });
+  await task.update(pick(body, ATTRIBUTES));
+  return res.json({ data: task });
 }
 
 async function archive({ task }, res) {
