@@ -14,7 +14,10 @@ import forEach from 'lodash/forEach';
 import snakeCase from 'lodash/snakeCase';
 import userApi from '@/api/user';
 
-const URL_REGEX = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/;
+const URL_REGEX = new RegExp(
+  ['(https?://(?:www.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}' +
+  '|www.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|https?://(?:www.|(?!www))' +
+  '[a-zA-Z0-9]+.[^s]{2,}|www.[a-zA-Z0-9]+.[^s]{2,})$'].join(''));
 
 const alphanumerical = {
   validate: value => (/\d/.test(value) && /[a-zA-Z]/.test(value)),
