@@ -9,7 +9,10 @@
           $snackbar.show('ID copied to the clipboard', { immediate: true })
         }"
         v-clipboard:error="() => $snackbar.show('Not able to copy the ID')"
-        class="ml-2" text x-small>
+        class="ml-2"
+        text
+        small>
+        <v-icon dense class="pr-2">mdi-identifier</v-icon>
         Copy id
       </v-btn>
       <v-btn
@@ -18,7 +21,10 @@
           $snackbar.show('Link copied to the clipboard', { immediate: true })
         }"
         v-clipboard:error="() => $snackbar.show('Not able to copy the link')"
-        class="ml-2" text x-small>
+        class="ml-2"
+        text
+        small>
+        <v-icon class="pr-2">mdi-link</v-icon>
         Copy link
       </v-btn>
     </div>
