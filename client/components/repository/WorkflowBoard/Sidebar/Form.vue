@@ -25,7 +25,8 @@
       label="Assignee"
       item-text="fullName"
       item-value="id"
-      outlined />
+      outlined
+      clearable />
     <select-priority
       @change="updateTask('priority', $event)"
       :value="task.priority"
@@ -41,7 +42,7 @@
 import { mapActions, mapGetters } from 'vuex';
 import DatePicker from '@/components/common/DatePicker';
 import { priorities } from 'shared/workflow';
-import SelectPriority from './SelectPriority';
+import SelectPriority from '@/components/repository/common/SelectPriority';
 
 export default {
   name: 'workflow-board-task-form',
@@ -54,12 +55,9 @@ export default {
     ...mapActions('repository', ['getUsers']),
     ...mapActions('repository/tasks', ['update']),
     async updateTask(key, value) {
-      await this.update({ ...this.task, [key]: value });
+      await this.update({ ...this.task, [key]: value || null });
       this.$snackbar.show(`${this.task.name} saved`);
     }
-  },
-  created() {
-    this.getUsers();
   },
   components: { DatePicker, SelectPriority }
 };
