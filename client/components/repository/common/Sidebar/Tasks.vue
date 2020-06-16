@@ -32,7 +32,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import CreateTaskDialog from '../CreateTaskDialog';
+import CreateTaskDialog from './CreateTaskDialog';
 import { priorities } from 'shared/workflow';
 
 export default {
