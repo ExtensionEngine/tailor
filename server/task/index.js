@@ -10,6 +10,7 @@ router.param('taskId', getTask);
 
 router
   .get('/', ctrl.list)
+  .post('/', ctrl.create)
   .patch('/:taskId', ctrl.patch)
   .patch('/:taskId/archive', ctrl.archive);
 
