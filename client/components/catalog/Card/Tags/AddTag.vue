@@ -6,7 +6,6 @@
     <template #header>Add Tag</template>
     <template #body>
       <validation-provider
-        ref="provider"
         v-slot="{ errors }"
         name="name"
         rules="required|min:2|max:20">
@@ -19,9 +18,9 @@
           outlined />
       </validation-provider>
     </template>
-    <template #actions>
+    <template #actions="{ invalid }">
       <v-btn @click="hide" text>Cancel</v-btn>
-      <v-btn @click="submit" color="primary" text>
+      <v-btn @click="submit" :disabled="invalid" color="primary" text>
         Save
       </v-btn>
     </template>
@@ -53,7 +52,7 @@ export default {
     async submit() {
       // Temp timeout due to https://github.com/vuetifyjs/vuetify/issues/4679
       setTimeout(async () => {
-        const { valid } = await this.$refs.provider.validate();
+        const { valid } = await this.$refs.form.validate();
         if (!valid) return;
         const data = { name: this.tagInput, repositoryId: this.repository.id };
         await this.addTag(data);
