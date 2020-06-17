@@ -6,6 +6,7 @@
     <template #header>Add Tag</template>
     <template #body>
       <validation-provider
+        ref="tag"
         v-slot="{ errors }"
         name="name"
         rules="required|min:2|max:20">
@@ -52,7 +53,7 @@ export default {
     async submit() {
       // Temp timeout due to https://github.com/vuetifyjs/vuetify/issues/4679
       setTimeout(async () => {
-        const { valid } = await this.$refs.form.validate();
+        const { valid } = await this.$refs.tag.validate();
         if (!valid) return;
         const data = { name: this.tagInput, repositoryId: this.repository.id };
         await this.addTag(data);
