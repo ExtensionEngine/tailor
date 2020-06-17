@@ -10,7 +10,7 @@
     </template>
     <template v-slot:header>Change Password</template>
     <template v-slot:body>
-      <validation-observer ref="form">
+      <validation-observer v-slot="{ invalid }" ref="form">
         <validation-provider
           v-slot="{ errors }"
           name="currentPassword"
@@ -57,18 +57,18 @@
             outlined
             class="mb-4" />
         </validation-provider>
-      </validation-observer>
-      <div class="pl-2 py-4">
-        <router-link :to="{ name: 'forgot-password' }" class="float-left">
-          Forgot password ?
-        </router-link>
-        <div class="float-right">
-          <v-btn @click="hide" text>Cancel</v-btn>
-          <v-btn @click="submit" color="primary" text>
-            Update
-          </v-btn>
+        <div class="pl-2 py-4">
+          <router-link :to="{ name: 'forgot-password' }" class="float-left">
+            Forgot password ?
+          </router-link>
+          <div class="float-right">
+            <v-btn @click="hide" text>Cancel</v-btn>
+            <v-btn @click="submit" :disabled="invalid" color="primary" text>
+              Update
+            </v-btn>
+          </div>
         </div>
-      </div>
+      </validation-observer>
     </template>
   </tailor-dialog>
 </template>
