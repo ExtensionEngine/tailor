@@ -23,11 +23,7 @@
             outlined />
         </validation-provider>
         <div class="d-flex">
-          <v-btn
-            @click="$router.go(-1)"
-            tag="a"
-            text
-            class="px-1">
+          <v-btn @click="$router.go(-1)" tag="a" text class="px-1">
             <v-icon>mdi-chevron-left</v-icon>
             Back
           </v-btn>
