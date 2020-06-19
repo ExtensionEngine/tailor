@@ -104,8 +104,12 @@ export default {
     }, 350),
     close() {
       this.isVisible = false;
-      this.$refs.form.reset();
       Object.assign(this, getDefaultData(this.roles));
+    }
+  },
+  watch: {
+    isVisible(val) {
+      if (val) this.$refs.form.reset();
     }
   },
   components: { TailorDialog }
