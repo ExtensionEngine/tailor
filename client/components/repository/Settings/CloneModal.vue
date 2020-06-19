@@ -71,8 +71,8 @@ export default {
       this.$refs.form.reset();
     },
     async cloneRepository() {
-      const isValid = await this.$refs.form.validate();
-      if (!isValid) return;
+      const valid = await this.$refs.form.validate();
+      if (!valid) return;
       this.inProgress = true;
       const { repositoryId } = this.$route.params;
       const data = { id: repositoryId, ...pick(this, ['name', 'description']) };
