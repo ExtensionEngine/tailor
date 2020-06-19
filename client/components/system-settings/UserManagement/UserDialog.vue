@@ -6,7 +6,7 @@
         <validation-provider
           v-slot="{ errors }"
           name="email"
-          :rules="{ required: true, email: true, unique_email: { userData: userData } }">
+          :rules="{ required: true, email: true, unique_email: { userData } }">
           <v-text-field
             v-model="user.email"
             :error-messages="errors"
@@ -109,8 +109,8 @@ export default {
       this.$emit('update:visible', false);
     },
     async save() {
-      const isValid = await this.$refs.form.validate();
-      if (!isValid) return;
+      const valid = await this.$refs.form.validate();
+      if (!valid) return;
       const action = this.isNewUser ? 'create' : 'update';
       api.upsert(this.user).then(() => this.$emit(`${action}d`));
       this.close();
