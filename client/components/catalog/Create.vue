@@ -107,23 +107,22 @@ export default {
   },
   methods: {
     async submit() {
-      const isValid = await this.$refs.form.validate();
-      if (!isValid) return;
+      const valid = await this.$refs.form.validate();
+      if (!valid) return;
       this.showLoader = true;
       return api.save(this.repository)
         .then(() => this.$emit('created') && this.hide())
         .catch(() => (this.errorAlert.show = true));
     },
     hide() {
-      this.repository = resetData();
       this.showLoader = false;
       this.isVisible = false;
     }
   },
   watch: {
     isVisible(val) {
-      if (!val) return;
-      setTimeout(() => this.$refs.form.reset(), 60);
+      if (!val) return setTimeout(() => this.$refs.form.reset(), 60);
+      this.repository = resetData();
     }
   },
   components: { TailorDialog }
