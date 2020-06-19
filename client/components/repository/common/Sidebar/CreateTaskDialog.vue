@@ -54,7 +54,7 @@ const initTaskState = statuses => ({
   description: null,
   status: statuses ? statuses[0].id : null,
   assigneeId: null,
-  priority: priorities[0].id,
+  priority: priorities[2].id,
   dueDate: null
 });
 
