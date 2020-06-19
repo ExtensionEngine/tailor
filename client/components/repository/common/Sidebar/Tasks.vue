@@ -14,8 +14,9 @@
         <div class="d-flex align-center mt-auto">
           <v-avatar
             :size="34"
-            color="d-flex white--text">
+            color="d-flex grey lighten-3 white--text">
             <img v-if="task.assignee" :src="task.assignee.imgUrl">
+            <v-icon v-else>mdi-account</v-icon>
           </v-avatar>
           <v-icon class="priority-icon mx-5">
             $vuetify.icons.{{ getPriorityIcon(task.priority) }}
