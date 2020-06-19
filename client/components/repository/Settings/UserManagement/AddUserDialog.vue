@@ -107,11 +107,6 @@ export default {
       Object.assign(this, getDefaultData(this.roles));
     }
   },
-  watch: {
-    isVisible(val) {
-      if (val) this.$refs.form.reset();
-    }
-  },
   components: { TailorDialog }
 };
 </script>
