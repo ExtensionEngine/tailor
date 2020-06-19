@@ -25,28 +25,30 @@
         Recently updated
       </v-btn>
     </div>
-    <div v-if="workflow" class="layout mt-4 mx-4 flex-grow-0">
-      <h5
-        v-for="status in workflow.statuses"
-        :key="status.id"
-        class="status-title pa-3 grey lighten-3 text-uppercase align-self-start">
-        {{ status.label }}
-      </h5>
-    </div>
-    <div v-if="workflow" class="columns mx-4 flex-grow-0">
-      <draggable
-        v-for="status in workflow.statuses"
-        :key="status.id"
-        @change="setTaskStatus($event, status.id)"
-        :list="getTasksByStatus(status.id)"
-        group="tasks"
-        class="cards d-flex flex-column align-center grey lighten-3">
-        <card
-          v-for="task in getTasksByStatus(status.id)"
-          :key="task.id"
-          @click="selectTask"
-          :task="task" />
-      </draggable>
+    <div class="tasks">
+      <div v-if="workflow" class="column-layout mt-4 mx-4 flex-grow-0">
+        <h5
+          v-for="status in workflow.statuses"
+          :key="status.id"
+          class="status-title pa-3 grey lighten-3 text-uppercase align-self-start">
+          {{ status.label }}
+        </h5>
+      </div>
+      <div v-if="workflow" class="columns column-layout mx-4 flex-grow-0">
+        <draggable
+          v-for="status in workflow.statuses"
+          :key="status.id"
+          @change="setTaskStatus($event, status.id)"
+          :list="getTasksByStatus(status.id)"
+          group="tasks"
+          class="cards d-flex flex-column align-center grey lighten-3">
+          <card
+            v-for="task in getTasksByStatus(status.id)"
+            :key="task.id"
+            @click="selectTask"
+            :task="task" />
+        </draggable>
+      </div>
     </div>
     <sidebar />
   </div>
@@ -141,33 +143,30 @@ export default {
 <style lang="scss" scoped>
 $sidebar-width: 435px;
 
-%board-layout {
+.column-layout {
   display: grid;
-  max-width: calc(100% - #{$sidebar-width});
   grid: auto / auto-flow 228px;
+  width: max-content;
   gap: 0 1rem;
-}
-
-%btn--active {
-  box-shadow: var(--v-info-base) 0 0 0 2px !important;
 }
 
 .board {
   position: relative;
   height: 100%;
-  overflow: hidden;
 }
 
-.layout {
-  @extend %board-layout;
-
+.tasks {
+  max-width: calc(100% - #{$sidebar-width});
   overflow-x: scroll;
 }
 
 .columns {
-  @extend %board-layout;
-
   overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.cards {
+  padding-bottom: 10rem;
 }
 
 .status-title {
@@ -187,7 +186,7 @@ $sidebar-width: 435px;
   }
 
   &.active {
-    @extend %btn--active;
+    box-shadow: var(--v-info-base) 0 0 0 2px;
   }
 
   &:hover {
@@ -199,9 +198,5 @@ $sidebar-width: 435px;
 
 .filters__btn {
   letter-spacing: inherit;
-
-  &.active {
-    @extend %btn--active;
-  }
 }
 </style>
