@@ -12,9 +12,16 @@
           :key="`assignee-${id}`"
           @click="toggleAssignee(id)"
           :size="34"
-          class="avatar grey lighten2 white--text"
+          class="avatar grey white--text"
           :class="{ active: isActive }">
           <img :src="imgUrl">
+        </v-avatar>
+        <v-avatar
+          @click="filterUnassigned = !filterUnassigned"
+          :size="34"
+          :class="{ active: filterUnassigned }"
+          color="avatar grey lighten-3 white--text">
+          <v-icon>mdi-account</v-icon>
         </v-avatar>
       </div>
       <v-btn
@@ -72,7 +79,8 @@ export default {
   name: 'workflow-board',
   mixins: [selectTask],
   data: () => ({
-    assigneesShown: [],
+    filteredAssigneeIds: [],
+    filterUnassigned: false,
     showRecentOnly: false,
     searchText: null
   }),
@@ -86,8 +94,10 @@ export default {
     },
     filteredTasks() {
       const filters = {};
-      if (this.assigneesShown.length) filters.assigneeId = this.filterByAssignee;
       if (this.showRecentOnly) filters.updatedAt = this.filterByRecency;
+      if (this.filteredAssigneeIds.length || this.filterUnassigned) {
+        filters.assigneeId = this.filterByAssignee;
+      }
       if (this.searchText && this.searchText.length > 3) {
         filters.searchableText = this.filterBySearchText;
       }
@@ -99,7 +109,7 @@ export default {
     assignees() {
       const assignees = this.tasks.reduce((all, { assignee }) => {
         if (!assignee) return all;
-        const isActive = this.assigneesShown.includes(assignee.id);
+        const isActive = this.filteredAssigneeIds.includes(assignee.id);
         return [...all, { ...assignee, isActive }];
       }, []);
       return uniqBy(assignees, 'id');
@@ -112,10 +122,11 @@ export default {
       return get(this.groupedTasks, statusId, []);
     },
     toggleAssignee(id) {
-      this.assigneesShown = xor(this.assigneesShown, [id]);
+      this.filteredAssigneeIds = xor(this.filteredAssigneeIds, [id]);
     },
     filterByAssignee(id) {
-      return this.assigneesShown.includes(id);
+      if (this.filterUnassigned && !id) return true;
+      return this.filteredAssigneeIds.includes(id);
     },
     filterByRecency(updatedAt) {
       const parsed = new Date(updatedAt);
