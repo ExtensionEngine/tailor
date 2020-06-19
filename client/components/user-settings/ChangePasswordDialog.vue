@@ -97,8 +97,8 @@ export default {
       return Object.assign(this, defaultData());
     },
     async submit() {
-      const isValid = await this.$refs.form.validate();
-      if (!isValid) return;
+      const valid = await this.$refs.form.validate();
+      if (!valid) return;
       const { currentPassword, newPassword } = this;
       return this.changePassword({ currentPassword, newPassword })
         .then(() => this.$snackbar.show('Password changed!'))
