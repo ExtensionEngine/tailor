@@ -15,9 +15,9 @@ import snakeCase from 'lodash/snakeCase';
 import userApi from '@/api/user';
 
 const URL_REGEX = new RegExp(
-  ['(https?://(?:www.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}' +
-  '|www.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|https?://(?:www.|(?!www))' +
-  '[a-zA-Z0-9]+.[^s]{2,}|www.[a-zA-Z0-9]+.[^s]{2,})$'].join(''));
+  `(https?://(?:www.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}
+  |www.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|https?://(?:www.|(?!www))
+  [a-zA-Z0-9]+.[^s]{2,}|www.[a-zA-Z0-9]+.[^s]{2,})$`);
 
 const alphanumerical = {
   validate: value => (/\d/.test(value) && /[a-zA-Z]/.test(value)),
@@ -28,7 +28,7 @@ const uniqueEmail = {
   params: ['userData'],
   validate: (email, { userData }) => {
     if (userData && email === userData.email) return true;
-    return userApi.fetch({ email }).then(({ total }) => { return !total; });
+    return userApi.fetch({ email }).then(({ total }) => !total);
   },
   message: 'The {_field_} is not unique.'
 };
