@@ -116,9 +116,14 @@ export default {
     },
     hide() {
       this.repository = resetData();
-      this.$refs.form.reset();
       this.showLoader = false;
       this.isVisible = false;
+    }
+  },
+  watch: {
+    isVisible(val) {
+      if (!val) return;
+      setTimeout(() => this.$refs.form.reset(), 60);
     }
   },
   components: { TailorDialog }
