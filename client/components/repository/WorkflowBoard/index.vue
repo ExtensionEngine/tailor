@@ -53,6 +53,7 @@
             v-for="task in getTasksByStatus(status.id)"
             :key="task.id"
             @click="selectTask"
+            :is-selected="selectedTask.id === task.id"
             :task="task" />
         </draggable>
       </div>

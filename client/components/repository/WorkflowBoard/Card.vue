@@ -1,9 +1,8 @@
 <template>
   <v-card
     @click="$emit('click', task.id)"
-    elevation="4"
+    :elevation="isSelected ? 4 : 1"
     class="card d-flex flex-column align-start px-4 py-3 my-2 mx-3"
-    :class="{ 'selected': isSelected }"
     :ripple="false">
     <chip :id="task.shortId" />
     <h4 class="text-left card-title">
@@ -14,7 +13,7 @@
         <img v-if="task.assignee" :src="task.assignee.imgUrl">
         <v-icon v-else>mdi-account</v-icon>
       </v-avatar>
-      <v-icon class="priority-icon mx-3">$vuetify.icons.{{ icon }}</v-icon>
+      <v-icon class="priority-icon mx-5">$vuetify.icons.{{ icon }}</v-icon>
       <span class="caption grey--text">{{ task.dueDate | formatDate('MM/DD/YY') }}</span>
     </div>
   </v-card>
@@ -52,7 +51,11 @@ export default {
     }
 
     .priority-icon {
-      width: 1rem;
+      width: 0.8rem;
+    }
+
+    &::before {
+      opacity: 0;
     }
   }
 </style>
