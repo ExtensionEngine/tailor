@@ -26,9 +26,9 @@
       </div>
       <v-btn
         @click="showRecentOnly = !showRecentOnly"
-        :elevation="0"
+        :class="{ active: showRecentOnly }"
         class="mx-3 filters__btn text-capitalize"
-        :class="{ active: showRecentOnly }">
+        text>
         Recently updated
       </v-btn>
     </div>
@@ -209,5 +209,9 @@ $sidebar-width: 435px;
 
 .filters__btn {
   letter-spacing: inherit;
+
+  &.active {
+    background-color: #e3e7e8;
+  }
 }
 </style>
