@@ -123,7 +123,7 @@ export default {
   watch: {
     show(val) {
       if (!val) return;
-      if (this.$refs.form) this.$refs.form.reset();
+      this.$nextTick(() => this.$refs.form.reset());
       if (!isEmpty(this.userData)) this.user = cloneDeep(this.userData);
     }
   },
