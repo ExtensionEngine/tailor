@@ -10,6 +10,6 @@ exports.apply = (api, { patterns = [], options = {} } = {}) => {
   api.hook('createWebpackChain', config => {
     config
       .plugin('copy')
-      .use(require('copy-webpack-plugin'), [patterns, options]);
+      .use(require('copy-webpack-plugin'), [{ patterns, options }]);
   });
 };
