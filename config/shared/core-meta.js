@@ -2,7 +2,7 @@
 
 module.exports = [
   'meta-checkbox',
-  'meta-colorpicker',
+  'meta-color',
   'meta-datetime',
   'meta-file',
   'meta-html',
