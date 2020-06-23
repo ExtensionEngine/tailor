@@ -1,7 +1,7 @@
 import Edit from './Edit';
 
 export default {
-  type: 'COLORPICKER',
+  type: 'COLOR',
   version: '1.0',
   Edit
 };

@@ -17,7 +17,7 @@ const subtypes = {
 };
 
 export default {
-  name: 'meta-input',
+  name: 'meta-input-wrapper',
   props: {
     meta: { type: Object, required: true }
   },
