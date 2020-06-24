@@ -1,9 +1,7 @@
 <template>
   <div class="file-upload">
     <form @submit.prevent class="upload-form">
-      <validation-provider
-        ref="provider"
-        :rules="validate">
+      <validation-provider ref="provider" :rules="validate">
         <input
           :ref="id"
           v-filefilter="'auto'"
