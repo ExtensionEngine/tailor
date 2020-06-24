@@ -2,8 +2,8 @@
   <validation-provider
     ref="metaKey"
     v-slot="{ errors }"
-    name="metaKey"
-    :rules="meta.validate">
+    :rules="meta.validate"
+    name="metaKey">
     <v-text-field
       v-model="value"
       @change="onChange"

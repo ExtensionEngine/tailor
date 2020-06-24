@@ -5,8 +5,8 @@
       <validation-observer ref="form">
         <validation-provider
           v-slot="{ errors }"
-          name="name"
-          rules="required|min:2|max:250">
+          rules="required|min:2|max:250"
+          name="name">
           <v-text-field
             v-model="name"
             :error-messages="errors"
@@ -19,8 +19,8 @@
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
-          name="description"
-          rules="required|min:2|max:2000">
+          rules="required|min:2|max:2000"
+          name="description">
           <v-textarea
             v-model="description"
             :error-messages="errors"

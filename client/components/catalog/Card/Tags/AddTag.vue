@@ -8,8 +8,8 @@
       <validation-provider
         ref="tag"
         v-slot="{ errors }"
-        name="name"
-        rules="required|min:2|max:20">
+        rules="required|min:2|max:20"
+        name="name">
         <v-combobox
           v-model="tagInput"
           @keydown.enter="submit"

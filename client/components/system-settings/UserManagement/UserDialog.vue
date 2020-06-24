@@ -5,8 +5,8 @@
       <validation-observer ref="form">
         <validation-provider
           v-slot="{ errors }"
-          name="email"
-          :rules="{ required: true, email: true, unique_email: { userData } }">
+          :rules="{ required: true, email: true, unique_email: { userData } }"
+          name="email">
           <v-text-field
             v-model="user.email"
             :error-messages="errors"
@@ -19,8 +19,8 @@
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
-          name="firstName"
-          rules="required|min:2|max:50">
+          rules="required|min:2|max:50"
+          name="firstName">
           <v-text-field
             v-model="user.firstName"
             :error-messages="errors"
@@ -33,8 +33,8 @@
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
-          name="lastName"
-          rules="required|min:2|max:50">
+          rules="required|min:2|max:50"
+          name="lastName">
           <v-text-field
             v-model="user.lastName"
             :error-messages="errors"
@@ -47,8 +47,8 @@
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
-          name="userRole"
-          rules="required">
+          rules="required"
+          name="userRole">
           <v-select
             v-model="user.role"
             :error-messages="errors"

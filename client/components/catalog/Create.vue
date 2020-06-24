@@ -26,8 +26,8 @@
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
-          name="schema"
-          rules="required">
+          rules="required"
+          name="schema">
           <v-select
             v-model="repository.schema"
             :items="schemas"
@@ -40,8 +40,8 @@
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
-          name="repositoryName"
-          rules="required|min:2|max:250">
+          rules="required|min:2|max:250"
+          name="repositoryName">
           <v-text-field
             v-model.trim="repository.name"
             :error-messages="errors"
@@ -52,8 +52,8 @@
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
-          name="description"
-          rules="required|min:2|max:2000">
+          rules="required|min:2|max:2000"
+          name="description">
           <v-textarea
             v-model.trim="repository.description"
             :error-messages="errors"

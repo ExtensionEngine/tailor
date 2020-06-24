@@ -17,8 +17,8 @@
       <validation-observer ref="form">
         <validation-provider
           v-slot="{ errors }"
-          name="email"
-          rules="required|email">
+          rules="required|email"
+          name="email">
           <v-combobox
             v-model="email"
             @update:search-input="fetchUsers"
@@ -31,8 +31,8 @@
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
-          name="role"
-          rules="required">
+          rules="required"
+          name="role">
           <v-select
             v-model="role"
             :items="roles"

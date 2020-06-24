@@ -2,8 +2,8 @@
   <validation-provider
     ref="provider"
     v-slot="{ errors }"
-    name="activity"
-    :rules="{ required: !allowEmpty }">
+    :rules="{ required: !allowEmpty }"
+    name="activity">
     <v-autocomplete
       v-model="value"
       @input="onRelationshipChanged"

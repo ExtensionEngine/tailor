@@ -13,8 +13,8 @@
       <validation-observer v-slot="{ invalid }" ref="form">
         <validation-provider
           v-slot="{ errors }"
-          name="currentPassword"
-          rules="required">
+          rules="required"
+          name="currentPassword">
           <v-text-field
             v-model="currentPassword"
             :error-messages="errors"
@@ -28,8 +28,8 @@
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
-          name="newPassword"
-          rules="required|alphanumerical|min:3|is_not:@currentPassword">
+          rules="required|alphanumerical|min:3|is_not:@currentPassword"
+          name="newPassword">
           <v-text-field
             ref="newPassword"
             v-model="newPassword"
@@ -44,8 +44,8 @@
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
-          name="passwordConfirmation"
-          rules="required|confirmed:newPassword">
+          rules="required|confirmed:newPassword"
+          name="passwordConfirmation">
           <v-text-field
             v-model="passwordConfirmation"
             :error-messages="errors"

@@ -11,8 +11,8 @@
       <validation-provider
         ref="provider"
         v-slot="{ validate, errors }"
-        name="height"
-        rules="required|min_value:200|max_value:3000">
+        rules="required|min_value:200|max_value:3000"
+        name="height">
         <v-text-field
           v-model="height"
           :error-messages="errors"

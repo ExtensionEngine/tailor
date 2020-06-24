@@ -3,8 +3,8 @@
     <v-form @submit.prevent="updateUser" class="pt-4 px-4">
       <validation-provider
         v-slot="{ errors }"
-        name="email"
-        :rules="{ required: true, email: true, unique_email: { userData: user } }">
+        :rules="{ required: true, email: true, unique_email: { userData: user } }"
+        name="email">
         <v-text-field
           v-model="userData.email"
           :error-messages="errors"
@@ -14,8 +14,8 @@
       </validation-provider>
       <validation-provider
         v-slot="{ errors }"
-        name="firstName"
-        rules="required|min:2|max:20">
+        rules="required|min:2|max:20"
+        name="firstName">
         <v-text-field
           v-model="userData.firstName"
           :error-messages="errors"
@@ -26,8 +26,8 @@
       </validation-provider>
       <validation-provider
         v-slot="{ errors }"
-        name="lastName"
-        rules="required|min:2|max:20">
+        rules="required|min:2|max:20"
+        name="lastName">
         <v-text-field
           v-model="userData.lastName"
           :error-messages="errors"

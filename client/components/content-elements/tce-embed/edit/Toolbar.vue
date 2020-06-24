@@ -18,8 +18,8 @@
       <validation-provider
         ref="url"
         v-slot="{ errors }"
-        name="url"
-        rules="url">
+        rules="url"
+        name="url">
         <v-text-field
           v-model="url"
           @input="onChange"

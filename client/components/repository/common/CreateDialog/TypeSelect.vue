@@ -1,8 +1,8 @@
 <template>
   <validation-provider
     v-slot="{ errors }"
-    name="type"
-    rules="required">
+    rules="required"
+    name="type">
     <v-select
       @change="$emit('input', $event)"
       :value="value"
@@ -17,7 +17,9 @@
       class="required">
       <template slot="item" slot-scope="{ item }">
         <div v-if="item.group" class="pr-5">
-          <v-icon color="grey" size="16" class="pr-1">mdi-folder-open-outline</v-icon>
+          <v-icon color="grey" size="16" class="pr-1">
+            mdi-folder-open-outline
+          </v-icon>
           <span class="pt-2">{{ item.group }}</span>
         </div>
         <div

@@ -12,8 +12,8 @@
       <form @submit.prevent="submit" novalidate>
         <validation-provider
           v-slot="{ errors }"
-          name="email"
-          rules="required|email">
+          rules="required|email"
+          name="email">
           <v-text-field
             v-model="email"
             :error-messages="errors"
@@ -28,8 +28,8 @@
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
-          name="password"
-          rules="required">
+          rules="required"
+          name="password">
           <v-text-field
             v-model="password"
             :error-messages="errors"

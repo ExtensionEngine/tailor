@@ -11,8 +11,8 @@
       <form @submit.prevent="submit">
         <validation-provider
           v-slot="{ errors }"
-          name="password"
-          rules="required|alphanumerical|min:6">
+          rules="required|alphanumerical|min:6"
+          name="password">
           <v-text-field
             ref="password"
             v-model="password"
@@ -27,8 +27,8 @@
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
-          name="passwordConfirmation"
-          rules="required|confirmed:password">
+          rules="required|confirmed:password"
+          name="passwordConfirmation">
           <v-text-field
             v-model="passwordConfirmation"
             :error-messages="errors"
