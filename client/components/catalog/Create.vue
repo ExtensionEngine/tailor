@@ -15,8 +15,7 @@
     <template v-slot:header>New</template>
     <template v-slot:body>
       <validation-observer ref="form">
-        <validation-provider
-          name="alert">
+        <validation-provider name="alert">
           <v-alert
             :value="errorAlert.show"
             color="error"
