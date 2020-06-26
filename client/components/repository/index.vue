@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import ActiveUsers from 'components/common/ActiveUsers';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
@@ -58,10 +58,7 @@ export default {
       return items;
     }
   },
-  methods: {
-    ...mapActions('repository', ['initialize', 'expandParents']),
-    ...mapMutations('repository', ['selectActivity'])
-  },
+  methods: mapActions('repository', ['initialize', 'expandParents']),
   watch: {
     selectedActivity(val) {
       if (val) this.lastSelectedActivity = val;
