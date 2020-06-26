@@ -5,6 +5,7 @@
         background-color="blue-grey darken-3"
         slider-color="grey lighten-2"
         slider-size="3"
+        height="56"
         dark>
         <v-tab
           v-for="tab in tabs"
@@ -105,6 +106,7 @@ export default {
 }
 
 .repo-toolbar {
+  height: 3.5rem;
   z-index: 2;
 }
 
