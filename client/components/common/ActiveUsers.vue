@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex align-center px-2">
+  <div class="d-flex align-center pl-2 pr-6">
     <v-avatar
       v-for="{ id, fullName, email, palette, imgUrl } in users"
       :key="id"
