@@ -1,3 +1,4 @@
+import * as yup from 'yup';
 import cuid from 'cuid';
 import dropRight from 'lodash/dropRight';
 import find from 'lodash/find';
@@ -7,7 +8,6 @@ import map from 'lodash/map';
 import times from 'lodash/times';
 import toPairs from 'lodash/toPairs';
 import toPath from 'lodash/toPath';
-import yup from 'yup';
 
 export const typeInfo = {
   MC: { type: 'MC', title: 'Multiple choice', class: 'multiple-choice' },
@@ -20,14 +20,11 @@ export const typeInfo = {
   DD: { type: 'DD', title: 'Drag & Drop', class: 'drag-drop' }
 };
 
-export const helperText = {
-  FB: { question: 'Type "@blank" when new blank is needed.' }
-};
-
+const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
 const BLANK_PLACEHOLDER = /(@blank)/g;
 
 function containsText(asset) {
-  return asset.type === 'HTML' &&
+  return TEXT_CONTAINERS.includes(asset.type) &&
     asset.data.content &&
     asset.data.content.trim().length > 0;
 }
@@ -121,14 +118,14 @@ export const schemas = {
 };
 
 export function errorProcessor(error) {
-  let item = error.value;
+  const item = error.value;
   if (item.type !== 'DD') return map(error.inner, it => it.path);
   // TODO: Nasty !!
   return map(error.inner, it => {
-    let path = toPath(it.path);
+    const path = toPath(it.path);
     if (path.length === 1) return it.path;
     if (last(path) !== 'value') return;
-    let key = get(error.value, dropRight(path).concat('key'));
+    const key = get(error.value, dropRight(path).concat('key'));
     return `${path[0]}${key}`;
   });
 }
@@ -174,7 +171,7 @@ export const defaults = {
     correct: []
   }),
   MQ() {
-    let element = {
+    const element = {
       type: 'MQ',
       ...baseDefaults,
       premises: [],
@@ -195,7 +192,7 @@ export const defaults = {
     return element;
   },
   DD() {
-    let element = {
+    const element = {
       type: 'DD',
       ...baseDefaults,
       groups: {},

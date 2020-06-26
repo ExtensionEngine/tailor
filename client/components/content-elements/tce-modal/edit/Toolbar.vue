@@ -1,21 +1,20 @@
 <template>
-  <div class="tce-modal-toolbar">
-    <ul>
-      <li @click="toggleEdit" class="btn btn-link btn-sm">
-        <span class="mdi mdi-pencil"></span>
-        <span>Toggle Edit</span>
-      </li>
-      <li class="title form-inline">
-        <label for="titleInput">Title</label>
-        <input
-          v-model="title"
-          id="titleInput"
-          class="form-control"
-          type="text"
-          placeholder="Title">
-      </li>
-    </ul>
-  </div>
+  <v-toolbar
+    height="72"
+    color="transparent"
+    class="tce-modal-toolbar elevation-0">
+    <v-toolbar-title class="pl-1">Modal component</v-toolbar-title>
+    <v-toolbar-items class="mx-auto">
+      <v-text-field
+        v-model="title"
+        label="Button label"
+        placeholder="Button label..."
+        prepend-icon="mdi-gesture-tap-button"
+        filled dense hide-details
+        class="mt-2 mr-5" />
+      <v-btn @click="toggleEdit" text>Toggle Edit Mode</v-btn>
+    </v-toolbar-items>
+  </v-toolbar>
 </template>
 
 <script>
@@ -39,64 +38,21 @@ export default {
   },
   watch: {
     title: debounce(function () {
-      const element = cloneDeep(this.element);
-      element.data.title = this.title;
-      this.$emit('save', element);
+      const data = cloneDeep(this.element.data);
+      data.title = this.title;
+      this.$elementBus.emit('save', data);
     }, 500)
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.tce-modal-toolbar {
-  position: relative;
-  width: 100%;
-  height: 50px;
-
-  ul {
-    float: left;
-    height: 100%;
-    margin: 0;
-    padding: 0 30px 0 10px;
-
-    li {
-      height: 100%;
-      padding-top: 15px;
-      color: #444;
-
-      .mdi {
-        display: inline-block;
-        margin-right: 5px;
-        font-size: 18px;
-        line-height: 18px;
-        vertical-align: middle;
-      }
-
-      &.active {
-        background-color: #e8e8e8;
-      }
-    }
-  }
+.v-toolbar__title {
+  min-width: 23.875rem;
+  text-align: left;
 }
 
-.title {
-  display: inline-block;
-  margin: 0 0 0 10px;
-  padding: 0;
-  font-size: 14px !important;
-
-  input {
-    min-width: 250px;
-    height: 20px;
-    font-size: 14px;
-    line-height: 14px;
-  }
-
-  label {
-    padding: 2px 10px;
-    font-size: 12px;
-    line-height: 12px;
-    text-transform: uppercase;
-  }
+.v-text-field {
+  min-width: 22.5rem;
 }
 </style>

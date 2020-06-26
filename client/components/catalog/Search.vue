@@ -3,14 +3,15 @@
     <div :style="{ width: expanded ? '100%' : '95%' }">
       <v-text-field
         v-focus="expanded"
-        :value="value"
         @focus="expanded = true"
         @blur="expanded = false"
         @input="emitChange"
+        :value="value"
+        :background-color="`blue-grey darken-${expanded ? 2 : 4}`"
         prepend-inner-icon="mdi-magnify"
-        solo
-        clearable
-        placeholder="Search..."/>
+        placeholder="Search..."
+        clearable hide-details solo dark
+        class="pb-5" />
     </div>
   </div>
 </template>

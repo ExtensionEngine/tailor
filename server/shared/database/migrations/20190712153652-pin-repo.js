@@ -10,7 +10,7 @@ module.exports = {
       defaultValue: false
     });
   },
-  down: (queryInterface) => {
+  down: queryInterface => {
     return queryInterface.removeColumn(TABLE_NAME, COLUMN_NAME);
   }
 };

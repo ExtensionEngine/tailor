@@ -1,122 +1,82 @@
 <template>
-  <div class="input">
-    <color-picker v-model="color"></color-picker>
-    <div class="actions">
-      <button
-        @click="$emit('close')"
-        type="button"
-        class="btn btn-default btn-cancel">
-        Cancel
-      </button>
-      <button
-        @click="submit(color)"
-        type="button"
-        class="btn btn-primary btn-submit">
-        Submit
-      </button>
-    </div>
-  </div>
+  <v-menu
+    v-model="menu"
+    :close-on-content-click="false">
+    <template v-slot:activator="{ on }">
+      <div v-on="on" class="preview">
+        <div :style="{ background: value }" class="selected">
+          <span class="mdi mdi-eyedropper eyedropper"></span>
+        </div>
+      </div>
+    </template>
+    <v-card>
+      <v-color-picker
+        @input="color = $event"
+        :value="value"
+        flat
+        mode="hexa"
+        width="250" />
+      <v-card-actions>
+        <v-spacer />
+        <v-btn @click="menu = false" small text>Cancel</v-btn>
+        <v-btn @click="submit" small text color="primary">Submit</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-menu>
 </template>
 
 <script>
-import ColorPicker from 'vue-color/src/components/Chrome';
-
 export default {
   props: {
     value: { type: String, required: true }
   },
   data() {
     return {
-      color: { hex: this.value || '#ffffff' }
+      menu: false,
+      color: this.value || '#ffffff'
     };
   },
   methods: {
-    submit(color) {
-      this.$emit('input', color.hex);
-      this.$emit('close');
+    submit() {
+      this.$emit('input', this.color);
+      this.menu = false;
     }
-  },
-  components: { ColorPicker }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-.btn {
-  margin-right: 5px;
-  padding: 6px 16px;
-  font-family: $font-family-secondary;
-  font-size: 12.5px;
-  font-weight: 500;
-  outline: none;
+.preview {
+  float: left;
+  margin-right: 10px;
 }
 
-.input {
+.selected {
+  width: 40px;
+  height: 40px;
   text-align: center;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.15);
 
-  .actions {
-    display: inline-block;
-    padding-top: 8px;
+  .eyedropper {
+    color: #fff;
+    font-size: 18px;
+    line-height: 40px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
 
-    .btn {
-      margin-right: 5px;
-    }
+  &:hover .eyedropper {
+    opacity: 1;
   }
 }
 
-.input /deep/ .c-chrome {
-  margin: 0 auto;
-  box-shadow: none;
-  border-radius: 3px;
-  background: transparent;
-  overflow: hidden;
+::v-deep .v-color-picker__edit {
+  margin-top: 16px;
 
-  .chrome-body {
-    padding: 12px 16px !important;
-    background: transparent;
-  }
-
-  .controls {
-    display: block;
-  }
-
-  .color-wrap {
-    float: left;
-  }
-
-  .active-color {
-    width: 24px;
-    height: 24px;
-    margin-top: 2px;
-    border-radius: 50%;
-  }
-
-  .sliders {
-    padding: 8px 0 0 40px;
-  }
-
-  .container {
-    width: 100%;
-  }
-
-  .alpha-wrap {
-    display: none;
-  }
-
-  .input__label {
-    display: none;
-    color: #222;
-  }
-
-  .input__input {
-    height: 24px;
-    color: #222;
-    font-family: $font-family-secondary;
-    font-size: 13px;
-    background: #fdfdfd;
-  }
-
-  .toggle-btn {
-    display: none;
+  input {
+    font-size: 14px;
   }
 }
 </style>

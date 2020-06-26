@@ -1,5 +1,5 @@
 <template>
-  <div class="tce-table">
+  <div :class="{ disabled: isDisabled }" class="tce-table">
     <div
       v-for="row in table"
       :key="row.id"
@@ -7,10 +7,9 @@
       <table-cell
         v-for="cell in cells(row)"
         :key="cell.id"
+        @save="saveCell"
         :cell="embeds[cell.id]"
-        :table="element"
-        :disabled="disabled"
-        @save="saveCell"/>
+        :table="element" />
     </div>
   </div>
 </template>
@@ -61,7 +60,7 @@ export default {
   inject: ['$elementBus'],
   props: {
     element: { type: Object, required: true },
-    disabled: { type: Boolean, default: false }
+    isDisabled: { type: Boolean, default: false }
   },
   computed: {
     table() {
@@ -82,14 +81,14 @@ export default {
       return find(rows, row => row.cells[cellId]);
     },
     focusElement(cell) {
-      this.$emit('focus', {}, { ...cell, type: 'HTML' }, this.element);
+      this.$emit('focus', {}, { ...cell, type: 'JODIT_HTML' }, this.element);
     },
     addRow(cellId, direction = Direction.AFTER) {
       const row = this.findRow(cellId);
       if (!row) return;
 
-      let element = cloneDeep(this.element);
-      let { tableId, rows, embeds } = element.data;
+      const element = cloneDeep(this.element);
+      const { tableId, rows, embeds } = element.data;
       const position = calculateInsertPosition(rows, row, direction);
       const newRow = { id: cuid(), position, cells: {} };
       forEach(row.cells, ({ position }) => {
@@ -106,8 +105,8 @@ export default {
       const cell = row.cells[cellId];
       if (!cell) return;
 
-      let element = cloneDeep(this.element);
-      let { tableId, rows, embeds } = element.data;
+      const element = cloneDeep(this.element);
+      const { tableId, rows, embeds } = element.data;
       const position = calculateInsertPosition(row.cells, cell, direction);
       forEach(rows, row => {
         const cellId = cuid();
@@ -121,8 +120,8 @@ export default {
       const row = this.findRow(cellId);
       if (!row || size(this.rows) <= MIN_ROWS) return;
 
-      let element = cloneDeep(this.element);
-      let { rows, embeds } = element.data;
+      const element = cloneDeep(this.element);
+      const { rows, embeds } = element.data;
       forEach(row.cells, cell => removeEmbed(embeds, { id: cell.id }));
       delete rows[row.id];
 
@@ -140,8 +139,8 @@ export default {
       const cell = row.cells[cellId];
       if (!cell) return;
 
-      let element = cloneDeep(this.element);
-      let { rows, embeds } = element.data;
+      const element = cloneDeep(this.element);
+      const { rows, embeds } = element.data;
 
       forEach(rows, row => {
         const deletedCell = removeCell(row, { position: cell.position });
@@ -183,5 +182,9 @@ export default {
   .table-row {
     display: table-row;
   }
+}
+
+.disabled {
+  pointer-events: none;
 }
 </style>

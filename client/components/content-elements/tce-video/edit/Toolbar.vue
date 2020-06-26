@@ -1,12 +1,17 @@
 <template>
-  <div class="tce-video-toolbar">
+  <v-toolbar
+    height="72"
+    color="transparent"
+    class="tce-video-toolbar elevation-0">
+    <v-toolbar-title class="pl-1">Video component</v-toolbar-title>
     <input-asset
-      :url="url"
-      :publicUrl="publicUrl"
-      :extensions="['.mp4']"
       @input="save"
-      uploadLabel="Upload mp4"/>
-  </div>
+      :url="url"
+      :public-url="publicUrl"
+      :extensions="['.mp4']"
+      upload-label="Upload mp4"
+      class="mx-auto" />
+  </v-toolbar>
 </template>
 
 <script>
@@ -22,12 +27,8 @@ export default {
     element: { type: Object, required: true }
   },
   computed: {
-    publicUrl() {
-      return get(this.element, 'data.url');
-    },
-    url() {
-      return get(this.element, 'data.assets.url');
-    }
+    publicUrl: vm => get(vm.element, 'data.url'),
+    url: vm => get(vm.element, 'data.assets.url')
   },
   methods: {
     save({ url, publicUrl }) {
@@ -41,10 +42,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.tce-video-toolbar {
-  position: relative;
-  width: 100%;
-  height: 60px;
-  padding: 13px 45px 0;
+.v-toolbar__title {
+  min-width: 23.875rem;
+  text-align: left;
 }
 </style>

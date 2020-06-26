@@ -1,20 +1,21 @@
 <template>
   <div
-    :class="[widthClass, { disabled: isDisabled, hovered: isHovered }]"
     @mouseover="isHovered = true"
     @mouseleave="isHovered = false"
     @dragstart="$emit('dragstart')"
     @dragend="$emit('dragend')"
     @dragover="scrollContainer"
+    :class="[widthClass, { disabled: isDisabled, hovered: isHovered }]"
     class="contained-content">
     <span class="drag-handle">
       <span class="mdi mdi-drag-vertical"></span>
     </span>
     <content-element
-      v-bind="{ element, isDisabled, isDragged }"
       @add="$emit('add', $event)"
       @save="$emit('save', $event)"
-      @delete="$emit('delete')"/>
+      @save:meta="$emit('save:meta', $event)"
+      @delete="$emit('delete')"
+      v-bind="bindings" />
   </div>
 </template>
 
@@ -25,16 +26,22 @@ import throttle from 'lodash/throttle';
 
 export default {
   name: 'contained-content',
+  inheritAttrs: false,
   props: {
     element: { type: Object, required: true },
     isDisabled: { type: Boolean, default: false },
     isDragged: { type: Boolean, default: false },
-    setWidth: { type: Boolean, default: true }
+    setWidth: { type: Boolean, default: true },
+    dense: { type: Boolean, default: false }
   },
   data() {
     return { isHovered: false };
   },
   computed: {
+    bindings() {
+      const { element, isDisabled, isDragged, dense, $attrs: attrs } = this;
+      return { element, isDisabled, isDragged, dense, ...attrs };
+    },
     widthClass() {
       const { element, setWidth } = this;
       return setWidth ? `col-xs-${get(element, 'data.width', 12)}` : '';

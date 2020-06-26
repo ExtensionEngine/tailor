@@ -8,6 +8,9 @@ const isObject = arg => arg !== null && typeof arg === 'object';
 
 exports.name = 'html-version-spec';
 
+/**
+ * @param {import('poi')} api
+ */
 exports.apply = ({ config, pkg }) => {
   const meta = {
     get version() {

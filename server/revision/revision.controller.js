@@ -1,16 +1,20 @@
 'use strict';
 
-const { resolveStatics } = require('../shared/storage/helpers');
 const { Revision, User } = require('../shared/database');
+const { resolveStatics } = require('../shared/storage/helpers');
 
-function index({ course, query }, res) {
+function index({ repository, query }, res) {
   const { limit, offset, entity, entityId } = query;
-  const where = { courseId: course.id };
+  const where = { repositoryId: repository.id };
   if (entity) {
     where.entity = entity;
     where.state = { id: entityId };
   }
-  const include = [{ model: User, attributes: ['id', 'email'] }];
+  const include = [{
+    model: User,
+    paranoid: false,
+    attributes: ['id', 'email', 'firstName', 'lastName', 'fullName', 'label']
+  }];
   const opts = { where, include, order: [['createdAt', 'DESC']], limit, offset };
   return Revision.findAll(opts).then(data => res.json({ data }));
 }

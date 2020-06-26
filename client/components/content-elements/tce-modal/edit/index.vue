@@ -1,25 +1,35 @@
 <template>
   <div class="tce-modal">
-    <div v-if="isEditing" class="container-fluid">
-      <div v-if="!hasElements" class="well">
-        Click the button below to Add first teaching element to your modal.
-      </div>
-      <embedded-container
-        :container="element.data"
-        @save="$emit('save', $event)"
-        @delete="deleteEmbed($event)"/>
+    <v-toolbar
+      height="32"
+      color="grey darken-3"
+      dark
+      class="text-left elevation-5">
+      <span class="subtitle-2 mr-4">Modal</span>
+      <span v-if="!isDisabled" class="text-truncate">
+        Use toolbar to toggle between edit and preview state
+      </span>
+    </v-toolbar>
+    <div class="px-8 py-3 blue-grey lighten-5">
+      <template v-if="!isDisabled && isEditing">
+        <v-alert
+          v-if="!hasElements"
+          color="blue-grey darken-2"
+          icon="mdi-information-variant"
+          text prominent
+          class="mt-6">
+          Click the button below to add content element.
+        </v-alert>
+        <embedded-container
+          @save="$emit('save', $event)"
+          @delete="deleteEmbed($event)"
+          :container="element.data" />
+      </template>
+      <preview
+        v-else
+        :label="title"
+        :elements="embeds" />
     </div>
-    <button
-      v-else
-      @click="showModal = true"
-      class="btn btn-primary btn-open"
-      type="button">
-      {{ title }}
-    </button>
-    <preview
-      v-if="showModal"
-      :elements="embeds"
-      @close="showModal = false"/>
   </div>
 </template>
 
@@ -33,24 +43,19 @@ export default {
   name: 'tce-modal',
   inject: ['$elementBus'],
   props: {
-    element: { type: Object, required: true }
+    element: { type: Object, required: true },
+    isFocused: { type: Boolean, required: true },
+    isDisabled: { type: Boolean, default: false }
   },
   data() {
-    return {
-      isEditing: false,
-      showModal: false
-    };
+    return { isEditing: !this.hasElements };
   },
   computed: {
-    title() {
-      return this.element.data.title || 'Open modal';
-    },
+    title: vm => vm.element.data.title || 'Open modal',
+    hasElements: vm => vm.embeds.length,
     embeds() {
       const items = this.element.data.embeds;
       return items ? values(items).sort((a, b) => a.position - b.position) : [];
-    },
-    hasElements() {
-      return this.embeds.length;
     }
   },
   methods: {
@@ -62,18 +67,8 @@ export default {
   },
   created() {
     this.$elementBus.on('toggleEdit', () => (this.isEditing = !this.isEditing));
+    this.$elementBus.on('save', data => this.$emit('save', data));
   },
   components: { EmbeddedContainer, Preview }
 };
 </script>
-
-<style lang="scss" scoped>
-.btn-open {
-  max-width: 90%;
-  padding: 9px 20px;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}
-</style>

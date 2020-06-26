@@ -1,36 +1,39 @@
 <template>
-  <div class="system-settings-container white">
-    <div class="heading primary elevation-5">
+  <div class="system-settings-container">
+    <v-toolbar
+      height="42"
+      absolute
+      color="blue-grey darken-3"
+      class="heading elevation-2">
       <v-chip
-        color="grey lighten-2"
-        label
-        outline
-        class="mt-2 ml-3 px-3 body-2">
+        color="blue-grey lighten-3"
+        small
+        class="ml-1 px-8 body-2">
         Admin
       </v-chip>
-    </div>
+    </v-toolbar>
     <v-container>
-      <v-layout row align-start>
-        <v-card>
-          <sidebar/>
-        </v-card>
-        <v-flex ml-4>
-          <router-view/>
-        </v-flex>
-      </v-layout>
-      <app-footer/>
+      <v-row align="start">
+        <v-col cols="3">
+          <admin-sidebar />
+        </v-col>
+        <v-col cols="9">
+          <router-view />
+        </v-col>
+      </v-row>
+      <app-footer />
     </v-container>
   </div>
 </template>
 
 <script>
+import AdminSidebar from './Sidebar';
 import AppFooter from '@/components/common/Footer';
-import Sidebar from './Sidebar';
 
 export default {
   components: {
-    AppFooter,
-    Sidebar
+    AdminSidebar,
+    AppFooter
   }
 };
 </script>
@@ -39,18 +42,12 @@ export default {
 .system-settings-container {
   width: 100%;
   height: 100%;
-  padding: 50px 0 60px;
+  padding: 3.125rem 0 3.75rem;
 }
 
 .heading {
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
-  height: 46px;
-  text-align: left;
   text-transform: uppercase;
-  color: #444;
   z-index: 2;
 }
 </style>

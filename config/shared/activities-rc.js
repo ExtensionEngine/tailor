@@ -3,7 +3,7 @@
 const CONTENT_CONTAINERS = [{
   type: 'INTRO',
   label: 'Introduction',
-  types: ['HTML', 'IMAGE', 'VIDEO'],
+  types: ['JODIT_HTML', 'IMAGE', 'VIDEO', 'HTML'],
   displayHeading: true
 }, {
   type: 'PAGE',
@@ -24,10 +24,7 @@ const SCHEMAS = [{
     subLevels: ['OBJECTIVE'],
     label: 'Competency',
     color: '#42A5F5',
-    contentContainers: ['INTRO'],
-    hasAssessments: false,
-    hasExams: true,
-    exams: { objectives: ['TOPIC'] },
+    contentContainers: ['INTRO', 'EXAM'],
     relationships: [{
       type: 'prerequisites',
       label: 'Prerequisites',
@@ -47,8 +44,6 @@ const SCHEMAS = [{
     label: 'Learning Objective',
     color: '#66BB6A',
     contentContainers: [],
-    hasAssessments: false,
-    hasExams: false,
     relationships: [{
       type: 'prerequisites',
       label: 'Prerequisites',
@@ -67,9 +62,7 @@ const SCHEMAS = [{
     label: 'Topic',
     color: '#EC407A',
     isObjective: true,
-    contentContainers: ['PERSPECTIVE'],
-    hasAssessments: true,
-    hasExams: false,
+    contentContainers: ['PERSPECTIVE', 'ASSESSMENT_POOL'],
     relationships: [{
       type: 'prerequisites',
       label: 'Prerequisites',
@@ -83,7 +76,22 @@ const SCHEMAS = [{
       validate: { required: false, max: 250 }
     }]
   }],
-  tesMeta: [{
+  contentContainers: [{
+    type: 'EXAM',
+    label: 'Exam',
+    displayHeading: true,
+    multiple: true,
+    required: false,
+    publishedAs: 'exam',
+    config: {
+      objectives: ['COURSE/TOPIC']
+    }
+  }, {
+    type: 'ASSESSMENT_POOL',
+    label: 'Assessments',
+    publishedAs: 'assessments'
+  }],
+  elementMeta: [{
     type: 'ASSESSMENT',
     label: 'Assessment',
     meta: [{

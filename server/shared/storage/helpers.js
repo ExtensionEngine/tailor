@@ -1,11 +1,11 @@
 'use strict';
 
 const crypto = require('crypto');
+const { elementRegistry } = require('../content-plugins');
 const { getFileUrl } = require('./');
 const isString = require('lodash/isString');
 const isUrl = require('is-url');
 const mime = require('mime-types');
-const nodeUrl = require('url');
 const Promise = require('bluebird');
 const storage = require('./index');
 const toPairs = require('lodash/toPairs');
@@ -13,7 +13,9 @@ const values = require('lodash/values');
 const set = require('lodash/set');
 
 const STORAGE_PROTOCOL = 'storage://';
-const PRIMITIVES = ['HTML', 'TABLE-CELL', 'IMAGE', 'BRIGHTCOVE_VIDEO', 'VIDEO', 'EMBED'];
+const PRIMITIVES = [
+  'JODIT_HTML', 'TABLE-CELL', 'IMAGE', 'BRIGHTCOVE_VIDEO', 'VIDEO', 'EMBED', 'HTML'
+];
 const DEFAULT_IMAGE_EXTENSION = 'png';
 const isPrimitive = asset => PRIMITIVES.indexOf(asset.type) > -1;
 const isQuestion = type => ['QUESTION', 'REFLECTION', 'ASSESSMENT'].includes(type);
@@ -21,6 +23,13 @@ const isQuestion = type => ['QUESTION', 'REFLECTION', 'ASSESSMENT'].includes(typ
 const ASSET_ROOT = 'repository/assets';
 
 function processStatics(item) {
+  const customProcessor = elementRegistry.getStaticsHandler(item.type);
+  return customProcessor
+    ? customProcessor(item, defaultStaticsProcessor, processStatics)
+    : defaultStaticsProcessor(item);
+}
+
+function defaultStaticsProcessor(item) {
   return isQuestion(item.type)
     ? processQuestion(item)
     : processAsset(item);
@@ -31,7 +40,7 @@ function processAsset(asset) {
 }
 
 function processQuestion(element) {
-  let question = element.data.question;
+  const question = element.data.question;
   if (!question || question.length < 1) return Promise.resolve(element);
   return Promise.each(question, it => processAsset(it));
 }
@@ -48,7 +57,7 @@ function processComposite(composite) {
     .then(() => composite);
 }
 
-let processor = {};
+const processor = {};
 
 processor.IMAGE = asset => {
   const image = asset.data.url;
@@ -59,7 +68,7 @@ processor.IMAGE = asset => {
   }
 
   if (isUrl(image)) {
-    let url = nodeUrl.parse(image);
+    const url = new URL(image);
     asset.data.url = url.pathname.substr(1, image.length);
     return Promise.resolve(asset);
   }
@@ -74,10 +83,21 @@ processor.IMAGE = asset => {
 };
 
 // TODO: Temp patch until asset embeding is unified
-async function resolveStatics(item) {
+function resolveStatics(item) {
+  const customResolver = elementRegistry.getStaticsHandler(item.type);
+  return customResolver
+    ? customResolver(item, defaultStaticsResolver, resolveStatics)
+    : defaultStaticsResolver(item);
+}
+
+async function defaultStaticsResolver(item) {
   const element = await (isQuestion(item.type)
     ? resolveQuestion(item)
     : resolveAsset(item));
+  return resolveAssetsMap(element);
+}
+
+async function resolveAssetsMap(element) {
   if (!element.data.assets) return element;
   await Promise.map(toPairs(element.data.assets), async ([key, url]) => {
     const isStorageResource = url.startsWith(STORAGE_PROTOCOL);
@@ -90,7 +110,7 @@ async function resolveStatics(item) {
 }
 
 function resolveQuestion(element) {
-  let question = element.data.question;
+  const question = element.data.question;
   if (!question || question.length < 1) return Promise.resolve(element);
   return Promise.each(question, it => resolveAsset(it)).then(() => element);
 }
@@ -102,16 +122,17 @@ function resolveAsset(element) {
 }
 
 function resolvePrimitive(primitive) {
-  if (!resolver[primitive.type]) return Promise.resolve(primitive);
-  return resolver[primitive.type](primitive);
+  const primitiveResolver = resolver[primitive.type] || resolveAssetsMap;
+  return primitiveResolver(primitive);
 }
 
-function resolveComposite(composite) {
+async function resolveComposite(composite) {
+  await resolveAssetsMap(composite);
   return Promise.each(values(composite.data.embeds), resolvePrimitive)
     .then(() => composite);
 }
 
-let resolver = {};
+const resolver = {};
 
 resolver.IMAGE = asset => {
   if (!asset.data || !asset.data.url) return Promise.resolve(asset);
@@ -127,7 +148,8 @@ resolver.IMAGE = asset => {
 };
 
 function saveFile(key, file) {
-  const options = { ACL: 'public-read', ContentType: mime.lookup(key) };
+  // TODO: Investigate and properly set 'ACL' grant in options
+  const options = { ContentType: mime.lookup(key) };
   return storage.saveFile(key, file, options);
 }
 

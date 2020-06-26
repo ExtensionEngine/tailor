@@ -3,7 +3,7 @@ import Edit from './edit';
 const initState = () => ({});
 
 export default {
-  name: 'Page Break',
+  name: 'Section Break',
   type: 'BREAK',
   version: '1.0',
   initState,

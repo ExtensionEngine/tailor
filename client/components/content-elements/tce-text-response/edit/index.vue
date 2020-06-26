@@ -1,68 +1,36 @@
 <template>
-  <div class="form-group">
-    <span class="form-label">{{ isGraded ? 'Answer' : 'Response' }}</span>
-    <span :class="{ 'has-error': correctError }" class="answer">
-      <textarea
-        v-model="correct"
-        :disabled="!isEditing || !isGraded"
-        @blur="update"
-        class="form-control"
-        rows="6"
-        type="text">
-      </textarea>
-    </span>
+  <div>
+    <div class="subtitle-2 pb-4">{{ title }}</div>
+    <v-textarea
+      @change="correct = $event"
+      :value="correct"
+      :disabled="answerDisabled"
+      :error="correctError"
+      color="blue-grey darken-3"
+      filled clearable auto-grow />
   </div>
 </template>
 
 <script>
 import { defaults } from 'utils/assessment';
 
+const getTitle = isGraded => isGraded ? 'Answer' : 'Response';
+
 export default {
   props: {
     assessment: { type: Object, default: defaults.TR },
-    isGraded: { type: Boolean, default: false },
     errors: { type: Array, default: () => ([]) },
-    isEditing: { type: Boolean, default: false }
-  },
-  data() {
-    return {
-      correct: this.assessment.correct
-    };
+    isEditing: { type: Boolean, default: false },
+    isGraded: { type: Boolean, default: false }
   },
   computed: {
-    correctError() {
-      return this.errors.includes('correct');
-    }
-  },
-  methods: {
-    update() {
-      this.$emit('update', { correct: this.correct });
-    }
-  },
-  watch: {
-    isEditing(newVal) {
-      if (this.isGraded && !newVal) this.correct = this.assessment.correct;
-    }
+    correct: {
+      get() { return this.assessment.correct; },
+      set(correct) { this.$emit('update', { correct }); }
+    },
+    title: vm => getTitle(vm.isGraded),
+    answerDisabled: vm => !vm.isEditing || !vm.isGraded,
+    correctError: vm => vm.errors.includes('correct')
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.form-group {
-  width: 100%;
-  margin: 0 auto;
-  padding: 25px 20px 15px;
-  text-align: left;
-  overflow: hidden;
-}
-
-.form-label {
-  font-size: 20px;
-}
-
-.answer {
-  margin: 10px 0;
-  padding: 10px 0 0 50px;
-  font-size: 16px;
-}
-</style>

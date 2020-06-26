@@ -1,25 +1,27 @@
 <template>
-  <div :style="{ height: `${height}px` }" class="tce-embed">
-    <div v-if="showPlaceholder">
-      <div :style="{ height: `${height}px` }" class="well placeholder">
-        <span class="heading">Embed placeholder</span>
-        <span v-show="!isFocused" class="message">Select to edit</span>
-        <span v-show="isFocused" class="message">Please use toolbar to enter url</span>
-      </div>
-    </div>
+  <div :style="style" class="tce-embed">
+    <element-placeholder
+      v-if="showPlaceholder"
+      :is-focused="isFocused"
+      :is-disabled="isDisabled"
+      :dense="dense"
+      name="Embed"
+      icon="mdi-iframe"
+      active-placeholder="Use toolbar to enter the url"
+      active-icon="mdi-arrow-up" />
     <div v-else>
       <div class="content">
-        <div v-show="!isFocused" class="overlay">
-          <div class="message">Click to preview</div>
+        <div v-show="!isDisabled && !isFocused" class="overlay">
+          <div class="message grey--text text--lighten-2">Click to preview</div>
         </div>
         <!-- Dragging iframes is not supported inside sortablejs container! -->
         <iframe
           v-if="!isDragged"
           ref="frame"
           :src="url"
-          class="content"
           frameborder="0"
-          sandbox="allow-forms allow-same-origin allow-scripts">
+          sandbox="allow-forms allow-same-origin allow-scripts"
+          class="content">
         </iframe>
       </div>
     </div>
@@ -27,27 +29,31 @@
 </template>
 
 <script>
+import { ElementPlaceholder } from 'tce-core';
+
 export default {
   name: 'tce-embed',
   inject: ['$elementBus'],
   props: {
     element: { type: Object, required: true },
     isFocused: { type: Boolean, default: false },
-    isDragged: { type: Boolean, default: false }
+    isDragged: { type: Boolean, default: false },
+    isDisabled: { type: Boolean, default: false },
+    dense: { type: Boolean, default: false }
   },
   computed: {
-    url() {
-      return this.element.data.url;
-    },
-    height() {
-      return this.element.data.height;
-    },
-    showPlaceholder() {
-      return !this.element.data.url;
+    url: vm => vm.element.data.url,
+    height: vm => vm.element.data.height,
+    showPlaceholder: vm => !vm.element.data.url,
+    style() {
+      return this.showPlaceholder ? {} : { height: `${this.height}px` };
     }
   },
   mounted() {
     this.$elementBus.on('save', data => this.$emit('save', data));
+  },
+  components: {
+    ElementPlaceholder
   }
 };
 </script>
@@ -56,20 +62,6 @@ export default {
 .tce-embed {
   position: relative;
   overflow: auto;
-}
-
-.placeholder {
-  margin: 0;
-  padding: 119px;
-
-  .heading {
-    font-size: 24px;
-  }
-
-  .message {
-    display: block;
-    font-size: 18px;
-  }
 }
 
 .overlay {
@@ -81,12 +73,11 @@ export default {
   z-index: 3;
   width: 100%;
   height: 100%;
-  background-color: #333;
+  background-color: #111;
   opacity: 0.9;
 
   .message {
-    color: green;
-    font-size: 22px;
+    font-size: 1.125rem;
   }
 }
 

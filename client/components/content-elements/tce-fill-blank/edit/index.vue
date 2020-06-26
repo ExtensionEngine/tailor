@@ -1,198 +1,184 @@
 <template>
-  <div v-if="hasAnswers" :class="{ disabled }">
-    <h5>Answers</h5>
-    <draggable :list="answerGroups" :options="dragOptions" @update="update">
-      <div v-for="(answers, i) in answerGroups" :key="i" class="answer-group">
-        <span class="drag-handle">
-          <span class="mdi mdi-drag-vertical"></span>
-        </span>
-        <span class="label">{{ i + 1 }}</span>
-        <span
-          @click="addAnswer(i)"
-          class="mdi mdi-plus btn btn-link pull-right">
-        </span>
-        <span
-          v-if="hasExtraAnswers"
-          @click="removeAnswerGroup(i)"
-          class="mdi mdi-delete btn btn-link pull-right">
-        </span>
-        <ul>
-          <li
-            v-for="(answer, j) in answers"
-            :key="`${i}.${j}`"
-            :class="errorClass(i, j)">
-            <input
-              v-model="answers[j]"
-              :disabled="disabled"
-              type="text"
-              class="form-control"
-              placeholder="Answer...">
-            <span @click="removeAnswer(i, j)" class="btn-remove mdi mdi-close"></span>
-          </li>
-        </ul>
-      </div>
+  <div :class="{ 'pb-4': !hasAnswers }">
+    <div class="d-flex justify-space-between subtitle-2">
+      <span v-if="isGraded">Answers</span>
+      <span v-else-if="isEditing">{{ blankCountInfo }}</span>
+      <span v-if="isEditing">
+        Type "@blank" above when new blank is needed.
+      </span>
+    </div>
+    <draggable v-model="correct" handle=".drag-handle">
+      <v-card
+        v-for="(group, i) in correct" :key="i"
+        class="mt-2 pt-2 transparent elevation-0">
+        <div class="mb-4">
+          <span v-if="isEditing" class="drag-handle">
+            <v-icon>mdi-drag-vertical</v-icon>
+          </span>
+          <v-chip :color="color" dark label small>{{ i + 1 }}</v-chip>
+          <v-btn
+            v-if="isEditing && !isSynced"
+            @click="removeAnswerGroup(i)"
+            color="secondary darken-1"
+            text small
+            class="float-right px-2">
+            <v-icon small class="mr-2">mdi-delete</v-icon>
+            Delete answer group
+          </v-btn>
+        </div>
+        <v-text-field
+          v-for="(answer, j) in group" :key="`${i}.${j}`"
+          @change="updateAnswer(i, j, $event)"
+          :value="answer"
+          :error="answerError(i, j)"
+          :disabled="disabled"
+          :color="color"
+          placeholder="Answer..."
+          filled>
+          <template slot="append">
+            <v-btn
+              v-if="isEditing && group.length > 1"
+              @click="removeAnswer(i, j)"
+              small icon>
+              <v-icon small>mdi-close</v-icon>
+            </v-btn>
+          </template>
+        </v-text-field>
+        <div class="d-flex justify-end mb-5">
+          <v-btn
+            v-if="isEditing"
+            @click="addAnswer(i)"
+            color="color"
+            text
+            class="px-2">
+            <v-icon small class="mr-1">mdi-plus</v-icon>
+            Add answer
+          </v-btn>
+        </div>
+      </v-card>
     </draggable>
   </div>
 </template>
 
 <script>
-import debounce from 'lodash/debounce';
+import cloneDeep from 'lodash/cloneDeep';
 import { defaults } from 'utils/assessment';
-import draggable from 'vuedraggable';
-import filter from 'lodash/filter';
+import Draggable from 'vuedraggable';
+import EventBus from 'EventBus';
 import get from 'lodash/get';
+import pluralize from 'pluralize';
+import pullAt from 'lodash/pullAt';
 import reduce from 'lodash/reduce';
+import size from 'lodash/size';
 import times from 'lodash/times';
 
-const PLACEHOLDER = /(@blank)/g;
-const ALERT = {
-  type: 'alert-danger',
-  text: `Question and blanks are out of sync !
-        Please delete unnecessary answers or add blanks in the question !`
+const appChannel = EventBus.channel('app');
+
+const TEXT_TYPES = ['JODIT_HTML', 'HTML'];
+const BLANK = /(@blank)/g;
+
+const OUT_OF_SYNC_ERR = {
+  type: 'error',
+  text: `
+    Question and blanks are out of sync!
+    Please delete unnecessary answers or add blanks in the question!`
 };
+
+const getBlankCount = question => {
+  return reduce(question, (count, element) => {
+    if (!TEXT_TYPES.includes(element.type)) return count;
+    const content = get(element, 'data.content', '');
+    return count + size(content.match(BLANK));
+  }, 0);
+};
+
+const getCountInfo = count => `${count} ${pluralize('blank', count)} detected.`;
 
 export default {
   props: {
     assessment: { type: Object, default: defaults.FB },
-    isGraded: { type: Boolean, default: false },
     errors: { type: Array, default: () => ([]) },
-    isEditing: { type: Boolean, default: false }
+    isEditing: { type: Boolean, default: false },
+    isGraded: { type: Boolean, default: false }
   },
   computed: {
-    question() {
-      return this.assessment.question;
+    correct: {
+      get() { return this.assessment.correct; },
+      set(correct) { this.update({ correct }); }
     },
-    answerGroups() {
-      return this.assessment.correct;
-    },
-    hasAnswers() {
-      return get(this.answerGroups, 'length') > 0;
-    },
-    hasExtraAnswers() {
-      return this.answerGroups.length !== this.blanksCount;
-    },
-    blanksCount() {
-      const textAssets = filter(this.question, { type: 'HTML' });
-      return reduce(textAssets, (count, it) => {
-        const content = get(it, 'data.content', '');
-        return count + (content.match(PLACEHOLDER) || []).length;
-      }, 0);
-    },
-    disabled() {
-      return !this.isEditing;
-    },
-    dragOptions() {
-      return {
-        disabled: this.disabled || !(this.answerGroups.length > 1),
-        handle: '.drag-handle'
-      };
-    }
+    question: vm => vm.assessment.question,
+    disabled: vm => !vm.isEditing,
+    hasAnswers: vm => !!size(vm.correct),
+    blankCount: vm => getBlankCount(vm.question),
+    blankCountInfo: vm => getCountInfo(vm.blankCount),
+    isSynced: vm => vm.blankCount === size(vm.correct),
+    color: vm => vm.disabled ? 'grey' : 'grey darken-3'
   },
   methods: {
-    update() {
-      this.validate();
-      this.$emit('update', { correct: this.answerGroups });
+    addAnswer(groupIndex) {
+      const correct = cloneDeep(this.correct);
+      correct[groupIndex].push('');
+      this.update({ correct });
     },
-    addAnswer(index) {
-      this.answerGroups[index].push('');
-      this.update();
+    updateAnswer(groupIndex, answerIndex, value) {
+      const correct = cloneDeep(this.correct);
+      correct[groupIndex][answerIndex] = value;
+      this.update({ correct });
     },
     removeAnswer(groupIndex, answerIndex) {
-      if (this.answerGroups[groupIndex].length === 1) return;
-      this.answerGroups[groupIndex].splice(answerIndex, 1);
-      this.update();
+      const correct = cloneDeep(this.correct);
+      pullAt(correct[groupIndex], answerIndex);
+      this.update({ correct });
     },
-    removeAnswerGroup(index) {
-      this.answerGroups.splice(index, 1);
-      this.update();
+    removeAnswerGroup(groupIndex) {
+      appChannel.emit('showConfirmationModal', {
+        title: 'Delete answer group',
+        message: 'Are you sure you want to delete this answer group?',
+        action: () => {
+          const correct = cloneDeep(this.correct);
+          pullAt(correct, groupIndex);
+          this.update({ correct });
+        }
+      });
+    },
+    attemptToSync() {
+      const count = this.blankCount - this.correct.length;
+      if (count <= 0) return;
+      const correct = cloneDeep(this.correct);
+      correct.push(...times(count, () => ['']));
+      this.update({ correct });
     },
     validate() {
-      this.$emit('alert', this.hasExtraAnswers ? ALERT : {});
+      this.$emit('alert', this.isSynced ? {} : OUT_OF_SYNC_ERR);
     },
-    parse() {
-      const count = this.blanksCount - this.answerGroups.length;
-      this.answerGroups.push(...times(count, () => ['']));
-      this.update();
+    update(value) {
+      this.$emit('update', value);
     },
-    errorClass(groupIndex, answerIndex) {
-      const answer = `correct[${groupIndex}][${answerIndex}]`;
-      return { 'has-error': this.errors.includes(answer) };
-    },
-    hasChanges(newVal, oldVal) {
-      let v1 = reduce(oldVal, (r, it) => r + get(it, 'data.content', ''), '');
-      let v2 = reduce(newVal, (r, it) => r + get(it, 'data.content', ''), '');
-      return v1 !== v2;
+    answerError(groupIndex, answerIndex) {
+      return this.errors.includes(`correct[${groupIndex}][${answerIndex}]`);
     }
   },
   watch: {
-    isEditing(newVal) {
-      if (!newVal) this.answerGroups = this.assessment.answerGroups;
-    },
-    question: debounce(function (newVal, oldVal) {
-      if (!this.isGraded || !this.hasChanges(newVal, oldVal)) return;
-      this.parse();
-    }, 200)
+    question() { if (this.isGraded) this.attemptToSync(); },
+    isSynced() { if (this.isGraded) this.validate(); }
   },
-  components: { draggable }
+  created() {
+    if (this.isGraded) this.validate();
+  },
+  components: { Draggable }
 };
 </script>
 
 <style lang="scss" scoped>
-h5 {
-  display: block;
-  margin: 30px 0 10px;
-  font-size: 18px;
-  text-align: left;
-}
+.drag-handle {
+  float: left;
+  margin-left: -0.375rem;
+  cursor: pointer;
 
-.answer-group {
-  padding: 10px;
-  text-align: left;
-
-  .drag-handle {
-    float: left;
-    cursor: pointer;
-
-    .mdi {
-      color: #888;
-      font-size: 22px;
-      line-height: 24px;
-    }
-  }
-
-  .label {
-    padding: 1px 10px;
-    font-size: 12px;
-    line-height: 24px;
-    border-radius: 1px;
-    background-color: #aaa;
-  }
-}
-
-ul {
-  padding: 0 0 0 10px;
-  list-style: none;
-
-  li {
-    position: relative;
-    margin: 20px 0;
-  }
-
-  .btn-remove {
-    position: absolute;
-    right: 5px;
-    bottom: 5px;
-    padding: 5px;
+  .mdi {
     color: #888;
-    cursor: pointer;
-
-    &:hover {
-      color: darken(#888, 20%);
-    }
+    font-size: 1.375rem;
+    line-height: 1.5rem;
   }
-}
-
-.disabled {
-  pointer-events: none;
 }
 </style>

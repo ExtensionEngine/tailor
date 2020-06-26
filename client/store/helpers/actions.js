@@ -2,7 +2,7 @@ import cuid from 'cuid';
 import Resource from './resource';
 
 export default function ($apiUrl) {
-  let api = new Resource($apiUrl);
+  const api = new Resource($apiUrl);
 
   const get = ({ commit }, id) => {
     return api.getById(id).then(item => commit('save', item) || item);
@@ -20,6 +20,8 @@ export default function ($apiUrl) {
     return api.fetch(opts).then(res => commit('reset', res));
   };
 
+  const add = ({ commit }, model) => commit('add', model);
+
   const save = ({ state, commit }, model) => {
     if (!model._cid) model._cid = cuid();
     model._synced = false;
@@ -32,6 +34,7 @@ export default function ($apiUrl) {
       const previous = state.items[model._cid];
       if (previous && previous._version === model._version) model._synced = true;
       commit('save', model);
+      return model;
     });
   };
 
@@ -59,6 +62,7 @@ export default function ($apiUrl) {
   };
 
   return {
+    add,
     api,
     fetch,
     filter,

@@ -1,26 +1,30 @@
 'use strict';
 
-const { migrationsPath } = require('../../../sequelize.config');
-const { wrapAsyncMethods } = require('./helpers');
 const config = require('./config');
 const forEach = require('lodash/forEach');
 const Hooks = require('./hooks');
 const invoke = require('lodash/invoke');
 const logger = require('../logger');
+const { migrationsPath } = require('../../../sequelize.config');
 const pick = require('lodash/pick');
 const pkg = require('../../../package.json');
 const semver = require('semver');
 const Sequelize = require('sequelize');
 const Umzug = require('umzug');
+const { wrapAsyncMethods } = require('./helpers');
 
 // Require models.
+/* eslint-disable require-sort/require-sort */
 const User = require('../../user/user.model');
-const Course = require('../../course/course.model');
-const CourseUser = require('../../course/courseUser.model');
+const Repository = require('../../repository/repository.model');
+const RepositoryTag = require('../../tag/repositoryTag.model');
+const RepositoryUser = require('../../repository/repositoryUser.model');
 const Activity = require('../../activity/activity.model');
-const TeachingElement = require('../../teaching-element/te.model');
+const ContentElement = require('../../content-element/content-element.model');
 const Revision = require('../../revision/revision.model');
 const Comment = require('../../comment/comment.model');
+const Tag = require('../../tag/tag.model');
+/* eslint-enable */
 
 const isProduction = process.env.NODE_ENV === 'production';
 const sequelize = createConnection(config);
@@ -63,14 +67,21 @@ function initialize() {
     });
 }
 
+/**
+ * Revision needs to be before Content Element to ensure its hooks are triggered
+ * first. This is a temporary fix until a new system for setting up hooks is in
+ * place.
+ */
 const models = {
   User: defineModel(User),
-  Course: defineModel(Course),
-  CourseUser: defineModel(CourseUser),
+  Repository: defineModel(Repository),
+  RepositoryTag: defineModel(RepositoryTag),
+  RepositoryUser: defineModel(RepositoryUser),
   Activity: defineModel(Activity),
-  TeachingElement: defineModel(TeachingElement),
   Revision: defineModel(Revision),
-  Comment: defineModel(Comment)
+  ContentElement: defineModel(ContentElement),
+  Comment: defineModel(Comment),
+  Tag: defineModel(Tag)
 };
 
 function defineModel(Model, connection = sequelize) {

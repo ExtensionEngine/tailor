@@ -3,7 +3,8 @@ import * as getters from './getters';
 import * as mutations from './mutations';
 
 const state = {
-  user: JSON.parse(window.localStorage.getItem('TAILOR_USER'))
+  user: null,
+  token: null
 };
 
 export default {

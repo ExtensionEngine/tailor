@@ -1,42 +1,38 @@
 'use strict';
 
-const forEach = require('lodash/forEach');
-const Promise = require('bluebird');
+const TABLE_NAME = 'teaching_element';
 
-function getElements(sequelize, transaction) {
-  return sequelize.query(
-    "SELECT * FROM teaching_element t WHERE t.type = 'TABLE'",
-    { type: sequelize.QueryTypes.SELECT, transaction });
+function findTables(queryInterface) {
+  const where = { type: 'TABLE' };
+  return queryInterface.rawSelect(TABLE_NAME, { where, plain: false }, null);
 }
 
-// NOTE: bulkInsert with updateOnDuplicate not working, avoiding model methods
-function bulkUpdate(sequelize, elements, transaction) {
-  return Promise.map(elements, ({ id, data }) => {
-    sequelize.query(
-      'UPDATE teaching_element SET data = :data WHERE id = :id',
-      { replacements: { id, data: JSON.stringify(data) }, transaction });
+function setCellType({ data }, type) {
+  if (!data.embeds) return;
+  data.embeds = mapKeys(data.embeds, (data, id) => {
+    return Object.assign({}, data, { type });
   });
 }
 
-function updateCellType(elements, type = 'HTML') {
-  forEach(elements, el => forEach(el.data.embeds, embed => (embed.type = type)));
-}
-
-module.exports = {
-  up: queryInterface => {
-    const { sequelize } = queryInterface;
-    return sequelize.transaction(async transaction => {
-      const elements = await getElements(sequelize, transaction);
-      updateCellType(elements);
-      return bulkUpdate(sequelize, elements, transaction);
-    });
-  },
-  down: queryInterface => {
-    const { sequelize } = queryInterface;
-    return sequelize.transaction(async transaction => {
-      const elements = await getElements(sequelize, transaction);
-      updateCellType(elements, 'TABLE-CELL');
-      return bulkUpdate(sequelize, elements, transaction);
-    });
-  }
+exports.up = async queryInterface => {
+  const tables = await findTables(queryInterface);
+  return Promise.all(tables.map(({ id, data }) => {
+    setCellType({ data }, 'HTML');
+    return queryInterface.update({}, TABLE_NAME, { data }, { id });
+  }));
 };
+
+exports.down = async queryInterface => {
+  const tables = await findTables(queryInterface);
+  return Promise.all(tables.map(({ id, data }) => {
+    setCellType({ data }, 'TABLE-CELL');
+    return queryInterface.update({}, TABLE_NAME, { data }, { id });
+  }));
+};
+
+function mapKeys(obj, cb) {
+  return Object.keys(obj).reduce((acc, key) => {
+    const val = cb(obj[key], key);
+    return Object.assign(acc, { [key]: val });
+  }, {});
+}

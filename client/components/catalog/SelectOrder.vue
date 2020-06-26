@@ -2,21 +2,21 @@
   <span>
     <v-menu offset-y>
       <template v-slot:activator="{ on }">
-        <v-btn v-on="on" icon flat class="mx-0">
+        <v-btn v-on="on" icon text class="my-1">
           <v-icon color="primary lighten-4">mdi-sort</v-icon>
         </v-btn>
       </template>
       <v-list class="py-0">
-        <v-list-tile
+        <v-list-item
           v-for="({ text, field, order }) in options"
           :key="field"
-          :class="{ 'secondary--text text--lighten-1': sortBy.field === field }"
-          @click="$emit('update', { field, order })">
-          <v-list-tile-title class="pr-3">{{ text }}</v-list-tile-title>
-        </v-list-tile>
+          @click="$emit('update', { field, order })"
+          :class="{ 'secondary--text text--lighten-1': sortBy.field === field }">
+          <v-list-item-title class="pr-3 text-left">{{ text }}</v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-menu>
-    <v-btn @click="toggleOrder" icon flat class="mx-0">
+    <v-btn @click="toggleOrder" icon text class="my-1">
       <v-icon color="primary lighten-4">
         mdi-sort-{{ sortBy.order === 'ASC' ? 'ascending' : 'descending' }}
       </v-icon>

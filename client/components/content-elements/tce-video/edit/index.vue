@@ -1,60 +1,60 @@
 <template>
   <div class="tce-video">
-    <div v-if="showPlaceholder">
-      <div class="well video-placeholder">
-        <div class="message">
-          <span class="heading">Video placeholder</span>
-          <span v-if="!isFocused">Select to edit</span>
-          <span v-else>Please use toolbar to enter url</span>
+    <element-placeholder
+      v-if="showPlaceholder"
+      :is-focused="isFocused"
+      :is-disabled="isDisabled"
+      name="Video"
+      icon="mdi-video-image"
+      active-placeholder="Use toolbar to upload the video"
+      active-icon="mdi-arrow-up" />
+    <div v-else>
+      <div v-if="!isDisabled && !isFocused" class="overlay">
+        <div class="message grey--text text--lighten-2">
+          Double click to preview
         </div>
       </div>
-    </div>
-    <div v-else>
-      <div v-if="!isFocused" class="overlay">
-        <div class="message">Double click to preview</div>
-      </div>
-      <div v-if="showError" class="error">
-        <div class="message">
-          <span class="icon mdi mdi-alert"></span>
-          <p>Error loading media!</p>
+      <div v-if="showError" class="overlay">
+        <div class="message secondary--text">
+          <v-icon>mdi-alert</v-icon> Error loading media!
         </div>
       </div>
       <div class="player">
-        <plyr
+        <plyrue
           v-if="showVideo"
           ref="video"
-          :emit="['error']"
-          @ready="onError">
-          <video v-if="type.isNative">
-            <source :src="url" :type="type.name"/>
+          @ready="onError"
+          :emit="['error']">
+          <video v-if="video.native">
+            <source :src="video.url" :type="video.mime">
           </video>
           <div v-else class="plyr__video-embed">
             <iframe :src="url" allowfullscreen></iframe>
           </div>
-        </plyr>
+        </plyrue>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { ElementPlaceholder } from 'tce-core';
 import { extname } from 'path';
 import get from 'lodash/get';
-import { Plyr } from 'vue-plyr';
+import { PlyrueComponent as Plyrue } from 'plyrue';
 
-handlePlyrErrors(Plyr);
+const { MEDIA_ERR_SRC_NOT_SUPPORTED } = window.MediaError;
 
-const MediaError = window.MediaError;
-
-const NOT_NATIVE = /youtu\.?be|vimeo/;
-
-// NOTE: m4v is a special video file format used by Apple. It is a video in
-//       mp4 container and uses a `.m4v` extension. Can contain DRM.
-// https://stackoverflow.com/a/15279480
-const CUSTOM_SUBTYPE_MAPPING = {
-  ogv: 'ogg',
-  m4v: 'mp4'
+const MIMETYPE = {
+  m4v: 'video/mp4',
+  ogv: 'video/ogg'
 };
+
+const VIDEO_HOSTING = [
+  /youtu(?:\.be|be\.com)$/,
+  /vimeo\.com$/,
+  /drive\.google\.com$/
+];
 
 export default {
   name: 'tce-video',
@@ -62,38 +62,24 @@ export default {
   props: {
     element: { type: Object, required: true },
     isFocused: { type: Boolean, default: false },
-    isDragged: { type: Boolean, default: false }
+    isDragged: { type: Boolean, default: false },
+    isDisabled: { type: Boolean, default: false }
   },
-  data() {
-    return {
-      error: null,
-      switchingVideo: false
-    };
-  },
+  data: () => ({ error: null, switchingVideo: false }),
   computed: {
-    player() {
-      return get(this.$refs, 'video.player');
+    player: ({ $refs }) => get($refs, 'video.player'),
+    url: ({ element }) => get(element, 'data.url', ''),
+    video: ({ url }) => {
+      url = new URL(url);
+      return {
+        url: url.href,
+        native: !isShareLink(url),
+        ...!isShareLink(url) && { mime: mimetype(url) }
+      };
     },
-    url() {
-      return get(this.element, 'data.url', '');
-    },
-    type() {
-      if (NOT_NATIVE.test(this.url)) return { isNative: false };
-      const url = this.url.split('?').shift();
-      const ext = extname(url).substring(1);
-      const name = `video/${CUSTOM_SUBTYPE_MAPPING[ext] || ext}`;
-      return { isNative: true, name };
-    },
-    showPlaceholder() {
-      return !this.url;
-    },
-    showVideo() {
-      return !(this.switchingVideo || this.isDragged);
-    },
-    showError() {
-      if (!this.error) return false;
-      return this.error.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED;
-    }
+    showPlaceholder: ({ url }) => !url,
+    showVideo: ({ switchingVideo, isDragged }) => !(switchingVideo || isDragged),
+    showError: ({ error }) => error ? error.code === MEDIA_ERR_SRC_NOT_SUPPORTED : false
   },
   methods: {
     onError(err) {
@@ -115,20 +101,16 @@ export default {
   mounted() {
     this.$elementBus.on('save', ({ data }) => this.$emit('save', data));
   },
-  components: { Plyr }
+  components: { ElementPlaceholder, Plyrue }
 };
 
-// Workaround for https://github.com/sampotts/plyr/issues/1001
-const ytDestroyError = 'The YouTube player is not attached to the DOM.';
-function handlePlyrErrors(Plyr) {
-  const beforeDestroy = Plyr.beforeDestroy;
-  Plyr.beforeDestroy = function () {
-    try {
-      return beforeDestroy.call(this, arguments);
-    } catch (err) {
-      if (err.message !== ytDestroyError) throw err;
-    }
-  };
+function isShareLink({ hostname }) {
+  return VIDEO_HOSTING.some(re => re.test(hostname));
+}
+function mimetype({ pathname }) {
+  const ext = extname(pathname).replace(/^\./, '');
+  if (MIMETYPE[ext]) return MIMETYPE[ext];
+  return `video/${ext}`;
 }
 </script>
 
@@ -137,68 +119,25 @@ function handlePlyrErrors(Plyr) {
   position: relative;
 }
 
-.video-placeholder {
-  .message {
-    padding: 155px 20px;
-
-    .heading {
-      font-size: 24px;
-    }
-
-    span {
-      display: block;
-      font-size: 18px;
-    }
-  }
-}
-
 .overlay {
   position: absolute;
   z-index: 3;
   width: 100%;
   height: 100%;
-  background-color: #333;
-  opacity: 0.9;
+  background: rgba(16, 16, 16, 0.85);
 
   .message {
     position: relative;
     top: 45%;
-    color: green;
-    font-size: 22px;
+    font-size: 1.125rem !important;
   }
-}
-
-.error {
-  position: absolute;
-  z-index: 98;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.9);
-}
-
-.error .message {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #fff;
-  font-size: 18px;
-  font-weight: 500;
-
-  .icon {
-    font-size: 42px;
-  }
-}
-
-.well {
-  margin: 0;
 }
 
 .player {
-  height: 410px;
+  height: 25.625rem;
   background: #000;
 
-  /deep/ {
+  ::v-deep {
     > div, .plyr--video, .plyr__video-wrapper, video {
       height: 100%;
     }

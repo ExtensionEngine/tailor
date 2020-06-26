@@ -95,16 +95,7 @@ class Amazon {
   getFileUrl(key, options = {}) {
     const expires = options.expires || DEFAULT_EXPIRATION_TIME;
     const params = Object.assign(options, { Bucket: this.bucket, Key: key, Expires: expires });
-    return this._getSignedUrl('getObject', params);
-  }
-
-  _getSignedUrl(operation, params) {
-    return new Promise((resolve, reject) => {
-      this.client.getSignedUrl(operation, params, (err, url) => {
-        if (err) return reject(err);
-        resolve(url);
-      });
-    });
+    return this.client.getSignedUrlPromise('getObject', params);
   }
 }
 
