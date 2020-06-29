@@ -10,6 +10,7 @@ const Promise = require('bluebird');
 const storage = require('./index');
 const toPairs = require('lodash/toPairs');
 const values = require('lodash/values');
+const set = require('lodash/set');
 
 const STORAGE_PROTOCOL = 'storage://';
 const PRIMITIVES = [
@@ -100,9 +101,10 @@ async function resolveAssetsMap(element) {
   if (!element.data.assets) return element;
   await Promise.map(toPairs(element.data.assets), async ([key, url]) => {
     const isStorageResource = url.startsWith(STORAGE_PROTOCOL);
-    element.data[key] = isStorageResource
+    const resolvedUrl = isStorageResource
       ? (await getFileUrl(url.substr(STORAGE_PROTOCOL.length, url.length)))
       : url;
+    set(element.data, key, resolvedUrl);
   });
   return element;
 }
