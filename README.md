@@ -5,7 +5,7 @@ status](https://badgen.net/circleci/github/ExtensionEngine/tailor/develop?icon)]
 [![Codacy
 Badge](https://badgen.net/codacy/grade/d6d198f9c56b4ca799b4624c5bb3e16c/develop)](https://app.codacy.com/manual/ExtensionEngine/tailor)
 [![Known
-Vulnerabilities](https://snyk.io/test/github/ExtensionEngine/tailor/develop/badge.svg)](https://snyk.io/test/github/ExtensionEngine/tailor)
+Vulnerabilities](https://badgen.net/snyk/ExtensionEngine/tailor/develop)](https://snyk.io/test/github/ExtensionEngine/tailor)
 [![GitHub package
 version](https://badgen.net/github/release/ExtensionEngine/tailor)](https://github.com/ExtensionEngine/tailor/releases)
 [![GitHub
