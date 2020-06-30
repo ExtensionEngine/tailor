@@ -31,7 +31,7 @@ export default {
   props: {
     emptyMessage: {
       type: String,
-      default: 'Please create your first Task on the left to view and edit its details here.'
+      default: 'Please select Task on the left to view and edit its details here.'
     }
   },
   computed: {
