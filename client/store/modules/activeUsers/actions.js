@@ -3,7 +3,6 @@ import find from 'lodash/find';
 import forEach from 'lodash/forEach';
 import generateActions from '@/store/helpers/actions';
 import palette from 'utils/avatarPalette';
-// import sample from 'lodash/sample';
 import SSEClient from '@/SSEClient';
 import urlJoin from 'url-join';
 
@@ -17,8 +16,7 @@ const Events = {
   RemoveSession: 'active_user:remove_session'
 };
 
-const subscribe = ({ state, commit, rootState }) => {
-  const { repositoryId } = rootState.route.params;
+const subscribe = ({ state, commit, rootState }, repositoryId) => {
   const params = { token: rootState.auth.token };
   const url = urlJoin(baseUrl, api.url.subscribe(repositoryId));
   if (feed.isConnected) return;
@@ -46,13 +44,12 @@ const unsubscribe = ({ commit }) => {
 };
 
 const fetch = ({ commit }, repositoryId) => {
-  return api.fetch(repositoryId)
-    .then(({ activeUsers }) => {
-      forEach(activeUsers, (user, index) => {
-        assignPalette(user, index);
-        commit('save', user);
-      });
+  return api.fetch(repositoryId).then(({ activeUsers }) => {
+    forEach(activeUsers, (user, index) => {
+      assignPalette(user, index);
+      commit('save', user);
     });
+  });
 };
 
 const add = (_, context) => {
