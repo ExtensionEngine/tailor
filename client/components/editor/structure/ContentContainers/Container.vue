@@ -107,7 +107,7 @@ export default {
   margin-bottom: 0.5rem;
 }
 
-::v-deep .active-users-wrapper {
+.active-users-wrapper {
   display: flex;
   justify-content: flex-end;
   position: relative;
