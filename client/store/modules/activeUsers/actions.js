@@ -43,22 +43,17 @@ const unsubscribe = ({ commit }) => {
   commit('setSseId', null);
 };
 
-const fetch = ({ commit }, repositoryId) => {
-  return api.fetch(repositoryId).then(({ activeUsers }) => {
+const fetch = ({ commit }, repositoryId) =>
+  api.fetch(repositoryId).then(({ activeUsers }) => {
     forEach(activeUsers, (user, index) => {
       assignPalette(user, index);
       commit('save', user);
     });
   });
-};
 
-const add = (_, context) => {
-  return api.add(context);
-};
+const add = (_, context) => api.add(context);
 
-const remove = (_, context) => {
-  return api.remove(context);
-};
+const remove = (_, context) => api.remove(context);
 
 export {
   setEndpoint,
