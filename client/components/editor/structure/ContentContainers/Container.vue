@@ -91,8 +91,8 @@ export default {
     getElementStyle(elementId) {
       const activeUsers = this.getActiveUsers('element', elementId);
       if (!activeUsers.length) return;
-      const { palette, imgUrl } = first(activeUsers);
-      const color = palette[imgUrl ? 'border' : 'background'];
+      const { palette } = first(activeUsers);
+      const color = palette.border;
       return { boxShadow: `0 0 0 2px ${color}` };
     }
   },
