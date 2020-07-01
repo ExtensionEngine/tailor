@@ -3,7 +3,6 @@
     <v-avatar
       v-for="{ id, fullName, email, palette, imgUrl } in users"
       :key="id"
-      :color="palette.background"
       :style="{ boxShadow: `0 0 0 2px ${palette.border}` }"
       :size="size"
       class="avatar">
