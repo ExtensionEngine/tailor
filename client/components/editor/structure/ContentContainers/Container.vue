@@ -32,13 +32,11 @@
           :dragged="dragged"
           :element="item"
           :element-style="getElementStyle(item.contentId)">
-          <div
-            class="active-users-wrapper">
-            <active-users
-              v-if="getActiveUsers('element', item.contentId)"
-              :users="getActiveUsers('element', item.contentId)"
-              :size="26" />
-          </div>
+          <active-users
+            v-if="getActiveUsers('element', item.contentId)"
+            :users="getActiveUsers('element', item.contentId)"
+            :size="26"
+            class="active-users-wrapper" />
         </content-element>
       </template>
     </element-list>
