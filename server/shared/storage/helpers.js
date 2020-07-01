@@ -7,10 +7,10 @@ const isString = require('lodash/isString');
 const isUrl = require('is-url');
 const mime = require('mime-types');
 const Promise = require('bluebird');
+const set = require('lodash/set');
 const storage = require('./index');
 const toPairs = require('lodash/toPairs');
 const values = require('lodash/values');
-const set = require('lodash/set');
 
 const STORAGE_PROTOCOL = 'storage://';
 const PRIMITIVES = [
