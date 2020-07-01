@@ -7,7 +7,7 @@
       :style="{ boxShadow: `0 0 0 2px ${palette.border}` }"
       :size="size"
       class="avatar">
-      <v-tooltip bottom>
+      <v-tooltip :disabled="!fullName" bottom>
         <template v-slot:activator="{ on }">
           <img
             v-if="imgUrl"
