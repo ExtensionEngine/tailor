@@ -38,7 +38,7 @@ export default {
       immediate: true
     }
   },
-  mounted() {
+  created() {
     this.subscribeToActiveUsers(this.repositoryId);
     this.fetchActiveUsers(this.repositoryId);
   },
