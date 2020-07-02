@@ -30,7 +30,7 @@
           :value="getPremiseContent(premiseKey)"
           :error="hasError(premiseKey, 'premises')"
           :disabled="disabled"
-          placeholder="Premise value...'"
+          placeholder="Premise value..."
           color="blue-grey darken-3"
           filled />
       </v-col>
