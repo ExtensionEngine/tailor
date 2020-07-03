@@ -9,7 +9,7 @@
       {{ message }}
     </v-alert>
     <validation-observer v-slot="{ invalid }" slim>
-      <form @submit.prevent="submit" novalidate>
+      <form @submit.prevent="submit">
         <validation-provider
           v-slot="{ errors }"
           rules="required|email"
@@ -49,7 +49,7 @@
         </div>
         <div class="options">
           <router-link :to="{ name: 'forgot-password' }">
-            Forgot password ?
+            Forgot password?
           </router-link>
         </div>
       </form>
