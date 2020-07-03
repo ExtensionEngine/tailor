@@ -7,8 +7,8 @@
       class="mb-5">
       {{ error }}
     </v-alert>
-    <validation-observer v-slot="{ invalid }" ref="form" slim>
-      <form @submit.prevent="submit">
+    <validation-observer v-slot="{ invalid, handleSubmit }" slim>
+      <form @submit.prevent="handleSubmit(submit)">
         <validation-provider
           v-slot="{ errors }"
           rules="required|alphanumerical|min:6"
@@ -65,8 +65,6 @@ export default {
     ...mapActions(['resetPassword']),
     async submit() {
       const { token } = this.$route.params;
-      const { valid } = await this.$refs.form.validate();
-      if (!valid) return;
       return this.resetPassword({ password: this.password, token })
         .then(() => this.$router.push('/'))
         .catch(() => (this.error = 'An error has occurred!'));
