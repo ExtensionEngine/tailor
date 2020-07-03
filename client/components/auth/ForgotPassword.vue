@@ -7,7 +7,7 @@
       class="mb-5">
       {{ error || 'Sending reset email...' }}
     </v-alert>
-    <validation-observer v-if="!error" v-slot="{ invalid }">
+    <validation-observer v-if="!error" v-slot="{ invalid }" slim>
       <form @submit.prevent="submit">
         <validation-provider
           v-slot="{ errors }"

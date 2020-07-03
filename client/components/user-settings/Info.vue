@@ -1,5 +1,5 @@
 <template>
-  <validation-observer v-slot="{ invalid }" ref="form">
+  <validation-observer v-slot="{ invalid }" ref="form" slim>
     <v-form @submit.prevent="updateUser" class="pt-4 px-4">
       <validation-provider
         v-slot="{ errors }"

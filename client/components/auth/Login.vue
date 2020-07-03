@@ -8,7 +8,7 @@
       class="mb-7 text-left">
       {{ message }}
     </v-alert>
-    <validation-observer v-slot="{ invalid }">
+    <validation-observer v-slot="{ invalid }" slim>
       <form @submit.prevent="submit" novalidate>
         <validation-provider
           v-slot="{ errors }"

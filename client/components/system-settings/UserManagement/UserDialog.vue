@@ -2,7 +2,7 @@
   <tailor-dialog v-model="show" header-icon="mdi-account">
     <template v-slot:header>{{ userData ? 'Edit' : 'Create' }} User</template>
     <template v-slot:body>
-      <validation-observer ref="form">
+      <validation-observer ref="form" slim>
         <validation-provider
           v-slot="{ errors }"
           :rules="{ required: true, email: true, unique_email: { userData } }"

@@ -7,7 +7,7 @@
       class="mb-5">
       {{ error }}
     </v-alert>
-    <validation-observer v-slot="{ invalid }" ref="form">
+    <validation-observer v-slot="{ invalid }" ref="form" slim>
       <form @submit.prevent="submit">
         <validation-provider
           v-slot="{ errors }"

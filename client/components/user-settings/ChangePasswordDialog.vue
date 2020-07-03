@@ -10,7 +10,7 @@
     </template>
     <template v-slot:header>Change Password</template>
     <template v-slot:body>
-      <validation-observer v-slot="{ invalid }" ref="form">
+      <validation-observer v-slot="{ invalid }" ref="form" slim>
         <validation-provider
           v-slot="{ errors }"
           rules="required"

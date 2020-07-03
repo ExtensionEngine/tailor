@@ -14,7 +14,7 @@
     </template>
     <template v-slot:header>Add user</template>
     <template v-slot:body>
-      <validation-observer ref="form">
+      <validation-observer ref="form" slim>
         <validation-provider
           v-slot="{ errors }"
           rules="required|email"

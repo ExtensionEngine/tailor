@@ -6,7 +6,7 @@
     <template v-for="(_, slot) in $scopedSlots" v-slot:[slot]="scope">
       <slot :name="slot" v-bind="scope"></slot>
     </template>
-    <validation-observer v-slot="props">
+    <validation-observer v-slot="props" slim>
       <v-form @submit.prevent>
         <v-card>
           <v-card-title primary-title class="dialog-title primary darken-1">

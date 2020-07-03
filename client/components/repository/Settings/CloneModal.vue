@@ -2,7 +2,7 @@
   <tailor-dialog :value="show" header-icon="mdi-content-copy" persistent>
     <template v-slot:header>Clone {{ schema.toLowerCase() }}</template>
     <template v-slot:body>
-      <validation-observer ref="form">
+      <validation-observer ref="form" slim>
         <validation-provider
           v-slot="{ errors }"
           rules="required|min:2|max:250"
