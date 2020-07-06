@@ -26,8 +26,9 @@
       :repository-id="activity.repositoryId"
       :levels="supportedLevels"
       :anchor="activity"
+      :add-child="addSublevel"
       :heading="`
-        Add ${supportedLevels === subLevels ? 'into' : 'below'}
+        Add ${addSublevel ? 'into' : 'below'}
         ${activity.data.name}`" />
     <copy-dialog
       v-if="showCopyDialog"
@@ -35,7 +36,8 @@
       @completed="parentId => expandParent({ parentId })"
       :repository-id="activity.repositoryId"
       :levels="supportedLevels"
-      :anchor="activity" />
+      :anchor="activity"
+      :copy-into="addSublevel" />
   </div>
 </template>
 
@@ -62,6 +64,7 @@ export default {
   data: () => ({
     showCreateDialog: false,
     showCopyDialog: false,
+    addSublevel: false,
     supportedLevels: []
   }),
   computed: {
@@ -73,32 +76,46 @@ export default {
       }, {
         name: 'Add item into',
         icon: 'subdirectory-arrow-right',
-        action: () => this.setCreateContext(this.subLevels)
+        action: () => this.setCreateContext(this.subLevels, true)
+      }];
+      if (!this.subLevels.length) items.pop();
+      return items;
+    },
+    copyMenuOptions() {
+      const items = [{
+        name: 'Copy existing below',
+        icon: 'content-copy',
+        action: () => this.setCopyContext()
+      }, {
+        name: 'Copy existing into',
+        icon: 'content-copy',
+        action: () => this.setCopyContext(true)
       }];
       if (!this.subLevels.length) items.pop();
       return items;
     },
     menuOptions() {
-      return [...this.addMenuOptions, {
-        name: 'Copy existing',
-        icon: 'content-copy',
-        action: () => this.setCopyContext()
-      }, {
-        name: 'Remove',
-        icon: 'delete',
-        action: () => this.delete(this.activity)
-      }];
+      return [
+        ...this.addMenuOptions,
+        ...this.copyMenuOptions, {
+          name: 'Remove',
+          icon: 'delete',
+          action: () => this.delete(this.activity)
+        }
+      ];
     }
   },
   methods: {
     ...mapActions('repository/activities', ['remove']),
-    setCreateContext(levels) {
+    setCreateContext(levels, addSublevel = false) {
       this.showCreateDialog = true;
       this.supportedLevels = levels;
+      this.addSublevel = addSublevel;
     },
-    setCopyContext() {
+    setCopyContext(addSublevel = false) {
       this.showCopyDialog = true;
       this.supportedLevels = this.levels;
+      this.addSublevel = addSublevel;
     },
     delete() {
       const { activity, $route: { name: routeName } } = this;

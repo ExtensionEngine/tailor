@@ -5,6 +5,7 @@ import get from 'lodash/get';
 import { isEditable } from 'shared/activities';
 import map from 'lodash/map';
 import selectActivity from '@/components/repository/common/selectActivity';
+import uniqBy from 'lodash/uniqBy';
 
 export default {
   mixins: [selectActivity],
@@ -12,11 +13,11 @@ export default {
     ...mapGetters('repository', ['structure', 'activities']),
     parent: vm => find(vm.activities, { id: vm.activity.parentId }),
     isEditable: vm => isEditable(vm.activity.type),
-    levels: vm => vm.sameLevel.concat(vm.subLevels),
+    levels: vm => uniqBy(vm.sameLevel.concat(vm.subLevels), 'type'),
     sameLevel() {
       const sameLevelTypes = this.parent
         ? get(find(this.structure, { type: this.parent.type }), 'subLevels', [])
-        : map(filter(this.structure, { level: 1 }), 'type');
+        : map(filter(this.structure, { rootLevel: true }), 'type');
       return filter(this.structure, it => sameLevelTypes.includes(it.type));
     },
     subLevels() {
