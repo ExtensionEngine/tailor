@@ -1,10 +1,11 @@
 <template>
-  <tailor-dialog :value="show" header-icon="mdi-content-copy" persistent>
-    <template v-slot:header>Clone {{ schema.toLowerCase() }}</template>
-    <template v-slot:body>
-      <validation-observer ref="form" slim>
+  <validation-observer v-slot="{ handleSubmit}" ref="form" slim>
+    <tailor-dialog :value="show" header-icon="mdi-content-copy" persistent>
+      <template v-slot:header>Clone {{ schema.toLowerCase() }}</template>
+      <template v-slot:body>
         <validation-provider
           v-slot="{ errors }"
+          mode="eager"
           rules="required|min:2|max:250"
           name="name">
           <v-text-field
@@ -19,6 +20,7 @@
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
+          mode="eager"
           rules="required|min:2|max:2000"
           name="description">
           <v-textarea
@@ -31,19 +33,19 @@
             outlined
             class="mb-4" />
         </validation-provider>
-      </validation-observer>
-    </template>
-    <template v-slot:actions>
-      <v-btn @click="close" :disabled="inProgress" text>Cancel</v-btn>
-      <v-btn
-        @click="cloneRepository"
-        :loading="inProgress"
-        color="primary"
-        text>
-        Clone
-      </v-btn>
-    </template>
-  </tailor-dialog>
+      </template>
+      <template v-slot:actions>
+        <v-btn @click="close" :disabled="inProgress" text>Cancel</v-btn>
+        <v-btn
+          @click.prevent="handleSubmit(cloneRepository)"
+          :loading="inProgress"
+          color="primary"
+          text>
+          Clone
+        </v-btn>
+      </template>
+    </tailor-dialog>
+  </validation-observer>
 </template>
 
 <script>
@@ -71,8 +73,6 @@ export default {
       this.$refs.form.reset();
     },
     async cloneRepository() {
-      const valid = await this.$refs.form.validate();
-      if (!valid) return;
       this.inProgress = true;
       const { repositoryId } = this.$route.params;
       const data = { id: repositoryId, ...pick(this, ['name', 'description']) };
