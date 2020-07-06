@@ -25,7 +25,7 @@
         </v-card-text>
         <v-card-actions class="px-4 pb-3">
           <v-spacer />
-          <slot v-bind="props" name="actions"></slot>
+          <slot name="actions"></slot>
         </v-card-actions>
       </v-card>
     </v-form>
