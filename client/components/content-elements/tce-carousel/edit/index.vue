@@ -22,7 +22,7 @@
     <v-carousel
       v-else
       v-model="activeItem"
-      :height="`${height}px`"
+      :height="height"
       :show-arrows="false">
       <carousel-item
         v-for="item in items"
