@@ -40,7 +40,7 @@ export default {
   computed: {
     schemas() {
       return SCHEMAS.map(({ name: label, structure }) => {
-        const roots = structure.filter(it => it.level === 1);
+        const roots = structure.filter(it => it.rootLevel);
         const children = roots.reduce((acc, { type }) => {
           acc.push(buildTree(type, structure));
           return acc;

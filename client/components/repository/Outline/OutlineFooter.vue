@@ -30,7 +30,7 @@ export default {
   },
   computed: {
     ...mapGetters('repository', ['repository', 'structure']),
-    levels: vm => filter(vm.structure, { level: 1 }),
+    levels: vm => filter(vm.structure, { rootLevel: true }),
     anchor: vm => last(vm.rootActivities)
   },
   components: { CreateDialog }
