@@ -50,7 +50,6 @@
           :key="subActivity._cid"
           v-bind="subActivity"
           :index="childIndex + 1"
-          :level="level + 1"
           :activities="activities"
           class="sub-activity" />
       </draggable>
