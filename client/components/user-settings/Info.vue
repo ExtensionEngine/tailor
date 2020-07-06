@@ -1,6 +1,6 @@
 <template>
-  <validation-observer v-slot="{ invalid }" ref="form" slim>
-    <v-form @submit.prevent="updateUser" class="pt-4 px-4">
+  <validation-observer v-slot="{ invalid, handleSubmit }" slim>
+    <v-form @submit.prevent="handleSubmit(updateUser)" class="pt-4 px-4">
       <validation-provider
         v-slot="{ errors }"
         :rules="{ required: true, email: true, unique_email: { userData: user } }"
@@ -79,8 +79,6 @@ export default {
   methods: {
     ...mapActions(['updateInfo']),
     async updateUser() {
-      const valid = await this.$refs.form.validate();
-      if (!valid) return;
       return this.updateInfo(pick(this.userData, ATTRIBUTES))
         .then(() => {
           this.$snackbar.show('User information updated!');
