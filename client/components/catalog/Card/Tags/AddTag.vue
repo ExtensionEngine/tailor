@@ -1,30 +1,32 @@
 <template>
-  <tailor-dialog
-    @click:outside="$emit('close')"
-    :value="true"
-    header-icon="mdi-tag-outline">
-    <template #header>Add Tag</template>
-    <template #body>
-      <validation-provider
-        v-slot="{ errors }"
-        rules="required|min:2|max:20"
-        name="name">
-        <v-combobox
-          v-model="tagInput"
-          @keydown.enter="submit"
-          :items="availableTags"
-          :error-messages="errors"
-          label="Select a tag or add a new one"
-          outlined />
-      </validation-provider>
-    </template>
-    <template #actions="{ invalid }">
-      <v-btn @click="hide" text>Cancel</v-btn>
-      <v-btn @click="submit" :disabled="invalid" color="primary" text>
-        Save
-      </v-btn>
-    </template>
-  </tailor-dialog>
+  <validation-observer v-slot="{ handleSubmit }" mode="eager">
+    <tailor-dialog
+      @click:outside="$emit('close')"
+      :value="true"
+      header-icon="mdi-tag-outline">
+      <template #header>Add Tag</template>
+      <template #body>
+        <validation-provider
+          v-slot="{ errors }"
+          rules="required|min:2|max:20"
+          name="name">
+          <v-combobox
+            v-model="tagInput"
+            @keydown.enter="submit"
+            :items="availableTags"
+            :error-messages="errors"
+            label="Select a tag or add a new one"
+            outlined />
+        </validation-provider>
+      </template>
+      <template #actions>
+        <v-btn @click="hide" text>Cancel</v-btn>
+        <v-btn @click.prevent="handleSubmit(submit)" color="primary" text>
+          Save
+        </v-btn>
+      </template>
+    </tailor-dialog>
+  </validation-observer>
 </template>
 
 <script>
