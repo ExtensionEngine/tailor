@@ -3,6 +3,7 @@
     <v-form @submit.prevent="handleSubmit(updateUser)" class="pt-4 px-4">
       <validation-provider
         v-slot="{ errors }"
+        mode="eager"
         :rules="{ required: true, email: true, unique_email: { userData: user } }"
         name="email">
         <v-text-field
@@ -14,6 +15,7 @@
       </validation-provider>
       <validation-provider
         v-slot="{ errors }"
+        mode="eager"
         rules="required|min:2|max:20"
         name="firstName">
         <v-text-field
@@ -26,6 +28,7 @@
       </validation-provider>
       <validation-provider
         v-slot="{ errors }"
+        mode="eager"
         rules="required|min:2|max:20"
         name="lastName">
         <v-text-field
