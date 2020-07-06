@@ -1,5 +1,5 @@
 <template>
-  <validation-observer v-slot="{ handleSubmit }" mode="eager">
+  <validation-observer v-slot="{ handleSubmit }" mode="eager" slim>
     <tailor-dialog
       @click:outside="$emit('close')"
       :value="true"
