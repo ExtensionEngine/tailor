@@ -43,7 +43,7 @@ function describeActivityRevision(rev, activity) {
   const typeLabel = getActivityTypeLabel(rev.state);
   const action = getAction(rev.operation);
   const activityConfig = getLevel(rev.state.type);
-  const containerContext = activityConfig.level !== 1
+  const containerContext = !activityConfig.rootLevel
     ? getContainerContext(activity)
     : '';
   return `${action} ${name} ${lower(typeLabel)} ${containerContext}`;
