@@ -43,10 +43,6 @@ export function getAncestors(activities, activity) {
   return [...ancestors, parent];
 }
 
-export function isSameLevel(activityX, activityY) {
-  return getLevel(activityX.type).level === getLevel(activityY.type).level;
-}
-
 export function toTreeFormat(activities, targetLevels, parentId = null, level = 1) {
   return getOutlineChildren(activities, parentId).map(activity => ({
     ...activity,
