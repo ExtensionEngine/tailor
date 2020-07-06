@@ -17,11 +17,11 @@
       <validation-observer ref="form" slim>
         <validation-provider name="alert">
           <v-alert
-            :value="errorAlert.show"
+            :value="error.show"
             color="error"
             icon="mdi-alert-outline"
             outlined>
-            {{ errorAlert.message }}
+            {{ error.message }}
           </v-alert>
         </validation-provider>
         <validation-provider
@@ -95,7 +95,7 @@ export default {
     repository: resetData(),
     isVisible: false,
     showLoader: false,
-    errorAlert: {
+    error: {
       show: false,
       message: 'An error has occurred!'
     }
@@ -111,7 +111,7 @@ export default {
       this.showLoader = true;
       return api.save(this.repository)
         .then(() => this.$emit('created') && this.hide())
-        .catch(() => (this.errorAlert.show = true));
+        .catch(() => (this.error.show = true));
     },
     hide() {
       this.showLoader = false;
