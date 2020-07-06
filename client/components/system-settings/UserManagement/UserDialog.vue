@@ -1,10 +1,11 @@
 <template>
-  <tailor-dialog v-model="show" header-icon="mdi-account">
-    <template v-slot:header>{{ userData ? 'Edit' : 'Create' }} User</template>
-    <template v-slot:body>
-      <validation-observer ref="form" slim>
+  <validation-observer v-slot="{ handleSubmit }" ref="form" slim>
+    <tailor-dialog v-model="show" header-icon="mdi-account">
+      <template v-slot:header>{{ userData ? 'Edit' : 'Create' }} User</template>
+      <template v-slot:body>
         <validation-provider
           v-slot="{ errors }"
+          mode="eager"
           :rules="{ required: true, email: true, unique_email: { userData } }"
           name="email">
           <v-text-field
@@ -19,6 +20,7 @@
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
+          mode="eager"
           rules="required|min:2|max:50"
           name="firstName">
           <v-text-field
@@ -33,6 +35,7 @@
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
+          mode="eager"
           rules="required|min:2|max:50"
           name="lastName">
           <v-text-field
@@ -59,13 +62,13 @@
             outlined
             class="mb-3" />
         </validation-provider>
-      </validation-observer>
-    </template>
-    <template v-slot:actions>
-      <v-btn @click="close" text>Cancel</v-btn>
-      <v-btn @click="save" color="blue-grey darken-4" text>Save</v-btn>
-    </template>
-  </tailor-dialog>
+      </template>
+      <template v-slot:actions>
+        <v-btn @click="close" text>Cancel</v-btn>
+        <v-btn @click.prevent="handleSubmit(save)" color="blue-grey darken-4" text>Save</v-btn>
+      </template>
+    </tailor-dialog>
+  </validation-observer>
 </template>
 
 <script>
@@ -109,8 +112,6 @@ export default {
       this.$emit('update:visible', false);
     },
     async save() {
-      const valid = await this.$refs.form.validate();
-      if (!valid) return;
       const action = this.isNewUser ? 'create' : 'update';
       api.upsert(this.user).then(() => this.$emit(`${action}d`));
       this.close();
