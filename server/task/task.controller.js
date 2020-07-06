@@ -1,6 +1,8 @@
 'use strict';
 
 const { Activity, sequelize, Task } = require('../shared/database');
+const { CONFLICT } = require('http-status-codes');
+const { createError } = require('../shared/error/helpers');
 const pick = require('lodash/pick');
 const ATTRIBUTES = [
   'name', 'description', 'priority', 'status', 'dueDate',
@@ -14,6 +16,12 @@ async function list({ repository }, res) {
 
 async function create({ body, repository, user }, res) {
   const { activityId, ...data } = pick(body, ATTRIBUTES);
+  const existingTaskForActivity = await Task.findOne({
+    include: [{ model: Activity, where: { id: activityId } }]
+  });
+  if (existingTaskForActivity) {
+    return createError(CONFLICT, 'Active task for activity already exists.');
+  }
   return sequelize.transaction(async transaction => {
     const task = await Task.create({
       ...data,
