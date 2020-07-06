@@ -1,5 +1,5 @@
 <template>
-  <validation-observer v-slot="{ handleSubmit }" mode="eager" slim>
+  <validation-observer v-slot="{ handleSubmit }" slim>
     <tailor-dialog
       @click:outside="$emit('close')"
       :value="true"
@@ -8,6 +8,7 @@
       <template #body>
         <validation-provider
           v-slot="{ errors }"
+          mode="eager"
           rules="required|min:2|max:20"
           name="name">
           <v-combobox

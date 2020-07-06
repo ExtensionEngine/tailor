@@ -7,10 +7,11 @@
       class="mb-5">
       {{ error || 'Sending reset email...' }}
     </v-alert>
-    <validation-observer v-if="!error" v-slot="{ invalid, handleSubmit }" slim>
+    <validation-observer v-if="!error" v-slot="{ handleSubmit }" slim>
       <form @submit.prevent="handleSubmit(submit)">
         <validation-provider
           v-slot="{ errors }"
+          mode="eager"
           rules="required|email"
           name="email">
           <v-text-field
@@ -29,7 +30,7 @@
           </v-btn>
           <v-spacer />
           <v-btn
-            :disabled="invalid || showMessage"
+            :disabled="showMessage"
             type="submit"
             color="primary darken-1">
             Send reset email
