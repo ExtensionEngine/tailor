@@ -10,7 +10,7 @@
       </v-btn>
       <validation-provider
         ref="provider"
-        v-slot="{ validate, errors }"
+        v-slot="{ errors }"
         rules="required|min_value:200|max_value:3000"
         name="height">
         <v-text-field
