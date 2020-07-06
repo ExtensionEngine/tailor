@@ -80,7 +80,6 @@ export default {
     id: { type: Number, default: null },
     parentId: { type: Number, default: null },
     repositoryId: { type: Number, required: true },
-    level: { type: Number, required: true },
     index: { type: Number, required: true },
     position: { type: Number, required: true },
     type: { type: String, required: true },
