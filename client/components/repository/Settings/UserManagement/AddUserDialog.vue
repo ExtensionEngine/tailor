@@ -1,22 +1,23 @@
 <template>
-  <tailor-dialog
-    :key="isVisible"
-    v-model="isVisible"
-    header-icon="mdi-account"
-    persistent>
-    <template v-slot:activator="{ on }">
-      <v-btn
-        v-on="on"
-        color="primary darken-1"
-        text>
-        <v-icon class="mr-2">mdi-account-plus</v-icon>Add User
-      </v-btn>
-    </template>
-    <template v-slot:header>Add user</template>
-    <template v-slot:body>
-      <validation-observer ref="form" slim>
+  <validation-observer v-slot="{ handleSubmit }" slim>
+    <tailor-dialog
+      :key="isVisible"
+      v-model="isVisible"
+      header-icon="mdi-account"
+      persistent>
+      <template v-slot:activator="{ on }">
+        <v-btn
+          v-on="on"
+          color="primary darken-1"
+          text>
+          <v-icon class="mr-2">mdi-account-plus</v-icon>Add User
+        </v-btn>
+      </template>
+      <template v-slot:header>Add user</template>
+      <template v-slot:body>
         <validation-provider
           v-slot="{ errors }"
+          mode="eager"
           rules="required|email"
           name="email">
           <v-combobox
@@ -42,19 +43,19 @@
             data-vv-name="role"
             outlined />
         </validation-provider>
-      </validation-observer>
-    </template>
-    <template v-slot:actions>
-      <v-btn @click="close" :disabled="isSaving" text>Cancel</v-btn>
-      <v-btn
-        @click="addUser"
-        :disabled="isSaving"
-        color="primary darken-2"
-        text>
-        Add
-      </v-btn>
-    </template>
-  </tailor-dialog>
+      </template>
+      <template v-slot:actions>
+        <v-btn @click="close" :disabled="isSaving" text>Cancel</v-btn>
+        <v-btn
+          @click.prevent="handleSubmit(addUser)"
+          :disabled="isSaving"
+          color="primary darken-2"
+          text>
+          Add
+        </v-btn>
+      </template>
+    </tailor-dialog>
+  </validation-observer>
 </template>
 
 <script>
@@ -84,8 +85,6 @@ export default {
     ...mapActions('repository', ['upsertUser']),
     addUser() {
       setTimeout(async () => {
-        const valid = await this.$refs.form.validate();
-        if (!valid) return;
         this.isSaving = true;
         const { email, role, $route: { params: { repositoryId } } } = this;
         await this.upsertUser({ repositoryId, email, role });
