@@ -1,18 +1,19 @@
 <template>
-  <tailor-dialog v-model="isVisible" header-icon="mdi-lock">
-    <template v-slot:activator="{ on }">
-      <v-btn
-        v-on="on"
-        color="primary darken-1"
-        text>
-        <v-icon small class="mr-1">mdi-lock</v-icon>Change Password
-      </v-btn>
-    </template>
-    <template v-slot:header>Change Password</template>
-    <template v-slot:body>
-      <validation-observer v-slot="{ invalid }" ref="form" slim>
+  <validation-observer v-slot="{ handleSubmit }" ref="form" slim>
+    <tailor-dialog v-model="isVisible" header-icon="mdi-lock">
+      <template v-slot:activator="{ on }">
+        <v-btn
+          v-on="on"
+          color="primary darken-1"
+          text>
+          <v-icon small class="mr-1">mdi-lock</v-icon>Change Password
+        </v-btn>
+      </template>
+      <template v-slot:header>Change Password</template>
+      <template v-slot:body>
         <validation-provider
           v-slot="{ errors }"
+          mode="eager"
           rules="required"
           name="currentPassword">
           <v-text-field
@@ -28,6 +29,7 @@
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
+          mode="eager"
           rules="required|alphanumerical|min:3|is_not:@currentPassword"
           name="newPassword">
           <v-text-field
@@ -44,6 +46,7 @@
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
+          mode="eager"
           rules="required|confirmed:newPassword"
           name="passwordConfirmation">
           <v-text-field
@@ -63,14 +66,14 @@
           </router-link>
           <div class="float-right">
             <v-btn @click="hide" text>Cancel</v-btn>
-            <v-btn @click="submit" :disabled="invalid" color="primary" text>
+            <v-btn @click.prevent="handleSubmit(submit)" color="primary" text>
               Update
             </v-btn>
           </div>
         </div>
-      </validation-observer>
-    </template>
-  </tailor-dialog>
+      </template>
+    </tailor-dialog>
+  </validation-observer>
 </template>
 
 <script>
@@ -97,8 +100,6 @@ export default {
       return Object.assign(this, defaultData());
     },
     async submit() {
-      const valid = await this.$refs.form.validate();
-      if (!valid) return;
       const { currentPassword, newPassword } = this;
       return this.changePassword({ currentPassword, newPassword })
         .then(() => this.$snackbar.show('Password changed!'))
