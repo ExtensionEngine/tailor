@@ -7,6 +7,7 @@
     :error-messages="vErrors.collect('type')"
     :disabled="disabled"
     item-value="type"
+    item-text="label"
     name="type"
     label="Type"
     outlined
