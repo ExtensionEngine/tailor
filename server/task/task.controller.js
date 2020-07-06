@@ -8,9 +8,7 @@ const ATTRIBUTES = [
 ];
 
 async function list({ repository }, res) {
-  const data = await repository.getTasks({
-    where: { archivedAt: null }
-  });
+  const data = await repository.getTasks();
   return res.json({ data });
 }
 

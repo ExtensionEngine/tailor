@@ -66,6 +66,14 @@ class Task extends Model {
       freezeTableName: true
     };
   }
+
+  static scopes() {
+    return {
+      defaultScope: {
+        where: { archivedAt: null }
+      }
+    };
+  }
 }
 
 module.exports = Task;
