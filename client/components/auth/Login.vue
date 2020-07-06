@@ -8,10 +8,11 @@
       class="mb-7 text-left">
       {{ message }}
     </v-alert>
-    <validation-observer v-slot="{ invalid }" slim>
-      <form @submit.prevent="submit">
+    <validation-observer v-slot="{ handleSubmit }" slim>
+      <form @submit.prevent="handleSubmit(submit)">
         <validation-provider
           v-slot="{ errors }"
+          mode="eager"
           rules="required|email"
           name="email">
           <v-text-field
@@ -28,6 +29,7 @@
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
+          mode="eager"
           rules="required"
           name="password">
           <v-text-field
@@ -43,7 +45,7 @@
         </validation-provider>
         <div class="d-flex">
           <v-spacer />
-          <v-btn :disabled="invalid" type="submit" color="primary darken-1">
+          <v-btn type="submit" color="primary darken-1">
             Log in
           </v-btn>
         </div>

@@ -11,6 +11,7 @@
       <form @submit.prevent="handleSubmit(submit)">
         <validation-provider
           v-slot="{ errors }"
+          mode="eager"
           rules="required|alphanumerical|min:6"
           name="password">
           <v-text-field
@@ -27,6 +28,7 @@
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
+          mode="eager"
           rules="required|confirmed:password"
           name="passwordConfirmation">
           <v-text-field
