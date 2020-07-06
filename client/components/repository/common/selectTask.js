@@ -6,7 +6,7 @@ export default {
   methods: {
     selectTask(taskId) {
       if (get(this.selectedTask, 'id') === taskId) return;
-      this.$router.push({ query: { taskId } });
+      this.$router.push({ query: { ...this.$route.query, taskId } });
     }
   }
 };

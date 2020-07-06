@@ -39,16 +39,17 @@ export default {
     ...mapGetters(['isAdmin']),
     ...mapGetters('repository', ['repository', 'activities', 'isRepositoryAdmin']),
     tabs() {
-      const query = { activityId: get(this.lastSelectedActivity, 'id') };
+      const activityId = get(this.lastSelectedActivity, 'id');
+      const query = { ...this.$route.query, activityId };
       const items = [
         { name: 'Structure', route: 'repository', icon: 'file-tree', query },
-        { name: 'Board', route: 'board', icon: 'view-dashboard-variant' },
+        { name: 'Board', route: 'board', icon: 'view-dashboard-variant', query },
         { name: 'Graph View', route: 'tree-view', icon: 'graph-outline', query },
         { name: 'History', route: 'revisions', icon: 'history' },
         { name: 'Settings', route: 'repository-info', icon: 'settings-outline' }
       ];
       if (!this.isAdmin && !this.isRepositoryAdmin) items.pop();
-      if (!get(this.activities, 'length')) items.splice(1, 2);
+      if (!get(this.activities, 'length')) items.splice(1, 3);
       return items;
     }
   },
