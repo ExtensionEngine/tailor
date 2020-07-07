@@ -14,9 +14,9 @@ export default {
     isEditable: vm => isEditable(vm.activity.type),
     levels: vm => uniqBy(vm.sameLevel.concat(vm.subLevels), 'type'),
     sameLevel() {
-      const sameLevelTypes = this.parent
-        ? get(find(this.structure, { type: this.parent.type }), 'subLevels', [])
-        : map(this.structure.filter(it => it.rootLevel), 'type');
+      if (!this.parent) this.structure.filter(it => it.rootLevel);
+      const parentConfig = find(this.structure, { type: this.parent.type });
+      const sameLevelTypes = get(parentConfig, 'subLevels', []);
       return this.structure.filter(it => sameLevelTypes.includes(it.type));
     },
     subLevels() {
