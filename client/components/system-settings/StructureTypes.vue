@@ -16,6 +16,7 @@
         <v-icon color="blue-grey darken-3">
           {{ open ? 'mdi-folder-open' : 'mdi-folder' }}
         </v-icon>
+        <v-icon v-if="item.recursive" color="primary darken-2">mdi-replay</v-icon>
       </template>
     </v-treeview>
   </div>
@@ -24,13 +25,14 @@
 <script>
 import cuid from 'cuid';
 import { SCHEMAS } from 'shared/activities';
+import without from 'lodash/without';
 
 const buildTree = (type, structure) => {
   const id = cuid();
   const { subLevels, ...leaf } = structure.find(it => it.type === type);
   if (!subLevels.length) return { id, ...leaf };
-  const children = subLevels.map(type => buildTree(type, structure));
-  return { id, children, ...leaf };
+  const children = without(subLevels, type).map(type => buildTree(type, structure));
+  return { id, children, ...leaf, recursive: subLevels.includes(type) };
 };
 
 export default {
