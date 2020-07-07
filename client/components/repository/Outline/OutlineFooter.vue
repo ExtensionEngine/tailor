@@ -20,7 +20,6 @@
 
 <script>
 import CreateDialog from '@/components/repository/common/CreateDialog';
-import filter from 'lodash/filter';
 import last from 'lodash/last';
 import { mapGetters } from 'vuex';
 
@@ -30,7 +29,7 @@ export default {
   },
   computed: {
     ...mapGetters('repository', ['repository', 'structure']),
-    levels: vm => filter(vm.structure, { rootLevel: true }),
+    levels: vm => vm.structure.filter(it => it.rootLevel),
     anchor: vm => last(vm.rootActivities)
   },
   components: { CreateDialog }

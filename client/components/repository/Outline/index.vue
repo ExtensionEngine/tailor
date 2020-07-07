@@ -75,7 +75,7 @@ export default {
       return !find(this.outlineActivities, it => types.includes(it.type));
     },
     rootActivities() {
-      const types = map(filter(this.structure, { rootLevel: true }), 'type');
+      const types = map(this.structure.filter(it => it.rootLevel), 'type');
       return filter(this.outlineActivities, it => types.includes(it.type) && !it.parentId)
         .sort((x, y) => x.position - y.position);
     },
