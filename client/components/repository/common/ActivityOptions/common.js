@@ -2,7 +2,6 @@ import { mapGetters, mapMutations } from 'vuex';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import { isEditable } from 'shared/activities';
-import map from 'lodash/map';
 import selectActivity from '@/components/repository/common/selectActivity';
 import uniqBy from 'lodash/uniqBy';
 
