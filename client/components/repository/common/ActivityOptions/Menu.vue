@@ -73,26 +73,26 @@ export default {
         name: 'Add item below',
         icon: 'arrow-down',
         action: () => this.setCreateContext(this.sameLevel)
-      }, {
+      }];
+      if (!this.subLevels.length) return items;
+      return items.concat({
         name: 'Add item into',
         icon: 'subdirectory-arrow-right',
         action: () => this.setCreateContext(this.subLevels, true)
-      }];
-      if (!this.subLevels.length) items.pop();
-      return items;
+      });
     },
     copyMenuOptions() {
       const items = [{
         name: 'Copy existing below',
         icon: 'content-copy',
         action: () => this.setCopyContext(this.sameLevel)
-      }, {
+      }];
+      if (!this.subLevels.length) return items;
+      return items.concat({
         name: 'Copy existing into',
         icon: 'content-copy',
         action: () => this.setCopyContext(this.subLevels, true)
-      }];
-      if (!this.subLevels.length) items.pop();
-      return items;
+      });
     },
     menuOptions() {
       return [
