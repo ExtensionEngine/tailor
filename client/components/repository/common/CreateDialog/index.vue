@@ -82,9 +82,7 @@ export default {
       if (!isValid) return;
       const { activity, anchor } = this;
       if (anchor) {
-        activity.parentId = !this.addChild
-          ? anchor.parentId
-          : anchor.id;
+        activity.parentId = this.addChild ? anchor.id : anchor.parentId;
       }
       activity.position = this.calculateInsertPosition(activity, anchor);
       const item = await this.save({ ...activity });

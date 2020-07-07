@@ -32,7 +32,7 @@ const buildTree = (type, structure) => {
   const { subLevels, ...leaf } = structure.find(it => it.type === type);
   if (!subLevels.length) return { id, ...leaf };
   const children = without(subLevels, type).map(type => buildTree(type, structure));
-  return { id, children, ...leaf, recursive: subLevels.includes(type) };
+  return { id, children, recursive: subLevels.includes(type), ...leaf };
 };
 
 export default {

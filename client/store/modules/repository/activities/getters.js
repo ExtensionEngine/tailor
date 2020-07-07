@@ -38,7 +38,7 @@ export const calculateInsertPosition = state => {
     const newPosition = anchor ? findIndex(items, { id: anchor.id }) : 1;
     const isFirstChild = !anchor ||
       (activity.parentId !== anchor.parentId) ||
-      newPosition === -1;
+      (newPosition === -1);
     const context = { items, newPosition, isFirstChild, insert: true };
     return calculatePosition(context);
   };
