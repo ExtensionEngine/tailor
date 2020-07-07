@@ -18,7 +18,6 @@
         <validation-provider name="alert">
           <v-alert
             :value="error.show"
-            mode="eager"
             color="error"
             icon="mdi-alert-outline"
             outlined>
@@ -27,7 +26,6 @@
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
-          mode="eager"
           rules="required"
           name="schema">
           <v-select
