@@ -40,13 +40,14 @@ import cloneDeep from 'lodash/cloneDeep';
 import { ElementPlaceholder } from 'tce-core';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
+import last from 'lodash/last';
 import map from 'lodash/map';
 import omit from 'lodash/omit';
 import pick from 'lodash/pick';
 import reduce from 'lodash/reduce';
 
 const DEFAULT_HEIGHT = 500;
-const getIndices = obj => map(obj, (val, key) => parseInt(key)).sort().reverse();
+const getIndices = obj => map(obj, (val, key) => parseInt(key)).sort((a, b) => a - b);
 
 export default {
   name: 'tce-carousel',
@@ -100,7 +101,7 @@ export default {
     this.$elementBus.on('add', () => {
       const element = cloneDeep(this.element);
       const indices = getIndices(this.items) || [];
-      const id = this.hasItems ? indices[0] + 1 : 1;
+      const id = this.hasItems ? last(indices) + 1 : 1;
       if (!element.data.items) {
         Object.assign(element.data, {
           embeds: {}, items: {}, height: DEFAULT_HEIGHT
