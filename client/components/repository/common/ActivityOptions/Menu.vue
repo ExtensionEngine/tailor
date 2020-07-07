@@ -85,11 +85,11 @@ export default {
       const items = [{
         name: 'Copy existing below',
         icon: 'content-copy',
-        action: () => this.setCopyContext()
+        action: () => this.setCopyContext(this.sameLevel)
       }, {
         name: 'Copy existing into',
         icon: 'content-copy',
-        action: () => this.setCopyContext(true)
+        action: () => this.setCopyContext(this.subLevels, true)
       }];
       if (!this.subLevels.length) items.pop();
       return items;
@@ -107,15 +107,17 @@ export default {
   },
   methods: {
     ...mapActions('repository/activities', ['remove']),
-    setCreateContext(levels, addSublevel = false) {
+    setCreateContext(levels, addSublevel) {
+      this.setSupportedLevels(levels, addSublevel);
       this.showCreateDialog = true;
-      this.supportedLevels = levels;
-      this.addSublevel = addSublevel;
     },
-    setCopyContext(addSublevel = false) {
+    setCopyContext(levels, addSublevel) {
+      this.setSupportedLevels(levels, addSublevel);
       this.showCopyDialog = true;
-      this.supportedLevels = this.levels;
-      this.addSublevel = addSublevel;
+    },
+    setSupportedLevels(levels, isSublevel = false) {
+      this.supportedLevels = levels;
+      this.addSublevel = isSublevel;
     },
     delete() {
       const { activity, $route: { name: routeName } } = this;
