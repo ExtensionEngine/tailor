@@ -72,13 +72,13 @@ export default {
     ...mapGetters('repository', ['structure', 'outlineActivities']),
     hasActivities: vm => !!vm.rootActivities.length,
     isFlat() {
-      const types = map(filter(this.structure, { level: 2 }), 'type');
+      const types = map(filter(this.structure, it => !it.rootLevel), 'type');
       if (!types.length) return false;
       return !find(this.outlineActivities, it => types.includes(it.type));
     },
     rootActivities() {
-      const types = map(filter(this.structure, { level: 1 }), 'type');
-      return filter(this.outlineActivities, it => types.includes(it.type))
+      const types = map(this.structure.filter(it => it.rootLevel), 'type');
+      return filter(this.outlineActivities, it => types.includes(it.type) && !it.parentId)
         .sort((x, y) => x.position - y.position);
     },
     filteredActivities() {
