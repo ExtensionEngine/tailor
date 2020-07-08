@@ -6,7 +6,7 @@
     @delete="remove"
     v-bind="$attrs"
     :element="element"
-    :is-dragged="dragged"
+    :is-dragged="isDragged"
     :is-disabled="disabled" />
 </template>
 
@@ -23,7 +23,7 @@ export default {
   props: {
     element: { type: Object, required: true },
     disabled: { type: Boolean, default: false },
-    dragged: { type: Boolean, default: false }
+    isDragged: { type: Boolean, default: false }
   },
   methods: {
     ...mapActions('repository/contentElements', {

@@ -15,19 +15,27 @@
         :class="`col-xs-${get(element, 'data.width', 12)}`">
         <slot
           :element="element"
-          :isDragged="dragElementIndex === index"
+          :is-dragged="dragElementIndex === index"
           :position="index"
           name="list-item">
         </slot>
       </div>
     </draggable>
-    <add-element
-      v-if="enableAdd"
-      @add="el => $emit('add', el)"
-      :include="supportedTypes"
-      :activity="activity"
-      :position="nextPosition"
-      :layout="layout" />
+    <template v-if="enableAdd">
+      <slot
+        :include="supportedTypes"
+        :activity="activity"
+        :position="nextPosition"
+        :layout="layout"
+        name="list-add">
+        <add-element
+          @add="el => $emit('add', el)"
+          :include="supportedTypes"
+          :activity="activity"
+          :position="nextPosition"
+          :layout="layout" />
+      </slot>
+    </template>
   </div>
 </template>
 
@@ -41,7 +49,8 @@ import last from 'lodash/last';
 export default {
   name: 'element-list',
   props: {
-    elements: { type: Array, default: () => ([]) },
+    elements: { type: Array, default: () => [] },
+    dragOptions: { type: Object, default: () => ({}) },
     supportedTypes: { type: Array, default: null },
     activity: { type: Object, default: null },
     layout: { type: Boolean, default: false },
@@ -52,11 +61,11 @@ export default {
   },
   computed: {
     options() {
-      return {
+      return Object.assign(this.dragOptions, {
         handle: '.drag-handle',
         scrollSpeed: 15,
         scrollSensitivity: 125
-      };
+      });
     },
     nextPosition() {
       const lastItem = last(this.elements);
