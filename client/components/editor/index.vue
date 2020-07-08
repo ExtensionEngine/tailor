@@ -2,7 +2,9 @@
   <div class="editor-container">
     <template v-if="!isLoading">
       <toolbar :element="selectedElement">
-        <active-users #active-users :users="activeUsers" />
+        <template #active-users>
+          <active-users :users="activeUsers" />
+        </template>
       </toolbar>
       <sidebar
         :repository="repository"
