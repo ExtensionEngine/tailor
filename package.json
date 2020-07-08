@@ -33,7 +33,9 @@
     "migrateAssessmentPools": "node -r ./server/script/preflight ./server/script/migrateAssessmentPools.js",
     "fixRevisionUrls": "node -r ./server/script/preflight ./server/script/fixRevisionUrls.js",
     "start": "node -r ./server/script/preflight ./server",
-    "postshrinkwrap": "rewrite-lockfile package-lock.json"
+    "postshrinkwrap": "rewrite-lockfile package-lock.json",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "dependencies": {
     "@extensionengine/tce-jodit": "github:extensionengine/tce-jodit#eede0d3b144c29b",
@@ -114,7 +116,7 @@
     "semver": "^6.3.0",
     "sequelize": "^5.21.3",
     "sequelize-replace-enum-postgres": "^1.5.0",
-    "snyk": "^1.290.1",
+    "snyk": "^1.360.0",
     "strip-json-comments": "^3.0.1",
     "to-case": "^2.0.0",
     "tooltip.js": "^1.3.3",
@@ -181,5 +183,6 @@
     "node": ">= 10.17.0",
     "npm": ">= 6.11.0",
     "postgres": ">= 9.4"
-  }
+  },
+  "snyk": true
 }

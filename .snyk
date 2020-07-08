@@ -1,5 +1,5 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.12.0
+version: v1.16.0
 ignore: {}
 # patches apply the minimum changes required to fix a vulnerability
 patch:
@@ -8,3 +8,120 @@ patch:
         patched: '2018-10-03T09:31:40.291Z'
     - passport-jwt > jsonwebtoken > joi > topo > hoek:
         patched: '2018-10-03T09:31:40.291Z'
+  SNYK-JS-LODASH-567746:
+    - mjml > mjml-migrate > mjml-core > mjml-migrate > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-migrate > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-core > mjml-migrate > mjml-core > mjml-migrate > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-cli > mjml-migrate > mjml-core > mjml-migrate > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-core > mjml-migrate > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-cli > mjml-migrate > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-accordion > mjml-core > mjml-migrate > mjml-core > mjml-migrate > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-body > mjml-core > mjml-migrate > mjml-core > mjml-migrate > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-button > mjml-core > mjml-migrate > mjml-core > mjml-migrate > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-carousel > mjml-core > mjml-migrate > mjml-core > mjml-migrate > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-cli > mjml-core > mjml-migrate > mjml-core > mjml-migrate > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-column > mjml-core > mjml-migrate > mjml-core > mjml-migrate > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-divider > mjml-core > mjml-migrate > mjml-core > mjml-migrate > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-group > mjml-core > mjml-migrate > mjml-core > mjml-migrate > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-head > mjml-core > mjml-migrate > mjml-core > mjml-migrate > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-head-attributes > mjml-core > mjml-migrate > mjml-core > mjml-migrate > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-head-breakpoint > mjml-core > mjml-migrate > mjml-core > mjml-migrate > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-head-font > mjml-core > mjml-migrate > mjml-core > mjml-migrate > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-head-preview > mjml-core > mjml-migrate > mjml-core > mjml-migrate > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-head-style > mjml-core > mjml-migrate > mjml-core > mjml-migrate > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-head-title > mjml-core > mjml-migrate > mjml-core > mjml-migrate > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-hero > mjml-core > mjml-migrate > mjml-core > mjml-migrate > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-image > mjml-core > mjml-migrate > mjml-core > mjml-migrate > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-navbar > mjml-core > mjml-migrate > mjml-core > mjml-migrate > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-raw > mjml-core > mjml-migrate > mjml-core > mjml-migrate > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-section > mjml-core > mjml-migrate > mjml-core > mjml-migrate > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-social > mjml-core > mjml-migrate > mjml-core > mjml-migrate > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-spacer > mjml-core > mjml-migrate > mjml-core > mjml-migrate > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-table > mjml-core > mjml-migrate > mjml-core > mjml-migrate > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-text > mjml-core > mjml-migrate > mjml-core > mjml-migrate > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-wrapper > mjml-core > mjml-migrate > mjml-core > mjml-migrate > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-accordion > mjml-core > mjml-migrate > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-body > mjml-core > mjml-migrate > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-button > mjml-core > mjml-migrate > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-carousel > mjml-core > mjml-migrate > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-cli > mjml-core > mjml-migrate > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-column > mjml-core > mjml-migrate > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-divider > mjml-core > mjml-migrate > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-group > mjml-core > mjml-migrate > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-head > mjml-core > mjml-migrate > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-head-attributes > mjml-core > mjml-migrate > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-head-breakpoint > mjml-core > mjml-migrate > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-head-font > mjml-core > mjml-migrate > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-head-preview > mjml-core > mjml-migrate > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-head-style > mjml-core > mjml-migrate > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-head-title > mjml-core > mjml-migrate > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-hero > mjml-core > mjml-migrate > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-image > mjml-core > mjml-migrate > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-navbar > mjml-core > mjml-migrate > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-raw > mjml-core > mjml-migrate > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-section > mjml-core > mjml-migrate > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-social > mjml-core > mjml-migrate > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-spacer > mjml-core > mjml-migrate > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-table > mjml-core > mjml-migrate > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-text > mjml-core > mjml-migrate > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-wrapper > mjml-core > mjml-migrate > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-wrapper > mjml-section > mjml-core > mjml-migrate > mjml-core > mjml-migrate > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
+    - mjml > mjml-wrapper > mjml-section > mjml-core > mjml-migrate > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-07-08T17:47:19.660Z'
