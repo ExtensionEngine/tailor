@@ -11,6 +11,7 @@ import {
 } from 'vee-validate/dist/rules';
 import { extend } from 'vee-validate';
 import forEach from 'lodash/forEach';
+import { messages } from 'vee-validate/dist/locale/en.json';
 import snakeCase from 'lodash/snakeCase';
 import userApi from '@/api/user';
 
@@ -53,4 +54,4 @@ const rules = {
   url
 };
 
-forEach(rules, (rule, name) => extend(snakeCase(name), rule));
+forEach(rules, (rule, name) => extend(snakeCase(name), { message: messages[name], ...rule }));
