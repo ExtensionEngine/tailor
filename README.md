@@ -113,8 +113,8 @@ An array of Schema objects.
 Configuration for schema structure nodes (activities). Contains the following
 properties:
 
-- **level** `Number` - The hierarchy level for that particular activity type.
 - **type** `String` - Const for marking activity type.
+- **rootLevel** `Boolean` - Used to define first level (root) activity types
 - **subLevels** `Array<String>` - An array of sub-types.
 - **label** `String` - Display label.
 - **color** `String` - Display color in hexadecimal notation.

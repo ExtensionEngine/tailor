@@ -60,8 +60,6 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import activityApi from 'client/api/activity';
-import { isSameLevel } from 'utils/activity';
-import keyBy from 'lodash/keyBy';
 import pluralize from 'pluralize';
 import Promise from 'bluebird';
 import repositoryApi from 'client/api/repository';
@@ -71,10 +69,12 @@ import sortBy from 'lodash/sortBy';
 import TailorDialog from '@/components/common/TailorDialog';
 
 export default {
+  name: 'copy-activity',
   props: {
     repositoryId: { type: Number, required: true },
     levels: { type: Array, required: true },
     anchor: { type: Object, default: null },
+    copyInto: { type: Boolean, default: false },
     showActivator: { type: Boolean, default: false }
   },
   data: () => ({
@@ -90,14 +90,10 @@ export default {
     ...mapGetters('repository', ['repository']),
     schema: vm => SCHEMAS.find(it => it.id === vm.repository.schema),
     copyBtnLabel() {
-      const { selectedActivities, anchor } = this;
-      const supportedTypes = keyBy(this.levels, 'type');
-      let label = 'Copy';
-      if (!selectedActivities.length) return label;
-      if (selectedActivities.length > 1) label += ` ${selectedActivities.length} items`;
-      const itemLevel = supportedTypes[selectedActivities[0].type].level;
-      const anchorLevel = anchor && supportedTypes[anchor.type].level;
-      return anchor && (itemLevel > anchorLevel) ? label.concat(' inside') : label;
+      const selectionLabel = this.selectedActivities.length
+        ? `${this.selectedActivities.length} items`
+        : '';
+      return `Copy ${selectionLabel} ${this.copyInto ? 'inside' : ''}`;
     }
   },
   methods: {
@@ -122,9 +118,7 @@ export default {
         position: this.calculateInsertPosition(activity, this.anchor)
       };
       if (this.anchor) {
-        payload.parentId = isSameLevel(activity, this.anchor)
-          ? this.anchor.parentId
-          : this.anchor.id;
+        payload.parentId = this.copyInto ? this.anchor.id : this.anchor.parentId;
       }
       return this.clone(payload);
     },

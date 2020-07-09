@@ -23,8 +23,9 @@
       :repository-id="activity.repositoryId"
       :levels="supportedLevels"
       :anchor="activity"
+      :add-child="addChild"
       :heading="`
-        Add ${isEqual(supportedLevels, subLevels) ? 'into' : 'below'}
+        Add ${addChild ? 'into' : 'below'}
         ${activity.data.name}`" />
   </div>
 </template>
@@ -44,7 +45,7 @@ const getOptions = vm => {
     items.push({
       name: 'Add item into',
       icon: 'subdirectory-arrow-right',
-      action: () => vm.setCreateContext(vm.subLevels)
+      action: () => vm.setCreateContext(vm.subLevels, true)
     });
   }
   if (vm.isEditable) {
@@ -66,16 +67,18 @@ export default {
   },
   data: () => ({
     showCreateDialog: false,
-    supportedLevels: []
+    supportedLevels: [],
+    addChild: false
   }),
   computed: {
     options: vm => getOptions(vm)
   },
   methods: {
     isEqual,
-    setCreateContext(levels) {
+    setCreateContext(levels, addChild) {
       this.supportedLevels = levels;
       this.showCreateDialog = true;
+      this.addChild = addChild;
     }
   },
   components: { CreateDialog }
