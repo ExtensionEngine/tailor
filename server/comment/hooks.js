@@ -1,6 +1,5 @@
 'use strict';
 
-const { broadcast, events } = require('./channel');
 const mail = require('../shared/mail');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
@@ -15,7 +14,6 @@ exports.add = (Comment, Hooks, db) => {
       const author = { id: a.id, email: a.email };
       const channel = sse.channel(comment.repositoryId);
       if (channel) channel.send(Events.Create, { ...comment.toJSON(), author });
-      broadcast(events.CREATE, { ...comment.toJSON(), author: a.profile });
       sendEmailNotification(comment, db);
     });
   });
