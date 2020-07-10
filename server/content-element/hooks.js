@@ -5,10 +5,13 @@ const forEach = require('lodash/forEach');
 const get = require('lodash/get');
 const hash = require('hash-obj');
 const { isOutlineActivity } = require('../../config/shared/activities');
+const sse = require('../shared/sse');
 
 module.exports = { add };
 
 function add(ContentElement, Hooks, Models) {
+  const { Events } = ContentElement;
+
   const mappings = {
     [Hooks.beforeCreate]: [processAssets],
     [Hooks.beforeUpdate]: [processAssets],
@@ -52,6 +55,23 @@ function add(ContentElement, Hooks, Models) {
     const activity = await resolveOutlineActivity(element);
     return activity && activity.touch();
   }
+
+  ContentElement.addHook(Hooks.afterCreate, contentElement => {
+    const channel = sse.channel(contentElement.repositoryId);
+    if (channel) channel.send(Events.Create, { ...contentElement.toJSON() });
+  });
+
+  ContentElement.addHook(Hooks.afterUpdate, contentElement => {
+    const channel = sse.channel(contentElement.repositoryId);
+    if (channel) channel.send(Events.Update, contentElement);
+  });
+
+  ContentElement.addHook(Hooks.afterDestroy, contentElement => {
+    ContentElement.findByPk(contentElement.id, { paranoid: false }).then(contentElement => {
+      const channel = sse.channel(contentElement.repositoryId);
+      if (channel) channel.send(Events.Delete, contentElement);
+    });
+  });
 }
 
 function resolveOutlineActivity(element) {
