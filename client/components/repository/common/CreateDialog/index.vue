@@ -32,7 +32,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import { getActivityMetadata } from 'shared/activities';
-import MetaInput from 'components/common/Meta';
+import MetaInput from 'tce-core/MetaInput';
 import TailorDialog from '@/components/common/TailorDialog';
 import TypeSelect from './TypeSelect';
 import { withValidation } from 'utils/validation';
