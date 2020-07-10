@@ -39,10 +39,8 @@ export default {
     deprecatedType: vm => deprecatedTypes[vm.originalType],
     type: vm => get(vm.deprecatedType, 'type', vm.originalType),
     metaInput: ({ meta, deprecatedType }) => {
-      return !deprecatedType ? meta : {
-        ...meta,
-        ...deprecatedType.config
-      };
+      if (!deprecatedType) return meta;
+      return { ...meta, ...deprecatedType.config };
     },
     component: vm => getMetaName(vm.type)
   },
