@@ -2,18 +2,31 @@
   <component
     :is="component"
     @update="(key, value) => $emit('update', key, value)"
-    :meta="meta"
-    :class="{ required: get(meta, 'validate.required') }" />
+    :meta="metaInput"
+    :class="{ required: get(metaInput, 'validate.required') }" />
 </template>
 
 <script>
 import get from 'lodash/get';
 import { getMetaName } from 'tce-core/utils';
 
-// Handle this better
-const subtypes = {
-  DATE: 'DATETIME',
-  MULTISELECT: 'SELECT'
+// TODO: Remove deprecated types in v5.0
+const getDeprecationWarning = (deprecatedType, type, config) =>
+  `Deprecation notice:
+    '${deprecatedType}' meta type is deprecated and will be removed in v5.0.
+    Please use '${type}' instead with following config added: ${config}.`;
+
+const deprecatedTypes = {
+  DATE: {
+    type: 'DATETIME',
+    config: { hideTime: true },
+    deprecationWarning: getDeprecationWarning('DATE', 'DATETIME', '{ hideTime: true }')
+  },
+  MULTISELECT: {
+    type: 'SELECT',
+    config: { multiple: true },
+    deprecationWarning: getDeprecationWarning('MULTISELECT', 'SELECT', '{ multiple: true }')
+  }
 };
 
 export default {
@@ -22,10 +35,24 @@ export default {
     meta: { type: Object, required: true }
   },
   computed: {
-    type: vm => (subtypes[vm.meta.type] || vm.meta.type || '').toUpperCase(),
+    originalType: vm => (vm.meta.type || '').toUpperCase(),
+    type: vm => get(deprecatedTypes[vm.originalType], 'type', vm.originalType),
+    metaInput: vm => {
+      if (!deprecatedTypes[vm.originalType]) return vm.meta;
+      return { ...vm.meta, ...deprecatedTypes[vm.originalType].config };
+    },
     component: vm => getMetaName(vm.type)
   },
-  methods: { get }
+  methods: { get },
+  watch: {
+    type: {
+      handler() {
+        if (!deprecatedTypes[this.originalType]) return;
+        console.warn(deprecatedTypes[this.originalType].deprecationWarning);
+      },
+      immediate: true
+    }
+  }
 };
 </script>
 

@@ -6,8 +6,8 @@
     :items="meta.options"
     :placeholder="meta.placeholder"
     :label="meta.label"
-    :multiple="isMultiSelect"
-    :chips="isMultiSelect"
+    :multiple="meta.multiple"
+    :chips="meta.multiple"
     :small-chips="!hasImgProp"
     item-text="label"
     item-value="value"
@@ -18,7 +18,7 @@
       <span>{{ item.label }}</span>
     </template>
     <template v-if="hasImgProp" v-slot:selection="{ item }">
-      <component :is="isMultiSelect ? 'v-chip' : 'div'">
+      <component :is="meta.multiple ? 'v-chip' : 'div'">
         <img v-if="item.img" :src="item.img" :alt="item.label" class="img">
         <span>{{ item.label }}</span>
       </component>
@@ -35,9 +35,6 @@ export default {
     meta: { type: Object, default: () => ({ value: null }) }
   },
   computed: {
-    isMultiSelect() {
-      return this.meta.type === 'MULTISELECT';
-    },
     value() {
       const { meta: { value, options } } = this;
       const hasPrimitiveOptions = !isObject(options[0]);
