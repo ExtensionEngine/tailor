@@ -20,12 +20,12 @@ const deprecatedTypes = {
   DATE: {
     type: 'DATETIME',
     config: { hideTime: true },
-    deprecationWarning: getDeprecationWarning('DATE', 'DATETIME', '{ hideTime: true }')
+    warning: getDeprecationWarning('DATE', 'DATETIME', '{ hideTime: true }')
   },
   MULTISELECT: {
     type: 'SELECT',
     config: { multiple: true },
-    deprecationWarning: getDeprecationWarning('MULTISELECT', 'SELECT', '{ multiple: true }')
+    warning: getDeprecationWarning('MULTISELECT', 'SELECT', '{ multiple: true }')
   }
 };
 
@@ -36,10 +36,13 @@ export default {
   },
   computed: {
     originalType: vm => (vm.meta.type || '').toUpperCase(),
-    type: vm => get(deprecatedTypes[vm.originalType], 'type', vm.originalType),
-    metaInput: vm => {
-      if (!deprecatedTypes[vm.originalType]) return vm.meta;
-      return { ...vm.meta, ...deprecatedTypes[vm.originalType].config };
+    deprecatedType: vm => deprecatedTypes[vm.originalType],
+    type: vm => get(vm.deprecatedType, 'type', vm.originalType),
+    metaInput: ({ meta, deprecatedType }) => {
+      return !deprecatedType ? meta : {
+        ...meta,
+        ...deprecatedType.config
+      };
     },
     component: vm => getMetaName(vm.type)
   },
@@ -47,8 +50,8 @@ export default {
   watch: {
     type: {
       handler() {
-        if (!deprecatedTypes[this.originalType]) return;
-        console.warn(deprecatedTypes[this.originalType].deprecationWarning);
+        if (!this.deprecatedType) return;
+        console.warn(this.deprecatedType.warning);
       },
       immediate: true
     }
