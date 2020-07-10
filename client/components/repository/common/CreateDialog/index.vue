@@ -24,7 +24,7 @@
     </template>
     <template v-slot:actions>
       <v-btn @click="visible = false" text>Cancel</v-btn>
-      <v-btn @click="create" color="primary" text>Create</v-btn>
+      <v-btn @click="create" color="primary darken-1" text>Create</v-btn>
     </template>
   </tailor-dialog>
 </template>
@@ -32,7 +32,6 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import { getActivityMetadata } from 'shared/activities';
-import { isSameLevel } from 'utils/activity';
 import MetaInput from 'tce-core/MetaInput';
 import TailorDialog from '@/components/common/TailorDialog';
 import TypeSelect from './TypeSelect';
@@ -51,6 +50,7 @@ export default {
     repositoryId: { type: Number, required: true },
     levels: { type: Array, required: true },
     anchor: { type: Object, default: null },
+    addChild: { type: Boolean, default: false },
     heading: { type: String, default: '' },
     showActivator: { type: Boolean, default: false },
     activatorLabel: { type: String, default: '' },
@@ -82,9 +82,7 @@ export default {
       if (!isValid) return;
       const { activity, anchor } = this;
       if (anchor) {
-        activity.parentId = isSameLevel(activity, anchor)
-          ? anchor.parentId
-          : anchor.id;
+        activity.parentId = this.addChild ? anchor.id : anchor.parentId;
       }
       activity.position = this.calculateInsertPosition(activity, anchor);
       const item = await this.save({ ...activity });
