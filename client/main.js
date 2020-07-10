@@ -62,7 +62,6 @@ contentPluginRegistry.initialize().then(() => {
       return {
         $teRegistry: contentPluginRegistry.elementRegistry,
         $ccRegistry: contentPluginRegistry.containerRegistry,
-        $meRegistry: contentPluginRegistry.metaRegistry,
         $storageService: assetsApi
       };
     }
