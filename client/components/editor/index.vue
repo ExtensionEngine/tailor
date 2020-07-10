@@ -50,7 +50,9 @@ export default {
     }
   },
   methods: {
-    ...mapActions('repository', ['initialize'])
+    ...mapActions('repository', ['initialize']),
+    ...mapActions('repository/contentElements',
+      ['subscribe'])
   },
   async created() {
     const { repositoryId: currentRepositoryId, repository: storeRepository } = this;
@@ -59,6 +61,7 @@ export default {
     if (!repositoryLoaded || repositoryChanged) {
       await this.initialize(currentRepositoryId);
     }
+    await this.subscribe();
     this.isLoading = false;
   },
   components: {
