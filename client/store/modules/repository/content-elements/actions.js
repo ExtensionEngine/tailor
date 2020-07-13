@@ -31,9 +31,9 @@ const subscribe = ({ dispatch, rootState, commit }) => {
   feed
     .connect(url, { params })
     .subscribe(Events.Create, item => api.setCid(item) || dispatch('add', item))
-    // .subscribe(Events.Update, item => commit('save', item))
-    // .subscribe(Events.Update, item => dispatch('save', item))
-    .subscribe(Events.Delete, item => commit('remove', item));
+    .subscribe(Events.Update, item => commit('save', item));
+  // .subscribe(Events.Delete, item => dispatch('remove', item));
+  // .subscribe(Events.Delete, item => commit('remove', item));
 };
 
 const insert = ({ dispatch }, { element, context }) => {
