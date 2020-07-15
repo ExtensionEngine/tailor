@@ -1,5 +1,7 @@
 import cuid from 'cuid';
 import each from 'lodash/each';
+import find from 'lodash/find';
+import pick from 'lodash/pick';
 import Vue from 'vue';
 
 export const fetch = (state, items) => {
@@ -25,4 +27,12 @@ export const remove = (state, models) => {
 
 export const setEndpoint = (state, url) => {
   state.$apiUrl = url;
+};
+
+export const sseUpdate = (state, model) => {
+  const existing = find(state.items, { uid: model.uid });
+  if (!existing) return;
+  const data = pick(model, ['data', 'createdAt', 'updatedAt', 'deletedAt']);
+  const updated = { ...existing, ...data };
+  Vue.set(state.items, updated._cid, updated);
 };
