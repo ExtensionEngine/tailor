@@ -30,15 +30,16 @@ const subscribe = ({ dispatch, rootState, commit }) => {
   const url = urlJoin(baseUrl, api.url('/subscribe'));
   feed
     .connect(url, { params })
-    .subscribe(Events.Create, item => api.setCid(item) || dispatch('add', item))
-    .subscribe(Events.Update, item => commit('save', item));
-  // .subscribe(Events.Delete, item => dispatch('remove', item));
-  // .subscribe(Events.Delete, item => commit('remove', item));
+    .subscribe(Events.Create, item => dispatch('sseElementAdd', item))
+    .subscribe(Events.Update, item => commit('sseUpdate', item))
+    .subscribe(Events.Delete, item => commit('customRemove', item));
 };
 
 const insert = ({ dispatch }, { element, context }) => {
   return dispatch('save', { ...element, position: calculatePosition(context) });
 };
+
+const sseElementAdd = ({ commit }, model) => commit('sseElementAdd', model);
 
 const reorder = ({ commit }, { element, context }) => {
   const position = calculatePosition(context);
@@ -49,6 +50,7 @@ const reorder = ({ commit }, { element, context }) => {
 
 export {
   add,
+  sseElementAdd,
   get,
   fetch,
   insert,
