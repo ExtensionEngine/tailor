@@ -30,7 +30,7 @@ const subscribe = ({ dispatch, rootState, commit }) => {
   const url = urlJoin(baseUrl, api.url('/subscribe'));
   feed
     .connect(url, { params })
-    .subscribe(Events.Create, item => dispatch('sseElementAdd', item))
+    .subscribe(Events.Create, item => commit('add', item))
     .subscribe(Events.Update, item => commit('sseUpdate', item))
     .subscribe(Events.Delete, item => commit('customRemove', item));
 };
