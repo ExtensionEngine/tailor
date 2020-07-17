@@ -28,6 +28,8 @@ extensions/content-elements/*
 !extensions/content-elements/.gitkeep
 extensions/content-containers/*
 !extensions/content-containers/.gitkeep
+extensions/meta-inputs/*
+!extensions/meta-inputs/.gitkeep
 
 # Branding
 client/assets/img/*

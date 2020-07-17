@@ -21,7 +21,7 @@
       activator-label="Add into"
       activator-color="blue-grey darken-3"
       activator-icon="mdi-folder-plus-outline"
-      show-activator />
+      add-child show-activator />
     <publishing
       v-if="isAdmin || isRepositoryAdmin"
       :activity="activity"

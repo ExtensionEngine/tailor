@@ -7,6 +7,7 @@ const isString = require('lodash/isString');
 const isUrl = require('is-url');
 const mime = require('mime-types');
 const Promise = require('bluebird');
+const set = require('lodash/set');
 const storage = require('./index');
 const toPairs = require('lodash/toPairs');
 const values = require('lodash/values');
@@ -100,9 +101,10 @@ async function resolveAssetsMap(element) {
   if (!element.data.assets) return element;
   await Promise.map(toPairs(element.data.assets), async ([key, url]) => {
     const isStorageResource = url.startsWith(STORAGE_PROTOCOL);
-    element.data[key] = isStorageResource
+    const resolvedUrl = isStorageResource
       ? (await getFileUrl(url.substr(STORAGE_PROTOCOL.length, url.length)))
       : url;
+    set(element.data, key, resolvedUrl);
   });
   return element;
 }
