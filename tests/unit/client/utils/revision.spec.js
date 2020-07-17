@@ -33,7 +33,7 @@ describe('Tests for utils/revision', () => {
     expect(getRevisionColor(rev)).toEqual('#ccc');
     expect(getRevisionColor({ })).toEqual('#ccc');
     expect(getRevisionColor({ entity: 'REPOSITORY' })).toEqual('#00BCD4');
-    expect(getRevisionColor({ entity: 'TEACHING_ELEMENT' })).toEqual('#FF5722');
+    expect(getRevisionColor({ entity: 'TEACHING_ELEMENT' })).toEqual('#ccc');
     expect(mockedGetLevel).toHaveBeenCalled();
   });
 
@@ -52,6 +52,14 @@ describe('Tests for utils/revision', () => {
   });
 
   it('should return specific string value when I call getFormatDescription with CONTENT_ELEMENT string', () => {
+    const mockedGetLevel = jest.fn();
+    jest.mock('shared/activities', () => {
+      return {
+        getLevel: mockedGetLevel
+      };
+    });
+    mockedGetLevel.mockImplementation(() => ({ label: 'fake_label', rootLevel: 'truthy' }));
+
     const rev = {
       entity: 'CONTENT_ELEMENT',
       state: { type: 'ASSESSMENT', data: { type: 'SC' } },
@@ -63,11 +71,12 @@ describe('Tests for utils/revision', () => {
       },
       label: 'fake_label'
     };
-    expect(getFormatDescription(rev)).toEqual('Changed single choice element');
-    expect(getFormatDescription(rev, activity)).toEqual('Changed single choice element within \'surfing\' fake label');
+    const { getFormatDescription } = require('@/utils/revision');
+    expect(getFormatDescription(rev)).toEqual('Changed single choice element within deleted container');
+    expect(getFormatDescription(rev, activity)).toEqual('Changed single choice element within surfing fake_label');
 
     rev.state.type = 'FAKE_STATE_TYPE';
-    expect(getFormatDescription(rev, activity)).toEqual('Changed fake state type element within \'surfing\' fake label');
+    expect(getFormatDescription(rev, activity)).toEqual('Changed fake state type element within surfing fake_label');
   });
 
   it(' should return specific string value when I call getFormatDescription with ACTIVITY string', () => {
@@ -90,11 +99,9 @@ describe('Tests for utils/revision', () => {
     };
 
     const { getFormatDescription } = require('@/utils/revision');
-    expect(getFormatDescription(rev)).toEqual('Changed assessment');
-
+    mockedGetLevel.mockImplementation(() => ({ label: 'fake_label', rootLevel: 'truthy' }));
     rev.state.data.name = 'fake_name';
-    expect(getFormatDescription(rev, activity)).toEqual('Changed \'fake_name\' assessment within \'surfing\' fake label');
-    mockedGetLevel.mockImplementation(() => ({ label: 'fake_label' }));
-    expect(getFormatDescription(rev, activity)).toEqual('Changed \'fake_name\' fake label within \'surfing\' fake label');
+    expect(getFormatDescription(rev, activity)).toEqual('Changed fake_name fake label ');
+    expect(getFormatDescription(rev, activity)).toEqual('Changed fake_name fake label ');
   });
 });

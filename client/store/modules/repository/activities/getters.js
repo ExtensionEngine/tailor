@@ -6,6 +6,7 @@ import {
 import calculatePosition from 'utils/calculatePosition';
 import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
+import { getLevel } from 'shared/activities';
 
 export const activities = state => state.items;
 

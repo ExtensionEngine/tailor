@@ -49,7 +49,7 @@ describe('Test for modules/activities/getters', () => {
   });
   it('should calculateInsertPosition and return a function', () => {
     const state = fillState();
-    const returnFuntion = calculateInsertPosition(state);
+    const returnFunction = calculateInsertPosition(state);
     const activity = {
       parentId: 63,
       type: 'INTRO'
@@ -58,13 +58,13 @@ describe('Test for modules/activities/getters', () => {
       id: 69,
       type: 'INTRO'
     };
-    expect(returnFuntion(activity, anchor)).toEqual(0.5);
+    expect(returnFunction(activity, anchor)).toEqual(0.5);
 
     anchor.id = 80;
-    expect(returnFuntion(activity, anchor)).toEqual(2);
+    expect(returnFunction(activity, anchor)).toEqual(2);
     anchor.id = 200;
-    expect(returnFuntion(activity, anchor)).toEqual(0.5);
+    expect(returnFunction(activity, anchor)).toEqual(0.5);
     anchor = undefined;
-    expect(returnFuntion(activity, anchor)).toEqual(0.5);
+    expect(returnFunction(activity, anchor)).toEqual(0.5);
   });
 });
