@@ -1,18 +1,18 @@
 'use strict';
 
-const Joi = require('joi');
 const path = require('path');
 const S3 = require('aws-sdk/clients/s3');
 const { validateConfig } = require('../validation');
+const yup = require('yup');
 
 const isNotFound = err => err.code === 'NoSuchKey';
 const DEFAULT_EXPIRATION_TIME = 3600; // seconds
 
-const schema = Joi.object().keys({
-  region: Joi.string().required(),
-  bucket: Joi.string().required(),
-  key: Joi.string().required(),
-  secret: Joi.string().required()
+const schema = yup.object().shape({
+  region: yup.string().required(),
+  bucket: yup.string().required(),
+  key: yup.string().required(),
+  secret: yup.string().required()
 });
 
 class Amazon {
@@ -95,16 +95,7 @@ class Amazon {
   getFileUrl(key, options = {}) {
     const expires = options.expires || DEFAULT_EXPIRATION_TIME;
     const params = Object.assign(options, { Bucket: this.bucket, Key: key, Expires: expires });
-    return this._getSignedUrl('getObject', params);
-  }
-
-  _getSignedUrl(operation, params) {
-    return new Promise((resolve, reject) => {
-      this.client.getSignedUrl(operation, params, (err, url) => {
-        if (err) return reject(err);
-        resolve(url);
-      });
-    });
+    return this.client.getSignedUrlPromise('getObject', params);
   }
 }
 

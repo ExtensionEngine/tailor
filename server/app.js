@@ -5,14 +5,16 @@ const cors = require('cors');
 const express = require('express');
 const helmet = require('helmet');
 const origin = require('./shared/origin');
-const passport = require('passport');
 const path = require('path');
+// eslint-disable-next-line require-sort/require-sort
 require('express-async-errors');
 
-require('./shared/auth');
+/* eslint-disable require-sort/require-sort */
+const auth = require('./shared/auth');
 const config = require('../config/server');
 const logger = require('./shared/logger');
 const router = require('./router');
+/* eslint-enable */
 
 const { STORAGE_PATH } = process.env;
 
@@ -20,7 +22,7 @@ const app = express();
 app.use(helmet());
 app.use(cors({ origin: config.auth.corsAllowedOrigins, credentials: true }));
 app.use(bodyParser.json({ limit: '50mb' }));
-app.use(passport.initialize());
+app.use(auth.initialize());
 app.use(origin());
 app.use(express.static(path.join(__dirname, '../dist/')));
 if (STORAGE_PATH) app.use(express.static(STORAGE_PATH));

@@ -1,35 +1,38 @@
 <template>
-  <v-card class="schema-list-container">
+  <div class="schema-list-container">
     <v-text-field
       v-model.trim="search"
       label="Search"
       append-icon="mdi-magnify"
-      clearable />
+      outlined clearable
+      class="mx-2" />
     <v-treeview
       :items="schemas"
       :search="search"
-      open-on-click
       item-text="label"
+      open-all open-on-click
       class="pt-3">
       <template v-slot:prepend="{ item, open }">
-        <v-icon :color="item.color">
+        <v-icon color="blue-grey darken-3">
           {{ open ? 'mdi-folder-open' : 'mdi-folder' }}
         </v-icon>
+        <v-icon v-if="item.recursive" color="primary darken-2">mdi-replay</v-icon>
       </template>
     </v-treeview>
-  </v-card>
+  </div>
 </template>
 
 <script>
 import cuid from 'cuid';
 import { SCHEMAS } from 'shared/activities';
+import without from 'lodash/without';
 
 const buildTree = (type, structure) => {
   const id = cuid();
   const { subLevels, ...leaf } = structure.find(it => it.type === type);
   if (!subLevels.length) return { id, ...leaf };
-  const children = subLevels.map(type => buildTree(type, structure));
-  return { id, children, ...leaf };
+  const children = without(subLevels, type).map(type => buildTree(type, structure));
+  return { id, children, recursive: subLevels.includes(type), ...leaf };
 };
 
 export default {
@@ -39,7 +42,7 @@ export default {
   computed: {
     schemas() {
       return SCHEMAS.map(({ name: label, structure }) => {
-        const roots = structure.filter(it => it.level === 1);
+        const roots = structure.filter(it => it.rootLevel);
         const children = roots.reduce((acc, { type }) => {
           acc.push(buildTree(type, structure));
           return acc;
@@ -53,11 +56,11 @@ export default {
 
 <style lang="scss" scoped>
 .schema-list-container {
-  padding: 30px;
+  padding: 1.875rem;
   text-align: left;
 
-  /deep/ .v-treeview-node__label {
-    font-size: 17px;
+  ::v-deep .v-treeview-node__label {
+    font-size: 1rem;
   }
 }
 </style>

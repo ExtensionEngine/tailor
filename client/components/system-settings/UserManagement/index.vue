@@ -1,77 +1,79 @@
 <template>
-  <v-layout justify-center class="elevation-1 white">
-    <v-flex>
-      <v-toolbar color="white" flat>
-        <v-spacer />
-        <v-btn @click.stop="showUserDialog()" color="primary darken-1" outline>
-          <v-icon class="pr-2">mdi-account-plus-outline</v-icon>
-          Add user
-        </v-btn>
-      </v-toolbar>
-      <div>
-        <v-layout row class="filters">
-          <v-flex>
-            <v-switch
-              v-model="showArchived"
-              label="Archived"
-              color="primary"
-              hide-details />
-          </v-flex>
-          <v-flex>
-            <v-text-field
-              v-model="filter"
-              append-icon="mdi-magnify"
-              label="Search"
-              single-line
-              hide-details
-              clearable />
-          </v-flex>
-        </v-layout>
-        <v-data-table
-          :headers="headers"
-          :items="users"
-          :total-items="totalItems"
-          :pagination.sync="dataTable"
-          :must-sort="true"
-          :loading="loading"
-          :rows-per-page-items="[10, 20, 50, 100]">
-          <template slot="items" slot-scope="{ item }">
-            <tr :key="item.id">
-              <td class="no-wrap text-xs-left">{{ item.email }}</td>
-              <td class="no-wrap text-xs-left">{{ item.role }}</td>
-              <td class="no-wrap text-xs-left">{{ item.createdAt | formatDate }}</td>
-              <td class="no-wrap text-xs-center">
-                <v-btn
-                  @click="showUserDialog(item)"
-                  color="primary"
-                  small
-                  flat
-                  icon>
-                  <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-                <v-btn
-                  @click="archiveOrRestore(item)"
-                  :disabled="user.id === item.id"
-                  color="primary"
-                  small
-                  flat
-                  icon>
-                  <v-icon>
-                    mdi-account-{{ item.deletedAt ? 'convert' : 'off' }}
-                  </v-icon>
-                </v-btn>
-              </td>
-            </tr>
-          </template>
-        </v-data-table>
-      </div>
-      <user-dialog
-        @updated="fetch(defaultPage)"
-        @created="fetch(defaultPage)"
-        :visible.sync="userDialog"
-        :user-data="editedUser" />
-    </v-flex>
-  </v-layout>
+  <div>
+    <v-toolbar color="transparent" flat>
+      <v-spacer />
+      <v-btn
+        @click.stop="showUserDialog()"
+        color="blue-grey darken-4"
+        text
+        class="px-1">
+        <v-icon class="pr-2">mdi-account-multiple-plus</v-icon>
+        Add user
+      </v-btn>
+    </v-toolbar>
+    <v-row no-gutters class="filters px-2 pb-2">
+      <v-col>
+        <v-switch
+          v-model="showArchived"
+          label="Archived"
+          color="blue-grey darken-3"
+          hide-details />
+      </v-col>
+      <v-col>
+        <v-text-field
+          v-model="filter"
+          append-icon="mdi-magnify"
+          label="Search"
+          outlined hide-details clearable />
+      </v-col>
+    </v-row>
+    <v-data-table
+      v-show="!!totalItems"
+      :headers="headers"
+      :items="users"
+      :server-items-length="totalItems"
+      :options.sync="dataTable"
+      :must-sort="true"
+      :footer-props="{ itemsPerPageOptions: [10, 20, 50, 100] }"
+      class="transparent">
+      <template slot="item" slot-scope="{ item }">
+        <tr :key="item.id">
+          <td class="text-no-wrap text-left">
+            <v-avatar size="40"><img :src="item.imgUrl"></v-avatar>
+          </td>
+          <td class="text-no-wrap text-left">{{ item.email }}</td>
+          <td class="text-truncate text-left">{{ item.firstName || '/' }}</td>
+          <td class="text-truncate text-left">{{ item.lastName || '/' }}</td>
+          <td class="text-no-wrap text-left">{{ item.role }}</td>
+          <td class="text-no-wrap text-left">
+            {{ item.createdAt | formatDate('MM/DD/YY') }}
+          </td>
+          <td class="text-no-wrap text-center">
+            <v-btn
+              @click="showUserDialog(item)"
+              color="blue-grey darken-3"
+              small icon>
+              <v-icon>mdi-pencil</v-icon>
+            </v-btn>
+            <v-btn
+              @click="archiveOrRestore(item)"
+              :disabled="user.id === item.id"
+              color="blue-grey darken-3"
+              small icon>
+              <v-icon>
+                mdi-account-{{ item.deletedAt ? 'convert' : 'off' }}
+              </v-icon>
+            </v-btn>
+          </td>
+        </tr>
+      </template>
+    </v-data-table>
+    <user-dialog
+      @updated="fetch(defaultPage)"
+      @created="fetch(defaultPage)"
+      :visible.sync="userDialog"
+      :user-data="editedUser" />
+  </div>
 </template>
 
 <script>
@@ -85,14 +87,17 @@ import UserDialog from './UserDialog';
 const appChannel = EventBus.channel('app');
 
 const defaultPage = () => ({
-  sortBy: 'updatedAt',
-  descending: true,
+  sortBy: ['updatedAt'],
+  sortDesc: [true],
   page: 1,
-  rowsPerPage: 10
+  itemsPerPage: 10
 });
 
 const headers = () => [
+  { text: 'User', sortable: false },
   { text: 'Email', value: 'email' },
+  { text: 'First Name', value: 'firstName' },
+  { text: 'Last Name', value: 'lastName' },
   { text: 'Role', value: 'role' },
   { text: 'Date Created', value: 'createdAt' },
   { text: 'Actions', value: 'email', align: 'center', sortable: false }
@@ -131,10 +136,10 @@ export default {
       this.loading = true;
       Object.assign(this.dataTable, opts);
       const { items, total } = await api.fetch({
-        sortBy: this.dataTable.sortBy,
-        sortOrder: this.dataTable.descending ? 'DESC' : 'ASC',
-        offset: (this.dataTable.page - 1) * this.dataTable.rowsPerPage,
-        limit: this.dataTable.rowsPerPage,
+        sortBy: this.dataTable.sortBy[0],
+        sortOrder: this.dataTable.sortDesc[0] ? 'DESC' : 'ASC',
+        offset: (this.dataTable.page - 1) * this.dataTable.itemsPerPage,
+        limit: this.dataTable.itemsPerPage,
         filter: this.filter,
         archived: this.showArchived || undefined
       });
@@ -169,7 +174,7 @@ export default {
 
 <style lang="scss" scoped>
 .v-input--switch {
-  /deep/ {
+  ::v-deep {
     .v-label {
       margin-bottom: 0;
     }
@@ -181,6 +186,10 @@ export default {
 }
 
 .filters {
-  margin: 0 18px 8px;
+  margin: 0 1.125rem 0.5rem;
+}
+
+td.text-truncate {
+  max-width: 7.25rem;
 }
 </style>

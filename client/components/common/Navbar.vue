@@ -1,10 +1,16 @@
 <template>
-  <v-toolbar color="grey lighten-5" app dense fixed>
-    <router-link :to="{ name: 'catalog' }" tag="span" class="app-brand">
-      <v-avatar color="primary darken-1" size="34" class="mt-1">
-        <img :src="logo" alt="Logo" class="logo">
+  <v-app-bar
+    color="blue-grey darken-3"
+    app fixed dense
+    class="elevation-0">
+    <router-link :to="{ name: 'catalog' }" tag="a" class="app-brand">
+      <v-avatar color="primary lighten-1" size="34" class="mt-1 pa-2">
+        <img :src="logo" alt="Logo">
       </v-avatar>
-      <v-toolbar-title class="app-name">{{ title }}</v-toolbar-title>
+      <v-toolbar-title class="app-name">
+        {{ title }}
+        <span class="caption">author</span>
+      </v-toolbar-title>
     </router-link>
     <v-spacer />
     <v-toolbar-items>
@@ -12,11 +18,11 @@
         v-for="({ name, to, icon }) in routes"
         :key="name"
         :to="to"
-        color="blue-grey darken-3"
-        exact
-        flat>
-        <v-icon class="pr-1">mdi-{{ icon }}</v-icon>
-        <span class="toolbar-route">{{ name }}</span>
+        color="blue-grey lighten-4"
+        active-class="secondary--text"
+        exact text>
+        <v-icon v-if="icon" class="pr-1">mdi-{{ icon }}</v-icon>
+        <span class="toolbar-route text-truncate">{{ name }}</span>
       </v-btn>
     </v-toolbar-items>
     <v-menu
@@ -24,21 +30,26 @@
       transition="slide-y-transition"
       offset-y
       z-index="1000">
-      <v-btn slot="activator" icon class="mr-2">
-        <v-avatar size="34" color="grey lighten-2">
-          <span class="grey--text text--darken-1 headline">{{ user.email[0] }}</span>
-        </v-avatar>
-      </v-btn>
-      <v-list>
-        <v-list-tile>
-          <v-list-tile-title>{{ user.email }}</v-list-tile-title>
-        </v-list-tile>
-        <v-list-tile @click="logout">
-          <v-list-tile-title>Logout</v-list-tile-title>
-        </v-list-tile>
+      <template v-slot:activator="{ on }">
+        <v-btn v-on="on" icon class="mr-2">
+          <v-avatar size="34" color="grey lighten-2">
+            <img :src="user.imgUrl">
+          </v-avatar>
+        </v-btn>
+      </template>
+      <v-list class="text-left">
+        <v-list-item>
+          <v-list-item-title>{{ user.email }}</v-list-item-title>
+        </v-list-item>
+        <v-list-item :to="{ name: 'user-settings' }">
+          <v-list-item-title>Profile</v-list-item-title>
+        </v-list-item>
+        <v-list-item @click="logout">
+          <v-list-item-title>Logout</v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-menu>
-  </v-toolbar>
+  </v-app-bar>
 </template>
 
 <script>
@@ -51,20 +62,19 @@ export default {
   },
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters('course', { repository: 'course' }),
+    ...mapGetters('repository', ['repository']),
     title: () => BRAND_CONFIG.TITLE,
     logo: () => BRAND_CONFIG.LOGO_COMPACT,
     routes() {
       const items = [
-        { name: 'Catalog', to: { name: 'catalog' }, icon: 'view-list' },
-        { name: 'Admin', to: { name: 'system-user-management' }, icon: 'settings' }
+        { name: 'Catalog', to: { name: 'catalog' } },
+        { name: 'Admin', to: { name: 'system-user-management' } }
       ];
       if (!this.isAdmin) items.pop();
       if (this.repository) {
         items.unshift({
-          name: this.repository.name,
-          to: { name: 'course', params: { courseId: this.repository.id } },
-          icon: 'card-text-outline'
+          name: `${this.repository.name} structure`,
+          to: { name: 'repository', params: { repositoryId: this.repository.id } }
         });
       }
       return items;
@@ -75,43 +85,39 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$container-height: 40px;
+$container-height: 2.5rem;
 $font-color: #333;
 
 .v-toolbar {
   z-index: 10;
+
+  .v-toolbar__content .v-btn.v-btn--icon {
+    width: unset;
+    height: unset;
+  }
 }
 
 .v-toolbar__items {
-  margin-right: 15px;
+  margin-right: 1rem;
 }
 
 .app-brand {
   display: flex;
-  padding-bottom: 2px;
+  padding-bottom: 0.125rem;
   cursor: pointer;
 
   .app-name {
-    margin: 1px 0 0 10px;
-    font-size: 20px;
+    margin: 0.125rem 0 0 0.625rem;
+    color: #fafafa;
+    font-size: 1.25rem;
     font-weight: 400;
+    letter-spacing: 1px;
     line-height: $container-height;
+    text-transform: uppercase;
   }
 }
 
 .toolbar-route {
-  max-width: 380px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-decoration: none;
-  overflow: hidden;
-
-  &:hover {
-    color: darken($font-color, 20%);
-  }
-}
-
-.logo {
-  width: 26px;
+  max-width: 12.5rem;
 }
 </style>

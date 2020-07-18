@@ -1,34 +1,41 @@
 <template>
   <div>
-    <div class="message">{{ error }}</div>
+    <v-alert
+      :value="!!error"
+      color="grey darken-3"
+      text
+      class="mb-5">
+      {{ error }}
+    </v-alert>
     <form @submit.prevent="submit">
       <v-text-field
         ref="password"
         v-model="password"
         v-validate="{ required: true, min: 6, alphanumerical: true }"
         :error-messages="vErrors.collect('password')"
-        prepend-icon="mdi-lock"
-        name="password"
+        prepend-inner-icon="mdi-lock"
         type="password"
+        name="password"
         label="Password"
-        class="my-1" />
+        placeholder="Password"
+        outlined
+        class="mb-1" />
       <v-text-field
         v-model="passwordConfirmation"
         v-validate="{ required: true, confirmed: 'password' }"
         :error-messages="vErrors.collect('passwordConfirmation')"
-        prepend-icon="mdi-lock-outline"
-        data-vv-as="password"
-        name="passwordConfirmation"
         type="password"
-        label="Please re-enter your password"
-        class="my-1" />
+        name="passwordConfirmation"
+        label="Re-enter password"
+        placeholder="Password confirmation"
+        data-vv-as="password"
+        prepend-inner-icon="mdi-lock-outline"
+        outlined />
       <v-btn
         :disabled="!isValid"
-        color="primary"
-        outline
-        block
         type="submit"
-        class="mt-3">
+        color="primary darken-1"
+        class="my-1">
         Change password
       </v-btn>
     </form>
@@ -41,29 +48,34 @@ import { withValidation } from 'utils/validation';
 
 export default {
   mixins: [withValidation()],
-  data() {
-    return {
-      error: null,
-      password: '',
-      passwordConfirmation: ''
-    };
-  },
+  data: () => ({
+    error: null,
+    password: '',
+    passwordConfirmation: ''
+  }),
   computed: {
     isValid() {
-      return this.password && this.vErrors.count() === 0;
+      const { password, passwordConfirmation, vErrors } = this;
+      return password && passwordConfirmation && vErrors.count() === 0;
     }
   },
   methods: {
     ...mapActions(['resetPassword']),
-    submit() {
+    async submit() {
       const { token } = this.$route.params;
-      this.$validator.validateAll().then(isValid => {
-        if (!isValid) return;
-        return this.resetPassword({ password: this.password, token })
-          .then(() => this.$router.push('/'))
-          .catch(() => (this.error = 'An error has occurred!'));
-      });
+      const isValid = await this.$validator.validateAll();
+      if (!isValid) return;
+      return this.resetPassword({ password: this.password, token })
+        .then(() => this.$router.push('/'))
+        .catch(() => (this.error = 'An error has occurred!'));
     }
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.v-input ::v-deep label {
+  padding-right: 0.25rem;
+  background: #fff;
+}
+</style>

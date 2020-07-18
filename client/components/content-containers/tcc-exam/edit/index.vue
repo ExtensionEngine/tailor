@@ -33,14 +33,14 @@
         @update="$emit('updateSubcontainer', $event)"
         @delete="$emit('deleteSubcontainer', group, 'group')"
         :group="group"
-        :tes="tes"
+        :elements="elements"
         :objectives="examObjectives"
         :position="index" />
       <v-btn
         @click.stop="createGroup"
         :disabled="!container.id"
         color="primary"
-        outline
+        outlined
         class="my-5">
         <v-icon class="pr-2">mdi-file-tree</v-icon>
         Add Question Group
@@ -64,7 +64,7 @@ export default {
     container: { type: Object, required: true },
     position: { type: Number, required: true },
     activities: { type: Object, required: true },
-    tes: { type: Object, required: true },
+    elements: { type: Object, required: true },
     config: { type: Object, default: () => ({}) }
   },
   data() {

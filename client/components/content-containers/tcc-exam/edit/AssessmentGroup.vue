@@ -1,8 +1,8 @@
 <template>
   <div class="assessment-group">
     <div class="divider"></div>
-    <v-layout justify-end class="pa-0">
-      <v-flex xs2>
+    <v-row justify="end" no-gutters class="pa-0">
+      <v-col cols="2">
         <v-text-field
           v-model="timeLimit"
           v-validate="{ numeric: true, min_value: 0 }"
@@ -17,8 +17,8 @@
             <v-icon @click="$emit('delete')">mdi-delete</v-icon>
           </template>
         </v-text-field>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
     <h3>Question group {{ position | toLetter }}</h3>
     <h4>Introduction</h4>
     <group-introduction
@@ -26,7 +26,7 @@
       @reorderElement="$emit('reorderElement', $event)"
       @deleteElement="$emit('deleteElement', $event)"
       :group="group"
-      :tes="tes" />
+      :elements="elements" />
     <h4>Questions</h4>
     <div v-if="!hasAssessments" class="well">
       Click the button below to Create first Assessment.
@@ -72,7 +72,7 @@ export default {
   mixins: [withValidation()],
   props: {
     group: { type: Object, required: true },
-    tes: { type: Object, required: true },
+    elements: { type: Object, required: true },
     objectives: { type: Array, required: true },
     position: { type: Number, required: true }
   },
@@ -89,7 +89,7 @@ export default {
     },
     savedAssessments() {
       const cond = { activityId: this.group.id, type: 'ASSESSMENT' };
-      return sortBy(filter(this.tes, cond), 'position');
+      return sortBy(filter(this.elements, cond), 'position');
     },
     assessments() {
       const { savedAssessments: saved, unsavedAssessments: unsaved } = this;

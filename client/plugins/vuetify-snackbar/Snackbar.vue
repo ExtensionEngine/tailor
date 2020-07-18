@@ -1,14 +1,19 @@
 <template>
-  <v-snackbar v-model="snackbar" v-bind="context">
+  <v-snackbar v-model="snackbar" v-bind="context" multi-line>
     {{ context.message }}
-    <v-btn @click="close" dark flat>Close</v-btn>
+    <v-btn
+      @click="close"
+      color="secondary lighten-2"
+      text>
+      Close
+    </v-btn>
   </v-snackbar>
 </template>
 
 <script>
 const initialData = () => ({
   message: '',
-  color: 'primary',
+  color: 'blue-grey darken-4',
   timeout: 2500,
   right: true
 });

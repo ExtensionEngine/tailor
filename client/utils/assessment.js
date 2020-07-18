@@ -20,14 +20,11 @@ export const typeInfo = {
   DD: { type: 'DD', title: 'Drag & Drop', class: 'drag-drop' }
 };
 
-export const helperText = {
-  FB: { question: 'Type "@blank" when new blank is needed.' }
-};
-
+const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
 const BLANK_PLACEHOLDER = /(@blank)/g;
 
 function containsText(asset) {
-  return asset.type === 'HTML' &&
+  return TEXT_CONTAINERS.includes(asset.type) &&
     asset.data.content &&
     asset.data.content.trim().length > 0;
 }

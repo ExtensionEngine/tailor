@@ -1,7 +1,15 @@
 'use strict';
 
 const {
-  getLevelRelationships, getSupportedContainers
+  Activity,
+  ContentElement,
+  Sequelize: { Op },
+  sequelize
+} = require('../database');
+const {
+  getLevelRelationships,
+  getOutlineLevels,
+  getSupportedContainers
 } = require('../../../config/shared/activities');
 const { containerRegistry } = require('../content-plugins');
 const filter = require('lodash/filter');
@@ -17,12 +25,11 @@ const Promise = require('bluebird');
 const reduce = require('lodash/reduce');
 const { resolveStatics } = require('../storage/helpers');
 const storage = require('../storage');
-const { TeachingElement } = require('../database');
 const without = require('lodash/without');
 
 const { FLAT_REPO_STRUCTURE } = process.env;
 
-const TES_ATTRS = [
+const CE_ATTRS = [
   'id', 'uid', 'type', 'contentId', 'contentSignature',
   'position', 'data', 'meta', 'refs', 'createdAt', 'updatedAt'
 ];
@@ -40,16 +47,28 @@ function publishActivity(activity) {
       attachContentSummary(find(spine.structure, { id: activity.id }), content);
       return saveSpine(spine)
         .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
+        .then(() => updatePublishingStatus(repository, activity))
         .then(() => activity.save());
     });
   });
 }
 
-function updateRepositoryCatalog(repository, publishedAt) {
+function getRepositoryCatalog() {
   return storage.getFile('repository/index.json').then(buffer => {
-    const catalog = (buffer && JSON.parse(buffer.toString('utf8'))) || [];
+    if (!buffer) return [];
+    return JSON.parse(buffer.toString('utf8'));
+  });
+}
+
+function updateRepositoryCatalog(repository, publishedAt) {
+  return getRepositoryCatalog().then(catalog => {
     const existing = find(catalog, { id: repository.id });
-    const repositoryData = { ...getRepositoryAttrs(repository), publishedAt };
+    if (!existing && repository.deletedAt) return;
+    const repositoryData = {
+      ...getRepositoryAttrs(repository),
+      publishedAt: publishedAt || existing.publishedAt,
+      detachedAt: repository.deletedAt
+    };
     if (existing) {
       Object.assign(existing, omit(repositoryData, ['id']));
     } else {
@@ -61,8 +80,9 @@ function updateRepositoryCatalog(repository, publishedAt) {
 }
 
 function publishRepositoryDetails(repository) {
-  return getPublishedStructure(repository).then(spine => {
+  return getPublishedStructure(repository).then(async spine => {
     Object.assign(spine, getRepositoryAttrs(repository));
+    await updatePublishingStatus(repository);
     return saveSpine(spine)
       .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt));
   });
@@ -74,7 +94,7 @@ function unpublishActivity(repository, activity) {
     if (!spineActivity) return;
     const deleted = getSpineChildren(spine, activity).concat(spineActivity);
     return Promise.map(deleted, it => {
-      const filenames = getActivityFilenames(it);
+      const filenames = getContentContainerFilenames(it);
       return Promise.map(filenames, filename => {
         const key = `${getBaseUrl(repository.id, it.id)}/${filename}.json`;
         return storage.deleteFile(key);
@@ -89,7 +109,7 @@ function unpublishActivity(repository, activity) {
 }
 
 function getStructureData(activity) {
-  const repoData = activity.getCourse().then(repository => {
+  const repoData = activity.getRepository().then(repository => {
     return getPublishedStructure(repository).then(spine => ({ repository, spine }));
   });
   return Promise.all([repoData, activity.predecessors()])
@@ -105,22 +125,13 @@ function getPublishedStructure(repository) {
 }
 
 async function fetchActivityContent(activity, signed = false) {
-  const res = await Promise
-    .all([fetchContainers(activity), fetchAssessments(activity)])
-    .spread((containers, assessments) => ({ containers, assessments }));
-  if (!signed) return res;
-  const [containers, assessments] = await Promise.all([
-    Promise.map(res.containers, resolveContainer),
-    resolveAssessments(res.assessments)
-  ]);
-  return Object.assign(res, { containers, assessments });
+  let containers = await fetchContainers(activity);
+  if (signed) containers = await Promise.map(containers, resolveContainer);
+  return { containers };
 }
 
 function publishContent(activity) {
-  return Promise.all([
-    publishContainers(activity),
-    publishAssessments(activity)
-  ]).spread((containers, assessments) => ({ containers, assessments }));
+  return publishContainers(activity).then(containers => ({ containers }));
 }
 
 function publishContainers(parent) {
@@ -129,13 +140,6 @@ function publishContainers(parent) {
       const { id, publishedAs = 'container' } = it;
       return saveFile(parent, `${id}.${publishedAs}`, it).then(() => it);
     });
-}
-
-function publishAssessments(parent) {
-  return fetchAssessments(parent).then(assessments => {
-    const key = getAssessmentsKey(parent);
-    return saveFile(parent, key, assessments).then(() => assessments);
-  });
 }
 
 function fetchContainers(parent) {
@@ -160,21 +164,16 @@ function fetchContainers(parent) {
 function fetchDefaultContainer(container) {
   const order = [['position', 'ASC']];
   return container
-    .getTeachingElements({ attributes: TES_ATTRS, order })
-    .then(tes => ({
+    .getContentElements({ attributes: CE_ATTRS, order })
+    .then(ces => ({
       ...pick(container, ['id', 'uid', 'type', 'position', 'createdAt', 'updatedAt']),
-      elements: map(tes, (it, pos) => Object.assign(it, { position: pos + 1 }))
+      elements: map(ces, (it, pos) => Object.assign(it, { position: pos + 1 }))
     }));
 }
 
 function fetchCustomContainers(parent) {
-  const options = { include: [{ model: TeachingElement, attributes: TES_ATTRS }] };
+  const options = { include: [{ model: ContentElement, attributes: CE_ATTRS }] };
   return containerRegistry.fetch(parent, options);
-}
-
-function fetchAssessments(parent) {
-  const options = { where: { type: 'ASSESSMENT' }, attributes: TES_ATTRS };
-  return parent.getTeachingElements(options);
 }
 
 function resolveContainer(container) {
@@ -185,13 +184,9 @@ function resolveContainer(container) {
     : Promise.map(elements, resolveStatics).then(() => container);
 }
 
-function resolveAssessments(assessments) {
-  return Promise.map(assessments, resolveStatics);
-}
-
 function saveFile(parent, key, data) {
   const buffer = Buffer.from(JSON.stringify(data), 'utf8');
-  const baseUrl = getBaseUrl(parent.courseId, parent.id);
+  const baseUrl = getBaseUrl(parent.repositoryId, parent.id);
   return storage.saveFile(`${baseUrl}/${key}.json`, buffer);
 }
 
@@ -238,29 +233,28 @@ function getRepositoryAttrs(repository) {
   return temp;
 }
 
-function attachContentSummary(obj, { containers, assessments }) {
-  obj.contentContainers = map(containers, it => ({
-    ...pick(it, ['id', 'uid', 'type', 'publishedAs']),
-    elementCount: get(it.elements, 'length', 0)
-  }));
-  obj.assessments = map(assessments, it => pick(it, ['id', 'uid']));
+function attachContentSummary(obj, { containers }) {
+  obj.contentContainers = map(containers, getContainerSummary);
 }
 
-function getActivityFilenames(spineActivity) {
-  const { contentContainers = [], assessments = [] } = spineActivity;
-  const filenames = [];
-  if (assessments.length) filenames.push(getAssessmentsKey(spineActivity));
-  filenames.push(...map(contentContainers, it => `${it.id}.${it.publishedAs}`));
-  return filenames;
+function getContainerSummary(container) {
+  const customBuilder = containerRegistry.getSummaryBuilder(container.type);
+  return customBuilder
+    ? customBuilder(container)
+    : defaultSummaryBuilder(container);
+}
+
+function defaultSummaryBuilder({ id, uid, type, publishedAs, elements = [] }) {
+  return { id, uid, type, publishedAs, elementCount: elements.length };
+}
+
+function getContentContainerFilenames({ contentContainers = [] }) {
+  return map(contentContainers, it => `${it.id}.${it.publishedAs}`);
 }
 
 function renameKey(obj, key, newKey) {
   obj[newKey] = obj[key];
   delete obj[key];
-}
-
-function getAssessmentsKey(parent) {
-  return FLAT_REPO_STRUCTURE ? `${parent.id}.assessments` : 'assessments';
 }
 
 function getBaseUrl(repoId, parentId) {
@@ -275,9 +269,31 @@ function mapRelationships(relationships, activity) {
   }, {});
 }
 
+// check if there is at least one outline activity with unpublished
+// changes and upadate repository model accordingly
+async function updatePublishingStatus(repository, activity) {
+  const outlineTypes = map(getOutlineLevels(repository.schema), 'type');
+  const where = {
+    repositoryId: repository.id,
+    type: outlineTypes,
+    detached: false,
+    [Op.or]: {
+      publishedAt: { [Op.eq]: null },
+      modifiedAt: { [Op.gt]: sequelize.col('published_at') }
+    }
+  };
+  if (activity) where.id = { [Op.ne]: activity.id };
+  const unpublishedCount = await Activity.count({ where });
+  return repository.update({ hasUnpublishedChanges: !!unpublishedCount });
+}
+
 module.exports = {
+  getRepositoryCatalog,
   publishActivity,
   unpublishActivity,
   publishRepositoryDetails,
-  fetchActivityContent
+  updateRepositoryCatalog,
+  updatePublishingStatus,
+  fetchActivityContent,
+  getRepositoryAttrs
 };
