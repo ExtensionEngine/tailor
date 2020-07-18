@@ -169,11 +169,11 @@
   },
   "vuePlugins": {
     "service": [
-      "./build/plugins/brand",
-      "./build/plugins/clean-out-dir",
-      "./build/plugins/copy",
-      "./build/plugins/html-version-spec",
-      "./build/plugins/sass-resources"
+      "./build/plugins/vue-cli/brand",
+      "./build/plugins/vue-cli/clean-out-dir",
+      "./build/plugins/vue-cli/copy",
+      "./build/plugins/vue-cli/html-version-spec",
+      "./build/plugins/vue-cli/sass-resources"
     ]
   }
 }
