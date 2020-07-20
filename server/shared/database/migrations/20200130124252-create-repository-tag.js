@@ -17,11 +17,11 @@ exports.up = (queryInterface, Sequelize) => {
       onDelete: 'CASCADE'
     }
   }).then(async () => {
-    return queryInterface.addConstraint(
-      TABLE_NAME,
-      ['repository_id', 'tag_id'],
-      { type: 'primary key', name: 'repository_tag_pkey' }
-    );
+    return queryInterface.addConstraint(TABLE_NAME, {
+      name: 'repository_tag_pkey',
+      type: 'primary key',
+      fields: ['repository_id', 'tag_id']
+    });
   });
 };
 

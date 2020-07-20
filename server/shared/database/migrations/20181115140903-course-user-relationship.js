@@ -37,11 +37,11 @@ module.exports = {
     }).then(async () => {
       const table = await queryInterface.describeTable(TABLE_NAME);
       if (table.course_id.primaryKey && table.user_id.primaryKey) return;
-      return queryInterface.addConstraint(
-        TABLE_NAME,
-        ['course_id', 'user_id'],
-        { type: 'primary key', name: 'course_user_pkey' }
-      );
+      return queryInterface.addConstraint(TABLE_NAME, {
+        name: 'course_user_pkey',
+        type: 'primary key',
+        fields: ['course_id', 'user_id']
+      });
     });
   },
   down: queryInterface => queryInterface.dropTable(TABLE_NAME)
