@@ -50,7 +50,6 @@
           :key="subActivity._cid"
           v-bind="subActivity"
           :index="childIndex + 1"
-          :level="level + 1"
           :activities="activities"
           class="sub-activity" />
       </draggable>
@@ -64,7 +63,6 @@ import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import { isEditable } from 'shared/activities';
-import map from 'lodash/map';
 import OptionsMenu from '../common/ActivityOptions/Menu';
 import OptionsToolbar from '../common/ActivityOptions/Toolbar';
 import reorderMixin from './reorderMixin';
@@ -81,7 +79,6 @@ export default {
     id: { type: Number, default: null },
     parentId: { type: Number, default: null },
     repositoryId: { type: Number, required: true },
-    level: { type: Number, required: true },
     index: { type: Number, required: true },
     position: { type: Number, required: true },
     type: { type: String, required: true },
@@ -105,10 +102,9 @@ export default {
     hasSubtypes: vm => !!size(vm.config.subLevels),
     hasChildren: vm => (vm.children.length > 0) && vm.hasSubtypes,
     children() {
-      const level = this.level + 1;
-      const types = map(filter(this.structure, { level }), 'type');
+      const { subLevels } = this.config;
       return filter(this.activities, it => {
-        return this.id && (this.id === it.parentId) && types.includes(it.type);
+        return this.id && (this.id === it.parentId) && subLevels.includes(it.type);
       }).sort((x, y) => x.position - y.position);
     },
     icon() {
