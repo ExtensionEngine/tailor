@@ -7,36 +7,38 @@
       class="mb-5">
       {{ error || 'Sending reset email...' }}
     </v-alert>
-    <validation-observer v-if="!error" v-slot="{ handleSubmit }" slim>
-      <form @submit.prevent="handleSubmit(submit)">
-        <validation-provider
-          v-slot="{ errors }"
-          mode="eager"
-          rules="required|email"
-          name="email">
-          <v-text-field
-            v-model="email"
-            :error-messages="errors"
-            type="email"
-            label="Email"
-            placeholder="Email"
-            prepend-inner-icon="mdi-email-outline"
-            outlined />
-        </validation-provider>
-        <div class="d-flex">
-          <v-btn @click="$router.go(-1)" tag="a" text class="px-1">
-            <v-icon>mdi-chevron-left</v-icon>
-            Back
-          </v-btn>
-          <v-spacer />
-          <v-btn
-            :disabled="showMessage"
-            type="submit"
-            color="primary darken-1">
-            Send reset email
-          </v-btn>
-        </div>
-      </form>
+    <validation-observer
+      v-if="!error"
+      ref="form"
+      @submit.prevent="$refs.form.handleSubmit(submit)"
+      tag="form">
+      <validation-provider
+        v-slot="{ errors }"
+        mode="eager"
+        rules="required|email"
+        name="email">
+        <v-text-field
+          v-model="email"
+          :error-messages="errors"
+          type="email"
+          label="Email"
+          placeholder="Email"
+          prepend-inner-icon="mdi-email-outline"
+          outlined />
+      </validation-provider>
+      <div class="d-flex">
+        <v-btn @click="$router.go(-1)" tag="a" text class="px-1">
+          <v-icon>mdi-chevron-left</v-icon>
+          Back
+        </v-btn>
+        <v-spacer />
+        <v-btn
+          :disabled="showMessage"
+          type="submit"
+          color="primary darken-1">
+          Send reset email
+        </v-btn>
+      </div>
     </validation-observer>
     <v-btn v-else @click.stop="resetInput" text>
       Retry
