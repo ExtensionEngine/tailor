@@ -71,7 +71,7 @@ import { getActivityMetadata, getLevel } from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex';
 import ActivityTasks from './Tasks';
 import Discussion from './Discussion';
-import Meta from 'components/common/Meta';
+import MetaInput from 'tce-core/MetaInput';
 import Relationship from './Relationship';
 
 export default {
@@ -98,7 +98,7 @@ export default {
     ActivityTasks,
     Discussion,
     Relationship,
-    MetaInput: Meta
+    MetaInput
   }
 };
 </script>

@@ -1,5 +1,9 @@
 import toCase from 'to-case';
 
+export function getMetaName(type) {
+  return `meta-${toCase.slug(type)}`;
+}
+
 export function getContainerName(type) {
   return `tcc-${toCase.slug(type)}`;
 }
