@@ -7,7 +7,11 @@ import assetsApi from '@/api/asset';
 import ContentPluginRegistry from './content-plugins';
 
 import { formatDate, truncate } from '@/filters';
-import { ValidationObserver, ValidationProvider } from 'vee-validate';
+import {
+  setInteractionMode,
+  ValidationObserver,
+  ValidationProvider
+} from 'vee-validate';
 import FileFilter from '@/directives/file-filter';
 import QuestionContainer from 'tce-core/QuestionContainer';
 import request from './api/request';
@@ -24,6 +28,10 @@ import router from './router';
 import App from './App';
 
 Vue.component('tce-question-container', QuestionContainer);
+Vue.component('ValidationObserver', ValidationObserver);
+Vue.component('ValidationProvider', ValidationProvider);
+setInteractionMode('eager');
+
 Vue.filter('formatDate', formatDate);
 Vue.filter('truncate', truncate);
 
@@ -31,8 +39,6 @@ Vue.use(FileFilter);
 Vue.use(VueHotkey);
 Vue.use(VueClipboard);
 Vue.use(VueCroppa);
-Vue.component('ValidationProvider', ValidationProvider);
-Vue.component('ValidationObserver', ValidationObserver);
 Vue.use(Timeago, {
   locale: 'en-US',
   locales: {

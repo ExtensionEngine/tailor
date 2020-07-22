@@ -14,7 +14,6 @@
       tag="form">
       <validation-provider
         v-slot="{ errors }"
-        mode="eager"
         rules="required|email"
         name="email">
         <v-text-field
