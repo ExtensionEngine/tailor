@@ -100,6 +100,7 @@ An array of Schema objects.
 
 - **id** `String` - Schema identifier.
 - **name** `String` - Schema display name.
+- **workflowId** `String` - Workflow identifier.
 - **meta** `Array<Metadata>` - An array of objects defining repository metadata.
 - **structure** `Array<ActivityConfig>` - An array of objects which define
   schema structure.
@@ -118,6 +119,7 @@ properties:
 - **subLevels** `Array<String>` - An array of sub-types.
 - **label** `String` - Display label.
 - **color** `String` - Display color in hexadecimal notation.
+- **isTrackedInWorkflow** `Boolean` - Defines whether workflow tasks can be created for this activity type.
 - **contentContainers** `Array<String>` - Array of content container types that
   define which content containers can be added.
 - **hasExams** `Boolean` - Activity allows adding exam activities to it.
@@ -237,6 +239,18 @@ Defines what meta fields content element has.
       "value": "second"
     }]
   ```
+
+### `WORKFLOW`
+
+Defines activity task statuses for repository workflow. Workflow can be reused across multiple schemas.
+
+#### Workflow
+- **id** `String` - Workflow identifier.
+- **statuses** `Array<TaskStatus>` - An array of possible task statuses.
+
+#### TaskStatus
+- **id** `String` - Task status identifier.
+- **label** `String` - Display label.
 
 ### `PREVIEW_URL`
 
