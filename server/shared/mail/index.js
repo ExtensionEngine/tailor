@@ -23,7 +23,8 @@ module.exports = {
   send,
   invite,
   resetPassword,
-  sendCommentNotification
+  sendCommentNotification,
+  sendTaskAssigneeNotification
 };
 
 function invite(user, token) {
@@ -70,6 +71,20 @@ function sendCommentNotification(users, comment) {
     from,
     to: recipients,
     subject: `${comment.author.label} left a comment on ${comment.repository}`,
+    text,
+    attachment: [{ data: html, alternative: true }]
+  });
+}
+
+function sendTaskAssigneeNotification(assignee, task) {
+  const recipients = assignee;
+  const html = renderHtml(path.join(templatesDir, 'task.mjml'), task);
+  const text = renderText(path.join(templatesDir, 'task.txt'), task);
+  logger.info({ recipients, sender: from }, '📧  Sending notification email to:', recipients);
+  return send({
+    from,
+    to: recipients,
+    subject: `You've been assigned task "${task.name}."`,
     text,
     attachment: [{ data: html, alternative: true }]
   });

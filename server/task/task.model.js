@@ -1,5 +1,6 @@
 'use strict';
 
+const hooks = require('./hooks');
 const { Model } = require('sequelize');
 const { priorities } = require('../../config/shared/workflow');
 
@@ -73,6 +74,10 @@ class Task extends Model {
         where: { archivedAt: null }
       }
     };
+  }
+
+  static hooks(Hooks, models) {
+    hooks.add(this, Hooks, models);
   }
 }
 
