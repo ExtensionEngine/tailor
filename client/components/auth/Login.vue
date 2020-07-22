@@ -14,8 +14,8 @@
       tag="form">
       <validation-provider
         v-slot="{ errors }"
-        rules="required|email"
-        name="email">
+        name="email"
+        rules="required|email">
         <v-text-field
           v-model="email"
           :error-messages="errors"
@@ -30,8 +30,8 @@
       </validation-provider>
       <validation-provider
         v-slot="{ errors }"
-        rules="required"
-        name="password">
+        name="password"
+        rules="required">
         <v-text-field
           v-model="password"
           :error-messages="errors"

@@ -14,9 +14,9 @@
       tag="form">
       <validation-provider
         v-slot="{ errors }"
-        rules="required|alphanumerical|min:6"
         vid="password"
-        name="password">
+        name="password"
+        rules="required|alphanumerical|min:6">
         <v-text-field
           ref="password"
           v-model="password"
@@ -31,9 +31,9 @@
       </validation-provider>
       <validation-provider
         v-slot="{ errors }"
-        rules="required|confirmed:password"
         vid="passwordConfirmation"
-        name="password">
+        name="password"
+        rules="required|confirmed:password">
         <v-text-field
           v-model="passwordConfirmation"
           :error-messages="errors"
