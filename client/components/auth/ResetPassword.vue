@@ -18,7 +18,6 @@
         name="password"
         rules="required|alphanumerical|min:6">
         <v-text-field
-          ref="password"
           v-model="password"
           :error-messages="errors"
           type="password"
