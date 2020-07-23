@@ -43,7 +43,7 @@ export default {
   },
   computed: {
     ...mapGetters('repository', ['tasks', 'users']),
-    activityTasks: vm => vm.tasks.filter(it => it.id === vm.activity.taskId)
+    activityTasks: vm => vm.tasks.filter(it => it.activityId === vm.activity.id)
   },
   methods: {
     ...mapActions('repository/tasks', ['fetch']),

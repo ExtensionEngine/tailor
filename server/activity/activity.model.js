@@ -82,8 +82,8 @@ class Activity extends Model {
       as: 'children',
       foreignKey: { name: 'parentId', field: 'parent_id' }
     });
-    this.belongsTo(Task, {
-      foreignKey: { name: 'taskId', field: 'task_id' }
+    this.hasMany(Task, {
+      foreignKey: { name: 'activityId', field: 'activity_id' }
     });
   }
 

@@ -9,7 +9,10 @@
       class="px-4 pt-4 pb-10">
       <sidebar-header :task="selectedTask" />
       <task-form :task="selectedTask" />
-      <task-activities :activities="taskActivities" />
+      <section>
+        <h5>Related content</h5>
+        <activity-card :activity="activity" />
+      </section>
     </article>
     <article v-else class="placeholder grey--text text--darken-3">
       <h4>Task Sidebar</h4>
@@ -22,9 +25,9 @@
 </template>
 
 <script>
+import ActivityCard from './ActivityCard';
 import { mapGetters } from 'vuex';
 import SidebarHeader from './Header';
-import TaskActivities from './Activities';
 import TaskForm from './Form';
 
 export default {
@@ -36,12 +39,12 @@ export default {
   },
   computed: {
     ...mapGetters('repository', ['selectedTask', 'activities']),
-    taskActivities() {
-      return this.activities.filter(it => it.taskId === this.selectedTask.id);
+    activity() {
+      return this.activities.find(it => it.id === this.selectedTask.activityId);
     }
   },
   components: {
-    TaskActivities,
+    ActivityCard,
     TaskForm,
     SidebarHeader
   }

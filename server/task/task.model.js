@@ -47,7 +47,7 @@ class Task extends Model {
   }
 
   static associate({ Activity, User, Repository }) {
-    this.hasMany(Activity);
+    this.belongsTo(Activity);
     this.belongsTo(Repository);
     this.belongsTo(User, {
       as: 'assignee',

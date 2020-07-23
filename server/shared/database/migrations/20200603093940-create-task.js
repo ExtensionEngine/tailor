@@ -25,6 +25,11 @@ module.exports = {
         field: 'repository_id',
         references: { model: 'repository', key: 'id' }
       },
+      activityId: {
+        type: Sequelize.INTEGER,
+        field: 'activity_id',
+        references: { model: 'activity', key: 'id' }
+      },
       priority: {
         type: Sequelize.ENUM(['TRIVIAL', 'LOW', 'MEDIUM', 'HIGH', 'CRITICAL']),
         allowNull: false
@@ -58,13 +63,8 @@ module.exports = {
         field: 'deleted_at'
       }
     });
-    return queryInterface.addColumn('activity', 'task_id', {
-      type: Sequelize.INTEGER,
-      references: { model: 'task', key: 'id' }
-    });
   },
   down: async queryInterface => {
-    await queryInterface.removeColumn('activity', 'task_id');
     return queryInterface.dropTable(TABLE_NAME);
   }
 };
