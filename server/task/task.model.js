@@ -68,9 +68,14 @@ class Task extends Model {
     };
   }
 
-  static scopes() {
+  static scopes({ Activity }) {
     return {
       defaultScope: {
+        include: [{
+          model: Activity,
+          attributes: [],
+          where: { detached: false }
+        }],
         where: { archivedAt: null }
       }
     };
