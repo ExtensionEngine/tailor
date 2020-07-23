@@ -34,12 +34,12 @@ export default {
   props: {
     repositoryId: { type: Number, required: true }
   },
-  data: () => ({ showLoader: true, lastSelectedActivity: null }),
+  data: () => ({ showLoader: true }),
   computed: {
     ...mapGetters(['isAdmin']),
     ...mapGetters('repository', ['repository', 'activities', 'isRepositoryAdmin']),
     tabs() {
-      const query = { activityId: get(this.lastSelectedActivity, 'id') };
+      const query = { activityId: get(this.selectedActivity, 'id') };
       const items = [
         { name: 'Structure', route: 'repository', icon: 'file-tree', query },
         { name: 'Graph View', route: 'tree-view', icon: 'graph-outline', query },
@@ -52,17 +52,6 @@ export default {
     }
   },
   methods: mapActions('repository', ['initialize', 'expandParents']),
-  watch: {
-    selectedActivity(val) {
-      if (val) this.lastSelectedActivity = val;
-    },
-    $route({ name, query }) {
-      if (query.activityId) return;
-      const { lastSelectedActivity: lastActivity } = this;
-      const activityView = (name === 'repository') || (name === 'tree-view');
-      if (activityView && lastActivity) this.selectActivity(lastActivity.id);
-    }
-  },
   async created() {
     const { repositoryId } = this;
     await this.initialize(repositoryId);
@@ -70,9 +59,7 @@ export default {
     if (!this.activities.length) return;
     if (!this.selectedActivity) {
       const rootActivities = filter(this.activities, { parentId: null });
-      const activity = rootActivities.length
-        ? sortBy(rootActivities, 'position')[0]
-        : null;
+      const [activity] = sortBy(rootActivities, 'position');
       this.selectActivity(activity.id);
     }
     this.expandParents(this.selectedActivity);
