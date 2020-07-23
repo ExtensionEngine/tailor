@@ -2,7 +2,7 @@
   <div>
     <div class="d-flex mb-3 justify-space-between align-center">
       <h5>Related Task</h5>
-      <create-task-dialog :activity="activity" heading="Add task" />
+      <create-task-dialog v-if="!activityTasks.length" :activity="activity" heading="Add task" />
     </div>
     <div class="d-flex flex-column">
       <v-card
