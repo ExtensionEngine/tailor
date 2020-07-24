@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <v-sheet color="transparent" class="navigation-header">
+  <div class="navigation-container">
+    <v-sheet color="transparent" class="navigation-header" elevation="1" tile>
       <v-text-field
         v-model="search"
         label="Search..."
@@ -11,13 +11,21 @@
         class="my-3 mx-1" />
     </v-sheet>
     <v-treeview
-      @update:active="navigateTo"
       :items="activityTree"
-      :active.sync="active"
+      :active="active"
       :search="search"
-      open-all activatable hoverable dense>
-      <template v-slot:label="{ item: { name, selectable } }">
-        <span :class="{ selectable }">{{ name }}</span>
+      item-text="name"
+      open-all
+      hoverable>
+      <template v-slot:append="{ item: { id, selectable } }">
+        <v-btn
+          v-if="selectable"
+          @click.stop="navigateTo(id)"
+          color="blue-grey darken-4"
+          icon
+          class="mr-1 selectable">
+          <v-icon>mdi-open-in-app</v-icon>
+        </v-btn>
       </template>
     </v-treeview>
   </div>
@@ -50,47 +58,49 @@ export default {
     }
   },
   methods: {
-    navigateTo([activityId]) {
+    navigateTo(activityId) {
       if (activityId === this.selected.id) return;
       const activity = this.activities.find(it => it.id === activityId);
       if (!activity || !this.isActivityEditable(activity)) return;
+      this.active = [activityId];
       this.$router.push({ name: 'editor', params: { activityId } });
     },
     isActivityEditable(activity) {
       return this.editableTypes.includes(activity.type);
-    }
-  },
-  watch: {
-    active([activityId]) {
-      const activity = this.activities.find(it => it.id === activityId);
-      // If not editable activity, keep the current one as active
-      if (!activity || !this.isActivityEditable(activity)) {
-        this.active = [this.selected.id];
-      }
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.navigation-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .navigation-header {
-  padding: 1.5rem 1rem 0.25rem 0.75rem;
+  padding: 0.75rem 1rem 0.75rem 0.75rem;
 }
 
-.v-treeview ::v-deep {
-  .v-treeview-node__toggle {
-    outline: none;
-  }
+.v-treeview {
+  padding: 0.5rem 0.25rem;
+  overflow-y: auto;
 
-  .v-treeview-node__content {
-    margin-left: 0;
-  }
+  ::v-deep {
+    .v-treeview-node__toggle {
+      outline: none;
+    }
 
-  .v-treeview-node__level {
-    width: 0.75rem;
+    .v-treeview-node__content {
+      margin-left: 0;
+    }
+
+    .v-treeview-node__level {
+      width: 0.75rem;
+    }
   }
 }
-
 .selectable {
   cursor: pointer;
 }

@@ -3,11 +3,7 @@
     width="400"
     absolute permanent
     class="sidebar grey lighten-4 elevation-2">
-    <div
-      :class="{
-        'toolbar-visible': selectedElement,
-        'toolbar-composite': selectedElement && selectedElement.parent
-      }">
+    <div :class="toolbarClasses" class="sidebar-container">
       <activity-navigation
         v-if="selectedTab === 'browser'"
         :repository="repository"
@@ -91,6 +87,14 @@ export default {
     metadata() {
       const { repository, selectedElement } = this;
       return getElementMetadata(get(repository, 'schema'), selectedElement);
+    },
+    toolbarClasses() {
+      const { selectedElement } = this;
+      if (!selectedElement) return;
+
+      const classes = ['toolbar-visible'];
+      if (selectedElement.parent) classes.push('toolbar-composite');
+      return classes;
     }
   },
   methods: {
@@ -120,11 +124,15 @@ export default {
   text-align: left;
 }
 
-.toolbar-visible {
-  margin-top: 4.5rem;
+.sidebar-container {
+  height: 100%;
 
-  &.toolbar-composite {
-    margin-top: 7.5rem;
+  &.toolbar-visible {
+    padding-top: 4.5rem;
+
+    &.toolbar-composite {
+      padding-top: 7.5rem;
+    }
   }
 }
 </style>
