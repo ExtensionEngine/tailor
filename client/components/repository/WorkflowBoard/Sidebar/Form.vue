@@ -23,7 +23,7 @@
       :value="task.assigneeId"
       :items="users"
       label="Assignee"
-      item-text="fullName"
+      :item-text="getUserLabel"
       item-value="id"
       outlined
       clearable />
@@ -54,6 +54,9 @@ export default {
   methods: {
     ...mapActions('repository', ['getUsers']),
     ...mapActions('repository/tasks', ['save']),
+    getUserLabel({ fullName, email }) {
+      return fullName || email;
+    },
     async updateTask(key, value) {
       await this.save({ ...this.task, [key]: value || null });
       this.$snackbar.show(`${this.task.name} saved`);
