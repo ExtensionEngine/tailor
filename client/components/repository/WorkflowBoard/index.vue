@@ -119,7 +119,7 @@ export default {
   },
   methods: {
     ...mapActions('repository', ['getUsers']),
-    ...mapActions('repository/tasks', { getTasks: 'fetch', updateTask: 'save' }),
+    ...mapActions('repository/tasks', { getTasks: 'reset', updateTask: 'save' }),
     getTasksByStatus(statusId) {
       return get(this.groupedTasks, statusId, []);
     },
