@@ -29,7 +29,7 @@
           v-model="task.assigneeId"
           :items="users"
           label="Assignee"
-          item-text="fullName"
+          :item-text="getUserLabel"
           item-value="id"
           outlined
           clearable />
@@ -67,12 +67,13 @@ export default {
     visible: false,
     task: initTaskState()
   }),
-  computed: {
-    ...mapGetters('repository', ['users', 'workflow'])
-  },
+  computed: mapGetters('repository', ['users', 'workflow']),
   methods: {
     ...mapActions('repository', ['getUsers']),
     ...mapActions('repository/tasks', { createTask: 'create' }),
+    getUserLabel({ fullName, email }) {
+      return fullName || email;
+    },
     close() {
       this.visible = false;
     },
