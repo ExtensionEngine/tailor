@@ -17,6 +17,7 @@
           <img :src="imgUrl">
         </v-avatar>
         <v-avatar
+          v-if="unassignedTaskExists"
           @click="filterUnassigned = !filterUnassigned"
           :size="34"
           :class="{ active: filterUnassigned }"
@@ -87,6 +88,7 @@ export default {
   }),
   computed: {
     ...mapGetters('repository', ['repository', 'workflow', 'tasks']),
+    unassignedTaskExists: vm => !!vm.tasks.find(it => !it.assigneeId),
     searchableTasks() {
       return this.tasks.map(it => ({
         ...it,
@@ -104,9 +106,7 @@ export default {
       }
       return this.searchableTasks.filter(conforms(filters));
     },
-    groupedTasks() {
-      return groupBy(this.filteredTasks, 'status');
-    },
+    groupedTasks: vm => groupBy(vm.filteredTasks, 'status'),
     assignees() {
       const assignees = this.tasks.reduce((all, { assignee }) => {
         if (!assignee) return all;
