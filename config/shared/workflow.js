@@ -5,11 +5,11 @@ const validateWorkflow = require('./workflow-validation');
 const { WORKFLOWS } = require('./activities-rc.load')();
 
 const priorities = [
-  { id: 'TRIVIAL', label: 'Trivial', icon: 'priorityTrivial' },
-  { id: 'LOW', label: 'Low', icon: 'priorityLow' },
+  { id: 'CRITICAL', label: 'Critical', icon: 'priorityCritical' },
   { id: 'MEDIUM', label: 'Medium', icon: 'priorityMedium' },
   { id: 'HIGH', label: 'High', icon: 'priorityHigh' },
-  { id: 'CRITICAL', label: 'Critical', icon: 'priorityCritical' }
+  { id: 'LOW', label: 'Low', icon: 'priorityLow' },
+  { id: 'TRIVIAL', label: 'Trivial', icon: 'priorityTrivial' }
 ];
 
 const priorityOptions = priorities.map(it => ({ value: it.id, label: it.label }));
