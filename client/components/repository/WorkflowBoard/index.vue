@@ -5,7 +5,8 @@
         v-model="searchText"
         class="search-field"
         prepend-inner-icon="mdi-magnify"
-        placeholder="Search by ID or name" />
+        placeholder="Search by ID or name"
+        clearable />
       <div v-if="assignees.length" class="ml-5 mr-3">
         <v-avatar
           v-for="{ id, isActive, imgUrl } in assignees"
