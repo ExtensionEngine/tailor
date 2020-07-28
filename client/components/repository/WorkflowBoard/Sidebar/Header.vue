@@ -28,20 +28,11 @@
         Copy link
       </v-btn>
     </div>
-    <v-btn @click="requestArchiveConfirmation" class="px-0 py-1 my-5" text small>
-      <v-icon>mdi-package-down</v-icon> Archive
-    </v-btn>
-    <div class="my-1">Created at {{ task.createdAt | formatDate }}</div>
-    <div class="my-1">Updated at {{ task.updatedAt | formatDate }}</div>
   </header>
 </template>
 
 <script>
 import Chip from '../Chip';
-import EventBus from 'EventBus';
-import { mapActions } from 'vuex';
-
-const appChannel = EventBus.channel('app');
 
 export default {
   props: {
@@ -49,16 +40,6 @@ export default {
   },
   computed: {
     taskUrl: () => window.location.href
-  },
-  methods: {
-    ...mapActions('repository/tasks', ['archive']),
-    requestArchiveConfirmation(task) {
-      appChannel.emit('showConfirmationModal', {
-        title: 'Archive task?',
-        message: 'Are you sure you want to archive task?',
-        action: () => this.archive(this.task)
-      });
-    }
   },
   components: { Chip }
 };

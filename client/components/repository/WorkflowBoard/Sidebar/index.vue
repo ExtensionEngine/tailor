@@ -13,6 +13,13 @@
         <h5>Related content</h5>
         <activity-card :activity="activity" />
       </section>
+      <section class="my-10">
+        <div class="caption my-1 px-3 grey--text text--darken-1">Created at {{ selectedTask.createdAt | formatDate }}</div>
+        <div class="caption my-1 px-3 grey--text text--darken-1">Updated at {{ selectedTask.updatedAt | formatDate }}</div>
+        <v-btn @click="requestArchiveConfirmation" class="my-3" text small>
+          <v-icon class="pr-2">mdi-package-down</v-icon> Archive
+        </v-btn>
+      </section>
     </article>
     <article v-else class="placeholder grey--text text--darken-3">
       <h4>Task Sidebar</h4>
@@ -25,10 +32,13 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import ActivityCard from './ActivityCard';
-import { mapGetters } from 'vuex';
+import EventBus from 'EventBus';
 import SidebarHeader from './Header';
 import TaskForm from './Form';
+
+const appChannel = EventBus.channel('app');
 
 export default {
   props: {
@@ -41,6 +51,16 @@ export default {
     ...mapGetters('repository', ['selectedTask', 'activities']),
     activity() {
       return this.activities.find(it => it.id === this.selectedTask.activityId);
+    }
+  },
+  methods: {
+    ...mapActions('repository/tasks', ['archive']),
+    requestArchiveConfirmation() {
+      appChannel.emit('showConfirmationModal', {
+        title: 'Archive task?',
+        message: 'Are you sure you want to archive task?',
+        action: () => this.archive(this.selectedTask)
+      });
     }
   },
   components: {
