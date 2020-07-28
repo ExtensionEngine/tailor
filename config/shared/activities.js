@@ -11,7 +11,9 @@ const isString = require('lodash/isString');
 const map = require('lodash/map');
 const mergeConfig = require('../utils/mergeConfig');
 const parseSchemas = require('./schema-parser');
+const reduce = require('lodash/reduce');
 const union = require('lodash/union');
+const uniq = require('lodash/uniq');
 
 /* eslint-disable */
 const defaultConfiguration = require('./activities-rc');
@@ -127,10 +129,15 @@ function getElementConfig(schemaId, type) {
 function getSiblingLevels(type) {
   const schemaId = getSchemaId(type);
   if (!schemaId) return [{ type }];
-  const levels = getOutlineLevels(schemaId);
-  const { level } = find(levels, { type }) || {};
-  if (!level) return [{ type }];
-  return filter(levels, { level });
+  const outline = getOutlineLevels(schemaId);
+  const activityConfig = find(outline, { type });
+  if (!activityConfig) return [{ type }];
+  if (activityConfig.rootLevel) return filter(outline, { rootLevel: true });
+  const siblingTypes = reduce(outline, (acc, { subLevels = [] }) => {
+    if (!subLevels.includes(type)) return acc;
+    return [...acc, ...subLevels];
+  }, []);
+  return uniq(siblingTypes).map(type => find(outline, { type }));
 }
 
 function getSupportedContainers(type) {
