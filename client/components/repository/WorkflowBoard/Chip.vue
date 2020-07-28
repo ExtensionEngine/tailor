@@ -1,5 +1,11 @@
 <template functional>
-  <v-chip label small>{{ props.id }}</v-chip>
+  <v-chip
+    color="blue-grey lighten-5"
+    class="font-weight-medium subtitle-2"
+    label
+    small>
+    {{ props.id }}
+  </v-chip>
 </template>
 
 <script>
