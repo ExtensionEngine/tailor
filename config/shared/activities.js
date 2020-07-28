@@ -1,7 +1,6 @@
 'use strict';
 
 const castArray = require('lodash/castArray');
-const filter = require('lodash/filter');
 const find = require('lodash/find');
 const first = require('lodash/first');
 const flatMap = require('lodash/flatMap');
@@ -132,10 +131,11 @@ function getSiblingLevels(type) {
   const outline = getOutlineLevels(schemaId);
   const activityConfig = find(outline, { type });
   if (!activityConfig) return [{ type }];
-  if (activityConfig.rootLevel) return filter(outline, { rootLevel: true });
-  const siblingTypes = reduce(outline, (acc, { subLevels = [] }) => {
-    if (!subLevels.includes(type)) return acc;
-    return [...acc, ...subLevels];
+  const isRoot = activityConfig.rootLevel;
+  const siblingTypes = reduce(outline, (acc, it) => {
+    if (isRoot && it.rootLevel) acc.push(it.type);
+    if (!it.subLevels || !it.subLevels.includes(type)) return acc;
+    return [...acc, ...it.subLevels];
   }, []);
   return uniq(siblingTypes).map(type => find(outline, { type }));
 }
