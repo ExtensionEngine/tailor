@@ -60,8 +60,10 @@ export default {
   methods: {
     navigateTo(activityId) {
       if (activityId === this.selected.id) return;
+
       const activity = this.activities.find(it => it.id === activityId);
       if (!activity || !this.isActivityEditable(activity)) return;
+
       this.active = [activityId];
       this.$router.push({ name: 'editor', params: { activityId } });
     },
