@@ -9,35 +9,35 @@
       <h4>Add task</h4>
     </template>
     <template #body>
-      <form @submit.prevent="create">
-        <v-text-field
-          v-model="task.name"
-          label="Name"
-          outlined />
-        <v-text-field
-          v-model="task.description"
-          label="Description"
-          outlined />
-        <v-select
-          v-model="task.status"
-          :items="workflow.statuses"
-          label="Status"
-          item-value="id"
-          item-text="label"
-          outlined />
-        <v-select
-          v-model="task.assigneeId"
-          :items="users"
-          label="Assignee"
-          :item-text="getUserLabel"
-          item-value="id"
-          outlined
-          clearable />
-        <select-priority v-model="task.priority" />
-        <date-picker v-model="task.dueDate" label="Due date" />
-        <v-btn @click="visible = false" text>Cancel</v-btn>
-        <v-btn type="submit" color="primary" text>Create</v-btn>
-      </form>
+      <v-text-field
+        v-model="task.name"
+        label="Name"
+        outlined />
+      <v-text-field
+        v-model="task.description"
+        label="Description"
+        outlined />
+      <v-select
+        v-model="task.status"
+        :items="workflow.statuses"
+        label="Status"
+        item-value="id"
+        item-text="label"
+        outlined />
+      <v-select
+        v-model="task.assigneeId"
+        :items="users"
+        label="Assignee"
+        :item-text="getUserLabel"
+        item-value="id"
+        outlined
+        clearable />
+      <select-priority v-model="task.priority" />
+      <date-picker v-model="task.dueDate" label="Due date" />
+    </template>
+    <template #actions>
+      <v-btn @click="visible = false" text>Cancel</v-btn>
+      <v-btn @click="create" color="primary" text>Create</v-btn>
     </template>
   </tailor-dialog>
 </template>
