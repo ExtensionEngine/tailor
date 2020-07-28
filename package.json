@@ -100,7 +100,7 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "path-exists": "^4.0.0",
-    "pg": "^7.17.2",
+    "pg": "^8.3.0",
     "pg-hstore": "^2.3.3",
     "pluralize": "^8.0.0",
     "plyrue": "^2.1.4",

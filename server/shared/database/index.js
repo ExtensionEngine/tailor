@@ -92,7 +92,6 @@ function defineModel(Model, connection = sequelize) {
   const fields = invoke(Model, 'fields', DataTypes, connection) || {};
   const options = invoke(Model, 'options') || {};
   Object.assign(options, { sequelize: connection });
-  wrapMethods(Model, Promise);
   return Model.init(fields, options);
 }
 
@@ -100,6 +99,7 @@ forEach(models, model => {
   invoke(model, 'associate', models);
   addHooks(model, Hooks, models);
   addScopes(model, models);
+  wrapMethods(model, Promise);
 });
 
 function addHooks(model, Hooks, models) {
