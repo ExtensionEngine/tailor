@@ -240,11 +240,14 @@ Defines what meta fields content element has.
     }]
   ```
 
-### `WORKFLOW`
+### `WORKFLOWS`
+
+An array of Workflow objects.
+
+#### Workflow
 
 Defines activity task statuses for repository workflow. Workflow can be reused across multiple schemas.
 
-#### Workflow
 - **id** `String` - Workflow identifier.
 - **statuses** `Array<TaskStatus>` - An array of possible task statuses.
 
