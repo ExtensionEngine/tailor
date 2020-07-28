@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="d-flex mb-3 justify-space-between align-center">
+    <div class="d-flex justify-space-between align-center">
       <h5>Related Task</h5>
       <create-task-dialog v-if="!activityTasks.length" :activity="activity" heading="Add task" />
     </div>
@@ -18,7 +18,7 @@
             <img v-if="task.assignee" :src="task.assignee.imgUrl">
             <v-icon v-else>mdi-account</v-icon>
           </v-avatar>
-          <v-icon class="priority-icon mx-5">
+          <v-icon class="priority-icon ml-5 mr-1">
             $vuetify.icons.{{ getPriorityIcon(task.priority) }}
           </v-icon>
           <span class="caption grey--text lighten2">

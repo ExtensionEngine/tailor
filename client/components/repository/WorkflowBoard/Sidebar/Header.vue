@@ -1,7 +1,7 @@
 <template>
   <header>
     <h3>{{ task.name }}</h3>
-    <div>
+    <div class="mt-8">
       <chip :id="task.shortId" />
       <v-btn
         v-clipboard:copy="task.shortId"

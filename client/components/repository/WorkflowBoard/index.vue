@@ -1,5 +1,5 @@
 <template>
-  <div class="board d-flex flex-column grey lighten-4">
+  <div class="board d-flex flex-column grey lighten-4 py-3">
     <div class="filters d-flex align-center px-4">
       <v-text-field
         v-model="searchText"
@@ -7,7 +7,7 @@
         prepend-inner-icon="mdi-magnify"
         placeholder="Search by ID or name"
         clearable />
-      <div v-if="assignees.length" class="ml-5 mr-3">
+      <div v-if="assignees.length" class="ml-7 mr-3">
         <v-avatar
           v-for="{ id, isActive, imgUrl } in assignees"
           :key="`assignee-${id}`"
@@ -29,7 +29,7 @@
       <v-btn
         @click="showRecentOnly = !showRecentOnly"
         :class="{ active: showRecentOnly }"
-        class="mx-3 filters__btn text-capitalize"
+        class="filters__btn mx-1 text-capitalize"
         text>
         Recently updated
       </v-btn>
@@ -187,7 +187,7 @@ $sidebar-width: 435px;
 }
 
 .search-field {
-  max-width: 400px;
+  max-width: 280px;
 }
 
 .avatar.v-avatar {
