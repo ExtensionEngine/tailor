@@ -199,7 +199,7 @@ $sidebar-width: 435px;
   }
 
   &.active {
-    box-shadow: var(--v-info-base) 0 0 0 2px;
+    box-shadow: var(--v-secondary-base) 0 0 0 2px;
   }
 
   &:hover {
@@ -213,7 +213,8 @@ $sidebar-width: 435px;
   letter-spacing: inherit;
 
   &.active {
-    background-color: #e3e7e8;
+    color: var(--v-secondary-darken1);
+    background-color: var(--v-secondary-lighten5);
   }
 }
 </style>
