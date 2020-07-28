@@ -10,7 +10,7 @@
       {{ task.name }}
     </h4>
     <div class="d-flex align-center mt-auto">
-      <v-avatar :size="34" color="avatar grey lighten-3 d-flex white--text">
+      <v-avatar :size="32" color="avatar grey lighten-3 d-flex white--text">
         <img v-if="task.assignee" :src="task.assignee.imgUrl">
         <v-icon v-else>mdi-account</v-icon>
       </v-avatar>
