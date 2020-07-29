@@ -34,12 +34,12 @@ export default {
   props: {
     repositoryId: { type: Number, required: true }
   },
-  data: () => ({ showLoader: true }),
+  data: () => ({ showLoader: true, lastSelectedActivity: null }),
   computed: {
     ...mapGetters(['isAdmin']),
     ...mapGetters('repository', ['repository', 'activities', 'isRepositoryAdmin']),
     tabs() {
-      const query = { activityId: get(this.selectedActivity, 'id') };
+      const query = { activityId: get(this.lastSelectedActivity, 'id') };
       const items = [
         { name: 'Structure', route: 'repository', icon: 'file-tree', query },
         { name: 'Graph View', route: 'tree-view', icon: 'graph-outline', query },
@@ -52,6 +52,11 @@ export default {
     }
   },
   methods: mapActions('repository', ['initialize', 'expandParents']),
+  watch: {
+    selectedActivity(val) {
+      if (val) this.lastSelectedActivity = val;
+    }
+  },
   async created() {
     const { repositoryId } = this;
     await this.initialize(repositoryId);
