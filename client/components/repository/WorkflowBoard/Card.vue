@@ -15,7 +15,7 @@
         <v-icon v-else>mdi-account</v-icon>
       </v-avatar>
       <v-icon class="priority-icon mx-5">$vuetify.icons.{{ icon }}</v-icon>
-      <span class="caption">{{ task.dueDate | formatDate('MM/DD/YY') }}</span>
+      <label-chip v-if="task.dueDate">{{ task.dueDate | formatDate('MM/DD/YY') }}</label-chip>
     </div>
   </v-card>
 </template>
