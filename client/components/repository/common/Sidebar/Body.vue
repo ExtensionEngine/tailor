@@ -8,13 +8,9 @@
     </v-chip>
     <v-tooltip open-delay="500" bottom>
       <template v-slot:activator="{ on }">
-        <v-chip
-          v-on="on"
-          color="blue-grey lighten-5"
-          label small
-          class="body-label subtitle-2">
+        <label-chip v-on="on" class="body-label">
           {{ activity.shortId }}
-        </v-chip>
+        </label-chip>
       </template>
       {{ config.label }} ID
     </v-tooltip>
@@ -71,6 +67,7 @@ import { getActivityMetadata, getLevel } from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex';
 import ActivityTasks from './Tasks';
 import Discussion from './Discussion';
+import LabelChip from '@/components/repository/common/LabelChip';
 import MetaInput from 'tce-core/MetaInput';
 import Relationship from './Relationship';
 
@@ -98,7 +95,8 @@ export default {
     ActivityTasks,
     Discussion,
     Relationship,
-    MetaInput
+    MetaInput,
+    LabelChip
   }
 };
 </script>
