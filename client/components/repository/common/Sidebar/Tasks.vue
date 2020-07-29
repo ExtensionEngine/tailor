@@ -18,13 +18,16 @@
             <img v-if="task.assignee" :src="task.assignee.imgUrl">
             <v-icon v-else>mdi-account</v-icon>
           </v-avatar>
-          <v-icon class="priority-icon ml-5 mr-1">
+          <v-icon class="priority-icon mx-5">
             $vuetify.icons.{{ getPriorityIcon(task.priority) }}
           </v-icon>
-          <span class="caption grey--text lighten2">
+          <label-chip v-if="task.dueDate" class="mr-3">
             {{ task.dueDate | formatDate('MM/DD/YY') }}
-          </span>
-          <v-chip class="mx-5" label small>{{ task.shortId }}</v-chip>
+          </label-chip>
+          <label-chip class="mr-3">
+            {{ getStatusLabel(task.status) }}
+          </label-chip>
+          <label-chip>{{ task.shortId }}</label-chip>
         </div>
       </v-card>
     </div>
@@ -34,6 +37,8 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import CreateTaskDialog from './CreateTaskDialog';
+import find from 'lodash/find';
+import LabelChip from '@/components/repository/common/LabelChip';
 import { priorities } from 'shared/workflow';
 
 export default {
@@ -42,11 +47,15 @@ export default {
     activity: { type: Object, default: () => ({}) }
   },
   computed: {
-    ...mapGetters('repository', ['tasks', 'users']),
+    ...mapGetters('repository', ['tasks', 'users', 'workflow']),
     activityTasks: vm => vm.tasks.filter(it => it.activityId === vm.activity.id)
   },
   methods: {
     ...mapActions('repository/tasks', ['fetch']),
+    getStatusLabel(id) {
+      const status = find(this.workflow.statuses, { id });
+      return status.label;
+    },
     getPriorityIcon(priority) {
       const { icon } = priorities.find(it => it.id === priority);
       return icon;
@@ -59,7 +68,7 @@ export default {
   created() {
     this.fetch();
   },
-  components: { CreateTaskDialog }
+  components: { LabelChip, CreateTaskDialog }
 };
 </script>
 
