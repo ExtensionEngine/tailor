@@ -61,7 +61,7 @@ export default {
       return icon;
     },
     getTaskRoute(taskId) {
-      const query = { taskId };
+      const query = { ...this.$route.query, taskId };
       return { name: 'board', query };
     }
   },
