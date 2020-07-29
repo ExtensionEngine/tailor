@@ -103,6 +103,7 @@ export default {
     }
   }
 }
+
 .selectable {
   cursor: pointer;
 }
