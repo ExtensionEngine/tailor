@@ -25,7 +25,10 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(auth.initialize());
 app.use(origin());
 app.use(express.static(path.join(__dirname, '../dist/')));
-if (STORAGE_PATH) app.use(express.static(STORAGE_PATH));
+if (STORAGE_PATH) {
+  const setHeaders = res => res.removeHeader('X-Frame-Options');
+  app.use(express.static(STORAGE_PATH, { setHeaders }));
+}
 
 // Mount main router.
 app.use('/api/v1', requestLogger, router);
