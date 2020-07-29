@@ -13,7 +13,7 @@
         <h4 class="mb-4">{{ task.name }}</h4>
         <div class="d-flex align-center mt-auto">
           <v-avatar
-            :size="34"
+            :size="32"
             color="d-flex grey lighten-3 white--text">
             <img v-if="task.assignee" :src="task.assignee.imgUrl">
             <v-icon v-else>mdi-account</v-icon>
