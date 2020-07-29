@@ -5,7 +5,7 @@
     class="card d-flex flex-column align-start px-4 py-3 my-2 mx-3"
     :class="{ 'bordered': isSelected }"
     :ripple="false">
-    <chip :id="task.shortId" />
+    <label-chip>{{ task.shortId }}</label-chip>
     <h4 class="text-left card-title">
       {{ task.name }}
     </h4>
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import Chip from './Chip';
+import LabelChip from '@/components/repository/common/LabelChip';
 import { priorities } from 'shared/workflow';
 
 export default {
@@ -37,7 +37,7 @@ export default {
       return icon;
     }
   },
-  components: { Chip }
+  components: { LabelChip }
 };
 </script>
 

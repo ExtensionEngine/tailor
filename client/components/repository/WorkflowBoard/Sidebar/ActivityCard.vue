@@ -3,13 +3,13 @@
     <h4 class="mb-4">
       {{ activity.data.name }}
     </h4>
-    <chip :id="activity.shortId" />
+    <label-chip>{{ activity.shortId }}</label-chip>
   </v-card>
 </template>
 
 <script>
-import Chip from '../Chip';
 import find from 'lodash/find';
+import LabelChip from '@/components/repository/common/LabelChip';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -29,7 +29,7 @@ export default {
       return { name: 'repository', query };
     }
   },
-  components: { Chip }
+  components: { LabelChip }
 };
 </script>
 

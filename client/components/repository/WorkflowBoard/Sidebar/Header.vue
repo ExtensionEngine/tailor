@@ -2,7 +2,7 @@
   <header>
     <h3>{{ task.name }}</h3>
     <div class="mt-8">
-      <chip :id="task.shortId" />
+      <label-chip>{{ task.shortId }}</label-chip>
       <v-btn
         v-clipboard:copy="task.shortId"
         v-clipboard:success="() => {
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import Chip from '../Chip';
+import LabelChip from '@/components/repository/common/LabelChip';
 
 export default {
   props: {
@@ -41,6 +41,6 @@ export default {
   computed: {
     taskUrl: () => window.location.href
   },
-  components: { Chip }
+  components: { LabelChip }
 };
 </script>
