@@ -1,6 +1,5 @@
 'use strict';
 
-const config = require('../../../../config/server');
 const exists = require('path-exists');
 const expandPath = require('untildify');
 const mkdirp = require('mkdirp');
@@ -72,7 +71,7 @@ class FilesystemStorage {
   }
 
   getFileUrl(key) {
-    return Promise.resolve(`${config.origin}/${key}`);
+    return Promise.resolve(path.join('/', key));
   }
 }
 
