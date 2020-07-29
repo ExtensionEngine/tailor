@@ -37,8 +37,7 @@ const uniqueEmail = {
 const extUrl = {
   params: ['extensions'],
   validate: (url, { extensions }) => extensions.some(ext => {
-    const regex = new RegExp(`\\w\\${ext}$`);
-    return regex.test(url);
+    return new RegExp(`\\w\\${ext}$`).test(url);
   }),
   message: 'The {_field_} is invalid.'
 };
