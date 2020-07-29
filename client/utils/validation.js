@@ -34,6 +34,15 @@ const uniqueEmail = {
   message: 'The {_field_} is not unique.'
 };
 
+const extUrl = {
+  params: ['extensions'],
+  validate: (url, { extensions }) => extensions.some(ext => {
+    const regex = new RegExp(`\\w\\${ext}$`);
+    return regex.test(url);
+  }),
+  message: 'The {_field_} is invalid.'
+};
+
 const url = {
   validate: value => URL_REGEX.test(value),
   message: 'The {_field_} is invalid.'
@@ -43,6 +52,7 @@ const rules = {
   alphanumerical,
   confirmed,
   email,
+  extUrl,
   isNot,
   max,
   maxValue,
@@ -54,4 +64,7 @@ const rules = {
   url
 };
 
-forEach(rules, (rule, name) => extend(snakeCase(name), { message: messages[name], ...rule }));
+forEach(rules, (rule, name) => extend(snakeCase(name), {
+  message: messages[name],
+  ...rule
+}));

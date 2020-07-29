@@ -29,13 +29,20 @@
         :value="fileName"
         readonly hide-details filled />
     </template>
-    <v-text-field
-      v-if="!uploading && (urlInput || !hasAsset)"
-      v-model="urlInput"
-      :disabled="!isEditing"
-      :placeholder="allowFileUpload ? 'or paste a URL...' : 'Paste a URL...'"
-      label="URL"
-      hide-details filled clearable />
+    <validation-provider
+      ref="provider"
+      v-slot="{ errors }"
+      :rules="{ ext_url: { extensions } }"
+      name="URL">
+      <v-text-field
+        v-if="!uploading && (urlInput || !hasAsset)"
+        v-model="urlInput"
+        :error-messages="errors"
+        :disabled="!isEditing"
+        :placeholder="allowFileUpload ? 'or paste a URL...' : 'Paste a URL...'"
+        label="URL"
+        hide-details filled clearable />
+    </validation-provider>
     <v-btn
       v-if="!isEditing"
       @click.stop="isEditing = true"
@@ -96,7 +103,9 @@ export default {
     }
   },
   methods: {
-    save() {
+    async save() {
+      const { valid } = await this.$refs.provider.validate();
+      if (!valid) return;
       this.isEditing = false;
       const payload = this.file || { url: this.urlInput, publicUrl: this.urlInput };
       this.$emit('input', payload);
