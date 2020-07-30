@@ -5,11 +5,12 @@
       :value="task.name"
       label="Name"
       outlined />
-    <v-text-field
-      @change="updateTask('description', $event)"
-      :value="task.description"
+    <editor-field
+      @blur="updateTask('description', $event)"
       label="Description"
-      outlined />
+      name="description"
+      class="description"
+      :value="task.description" />
     <v-select
       @change="updateTask('status', $event)"
       :value="task.status"
@@ -41,6 +42,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import DatePicker from '@/components/common/DatePicker';
+import EditorField from '@/components/common/EditorField';
 import { priorities } from 'shared/workflow';
 import SelectPriority from '@/components/repository/common/SelectPriority';
 
@@ -49,7 +51,7 @@ export default {
   props: {
     task: { type: Object, default: () => ({}) }
   },
-  data: () => ({ showDatePicker: false, priorities }),
+  data: () => ({ priorities, showDatePicker: false }),
   computed: mapGetters('repository', ['users', 'workflow']),
   methods: {
     ...mapActions('repository', ['getUsers']),
@@ -58,10 +60,17 @@ export default {
       return fullName || email;
     },
     async updateTask(key, value) {
+      if (this.task[key] === value) return;
       await this.save({ ...this.task, [key]: value || null });
       this.$snackbar.show(`${this.task.name} saved`);
     }
   },
-  components: { DatePicker, SelectPriority }
+  components: { DatePicker, EditorField, SelectPriority }
 };
 </script>
+
+<style lang="scss" scoped>
+.description {
+  margin-bottom: 1.875rem;
+}
+</style>
