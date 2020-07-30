@@ -44,7 +44,6 @@ export default {
 <style lang="scss" scoped>
   .card.v-card {
     min-height: 10rem;
-    flex: 0;
     align-self: stretch;
 
     &.bordered {
