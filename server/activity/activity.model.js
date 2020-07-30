@@ -182,7 +182,8 @@ class Activity extends Model {
 
   remove(options = {}) {
     if (!options.recursive) return this.destroy(options);
-    return this.sequelize.transaction(t => {
+    const { soft } = options;
+    return this.sequelize.transaction(transaction => {
       return this.descendants({ attributes: ['id'] })
         .then(descendants => {
           descendants.all = [...descendants.nodes, ...descendants.leaves];
@@ -192,15 +193,15 @@ class Activity extends Model {
           const ContentElement = this.sequelize.model('ContentElement');
           const activities = map(descendants.all, 'id');
           const where = { activityId: [...activities, this.id] };
-          return removeAll(ContentElement, where, options.soft, t)
+          return removeAll(ContentElement, where, { soft, transaction })
             .then(() => descendants);
         })
         .then(descendants => {
           const activities = map(descendants.nodes, 'id');
           const where = { parentId: [...activities, this.id] };
-          return removeAll(Activity, where, options.soft, t);
+          return removeAll(Activity, where, { soft, transaction });
         })
-        .then(() => this.destroy({ ...options, transaction: t }))
+        .then(() => this.destroy({ ...options, transaction }))
         .then(() => this);
     });
   }
@@ -229,7 +230,8 @@ class Activity extends Model {
   }
 }
 
-function removeAll(Model, where = {}, soft = false, transaction) {
+function removeAll(Model, where = {}, options = {}) {
+  const { soft, transaction } = options;
   if (!soft) return Model.destroy({ where });
   return Model.update({ detached: true }, { where, transaction });
 }
