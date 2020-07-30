@@ -40,8 +40,7 @@
         :error-messages="errors"
         :disabled="!isEditing"
         :placeholder="allowFileUpload ? 'or paste a URL...' : 'Paste a URL...'"
-        label="URL"
-        hide-details filled clearable />
+        filled clearable />
     </validation-provider>
     <v-btn
       v-if="!isEditing"
@@ -118,7 +117,16 @@ export default {
 <style lang="scss" scoped>
 .v-text-field {
   min-width: 21.875rem;
-  margin: 0.5rem 0.75rem 0 1.75rem;
+  margin: 0.75rem 0.75rem 0 1.75rem;
+
+  ::v-deep .v-input__slot {
+    min-height: 2.75rem;
+    margin-bottom: 0.1875rem;
+
+    .v-input__append-inner {
+      margin-top: 0.75rem;
+    }
+  }
 }
 
 .action ::v-deep .v-btn__content {
