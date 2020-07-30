@@ -13,9 +13,11 @@
         v-model="task.name"
         label="Name"
         outlined />
-      <v-text-field
-        v-model="task.description"
+      <editor-field
+        @change="task.description = $event"
+        :value="task.description"
         label="Description"
+        class="editor-field"
         outlined />
       <v-select
         v-model="task.status"
@@ -45,6 +47,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import DatePicker from '@/components/common/DatePicker';
+import EditorField from '@/components/common/EditorField';
 import { priorities } from 'shared/workflow';
 import SelectPriority from '@/components/repository/common/SelectPriority';
 import TailorDialog from '@/components/common/TailorDialog';
@@ -101,6 +104,12 @@ export default {
   created() {
     this.getUsers();
   },
-  components: { DatePicker, SelectPriority, TailorDialog }
+  components: { DatePicker, EditorField, SelectPriority, TailorDialog }
 };
 </script>
+
+<style lang="scss" scoped>
+.editor-field {
+  margin-bottom: 1.875rem;
+}
+</style>
