@@ -7,7 +7,7 @@
       ref="editor"
       v-model="internalValue"
       @focus="enableEditing"
-      @blur="disableEditing"
+      @blur="emitChange"
       :options="options"
       :disabled="!editing"
       class="editor py-2" />
@@ -32,7 +32,6 @@ const options = {
 export default {
   name: 'v-editor-field',
   props: {
-    name: { type: String, required: true },
     label: { type: String, required: true },
     value: { type: String, default: '' }
   },
@@ -49,9 +48,9 @@ export default {
       const { quill } = this.$refs.editor;
       return this.$nextTick(() => quill.focus());
     },
-    disableEditing(editor) {
+    emitChange(editor) {
       if (!this.hasActiveTooltip(editor)) this.editing = false;
-      this.$emit('blur', this.internalValue);
+      this.$emit('change', this.internalValue);
     },
     hasActiveTooltip(editor) {
       const tooltips = editor.container.querySelectorAll('.ql-tooltip');

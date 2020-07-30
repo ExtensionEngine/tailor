@@ -8,8 +8,7 @@
     <editor-field
       @blur="updateTask('description', $event)"
       label="Description"
-      name="description"
-      class="description"
+      class="editor-field"
       :value="task.description" />
     <v-select
       @change="updateTask('status', $event)"
@@ -70,7 +69,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.description {
+.editor-field {
   margin-bottom: 1.875rem;
 }
 </style>
