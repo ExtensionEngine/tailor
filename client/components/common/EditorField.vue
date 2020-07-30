@@ -101,10 +101,6 @@ export default {
 
     button:hover, button:focus {
       color: var(--v-secondary-base);
-
-      ::v-deep .ql-fill {
-        fill: currentColor;
-      }
     }
   }
 
