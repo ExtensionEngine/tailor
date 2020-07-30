@@ -118,7 +118,7 @@ export default {
   align-items: center;
 
   .open-button {
-    transition: opacity 0.5s ease 0.2s;
+    transition: opacity 0.3s ease 0.15s;
     opacity: 0;
   }
 
