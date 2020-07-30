@@ -128,10 +128,10 @@ export default {
   height: 100%;
 
   &.toolbar-visible {
-    padding-top: 4.5rem;
+    padding-top: 4.75rem;
 
     &.toolbar-composite {
-      padding-top: 7.5rem;
+      padding-top: 8.75rem;
     }
   }
 }
