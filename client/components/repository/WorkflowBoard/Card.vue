@@ -6,7 +6,7 @@
     :class="{ 'bordered': isSelected }"
     :ripple="false">
     <label-chip>{{ task.shortId }}</label-chip>
-    <h4 class="text-left card-title">
+    <h4 class="card-title mb-5 text-left font-weight-regular">
       {{ task.name }}
     </h4>
     <div class="d-flex align-center mt-auto">
@@ -45,6 +45,11 @@ export default {
   .card.v-card {
     min-height: 10rem;
     align-self: stretch;
+
+    .card-title {
+      font-size: 1rem;
+      line-height: 1.2;
+    }
 
     &.bordered {
       border: 2px solid var(--v-primary-base);
