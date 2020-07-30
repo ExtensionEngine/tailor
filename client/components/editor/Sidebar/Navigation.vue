@@ -11,6 +11,7 @@
         class="my-3 mx-1" />
     </v-sheet>
     <v-treeview
+      ref="activityTree"
       :items="activityTree"
       :active="active"
       :search="search"
@@ -71,6 +72,11 @@ export default {
     },
     isActivityEditable(activity) {
       return this.editableTypes.includes(activity.type);
+    }
+  },
+  watch: {
+    search() {
+      return this.$refs.activityTree.updateAll(true);
     }
   }
 };
