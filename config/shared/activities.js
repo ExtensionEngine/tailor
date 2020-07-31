@@ -37,7 +37,7 @@ module.exports = {
   getElementMetadata,
   getLevelRelationships,
   getRepositoryRelationships,
-  getSiblingLevels,
+  getSiblingTypes,
   getSupportedContainers,
   hasAssessments: level => getActivityConfig(level).hasAssessments,
   isEditable: activityType => {
@@ -125,19 +125,17 @@ function getElementConfig(schemaId, type) {
   return find(config, it => castArray(it.type).includes(type)) || {};
 }
 
-function getSiblingLevels(type) {
+function getSiblingTypes(type) {
+  if (!isOutlineActivity(type)) return [type];
   const schemaId = getSchemaId(type);
-  if (!schemaId) return [{ type }];
   const outline = getOutlineLevels(schemaId);
-  const activityConfig = find(outline, { type });
-  if (!activityConfig) return [{ type }];
-  const isRoot = activityConfig.rootLevel;
-  const siblingTypes = reduce(outline, (acc, it) => {
-    if (isRoot && it.rootLevel) acc.push(it.type);
+  const activityConfig = getActivityConfig(type);
+  const isRootLevel = activityConfig.rootLevel;
+  return uniq(reduce(outline, (acc, it) => {
+    if (isRootLevel && it.rootLevel) acc.push(it.type);
     if (!it.subLevels || !it.subLevels.includes(type)) return acc;
     return [...acc, ...it.subLevels];
-  }, []);
-  return uniq(siblingTypes).map(type => find(outline, { type }));
+  }, []));
 }
 
 function getSupportedContainers(type) {

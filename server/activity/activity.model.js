@@ -1,7 +1,7 @@
 'use strict';
 
 const {
-  getSiblingLevels,
+  getSiblingTypes,
   isOutlineActivity
 } = require('../../config/shared/activities');
 const { Model, Op } = require('sequelize');
@@ -207,8 +207,7 @@ class Activity extends Model {
 
   reorder(index, context) {
     return this.sequelize.transaction(transaction => {
-      const types = getSiblingLevels(this.type).map(it => it.type);
-      const filter = { type: types };
+      const filter = { type: getSiblingTypes(this.type) };
       return this.siblings({ filter, transaction }).then(siblings => {
         this.position = calculatePosition(this.id, index, siblings);
         return this.save({ transaction, context });
