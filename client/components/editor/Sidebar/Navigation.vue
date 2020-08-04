@@ -18,11 +18,10 @@
       open-all
       hoverable>
       <template v-slot:label="{ item: { id, name, selectable } }">
-        <div :class="{ selectable }">
+        <div @click.stop="navigateTo(id)" :class="{ selectable }">
           {{ name }}
           <v-btn
             v-if="selectable"
-            @click.stop="navigateTo(id)"
             color="blue-grey darken-4"
             icon
             class="mr-1 open-button">
@@ -123,6 +122,8 @@ export default {
   }
 
   &:hover {
+    cursor: pointer;
+
     .open-button {
       opacity: 1;
     }
