@@ -35,7 +35,7 @@
       </v-btn>
     </div>
     <div class="tasks">
-      <div v-if="workflow" class="column-layout mt-4 mx-4 flex-grow-0">
+      <div v-if="workflow" class="column-layout mt-4 px-4">
         <h5
           v-for="status in workflow.statuses"
           :key="status.id"
@@ -43,7 +43,7 @@
           {{ status.label }}
         </h5>
       </div>
-      <div v-if="workflow" class="columns column-layout mx-4 flex-grow-0">
+      <div v-if="workflow" class="column-layout px-4">
         <draggable
           v-for="status in workflow.statuses"
           :key="status.id"
@@ -154,13 +154,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$sidebar-width: 435px;
+$sidebar-width: 27.1875rem;
 
 .column-layout {
   display: grid;
-  grid: auto / auto-flow 228px;
-  width: max-content;
-  gap: 0 1rem;
+  grid: auto / auto-flow minmax(15.75rem, 25rem);
+  gap: 0 0.75rem;
+  width: fit-content;
 }
 
 .board {
@@ -169,13 +169,8 @@ $sidebar-width: 435px;
 }
 
 .tasks {
-  max-width: calc(100% - #{$sidebar-width});
+  max-width: calc(100% - #{$sidebar-width} - 1rem);
   overflow-x: scroll;
-}
-
-.columns {
-  overflow-y: scroll;
-  overflow-x: hidden;
 }
 
 .cards {
@@ -187,7 +182,7 @@ $sidebar-width: 435px;
 }
 
 .search-field {
-  max-width: 280px;
+  max-width: 17.5rem;
 }
 
 .avatar.v-avatar {
@@ -200,6 +195,7 @@ $sidebar-width: 435px;
 
   &.active {
     box-shadow: var(--v-secondary-base) 0 0 0 2px;
+    z-index: 2;
   }
 
   &:hover {

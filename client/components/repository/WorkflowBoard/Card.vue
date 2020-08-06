@@ -2,20 +2,20 @@
   <v-card
     @click="$emit('click', task.id)"
     :elevation="isSelected ? 0 : 1"
-    class="card d-flex flex-column align-start px-4 py-3 my-2 mx-3"
+    class="card d-flex flex-column align-start pa-3 my-2 mx-3"
     :class="{ 'bordered': isSelected }"
     :ripple="false">
-    <label-chip>{{ task.shortId }}</label-chip>
-    <h4 class="card-title mb-5 text-left font-weight-regular">
+    <div class="card-title mt-3 mb-5 text-left font-weight-regular">
       {{ task.name }}
-    </h4>
+    </div>
     <div class="d-flex align-center mt-auto">
-      <v-avatar :size="32" color="avatar grey lighten-3 d-flex white--text">
+      <v-avatar :size="24" color="avatar mr-3 grey lighten-3 d-flex white--text">
         <img v-if="task.assignee" :src="task.assignee.imgUrl">
-        <v-icon v-else>mdi-account</v-icon>
+        <v-icon v-else :size="16">mdi-account</v-icon>
       </v-avatar>
-      <v-icon class="priority-icon mx-5">$vuetify.icons.{{ icon }}</v-icon>
-      <label-chip v-if="task.dueDate">{{ task.dueDate | formatDate('MM/DD/YY') }}</label-chip>
+      <v-icon class="priority-icon mr-3">$vuetify.icons.{{ icon }}</v-icon>
+      <label-chip v-if="task.dueDate" class="mr-3">{{ task.dueDate | formatDate('MM/DD/YY') }}</label-chip>
+      <label-chip>{{ task.shortId }}</label-chip>
     </div>
   </v-card>
 </template>
@@ -60,7 +60,7 @@ export default {
     }
 
     .priority-icon {
-      width: 0.8rem;
+      width: 0.75rem;
     }
 
     &::before {

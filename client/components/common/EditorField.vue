@@ -1,6 +1,6 @@
 <template>
   <v-input :class="{ editing }" class="field d-flex px-3">
-    <label class="label v-label theme--light grey lighten-5 font-weight-regular">
+    <label class="label v-label theme--light font-weight-regular">
       {{ label }}
     </label>
     <quill-editor
@@ -88,6 +88,7 @@ export default {
     left: -0.25rem;
     padding: 0 0.25rem;
     font-size: 0.75rem;
+    background: #fafafa;
   }
 
   .editor {

@@ -1,8 +1,9 @@
 <template functional>
   <v-chip
+    v-on="listeners"
     color="blue-grey lighten-5"
     class="chip caption text-uppercase"
-    :class="[data.staticClass, data.class]"
+    :class="[data.staticClass, data.class, { active: listeners.mouseenter }]"
     label small>
     <slot></slot>
   </v-chip>
@@ -13,7 +14,11 @@ export default { name: 'repository-label-chip' };
 </script>
 
 <style lang="scss" scoped>
-.chip {
+.chip.v-chip {
   flex-shrink: 0;
+
+  &:not(.active)::before {
+    opacity: 0;
+  }
 }
 </style>
