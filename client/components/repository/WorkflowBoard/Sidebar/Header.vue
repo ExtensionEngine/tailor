@@ -2,7 +2,12 @@
   <header>
     <h3>{{ task.name }}</h3>
     <div class="mt-8">
-      <label-chip>{{ task.shortId }}</label-chip>
+      <v-tooltip open-delay="500" bottom>
+        <template #activator="{ on }">
+          <label-chip v-on="on">{{ task.shortId }}</label-chip>
+        </template>
+        Task ID
+      </v-tooltip>
       <v-btn
         v-clipboard:copy="task.shortId"
         v-clipboard:success="() => {
