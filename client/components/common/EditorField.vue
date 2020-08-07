@@ -82,12 +82,16 @@ export default {
     box-shadow: inset 0 0 0 1px rgba(0, 0, 0);
   }
 
+  .ql-editor {
+    padding: 0.75rem 0;
+  }
+
   &.editing {
+    cursor: inherit;
+
     &::before {
       box-shadow: inset 0 0 0 2px var(--v-primary-base);
     }
-
-    cursor: inherit;
 
     .ql-editor {
       cursor: text;
