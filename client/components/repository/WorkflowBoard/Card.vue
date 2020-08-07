@@ -2,7 +2,7 @@
   <v-card
     @click="$emit('click', task.id)"
     :elevation="isSelected ? 0 : 1"
-    class="card d-flex flex-column align-start pa-3 my-2 mx-3"
+    class="card d-flex flex-column align-start pa-3"
     :class="{ 'bordered': isSelected }"
     :ripple="false">
     <div class="card-title mt-3 mb-5 text-left font-weight-regular">

@@ -56,7 +56,8 @@
             :key="task.id"
             @click="selectTask"
             :is-selected="selectedTask && selectedTask.id === task.id"
-            :task="task" />
+            :task="task"
+            class="my-2 mx-3" />
         </draggable>
       </div>
     </div>
