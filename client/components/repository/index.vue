@@ -37,14 +37,19 @@ export default {
   data: () => ({ showLoader: true, lastSelectedActivity: null }),
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters('repository', ['repository', 'activities', 'isRepositoryAdmin']),
+    ...mapGetters('repository', [
+      'repository',
+      'activities',
+      'isRepositoryAdmin',
+      'hasWorkflow'
+    ]),
     tabs() {
       const hasActivities = get(this.activities, 'length');
       const activityId = get(this.lastSelectedActivity, 'id');
       const query = { ...this.$route.query, activityId };
       const items = [
         { name: 'Structure', route: 'repository', icon: 'file-tree', query },
-        hasActivities && { name: 'Board', route: 'board', icon: 'view-dashboard-variant', query },
+        hasActivities && this.hasWorkflow && { name: 'Board', route: 'board', icon: 'view-dashboard-variant', query },
         hasActivities && { name: 'Graph View', route: 'tree-view', icon: 'graph-outline', query },
         hasActivities && { name: 'History', route: 'revisions', icon: 'history' },
         { name: 'Settings', route: 'repository-info', icon: 'settings-outline' }
