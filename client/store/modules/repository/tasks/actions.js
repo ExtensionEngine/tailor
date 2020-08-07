@@ -15,7 +15,7 @@ const create = ({ commit, dispatch }, data) => {
 
 const archive = ({ commit }, model) => {
   if (!model.id) return commit('archive', model);
-  return api.patch(`${model.id}/archive`)
+  return api.post(`${model.id}/archive`)
     .then(() => { commit('archive', model); });
 };
 

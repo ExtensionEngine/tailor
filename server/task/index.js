@@ -12,7 +12,7 @@ router
   .get('/', ctrl.list)
   .post('/', ctrl.create)
   .patch('/:taskId', ctrl.patch)
-  .patch('/:taskId/archive', ctrl.archive);
+  .post('/:taskId/archive', ctrl.archive);
 
 module.exports = {
   path: '/tasks',
