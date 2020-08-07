@@ -11,6 +11,9 @@
     <template #body>
       <v-text-field
         v-model="task.name"
+        v-validate="{ required: true }"
+        :error-messages="vErrors.collect('name')"
+        data-vv-name="name"
         label="Name"
         outlined />
       <editor-field
@@ -51,6 +54,7 @@ import EditorField from '@/components/common/EditorField';
 import { priorities } from 'shared/workflow';
 import SelectPriority from '@/components/repository/common/SelectPriority';
 import TailorDialog from '@/components/common/TailorDialog';
+import { withValidation } from 'utils/validation';
 
 const initTaskState = statuses => ({
   name: null,
@@ -63,6 +67,7 @@ const initTaskState = statuses => ({
 
 export default {
   name: 'create-task-dialog',
+  mixins: [withValidation()],
   props: {
     activity: { type: Object, required: true }
   },
@@ -80,7 +85,9 @@ export default {
     close() {
       this.visible = false;
     },
-    create() {
+    async create() {
+      const isValid = await this.$validator.validateAll();
+      if (!isValid) return;
       const data = {
         ...this.task,
         activityId: this.activity.id
