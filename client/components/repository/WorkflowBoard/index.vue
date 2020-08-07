@@ -51,7 +51,7 @@
           :list="getTasksByStatus(status.id)"
           group="tasks"
           class="cards d-flex flex-column align-center grey lighten-3">
-          <card
+          <task-card
             v-for="task in getTasksByStatus(status.id)"
             :key="task.id"
             @click="selectTask"
@@ -67,7 +67,6 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import Card from './Card';
 import conforms from 'lodash/conforms';
 import Draggable from 'vuedraggable';
 import get from 'lodash/get';
@@ -76,6 +75,7 @@ import isAfter from 'date-fns/isAfter';
 import selectTask from '../common/selectTask';
 import Sidebar from './Sidebar';
 import sub from 'date-fns/sub';
+import TaskCard from './Card';
 import uniqBy from 'lodash/uniqBy';
 import xor from 'lodash/xor';
 
@@ -150,7 +150,7 @@ export default {
     this.getTasks();
     this.getUsers();
   },
-  components: { Card, Draggable, Sidebar }
+  components: { TaskCard, Draggable, Sidebar }
 };
 </script>
 
