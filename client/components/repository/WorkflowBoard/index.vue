@@ -44,21 +44,12 @@
         </h5>
       </div>
       <div v-if="workflow" class="column-layout px-4">
-        <draggable
+        <board-column
           v-for="status in workflow.statuses"
           :key="status.id"
-          @change="setTaskStatus($event, status.id)"
-          :list="getTasksByStatus(status.id)"
-          group="tasks"
-          class="cards d-flex flex-column align-center grey lighten-3">
-          <task-card
-            v-for="task in getTasksByStatus(status.id)"
-            :key="task.id"
-            @click="selectTask"
-            :is-selected="selectedTask && selectedTask.id === task.id"
-            :task="task"
-            class="my-2 mx-3" />
-        </draggable>
+          :tasks="groupedTasks"
+          :status="status"
+          class="cards" />
       </div>
     </div>
     <sidebar />
@@ -67,21 +58,17 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import BoardColumn from './Column';
 import conforms from 'lodash/conforms';
-import Draggable from 'vuedraggable';
-import get from 'lodash/get';
 import groupBy from 'lodash/groupBy';
 import isAfter from 'date-fns/isAfter';
-import selectTask from '../common/selectTask';
 import Sidebar from './Sidebar';
 import sub from 'date-fns/sub';
-import TaskCard from './Card';
 import uniqBy from 'lodash/uniqBy';
 import xor from 'lodash/xor';
 
 export default {
   name: 'workflow-board',
-  mixins: [selectTask],
   data: () => ({
     filteredAssigneeIds: [],
     filterUnassigned: false,
@@ -121,9 +108,6 @@ export default {
   methods: {
     ...mapActions('repository', ['getUsers']),
     ...mapActions('repository/tasks', { getTasks: 'reset', updateTask: 'save' }),
-    getTasksByStatus(statusId) {
-      return get(this.groupedTasks, statusId, []);
-    },
     toggleAssignee(id) {
       this.filteredAssigneeIds = xor(this.filteredAssigneeIds, [id]);
     },
@@ -139,18 +123,13 @@ export default {
     },
     filterBySearchText(searchableText) {
       return searchableText.indexOf(this.searchText.toLowerCase()) !== -1;
-    },
-    setTaskStatus(update, status) {
-      if (!update.added) return;
-      const { element: task } = update.added;
-      return this.updateTask({ ...task, status });
     }
   },
   created() {
     this.getTasks();
     this.getUsers();
   },
-  components: { TaskCard, Draggable, Sidebar }
+  components: { BoardColumn, Sidebar }
 };
 </script>
 
