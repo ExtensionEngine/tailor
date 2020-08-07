@@ -84,6 +84,11 @@ export default {
 
   .ql-editor {
     padding: 0.75rem 0;
+
+    &::before {
+      // Places placeholder where the actual content is inserted.
+      left: 0;
+    }
   }
 
   &.editing {
