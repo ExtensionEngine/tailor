@@ -158,7 +158,7 @@ $sidebar-width: 27.1875rem;
 
 .column-layout {
   display: grid;
-  grid: auto / auto-flow minmax(15.75rem, 25rem);
+  grid: auto / auto-flow minmax(16rem, 25rem);
   gap: 0 0.75rem;
   width: fit-content;
 }
