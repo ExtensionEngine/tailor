@@ -7,12 +7,13 @@
       :error-messages="vErrors.collect('name')"
       data-vv-name="name"
       label="Name"
+      class="my-2"
       outlined />
     <editor-field
       @change="updateTask('description', $event)"
+      :value="task.description"
       label="Description"
-      class="editor-field"
-      :value="task.description" />
+      class="editor-field mt-2" />
     <v-select
       @change="updateTask('status', $event)"
       :value="task.status"
@@ -20,24 +21,28 @@
       label="Status"
       item-value="id"
       item-text="label"
+      class="my-2"
       outlined />
     <v-select
       @change="updateTask('assigneeId', $event)"
       :value="task.assigneeId"
       :items="users"
-      label="Assignee"
       :item-text="getUserLabel"
+      label="Assignee"
       item-value="id"
+      class="my-2"
       outlined
       clearable />
     <select-priority
       @change="updateTask('priority', $event)"
       :value="task.priority"
-      :items="priorities" />
+      :items="priorities"
+      class="my-2" />
     <date-picker
       @input="updateTask('dueDate', $event)"
       :value="task.dueDate"
-      label="Due date" />
+      label="Due date"
+      class="my-2" />
   </section>
 </template>
 
@@ -80,7 +85,7 @@ export default {
 
 <style lang="scss" scoped>
 .editor-field {
-  margin-bottom: 1.875rem;
+  margin-bottom: 2.375rem;
 
   ::v-deep .v-label {
     background: #fafafa;

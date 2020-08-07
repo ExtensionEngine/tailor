@@ -65,16 +65,28 @@ export default {
 .field {
   position: relative;
   border: none;
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.38);
-  border-radius: 0.125rem;
   cursor: pointer;
 
-  &:hover {
+  &::before {
+    content: '';
+    position: absolute;
+    top: 1px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.38);
+    border-radius: 0.125rem;
+  }
+
+  &:hover::before {
     box-shadow: inset 0 0 0 1px rgba(0, 0, 0);
   }
 
   &.editing {
-    box-shadow: inset 0 0 0 2px var(--v-primary-base);
+    &::before {
+      box-shadow: inset 0 0 0 2px var(--v-primary-base);
+    }
+
     cursor: inherit;
 
     .ql-editor {
@@ -84,7 +96,7 @@ export default {
 
   .label {
     position: absolute;
-    top: -0.625rem;
+    top: -0.5625rem;
     left: -0.25rem;
     padding: 0 0.25rem;
     font-size: 0.75rem;

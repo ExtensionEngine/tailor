@@ -15,12 +15,13 @@
         :error-messages="vErrors.collect('name')"
         data-vv-name="name"
         label="Name"
+        class="my-2"
         outlined />
       <editor-field
         @change="task.description = $event"
         :value="task.description"
         label="Description"
-        class="editor-field"
+        class="editor-field mt-2"
         outlined />
       <v-select
         v-model="task.status"
@@ -28,17 +29,19 @@
         label="Status"
         item-value="id"
         item-text="label"
+        class="my-2"
         outlined />
       <v-select
         v-model="task.assigneeId"
         :items="users"
-        label="Assignee"
         :item-text="getUserLabel"
+        label="Assignee"
         item-value="id"
+        class="my-2"
         outlined
         clearable />
-      <select-priority v-model="task.priority" />
-      <date-picker v-model="task.dueDate" label="Due date" />
+      <select-priority v-model="task.priority" class="my-2" />
+      <date-picker v-model="task.dueDate" label="Due date" class="my-2" />
     </template>
     <template #actions>
       <v-btn @click="visible = false" text>Cancel</v-btn>
@@ -117,6 +120,6 @@ export default {
 
 <style lang="scss" scoped>
 .editor-field {
-  margin-bottom: 1.875rem;
+  margin-bottom: 2.375rem;
 }
 </style>
