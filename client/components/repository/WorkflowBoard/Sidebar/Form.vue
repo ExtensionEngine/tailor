@@ -6,7 +6,7 @@
       label="Name"
       outlined />
     <editor-field
-      @blur="updateTask('description', $event)"
+      @change="updateTask('description', $event)"
       label="Description"
       class="editor-field"
       :value="task.description" />
