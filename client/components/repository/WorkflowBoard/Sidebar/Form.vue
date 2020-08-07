@@ -71,5 +71,9 @@ export default {
 <style lang="scss" scoped>
 .editor-field {
   margin-bottom: 1.875rem;
+
+  ::v-deep .v-label {
+    background: #fafafa;
+  }
 }
 </style>
