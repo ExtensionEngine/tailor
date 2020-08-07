@@ -107,7 +107,7 @@ export default {
   },
   methods: {
     ...mapActions('repository', ['getUsers']),
-    ...mapActions('repository/tasks', { getTasks: 'reset', updateTask: 'save' }),
+    ...mapActions('repository/tasks', { getTasks: 'reset' }),
     toggleAssignee(id) {
       this.filteredAssigneeIds = xor(this.filteredAssigneeIds, [id]);
     },
