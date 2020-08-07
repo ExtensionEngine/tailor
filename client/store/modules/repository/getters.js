@@ -31,7 +31,7 @@ export const workflow = (_state, { repository }) => {
   return getWorkflow(schema.workflowId);
 };
 
-export const hasWorkflow = (_state, { workflow }) => !!workflow;
+export const hasWorkflow = (_state, { workflow }) => Boolean(workflow);
 
 export const structure = (_, { repository }) => {
   return repository && getOutlineLevels(repository.schema);
