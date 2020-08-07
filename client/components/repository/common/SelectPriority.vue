@@ -10,12 +10,12 @@
     outlined>
     <template #prepend-inner>
       <v-icon v-if="selected" class="icon mr-1">
-        $vuetify.icons.{{ selected.icon }}
+        {{ `$vuetify.icons.${selected.icon}` }}
       </v-icon>
     </template>
     <template #item="{ item }">
       <v-icon v-if="item.icon" class="icon mr-3">
-        $vuetify.icons.{{ item.icon }}
+        {{ `$vuetify.icons.${item.icon}` }}
       </v-icon>
       <span>{{ item.label }}</span>
     </template>

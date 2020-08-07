@@ -13,7 +13,7 @@
         <img v-if="task.assignee" :src="task.assignee.imgUrl">
         <v-icon v-else :size="16">mdi-account</v-icon>
       </v-avatar>
-      <v-icon class="priority-icon mr-3">$vuetify.icons.{{ icon }}</v-icon>
+      <v-icon class="priority-icon mr-3">{{ `$vuetify.icons.${icon}` }}</v-icon>
       <label-chip v-if="task.dueDate" class="mr-3">{{ task.dueDate | formatDate('MM/DD/YY') }}</label-chip>
       <label-chip>{{ task.shortId }}</label-chip>
     </div>

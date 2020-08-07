@@ -19,7 +19,7 @@
             <v-icon v-else>mdi-account</v-icon>
           </v-avatar>
           <v-icon class="priority-icon mx-5">
-            $vuetify.icons.{{ getPriorityIcon(task.priority) }}
+            {{ `$vuetify.icons.${getPriorityIcon(task.priority)}` }}
           </v-icon>
           <label-chip v-if="task.dueDate" class="mr-3">
             {{ task.dueDate | formatDate('MM/DD/YY') }}
