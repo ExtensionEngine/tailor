@@ -175,7 +175,6 @@ $sidebar-width: 27.1875rem;
 
   &.active {
     box-shadow: var(--v-secondary-base) 0 0 0 2px;
-    z-index: 2;
   }
 
   &:hover {
