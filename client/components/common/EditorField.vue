@@ -30,7 +30,7 @@ const options = {
 };
 
 export default {
-  name: 'v-editor-field',
+  name: 'editor-field',
   props: {
     label: { type: String, required: true },
     value: { type: String, default: '' }
