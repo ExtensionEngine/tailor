@@ -1,15 +1,15 @@
 <template>
   <header>
-    <h3>{{ task.name }}</h3>
+    <h3>{{ name }}</h3>
     <div class="mt-8">
       <v-tooltip open-delay="500" bottom>
         <template #activator="{ on }">
-          <label-chip v-on="on">{{ task.shortId }}</label-chip>
+          <label-chip v-on="on">{{ shortId }}</label-chip>
         </template>
         Task ID
       </v-tooltip>
       <v-btn
-        v-clipboard:copy="task.shortId"
+        v-clipboard:copy="shortId"
         v-clipboard:success="() => {
           $snackbar.show('ID copied to the clipboard', { immediate: true })
         }"
@@ -40,9 +40,9 @@
         <v-icon class="pr-2">mdi-package-down</v-icon> Archive
       </v-btn>
       <div class="mt-1 caption grey--text text--darken-1">
-        Created at {{ task.createdAt | formatDate }}
+        Created at {{ createdAt | formatDate }}
         <span class="mx-1">|</span>
-        Updated at {{ task.updatedAt | formatDate }}
+        Updated at {{ updatedAt | formatDate }}
       </div>
     </div>
   </header>
@@ -57,7 +57,12 @@ const appChannel = EventBus.channel('app');
 
 export default {
   props: {
-    task: { type: Object, default: () => ({}) }
+    cid: { type: String, required: true },
+    id: { type: Number, required: true },
+    name: { type: String, required: true },
+    shortId: { type: String, required: true },
+    createdAt: { type: String, required: true },
+    updatedAt: { type: String, required: true }
   },
   computed: {
     taskUrl: () => window.location.href
@@ -65,10 +70,11 @@ export default {
   methods: {
     ...mapActions('repository/tasks', ['archive']),
     requestArchiveConfirmation() {
+      const model = { id: this.id, _cid: this.cid };
       appChannel.emit('showConfirmationModal', {
         title: 'Archive task?',
         message: 'Are you sure you want to archive task?',
-        action: () => this.archive(this.task)
+        action: () => this.archive(model)
       });
     }
   },

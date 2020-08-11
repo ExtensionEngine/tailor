@@ -1,9 +1,7 @@
 <template>
   <v-card :to="route" :color="color" class="card px-3 pt-1 pb-4">
-    <h4 class="mb-4">
-      {{ activity.data.name }}
-    </h4>
-    <label-chip>{{ activity.shortId }}</label-chip>
+    <h4 class="mb-4">{{ name }}</h4>
+    <label-chip>{{ shortId }}</label-chip>
   </v-card>
 </template>
 
@@ -15,19 +13,16 @@ import { mapGetters } from 'vuex';
 export default {
   name: 'workflow-board-sidebar-activity-card',
   props: {
-    activity: {
-      type: Object,
-      default: () => ({})
-    }
+    id: { type: Number, required: true },
+    name: { type: String, required: true },
+    shortId: { type: String, required: true },
+    type: { type: String, required: true }
   },
   computed: {
     ...mapGetters('repository', ['structure', 'isCollapsed']),
-    config: vm => find(vm.structure, { type: vm.activity.type }),
+    config: vm => find(vm.structure, { type: vm.type }),
     color: vm => vm.config.color,
-    route() {
-      const query = { activityId: this.activity.id };
-      return { name: 'repository', query };
-    }
+    route: vm => ({ name: 'repository', query: { activityId: vm.id } })
   },
   components: { LabelChip }
 };

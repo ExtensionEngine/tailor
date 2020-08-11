@@ -7,11 +7,11 @@
       v-if="selectedTask"
       :key="selectedTask._cid"
       class="px-4 pt-4 pb-10">
-      <sidebar-header :task="selectedTask" />
+      <sidebar-header v-bind="selectedTask" :cid="selectedTask._cid" />
       <task-form :task="selectedTask" />
       <section>
         <h5>Related content</h5>
-        <activity-card :activity="activity" />
+        <activity-card v-bind="activity" :name="activity.data.name" />
       </section>
     </article>
     <article v-else class="placeholder grey--text text--darken-3">
