@@ -1,7 +1,12 @@
 <template>
   <v-card :to="route" :color="color" class="card px-3 pt-1 pb-4">
     <h4 class="mb-4">{{ name }}</h4>
-    <label-chip>{{ shortId }}</label-chip>
+    <v-tooltip open-delay="500" bottom>
+      <template #activator="{ on }">
+        <label-chip v-on="on">{{ shortId }}</label-chip>
+      </template>
+      {{ config.label }} ID
+    </v-tooltip>
   </v-card>
 </template>
 

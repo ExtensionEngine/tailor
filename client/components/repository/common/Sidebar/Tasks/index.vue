@@ -8,10 +8,8 @@
       <task-card
         v-for="task in activityTasks"
         :key="task.id"
-        :to="getTaskRoute(task.id)"
         v-bind="task"
-        :status="getStatusLabel(task.status)"
-        :avatar-url="task.assignee && task.assignee.imgUrl"
+        :assignee="task.assignee"
         class="px-3 pt-1 pb-4" />
     </div>
   </div>
@@ -20,8 +18,6 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import CreateTaskDialog from '../CreateTaskDialog';
-import find from 'lodash/find';
-import { priorities } from 'shared/workflow';
 import TaskCard from './Card';
 
 export default {
@@ -30,24 +26,10 @@ export default {
     activity: { type: Object, default: () => ({}) }
   },
   computed: {
-    ...mapGetters('repository', ['tasks', 'users', 'workflow']),
+    ...mapGetters('repository', ['tasks', 'users']),
     activityTasks: vm => vm.tasks.filter(it => it.activityId === vm.activity.id)
   },
-  methods: {
-    ...mapActions('repository/tasks', ['fetch']),
-    getStatusLabel(id) {
-      const status = find(this.workflow.statuses, { id });
-      return status.label;
-    },
-    getPriorityIcon(priority) {
-      const { icon } = priorities.find(it => it.id === priority);
-      return icon;
-    },
-    getTaskRoute(taskId) {
-      const query = { ...this.$route.query, taskId };
-      return { name: 'board', query };
-    }
-  },
+  methods: mapActions('repository/tasks', ['fetch']),
   created() {
     this.fetch();
   },

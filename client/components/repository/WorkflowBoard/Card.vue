@@ -1,12 +1,12 @@
 <template>
   <v-card
-    @click="$emit('click', task.id)"
+    @click="$emit('click', id)"
     :elevation="isSelected ? 0 : 1"
     class="card d-flex flex-column align-start pa-3"
     :class="{ 'bordered': isSelected }"
     :ripple="false">
     <div class="card-title mt-3 mb-5 text-left font-weight-regular">
-      {{ task.name }}
+      {{ name }}
     </div>
     <div class="d-flex align-center mt-auto">
       <v-tooltip open-delay="500" bottom>
@@ -16,11 +16,11 @@
             :size="24"
             color="grey lighten-3"
             class="avatar mr-3 d-flex white--text">
-            <img v-if="task.assignee" :src="task.assignee.imgUrl">
+            <img v-if="assignee" :src="assignee.imgUrl">
             <v-icon v-else :size="16">mdi-account</v-icon>
           </v-avatar>
         </template>
-        <span v-if="task.assignee">{{ task.assignee.fullName || task.assignee.email }}</span>
+        <span v-if="assignee">{{ assignee.fullName || assignee.email }}</span>
         <span v-else>Unassigned</span>
       </v-tooltip>
       <v-tooltip open-delay="500" bottom>
@@ -28,25 +28,24 @@
           <v-icon
             v-on="on"
             class="priority-icon mr-3">
-            {{ `$vuetify.icons.${priority.icon}` }}
+            {{ `$vuetify.icons.${priorityConfig.icon}` }}
           </v-icon>
         </template>
-        {{ priority.label }} priority
+        {{ priorityConfig.label }} priority
       </v-tooltip>
-      <v-tooltip open-delay="500" bottom>
+      <v-tooltip v-if="dueDate" open-delay="500" bottom>
         <template #activator="{ on }">
           <label-chip
-            v-if="task.dueDate"
             v-on="on"
             class="mr-3">
-            {{ task.dueDate | formatDate('MM/DD/YY') }}
+            {{ dueDate | formatDate('MM/DD/YY') }}
           </label-chip>
         </template>
         Due date
       </v-tooltip>
       <v-tooltip open-delay="500" bottom>
         <template #activator="{ on }">
-          <label-chip v-on="on">{{ task.shortId }}</label-chip>
+          <label-chip v-on="on">{{ shortId }}</label-chip>
         </template>
         Task ID
       </v-tooltip>
@@ -61,15 +60,18 @@ import { priorities } from 'shared/workflow';
 export default {
   name: 'workflow-board-card',
   props: {
-    task: { type: Object, default: () => ({}) },
+    id: { type: Number, required: true },
+    name: { type: String, required: true },
+    assignee: { type: Object, default: null },
+    avatarUrl: { type: String, default: null },
+    priority: { type: String, required: true },
+    dueDate: { type: String, default: null },
+    shortId: { type: String, required: true },
+    status: { type: String, required: true },
     isSelected: { type: Boolean, default: false }
   },
   computed: {
-    priority() {
-      const { priority } = this.task;
-      const { icon, label } = priorities.find(it => it.id === priority);
-      return { icon, label };
-    }
+    priorityConfig: vm => priorities.find(it => it.id === vm.priority)
   },
   components: { LabelChip }
 };

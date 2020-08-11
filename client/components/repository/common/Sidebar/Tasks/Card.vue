@@ -4,28 +4,57 @@
     class="px-3 pt-1 pb-4">
     <h4 class="mb-4">{{ name }}</h4>
     <div class="d-flex align-center mt-auto">
-      <v-avatar
-        :size="32"
-        color="d-flex grey lighten-3 white--text">
-        <img v-if="avatarUrl" :src="avatarUrl">
-        <v-icon v-else>mdi-account</v-icon>
-      </v-avatar>
-      <v-icon class="priority-icon mx-5">
-        {{ `$vuetify.icons.${priorityIcon}` }}
-      </v-icon>
-      <label-chip v-if="dueDate" class="mr-3">
-        {{ dueDate | formatDate('MM/DD/YY') }}
-      </label-chip>
-      <label-chip class="mr-3">
-        {{ status }}
-      </label-chip>
-      <label-chip>{{ shortId }}</label-chip>
+      <v-tooltip open-delay="500" bottom>
+        <template #activator="{ on }">
+          <v-avatar
+            v-on="on"
+            :size="32"
+            color="d-flex grey lighten-3 white--text">
+            <img v-if="assignee" :src="assignee.imgUrl">
+            <v-icon v-else>mdi-account</v-icon>
+          </v-avatar>
+        </template>
+        <span v-if="assignee">{{ assignee.fullName || assignee.email }}</span>
+        <span v-else>Unassigned</span>
+      </v-tooltip>
+      <v-tooltip open-delay="500" bottom>
+        <template #activator="{ on }">
+          <v-icon v-on="on" class="priority-icon mx-5">
+            {{ `$vuetify.icons.${priorityConfig.icon}` }}
+          </v-icon>
+        </template>
+        {{ priorityConfig.label }} priority
+      </v-tooltip>
+      <v-tooltip v-if="dueDate" open-delay="500" bottom>
+        <template #activator="{ on }">
+          <label-chip v-on="on" class="mr-3">
+            {{ dueDate | formatDate('MM/DD/YY') }}
+          </label-chip>
+        </template>
+        Due date
+      </v-tooltip>
+      <v-tooltip open-delay="500" bottom>
+        <template #activator="{ on }">
+          <label-chip v-on="on" class="mr-3">
+            {{ statusConfig.label }}
+          </label-chip>
+        </template>
+        Status
+      </v-tooltip>
+      <v-tooltip open-delay="500" bottom>
+        <template #activator="{ on }">
+          <label-chip v-on="on">{{ shortId }}</label-chip>
+        </template>
+        Task ID
+      </v-tooltip>
     </div>
   </v-card>
 </template>
 
 <script>
+import find from 'lodash/find';
 import LabelChip from '@/components/repository/common/LabelChip';
+import { mapGetters } from 'vuex';
 import { priorities } from 'shared/workflow';
 
 export default {
@@ -33,14 +62,16 @@ export default {
   props: {
     id: { type: Number, required: true },
     name: { type: String, required: true },
-    avatarUrl: { type: String, default: null },
+    assignee: { type: Object, default: null },
     priority: { type: String, required: true },
     dueDate: { type: String, default: null },
     shortId: { type: String, required: true },
     status: { type: String, required: true }
   },
   computed: {
-    priorityIcon: vm => priorities.find(it => it.id === vm.priority).icon,
+    ...mapGetters('repository', ['workflow']),
+    statusConfig: vm => find(vm.workflow.statuses, { id: vm.status }),
+    priorityConfig: vm => priorities.find(it => it.id === vm.priority),
     route: vm => ({ name: 'board', query: { ...vm.$route.query, taskId: vm.id } })
   },
   components: { LabelChip }

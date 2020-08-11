@@ -9,8 +9,9 @@
       v-for="task in tasksByStatus"
       :key="task.id"
       @click="selectTask"
+      v-bind="task"
+      :assignee="task.assignee"
       :is-selected="selectedTask && selectedTask.id === task.id"
-      :task="task"
       class="my-2 mx-3" />
   </draggable>
 </template>
@@ -30,9 +31,7 @@ export default {
     tasks: { type: Object, default: () => ({}) }
   },
   computed: {
-    tasksByStatus() {
-      return get(this.tasks, this.status.id, []);
-    }
+    tasksByStatus: vm => get(vm.tasks, vm.status.id, [])
   },
   methods: {
     ...mapActions('repository/tasks', ['save']),
