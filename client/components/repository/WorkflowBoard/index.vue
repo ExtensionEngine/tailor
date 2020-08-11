@@ -81,6 +81,9 @@ import sub from 'date-fns/sub';
 import uniqBy from 'lodash/uniqBy';
 import xor from 'lodash/xor';
 
+const RECENCY_THRESHOLD = { days: 2 };
+const SEARCH_TEXT_LENGTH_THRESHOLD = 3;
+
 export default {
   name: 'workflow-board',
   data: () => ({
@@ -99,14 +102,16 @@ export default {
       }));
     },
     filteredTasks() {
-      const filters = {};
-      if (this.showRecentOnly) filters.updatedAt = this.filterByRecency;
-      if (this.filteredAssigneeIds.length || this.filterUnassigned) {
-        filters.assigneeId = this.filterByAssignee;
-      }
-      if (this.searchText && this.searchText.length > 3) {
-        filters.searchableText = this.filterBySearchText;
-      }
+      const isFilteredByAssignee = this.filteredAssigneeIds.length ||
+        this.filterUnassigned;
+      const isFilteredBySearchText = this.searchText &&
+       this.searchText.length > SEARCH_TEXT_LENGTH_THRESHOLD;
+
+      const filters = {
+        ...this.showRecentOnly && { updatedAt: this.filterByRecency },
+        ...isFilteredByAssignee && { assigneeId: this.filterByAssignee },
+        ...isFilteredBySearchText && { searchableText: this.filterBySearchText }
+      };
       return this.searchableTasks.filter(conforms(filters));
     },
     groupedTasks: vm => groupBy(vm.filteredTasks, 'status'),
@@ -131,8 +136,7 @@ export default {
     },
     filterByRecency(updatedAt) {
       const parsed = new Date(updatedAt);
-      const recencyThreshold = { days: 2 };
-      const updatedAtLimit = sub(new Date(), recencyThreshold);
+      const updatedAtLimit = sub(new Date(), RECENCY_THRESHOLD);
       return isAfter(parsed, updatedAtLimit);
     },
     filterBySearchText(searchableText) {
