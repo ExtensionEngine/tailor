@@ -9,13 +9,47 @@
       {{ task.name }}
     </div>
     <div class="d-flex align-center mt-auto">
-      <v-avatar :size="24" color="avatar mr-3 grey lighten-3 d-flex white--text">
-        <img v-if="task.assignee" :src="task.assignee.imgUrl">
-        <v-icon v-else :size="16">mdi-account</v-icon>
-      </v-avatar>
-      <v-icon class="priority-icon mr-3">{{ `$vuetify.icons.${icon}` }}</v-icon>
-      <label-chip v-if="task.dueDate" class="mr-3">{{ task.dueDate | formatDate('MM/DD/YY') }}</label-chip>
-      <label-chip>{{ task.shortId }}</label-chip>
+      <v-tooltip open-delay="500" bottom>
+        <template #activator="{ on }">
+          <v-avatar
+            v-on="on"
+            :size="24"
+            color="grey lighten-3"
+            class="avatar mr-3 d-flex white--text">
+            <img v-if="task.assignee" :src="task.assignee.imgUrl">
+            <v-icon v-else :size="16">mdi-account</v-icon>
+          </v-avatar>
+        </template>
+        <span v-if="task.assignee">{{ task.assignee.fullName || task.assignee.email }}</span>
+        <span v-else>Unassigned</span>
+      </v-tooltip>
+      <v-tooltip open-delay="500" bottom>
+        <template #activator="{ on }">
+          <v-icon
+            v-on="on"
+            class="priority-icon mr-3">
+            {{ `$vuetify.icons.${priority.icon}` }}
+          </v-icon>
+        </template>
+        {{ priority.label }} priority
+      </v-tooltip>
+      <v-tooltip open-delay="500" bottom>
+        <template #activator="{ on }">
+          <label-chip
+            v-if="task.dueDate"
+            v-on="on"
+            class="mr-3">
+            {{ task.dueDate | formatDate('MM/DD/YY') }}
+          </label-chip>
+        </template>
+        Due date
+      </v-tooltip>
+      <v-tooltip open-delay="500" bottom>
+        <template #activator="{ on }">
+          <label-chip v-on="on">{{ task.shortId }}</label-chip>
+        </template>
+        Task ID
+      </v-tooltip>
     </div>
   </v-card>
 </template>
@@ -31,10 +65,10 @@ export default {
     isSelected: { type: Boolean, default: false }
   },
   computed: {
-    icon() {
+    priority() {
       const { priority } = this.task;
-      const { icon } = priorities.find(it => it.id === priority);
-      return icon;
+      const { icon, label } = priorities.find(it => it.id === priority);
+      return { icon, label };
     }
   },
   components: { LabelChip }

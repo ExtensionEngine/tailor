@@ -8,23 +8,37 @@
         placeholder="Search by ID or name"
         clearable />
       <div v-if="assignees.length" class="ml-7 mr-3">
-        <v-avatar
-          v-for="{ id, isActive, imgUrl } in assignees"
+        <v-tooltip
+          v-for="{ id, fullName, email, isActive, imgUrl } in assignees"
           :key="`assignee-${id}`"
-          @click="toggleAssignee(id)"
-          :size="34"
-          class="avatar grey white--text"
-          :class="{ active: isActive }">
-          <img :src="imgUrl">
-        </v-avatar>
-        <v-avatar
-          v-if="unassignedTaskExists"
-          @click="filterUnassigned = !filterUnassigned"
-          :size="34"
-          :class="{ active: filterUnassigned }"
-          color="avatar grey lighten-3 white--text">
-          <v-icon>mdi-account</v-icon>
-        </v-avatar>
+          open-delay="500"
+          bottom>
+          <template #activator="{ on }">
+            <v-avatar
+              v-on="on"
+              @click="toggleAssignee(id)"
+              :size="34"
+              class="avatar grey white--text"
+              :class="{ active: isActive }">
+              <img :src="imgUrl">
+            </v-avatar>
+          </template>
+          {{ fullName || email }}
+        </v-tooltip>
+        <v-tooltip bottom>
+          <template #activator="{ on }">
+            <v-avatar
+              v-if="unassignedTaskExists"
+              v-on="on"
+              @click="filterUnassigned = !filterUnassigned"
+              :size="34"
+              :class="{ active: filterUnassigned }"
+              color="avatar grey lighten-3 white--text">
+              <v-icon>mdi-account</v-icon>
+            </v-avatar>
+          </template>
+          Unassigned
+        </v-tooltip>
       </div>
       <v-btn
         @click="showRecentOnly = !showRecentOnly"
