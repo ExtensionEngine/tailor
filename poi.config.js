@@ -79,7 +79,8 @@ module.exports = {
     }, {
       resolve: 'poi-preset-sass-resources',
       options: {
-        resources: './client/assets/stylesheets/common/_variables.scss'
+        resources: './client/assets/stylesheets/common/_variables.scss',
+        scope: ['scss']
       }
     }
   ],
@@ -116,6 +117,17 @@ module.exports = {
       .use('imports-loader')
       .loader(require.resolve('imports-loader'))
       .options({ jQuery: 'jquery' });
+
+    // Prevents injecting preset to Vuetify component's SASS files.
+    // More about module oneOf rules can be found here:
+    // https://poi.js.org/guide/customizing-webpack-config.html#a-note-for-css-loaders
+    config.module.rule('sass')
+      .oneOf('normal')
+      .use('sass-loader')
+        .tap(opt => {
+          delete opt.data;
+          return opt;
+        });
 
     config.module.rule('event-source-polyfill')
       .test(require.resolve('event-source-polyfill'))
