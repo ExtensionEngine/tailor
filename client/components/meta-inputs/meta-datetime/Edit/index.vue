@@ -5,11 +5,13 @@
       :value="date"
       :label="meta.label"
       :placeholder="meta.placeholder" />
-    <time-picker
-      v-if="date && (meta.type === 'DATETIME')"
-      @change="setTime"
-      :value="date"
-      :disabled="!date" />
+    <template v-if="!meta.hideTime">
+      <time-picker
+        v-if="date"
+        @change="setTime"
+        :value="date"
+        :disabled="!date" />
+    </template>
     <v-btn
       v-if="date"
       @click="date = null"
