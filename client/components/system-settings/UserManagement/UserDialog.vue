@@ -2,6 +2,17 @@
   <tailor-dialog v-model="show" header-icon="mdi-account">
     <template v-slot:header>{{ userData ? 'Edit' : 'Create' }} User</template>
     <template v-slot:body>
+      <div v-if="userData" class="text-left">
+        <v-btn
+          @click="reinvite"
+          :loading="isLoading"
+          :disabled="isLoading"
+          outlined
+          color="primary"
+          class="mb-6">
+          Reinvite
+        </v-btn>
+      </div>
       <v-text-field
         v-model="user.email"
         v-validate="{ required: true, email: true, 'unique-email': userData }"
