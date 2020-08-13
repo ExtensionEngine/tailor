@@ -5,10 +5,10 @@
       <div v-if="userData" class="text-left">
         <v-btn
           @click="reinvite"
-          :loading="isLoading"
-          :disabled="isLoading"
-          outlined
+          :loading="isReinviting"
+          :disabled="isReinviting"
           color="primary"
+          outlined
           class="mb-6">
           Reinvite
         </v-btn>
@@ -85,7 +85,7 @@ export default {
     visible: { type: Boolean, default: false },
     userData: { type: Object, default: () => ({}) }
   },
-  data: () => ({ user: resetUser(), isLoading: false }),
+  data: () => ({ user: resetUser(), isReinviting: false }),
   computed: {
     isNewUser: vm => !vm.user.id,
     roles: vm => map(roles, it => ({ text: humanize(it), value: it })),
@@ -111,8 +111,8 @@ export default {
       this.close();
     },
     reinvite() {
-      this.isLoading = true;
-      api.reinvite(this.user).finally(() => (this.isLoading = false));
+      this.isReinviting = true;
+      api.reinvite(this.user).finally(() => (this.isReinviting = false));
     }
   },
   watch: {
