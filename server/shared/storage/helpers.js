@@ -46,7 +46,6 @@ function processQuestion(element) {
 }
 
 function processPrimitive(primitive) {
-  if (!isPrimitive(primitive)) throw new Error('Invalid primitive');
   if (!processor[primitive.type]) return Promise.resolve(primitive);
   return processor[primitive.type](primitive);
 }
