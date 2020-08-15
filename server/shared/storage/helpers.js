@@ -89,11 +89,8 @@ function resolveStatics(item) {
     : defaultStaticsResolver(item);
 }
 
-async function defaultStaticsResolver(item) {
-  const element = await (isQuestion(item.type)
-    ? resolveQuestion(item)
-    : resolveAsset(item));
-  return resolveAssetsMap(element);
+function defaultStaticsResolver(item) {
+  return isQuestion(item.type) ? resolveQuestion(item) : resolveAsset(item);
 }
 
 async function resolveAssetsMap(element) {
@@ -125,8 +122,7 @@ function resolvePrimitive(primitive) {
   return primitiveResolver(primitive);
 }
 
-async function resolveComposite(composite) {
-  await resolveAssetsMap(composite);
+function resolveComposite(composite) {
   return Promise.each(values(composite.data.embeds), resolvePrimitive)
     .then(() => composite);
 }
