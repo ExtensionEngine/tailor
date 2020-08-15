@@ -13,8 +13,8 @@ const values = require('lodash/values');
 
 const STORAGE_PROTOCOL = 'storage://';
 const PRIMITIVES = [
-  'JODIT_HTML', 'TABLE-CELL', 'IMAGE', 'BRIGHTCOVE_VIDEO', 'VIDEO', 'EMBED',
-  'HTML', 'AUDIO', 'PDF', 'BREAK'
+  'JODIT_HTML', 'IMAGE', 'BRIGHTCOVE_VIDEO', 'VIDEO', 'EMBED', 'HTML',
+  'AUDIO', 'PDF', 'BREAK'
 ];
 const DEFAULT_IMAGE_EXTENSION = 'png';
 const isPrimitive = asset => PRIMITIVES.indexOf(asset.type) > -1;
