@@ -87,7 +87,7 @@
     "jsonwebtoken": "^8.0.0",
     "jszip": "^3.2.2",
     "loaders.css": "^0.1.2",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.20",
     "luxon": "^1.19.3",
     "mime-types": "^2.1.14",
     "minimist": "^1.2.5",
