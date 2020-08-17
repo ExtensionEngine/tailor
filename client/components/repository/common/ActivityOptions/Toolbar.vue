@@ -23,10 +23,9 @@
       :repository-id="activity.repositoryId"
       :levels="supportedLevels"
       :anchor="activity"
+      :prepend-item="prependItem"
       :add-child="addChild"
-      :heading="`
-        Add ${addChild ? 'into' : 'below'}
-        ${activity.data.name}`" />
+      :heading="`${createDialogHeading} ${activity.data.name}`" />
   </div>
 </template>
 
@@ -37,6 +36,10 @@ import optionsMixin from './common';
 
 const getOptions = vm => {
   const items = [{
+    name: 'Add item above',
+    icon: 'arrow-up',
+    action: () => vm.setCreateContext(vm.sameLevel, { prependItem: true })
+  }, {
     name: 'Add item below',
     icon: 'arrow-down',
     action: () => vm.setCreateContext(vm.sameLevel)
@@ -45,7 +48,7 @@ const getOptions = vm => {
     items.push({
       name: 'Add item into',
       icon: 'subdirectory-arrow-right',
-      action: () => vm.setCreateContext(vm.subLevels, true)
+      action: () => vm.setCreateContext(vm.subLevels, { addChild: true })
     });
   }
   if (vm.isEditable) {
@@ -68,17 +71,24 @@ export default {
   data: () => ({
     showCreateDialog: false,
     supportedLevels: [],
+    prependItem: false,
     addChild: false
   }),
   computed: {
-    options: vm => getOptions(vm)
+    options: vm => getOptions(vm),
+    createDialogHeading: ({ addChild, prependItem }) => {
+      if (addChild) return 'Add into';
+      if (prependItem) return 'Add above';
+      return 'Add below';
+    }
   },
   methods: {
     isEqual,
-    setCreateContext(levels, addChild) {
+    setCreateContext(levels, { addChild = false, prependItem = false } = {}) {
       this.supportedLevels = levels;
       this.showCreateDialog = true;
       this.addChild = addChild;
+      this.prependItem = prependItem;
     }
   },
   components: { CreateDialog }

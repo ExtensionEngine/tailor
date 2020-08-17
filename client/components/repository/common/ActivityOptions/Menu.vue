@@ -26,10 +26,9 @@
       :repository-id="activity.repositoryId"
       :levels="supportedLevels"
       :anchor="activity"
-      :add-child="addSublevel"
-      :heading="`
-        Add ${addSublevel ? 'into' : 'below'}
-        ${activity.data.name}`" />
+      :prepend-item="prependItem"
+      :add-child="addChild"
+      :heading="`${createDialogHeading} ${activity.data.name}`" />
     <copy-dialog
       v-if="showCopyDialog"
       @close="showCopyDialog = null"
@@ -37,7 +36,7 @@
       :repository-id="activity.repositoryId"
       :levels="supportedLevels"
       :anchor="activity"
-      :copy-into="addSublevel" />
+      :copy-into="addChild" />
   </div>
 </template>
 
@@ -64,12 +63,17 @@ export default {
   data: () => ({
     showCreateDialog: false,
     showCopyDialog: false,
-    addSublevel: false,
+    addChild: false,
+    prependItem: false,
     supportedLevels: []
   }),
   computed: {
     addMenuOptions() {
       const items = [{
+        name: 'Add item above',
+        icon: 'arrow-up',
+        action: () => this.setCreateContext(this.sameLevel, { prependItem: true })
+      }, {
         name: 'Add item below',
         icon: 'arrow-down',
         action: () => this.setCreateContext(this.sameLevel)
@@ -78,7 +82,7 @@ export default {
       return items.concat({
         name: 'Add item into',
         icon: 'subdirectory-arrow-right',
-        action: () => this.setCreateContext(this.subLevels, true)
+        action: () => this.setCreateContext(this.subLevels, { addChild: true })
       });
     },
     copyMenuOptions() {
@@ -91,7 +95,7 @@ export default {
       return items.concat({
         name: 'Copy existing into',
         icon: 'content-copy',
-        action: () => this.setCopyContext(this.subLevels, true)
+        action: () => this.setCopyContext(this.subLevels, { addChild: true })
       });
     },
     menuOptions() {
@@ -103,21 +107,27 @@ export default {
           action: () => this.delete(this.activity)
         }
       ];
+    },
+    createDialogHeading: ({ addChild, prependItem }) => {
+      if (addChild) return 'Add into';
+      if (prependItem) return 'Add above';
+      return 'Add below';
     }
   },
   methods: {
     ...mapActions('repository/activities', ['remove']),
-    setCreateContext(levels, addSublevel) {
-      this.setSupportedLevels(levels, addSublevel);
+    setCreateContext(levels, { addChild = false, prependItem = false } = {}) {
+      this.setSupportedLevels(levels, addChild);
+      this.prependItem = prependItem;
       this.showCreateDialog = true;
     },
-    setCopyContext(levels, addSublevel) {
-      this.setSupportedLevels(levels, addSublevel);
+    setCopyContext(levels, addChild) {
+      this.setSupportedLevels(levels, addChild);
       this.showCopyDialog = true;
     },
-    setSupportedLevels(levels, isSublevel = false) {
+    setSupportedLevels(levels, addChild = false) {
       this.supportedLevels = levels;
-      this.addSublevel = isSublevel;
+      this.addChild = addChild;
     },
     delete() {
       const { activity, $route: { name: routeName } } = this;
