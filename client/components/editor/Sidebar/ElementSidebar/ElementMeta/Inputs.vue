@@ -10,7 +10,7 @@
 
 <script>
 import { getElementId } from 'tce-core/utils';
-import MetaInput from '@/components/common/Meta';
+import MetaInput from 'tce-core/MetaInput';
 
 export default {
   name: 'element-meta-inputs',
