@@ -18,7 +18,7 @@ const uniq = require('lodash/uniq');
 const defaultConfiguration = require('./activities-rc');
 const customConfiguration = require('./activities-rc.load')();
 /* eslint-enable */
-if (!process.env.ENABLE_DEFAULT_SCHEMA && !isEmpty(customConfiguration)) {
+if (!process.env.VUE_APP_ENABLE_DEFAULT_SCHEMA && !isEmpty(customConfiguration)) {
   defaultConfiguration.SCHEMAS = [];
 }
 
