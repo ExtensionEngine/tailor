@@ -1,9 +1,9 @@
 import { FORBIDDEN, UNAUTHORIZED } from 'http-status-codes';
 import axios from 'axios';
 
-const authScheme = process.env.AUTH_JWT_SCHEME;
+const authScheme = process.env.VUE_APP_AUTH_JWT_SCHEME;
 const config = {
-  baseURL: process.env.API_PATH,
+  baseURL: process.env.VUE_APP_API_PATH,
   withCredentials: true,
   headers: { 'Content-Type': 'application/json' }
 };
