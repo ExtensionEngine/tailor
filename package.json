@@ -168,11 +168,11 @@
     "rewrite-lockfile": "^1.0.1",
     "sass": "^1.26.10",
     "sass-loader": "^7.3.1",
-    "sass-resources-loader": "^2.0.1",
     "sequelize-cli": "^6.2.0",
     "stylelint": "^13.0.0",
     "umzug": "^2.2.0",
     "val-loader": "^1.1.1",
+    "vue-cli-plugin-sass-resources": "^1.0.2",
     "vue-template-compiler": "^2.6.11"
   },
   "engines": {
@@ -185,8 +185,7 @@
       "./build/plugins/vue-cli/brand",
       "./build/plugins/vue-cli/clean-out-dir",
       "./build/plugins/vue-cli/copy",
-      "./build/plugins/vue-cli/html-version-spec",
-      "./build/plugins/vue-cli/sass-resources"
+      "./build/plugins/vue-cli/html-version-spec"
     ]
   }
 }
