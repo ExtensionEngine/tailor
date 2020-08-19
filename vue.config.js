@@ -33,6 +33,9 @@ module.exports = {
     index: {
       entry: './client/main.js',
       title: 'Tailor',
+      template: 'public/index.html',
+      filename: 'index.html',
+      chunks: ['chunk-vendors', 'chunk-common', 'index'],
       appMountId: 'app'
     }
   },
@@ -57,6 +60,7 @@ module.exports = {
     },
     copy: { patterns: copy },
     envs: {
+      APP_TITLE: 'Tailor',
       API_PATH: '/api/v1/',
       AUTH_JWT_SCHEME,
       ENABLE_DEFAULT_SCHEMA: yn(ENABLE_DEFAULT_SCHEMA),
