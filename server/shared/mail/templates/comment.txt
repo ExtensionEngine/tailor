@@ -5,4 +5,10 @@ Tailor
 
 {{content}}
 
+Open the activity by clicking the URL below:
+
+{{href}}
+
+Or copy and paste this URL into your browser.
+
 -------------------------------------------------

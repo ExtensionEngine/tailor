@@ -18,6 +18,8 @@ const send = promisify(server.send.bind(server));
 const templatesDir = path.join(__dirname, './templates/');
 
 const resetUrl = token => urlJoin(origin, '/#/reset-password/', token);
+const activityUrl = (repositoryId, activityId) =>
+  urlJoin(origin, '/#/repository', repositoryId, `?activityId=${activityId}`);
 
 module.exports = {
   send,
@@ -62,9 +64,12 @@ function resetPassword(user, token) {
 }
 
 function sendCommentNotification(users, comment) {
+  const { repositoryId, activityId } = comment;
+  const href = activityUrl(repositoryId.toString(), activityId.toString());
   const recipients = users.concat(',');
-  const html = renderHtml(path.join(templatesDir, 'comment.mjml'), comment);
-  const text = renderText(path.join(templatesDir, 'comment.txt'), comment);
+  const data = { href, ...comment };
+  const html = renderHtml(path.join(templatesDir, 'comment.mjml'), data);
+  const text = renderText(path.join(templatesDir, 'comment.txt'), data);
   logger.info({ recipients, sender: from }, '📧  Sending notification email to:', recipients);
   return send({
     from,
