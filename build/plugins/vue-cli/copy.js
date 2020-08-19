@@ -3,9 +3,9 @@
 const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = (api, { pluginOptions } = {}) => {
-  const { patterns, options } = pluginOptions.copy;
+  const { patterns, options = {} } = pluginOptions.copy;
   api.chainWebpack(config =>
     config
       .plugin('copy')
-      .use(CopyPlugin, [patterns, options]));
+      .use(CopyPlugin, [{ patterns, options }]));
 };
