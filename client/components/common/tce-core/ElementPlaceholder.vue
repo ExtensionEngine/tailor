@@ -17,7 +17,7 @@
         dense ? 'my-2 subtitle-2' : 'my-4 headline'
       ]"
       class="grey--text">
-      {{ name }} component
+      {{ name }}
     </div>
     <div v-if="!dense && !isDisabled" class="subtitle-1">
       <template v-if="!isFocused">{{ placeholder }}</template>
