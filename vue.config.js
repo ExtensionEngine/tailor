@@ -2,8 +2,13 @@
 
 const path = require('path');
 const serverPort = require('./config/server').port;
+const yn = require('yn');
 
-const { STORAGE_PATH } = process.env;
+const {
+  AUTH_JWT_SCHEME,
+  ENABLE_DEFAULT_SCHEMA,
+  STORAGE_PATH
+} = process.env;
 const imagesPath = 'assets/img';
 const serverUrl = `http://127.0.0.1:${serverPort}`;
 
@@ -51,6 +56,12 @@ module.exports = {
       cleanOnceBeforeBuildPatterns: ['**/*', '!.gitkeep']
     },
     copy: { patterns: copy },
+    envs: {
+      API_PATH: '/api/v1/',
+      AUTH_JWT_SCHEME,
+      ENABLE_DEFAULT_SCHEMA: yn(ENABLE_DEFAULT_SCHEMA),
+      VUEX_STORAGE_KEY: 'TAILOR_APP_STATE'
+    },
     sassResources: {
       resources: './client/assets/stylesheets/common/_variables.scss'
     }

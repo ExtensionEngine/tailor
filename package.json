@@ -182,6 +182,7 @@
   },
   "vuePlugins": {
     "service": [
+      "./build/plugins/vue-cli/envs",
       "./build/plugins/vue-cli/brand",
       "./build/plugins/vue-cli/clean-out-dir",
       "./build/plugins/vue-cli/copy",
