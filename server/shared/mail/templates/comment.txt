@@ -5,7 +5,7 @@ Tailor
 
 {{content}}
 
-Open {{activityLabel}} by clicking the URL below:
+View {{activityLabel}} by clicking the URL below:
 
 {{href}}
 

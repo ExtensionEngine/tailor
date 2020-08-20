@@ -35,7 +35,7 @@
           padding-left="0"
           color="#444"
           font-size="16px">
-          Open the {{activityLabel}} by clicking the button below:
+          View the {{activityLabel}} by clicking the button below:
         </mj-text>
         <mj-button mj-class="ctaButton" href="{{href}}">
           View {{activityLabel}}
