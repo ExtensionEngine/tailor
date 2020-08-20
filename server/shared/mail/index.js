@@ -74,7 +74,7 @@ function sendCommentNotification(users, comment) {
   return send({
     from,
     to: recipients,
-    subject: `${comment.author.label} left a comment on ${comment.repository}`,
+    subject: `${comment.author.label} left a comment on ${comment.repositoryName}`,
     text,
     attachment: [{ data: html, alternative: true }]
   });

@@ -40,7 +40,7 @@ async function sendEmailNotification(comment, db) {
   const { author, repository, activity } = comment;
   const data = {
     repositoryId: repository.id,
-    repository: repository.name,
+    repositoryName: repository.name,
     activityId: activity.id,
     topic: activity.data.name,
     author: author.profile,
