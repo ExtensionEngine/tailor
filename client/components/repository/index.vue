@@ -9,7 +9,7 @@
       <v-tab
         v-for="tab in tabs"
         :key="tab.name"
-        :to="{ name: tab.route }"
+        :to="{ name: tab.route, query: tab.query }"
         active-class="tab-active"
         ripple exact
         class="px-4">
@@ -23,28 +23,26 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
+import selectActivity from '@/components/repository/common/selectActivity';
 import sortBy from 'lodash/sortBy';
 
 export default {
+  mixins: [selectActivity],
   props: {
     repositoryId: { type: Number, required: true }
   },
-  data() {
-    return {
-      showLoader: true
-    };
-  },
+  data: () => ({ showLoader: true, lastSelectedActivity: null }),
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters('repository',
-      ['repository', 'activities', 'selectedActivity', 'isRepositoryAdmin']),
+    ...mapGetters('repository', ['repository', 'activities', 'isRepositoryAdmin']),
     tabs() {
+      const query = { activityId: get(this.lastSelectedActivity, 'id') };
       const items = [
-        { name: 'Structure', route: 'repository', icon: 'file-tree' },
-        { name: 'Graph View', route: 'tree-view', icon: 'graph-outline' },
+        { name: 'Structure', route: 'repository', icon: 'file-tree', query },
+        { name: 'Graph View', route: 'tree-view', icon: 'graph-outline', query },
         { name: 'History', route: 'revisions', icon: 'history' },
         { name: 'Settings', route: 'repository-info', icon: 'settings-outline' }
       ];
@@ -53,22 +51,23 @@ export default {
       return items;
     }
   },
-  methods: {
-    ...mapActions('repository', ['initialize']),
-    ...mapMutations('repository', ['selectActivity'])
+  methods: mapActions('repository', ['initialize', 'expandParents']),
+  watch: {
+    selectedActivity(val) {
+      if (val) this.lastSelectedActivity = val;
+    }
   },
   async created() {
-    const { repositoryId, selectedActivity: activity } = this;
+    const { repositoryId } = this;
     await this.initialize(repositoryId);
-    const isActivitySelected = get(activity, 'repositoryId') === repositoryId;
-    if (!isActivitySelected) {
-      const rootActivities = filter(this.activities, { parentId: null });
-      const activityCid = rootActivities.length
-        ? sortBy(rootActivities, 'position')[0]._cid
-        : null;
-      this.selectActivity(activityCid);
-    }
     this.showLoader = false;
+    if (!this.activities.length) return;
+    if (!this.selectedActivity) {
+      const rootActivities = filter(this.activities, { parentId: null });
+      const [activity] = sortBy(rootActivities, 'position');
+      this.selectActivity(activity.id);
+    }
+    this.expandParents(this.selectedActivity);
   }
 };
 </script>

@@ -2,7 +2,7 @@
   <div infinite-wrapper class="catalog-wrapper">
     <v-container :class="{ 'catalog-empty': !hasRepositories }" class="catalog mt-3">
       <v-row no-gutters class="catalog-actions">
-        <create-repository @created="reset" />
+        <create-repository @created="onCreate" />
         <v-col md="4" sm="10" offset-md="4" offset-sm="1">
           <search
             @update="onFilterChange(setSearch, $event)"
@@ -73,11 +73,7 @@ import TagFilter from './TagFilter';
 import TagFilterSelection from './TagFilterSelection';
 
 export default {
-  data() {
-    return {
-      loading: true
-    };
-  },
+  data: () => ({ loading: true }),
   computed: {
     ...mapState('repositories', {
       sortBy: state => state.$internals.sort,
@@ -106,8 +102,8 @@ export default {
   methods: {
     ...mapActions('repositories', ['fetch', 'fetchTags']),
     ...mapMutations('repositories', [
-      'togglePinned', 'setSearch', 'setOrder', 'resetFilters', 'toggleTagFilter',
-      'clearTagFilter'
+      'togglePinned', 'setSearch', 'setOrder', 'reset', 'resetFilters',
+      'resetPagination', 'toggleTagFilter', 'clearTagFilter'
     ]),
     async load() {
       this.loading = true;
@@ -116,7 +112,7 @@ export default {
       if (!this.hasMoreResults) this.loader.complete();
       this.loading = false;
     },
-    async reset() {
+    async onCreate() {
       this.setOrder({ field: 'createdAt', order: 'DESC' });
       this.resetFilters();
       await this.load();
@@ -135,6 +131,10 @@ export default {
     }
   },
   created() {
+    // repositories must be reloaded for publishing badge to work properly
+    // reset state manually to trigger "infinite" event in all cases
+    this.resetPagination();
+    this.reset();
     this.fetchTags();
   },
   components: {
@@ -165,7 +165,7 @@ export default {
     left: 0;
     width: 100%;
     height: 230px;
-    background: #455a64;
+    background: #37474f;
     box-shadow:
       0 3px 5px -1px rgba(0,0,0,0.2),
       0 5px 8px 0 rgba(0,0,0,0.14),

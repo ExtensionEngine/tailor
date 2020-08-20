@@ -3,11 +3,10 @@ import * as getters from './getters';
 import * as mutations from './mutations';
 import activities from './activities';
 import comments from './comments';
+import contentElements from './content-elements';
 import revisions from './revisions';
-import tes from './tes';
 
 const state = {
-  activity: undefined,
   outline: { expanded: {} },
   users: {},
   $apiUrl: null
@@ -22,7 +21,7 @@ export default {
   modules: {
     activities,
     comments,
-    revisions,
-    tes
+    contentElements,
+    revisions
   }
 };

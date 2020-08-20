@@ -1,19 +1,21 @@
 'use strict';
 
-const { migrationsPath } = require('../../../sequelize.config');
-const { wrapAsyncMethods } = require('./helpers');
 const config = require('./config');
 const forEach = require('lodash/forEach');
 const Hooks = require('./hooks');
 const invoke = require('lodash/invoke');
 const logger = require('../logger')('db');
+const { migrationsPath } = require('../../../sequelize.config');
 const pick = require('lodash/pick');
 const pkg = require('../../../package.json');
+const Promise = require('bluebird');
 const semver = require('semver');
 const Sequelize = require('sequelize');
 const Umzug = require('umzug');
+const { wrapMethods } = require('./helpers');
 
 // Require models.
+/* eslint-disable require-sort/require-sort */
 const User = require('../../user/user.model');
 const Repository = require('../../repository/repository.model');
 const RepositoryTag = require('../../tag/repositoryTag.model');
@@ -23,6 +25,7 @@ const ContentElement = require('../../content-element/content-element.model');
 const Revision = require('../../revision/revision.model');
 const Comment = require('../../comment/comment.model');
 const Tag = require('../../tag/tag.model');
+/* eslint-enable */
 
 const isProduction = process.env.NODE_ENV === 'production';
 const sequelize = createConnection(config);
@@ -87,7 +90,6 @@ function defineModel(Model, connection = sequelize) {
   const fields = invoke(Model, 'fields', DataTypes, connection) || {};
   const options = invoke(Model, 'options') || {};
   Object.assign(options, { sequelize: connection });
-  wrapAsyncMethods(Model);
   return Model.init(fields, options);
 }
 
@@ -95,6 +97,7 @@ forEach(models, model => {
   invoke(model, 'associate', models);
   addHooks(model, Hooks, models);
   addScopes(model, models);
+  wrapMethods(model, Promise);
 });
 
 function addHooks(model, Hooks, models) {
@@ -114,6 +117,7 @@ const db = {
   ...models
 };
 
+wrapMethods(Sequelize.Model, Promise);
 // Patch Sequelize#method to support getting models by class name.
 sequelize.model = name => sequelize.models[name] || db[name];
 

@@ -3,9 +3,47 @@
     <v-chip
       :color="config.color"
       label dark small
-      class="type-label">
+      class="body-label">
       {{ config.label.toUpperCase() }}
     </v-chip>
+    <v-tooltip open-delay="500" bottom>
+      <template v-slot:activator="{ on }">
+        <v-chip
+          v-on="on"
+          color="blue-grey lighten-5"
+          label small
+          class="body-label subtitle-2">
+          {{ activity.shortId }}
+        </v-chip>
+      </template>
+      {{ config.label }} ID
+    </v-tooltip>
+    <div class="mt-1 mb-2">
+      <v-btn
+        v-clipboard:copy="activity.shortId"
+        v-clipboard:success="() => {
+          $snackbar.show('ID copied to the clipboard', { immediate: true })
+        }"
+        v-clipboard:error="() => $snackbar.show('Not able to copy the ID')"
+        color="blue-grey darken-3"
+        text small
+        class="px-1 mr-2">
+        <v-icon dense class="pr-2">mdi-identifier</v-icon>
+        Copy id
+      </v-btn>
+      <v-btn
+        v-clipboard:copy="activityUrl"
+        v-clipboard:success="() => {
+          $snackbar.show('Link copied to the clipboard', { immediate: true })
+        }"
+        v-clipboard:error="() => $snackbar.show('Not able to copy the link')"
+        color="blue-grey darken-3"
+        text small
+        class="px-1">
+        <v-icon class="pr-2">mdi-link</v-icon>
+        Copy link
+      </v-btn>
+    </div>
     <div class="meta-elements">
       <meta-input
         v-for="it in metadata"
@@ -25,9 +63,10 @@
 </template>
 
 <script>
+import { getActivityMetadata, getLevel } from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex';
 import Discussion from './Discussion';
-import Meta from 'components/common/Meta';
+import MetaInput from 'tce-core/MetaInput';
 import Relationship from './Relationship';
 
 export default {
@@ -37,21 +76,23 @@ export default {
   },
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters('repository', ['getConfig', 'getMetadata', 'isRepositoryAdmin']),
-    config: vm => vm.getConfig(vm.activity),
-    metadata: vm => vm.getMetadata(vm.activity)
+    ...mapGetters('repository', ['isRepositoryAdmin']),
+    activityUrl: () => window.location.href,
+    config: vm => getLevel(vm.activity.type),
+    metadata: vm => getActivityMetadata(vm.activity)
   },
   methods: {
     ...mapActions('repository/activities', ['update']),
-    updateActivity(key, value) {
+    async updateActivity(key, value) {
       const data = { ...this.activity.data, [key]: value };
-      this.update({ _cid: this.activity._cid, data });
+      await this.update({ _cid: this.activity._cid, data });
+      this.$snackbar.show(`${this.config.label} saved`);
     }
   },
   components: {
     Discussion,
     Relationship,
-    MetaInput: Meta
+    MetaInput
   }
 };
 </script>
@@ -62,7 +103,7 @@ export default {
   padding: 0.375rem 1rem;
 }
 
-.type-label {
+.body-label {
   margin: 0.25rem 0.25rem 1.25rem;
   font-weight: 500;
 }

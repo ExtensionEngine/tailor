@@ -51,7 +51,7 @@ const getDefaultState = () => ({
 export default {
   mixins: [withValidation()],
   props: {
-    show: { type: Boolean, required: true }
+    show: { type: Boolean, default: true }
   },
   data: () => getDefaultState(),
   computed: mapGetters('repository', ['schema']),

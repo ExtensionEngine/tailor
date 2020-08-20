@@ -1,10 +1,23 @@
 <template>
-  <v-card @click="$emit('select')" :ripple="false" class="my-3 py-1 text-left">
+  <v-card
+    @click="$emit('select')"
+    :ripple="false"
+    class="my-5 py-1 grey lighten-5 text-left">
     <v-card-subtitle class="pb-1 d-flex align-center">
-      <v-chip :color="color" label x-small class="pa-2 mr-2" />
-      <span class="text-uppercase">{{ typeLabel }}</span>
+      <v-chip
+        :color="color"
+        label small dark
+        class="mr-2 subtitle-2">
+        {{ typeLabel }}
+      </v-chip>
+      <v-chip
+        color="blue-grey darken-2"
+        label small dark
+        class="px-4 subtitle-2">
+        {{ activity.shortId }}
+      </v-chip>
     </v-card-subtitle>
-    <v-card-title class="py-0 text-truncate">
+    <v-card-title class="py-1 text-truncate">
       {{ activity.data.name }}
     </v-card-title>
     <v-card-actions class="py-1">

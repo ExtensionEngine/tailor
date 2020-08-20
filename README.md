@@ -5,7 +5,7 @@ status](https://badgen.net/circleci/github/ExtensionEngine/tailor/develop?icon)]
 [![Codacy
 Badge](https://badgen.net/codacy/grade/d6d198f9c56b4ca799b4624c5bb3e16c/develop)](https://app.codacy.com/manual/ExtensionEngine/tailor)
 [![Known
-Vulnerabilities](https://snyk.io/test/github/ExtensionEngine/tailor/develop/badge.svg)](https://snyk.io/test/github/ExtensionEngine/tailor)
+Vulnerabilities](https://badgen.net/snyk/ExtensionEngine/tailor/develop)](https://snyk.io/test/github/ExtensionEngine/tailor)
 [![GitHub package
 version](https://badgen.net/github/release/ExtensionEngine/tailor)](https://github.com/ExtensionEngine/tailor/releases)
 [![GitHub
@@ -40,12 +40,12 @@ Adaptive course authoring platform.
 - Application is configured via environment variables contained in a file named
   `.env`. Use the `.env.example` file as a template: `cp .env.example .env` and
   enter configuration details.
-- You can init the db (for development) by setting `ENABLE_DEFAULT_SCHEMA=1` and
-  running `npm run db:seed`.
+- Initialize database by running `npm run db migrate`
+- Enable default repository schema by setting env variable `ENABLE_DEFAULT_SCHEMA=1` or define a custom one (more details below).
 - You can create admin user by running `npm run add:admin <email> <password>`
 - App branding is configured via values set in a file named `.brandrc` (or
   `.brandrc.js`). Use the `.brandrc.example` file as a template: `cp
-  .brandrc.example .brandrc` and enter configuration details.
+  .brandrc.example .brandrc` and enter configuration details (Optional).
 
 ## Launch
 
@@ -104,31 +104,31 @@ An array of Schema objects.
 - **structure** `Array<ActivityConfig>` - An array of objects which define
   schema structure.
 - **contentContainers** `Array<ContentContainer>` - Array of content container
-  configs
+  configs.
+- **elementMeta** `Array<ElementMetaConfig>` - An array of objects defining
+  content element metadata.
 
 #### ActivityConfig - Schema structure elements
 
 Configuration for schema structure nodes (activities). Contains the following
 properties:
 
-- **level** `Number` - The hierarchy level for that particular activity type.
 - **type** `String` - Const for marking activity type.
+- **rootLevel** `Boolean` - Used to define first level (root) activity types
 - **subLevels** `Array<String>` - An array of sub-types.
 - **label** `String` - Display label.
 - **color** `String` - Display color in hexadecimal notation.
 - **contentContainers** `Array<String>` - Array of content container types that
   define which content containers can be added.
-- **hasAssessments** `Boolean` - Activity allows adding assessments activities
-  to it.
 - **hasExams** `Boolean` - Activity allows adding exam activities to it.
 - **exams** `Object` - Configuration for activity exams.
-- **relationships** `Array<Relationship>` - Defines what relationships this
+- **relationships** `Array<ActivityRelationship>` - Defines what relationships this
   activity has to other activities.
 - **meta** `Array<Metadata>` - An array of objects defining activity metadata.
 
-#### Relationship
+#### ActivityRelationship
 
-Defines the structure of an activity relationship field.
+Defines the structure of the activity relationship field.
 
 - **type** `String` - Defines the name of the relationship. The relationship
   will be published under this value.
@@ -150,7 +150,7 @@ Defines the structure of an activity relationship field.
 
 #### Metadata
 
-Defines the structure of an activity metadata field.
+Defines the structure of the activity metadata field.
 
 - **key** `String` - Unique key for the field.
 - **type** `String` - Type of the input component used on the client.
@@ -193,6 +193,50 @@ Configuration for content containers. Contains the following properties:
   under which the container will be published. Defaults to `container`. The name
   of the structure component used is the `kebab-cased` version of the `type`
   property. (example: ABC_DEF -> abc-def)
+
+#### ElementMetaConfig
+
+Defines the structure of an content element metadata.
+
+- **type** `String` - Type of content element (example: "IMAGE", "HTML").
+- **inputs** `Array<ElementMeta>` - Defines what meta fields content element has.
+- **relationships** `Array<ElementRelationship>` - Defines what relationship
+  metadata content element has (relationships with content elements from the same 
+  or other activities in the repository).
+
+#### ElementRelationship
+
+Defines the structure of an content element relationship field.
+
+- **key** `String` - Defines the name of the relationship. The relationship
+  will be published under this value.
+- **label** `String` - Display label.
+- **placeholder** `String` - Label for relationship add button and modal title.
+- **multiple** `Boolean` - Defines if the relationship can have multiple
+  associations chosen. True by default.
+- **allowedTypes** `Array<String>` - Defines to what type of content elements
+   given content element can have relationship with (example: `['VIDEO']`).
+
+#### ElementMeta
+
+Defines what meta fields content element has.
+
+- **key** `String` - Unique key for the field.
+- **type** `String` - Type of the input component used on the client. 
+- **label** `String` - Display label.
+- **description** `String` - Description of meta field.
+- **options** `Array<Object>` - Options for certain types of input component.
+  For example, for select component, options would be:
+  ```json
+  "type": "SELECT"
+  "options": [{
+      "label": "First",
+      "value": "first"
+    }, {
+      "label": "Second",
+      "value": "second"
+    }]
+  ```
 
 ### `PREVIEW_URL`
 

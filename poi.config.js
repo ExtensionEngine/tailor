@@ -2,8 +2,14 @@
 
 const path = require('path');
 const serverPort = require('./config/server').port;
+const yn = require('yn');
 
-const { AUTH_JWT_SCHEME, NODE_ENV, STORAGE_PATH } = process.env;
+const {
+  AUTH_JWT_SCHEME,
+  ENABLE_DEFAULT_SCHEMA,
+  NODE_ENV,
+  STORAGE_PATH
+} = process.env;
 const imagesPath = 'assets/img';
 const isProduction = NODE_ENV === 'production';
 const serverUrl = `http://127.0.0.1:${serverPort}`;
@@ -86,10 +92,13 @@ module.exports = {
   envs: {
     API_PATH: '/api/v1/',
     AUTH_JWT_SCHEME,
+    ENABLE_DEFAULT_SCHEMA: yn(ENABLE_DEFAULT_SCHEMA),
     VUEX_STORAGE_KEY: 'TAILOR_APP_STATE'
   },
   babel: {
     transpileModules: [
+      // NOTE: Remove after new version of tce-jodit
+      'auto-bind',
       // NOTE: Packages do NOT contain transpiled code.
       'humanize-string', 'decamelize',
       // NOTE: Unclear why is this necessary :/

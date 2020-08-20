@@ -2,10 +2,6 @@ import compact from 'lodash/compact';
 import transform from 'lodash/transform';
 import Vue from 'vue';
 
-export const selectActivity = (state, _cid) => {
-  state.activity = _cid;
-};
-
 export const toggleActivity = (state, { _cid, expanded }) => {
   const expandedItems = state.outline.expanded;
   expanded = expanded === undefined ? !expandedItems[_cid] : expanded;

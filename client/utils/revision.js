@@ -1,6 +1,7 @@
+import { lower, title as toTitleCase } from 'to-case';
 import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
-import { lower } from 'to-case';
+import isEmpty from 'lodash/isEmpty';
 import reduce from 'lodash/reduce';
 import { typeInfo } from './assessment';
 
@@ -22,27 +23,40 @@ function getAction(operation) {
   }
 }
 
-function getActivityText(activity) {
-  return activity ? ` within '${activity.data.name}' ${lower(activity.label)}` : '';
+function getActivityTypeLabel(activity) {
+  if (!activity) return '';
+  const activityConfig = getLevel(activity.type);
+  return !isEmpty(activityConfig)
+    ? activityConfig.label
+    : toTitleCase(activity.type);
+}
+
+function getContainerContext(activity) {
+  if (!activity) return '';
+  const name = get(activity, 'data.name');
+  const typeLabel = getActivityTypeLabel(activity);
+  return `within ${name} ${typeLabel}`;
 }
 
 function describeActivityRevision(rev, activity) {
-  const { type } = rev.state;
-  let name = get(rev, 'state.data.name');
-  name = name ? `'${name}' ` : '';
-  const level = getLevel(type);
-  const label = level ? level.label : type;
+  const name = get(rev, 'state.data.name', '');
+  const typeLabel = getActivityTypeLabel(rev.state);
   const action = getAction(rev.operation);
-  const activityText = getActivityText(activity);
-  return `${action} ${name}${lower(label)}${activityText}`;
+  const activityConfig = getLevel(rev.state.type);
+  const containerContext = activityConfig.rootLevel
+    ? ''
+    : getContainerContext(activity);
+  return `${action} ${name} ${lower(typeLabel)} ${containerContext}`;
 }
 
 function describeElementRevision(rev, activity) {
   const { type, data } = rev.state;
   const title = type === 'ASSESSMENT' ? typeInfo[data.type].title : type;
   const action = getAction(rev.operation);
-  const activityText = getActivityText(activity);
-  return `${action} ${lower(title)} element${activityText}`;
+  const activityText = activity
+    ? getContainerContext(activity)
+    : 'within deleted container';
+  return `${action} ${lower(title)} element ${activityText}`;
 }
 
 function describeRepositoryRevision(rev) {
@@ -76,12 +90,12 @@ export function getRevisionColor(rev) {
   const DEFAULT_COLOR = '#ccc';
   switch (rev.entity) {
     case 'ACTIVITY': {
-      const level = getLevel(rev.state.type);
-      return level ? level.color : DEFAULT_COLOR;
+      const config = getLevel(rev.state.type);
+      return !isEmpty(config) ? config.color : DEFAULT_COLOR;
     }
     case 'REPOSITORY':
       return '#00BCD4';
-    case 'TEACHING_ELEMENT':
+    case 'CONTENT_ELEMENT':
       return '#FF5722';
     default:
       return DEFAULT_COLOR;

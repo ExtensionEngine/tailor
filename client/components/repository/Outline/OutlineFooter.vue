@@ -3,11 +3,11 @@
     <v-col class="text-left">
       <v-alert
         v-if="!anchor"
-        type="info"
-        color="grey darken-3"
-        prominent outlined
+        color="blue-grey darken-4"
+        icon="mdi-information-variant"
+        prominent text
         class="mb-5">
-        Click on the button bellow in order to create your first item!
+        Click on the button below in order to create your first item!
       </v-alert>
       <create-dialog
         :repository-id="repository.id"
@@ -20,7 +20,6 @@
 
 <script>
 import CreateDialog from '@/components/repository/common/CreateDialog';
-import filter from 'lodash/filter';
 import last from 'lodash/last';
 import { mapGetters } from 'vuex';
 
@@ -30,7 +29,7 @@ export default {
   },
   computed: {
     ...mapGetters('repository', ['repository', 'structure']),
-    levels: vm => filter(vm.structure, { level: 1 }),
+    levels: vm => vm.structure.filter(it => it.rootLevel),
     anchor: vm => last(vm.rootActivities)
   },
   components: { CreateDialog }

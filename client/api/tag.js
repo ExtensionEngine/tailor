@@ -5,8 +5,8 @@ const urls = {
   root: '/tags'
 };
 
-function fetch() {
-  return request.get(urls.root).then(extractData);
+function fetch(params) {
+  return request.get(urls.root, { params }).then(extractData);
 }
 
 export default {

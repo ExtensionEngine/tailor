@@ -2,10 +2,10 @@
   <transition name="slide-fade">
     <div class="revisions">
       <div class="preview">
-        <teaching-element
+        <content-element
           v-if="selectedRevision.resolved"
           :element="selectedRevision.state"
-          :disabled="true" />
+          is-disabled />
       </div>
       <entity-sidebar
         v-show="expanded"
@@ -20,15 +20,19 @@
 </template>
 
 <script>
-import axios from 'client/api/request';
+import ContentElement from 'tce-core/ContentElement';
+import contentElementApi from '@/api/contentElement';
 import EntitySidebar from './EntitySidebar';
 import first from 'lodash/first';
 import get from 'lodash/get';
 import includes from 'lodash/includes';
+import pick from 'lodash/pick';
 import Promise from 'bluebird';
-import TeachingElement from 'components/editor/TeachingElement';
+import revisionApi from '@/api/revision';
 
-const WITHOUT_STATICS = ['HTML', 'BRIGHTCOVE_VIDEO', 'EMBED', 'BREAK'];
+const WITHOUT_STATICS = [
+  'JODIT_HTML', 'BRIGHTCOVE_VIDEO', 'EMBED', 'BREAK', 'HTML'
+];
 
 export default {
   name: 'entity-revisions',
@@ -51,7 +55,7 @@ export default {
     getRevisions() {
       const { entity, state } = this.revision;
       const params = { entity, entityId: state.id };
-      return axios.get(this.baseUrl, { params }).then(({ data: { data } }) => {
+      return revisionApi.fetch(this.repositoryId, params).then(data => {
         data.forEach(it => {
           if (includes(WITHOUT_STATICS, it.state.type)) it.resolved = true;
         });
@@ -63,8 +67,8 @@ export default {
       this.selectedRevision = revision;
       if (revision.resolved) return;
       this.$set(revision, 'loading', true);
-      return axios.get(`${this.baseUrl}${revision.id}`).then(({ data }) => {
-        Object.assign(revision, { ...data, resolved: true });
+      return revisionApi.get(this.repositoryId, revision.id).then(data => {
+        Object.assign(revision, { state: data.state, resolved: true });
         this.$set(this.selectedRevision, revision);
         return Promise.delay(600);
       }).then(() => this.$set(revision, 'loading', false));
@@ -72,7 +76,8 @@ export default {
     rollback(revision) {
       this.$set(revision, 'loading', true);
       const entity = { ...revision.state, paranoid: false };
-      axios.patch(`/repositories/${this.repositoryId}/tes/${entity.id}`, entity)
+      const options = pick(entity, ['id', 'repositoryId']);
+      return contentElementApi.patch(options, entity)
         .then(this.getRevisions)
         .then(revisions => {
           const newRevision = first(revisions);
@@ -91,7 +96,7 @@ export default {
     this.previewRevision(this.revision);
     Promise.delay(700).then(() => (this.expanded = true));
   },
-  components: { EntitySidebar, TeachingElement }
+  components: { ContentElement, EntitySidebar }
 };
 </script>
 

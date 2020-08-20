@@ -5,8 +5,8 @@ require('../shared/logger').enabled = false;
 
 const { getRepositoryAttrs, getRepositoryCatalog } = require('../shared/publishing/helpers');
 const each = require('lodash/each');
-const omit = require('lodash/omit');
 const find = require('lodash/find');
+const omit = require('lodash/omit');
 const { Repository } = require('../shared/database');
 const storage = require('../shared/storage');
 

@@ -5,7 +5,7 @@
       @update="$emit('reorderElement', $event)"
       :elements="introductionElements"
       :activity="group"
-      :supported-types="['HTML', 'IMAGE', 'VIDEO', 'EMBED']"
+      :supported-types="['JODIT_HTML', 'IMAGE', 'VIDEO', 'EMBED', 'HTML']"
       :layout="true">
       <template v-slot:list-item="{ element, dragged }">
         <contained-content
@@ -30,13 +30,13 @@ export default {
   name: 'group-introduction',
   props: {
     group: { type: Object, required: true },
-    tes: { type: Object, required: true }
+    elements: { type: Object, required: true }
   },
   computed: {
     introductionElements() {
-      const { group, tes } = this;
+      const { group, elements } = this;
       const cond = it => it.activityId === group.id && !isQuestion(it.type);
-      return sortBy(filter(tes, cond), 'position');
+      return sortBy(filter(elements, cond), 'position');
     }
   },
   methods: {

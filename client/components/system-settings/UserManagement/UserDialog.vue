@@ -2,10 +2,22 @@
   <tailor-dialog v-model="show" header-icon="mdi-account">
     <template v-slot:header>{{ userData ? 'Edit' : 'Create' }} User</template>
     <template v-slot:body>
+      <div v-if="userData" class="text-left">
+        <v-btn
+          @click="reinvite"
+          :loading="isReinviting"
+          :disabled="isReinviting"
+          color="primary"
+          outlined
+          class="mb-6">
+          Reinvite
+        </v-btn>
+      </div>
       <v-text-field
         v-model="user.email"
         v-validate="{ required: true, email: true, 'unique-email': userData }"
         :error-messages="vErrors.collect('email')"
+        :disabled="!isNewUser"
         label="E-mail"
         placeholder="Enter email..."
         data-vv-name="email"
@@ -44,7 +56,7 @@
     </template>
     <template v-slot:actions>
       <v-btn @click="close" text>Cancel</v-btn>
-      <v-btn @click="save" color="primary" text>Save</v-btn>
+      <v-btn @click="save" color="blue-grey darken-4" text>Save</v-btn>
     </template>
   </tailor-dialog>
 </template>
@@ -73,7 +85,7 @@ export default {
     visible: { type: Boolean, default: false },
     userData: { type: Object, default: () => ({}) }
   },
-  data: () => ({ user: resetUser(), isLoading: false }),
+  data: () => ({ user: resetUser(), isReinviting: false }),
   computed: {
     isNewUser: vm => !vm.user.id,
     roles: vm => map(roles, it => ({ text: humanize(it), value: it })),
@@ -99,8 +111,8 @@ export default {
       this.close();
     },
     reinvite() {
-      this.isLoading = true;
-      api.reinvite(this.user).finally(() => (this.isLoading = false));
+      this.isReinviting = true;
+      api.reinvite(this.user).finally(() => (this.isReinviting = false));
     }
   },
   watch: {

@@ -1,17 +1,16 @@
 <template>
   <div class="tce-brightcove-video">
-    <div v-if="showPlaceholder">
-      <div class="well video-placeholder">
-        <div class="message">
-          <span class="heading">Video placeholder</span>
-          <span v-if="!isFocused">Select to edit</span>
-          <span v-else>Please use toolbar to change video parameters</span>
-        </div>
-      </div>
-    </div>
+    <element-placeholder
+      v-if="showPlaceholder"
+      :is-focused="isFocused"
+      :is-disabled="isDisabled"
+      name="Brightcove video"
+      icon="mdi-video"
+      active-placeholder="Use toolbar to set the video parameters"
+      active-icon="mdi-arrow-up" />
     <div v-else>
-      <div v-if="!isFocused" class="overlay">
-        <div class="message">Double click to preview</div>
+      <div v-if="!isDisabled && !isFocused" class="overlay">
+        <div class="message grey--text text--lighten-2">Double click to preview</div>
       </div>
       <brightcove-player
         ref="player"
@@ -23,13 +22,15 @@
 
 <script>
 import BrightcovePlayer from './Player';
+import { ElementPlaceholder } from 'tce-core';
 import get from 'lodash/get';
 
 export default {
   name: 'tce-brightcove-video',
   props: {
     element: { type: Object, required: true },
-    isFocused: { type: Boolean, default: false }
+    isFocused: { type: Boolean, default: false },
+    isDisabled: { type: Boolean, default: false }
   },
   computed: {
     showPlaceholder() {
@@ -45,7 +46,7 @@ export default {
       if (oldVal && !val && this.$refs.player) this.$refs.player.pause();
     }
   },
-  components: { BrightcovePlayer }
+  components: { BrightcovePlayer, ElementPlaceholder }
 };
 </script>
 
@@ -54,39 +55,19 @@ export default {
   position: relative;
 }
 
-.video-placeholder {
-  .message {
-    padding: 100px 20px;
-
-    .heading {
-      font-size: 24px;
-    }
-
-    span {
-      display: block;
-      font-size: 18px;
-    }
-  }
-}
-
 .overlay {
   position: absolute;
   z-index: 3;
   width: 100%;
   height: 100%;
-  background-color: #333;
+  background-color: #111;
   opacity: 0.9;
 
   .message {
     position: relative;
     top: 45%;
-    color: green;
-    font-size: 22px;
+    font-size: 1.125rem;
   }
-}
-
-.well {
-  margin: 0;
 }
 
 .player ::v-deep .video-js .vjs-big-play-button {

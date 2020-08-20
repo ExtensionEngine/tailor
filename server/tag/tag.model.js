@@ -3,7 +3,7 @@
 const { Model } = require('sequelize');
 
 class Tag extends Model {
-  static fields({ STRING, DATE }) {
+  static fields({ STRING }) {
     return {
       name: {
         type: STRING,
@@ -19,6 +19,22 @@ class Tag extends Model {
       through: RepositoryTag,
       foreignKey: { name: 'tagId', field: 'tag_id' }
     });
+  }
+
+  static getAssociated(user) {
+    const Repository = this.sequelize.model('Repository');
+    const User = this.sequelize.model('User');
+    const Tag = this.sequelize.model('Tag');
+    const includeRepository = {
+      model: Repository,
+      as: 'repositories',
+      attributes: ['id'],
+      required: true
+    };
+    if (user && !user.isAdmin()) {
+      includeRepository.include = [{ model: User, attributes: ['id'], where: { id: user.id } }];
+    }
+    return Tag.findAll({ include: [includeRepository] });
   }
 
   static options() {

@@ -9,20 +9,12 @@ export const activity = (_state, _getters, { route, repository }) => {
   return find(repository.activities.items, { id });
 };
 
-export const contentContainers = (_state, getters, { repository }) => {
+export const contentContainers = (_state, { activity }, { repository }) => {
   const { items: activities } = repository.activities;
-  const { activity } = getters;
   if (!activity) return {};
   const containers = getSupportedContainers(activity.type);
   return reduce(containers, (acc, { type }) => {
     acc[type] = filter(activities, { parentId: activity.id, type });
     return acc;
   }, {});
-};
-
-export const assessments = (_state, getters, rootState) => {
-  const { items: tes } = rootState.repository.tes;
-  const { activity } = getters;
-  if (!activity) return [];
-  return filter(tes, { activityId: activity.id, type: 'ASSESSMENT' });
 };

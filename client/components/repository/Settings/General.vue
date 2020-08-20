@@ -30,14 +30,12 @@ import { mapActions, mapGetters } from 'vuex';
 import api from '@/api/repository';
 import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
-import { getRepositoryMeta } from 'shared/activities';
-import Meta from 'components/common/Meta';
+import { getRepositoryMetadata } from 'shared/activities';
+import Meta from 'tce-core/MetaInput';
 import set from 'lodash/set';
 
 export default {
-  data() {
-    return { publishing: false };
-  },
+  data: () => ({ publishing: false }),
   computed: {
     ...mapGetters('repository', ['repository']),
     requiredData() {
@@ -55,16 +53,15 @@ export default {
         validate: { required: true, min: 2, max: 2000 }
       }];
     },
-    metadata() {
-      return getRepositoryMeta(this.repository);
-    }
+    metadata: vm => getRepositoryMetadata(vm.repository)
   },
   methods: {
     ...mapActions('repositories', ['update']),
-    updateKey(key, value) {
+    async updateKey(key, value) {
       if (find(this.metadata, { key })) key = `data.${key}`;
       const data = cloneDeep(this.repository);
-      this.update(set(data, key, value));
+      await this.update(set(data, key, value));
+      this.$snackbar.show('Saved', { class: 'mb-12' });
     },
     publish() {
       this.publishing = true;

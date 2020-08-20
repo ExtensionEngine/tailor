@@ -1,28 +1,26 @@
 <template>
-  <div class="question-container">
-    <h4>Question</h4>
-    <div
-      :class="{ editing: isEditing, 'question-error': questionError }"
-      class="question">
+  <v-sheet class="question-container mb-4 pa-5 grey lighten-4 elevation-1">
+    <span class="subtitle-2 grey--text text--darken-4">Question</span>
+    <div :class="['question', { 'question-error': questionError }]">
       <draggable v-model="question" v-bind="dragOptions" class="row">
         <contained-content
-          v-for="element in question"
-          :key="element.id"
-          @save="data => elementChanged(element, data)"
+          v-for="element in question" :key="element.id"
+          @save="updateElement(element, $event)"
           @delete="deleteElement(element)"
           :element="element"
-          :is-disabled="!isEditing" />
+          :is-disabled="!isEditing"
+          dense />
       </draggable>
       <add-element
-        v-show="isEditing"
         @add="addElement"
-        :include="['HTML', 'IMAGE', 'EMBED']"
-        :layout="false" />
+        :layout="false"
+        :disabled="!isEditing"
+        :include="['JODIT_HTML', 'IMAGE', 'EMBED', 'HTML']"
+        :class="['add-element', { invisible: !isEditing }]"
+        label="Add question block"
+        large />
     </div>
-    <span v-if="isEditing && helperText" class="help-block">
-      {{ helperText }}
-    </span>
-  </div>
+  </v-sheet>
 </template>
 
 <script>
@@ -31,8 +29,14 @@ import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
 import Draggable from 'vuedraggable';
 import findIndex from 'lodash/findIndex';
-import { helperText } from 'utils/assessment';
 import pullAt from 'lodash/pullAt';
+import set from 'lodash/set';
+
+const DRAG_OPTIONS = {
+  handle: '.drag-handle',
+  scrollSensitivity: 125,
+  scrollSpeed: 15
+};
 
 export default {
   name: 'question',
@@ -50,39 +54,26 @@ export default {
         this.$emit('update', { question });
       }
     },
-    helperText() {
-      const helper = helperText[this.assessment.data.type] || {};
-      return helper.question;
-    },
-    questionError() {
-      return this.errors.includes('question');
-    },
-    dragOptions() {
-      return {
-        handle: '.drag-handle',
-        scrollSpeed: 15,
-        scrollSensitivity: 125
-      };
-    }
+    questionError: vm => vm.errors.includes('question'),
+    dragOptions: () => DRAG_OPTIONS
   },
   methods: {
     addElement(element) {
-      const question = this.assessment.data.question.concat(element);
-      this.$emit('update', { question });
+      const question = cloneDeep(this.assessment.data.question);
+      this.$emit('update', { question: question.concat(element) });
     },
-    elementChanged(element, data) {
+    updateElement(element, data) {
       if (!this.isEditing) return;
-      element = { ...element, data };
       const question = cloneDeep(this.assessment.data.question);
       const index = findIndex(question, { id: element.id });
-      if (index < 0) return;
-      question[index] = element;
-      this.$emit('update', { question });
+      if (index === -1) return;
+      element = { ...question[index], data };
+      this.$emit('update', { question: set(question, index, element) });
     },
     deleteElement(element) {
-      const index = findIndex(this.assessment.data.question, { id: element.id });
-      if (index === -1) return;
       const question = cloneDeep(this.assessment.data.question);
+      const index = findIndex(question, { id: element.id });
+      if (index === -1) return;
       pullAt(question, index);
       this.$emit('update', { question });
     }
@@ -98,17 +89,28 @@ export default {
 <style lang="scss" scoped>
 .question-container {
   clear: both;
-  width: 100%;
-  text-align: left;
-}
+  margin: 0 1.5rem;
 
-.question {
-  padding: 10px;
-  font-size: 22px;
-  text-align: center;
+  @media (max-width: 1263px) {
+    margin: 0;
+  }
 
-  &.question-error {
-    box-shadow: inset 0 -2px 0 #e51c23;
+  .question {
+    padding: 0.75rem 0.75rem 0;
+    font-size: 1.375rem;
+    text-align: center;
+
+    .add-element {
+      margin-top: 0.375rem;
+    }
+
+    .invisible {
+      visibility: none;
+    }
+  }
+
+  .question-error {
+    box-shadow: inset 0 -0.125rem 0 #e51c23;
   }
 }
 </style>

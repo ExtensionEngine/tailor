@@ -9,10 +9,12 @@ const processQuery = require('../shared/util/processListQuery')();
 const { Repository } = require('../shared/database');
 const router = require('express').Router();
 
+/* eslint-disable require-sort/require-sort */
 const activity = require('../activity');
 const comment = require('../comment');
 const revision = require('../revision');
 const contentElement = require('../content-element');
+/* eslint-enable */
 
 router
   .param('repositoryId', getRepository)

@@ -1,8 +1,12 @@
 'use strict';
 
+const {
+  getSiblingTypes,
+  isOutlineActivity
+} = require('../../config/shared/activities');
 const { Model, Op } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
-const { getSiblingLevels } = require('../../config/shared/activities');
+const hooks = require('./hooks');
 const isEmpty = require('lodash/isEmpty');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
@@ -41,6 +45,10 @@ class Activity extends Model {
         type: DATE,
         field: 'published_at'
       },
+      modifiedAt: {
+        type: DATE,
+        field: 'modified_at'
+      },
       createdAt: {
         type: DATE,
         field: 'created_at'
@@ -76,6 +84,10 @@ class Activity extends Model {
     });
   }
 
+  static hooks(Hooks, models) {
+    hooks.add(this, Hooks, models);
+  }
+
   static scopes() {
     const notNull = { [Op.ne]: null };
     return {
@@ -102,7 +114,7 @@ class Activity extends Model {
     const dstActivities = await Activity.bulkCreate(map(src, it => ({
       repositoryId: dstRepositoryId,
       parentId: dstParentId,
-      ...pick(it, ['type', 'position', 'data', 'refs'])
+      ...pick(it, ['type', 'position', 'data', 'refs', 'modifiedAt'])
     })), { returning: true, transaction });
     const ContentElement = this.sequelize.model('ContentElement');
     return Promise.reduce(src, async (acc, it, index) => {
@@ -170,7 +182,8 @@ class Activity extends Model {
 
   remove(options = {}) {
     if (!options.recursive) return this.destroy(options);
-    return this.sequelize.transaction(t => {
+    const { soft } = options;
+    return this.sequelize.transaction(transaction => {
       return this.descendants({ attributes: ['id'] })
         .then(descendants => {
           descendants.all = [...descendants.nodes, ...descendants.leaves];
@@ -180,34 +193,46 @@ class Activity extends Model {
           const ContentElement = this.sequelize.model('ContentElement');
           const activities = map(descendants.all, 'id');
           const where = { activityId: [...activities, this.id] };
-          return removeAll(ContentElement, where, options.soft)
+          return removeAll(ContentElement, where, { soft, transaction })
             .then(() => descendants);
         })
         .then(descendants => {
           const activities = map(descendants.nodes, 'id');
           const where = { parentId: [...activities, this.id] };
-          return removeAll(Activity, where, options.soft);
+          return removeAll(Activity, where, { soft, transaction });
         })
-        .then(() => this.destroy(options))
+        .then(() => this.destroy({ ...options, transaction }))
         .then(() => this);
     });
   }
 
-  reorder(index) {
+  reorder(index, context) {
     return this.sequelize.transaction(transaction => {
-      const types = getSiblingLevels(this.type).map(it => it.type);
-      const filter = { type: types };
+      const filter = { type: getSiblingTypes(this.type) };
       return this.siblings({ filter, transaction }).then(siblings => {
         this.position = calculatePosition(this.id, index, siblings);
-        return this.save({ transaction });
+        return this.save({ transaction, context });
       });
     });
   }
+
+  getOutlineParent(transaction) {
+    return this.getParent({ transaction }).then(parent => {
+      if (!parent) return Promise.resolve();
+      if (isOutlineActivity(parent.type)) return parent;
+      return parent.getOutlineParent(transaction);
+    });
+  }
+
+  touch(transaction) {
+    return this.update({ modifiedAt: new Date() }, { transaction });
+  }
 }
 
-function removeAll(Model, where = {}, soft = false) {
+function removeAll(Model, where = {}, options = {}) {
+  const { soft, transaction } = options;
   if (!soft) return Model.destroy({ where });
-  return Model.update({ detached: true }, { where });
+  return Model.update({ detached: true }, { where, transaction });
 }
 
 module.exports = Activity;
