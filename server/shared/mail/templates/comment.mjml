@@ -35,10 +35,10 @@
           padding-left="0"
           color="#444"
           font-size="16px">
-          Open the activity by clicking the button below:
+          Open the {{activityLabel}} by clicking the button below:
         </mj-text>
         <mj-button mj-class="ctaButton" href="{{href}}">
-          Open activity
+          View {{activityLabel}}
         </mj-button>
         <mj-text
           mj-class="content"

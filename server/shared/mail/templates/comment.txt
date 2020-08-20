@@ -5,7 +5,7 @@ Tailor
 
 {{content}}
 
-Open the activity by clicking the URL below:
+Open {{activityLabel}} by clicking the URL below:
 
 {{href}}
 
