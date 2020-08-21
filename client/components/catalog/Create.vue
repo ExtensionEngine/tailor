@@ -17,7 +17,7 @@
       <v-alert
         :value="!!serverError"
         color="error"
-        icon="mdi-alert-outline"
+        icon="mdi-alert"
         dark
         class="mb-7">
         {{ serverError }}
