@@ -112,13 +112,6 @@ module.exports = {
     config.resolve.alias.merge(aliases);
     config.resolve.extensions.merge(extensions);
 
-    config.module.rule('bootstrap')
-      .test(/bootstrap-sass[/\\]assets[/\\]javascripts[/\\]/)
-      .post()
-      .use('imports-loader')
-      .loader(require.resolve('imports-loader'))
-      .options({ jQuery: 'jquery' });
-
     config.module.rule('event-source-polyfill')
       .test(require.resolve('event-source-polyfill'))
       .post()
