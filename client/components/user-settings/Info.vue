@@ -1,62 +1,57 @@
 <template>
-  <validation-observer v-slot="{ invalid, handleSubmit }" slim>
-    <v-form @submit.prevent="handleSubmit(updateUser)" class="pt-4 px-4">
-      <validation-provider
-        v-slot="{ errors }"
-        mode="eager"
-        :rules="{ required: true, email: true, unique_email: { userData: user } }"
-        name="email">
-        <v-text-field
-          v-model="userData.email"
-          :error-messages="errors"
-          name="email"
-          label="Email"
-          outlined />
-      </validation-provider>
-      <validation-provider
-        v-slot="{ errors }"
-        mode="eager"
-        rules="required|min:2|max:20"
-        name="firstName">
-        <v-text-field
-          v-model="userData.firstName"
-          :error-messages="errors"
-          data-vv-as="First name"
-          data-vv-name="firstName"
-          label="First name"
-          outlined />
-      </validation-provider>
-      <validation-provider
-        v-slot="{ errors }"
-        mode="eager"
-        rules="required|min:2|max:20"
-        name="lastName">
-        <v-text-field
-          v-model="userData.lastName"
-          :error-messages="errors"
-          data-vv-as="Last Name"
-          data-vv-name="lastName"
-          label="Last name"
-          outlined />
-      </validation-provider>
-      <div>
-        <div class="float-right">
-          <v-btn
-            @click="resetForm"
-            :disabled="!hasChanges && !invalid"
-            text>
-            Cancel
-          </v-btn>
-          <v-btn
-            :disabled="!hasChanges || invalid"
-            type="submit"
-            color="blue-grey darken-4"
-            text>
-            Update
-          </v-btn>
-        </div>
-      </div>
-    </v-form>
+  <validation-observer
+    ref="form"
+    v-slot="{ invalid }"
+    @submit.prevent="$refs.form.handleSubmit(submit)"
+    tag="form"
+    class="pt-4 px-4">
+    <validation-provider
+      v-slot="{ errors }"
+      :rules="{ required: true, email: true, unique_email: { userData: user } }">
+      <v-text-field
+        v-model="userData.email"
+        :error-messages="errors"
+        name="email"
+        label="Email"
+        outlined />
+    </validation-provider>
+    <validation-provider
+      v-slot="{ errors }"
+      rules="required|min:2|max:20"
+      name="First name">
+      <v-text-field
+        v-model="userData.firstName"
+        :error-messages="errors"
+        name="firstName"
+        label="First name"
+        outlined />
+    </validation-provider>
+    <validation-provider
+      v-slot="{ errors }"
+      rules="required|min:2|max:20"
+      name="Last Name">
+      <v-text-field
+        v-model="userData.lastName"
+        :error-messages="errors"
+        name="lastName"
+        label="Last name"
+        outlined />
+    </validation-provider>
+    <div class="d-flex justify-end">
+      <v-btn
+        @click="resetForm"
+        :disabled="!hasChanges && !invalid"
+        text>
+        Cancel
+      </v-btn>
+      <v-btn
+        :disabled="!hasChanges || invalid"
+        type="submit"
+        color="blue-grey darken-4"
+        text>
+        Update
+      </v-btn>
+    </div>
   </validation-observer>
 </template>
 
@@ -81,7 +76,7 @@ export default {
   },
   methods: {
     ...mapActions(['updateInfo']),
-    async updateUser() {
+    submit() {
       return this.updateInfo(pick(this.userData, ATTRIBUTES))
         .then(() => {
           this.$snackbar.show('User information updated!');
