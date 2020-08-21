@@ -85,7 +85,8 @@ export default {
         .catch(() => this.$snackbar.error('Something went wrong!'));
     },
     resetForm() {
-      return Object.assign(this.userData, pick(this.user, ATTRIBUTES));
+      Object.assign(this.userData, pick(this.user, ATTRIBUTES));
+      this.$refs.form.reset();
     }
   },
   created() {
