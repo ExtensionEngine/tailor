@@ -3,21 +3,19 @@
   <mj-body padding="10px">
     <mj-include path="./components/header.mjml"/>
     <mj-section
-      padding="10px 10px 20px 10px"
+      padding="0 10px"
       text-align="left">
-      <mj-column
-        padding-bottom="15px"
-        border-bottom="1px solid #ccc">
+      <mj-column border-bottom="1px solid #ccc">
         <mj-text
           mj-class="content"
           padding-left="0"
           color="#444"
           font-size="16px">
-          <b>{{author.label}}</b> left a comment on {{repository}}, {{topic}}.
+          <b>{{author.label}}</b> left a comment on {{repositoryName}}, {{topic}}.
         </mj-text>
       </mj-column>
     </mj-section>
-    <mj-section padding="0 10px">
+    <mj-section padding="20px 10px">
       <mj-column
         background-color="#f1f1f1"
         border-radius="8px">
@@ -27,6 +25,34 @@
           color="#444"
           font-size="16px">
           {{content}}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section padding="0 10px">
+      <mj-column border-top="1px solid #ccc">
+        <mj-text
+          mj-class="content"
+          padding-left="0"
+          color="#444"
+          font-size="16px">
+          View the {{activityLabel}} by clicking the button below:
+        </mj-text>
+        <mj-button mj-class="ctaButton" href="{{href}}">
+          View {{activityLabel}}
+        </mj-button>
+        <mj-text
+          mj-class="content"
+          padding-left="0"
+          color="#444"
+          font-size="16px">
+          Or copy and paste this URL into your browser:
+        </mj-text>
+        <mj-text
+          mj-class="content"
+          padding-left="0"
+          color="#444"
+          font-size="16px">
+          <a href="{{href}}">{{href}}</a>
         </mj-text>
       </mj-column>
     </mj-section>

@@ -55,12 +55,6 @@ export default {
   watch: {
     selectedActivity(val) {
       if (val) this.lastSelectedActivity = val;
-    },
-    $route({ name, query }) {
-      if (query.activityId) return;
-      const { lastSelectedActivity: lastActivity } = this;
-      const activityView = (name === 'repository') || (name === 'tree-view');
-      if (activityView && lastActivity) this.selectActivity(lastActivity.id);
     }
   },
   async created() {
@@ -70,9 +64,7 @@ export default {
     if (!this.activities.length) return;
     if (!this.selectedActivity) {
       const rootActivities = filter(this.activities, { parentId: null });
-      const activity = rootActivities.length
-        ? sortBy(rootActivities, 'position')[0]
-        : null;
+      const [activity] = sortBy(rootActivities, 'position');
       this.selectActivity(activity.id);
     }
     this.expandParents(this.selectedActivity);

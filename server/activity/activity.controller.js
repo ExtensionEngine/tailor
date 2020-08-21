@@ -66,9 +66,10 @@ function publish({ activity }, res) {
     .then(data => res.json({ data }));
 }
 
-function clone({ activity, body }, res) {
+function clone({ activity, body, user }, res) {
   const { repositoryId, parentId, position } = body;
-  return activity.clone(repositoryId, parentId, position).then(mappings => {
+  const context = { userId: user.id };
+  return activity.clone(repositoryId, parentId, position, context).then(mappings => {
     const opts = { where: { id: Object.values(mappings) } };
     return Activity.findAll(opts).then(data => res.json({ data }));
   });

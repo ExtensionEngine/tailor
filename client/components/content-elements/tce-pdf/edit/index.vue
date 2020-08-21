@@ -4,7 +4,7 @@
       v-if="showPlaceholder"
       :is-focused="isFocused"
       :is-disabled="isDisabled"
-      name="PDF"
+      name="PDF component"
       icon="mdi-file-pdf"
       active-placeholder="Use toolbar to upload the pdf"
       active-icon="mdi-arrow-up" />
@@ -137,7 +137,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.9);
+  background: rgba(0, 0, 0, 0.9);
   z-index: 1;
 }
 
