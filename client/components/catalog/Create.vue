@@ -14,19 +14,18 @@
     </template>
     <template v-slot:header>New</template>
     <template v-slot:body>
+      <v-alert
+        :value="!!serverError"
+        color="error"
+        icon="mdi-alert-outline"
+        dark
+        class="mb-7">
+        {{ serverError }}
+      </v-alert>
       <validation-observer
         ref="form"
         @submit.prevent="$refs.form.handleSubmit(submit)"
         tag="form">
-        <validation-provider name="alert">
-          <v-alert
-            :value="error.show"
-            color="error"
-            icon="mdi-alert-outline"
-            outlined>
-            {{ error.message }}
-          </v-alert>
-        </validation-provider>
         <validation-provider v-slot="{ errors }" rules="required" name="schema">
           <v-select
             v-model="repository.schema"
@@ -63,10 +62,9 @@
         <div class="d-flex justify-end">
           <v-btn @click="hide" :disabled="showLoader" text>Cancel</v-btn>
           <v-btn
-            @click.prevent="handleSubmit(submit)"
             :loading="showLoader"
             type="submit"
-            color="blue-grey darken-4"
+            color="primary darken-2"
             text
             class="px-1">
             Create
@@ -95,10 +93,7 @@ export default {
     repository: resetData(),
     isVisible: false,
     showLoader: false,
-    error: {
-      show: false,
-      message: 'An error has occurred!'
-    }
+    serverError: ''
   }),
   computed: {
     ...mapGetters(['isAdmin']),
@@ -109,7 +104,7 @@ export default {
       this.showLoader = true;
       return api.save(this.repository)
         .then(() => this.$emit('created') && this.hide())
-        .catch(() => (this.error.show = true));
+        .catch(() => (this.serverError = 'An error has occurred!'));
     },
     hide() {
       this.showLoader = false;
