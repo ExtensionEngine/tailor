@@ -89,7 +89,7 @@ export default {
       this.$refs.form.reset();
     }
   },
-  created() {
+  mounted() {
     return this.resetForm();
   }
 };
