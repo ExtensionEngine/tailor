@@ -122,18 +122,15 @@ $icon-size: 1.125rem;
     }
   }
 
-  button:hover,
-  button:focus {
+  button:hover,button:focus {
     @include colorize($color: $icon-accent-color);
   }
 
-  .ql-picker:not(.ql-expanded) .ql-picker-label:hover,
-  .ql-picker-item:hover {
+  .ql-picker:not(.ql-expanded) .ql-picker-label:hover,.ql-picker-item:hover {
     @include colorize($color: $icon-accent-color);
   }
 
-  button.ql-active,
-  .ql-picker-label.ql-active {
+  button.ql-active,.ql-picker-label.ql-active {
     @include colorize(
       $color: $icon-accent-color,
       $background: lighten($icon-accent-color, 25%)
