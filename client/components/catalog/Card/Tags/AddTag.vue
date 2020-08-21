@@ -1,14 +1,16 @@
 <template>
-  <validation-observer v-slot="{ handleSubmit }" slim>
-    <tailor-dialog
-      @click:outside="$emit('close')"
-      :value="true"
-      header-icon="mdi-tag-outline">
-      <template #header>Add Tag</template>
-      <template #body>
+  <tailor-dialog
+    @click:outside="$emit('close')"
+    :value="true"
+    header-icon="mdi-tag-outline">
+    <template #header>Add Tag</template>
+    <template #body>
+      <validation-observer
+        ref="form"
+        @submit.prevent="$refs.form.handleSubmit(submit)"
+        tag="form">
         <validation-provider
           v-slot="{ errors }"
-          mode="eager"
           rules="required|min:2|max:20"
           name="name">
           <v-combobox
@@ -19,15 +21,15 @@
             label="Select a tag or add a new one"
             outlined />
         </validation-provider>
-      </template>
-      <template #actions>
-        <v-btn @click="hide" text>Cancel</v-btn>
-        <v-btn @click.prevent="handleSubmit(submit)" color="primary" text>
-          Save
-        </v-btn>
-      </template>
-    </tailor-dialog>
-  </validation-observer>
+        <div class="d-flex justify-end">
+          <v-btn @click="hide" text>Cancel</v-btn>
+          <v-btn type="submit" color="primary darken-2" text>
+            Save
+          </v-btn>
+        </div>
+      </validation-observer>
+    </template>
+  </tailor-dialog>
 </template>
 
 <script>
