@@ -3,13 +3,13 @@
     <tailor-dialog v-model="show" header-icon="mdi-account">
       <template v-slot:header>{{ userData ? 'Edit' : 'Create' }} User</template>
       <template v-slot:body>
-        <div v-if="userData" class="text-left">
+        <div v-if="userData" class="d-flex justify-end">
           <v-btn
             @click="reinvite"
             :loading="isReinviting"
             :disabled="isReinviting"
-            color="primary"
-            outlined
+            color="primary darken-2"
+            text
             class="mb-6">
             Reinvite
           </v-btn>
