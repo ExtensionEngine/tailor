@@ -2,6 +2,7 @@
   <tailor-dialog
     v-if="isAdmin"
     v-model="isVisible"
+    @click:outside="hide"
     header-icon="mdi-folder-plus-outline">
     <template v-slot:activator="{ on }">
       <v-btn
@@ -15,10 +16,11 @@
     <template v-slot:header>New</template>
     <template v-slot:body>
       <v-alert
+        @click:close="serverError = null"
         :value="!!serverError"
         color="error"
         icon="mdi-alert"
-        dark
+        dark dismissible
         class="mb-7">
         {{ serverError }}
       </v-alert>
@@ -102,6 +104,7 @@ export default {
   methods: {
     async submit() {
       this.showLoader = true;
+      this.serverError = '';
       return api.save(this.repository)
         .then(() => this.$emit('created') && this.hide())
         .catch(() => (this.serverError = 'An error has occurred!'));
@@ -109,6 +112,7 @@ export default {
     hide() {
       this.showLoader = false;
       this.isVisible = false;
+      this.serverError = '';
     }
   },
   watch: {
