@@ -118,15 +118,18 @@ $icon-size: 1.125rem;
     }
   }
 
-  button:hover, button:focus {
+  button:hover,
+  button:focus {
     @include colorize($color: $icon-accent-color);
   }
 
-  .ql-picker:not(.ql-expanded) .ql-picker-label:hover, .ql-picker-item:hover {
+  .ql-picker:not(.ql-expanded) .ql-picker-label:hover,
+  .ql-picker-item:hover {
     @include colorize($color: $icon-accent-color);
   }
 
-  button.ql-active, .ql-picker-label.ql-active {
+  button.ql-active,
+  .ql-picker-label.ql-active {
     @include colorize(
       $color: $icon-accent-color,
       $background: lighten($icon-accent-color, 25%)
@@ -155,8 +158,6 @@ $icon-size: 1.125rem;
   border-radius: 0;
   user-select: none;
   cursor: default;
-  // TODO: Remove this after bootstrap gets removed!
-  opacity: initial;
 
   &-arrow {
     position: absolute;
@@ -177,8 +178,6 @@ $icon-size: 1.125rem;
     font-family: $font-family-secondary;
     font-weight: 500;
     text-align: center;
-    // TODO: Remove this after bootstrap gets removed!
-    background: initial;
   }
 }
 </style>

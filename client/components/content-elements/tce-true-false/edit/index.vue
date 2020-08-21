@@ -41,10 +41,3 @@ export default {
   methods: { getLabel }
 };
 </script>
-
-<style lang="scss" scoped>
-// override global bootstrap
-.answer ::v-deep .v-label {
-  margin-bottom: 0;
-}
-</style>
