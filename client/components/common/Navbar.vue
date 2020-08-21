@@ -105,6 +105,7 @@ $font-color: #333;
   display: flex;
   padding-bottom: 0.125rem;
   cursor: pointer;
+  text-decoration: none;
 
   .app-name {
     margin: 0.125rem 0 0 0.625rem;

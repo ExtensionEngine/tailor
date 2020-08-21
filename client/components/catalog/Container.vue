@@ -160,16 +160,15 @@ export default {
   }
 
   &::before {
+    content: " ";
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 230px;
     background: #37474f;
-    box-shadow:
-      0 3px 5px -1px rgba(0,0,0,0.2),
-      0 5px 8px 0 rgba(0,0,0,0.14),
-      0 1px 14px 0 rgba(0,0,0,0.12);
+    box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2),
+      0 5px 8px 0 rgba(0, 0, 0, 0.14), 0 1px 14px 0 rgba(0, 0, 0, 0.12);
   }
 
   &.catalog-empty {
@@ -180,7 +179,8 @@ export default {
   }
 }
 
-.spinner, .no-results {
+.spinner,
+.no-results {
   margin-top: 40px;
 }
 
