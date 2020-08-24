@@ -1,28 +1,37 @@
 <template>
   <div :class="{ collapsed }" class="exam">
-    <div v-if="collapsed" @click="collapsed = false">
-      <h3>{{ title }}</h3>
-      <span class="label label-success pull-right">{{ label }}</span>
+    <div
+      v-if="collapsed"
+      @click="collapsed = false"
+      class="d-flex justify-center align-center">
+      <h3 class="ml-auto">{{ title }}</h3>
+      <v-chip
+        color="green"
+        text-color="white"
+        label small
+        class="ml-auto">
+        <strong>{{ label }}</strong>
+      </v-chip>
     </div>
     <div v-else>
-      <div class="header">
-        <h3 class="pull-left">{{ title }}</h3>
+      <div class="align-baseline header d-flex justify-space-between">
+        <h3 class="text-left">{{ title }}</h3>
         <div class="actions">
-          <span
-            @click="$emit('delete')"
-            class="btn btn-sm btn-link pull-right">
-            Delete
-          </span>
-          <span
-            @click="collapsed = true"
-            class="btn btn-sm btn-link pull-right">
+          <v-btn @click="collapsed = true" text>
             Collapse
-          </span>
+          </v-btn>
+          <v-btn @click="$emit('delete')" text>
+            Delete
+          </v-btn>
         </div>
       </div>
-      <div v-if="!groups.length" class="well">
+      <v-alert
+        v-if="!groups.length"
+        color="blue-grey darken-3"
+        icon="mdi-information-variant"
+        text>
         Click the button below to Create first question group.
-      </div>
+      </v-alert>
       <assessment-group
         v-for="(group, index) in groups"
         :key="group.uid"
@@ -120,7 +129,7 @@ h3 {
   margin-bottom: 13px;
   padding: 0;
   background-color: #fff;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 
   > div {
     padding: 15px 25px;
