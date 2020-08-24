@@ -1,5 +1,5 @@
 <template>
-  <div class="assessment-group">
+  <v-container class="assessment-group">
     <div class="divider"></div>
     <v-row justify="end" no-gutters class="pa-0">
       <v-col cols="2">
@@ -34,9 +34,12 @@
       :group="group"
       :elements="elements" />
     <h4>Questions</h4>
-    <div v-if="!hasAssessments" class="well">
-      Click the button below to Create first Assessment.
-    </div>
+    <v-alert
+      :value="!hasAssessments" color="blue-grey darken-3"
+      icon="mdi-information-variant"
+      text>
+      Click the button below to create  sment.
+    </v-alert>
     <element-list
       @add="addAssessments"
       @update="$emit('reorder:element', $event)"
@@ -52,7 +55,7 @@
           :objective-label="objectiveLabel" />
       </template>
     </element-list>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -170,10 +173,6 @@ h4 {
 
   .assessment-item {
     margin-bottom: 12px;
-  }
-
-  .well {
-    font-size: 16px;
   }
 
   + .assessment-group {

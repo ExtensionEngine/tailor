@@ -1,5 +1,5 @@
 <template>
-  <li
+  <div
     @mouseenter="hover = true"
     @mouseleave="hover = false"
     :class="[assessment.changeSincePublish, {
@@ -57,7 +57,7 @@
         <v-icon>mdi-close</v-icon>
       </v-btn>
     </div>
-  </li>
+  </div>
 </template>
 
 <script>

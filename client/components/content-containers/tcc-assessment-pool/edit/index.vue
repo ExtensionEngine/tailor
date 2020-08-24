@@ -9,7 +9,7 @@
     <v-alert :value="!hasAssessments" color="white" icon="mdi-information-variant">
       Click the button below to create first assessment.
     </v-alert>
-    <ul class="list-group pl-0">
+    <div class="pl-0">
       <assessment-item
         v-for="it in assessments"
         :key="it.uid"
@@ -17,9 +17,8 @@
         @save="saveAssessment"
         @delete="$emit('delete:element', it)"
         :assessment="it"
-        :expanded="isSelected(it)"
-        :is-disabled="isDisabled" />
-    </ul>
+        :expanded="isSelected(it)" />
+    </div>
     <add-element
       v-if="!isDisabled"
       @add="addAssessments"
