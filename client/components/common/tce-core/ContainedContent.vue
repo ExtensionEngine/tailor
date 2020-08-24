@@ -1,22 +1,27 @@
 <template>
-  <div
-    @mouseover="isHovered = true"
-    @mouseleave="isHovered = false"
-    @dragstart="$emit('dragstart')"
-    @dragend="$emit('dragend')"
-    @dragover="scrollContainer"
-    :class="[widthClass, { disabled: isDisabled, hovered: isHovered }]"
-    class="contained-content">
-    <span class="drag-handle">
-      <span class="mdi mdi-drag-vertical"></span>
-    </span>
-    <content-element
-      @add="$emit('add', $event)"
-      @save="$emit('save', $event)"
-      @save:meta="$emit('save:meta', $event)"
-      @delete="$emit('delete')"
-      v-bind="bindings" />
-  </div>
+  <v-container>
+    <v-row>
+      <v-col
+        @mouseover="isHovered = true"
+        @mouseleave="isHovered = false"
+        @dragstart="$emit('dragstart')"
+        @dragend="$emit('dragend')"
+        @dragover="scrollContainer"
+        :cols="cols"
+        :class="[{ disabled: isDisabled, hovered: isHovered }]"
+        class="contained-content">
+        <span class="drag-handle">
+          <span class="mdi mdi-drag-vertical"></span>
+        </span>
+        <content-element
+          @add="$emit('add', $event)"
+          @save="$emit('save', $event)"
+          @save:meta="$emit('save:meta', $event)"
+          @delete="$emit('delete')"
+          v-bind="bindings" />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -42,9 +47,9 @@ export default {
       const { element, isDisabled, isDragged, dense, $attrs: attrs } = this;
       return { element, isDisabled, isDragged, dense, ...attrs };
     },
-    widthClass() {
+    cols() {
       const { element, setWidth } = this;
-      return setWidth ? `col-xs-${get(element, 'data.width', 12)}` : '';
+      return setWidth ? get(element, 'data.width', 12) : '';
     }
   },
   methods: {
