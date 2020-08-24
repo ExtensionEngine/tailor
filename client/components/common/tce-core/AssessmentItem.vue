@@ -1,9 +1,9 @@
 <template>
-  <li
+  <div
     @mouseenter="hover = true"
     @mouseleave="hover = false"
     :class="{ hover }"
-    class="list-group-item assessment-item elevation-1">
+    class="assessment-item elevation-1">
     <span v-if="draggable" class="drag-handle">
       <v-icon>mdi-drag-vertical</v-icon>
     </span>
@@ -43,7 +43,7 @@
         <v-icon>mdi-close</v-icon>
       </v-btn>
     </div>
-  </li>
+  </div>
 </template>
 
 <script>
