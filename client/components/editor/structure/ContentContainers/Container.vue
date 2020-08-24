@@ -1,11 +1,10 @@
 <template>
   <v-card class="content-container mb-5">
-    <div class="actions">
+    <div class="actions d-flex justify-end">
       <v-btn
         @click="$emit('delete')"
         color="secondary darken-1"
-        text
-        class="pull-right">
+        text>
         Delete {{ name }}
       </v-btn>
     </div>
