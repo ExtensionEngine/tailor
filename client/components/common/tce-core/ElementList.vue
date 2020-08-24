@@ -1,25 +1,25 @@
 <template>
-  <div class="list-group">
+  <v-container class="list-group">
     <draggable
       @start="dragElementIndex = $event.oldIndex"
       @end="dragElementIndex = -1"
       @update="reorder"
       :list="elements"
-      v-bind="options"
-      class="row">
-      <div
+      tag="v-row"
+      v-bind="options">
+      <v-col
         v-for="(element, index) in elements"
         :key="getElementId(element)"
         @dragstart="dragElementIndex = index"
         @dragend="dragElementIndex = -1"
-        :class="`col-xs-${get(element, 'data.width', 12)}`">
+        :cols="get(element, 'data.width', 12)">
         <slot
           :element="element"
           :isDragged="dragElementIndex === index"
           :position="index"
           name="list-item">
         </slot>
-      </div>
+      </v-col>
     </draggable>
     <add-element
       v-if="enableAdd"
@@ -30,7 +30,7 @@
       :large="addElementOptions.large"
       :position="nextPosition"
       :layout="layout" />
-  </div>
+  </v-container>
 </template>
 
 <script>
