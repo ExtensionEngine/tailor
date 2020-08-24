@@ -42,9 +42,9 @@ export default {
       } = this;
       return { element, isDisabled, isDragged, isHovered, dense, ...attrs };
     },
-    widthClass() {
+    cols() {
       const { element, setWidth } = this;
-      return setWidth ? `col-xs-${get(element, 'data.width', 12)}` : '';
+      return setWidth ? get(element, 'data.width', 12) : '';
     }
   },
   methods: {
