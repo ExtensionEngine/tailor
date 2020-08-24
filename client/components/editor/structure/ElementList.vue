@@ -1,5 +1,5 @@
 <template>
-  <div
+  <v-container
     :class="{ 'embeded-elements': embedded }"
     class="list-group">
     <draggable
@@ -8,11 +8,12 @@
       @update="$emit('update', $event)"
       :list="list"
       v-bind="options"
-      class="row">
-      <div
+      tag="v-row">
+      <v-col
         v-for="(item, index) in list"
         :key="item._cid || item.id"
-        :class="getContainerClasses(item)"
+        :cols="item.data.width || 12"
+        :class="{ insertable: enableAdd }"
         class="list-item-container">
         <inline-activator
           v-if="enableAdd && !embedded"
@@ -23,7 +24,7 @@
           :dragged="dragElementIndex === index"
           name="list-item">
         </slot>
-      </div>
+      </v-col>
     </draggable>
     <div class="add-element-container mt-5">
       <add-element
@@ -38,7 +39,7 @@
         :large="!embedded"
         :icon="embedded ? 'mdi-plus' : 'mdi-toy-brick-plus'" />
     </div>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -85,11 +86,6 @@ export default {
     onHiddenElementDrawer() {
       this.isElementDrawerVisible = false;
       this.insertPosition = this.lastPosition;
-    },
-    getContainerClasses({ data: { width } }) {
-      const classes = [`col-xs-${width || 12}`];
-      if (this.enableAdd) classes.push('insertable');
-      return classes;
     },
     addElement(element) {
       const type = element.position === this.lastPosition ? 'add' : 'insert';
