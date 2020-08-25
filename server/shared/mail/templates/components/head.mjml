@@ -1,21 +1,20 @@
 <mj-head>
   <mj-attributes>
     <mj-class name="title"
-      font-size="20px"
-      color="#253239" />
+      font-size="28px"
+      color="#37474F" />
     <mj-class name="content"
       color="#222222"
       font-size="14px"
       font-family="'Helvetica Neue', helvetica, arial, sans-serif"
       background-color="white" />
     <mj-class name="ctaButton"
-      width="300px"
       height="50px"
       inner-padding="0 25px"
       padding="25px"
       color="white"
       font-size="16px"
-      background-color="#455B64" />
+      background-color="#37474f" />
     <mj-class name="footer"
       color="#555"
       font-size="12px"
@@ -23,7 +22,8 @@
     <mj-class name="divider"
       padding="20px 25px"
       border-width="1px"
-      border-color="#eaeaea" />
+      border-color="#d2d2d2"
+      border-style="dashed" />
   </mj-attributes>
   <mj-style inline="inline">
     strong {
@@ -31,7 +31,7 @@
     }
 
     a {
-      color: #067df7;
+      color: #C2185B;
       text-decoration: none;
     }
   </mj-style>
