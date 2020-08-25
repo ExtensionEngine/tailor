@@ -1,23 +1,9 @@
-<mj-section padding="10px" text-align="left">
-  <mj-group width="130px">
-    <mj-column
-      width="18%"
-      background-color="#E91D63"
-      border-radius="4px">
-      <mj-text
-        padding="4px 15px"
-        color="#fff"
-        font-size="16px"
-        align="center">
-        T
-      </mj-text>
-    </mj-column>
-    <mj-column width="82%">
-      <mj-text
-        mj-class="title"
-        padding="3px 24px">
+  <mj-section>
+    <mj-column>
+      <mj-image width="80px" height="80px" src="{{origin}}/assets/img/default-email-logo.svg" />
+      <mj-text align="center" mj-class="title">
         Tailor
       </mj-text>
+      <mj-divider mj-class="divider" border-width="2px" />
     </mj-column>
-  </mj-group>
-</mj-section>
+  </mj-section>
