@@ -61,9 +61,7 @@
           <router-link :to="{ name: 'forgot-password' }">
             Forgot password ?
           </router-link>
-          <v-btn @click="hide" :disabled="pristine" text class="ml-auto">
-            Cancel
-          </v-btn>
+          <v-btn @click="hide" text class="ml-auto">Cancel</v-btn>
           <v-btn
             @click.prevent="submit"
             :disabled="pristine || invalid"
