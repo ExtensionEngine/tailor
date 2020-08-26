@@ -63,8 +63,8 @@
           </router-link>
           <v-btn @click="hide" text class="ml-auto">Cancel</v-btn>
           <v-btn
-            @click.prevent="submit"
             :disabled="pristine || invalid"
+            type="submit"
             color="primary" text>
             Update
           </v-btn>
