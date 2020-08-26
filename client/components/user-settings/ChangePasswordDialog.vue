@@ -1,5 +1,4 @@
 <template>
-  <validation-observer v-slot="{ handleSubmit }" ref="form" slim>
     <tailor-dialog v-model="isVisible" header-icon="mdi-lock">
       <template v-slot:activator="{ on }">
         <v-btn
@@ -11,69 +10,70 @@
       </template>
       <template v-slot:header>Change Password</template>
       <template v-slot:body>
+        <validation-observer
+          ref="form"
+          v-slot="{ pristine, invalid }"
+          @submit.prevent="$refs.form.handleSubmit(submit)"
+          tag="form">
+          <validation-provider
+            v-slot="{ errors }"
+            vid="currentPassword"
+            name="current password"
+            rules="required">
+            <v-text-field
+              v-model="currentPassword"
+              :error-messages="errors"
+              type="password"
+              label="Current password"
+              placeholder="Enter current password..."
+              outlined
+              class="my-4" />
+          </validation-provider>
+          <validation-provider
+            v-slot="{ errors }"
+            vid="newPassword"
+            name="new password"
+            rules="required|alphanumerical|min:3|is_not:@currentPassword">
+            <v-text-field
+              v-model="newPassword"
+              :error-messages="errors"
+              type="password"
+              label="New password"
+              placeholder="Enter new password..."
+              outlined
+              class="mb-4" />
+          </validation-provider>
         <validation-provider
           v-slot="{ errors }"
-          mode="eager"
-          rules="required"
-          name="currentPassword">
-          <v-text-field
-            v-model="currentPassword"
-            :error-messages="errors"
-            type="password"
-            label="Current password"
-            placeholder="Enter current password..."
-            data-vv-name="currentPassword"
-            data-vv-as="Current Password"
-            outlined
-            class="my-4" />
-        </validation-provider>
-        <validation-provider
-          v-slot="{ errors }"
-          mode="eager"
-          rules="required|alphanumerical|min:3|is_not:@currentPassword"
-          name="newPassword">
-          <v-text-field
-            ref="newPassword"
-            v-model="newPassword"
-            :error-messages="errors"
-            type="password"
-            label="New password"
-            placeholder="Enter new password..."
-            data-vv-name="newPassword"
-            data-vv-as="New password"
-            outlined
-            class="mb-4" />
-        </validation-provider>
-        <validation-provider
-          v-slot="{ errors }"
-          mode="eager"
-          rules="required|confirmed:newPassword"
-          name="passwordConfirmation">
+          vid="confirmedPassword"
+          name="new password"
+          rules="required|confirmed:newPassword">
           <v-text-field
             v-model="passwordConfirmation"
             :error-messages="errors"
             type="password"
             label="Confirm new password"
             placeholder="Confirm new password..."
-            data-vv-name="passwordConfirmation"
-            data-vv-as="Password confirmation"
             outlined
             class="mb-4" />
         </validation-provider>
-        <div class="pl-2 py-4">
-          <router-link :to="{ name: 'forgot-password' }" class="float-left">
+        <div class="d-flex align-center pl-2 py-4">
+          <router-link :to="{ name: 'forgot-password' }">
             Forgot password ?
           </router-link>
-          <div class="float-right">
-            <v-btn @click="hide" text>Cancel</v-btn>
-            <v-btn @click.prevent="handleSubmit(submit)" color="primary" text>
-              Update
-            </v-btn>
-          </div>
+          <v-btn @click="hide" :disabled="pristine" text class="ml-auto">
+            Cancel
+          </v-btn>
+          <v-btn
+            @click.prevent="submit"
+            :disabled="pristine || invalid"
+            color="primary" text>
+            Update
+          </v-btn>
         </div>
+      </validation-observer>
       </template>
     </tailor-dialog>
-  </validation-observer>
 </template>
 
 <script>
