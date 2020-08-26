@@ -97,7 +97,6 @@ export default {
         .catch(() => this.vErrors.add('default', 'An error has occurred!'));
     },
     hide() {
-      this.repository = resetData();
       this.showLoader = false;
       this.isVisible = false;
     }
@@ -105,7 +104,10 @@ export default {
   watch: {
     isVisible(val) {
       if (!val) return;
-      setTimeout(() => this.$validator.reset(), 60);
+      setTimeout(() => {
+        this.$validator.reset();
+        this.repository = resetData();
+      }, 60);
     }
   },
   components: { TailorDialog }
