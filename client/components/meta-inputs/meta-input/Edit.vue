@@ -3,12 +3,11 @@
     ref="metaKey"
     v-slot="{ errors }"
     :rules="meta.validate"
-    name="metaKey">
+    :name="meta.label">
     <v-text-field
       v-model="value"
       @change="onChange"
       :name="meta.key"
-      :data-vv-as="meta.label"
       :label="meta.label"
       :placeholder="meta.placeholder"
       :error-messages="errors"

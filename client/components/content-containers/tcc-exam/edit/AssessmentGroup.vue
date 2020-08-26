@@ -11,7 +11,6 @@
             v-model="timeLimit"
             :error-messages="errors"
             name="timeLimit"
-            data-vv-as="time limit"
             hint="Time limit (minutes)"
             type="number"
             step="15"

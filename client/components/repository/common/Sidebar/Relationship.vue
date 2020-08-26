@@ -11,7 +11,6 @@
       :name="type"
       :label="label"
       :placeholder="selectPlaceholder"
-      :data-vv-as="label"
       :multiple="multiple"
       :chips="multiple"
       :clearable="!multiple"

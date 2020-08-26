@@ -14,7 +14,6 @@
             :disabled="inProgress"
             label="Name"
             placeholder="Enter name..."
-            data-vv-name="name"
             outlined
             class="mb-4" />
         </validation-provider>
@@ -29,7 +28,6 @@
             :disabled="inProgress"
             label="Description"
             placeholder="Enter description..."
-            data-vv-name="description"
             outlined
             class="mb-4" />
         </validation-provider>

@@ -27,7 +27,6 @@
             :error-messages="errors"
             label="Email"
             placeholder="Enter email..."
-            data-vv-name="email"
             outlined />
         </validation-provider>
         <validation-provider
@@ -40,7 +39,6 @@
             :error-messages="errors"
             label="Role"
             placeholder="Role..."
-            data-vv-name="role"
             outlined />
         </validation-provider>
       </template>

@@ -18,8 +18,9 @@
       <validation-provider
         ref="url"
         v-slot="{ errors }"
+        name="url"
         rules="url"
-        name="url">
+        immediate>
         <v-text-field
           v-model="url"
           @input="onChange"
@@ -28,7 +29,6 @@
           label="URL"
           placeholder="Enter URL..."
           prepend-icon="mdi-link"
-          data-vv-delay="0"
           hide-details dense filled />
       </validation-provider>
     </div>
