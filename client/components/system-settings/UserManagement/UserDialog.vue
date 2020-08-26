@@ -1,6 +1,6 @@
 <template>
   <tailor-dialog v-model="show" header-icon="mdi-account">
-    <template v-slot:header>{{ userData ? "Edit" : "Create" }} User</template>
+    <template v-slot:header>{{ userData ? 'Edit' : 'Create' }} User</template>
     <template v-slot:body>
       <v-btn
         @click="reinvite"
