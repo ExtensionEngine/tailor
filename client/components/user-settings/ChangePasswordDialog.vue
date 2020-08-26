@@ -72,8 +72,8 @@
           </v-btn>
         </div>
       </validation-observer>
-      </template>
-    </tailor-dialog>
+    </template>
+  </tailor-dialog>
 </template>
 
 <script>
