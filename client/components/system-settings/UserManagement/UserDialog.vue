@@ -2,22 +2,20 @@
     <tailor-dialog v-model="show" header-icon="mdi-account">
       <template v-slot:header>{{ userData ? 'Edit' : 'Create' }} User</template>
       <template v-slot:body>
+        <v-btn
+          @click="reinvite"
+          :loading="isReinviting"
+          :disabled="isReinviting"
+          color="primary darken-2"
+          text
+          class="d-block ml-auto mb-6">
+          Reinvite
+        </v-btn>
         <validation-observer
           ref="form"
           v-slot="{ invalid, pristine }"
           @submit.prevent="$refs.form.handleSubmit(submit)"
           tag="form">
-          <div v-if="userData" class="d-flex justify-end">
-            <v-btn
-              @click="reinvite"
-              :loading="isReinviting"
-              :disabled="isReinviting"
-              color="primary darken-2"
-              text
-              class="mb-6">
-              Reinvite
-            </v-btn>
-          </div>
           <validation-provider
             v-slot="{ errors }"
             mode="eager"
