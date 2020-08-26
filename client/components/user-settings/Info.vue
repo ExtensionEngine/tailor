@@ -7,6 +7,7 @@
     class="pt-4 px-4">
     <validation-provider
       v-slot="{ errors }"
+      name="email"
       :rules="{ required: true, email: true, unique_email: { userData: user } }">
       <v-text-field
         v-model="userData.email"
@@ -17,8 +18,8 @@
     </validation-provider>
     <validation-provider
       v-slot="{ errors }"
-      rules="required|min:2|max:20"
-      name="First name">
+      name="first name"
+      rules="required|min:2|max:20">
       <v-text-field
         v-model="userData.firstName"
         :error-messages="errors"
@@ -28,8 +29,8 @@
     </validation-provider>
     <validation-provider
       v-slot="{ errors }"
-      rules="required|min:2|max:20"
-      name="Last Name">
+      name="last name"
+      rules="required|min:2|max:20">
       <v-text-field
         v-model="userData.lastName"
         :error-messages="errors"
@@ -38,17 +39,10 @@
         outlined />
     </validation-provider>
     <div class="d-flex justify-end">
-      <v-btn
-        @click="resetForm"
-        :disabled="!hasChanges && !invalid"
-        text>
+      <v-btn @click="resetForm" :disabled="!hasChanges" text>
         Cancel
       </v-btn>
-      <v-btn
-        :disabled="!hasChanges || invalid"
-        type="submit"
-        color="blue-grey darken-4"
-        text>
+      <v-btn :disabled="invalid || !hasChanges" type="submit" text>
         Update
       </v-btn>
     </div>
