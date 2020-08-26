@@ -1,48 +1,48 @@
 <template>
-    <tailor-dialog v-model="isVisible" header-icon="mdi-lock">
-      <template v-slot:activator="{ on }">
-        <v-btn
-          v-on="on"
-          color="primary darken-1"
-          text>
-          <v-icon small class="mr-1">mdi-lock</v-icon>Change Password
-        </v-btn>
-      </template>
-      <template v-slot:header>Change Password</template>
-      <template v-slot:body>
-        <validation-observer
-          ref="form"
-          v-slot="{ pristine, invalid }"
-          @submit.prevent="$refs.form.handleSubmit(submit)"
-          tag="form">
-          <validation-provider
-            v-slot="{ errors }"
-            vid="currentPassword"
-            name="current password"
-            rules="required">
-            <v-text-field
-              v-model="currentPassword"
-              :error-messages="errors"
-              type="password"
-              label="Current password"
-              placeholder="Enter current password..."
-              outlined
-              class="my-4" />
-          </validation-provider>
-          <validation-provider
-            v-slot="{ errors }"
-            vid="newPassword"
-            name="new password"
-            rules="required|alphanumerical|min:3|is_not:@currentPassword">
-            <v-text-field
-              v-model="newPassword"
-              :error-messages="errors"
-              type="password"
-              label="New password"
-              placeholder="Enter new password..."
-              outlined
-              class="mb-4" />
-          </validation-provider>
+  <tailor-dialog v-model="isVisible" header-icon="mdi-lock">
+    <template v-slot:activator="{ on }">
+      <v-btn
+        v-on="on"
+        color="primary darken-1"
+        text>
+        <v-icon small class="mr-1">mdi-lock</v-icon>Change Password
+      </v-btn>
+    </template>
+    <template v-slot:header>Change Password</template>
+    <template v-slot:body>
+      <validation-observer
+        ref="form"
+        v-slot="{ pristine, invalid }"
+        @submit.prevent="$refs.form.handleSubmit(submit)"
+        tag="form">
+        <validation-provider
+          v-slot="{ errors }"
+          vid="currentPassword"
+          name="current password"
+          rules="required">
+          <v-text-field
+            v-model="currentPassword"
+            :error-messages="errors"
+            type="password"
+            label="Current password"
+            placeholder="Enter current password..."
+            outlined
+            class="my-4" />
+        </validation-provider>
+        <validation-provider
+          v-slot="{ errors }"
+          vid="newPassword"
+          name="new password"
+          rules="required|alphanumerical|min:3|is_not:@currentPassword">
+          <v-text-field
+            v-model="newPassword"
+            :error-messages="errors"
+            type="password"
+            label="New password"
+            placeholder="Enter new password..."
+            outlined
+            class="mb-4" />
+        </validation-provider>
         <validation-provider
           v-slot="{ errors }"
           vid="confirmedPassword"
