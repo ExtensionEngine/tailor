@@ -22,7 +22,7 @@ const URL_REGEX = new RegExp(
 
 const alphanumerical = {
   validate: value => (/\d/.test(value) && /[a-zA-Z]/.test(value)),
-  message: 'The {_field_} field must contain at least 1 letter and 1 numeric value.'
+  message: 'The {_field_} field must contain at least 1 letter and 1 numeric value'
 };
 
 const uniqueEmail = {
@@ -31,13 +31,15 @@ const uniqueEmail = {
     if (userData && email === userData.email) return true;
     return userApi.fetch({ email }).then(({ total }) => !total);
   },
-  message: 'The {_field_} is not unique.'
+  message: 'The {_field_} is not unique'
 };
 
 const url = {
   validate: value => URL_REGEX.test(value),
-  message: 'The {_field_} is invalid.'
+  message: 'The {_field_} is not a valid URL'
 };
+
+isNot.message = 'The {_field_} is equal to the {other} value';
 
 const rules = {
   alphanumerical,
