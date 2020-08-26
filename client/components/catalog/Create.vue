@@ -28,7 +28,7 @@
         ref="form"
         @submit.prevent="$refs.form.handleSubmit(submit)"
         tag="form">
-        <validation-provider v-slot="{ errors }" rules="required" name="schema">
+        <validation-provider v-slot="{ errors }" name="schema" rules="required">
           <v-select
             v-model="repository.schema"
             :items="schemas"

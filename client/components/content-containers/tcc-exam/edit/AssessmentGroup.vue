@@ -5,8 +5,8 @@
       <v-col cols="2">
         <validation-provider
           v-slot="{ errors }"
-          rules="numeric|min_value:0"
-          name="timeLimit">
+          name="time limit"
+          rules="numeric|min_value:0">
           <v-text-field
             v-model="timeLimit"
             :error-messages="errors"

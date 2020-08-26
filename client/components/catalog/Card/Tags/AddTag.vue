@@ -11,8 +11,8 @@
         tag="form">
         <validation-provider
           v-slot="{ errors }"
-          rules="required|min:2|max:20"
-          name="name">
+          name="name"
+          rules="required|min:2|max:20">
           <v-combobox
             v-model="tagInput"
             @keydown.enter="submit"
