@@ -2,8 +2,8 @@
   <validation-provider
     ref="metaKey"
     v-slot="{ errors }"
-    :rules="meta.validate"
-    :name="meta.label">
+    :name="meta.label | loweCase"
+    :rules="meta.validate">
     <v-text-field
       v-model="value"
       @change="onChange"
@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import lowerCase from 'lodash/lowerCase';
 
 export default {
   name: 'meta-input',
@@ -35,6 +36,7 @@ export default {
       if (this.value === this.meta.value) return;
       this.$emit('update', this.meta.key, this.value);
     }
-  }
+  },
+  filters: { lowerCase }
 };
 </script>
