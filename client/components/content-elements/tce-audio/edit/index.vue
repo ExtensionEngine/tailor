@@ -14,8 +14,7 @@
         v-if="source"
         v-show="!error"
         @error="error = 'Audio cannot be played.'"
-        :music="playerOptions"
-        mode="order" />
+        :music="playerOptions" />
       <div v-if="error" class="error">
         <div class="message">
           <v-icon dark class="mr-2">mdi-alert</v-icon>
