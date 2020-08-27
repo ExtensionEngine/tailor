@@ -85,7 +85,7 @@ export default {
     isDisabled: { type: Boolean, default: false }
   },
   data: vm => ({
-    isEditing: !vm.element.id,
+    isEditing: true,
     editedElement: cloneDeep(vm.element),
     undoState: cloneDeep(vm.element),
     errors: [],
@@ -146,6 +146,9 @@ export default {
       const { editedElement: element } = this;
       this.$set(element.data, 'feedback', { ...element.data.feedback, ...data });
     }
+  },
+  watch: {
+    element(val) { this.isEditing = !val.id; }
   },
   components: { Controls, Feedback, Question }
 };
