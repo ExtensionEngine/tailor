@@ -1,6 +1,7 @@
 import {
   confirmed,
   email,
+  ext,
   is_not as isNot,
   max,
   max_value as maxValue,
@@ -45,6 +46,7 @@ const rules = {
   alphanumerical,
   confirmed,
   email,
+  ext,
   isNot,
   max,
   maxValue,
