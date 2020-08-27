@@ -10,7 +10,10 @@
     </template>
     <template v-slot:header>{{ heading || defaultLabel }}</template>
     <template v-slot:body>
-      <validation-observer v-slot="{ invalid }">
+      <validation-observer
+        ref="form"
+        @submit.prevent="$refs.form.handleSubmit(submit)"
+        tag="form">
         <type-select
           v-model="activity.type"
           :options="levels"
@@ -22,7 +25,7 @@
           :meta="input" />
         <div class="d-flex justify-end">
           <v-btn @click="visible = false" text>Cancel</v-btn>
-          <v-btn :disabled="invalid" type="submit" color="primary darken-1" text>
+          <v-btn type="submit" color="primary darken-1" text>
             Create
           </v-btn>
         </div>
@@ -77,7 +80,7 @@ export default {
     setMetaValue(key, val) {
       this.activity.data[key] = val;
     },
-    async create() {
+    async submit() {
       const { activity, anchor } = this;
       if (anchor) {
         activity.parentId = this.addChild ? anchor.id : anchor.parentId;
