@@ -14,7 +14,8 @@
         ref="form"
         v-slot="{ pristine, invalid }"
         @submit.prevent="$refs.form.handleSubmit(submit)"
-        tag="form">
+        tag="form"
+        novalidate>
         <validation-provider
           v-slot="{ errors }"
           vid="currentPassword"

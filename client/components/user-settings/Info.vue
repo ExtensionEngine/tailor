@@ -4,6 +4,7 @@
     v-slot="{ invalid }"
     @submit.prevent="$refs.form.handleSubmit(submit)"
     tag="form"
+    novalidate
     class="pt-4 px-4">
     <validation-provider
       v-slot="{ errors }"

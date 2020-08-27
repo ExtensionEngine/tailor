@@ -6,7 +6,8 @@
         ref="form"
         v-slot="{ invalid }"
         @submit.prevent="$refs.forms.handleSubmit(submit)"
-        tag="form">
+        tag="form"
+        novalidate>
         <validation-provider
           v-slot="{ errors }"
           name="name"

@@ -27,7 +27,8 @@
       <validation-observer
         ref="form"
         @submit.prevent="$refs.form.handleSubmit(submit)"
-        tag="form">
+        tag="form"
+        novalidate>
         <validation-provider v-slot="{ errors }" name="schema" rules="required">
           <v-select
             v-model="repository.schema"
