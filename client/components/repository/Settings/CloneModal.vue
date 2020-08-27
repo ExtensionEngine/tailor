@@ -40,7 +40,7 @@
             :loading="inProgress"
             :disabled="invalid"
             type="submit"
-            color="primary"
+            color="blue-grey darken-4"
             text>
             Clone
           </v-btn>

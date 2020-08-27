@@ -43,7 +43,11 @@
       <v-btn @click="resetForm" :disabled="!hasChanges" text>
         Cancel
       </v-btn>
-      <v-btn :disabled="invalid || !hasChanges" type="submit" text>
+      <v-btn
+        :disabled="invalid || !hasChanges"
+        type="submit"
+        color="blue-grey darken-4"
+        text>
         Update
       </v-btn>
     </div>

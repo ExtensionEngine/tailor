@@ -67,7 +67,7 @@
           <v-btn
             :loading="showLoader"
             type="submit"
-            color="primary darken-2"
+            color="blue-grey darken-4"
             text
             class="px-1">
             Create

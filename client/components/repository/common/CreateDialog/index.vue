@@ -25,7 +25,7 @@
           :meta="input" />
         <div class="d-flex justify-end">
           <v-btn @click="visible = false" text>Cancel</v-btn>
-          <v-btn type="submit" color="primary darken-1" text>
+          <v-btn type="submit" color="blue-grey darken-4" text>
             Create
           </v-btn>
         </div>

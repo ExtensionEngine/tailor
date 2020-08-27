@@ -49,7 +49,7 @@
           <v-btn
             :disabled="isSaving"
             type="submit"
-            color="primary darken-2"
+            color="blue-grey darken-4"
             text>
             Add
           </v-btn>

@@ -66,7 +66,7 @@
           <v-btn
             :disabled="pristine || invalid"
             type="submit"
-            color="primary" text>
+            color="blue-grey darken-4" text>
             Update
           </v-btn>
         </div>
