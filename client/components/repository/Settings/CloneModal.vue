@@ -4,7 +4,6 @@
     <template v-slot:body>
       <validation-observer
         ref="form"
-        v-slot="{ invalid }"
         @submit.prevent="$refs.forms.handleSubmit(submit)"
         tag="form"
         novalidate>
@@ -38,7 +37,6 @@
           <v-btn @click="close" :disabled="inProgress" class="ml-auto" text>Cancel</v-btn>
           <v-btn
             :loading="inProgress"
-            :disabled="invalid"
             type="submit"
             color="blue-grey darken-4"
             text>
