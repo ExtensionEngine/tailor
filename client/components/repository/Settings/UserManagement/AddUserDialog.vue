@@ -1,25 +1,27 @@
 <template>
-  <validation-observer v-slot="{ handleSubmit }" slim>
-    <tailor-dialog
-      :key="isVisible"
-      v-model="isVisible"
-      header-icon="mdi-account"
-      persistent>
-      <template v-slot:activator="{ on }">
-        <v-btn
-          v-on="on"
-          color="primary darken-1"
-          text>
-          <v-icon class="mr-2">mdi-account-plus</v-icon>Add User
-        </v-btn>
-      </template>
-      <template v-slot:header>Add user</template>
-      <template v-slot:body>
+  <tailor-dialog
+    :key="isVisible"
+    v-model="isVisible"
+    header-icon="mdi-account"
+    persistent>
+    <template v-slot:activator="{ on }">
+      <v-btn
+        v-on="on"
+        color="primary darken-1"
+        text>
+        <v-icon class="mr-2">mdi-account-plus</v-icon>Add User
+      </v-btn>
+    </template>
+    <template v-slot:header>Add user</template>
+    <template v-slot:body>
+      <validation-observer
+        ref="form"
+        @submit.prevent="$refs.form.handleSubmit(submit)"
+        tag="form">
         <validation-provider
           v-slot="{ errors }"
-          mode="eager"
-          rules="required|email"
-          name="email">
+          name="email"
+          rules="required|email">
           <v-combobox
             v-model="email"
             @update:search-input="fetchUsers"
@@ -31,8 +33,8 @@
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
-          rules="required"
-          name="role">
+          name="role"
+          rules="required">
           <v-select
             v-model="role"
             :items="roles"
@@ -41,19 +43,19 @@
             placeholder="Role..."
             outlined />
         </validation-provider>
-      </template>
-      <template v-slot:actions>
-        <v-btn @click="close" :disabled="isSaving" text>Cancel</v-btn>
-        <v-btn
-          @click.prevent="handleSubmit(addUser)"
-          :disabled="isSaving"
-          color="primary darken-2"
-          text>
-          Add
-        </v-btn>
-      </template>
-    </tailor-dialog>
-  </validation-observer>
+        <div class="d-flex justify-end">
+          <v-btn @click="close" :disabled="isSaving" text>Cancel</v-btn>
+          <v-btn
+            :disabled="isSaving"
+            type="submit"
+            color="primary darken-2"
+            text>
+            Add
+          </v-btn>
+        </div>
+      </validation-observer>
+    </template>
+  </tailor-dialog>
 </template>
 
 <script>
