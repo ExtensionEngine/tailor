@@ -4,7 +4,7 @@
     <template v-slot:body>
       <validation-observer
         ref="form"
-        @submit.prevent="$refs.forms.handleSubmit(submit)"
+        @submit.prevent="$refs.form.handleSubmit(submit)"
         tag="form"
         novalidate>
         <validation-provider
@@ -72,7 +72,7 @@ export default {
       Object.assign(this, getDefaultState());
       this.$refs.form.reset();
     },
-    async cloneRepository() {
+    async submit() {
       this.inProgress = true;
       const { repositoryId } = this.$route.params;
       const data = { id: repositoryId, ...pick(this, ['name', 'description']) };

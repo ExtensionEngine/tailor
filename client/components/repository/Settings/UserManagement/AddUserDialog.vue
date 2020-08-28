@@ -84,7 +84,7 @@ export default {
   },
   methods: {
     ...mapActions('repository', ['upsertUser']),
-    addUser() {
+    submit() {
       setTimeout(async () => {
         this.isSaving = true;
         const { email, role, $route: { params: { repositoryId } } } = this;
