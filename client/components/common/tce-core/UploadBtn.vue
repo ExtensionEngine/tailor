@@ -4,10 +4,10 @@
       <validation-provider ref="provider" :rules="validate">
         <input
           :ref="id"
-          v-filefilter="'auto'"
           @change="uploadFile"
           :id="id"
           :name="id"
+          :accept="validate.ext"
           type="file"
           class="upload-input">
       </validation-provider>
