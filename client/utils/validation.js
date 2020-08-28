@@ -48,9 +48,9 @@ const rules = {
   integer,
   isNot: { ...isNot, message: 'The {_field_} is equal to the {other} value' },
   max,
-  maxValue,
+  maxValue: { ...maxValue, message: 'The {_field_} must be {max} or less' },
   min,
-  minValue,
+  minValue: { ...minValue, message: 'The {_field_} must be {min} or more' },
   required,
   uniqueEmail,
   url
