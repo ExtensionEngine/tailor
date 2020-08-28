@@ -40,14 +40,12 @@ const url = {
   message: 'The {_field_} is not a valid URL'
 };
 
-isNot.message = 'The {_field_} is equal to the {other} value';
-
 const rules = {
   alphanumerical,
   confirmed,
   email,
   ext,
-  isNot,
+  isNot: { ...isNot, message: 'The {_field_} is equal to the {other} value' },
   max,
   maxValue,
   min,
