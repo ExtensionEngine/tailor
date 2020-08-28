@@ -4,6 +4,7 @@
     <v-row justify="end" no-gutters class="pa-0">
       <v-col cols="2">
         <validation-provider
+          ref="provider"
           v-slot="{ errors }"
           name="time limit"
           rules="numeric|min_value:0">
@@ -124,8 +125,8 @@ export default {
   watch: {
     savedAssessments: 'clearUnsavedAssessments',
     timeLimit: debounce(function (val) {
-      this.$validator.validateAll().then(isValid => {
-        if (!isValid) return;
+      this.$refs.provider.validate().then(({ valid }) => {
+        if (!valid) return;
         const group = cloneDeep(this.group);
         group.data = group.data || {};
         group.data.timeLimit = val;
