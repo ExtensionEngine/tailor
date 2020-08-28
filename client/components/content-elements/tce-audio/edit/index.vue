@@ -14,7 +14,7 @@
         v-if="source"
         v-show="!error"
         :key="source"
-        :sources="playerOptions"
+        :sources="sources"
         type="audio" />
       <div v-if="error" class="error">
         <div class="message">
@@ -44,7 +44,7 @@ export default {
   computed: {
     source: vm => vm.element.data.url,
     showPlaceholder: vm => !vm.source,
-    playerOptions: vm => ([{
+    sources: vm => ([{
       src: vm.source,
       title: 'Audio Track'
     }])
@@ -85,11 +85,17 @@ export default {
 
 <style lang="scss" scoped>
 .tce-audio {
+  display: flex;
   position: relative;
   min-height: 4.5rem;
+  align-items: center;
 
   ::v-deep .element-placeholder {
     padding: 0.5rem !important;
+  }
+
+  .audio-container {
+    width: 100%;
   }
 
   .error {
