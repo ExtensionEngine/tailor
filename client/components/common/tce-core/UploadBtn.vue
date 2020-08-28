@@ -5,7 +5,7 @@
         <input
           :ref="id"
           v-filefilter="'auto'"
-          @change="upload"
+          @change="uploadFile"
           :id="id"
           :name="id"
           type="file"
@@ -50,6 +50,12 @@ export default {
     validate: { type: Object, default: () => ({ ext: [] }) },
     label: { type: String, default: 'Choose a file' },
     sm: { type: Boolean, default: false }
+  },
+  methods: {
+    async uploadFile(e) {
+      const { valid } = await this.$refs.provider.validate(e);
+      if (valid) this.upload(e);
+    }
   },
   watch: {
     uploading(val) {
