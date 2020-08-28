@@ -7,9 +7,9 @@
           ref="provider"
           v-slot="{ errors }"
           name="time limit"
-          rules="numeric|min_value:0">
+          rules="integer|min_value:0">
           <v-text-field
-            v-model="timeLimit"
+            v-model.number="timeLimit"
             :error-messages="errors"
             name="timeLimit"
             hint="Time limit (minutes)"

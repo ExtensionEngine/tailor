@@ -2,12 +2,12 @@ import {
   confirmed,
   email,
   ext,
+  integer,
   is_not as isNot,
   max,
   max_value as maxValue,
   min,
   min_value as minValue,
-  numeric,
   required
 } from 'vee-validate/dist/rules';
 import { extend } from 'vee-validate';
@@ -45,12 +45,12 @@ const rules = {
   confirmed,
   email,
   ext,
+  integer,
   isNot: { ...isNot, message: 'The {_field_} is equal to the {other} value' },
   max,
   maxValue,
   min,
   minValue,
-  numeric,
   required,
   uniqueEmail,
   url
