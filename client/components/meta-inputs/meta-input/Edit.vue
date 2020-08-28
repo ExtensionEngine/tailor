@@ -2,7 +2,7 @@
   <validation-provider
     ref="provider"
     v-slot="{ errors }"
-    :name="meta.label | loweCase"
+    :name="meta.label | lowerCase"
     :rules="meta.validate">
     <v-text-field
       v-model="value"
