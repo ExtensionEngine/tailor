@@ -10,11 +10,12 @@
       active-icon="mdi-arrow-up"
       class="element-placeholder" />
     <div v-show="!showPlaceholder" class="audio-container">
-      <aplayer
+      <plyrue
         v-if="source"
         v-show="!error"
-        @error="error = 'Audio cannot be played.'"
-        :music="playerOptions" />
+        :key="source"
+        :sources="playerOptions"
+        type="audio" />
       <div v-if="error" class="error">
         <div class="message">
           <v-icon dark class="mr-2">mdi-alert</v-icon>
@@ -26,9 +27,9 @@
 </template>
 
 <script>
-import Aplayer from 'vue-aplayer';
 import { ElementPlaceholder } from 'tce-core';
 import get from 'lodash/get';
+import { PlyrueComponent as Plyrue } from 'plyrue';
 
 export default {
   name: 'tce-audio',
@@ -43,12 +44,10 @@ export default {
   computed: {
     source: vm => vm.element.data.url,
     showPlaceholder: vm => !vm.source,
-    playerOptions: vm => ({
+    playerOptions: vm => ([{
       src: vm.source,
-      title: 'Audio Track',
-      artist: ' ',
-      pic: ' '
-    })
+      title: 'Audio Track'
+    }])
   },
   methods: {
     getPlayer() {
@@ -80,7 +79,7 @@ export default {
       });
     }
   },
-  components: { Aplayer, ElementPlaceholder }
+  components: { Plyrue, ElementPlaceholder }
 };
 </script>
 
@@ -91,10 +90,6 @@ export default {
 
   ::v-deep .element-placeholder {
     padding: 0.5rem !important;
-  }
-
-  .aplayer {
-    margin: 0;
   }
 
   .error {
