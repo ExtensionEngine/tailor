@@ -7,16 +7,19 @@
     <template #body>
       <validation-observer
         ref="form"
+        v-slot="{ handleSubmit }"
         @submit.prevent="$refs.form.handleSubmit(submit)"
         tag="form"
         novalidate>
         <validation-provider
+          ref="nameProvider"
           v-slot="{ errors }"
           name="name"
           rules="required|min:2|max:20">
+          <!-- Avoid binding using v-model due to https://github.com/vuetifyjs/vuetify/issues/4679 -->
           <v-combobox
-            v-model="tagInput"
-            @keydown.enter="submit"
+            @update:search-input="update"
+            @keydown.enter="handleSubmit(submit)"
             :items="availableTags"
             :error-messages="errors"
             label="Select a tag or add a new one"
@@ -56,12 +59,13 @@ export default {
       this.$emit('close');
     },
     async submit() {
-      // Temp timeout due to https://github.com/vuetifyjs/vuetify/issues/4679
-      setTimeout(async () => {
-        const data = { name: this.tagInput, repositoryId: this.repository.id };
-        await this.addTag(data);
-        this.hide();
-      });
+      const data = { name: this.tagInput, repositoryId: this.repository.id };
+      await this.addTag(data);
+      this.hide();
+    },
+    update(value) {
+      this.$refs.nameProvider.syncValue(value);
+      this.tagInput = value;
     }
   },
   created() {
