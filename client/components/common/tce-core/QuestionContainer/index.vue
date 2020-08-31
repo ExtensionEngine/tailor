@@ -84,10 +84,10 @@ export default {
     element: { type: Object, required: true },
     isDisabled: { type: Boolean, default: false }
   },
-  data: vm => ({
-    isEditing: !vm.element.id,
-    editedElement: cloneDeep(vm.element),
-    undoState: cloneDeep(vm.element),
+  data: () => ({
+    isEditing: false,
+    editedElement: {},
+    undoState: {},
     errors: [],
     alert: {}
   }),
@@ -151,6 +151,8 @@ export default {
     element: {
       handler() {
         this.isEditing = !this.element.id;
+        this.editedElement = cloneDeep(this.element);
+        this.undoState = cloneDeep(this.element);
       },
       immediate: true
     }
