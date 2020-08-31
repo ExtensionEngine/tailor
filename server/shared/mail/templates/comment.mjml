@@ -40,20 +40,6 @@
         <mj-button mj-class="ctaButton" href="{{href}}">
           View {{activityLabel}}
         </mj-button>
-        <mj-text
-          mj-class="content"
-          padding-left="0"
-          color="#444"
-          font-size="16px">
-          Or copy and paste this URL into your browser:
-        </mj-text>
-        <mj-text
-          mj-class="content"
-          padding-left="0"
-          color="#444"
-          font-size="16px">
-          <a href="{{href}}">{{href}}</a>
-        </mj-text>
       </mj-column>
     </mj-section>
   </mj-body>
