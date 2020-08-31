@@ -16,10 +16,7 @@ import { messages } from 'vee-validate/dist/locale/en.json';
 import snakeCase from 'lodash/snakeCase';
 import userApi from '@/api/user';
 
-const URL_REGEX = new RegExp(
-  `(https?://(?:www.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}
-  |www.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|https?://(?:www.|(?!www))
-  [a-zA-Z0-9]+.[^s]{2,}|www.[a-zA-Z0-9]+.[^s]{2,})$`);
+const URL_REGEX = /^(https?:\/\/)?((?=[a-z0-9-]{2,})([a-z0-9]+(-[a-z0-9]+)?)\.)+[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?/i;
 
 const alphanumerical = {
   validate: value => (/\d/.test(value) && /[a-zA-Z]/.test(value)),
