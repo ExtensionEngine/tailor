@@ -20,10 +20,12 @@
       font-size="12px"
       background-color="white" />
     <mj-class name="divider"
-      padding="20px 25px"
+      padding="20px 10px"
       border-width="1px"
       border-color="#d2d2d2"
       border-style="dashed" />
+    <mj-class name="avatar"
+      padding="10px" />
   </mj-attributes>
   <mj-style inline="inline">
     strong {
@@ -33,6 +35,23 @@
     a {
       color: #C2185B;
       text-decoration: none;
+    }
+
+    .content {
+      color: #222222;
+      font-size: 16px;
+      font-family: 'Helvetica Neue', helvetica, arial, sans-serif;
+    }
+
+    .label {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
     }
   </mj-style>
 </mj-head>
