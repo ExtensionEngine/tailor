@@ -20,7 +20,7 @@
     <validation-provider
       v-slot="{ errors }"
       name="first name"
-      rules="required|min:2|max:20">
+      rules="required|min:2|max:50">
       <v-text-field
         v-model="userData.firstName"
         :error-messages="errors"
@@ -31,7 +31,7 @@
     <validation-provider
       v-slot="{ errors }"
       name="last name"
-      rules="required|min:2|max:20">
+      rules="required|min:2|max:50">
       <v-text-field
         v-model="userData.lastName"
         :error-messages="errors"
