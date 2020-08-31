@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import get from 'lodash/get';
 import lowerCase from 'lodash/lowerCase';
 
 export default {
@@ -31,6 +32,11 @@ export default {
     return {
       value: this.meta.value
     };
+  },
+  computed: {
+    validate() {
+      return get(this.meta, 'validate.rules');
+    }
   },
   methods: {
     async onChange() {
