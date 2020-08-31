@@ -13,7 +13,7 @@
       <plyrue
         v-if="source"
         v-show="!error"
-        :key="source"
+        :key="element._cid"
         :sources="sources"
         type="audio" />
       <div v-if="error" class="error">
@@ -53,9 +53,6 @@ export default {
     getPlayer() {
       return this.$el.querySelector('audio');
     },
-    playAudio() {
-      this.getPlayer().play();
-    },
     pauseAudio() {
       this.getPlayer().pause();
     },
@@ -89,6 +86,7 @@ export default {
   position: relative;
   min-height: 4.5rem;
   align-items: center;
+  justify-content: center;
 
   ::v-deep .element-placeholder {
     padding: 0.5rem !important;
