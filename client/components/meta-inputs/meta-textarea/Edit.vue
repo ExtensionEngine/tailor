@@ -3,7 +3,7 @@
     ref="metaKey"
     v-slot="{ errors }"
     :name="meta.label | lowerCase"
-    :rules="meta.validate">
+    :rules="validate">
     <v-textarea
       v-model="value"
       @change="onChange"
