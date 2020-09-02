@@ -5,31 +5,28 @@ export default function ({
   insert = false,
   prepend = false
 }) {
+  let prev = items[newPosition - 1];
+
+  if (prepend) {
+    const current = items[newPosition];
+    return ((prev ? prev.position : 0) + current.position) * 0.5;
+  }
+
   const next = items[newPosition + 1];
-  const current = items[newPosition];
-  const count = items.length;
-  let position, first, prev;
+  const isLastChild = newPosition + 1 === items.length;
+  let first = items[0];
 
   if (insert) {
-    first = items[0];
     prev = items[newPosition];
-  } else if (prepend) {
-    first = items[0];
-    prev = items[newPosition - 1];
   } else {
     first = items[1];
-    prev = items[newPosition - 1];
   }
 
   if (isFirstChild) {
-    position = first ? first.position * 0.5 : 1;
-  } else if (prepend) {
-    position = ((prev ? prev.position : 0) + current.position) * 0.5;
-  } else if (newPosition + 1 === count) {
-    position = prev.position + 1;
-  } else {
-    position = (prev.position + next.position) * 0.5;
+    return first ? first.position * 0.5 : 1;
+  } else if (isLastChild) {
+    return prev.position + 1;
   }
 
-  return position;
+  return (prev.position + next.position) * 0.5;
 }
