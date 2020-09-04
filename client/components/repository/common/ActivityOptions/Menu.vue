@@ -26,7 +26,7 @@
       :repository-id="activity.repositoryId"
       :levels="supportedLevels"
       :anchor="activity"
-      :prepend-item="prependItem"
+      :action="action"
       :add-child="addChild"
       :heading="`${createDialogHeading} ${activity.data.name}`" />
     <copy-dialog
@@ -47,12 +47,14 @@ import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import first from 'lodash/first';
+import insertActions from '@/utils/insertActions';
 import { mapActions } from 'vuex';
 import optionsMixin from './common';
 import sortBy from 'lodash/sortBy';
 
 const appChannel = EventBus.channel('app');
 const TREE_VIEW_ROUTE = 'tree-view';
+const { ADD_AFTER, ADD_BEFORE } = insertActions;
 
 export default {
   name: 'activity-options-menu',
@@ -64,7 +66,7 @@ export default {
     showCreateDialog: false,
     showCopyDialog: false,
     addChild: false,
-    prependItem: false,
+    action: '',
     supportedLevels: []
   }),
   computed: {
@@ -72,11 +74,11 @@ export default {
       const items = [{
         name: 'Add item above',
         icon: 'arrow-up',
-        action: () => this.setCreateContext(this.sameLevel, { prependItem: true })
+        action: () => this.setCreateContext(this.sameLevel, { action: ADD_BEFORE })
       }, {
         name: 'Add item below',
         icon: 'arrow-down',
-        action: () => this.setCreateContext(this.sameLevel)
+        action: () => this.setCreateContext(this.sameLevel, { action: ADD_AFTER })
       }];
       if (!this.subLevels.length) return items;
       return items.concat({
@@ -95,7 +97,7 @@ export default {
       return items.concat({
         name: 'Copy existing into',
         icon: 'content-copy',
-        action: () => this.setCopyContext(this.subLevels, { addChild: true })
+        action: () => this.setCopyContext(this.subLevels, true)
       });
     },
     menuOptions() {
@@ -108,17 +110,17 @@ export default {
         }
       ];
     },
-    createDialogHeading: ({ addChild, prependItem }) => {
+    createDialogHeading: ({ addChild, action }) => {
       if (addChild) return 'Add into';
-      if (prependItem) return 'Add above';
-      return 'Add below';
+      if (action === ADD_BEFORE) return 'Add above';
+      if (action === ADD_AFTER) return 'Add below';
     }
   },
   methods: {
     ...mapActions('repository/activities', ['remove']),
-    setCreateContext(levels, { addChild = false, prependItem = false } = {}) {
+    setCreateContext(levels, { addChild = false, action = '' } = {}) {
       this.setSupportedLevels(levels, addChild);
-      this.prependItem = prependItem;
+      this.action = action;
       this.showCreateDialog = true;
     },
     setCopyContext(levels, addChild) {

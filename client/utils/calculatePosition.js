@@ -1,13 +1,11 @@
-export default function ({
-  newPosition,
-  items,
-  isFirstChild,
-  insert = false,
-  prepend = false
-}) {
+import insertActions from './insertActions';
+
+const { ADD_AFTER, ADD_BEFORE } = insertActions;
+
+export default function ({ newPosition, items, isFirstChild, action = '' }) {
   let prev = items[newPosition - 1];
 
-  if (prepend) {
+  if (action === ADD_BEFORE) {
     const current = items[newPosition];
     return ((prev ? prev.position : 0) + current.position) * 0.5;
   }
@@ -16,7 +14,7 @@ export default function ({
   const isLastChild = newPosition + 1 === items.length;
   let first = items[0];
 
-  if (insert) {
+  if (action === ADD_AFTER) {
     prev = items[newPosition];
   } else {
     first = items[1];

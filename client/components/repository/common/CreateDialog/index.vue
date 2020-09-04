@@ -51,7 +51,7 @@ export default {
     levels: { type: Array, required: true },
     anchor: { type: Object, default: null },
     addChild: { type: Boolean, default: false },
-    prependItem: { type: Boolean, default: false },
+    action: { type: String, default: '' },
     heading: { type: String, default: '' },
     showActivator: { type: Boolean, default: false },
     activatorLabel: { type: String, default: '' },
@@ -81,11 +81,11 @@ export default {
     async create() {
       const isValid = await this.$validator.validateAll();
       if (!isValid) return;
-      const { activity, anchor, prependItem } = this;
+      const { activity, anchor, action } = this;
       if (anchor) {
         activity.parentId = this.addChild ? anchor.id : anchor.parentId;
       }
-      activity.position = this.calculateInsertPosition(activity, anchor, prependItem);
+      activity.position = this.calculateInsertPosition(activity, anchor, action);
       const item = await this.save({ ...activity });
       if (anchor && (anchor.id === activity.parentId)) this.$emit('expand', anchor);
       this.$emit('created', item);

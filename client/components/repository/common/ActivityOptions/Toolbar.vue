@@ -23,7 +23,7 @@
       :repository-id="activity.repositoryId"
       :levels="supportedLevels"
       :anchor="activity"
-      :prepend-item="prependItem"
+      :action="action"
       :add-child="addChild"
       :heading="`${createDialogHeading} ${activity.data.name}`" />
   </div>
@@ -31,14 +31,17 @@
 
 <script>
 import CreateDialog from '@/components/repository/common/CreateDialog';
+import insertActions from '@/utils/insertActions';
 import isEqual from 'lodash/isEqual';
 import optionsMixin from './common';
+
+const { ADD_AFTER, ADD_BEFORE } = insertActions;
 
 const getOptions = vm => {
   const items = [{
     name: 'Add item above',
     icon: 'arrow-up',
-    action: () => vm.setCreateContext(vm.sameLevel, { prependItem: true })
+    action: () => vm.setCreateContext(vm.sameLevel, { action: ADD_BEFORE })
   }, {
     name: 'Add item below',
     icon: 'arrow-down',
@@ -71,24 +74,24 @@ export default {
   data: () => ({
     showCreateDialog: false,
     supportedLevels: [],
-    prependItem: false,
+    action: false,
     addChild: false
   }),
   computed: {
     options: vm => getOptions(vm),
-    createDialogHeading: ({ addChild, prependItem }) => {
+    createDialogHeading: ({ addChild, action }) => {
       if (addChild) return 'Add into';
-      if (prependItem) return 'Add above';
-      return 'Add below';
+      if (action === ADD_BEFORE) return 'Add above';
+      if (action === ADD_AFTER) return 'Add below';
     }
   },
   methods: {
     isEqual,
-    setCreateContext(levels, { addChild = false, prependItem = false } = {}) {
+    setCreateContext(levels, { addChild = false, action = '' } = {}) {
       this.supportedLevels = levels;
       this.showCreateDialog = true;
       this.addChild = addChild;
-      this.prependItem = prependItem;
+      this.action = action;
     }
   },
   components: { CreateDialog }
