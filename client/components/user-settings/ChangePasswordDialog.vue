@@ -34,7 +34,7 @@
           v-slot="{ errors }"
           vid="newPassword"
           name="new password"
-          rules="required|alphanumerical|min:3|is_not:@currentPassword">
+          rules="required|alphanumerical|min:6|is_not:@currentPassword">
           <v-text-field
             v-model="newPassword"
             :error-messages="errors"
