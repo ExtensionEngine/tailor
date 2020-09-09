@@ -31,7 +31,7 @@
     }
 
     a {
-      color: #C2185B;
+      color: #c2185b;
       text-decoration: none;
     }
   </mj-style>
