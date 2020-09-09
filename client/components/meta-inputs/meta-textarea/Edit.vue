@@ -2,7 +2,7 @@
   <validation-provider
     ref="metaKey"
     v-slot="{ errors }"
-    :name="meta.label | lowerCase"
+    :name="lowerCase(meta.label)"
     :rules="validate">
     <v-textarea
       v-model="value"
@@ -39,13 +39,13 @@ export default {
     }
   },
   methods: {
+    lowerCase,
     async onChange() {
       const { valid } = await this.$refs.metaKey.validate();
       if (!valid) return;
       if (this.value === this.meta.value) return;
       this.$emit('update', this.meta.key, this.value);
     }
-  },
-  filters: { lowerCase }
+  }
 };
 </script>

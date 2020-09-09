@@ -2,7 +2,7 @@
   <validation-provider
     ref="provider"
     v-slot="{ errors }"
-    :name="meta.label | lowerCase"
+    :name="lowerCase(meta.label)"
     :rules="validate">
     <v-text-field
       v-model="value"
@@ -36,13 +36,13 @@ export default {
     }
   },
   methods: {
+    lowerCase,
     async onChange() {
       const { valid } = await this.$refs.provider.validate();
       if (!valid) return;
       if (this.value === this.meta.value) return;
       this.$emit('update', this.meta.key, this.value);
     }
-  },
-  filters: { lowerCase }
+  }
 };
 </script>
