@@ -3,7 +3,7 @@
     ref="activityInput"
     v-slot="{ errors }"
     :rules="{ required: !allowEmpty }"
-    name="activity">
+    :name="lowerCase(label)">
     <v-autocomplete
       v-model="value"
       @input="onRelationshipChanged"
@@ -35,6 +35,7 @@ import get from 'lodash/get';
 import groupBy from 'lodash/groupBy';
 import includes from 'lodash/includes';
 import isEmpty from 'lodash/isEmpty';
+import lowerCase from 'lodash/lowerCase';
 import map from 'lodash/map';
 import pluralize from 'pluralize';
 import set from 'lodash/set';
@@ -89,6 +90,7 @@ export default {
     }
   },
   methods: {
+    lowerCase,
     ...mapActions('repository/activities', ['update']),
     getAssociationIds(activity) {
       return get(activity, `refs.${this.type}`, []);
