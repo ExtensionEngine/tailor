@@ -34,7 +34,7 @@
             class="mb-4" />
         </validation-provider>
         <div class="d-flex justify-end">
-          <v-btn @click="close" :disabled="inProgress" class="ml-auto" text>Cancel</v-btn>
+          <v-btn @click="close" :disabled="inProgress" text>Cancel</v-btn>
           <v-btn
             :loading="inProgress"
             type="submit"
