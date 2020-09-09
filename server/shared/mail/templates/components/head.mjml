@@ -24,8 +24,7 @@
       border-width="1px"
       border-color="#d2d2d2"
       border-style="dashed" />
-    <mj-class name="avatar"
-      padding="10px" />
+    <mj-class name="avatar" padding="10px" />
   </mj-attributes>
   <mj-style inline="inline">
     strong {
