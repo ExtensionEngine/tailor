@@ -3,7 +3,7 @@
     ref="metaKey"
     v-slot="{ errors }"
     :name="lowerCase(meta.label)"
-    :rules="validate">
+    :rules="validationRules">
     <v-textarea
       v-model="value"
       @change="onChange"
@@ -34,9 +34,7 @@ export default {
     };
   },
   computed: {
-    validate() {
-      return get(this.meta, 'validate.rules');
-    }
+    validationRules: vm => get(vm.meta, 'validate.rules')
   },
   methods: {
     lowerCase,
