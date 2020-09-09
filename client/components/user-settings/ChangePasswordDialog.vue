@@ -99,7 +99,7 @@ export default {
       this.$refs.form.reset();
       return Object.assign(this, defaultData());
     },
-    async submit() {
+    submit() {
       const { currentPassword, newPassword } = this;
       return this.changePassword({ currentPassword, newPassword })
         .then(() => this.$snackbar.show('Password changed!'))
