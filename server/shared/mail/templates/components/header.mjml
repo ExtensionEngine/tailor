@@ -1,12 +1,6 @@
 <mj-section>
   <mj-column>
-    <mj-table>
-      <tr style="display: flex;">
-        <td style="display: flex; width: 60px; margin: 0 auto; background: #37474F; border-radius: 50%; padding: 10px">
-          <img width="60px" height="60px" src="{{origin}}/assets/img/default-logo-compact.svg" />
-        </td>
-      </tr>
-    </mj-table>
+    <mj-image width="80px" height="80px" src="{{origin}}/assets/img/default-email-logo.svg" />
     <mj-text align="center" mj-class="title">
       Tailor
     </mj-text>
