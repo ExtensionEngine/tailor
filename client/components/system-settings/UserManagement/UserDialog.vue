@@ -3,12 +3,13 @@
     <template v-slot:header>{{ userData ? 'Edit' : 'Create' }} User</template>
     <template v-slot:body>
       <v-btn
+        v-if="userData"
         @click="reinvite"
         :loading="isReinviting"
         :disabled="isReinviting"
         color="primary darken-2"
         text
-        class="d-block ml-auto mb-6">
+        class="d-block ml-auto mb-4">
         Reinvite
       </v-btn>
       <validation-observer
