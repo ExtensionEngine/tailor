@@ -31,7 +31,7 @@ export default {
     };
   },
   computed: {
-    validationRules: vm => get(vm.meta, 'validate.rules')
+    validationRules: vm => get(vm.meta, 'validate.rules', vm.meta.validate)
   },
   methods: {
     lowerCase,
