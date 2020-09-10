@@ -1,6 +1,6 @@
 <template>
   <validation-provider
-    ref="metaKey"
+    ref="validator"
     v-slot="{ errors }"
     :name="meta.label | lowerCase"
     :rules="validate">
@@ -40,7 +40,7 @@ export default {
   },
   methods: {
     async onChange() {
-      const { valid } = await this.$refs.metaKey.validate();
+      const { valid } = await this.$refs.validator.validate();
       if (!valid) return;
       if (this.value === this.meta.value) return;
       this.$emit('update', this.meta.key, this.value);
