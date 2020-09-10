@@ -16,12 +16,13 @@
     <template v-slot:body>
       <validation-observer
         ref="form"
-        @submit.prevent="$refs.form.handleSubmit(submit)"
+        @submit.prevent="submit"
         tag="form"
         novalidate>
         <validation-provider
           v-slot="{ errors }"
           name="email"
+          mode="lazy"
           rules="required|email">
           <v-combobox
             v-model="email"
@@ -86,6 +87,8 @@ export default {
     ...mapActions('repository', ['upsertUser']),
     submit() {
       setTimeout(async () => {
+        const isValid = await this.$refs.form.validate();
+        if (!isValid) return;
         this.isSaving = true;
         const { email, role, $route: { params: { repositoryId } } } = this;
         await this.upsertUser({ repositoryId, email, role });
