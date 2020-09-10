@@ -43,7 +43,7 @@ const initActivityState = (repositoryId, levels) => ({
   type: levels.length > 1 ? null : levels[0].type,
   data: {}
 });
-const { ADD_INTO } = insertActions;
+const { ADD_AFTER, ADD_INTO } = insertActions;
 
 export default {
   name: 'create-activity-dialog',
@@ -52,7 +52,7 @@ export default {
     repositoryId: { type: Number, required: true },
     levels: { type: Array, required: true },
     anchor: { type: Object, default: null },
-    action: { type: String, default: '' },
+    action: { type: String, default: ADD_AFTER },
     heading: { type: String, default: '' },
     showActivator: { type: Boolean, default: false },
     activatorLabel: { type: String, default: '' },
