@@ -73,7 +73,7 @@ export default {
   data: () => ({
     showCreateDialog: false,
     supportedLevels: [],
-    action: false
+    action: null
   }),
   computed: {
     options: vm => getOptions(vm),
