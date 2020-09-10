@@ -29,7 +29,7 @@
           <b>{{name}}</b>
           <br>
           <br>
-          {{description}}
+          {{{description}}}
         </mj-text>
       </mj-column>
     </mj-section>
