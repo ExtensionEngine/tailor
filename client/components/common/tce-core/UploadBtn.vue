@@ -1,7 +1,7 @@
 <template>
   <div class="file-upload">
     <form @submit.prevent class="upload-form">
-      <validation-provider ref="uploadInput" :rules="validate">
+      <validation-provider ref="validator" :rules="validate">
         <input
           :ref="id"
           @change="validateAndUpload"
@@ -53,7 +53,7 @@ export default {
   },
   methods: {
     async validateAndUpload(e) {
-      const { valid } = await this.$refs.uploadInput.validate(e);
+      const { valid } = await this.$refs.validator.validate(e);
       if (valid) this.upload(e);
     }
   },

@@ -1,6 +1,6 @@
 <template>
   <validation-provider
-    ref="activityInput"
+    ref="validator"
     v-slot="{ errors }"
     :rules="{ required: !allowEmpty }"
     :name="lowerCase(label)">
@@ -96,7 +96,7 @@ export default {
       return get(activity, `refs.${this.type}`, []);
     },
     async onRelationshipChanged(value) {
-      const { valid } = await this.$refs.activityInput.validate();
+      const { valid } = await this.$refs.validator.validate();
       if (!valid) return;
       const associations = compact(castArray(value));
       const activity = cloneDeep(this.activity) || {};
