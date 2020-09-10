@@ -1,6 +1,6 @@
 {
   "name": "tailor",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "codename": "velour",
   "description": "Content authoring platform",
   "author": "ExtensionEngine <info@extensionengine.com>",
@@ -87,7 +87,7 @@
     "jsonwebtoken": "^8.0.0",
     "jszip": "^3.2.2",
     "loaders.css": "^0.1.2",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.20",
     "luxon": "^1.19.3",
     "mime-types": "^2.1.14",
     "minimist": "^1.2.5",
@@ -139,7 +139,7 @@
     "vuex-persist": "^2.2.0",
     "vuex-router-sync": "^5.0.0",
     "yn": "^3.1.1",
-    "yup": "^0.27.0"
+    "yup": "^0.28.2"
   },
   "devDependencies": {
     "@babel/core": "^7.8.3",

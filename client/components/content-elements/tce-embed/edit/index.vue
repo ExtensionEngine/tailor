@@ -5,7 +5,7 @@
       :is-focused="isFocused"
       :is-disabled="isDisabled"
       :dense="dense"
-      name="Embed"
+      name="Embed component"
       icon="mdi-iframe"
       active-placeholder="Use toolbar to enter the url"
       active-icon="mdi-arrow-up" />
