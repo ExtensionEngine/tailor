@@ -4,7 +4,7 @@
       <validation-provider ref="provider" :rules="validate">
         <input
           :ref="id"
-          @change="uploadFile"
+          @change="validateAndUpload"
           :id="id"
           :name="id"
           :accept="validate.ext"
@@ -52,7 +52,7 @@ export default {
     sm: { type: Boolean, default: false }
   },
   methods: {
-    async uploadFile(e) {
+    async validateAndUpload(e) {
       const { valid } = await this.$refs.provider.validate(e);
       if (valid) this.upload(e);
     }

@@ -67,9 +67,10 @@
         <div class="d-flex justify-end">
           <v-btn @click="close" text>Cancel</v-btn>
           <v-btn
-            type="submit"
             :disabled="invalid || pristine"
-            color="blue-grey darken-4" text>
+            type="submit"
+            color="blue-grey darken-4"
+            text>
             Save
           </v-btn>
         </div>

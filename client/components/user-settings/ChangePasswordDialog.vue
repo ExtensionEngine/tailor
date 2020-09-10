@@ -34,7 +34,7 @@
           v-slot="{ errors }"
           vid="newPassword"
           name="new password"
-          rules="required|alphanumerical|min:3|is_not:@currentPassword">
+          rules="required|alphanumerical|min:6|is_not:@currentPassword">
           <v-text-field
             v-model="newPassword"
             :error-messages="errors"
@@ -66,7 +66,8 @@
           <v-btn
             :disabled="pristine || invalid"
             type="submit"
-            color="blue-grey darken-4" text>
+            color="blue-grey darken-4"
+            text>
             Update
           </v-btn>
         </div>
@@ -98,7 +99,7 @@ export default {
       this.$refs.form.reset();
       return Object.assign(this, defaultData());
     },
-    async submit() {
+    submit() {
       const { currentPassword, newPassword } = this;
       return this.changePassword({ currentPassword, newPassword })
         .then(() => this.$snackbar.show('Password changed!'))

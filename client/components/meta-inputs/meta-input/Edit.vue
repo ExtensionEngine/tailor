@@ -3,7 +3,7 @@
     ref="provider"
     v-slot="{ errors }"
     :name="meta.label | lowerCase"
-    :rules="validate">
+    :rules="validationRules">
     <v-text-field
       v-model="value"
       @change="onChange"
@@ -31,9 +31,7 @@ export default {
     };
   },
   computed: {
-    validate() {
-      return get(this.meta, 'validate.rules');
-    }
+    validationRules: vm => get(vm.meta, 'validate.rules')
   },
   methods: {
     async onChange() {
