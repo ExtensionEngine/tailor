@@ -24,7 +24,6 @@
       :levels="supportedLevels"
       :anchor="activity"
       :action="action"
-      :add-child="addChild"
       :heading="`${createDialogHeading} ${activity.data.name}`" />
   </div>
 </template>
@@ -35,23 +34,23 @@ import insertActions from '@/utils/insertActions';
 import isEqual from 'lodash/isEqual';
 import optionsMixin from './common';
 
-const { ADD_AFTER, ADD_BEFORE } = insertActions;
+const { ADD_AFTER, ADD_BEFORE, ADD_INTO } = insertActions;
 
 const getOptions = vm => {
   const items = [{
     name: 'Add item above',
     icon: 'arrow-up',
-    action: () => vm.setCreateContext(vm.sameLevel, { action: ADD_BEFORE })
+    action: () => vm.setCreateContext(vm.sameLevel, ADD_BEFORE)
   }, {
     name: 'Add item below',
     icon: 'arrow-down',
-    action: () => vm.setCreateContext(vm.sameLevel)
+    action: () => vm.setCreateContext(vm.sameLevel, ADD_AFTER)
   }];
   if (vm.subLevels.length) {
     items.push({
       name: 'Add item into',
       icon: 'subdirectory-arrow-right',
-      action: () => vm.setCreateContext(vm.subLevels, { addChild: true })
+      action: () => vm.setCreateContext(vm.subLevels, ADD_INTO)
     });
   }
   if (vm.isEditable) {
@@ -74,23 +73,24 @@ export default {
   data: () => ({
     showCreateDialog: false,
     supportedLevels: [],
-    action: false,
-    addChild: false
+    action: false
   }),
   computed: {
     options: vm => getOptions(vm),
-    createDialogHeading: ({ addChild, action }) => {
-      if (addChild) return 'Add into';
-      if (action === ADD_BEFORE) return 'Add above';
-      if (action === ADD_AFTER) return 'Add below';
+    createDialogHeading: ({ action }) => {
+      const heading = {
+        [ADD_BEFORE]: 'Add above',
+        [ADD_AFTER]: 'Add below',
+        [ADD_INTO]: 'Add into'
+      };
+      return heading[action];
     }
   },
   methods: {
     isEqual,
-    setCreateContext(levels, { addChild = false, action = '' } = {}) {
+    setCreateContext(levels, action = null) {
       this.supportedLevels = levels;
       this.showCreateDialog = true;
-      this.addChild = addChild;
       this.action = action;
     }
   },

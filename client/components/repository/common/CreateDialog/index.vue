@@ -32,6 +32,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import { getActivityMetadata } from 'shared/activities';
+import insertActions from '@/utils/insertActions';
 import MetaInput from 'tce-core/MetaInput';
 import TailorDialog from '@/components/common/TailorDialog';
 import TypeSelect from './TypeSelect';
@@ -42,6 +43,7 @@ const initActivityState = (repositoryId, levels) => ({
   type: levels.length > 1 ? null : levels[0].type,
   data: {}
 });
+const { ADD_INTO } = insertActions;
 
 export default {
   name: 'create-activity-dialog',
@@ -50,7 +52,6 @@ export default {
     repositoryId: { type: Number, required: true },
     levels: { type: Array, required: true },
     anchor: { type: Object, default: null },
-    addChild: { type: Boolean, default: false },
     action: { type: String, default: '' },
     heading: { type: String, default: '' },
     showActivator: { type: Boolean, default: false },
@@ -83,7 +84,7 @@ export default {
       if (!isValid) return;
       const { activity, anchor, action } = this;
       if (anchor) {
-        activity.parentId = this.addChild ? anchor.id : anchor.parentId;
+        activity.parentId = action === ADD_INTO ? anchor.id : anchor.parentId;
       }
       activity.position = this.calculateInsertPosition(activity, anchor, action);
       const item = await this.save({ ...activity });

@@ -60,6 +60,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import activityApi from 'client/api/activity';
+import insertActions from '@/utils/insertActions';
 import pluralize from 'pluralize';
 import Promise from 'bluebird';
 import repositoryApi from 'client/api/repository';
@@ -68,13 +69,15 @@ import { SCHEMAS } from 'shared/activities';
 import sortBy from 'lodash/sortBy';
 import TailorDialog from '@/components/common/TailorDialog';
 
+const { ADD_INTO } = insertActions;
+
 export default {
   name: 'copy-activity',
   props: {
     repositoryId: { type: Number, required: true },
     levels: { type: Array, required: true },
     anchor: { type: Object, default: null },
-    copyInto: { type: Boolean, default: false },
+    action: { type: String, default: '' },
     showActivator: { type: Boolean, default: false }
   },
   data: () => ({
@@ -89,11 +92,11 @@ export default {
   computed: {
     ...mapGetters('repository', ['repository']),
     schema: vm => SCHEMAS.find(it => it.id === vm.repository.schema),
-    copyBtnLabel() {
-      const selectionLabel = this.selectedActivities.length
-        ? `${this.selectedActivities.length} items`
+    copyBtnLabel: ({ selectedActivities, action }) => {
+      const selectionLabel = selectedActivities.length
+        ? `${selectedActivities.length} items`
         : '';
-      return `Copy ${selectionLabel} ${this.copyInto ? 'inside' : ''}`;
+      return `Copy ${selectionLabel} ${action === ADD_INTO ? 'inside' : ''}`;
     }
   },
   methods: {
@@ -110,15 +113,16 @@ export default {
     },
     async copyActivity(activity) {
       const { id: srcId, repositoryId: srcRepositoryId, type } = activity;
+      const { anchor, action } = this;
       const payload = {
         srcId,
         srcRepositoryId,
         repositoryId: this.repositoryId,
         type,
-        position: this.calculateInsertPosition(activity, this.anchor)
+        position: this.calculateInsertPosition(activity, anchor)
       };
-      if (this.anchor) {
-        payload.parentId = this.copyInto ? this.anchor.id : this.anchor.parentId;
+      if (anchor) {
+        payload.parentId = action === ADD_INTO ? anchor.id : anchor.parentId;
       }
       return this.clone(payload);
     },
