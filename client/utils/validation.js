@@ -40,8 +40,8 @@ const url = {
 const notWithin = {
   params: ['values', 'checkBy'],
   validate: (value, { values, checkBy }) => {
-    if (!checkBy) return !some(values, value);
-    return !some(values, { [checkBy]: value });
+    const query = checkBy ? { [checkBy]: value } : value;
+    return !some(values, query);
   },
   message: 'This {_field_} already exists'
 };

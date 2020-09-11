@@ -21,9 +21,9 @@
         novalidate>
         <validation-provider
           v-slot="{ errors }"
+          :rules="{ required: true, email: true, not_within: [users, 'email'] }"
           name="email"
-          mode="lazy"
-          :rules="{ required: true, email: true, not_within: [users, 'email'] }">
+          mode="lazy">
           <v-combobox
             v-model="email"
             @update:search-input="fetchUsers"
