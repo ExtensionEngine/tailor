@@ -11,6 +11,7 @@
     <template v-slot:header>{{ heading || defaultLabel }}</template>
     <template v-slot:body>
       <validation-observer
+        :key="visible"
         ref="form"
         @submit.prevent="$refs.form.handleSubmit(submit)"
         tag="form">
