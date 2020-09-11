@@ -23,7 +23,7 @@
           v-slot="{ errors }"
           name="email"
           mode="lazy"
-          rules="required|email">
+          :rules="{ required: true, email: true, not_within: [users, 'email'] }">
           <v-combobox
             v-model="email"
             @update:search-input="fetchUsers"
@@ -61,8 +61,8 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import api from '@/api/user';
-import { mapActions } from 'vuex';
 import TailorDialog from '@/components/common/TailorDialog';
 import throttle from 'lodash/throttle';
 
@@ -83,6 +83,7 @@ export default {
       ...getDefaultData(this.roles)
     };
   },
+  computed: mapGetters('repository', ['users']),
   methods: {
     ...mapActions('repository', ['upsertUser']),
     submit() {

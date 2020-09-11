@@ -14,6 +14,7 @@ import { extend } from 'vee-validate';
 import forEach from 'lodash/forEach';
 import { messages } from 'vee-validate/dist/locale/en.json';
 import snakeCase from 'lodash/snakeCase';
+import some from 'lodash/some';
 import userApi from '@/api/user';
 
 const URL_REGEX = /^(https?:\/\/)?((?=[a-z0-9-]{2,})([a-z0-9]+(-[a-z0-9]+)?)\.)+[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?/i;
@@ -37,6 +38,15 @@ const url = {
   message: 'The {_field_} is not a valid URL'
 };
 
+const notWithin = {
+  params: ['values', 'checkBy'],
+  validate: (value, { values, checkBy }) => {
+    if (!checkBy) return !some(values, value);
+    return !some(values, { [checkBy]: value });
+  },
+  message: 'This {_field_} already exists'
+};
+
 const rules = {
   alphanumerical,
   confirmed,
@@ -48,6 +58,7 @@ const rules = {
   maxValue: { ...maxValue, message: 'The {_field_} must be {max} or less' },
   min,
   minValue: { ...minValue, message: 'The {_field_} must be {min} or more' },
+  notWithin,
   required,
   uniqueEmail,
   url
