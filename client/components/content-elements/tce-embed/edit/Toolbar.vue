@@ -15,28 +15,30 @@
         prepend-icon="mdi-resize"
         hide-details dense filled
         class="height-input" />
-      <v-text-field
-        v-model="url"
-        v-validate="{ url: true }"
-        @input="onChange"
-        :error-messages="vErrors.collect('url')"
+      <validation-provider
+        ref="urlValidator"
+        v-slot="{ errors }"
         name="url"
-        label="URL"
-        placeholder="Enter URL..."
-        prepend-icon="mdi-link"
-        data-vv-delay="0"
-        hide-details dense filled />
+        rules="url">
+        <v-text-field
+          v-model="url"
+          @keyup="onChange"
+          :error-messages="errors"
+          name="url"
+          label="URL"
+          placeholder="Enter URL..."
+          prepend-icon="mdi-link"
+          hide-details dense filled />
+      </validation-provider>
     </div>
   </v-toolbar>
 </template>
 
 <script>
 import debounce from 'lodash/debounce';
-import { withValidation } from 'utils/validation';
 
 export default {
   name: 'tce-embed-toolbar',
-  mixins: [withValidation()],
   inject: ['$elementBus'],
   props: {
     element: { type: Object, required: true }
@@ -48,8 +50,8 @@ export default {
   methods: {
     async onChange() {
       const { height, url } = this;
-      const isValid = await this.$validator.validateAll();
-      if (!isValid) return;
+      const { valid } = await this.$refs.urlValidator.validate();
+      if (!valid) return;
       this.save({ height, url });
     },
     save: debounce(function (data) {
