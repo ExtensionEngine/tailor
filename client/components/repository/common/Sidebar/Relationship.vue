@@ -3,7 +3,8 @@
     ref="validator"
     v-slot="{ errors }"
     :rules="{ required: !allowEmpty }"
-    :name="lowerCase(label)">
+    :name="lowerCase(label)"
+    immediate>
     <v-autocomplete
       v-model="value"
       @input="onRelationshipChanged"
