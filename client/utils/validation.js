@@ -15,9 +15,8 @@ import forEach from 'lodash/forEach';
 import { messages } from 'vee-validate/dist/locale/en.json';
 import snakeCase from 'lodash/snakeCase';
 import some from 'lodash/some';
+import urlRegex from 'url-regex';
 import userApi from '@/api/user';
-
-const URL_REGEX = /^(https?:\/\/)?((?=[a-z0-9-]{2,})([a-z0-9]+(-[a-z0-9]+)?)\.)+[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?/i;
 
 const alphanumerical = {
   validate: value => (/\d/.test(value) && /[a-zA-Z]/.test(value)),
@@ -34,7 +33,7 @@ const uniqueEmail = {
 };
 
 const url = {
-  validate: value => URL_REGEX.test(value),
+  validate: value => urlRegex({ exact: true }).test(value),
   message: 'The {_field_} is not a valid URL'
 };
 
