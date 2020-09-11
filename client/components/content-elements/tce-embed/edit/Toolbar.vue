@@ -16,14 +16,13 @@
         hide-details dense filled
         class="height-input" />
       <validation-provider
-        ref="url"
+        ref="urlValidator"
         v-slot="{ errors }"
         name="url"
-        rules="url"
-        immediate>
+        rules="url">
         <v-text-field
           v-model="url"
-          @input="onChange"
+          @keyup="onChange"
           :error-messages="errors"
           name="url"
           label="URL"
@@ -51,7 +50,7 @@ export default {
   methods: {
     async onChange() {
       const { height, url } = this;
-      const { valid } = await this.$refs.url.validate();
+      const { valid } = await this.$refs.urlValidator.validate();
       if (!valid) return;
       this.save({ height, url });
     },
