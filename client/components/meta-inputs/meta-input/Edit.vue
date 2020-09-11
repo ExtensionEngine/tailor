@@ -1,23 +1,27 @@
 <template>
-  <v-text-field
-    v-model="value"
-    v-validate="meta.validate"
-    @change="onChange"
-    :name="meta.key"
-    :data-vv-as="meta.label"
-    :label="meta.label"
-    :placeholder="meta.placeholder"
-    :error-messages="vErrors.collect(meta.key)"
-    outlined
-    class="my-2" />
+  <validation-provider
+    ref="validator"
+    v-slot="{ errors }"
+    :name="lowerCase(meta.label)"
+    :rules="validationRules">
+    <v-text-field
+      v-model="value"
+      @change="onChange"
+      :name="meta.key"
+      :label="meta.label"
+      :placeholder="meta.placeholder"
+      :error-messages="errors"
+      outlined
+      class="my-2" />
+  </validation-provider>
 </template>
 
 <script>
-import { withValidation } from 'utils/validation';
+import get from 'lodash/get';
+import lowerCase from 'lodash/lowerCase';
 
 export default {
   name: 'meta-input',
-  mixins: [withValidation({ inherit: true })],
   props: {
     meta: { type: Object, default: () => ({ value: null }) }
   },
@@ -26,10 +30,14 @@ export default {
       value: this.meta.value
     };
   },
+  computed: {
+    validationRules: vm => get(vm.meta, 'validate.rules', vm.meta.validate)
+  },
   methods: {
+    lowerCase,
     async onChange() {
-      const isValid = await this.$validator.validate(this.meta.key);
-      if (!isValid) return;
+      const { valid } = await this.$refs.validator.validate();
+      if (!valid) return;
       if (this.value === this.meta.value) return;
       this.$emit('update', this.meta.key, this.value);
     }
