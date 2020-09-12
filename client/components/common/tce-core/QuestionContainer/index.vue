@@ -16,7 +16,7 @@
       :errors="errors" />
     <div class="content">
       <component
-        :is="resolveComponentName(element)"
+        :is="componentName"
         @update="update"
         @alert="alert = $event"
         :assessment="editedElement.data"
@@ -76,6 +76,8 @@ const WITH_FEEDBACK = ['MC', 'SC', 'TF'];
 const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
 const validationOptions = { recursive: true, abortEarly: false };
 
+const resolveComponentName = type => getComponentName(processAnswerType(type));
+
 export default {
   name: 'tce-question-container',
   inject: ['$teRegistry'],
@@ -91,7 +93,6 @@ export default {
     alert: {}
   }),
   computed: {
-    conifg: vm => vm.$teRegistry.get(vm.answerType),
     schema() {
       const elementSchema = this.conifg.schema;
       return yup.object().shape({
@@ -100,14 +101,13 @@ export default {
       });
     },
     answerType: vm => vm.element.data.type,
+    conifg: vm => vm.$teRegistry.get(vm.answerType),
     isGraded: vm => vm.element.type === 'ASSESSMENT',
+    componentName: vm => resolveComponentName(vm.answerType),
     showFeedback: vm => WITH_FEEDBACK.includes(vm.answerType),
     hintError: vm => vm.errors.includes('hint')
   },
   methods: {
-    resolveComponentName(element) {
-      return getComponentName(processAnswerType(this.answerType));
-    },
     edit() {
       this.editedElement = cloneDeep(this.element);
       this.undoState = cloneDeep(this.element);
