@@ -52,7 +52,6 @@
         @save="save"
         @cancel="cancel"
         :is-editing="isEditing"
-        :has-errors="hasErrors"
         class="controls" />
     </div>
   </v-card>
@@ -100,7 +99,6 @@ export default {
         ...this.isGraded ? elementSchema : omit(elementSchema, ['correct'])
       });
     },
-    hasErrors: vm => !!vm.errors.length,
     answerType: vm => vm.element.data.type,
     isGraded: vm => vm.element.type === 'ASSESSMENT',
     showFeedback: vm => WITH_FEEDBACK.includes(vm.answerType),
