@@ -2,8 +2,8 @@
   <tailor-dialog
     v-if="isAdmin"
     v-model="isVisible"
-    @click:outside="hide"
-    header-icon="mdi-folder-plus-outline">
+    header-icon="mdi-folder-plus-outline"
+    persistent>
     <template v-slot:activator="{ on }">
       <v-btn
         v-on="on"
@@ -13,7 +13,7 @@
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </template>
-    <template v-slot:header>New</template>
+    <template v-slot:header>Add</template>
     <template v-slot:body>
       <v-alert
         @click:close="serverError = null"
@@ -29,16 +29,47 @@
         @submit.prevent="$refs.form.handleSubmit(submit)"
         tag="form"
         novalidate>
-        <validation-provider v-slot="{ errors }" name="schema" rules="required">
-          <v-select
-            v-model="repository.schema"
-            :items="schemas"
-            :error-messages="errors"
-            item-value="id"
-            item-text="name"
-            outlined
-            class="mb-3" />
-        </validation-provider>
+        <v-tabs
+          v-model="tab"
+          active-class="highlight"
+          height="38"
+          grow>
+          <v-tab key="schema">New</v-tab>
+          <v-tab key="archive">Import</v-tab>
+        </v-tabs>
+        <v-tabs-items v-model="tab" class="mt-4">
+          <v-tab-item key="schema">
+            <validation-provider
+              v-slot="{ errors }"
+              :rules="{ required: isCreate }"
+              name="schema">
+              <v-select
+                v-model="repository.schema"
+                :items="schemas"
+                :error-messages="errors"
+                item-value="id"
+                item-text="name"
+                label="Schema"
+                outlined />
+            </validation-provider>
+          </v-tab-item>
+          <v-tab-item key="archive">
+            <validation-provider
+              v-slot="{ errors }"
+              :rules="{ required: !isCreate }"
+              name="archive">
+              <v-file-input
+                v-model="archive"
+                :error-messages="errors"
+                :clearable="false"
+                label="Archive"
+                prepend-icon=""
+                prepend-inner-icon="mdi-paperclip"
+                placeholder="Select repository archive"
+                outlined />
+            </validation-provider>
+          </v-tab-item>
+        </v-tabs-items>
         <validation-provider
           v-slot="{ errors }"
           name="name"
@@ -84,6 +115,8 @@ import { mapGetters } from 'vuex';
 import { SCHEMAS } from 'shared/activities';
 import TailorDialog from '@/components/common/TailorDialog';
 
+const FROM_SCHEMA = 0;
+
 const resetData = () => ({
   schema: SCHEMAS[0].id,
   name: null,
@@ -94,25 +127,42 @@ export default {
   name: 'create-repository',
   data: () => ({
     repository: resetData(),
+    tab: FROM_SCHEMA,
     isVisible: false,
     showLoader: false,
+    archive: null,
     serverError: ''
   }),
   computed: {
     ...mapGetters(['isAdmin']),
+    isCreate: vm => vm.tab === FROM_SCHEMA,
     schemas: () => SCHEMAS
   },
   methods: {
     async submit() {
       this.showLoader = true;
-      this.serverError = '';
-      return api.save(this.repository)
-        .then(() => this.$emit('created') && this.hide())
-        .catch(() => (this.serverError = 'An error has occurred!'));
+      const action = this.isCreate ? 'create' : 'import';
+      return this[action]()
+        .then(() => this.$emit('done') && this.hide())
+        .catch(() => (this.serverError = 'An error has occurred!'))
+        .finally(() => (this.showLoader = false));
+    },
+    create() {
+      return api.save(this.repository);
+    },
+    import() {
+      const { archive, repository } = this;
+      const form = new FormData();
+      form.append('archive', archive);
+      form.append('name', repository.name);
+      form.append('description', repository.description);
+      const headers = { 'content-type': 'multipart/form-data' };
+      return api.importRepository(form, { headers });
     },
     hide() {
       this.showLoader = false;
       this.isVisible = false;
+      this.archive = null;
       this.serverError = '';
     }
   },
@@ -127,6 +177,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.highlight {
+  background: #e2e5e7;
+}
+
 ::v-deep .v-list.v-sheet {
   text-align: left;
 }

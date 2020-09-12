@@ -3,8 +3,11 @@ import request from './request';
 
 const urls = {
   root: '/repositories',
+  import: () => `${urls.root}/import`,
   resource: id => `${urls.root}/${id}`,
   publish: id => `${urls.resource(id)}/publish`,
+  exportPreflight: id => `${urls.resource(id)}/export/preflight`,
+  export: (id, jobId) => `${urls.resource(id)}/export/${jobId}`,
   users: (id, userId = '') => `${urls.resource(id)}/users/${userId}`,
   tags: (id, tagId = '') => `${urls.resource(id)}/tags/${tagId}`
 };
@@ -49,6 +52,19 @@ function removeTag({ repositoryId, tagId }) {
     .then(extractData);
 }
 
+function preflightExport(repositoryId) {
+  return request.get(urls.exportPreflight(repositoryId))
+    .then(extractData);
+}
+
+function exportRepository(repositoryId, jobId, fields) {
+  return request.submitForm(urls.export(repositoryId, jobId), fields);
+}
+
+function importRepository(data, options) {
+  return request.post(urls.import(), data, options);
+}
+
 export default {
   getRepositories,
   save,
@@ -57,5 +73,8 @@ export default {
   removeUser,
   publishRepositoryMeta,
   addTag,
-  removeTag
+  removeTag,
+  preflightExport,
+  exportRepository,
+  importRepository
 };
