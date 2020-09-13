@@ -62,7 +62,7 @@ export default {
     ...mapActions('repository/contentElements', {
       reorderElements: 'reorder',
       insertElement: 'insert',
-      addElement: 'save'
+      addElement: 'add'
     }),
     reorder({ newIndex: newPosition }) {
       const items = this.contentElements;
