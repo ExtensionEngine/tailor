@@ -14,7 +14,10 @@
       :assessment="editedElement"
       :is-editing="isEditing"
       :errors="errors" />
-    <div class="content">
+    <validation-observer
+      v-slot="{ handleSubmit }"
+      tag="form"
+      class="content">
       <component
         :is="componentName"
         @update="update"
@@ -48,12 +51,12 @@
       </v-alert>
       <controls
         v-if="!isDisabled"
+        @save="handleSubmit(save)"
         @edit="edit"
-        @save="save"
         @cancel="cancel"
         :is-editing="isEditing"
         class="controls" />
-    </div>
+    </validation-observer>
   </v-card>
 </template>
 

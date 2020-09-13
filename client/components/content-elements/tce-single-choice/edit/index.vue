@@ -1,29 +1,36 @@
 <template>
   <div>
     <div class="subtitle-2">{{ title }}</div>
-    <v-radio-group v-model="correct" :error="correctError" hide-details>
-      <v-text-field
-        v-for="(answer, idx) in answers" :key="idx"
-        @change="updateAnswer($event, idx)"
-        :value="answer"
-        :error="answerError(idx)"
-        :placeholder="placeholder"
-        :color="color"
-        :disabled="disabled"
-        filled>
-        <template slot="prepend-inner">
-          <v-radio v-if="isGraded" :value="idx" :color="color" />
-          <v-avatar v-else :color="color" size="24" class="subtitle-2 mr-2">
-            {{ idx + 1 }}
-          </v-avatar>
-        </template>
-        <template slot="append">
-          <v-btn v-if="isEditing" @click="removeAnswer(idx)" small icon>
-            <v-icon small>mdi-close</v-icon>
-          </v-btn>
-        </template>
-      </v-text-field>
-    </v-radio-group>
+    <validation-provider v-slot="{ invalid }" name="correct" rules="required">
+      <v-radio-group v-model="correct" :error="invalid" hide-details>
+        <validation-provider
+          v-for="(answer, idx) in answers" :key="idx"
+          v-slot="{ errors }"
+          name="answer"
+          rules="required|min:1|max:500">
+          <v-text-field
+            @change="updateAnswer($event, idx)"
+            :value="answer"
+            :error-messages="errors"
+            :placeholder="placeholder"
+            :color="color"
+            :disabled="disabled"
+            filled>
+            <template slot="prepend-inner">
+              <v-radio v-if="isGraded" :value="idx" :color="color" />
+              <v-avatar v-else :color="color" size="24" class="subtitle-2 mr-2">
+                {{ idx + 1 }}
+              </v-avatar>
+            </template>
+            <template slot="append">
+              <v-btn v-if="isEditing" @click="removeAnswer(idx)" small icon>
+                <v-icon small>mdi-close</v-icon>
+              </v-btn>
+            </template>
+          </v-text-field>
+        </validation-provider>
+      </v-radio-group>
+    </validation-provider>
     <div :class="['d-flex', 'justify-end', { 'pb-2': isEditing }]">
       <v-btn
         v-if="isEditing"
@@ -56,7 +63,6 @@ const getButtonLabel = isGraded => isGraded ? 'Add answer' : 'Add option';
 export default {
   props: {
     assessment: { type: Object, default: defaults.SC },
-    errors: { type: Array, default: () => ([]) },
     isEditing: { type: Boolean, default: false },
     isGraded: { type: Boolean, default: false }
   },
@@ -69,7 +75,6 @@ export default {
     answers: vm => vm.assessment.answers,
     feedback: vm => vm.assessment.feedback,
     color: vm => vm.disabled ? 'grey' : 'grey darken-3',
-    correctError: vm => vm.errors.includes('correct'),
     title: vm => getTitle(vm.isGraded),
     placeholder: vm => getPlaceholder(vm.isGraded),
     addButtonLabel: vm => getButtonLabel(vm.isGraded)
@@ -102,18 +107,15 @@ export default {
       }
       this.$emit('update', { answers, correct, feedback });
     },
-    validate() {
-      this.$emit('alert', this.answers.length < 2 ? MIN_ANSWER_ALERT : {});
-    },
-    answerError(index) {
-      return this.errors.includes(`answers[${index}]`);
-    },
     update(data) {
       this.$emit('update', data);
+    },
+    validateAnswerCount() {
+      this.$emit('alert', this.answers.length < 2 ? MIN_ANSWER_ALERT : {});
     }
   },
   watch: {
-    'assessment.answers'() { this.validate(); }
+    'assessment.answers'() { this.validateAnswerCount(); }
   }
 };
 </script>

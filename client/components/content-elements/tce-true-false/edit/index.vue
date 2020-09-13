@@ -1,17 +1,19 @@
 <template>
   <div>
     <div class="subtitle-2">{{ title }}</div>
-    <v-radio-group v-model="correct" :error="correctError">
-      <v-radio
-        v-for="(answer, index) in [true, false]"
-        :key="index"
-        :value="answer"
-        :disabled="answerDisabled"
-        :label="getLabel(answer)"
-        :color="answerDisabled ? 'grey' : 'blue-grey darken-3'"
-        :off-icon="isGraded ? 'mdi-circle-outline' : 'mdi-circle'"
-        class="answer pl-3" />
-    </v-radio-group>
+    <validation-provider v-slot="{ invalid }" name="correct" rules="required">
+      <v-radio-group v-model="correct" :error="invalid">
+        <v-radio
+          v-for="(answer, index) in [true, false]"
+          :key="index"
+          :value="answer"
+          :disabled="answerDisabled"
+          :label="getLabel(answer)"
+          :color="answerDisabled ? 'grey' : 'blue-grey darken-3'"
+          :off-icon="isGraded ? 'mdi-circle-outline' : 'mdi-circle'"
+          class="answer pl-3" />
+      </v-radio-group>
+    </validation-provider>
   </div>
 </template>
 
@@ -25,7 +27,6 @@ const getLabel = answer => capital(answer.toString());
 export default {
   props: {
     assessment: { type: Object, default: defaults.TF },
-    errors: { type: Array, default: () => ([]) },
     isEditing: { type: Boolean, default: false },
     isGraded: { type: Boolean, default: false }
   },
@@ -35,8 +36,7 @@ export default {
       set(correct) { this.$emit('update', { correct }); }
     },
     title: vm => getTitle(vm.isGraded),
-    answerDisabled: vm => !vm.isEditing || !vm.isGraded,
-    correctError: vm => vm.errors.includes('correct')
+    answerDisabled: vm => !vm.isEditing || !vm.isGraded
   },
   methods: { getLabel }
 };
