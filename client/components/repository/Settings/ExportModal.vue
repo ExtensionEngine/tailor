@@ -2,24 +2,14 @@
   <tailor-dialog :value="true" header-icon="mdi-export" persistent>
     <template v-slot:header>Export {{ repository.name }}</template>
     <template v-slot:body>
-      <div v-if="loading">
-        Please wait while repository export is being prepared.
-        <v-progress-circular
-          size="20"
-          width="2"
-          color="primary"
-          indeterminate
-          class="progress" />
-      </div>
-      <div v-else-if="jobId">Repository export is ready. Click to download.</div>
-      <div v-else>Something went wrong. Please try again later.</div>
+      <v-alert v-bind="status" prominent>{{ status.message }}</v-alert>
     </template>
     <template v-slot:actions>
       <v-btn @click="close" text>Cancel</v-btn>
       <v-btn
         @click="exportRepository"
         :disabled="!jobId"
-        color="success"
+        color="blue-grey darken-3"
         text>
         Download
       </v-btn>
@@ -32,11 +22,27 @@ import { mapGetters, mapState } from 'vuex';
 import api from '@/api/repository';
 import TailorDialog from '@/components/common/TailorDialog';
 
+const STATUS = {
+  INIT: {
+    icon: 'mdi-loading mdi-spin',
+    color: 'grey lighten-3',
+    message: 'Please wait while repository export is being prepared...'
+  },
+  READY: {
+    icon: 'mdi-download',
+    color: 'grey lighten-3',
+    message: 'Repository export is ready. Click button below to download...'
+  },
+  ERROR: {
+    icon: 'mdi-alert-circle-outline',
+    color: 'secondary lighten-1',
+    dark: true,
+    message: 'Something went wrong. Please try again later.'
+  }
+};
+
 export default {
-  data: () => ({
-    loading: true,
-    jobId: null
-  }),
+  data: () => ({ jobId: null, status: STATUS.INIT }),
   computed: {
     ...mapState({ token: state => state.auth.token }),
     ...mapGetters('repository', ['repository'])
@@ -54,16 +60,12 @@ export default {
   },
   created() {
     return api.initiateExportJob(this.repository.id)
-      .then(jobId => (this.jobId = jobId))
-      .finally(() => (this.loading = false));
+      .then(jobId => {
+        this.jobId = jobId;
+        this.status = STATUS.READY;
+      })
+      .catch(() => (this.status = STATUS.ERROR));
   },
   components: { TailorDialog }
 };
 </script>
-
-<style lang="scss" scoped>
-.progress {
-  margin-top: 0.05rem;
-  margin-left: 0.5rem;
-}
-</style>

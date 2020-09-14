@@ -19,7 +19,7 @@
           <slot name="header"></slot>
         </div>
       </v-card-title>
-      <v-card-text :class="[paddingless ? 'pa-0' : 'pt-7 px-6 pb-5']">
+      <v-card-text :class="[paddingless ? 'pa-0' : 'pt-7 px-4 pb-2']">
         <slot name="body"></slot>
       </v-card-text>
       <v-card-actions v-if="$slots.actions" class="px-4 pb-3">
