@@ -14,8 +14,16 @@ class Storage {
     return this.provider.getFile(key, options);
   }
 
+  createReadStream(key, options = {}) {
+    return this.provider.createReadStream(key, options);
+  }
+
   saveFile(key, data, options = {}) {
     return this.provider.saveFile(key, data, options);
+  }
+
+  createWriteStream(key, options = {}) {
+    return this.provider.createWriteStream(key, options);
   }
 
   deleteFile(key, options = {}) {

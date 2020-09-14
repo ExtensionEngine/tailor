@@ -4,6 +4,7 @@ const { NOT_FOUND, UNAUTHORIZED } = require('http-status-codes');
 const { authorize } = require('../shared/auth/mw');
 const { createError } = require('../shared/error/helpers');
 const ctrl = require('./repository.controller');
+const multer = require('multer');
 const path = require('path');
 const processQuery = require('../shared/util/processListQuery')();
 const { Repository } = require('../shared/database');
@@ -15,6 +16,13 @@ const comment = require('../comment');
 const revision = require('../revision');
 const contentElement = require('../content-element');
 /* eslint-enable */
+
+// NOTE: disk storage engine expects an object to be passed as the first argument
+// https://github.com/expressjs/multer/blob/6b5fff5/storage/disk.js#L17-L18
+const upload = multer({ storage: multer.diskStorage({}) });
+
+router
+  .post('/import', authorize(), upload.single('archive'), ctrl.import);
 
 router
   .param('repositoryId', getRepository)
@@ -34,6 +42,8 @@ router
   .post('/:repositoryId/clone', authorize(), ctrl.clone)
   .post('/:repositoryId/publish', ctrl.publishRepoInfo)
   .get('/:repositoryId/users', ctrl.getUsers)
+  .get('/:repositoryId/export/setup', ctrl.initiateExportJob)
+  .post('/:repositoryId/export/:jobId', ctrl.export)
   .post('/:repositoryId/users', ctrl.upsertUser)
   .delete('/:repositoryId/users/:userId', ctrl.removeUser)
   .post('/:repositoryId/tags', ctrl.addTag)
