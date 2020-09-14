@@ -208,7 +208,6 @@ function exportRepository({ repository, params }, res) {
 }
 
 function importRepository({ body, file, user }, res) {
-  debugger;
   const { path } = file;
   const { description, name } = body;
   const options = { description, name, userId: user.id };
