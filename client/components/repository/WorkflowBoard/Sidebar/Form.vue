@@ -1,14 +1,18 @@
 <template>
   <section class="mt-9 mb-4">
-    <v-text-field
-      v-validate="{ required: true }"
-      @change="updateTask('name', $event)"
-      :value="task.name"
-      :error-messages="vErrors.collect('name')"
-      data-vv-name="name"
-      label="Name"
-      class="my-2"
-      outlined />
+    <validation-provider
+      v-slot="{ errors }"
+      ref="name"
+      :rules="{ required: true }"
+      name="name">
+      <v-text-field
+        @change="updateTask('name', $event)"
+        :value="task.name"
+        :error-messages="errors"
+        label="Name"
+        class="my-2"
+        outlined />
+    </validation-provider>
     <editor-field
       @change="updateTask('description', $event)"
       :value="task.description"
@@ -52,11 +56,9 @@ import DatePicker from '@/components/common/DatePicker';
 import EditorField from '@/components/common/EditorField';
 import { priorities } from 'shared/workflow';
 import SelectPriority from '@/components/repository/common/SelectPriority';
-import { withValidation } from 'utils/validation';
 
 export default {
   name: 'workflow-board-task-form',
-  mixins: [withValidation()],
   props: {
     task: { type: Object, default: () => ({}) }
   },
@@ -68,13 +70,17 @@ export default {
     getUserLabel({ fullName, email }) {
       return fullName || email;
     },
+    async validateField(descriptor, value) {
+      const field = this.$refs[descriptor];
+      if (!field) return true;
+      const validationResult = await field.validate(value);
+      await field.applyResult(validationResult);
+      return validationResult.valid;
+    },
     async updateTask(descriptor, value) {
       if (this.task[descriptor] === value) return;
-      const hasValidation = !!this.$validator.fields.items.find(it => it.name === descriptor);
-      if (hasValidation) {
-        const isValid = await this.$validator.validate(descriptor, value);
-        if (!isValid) return;
-      }
+      const isValid = await this.validateField(descriptor, value);
+      if (!isValid) return;
       await this.save({ ...this.task, [descriptor]: value || null });
       this.$snackbar.show(`${this.task.name} saved`);
     }
