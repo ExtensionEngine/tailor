@@ -41,10 +41,22 @@ class FilesystemStorage {
       });
   }
 
+  createReadStream(key, options = {}) {
+    return fs.createReadStream(this.path(key), options);
+  }
+
   saveFile(key, data, options = {}) {
     const filePath = this.path(key);
     return mkdirp(path.dirname(filePath))
       .then(() => fs.writeFileAsync(filePath, data, options));
+  }
+
+  createWriteStream(key, options = {}) {
+    const filepath = this.path(key);
+    const dirname = path.dirname(filepath);
+    // TODO: Replace with async mkdir
+    fs.mkdirSync(dirname, { recursive: true });
+    return fs.createWriteStream(filepath, options);
   }
 
   copyFile(key, newKey) {
