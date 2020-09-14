@@ -59,7 +59,8 @@
             <validation-provider
               v-slot="{ errors }"
               :rules="{ required: !isCreate }"
-              name="archive">
+              name="archive"
+              mode="lazy">
               <v-file-input
                 v-model="archive"
                 :error-messages="errors"
