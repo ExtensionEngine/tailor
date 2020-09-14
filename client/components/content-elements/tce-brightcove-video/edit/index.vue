@@ -4,7 +4,7 @@
       v-if="showPlaceholder"
       :is-focused="isFocused"
       :is-disabled="isDisabled"
-      name="Brightcove video"
+      name="Brightcove video component"
       icon="mdi-video"
       active-placeholder="Use toolbar to set the video parameters"
       active-icon="mdi-arrow-up" />

@@ -15,7 +15,7 @@
       v-if="!hasItems"
       :is-focused="isFocused"
       :is-disabled="isDisabled"
-      name="Carousel"
+      name="Carousel component"
       icon="mdi-view-carousel"
       active-placeholder="Use toolbar to add the first slide to the carousel"
       active-icon="mdi-arrow-up" />

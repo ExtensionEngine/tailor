@@ -5,7 +5,7 @@
       :is-focused="isFocused"
       :is-disabled="isDisabled"
       :dense="dense"
-      name="Text (deprecated)"
+      name="Text (deprecated) component"
       icon="mdi-text"
       class="element-placeholder" />
     <div v-else>

@@ -31,14 +31,12 @@ import DefaultToolbar from './DefaultToolbar';
 import EventBus from 'EventBus';
 import { mapActions } from 'vuex';
 import Vue from 'vue';
-import { withValidation } from 'utils/validation';
 
 const appBus = EventBus.channel('app');
 
 export default {
   name: 'element-toolbar-wrapper',
   inject: ['$teRegistry'],
-  mixins: [withValidation()],
   props: {
     element: { type: Object, required: true },
     embed: { type: Object, default: null }

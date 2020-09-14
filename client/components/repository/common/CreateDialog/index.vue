@@ -10,21 +10,27 @@
     </template>
     <template v-slot:header>{{ heading || defaultLabel }}</template>
     <template v-slot:body>
-      <type-select
-        v-model="activity.type"
-        :options="levels"
-        :disabled="hasSingleOption" />
-      <template v-if="activity.type && visible">
+      <validation-observer
+        :key="visible"
+        ref="form"
+        @submit.prevent="$refs.form.handleSubmit(submit)"
+        tag="form">
+        <type-select
+          v-model="activity.type"
+          :options="levels"
+          :disabled="hasSingleOption" />
         <meta-input
           v-for="input in metadata"
           :key="input.key"
           @update="setMetaValue"
           :meta="input" />
-      </template>
-    </template>
-    <template v-slot:actions>
-      <v-btn @click="visible = false" text>Cancel</v-btn>
-      <v-btn @click="create" color="primary darken-1" text>Create</v-btn>
+        <div class="d-flex justify-end">
+          <v-btn @click="visible = false" text>Cancel</v-btn>
+          <v-btn type="submit" color="blue-grey darken-4" text>
+            Create
+          </v-btn>
+        </div>
+      </validation-observer>
     </template>
   </tailor-dialog>
 </template>
@@ -35,7 +41,6 @@ import { getActivityMetadata } from 'shared/activities';
 import MetaInput from 'tce-core/MetaInput';
 import TailorDialog from '@/components/common/TailorDialog';
 import TypeSelect from './TypeSelect';
-import { withValidation } from 'utils/validation';
 
 const initActivityState = (repositoryId, levels) => ({
   repositoryId,
@@ -45,7 +50,6 @@ const initActivityState = (repositoryId, levels) => ({
 
 export default {
   name: 'create-activity-dialog',
-  mixins: [withValidation()],
   props: {
     repositoryId: { type: Number, required: true },
     levels: { type: Array, required: true },
@@ -77,9 +81,7 @@ export default {
     setMetaValue(key, val) {
       this.activity.data[key] = val;
     },
-    async create() {
-      const isValid = await this.$validator.validateAll();
-      if (!isValid) return;
+    async submit() {
       const { activity, anchor } = this;
       if (anchor) {
         activity.parentId = this.addChild ? anchor.id : anchor.parentId;
