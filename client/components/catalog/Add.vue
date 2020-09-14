@@ -3,7 +3,7 @@
     v-if="isAdmin"
     v-model="isVisible"
     header-icon="mdi-folder-plus-outline"
-    persistent>
+    paddingless persistent>
     <template v-slot:activator="{ on }">
       <v-btn
         v-on="on"
@@ -15,29 +15,31 @@
     </template>
     <template v-slot:header>Add</template>
     <template v-slot:body>
-      <v-alert
-        @click:close="serverError = null"
-        :value="!!serverError"
-        color="error"
-        icon="mdi-alert"
-        dark dismissible
-        class="mb-7">
-        {{ serverError }}
-      </v-alert>
+      <v-tabs
+        v-model="selectedTab"
+        background-color="primary darken-1"
+        slider-color="secondary lighten-2"
+        slider-size="3"
+        dark grow>
+        <v-tab key="schema">New</v-tab>
+        <v-tab key="archive">Import</v-tab>
+      </v-tabs>
       <validation-observer
         ref="form"
         @submit.prevent="$refs.form.handleSubmit(submit)"
         tag="form"
-        novalidate>
-        <v-tabs
-          v-model="tab"
-          active-class="highlight"
-          height="38"
-          grow>
-          <v-tab key="schema">New</v-tab>
-          <v-tab key="archive">Import</v-tab>
-        </v-tabs>
-        <v-tabs-items v-model="tab" class="mt-4">
+        novalidate
+        class="pt-10 pa-4">
+        <v-alert
+          @click:close="serverError = null"
+          :value="!!serverError"
+          color="error"
+          icon="mdi-alert"
+          dark dismissible
+          class="mb-12">
+          {{ serverError }}
+        </v-alert>
+        <v-tabs-items v-model="selectedTab">
           <v-tab-item key="schema">
             <validation-provider
               v-slot="{ errors }"
@@ -115,7 +117,7 @@ import { mapGetters } from 'vuex';
 import { SCHEMAS } from 'shared/activities';
 import TailorDialog from '@/components/common/TailorDialog';
 
-const FROM_SCHEMA = 0;
+const NEW_TAB = 0;
 
 const resetData = () => ({
   schema: SCHEMAS[0].id,
@@ -127,15 +129,15 @@ export default {
   name: 'create-repository',
   data: () => ({
     repository: resetData(),
-    tab: FROM_SCHEMA,
+    archive: null,
+    selectedTab: NEW_TAB,
     isVisible: false,
     showLoader: false,
-    archive: null,
     serverError: ''
   }),
   computed: {
     ...mapGetters(['isAdmin']),
-    isCreate: vm => vm.tab === FROM_SCHEMA,
+    isCreate: vm => vm.selectedTab === NEW_TAB,
     schemas: () => SCHEMAS
   },
   methods: {
@@ -177,10 +179,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.highlight {
-  background: #e2e5e7;
-}
-
 ::v-deep .v-list.v-sheet {
   text-align: left;
 }
