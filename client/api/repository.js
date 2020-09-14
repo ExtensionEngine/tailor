@@ -6,7 +6,7 @@ const urls = {
   import: () => `${urls.root}/import`,
   resource: id => `${urls.root}/${id}`,
   publish: id => `${urls.resource(id)}/publish`,
-  exportPreflight: id => `${urls.resource(id)}/export/preflight`,
+  exportPreflight: id => `${urls.resource(id)}/export/setup`,
   export: (id, jobId) => `${urls.resource(id)}/export/${jobId}`,
   users: (id, userId = '') => `${urls.resource(id)}/users/${userId}`,
   tags: (id, tagId = '') => `${urls.resource(id)}/tags/${tagId}`
@@ -52,7 +52,7 @@ function removeTag({ repositoryId, tagId }) {
     .then(extractData);
 }
 
-function preflightExport(repositoryId) {
+function initiateExportJob(repositoryId) {
   return request.get(urls.exportPreflight(repositoryId))
     .then(extractData);
 }
@@ -74,7 +74,7 @@ export default {
   publishRepositoryMeta,
   addTag,
   removeTag,
-  preflightExport,
+  initiateExportJob,
   exportRepository,
   importRepository
 };

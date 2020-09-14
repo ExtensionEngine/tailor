@@ -177,7 +177,7 @@ async function removeTag({ params: { tagId, repositoryId } }, res) {
   return res.status(NO_CONTENT).send();
 }
 
-async function preflightExport({ repository }, res) {
+async function initiateExportJob({ repository }, res) {
   const [outFile] = await tmp.fileAsync();
   const options = { repositoryId: repository.id, schemaId: repository.schema };
   return TransferService
@@ -226,7 +226,7 @@ module.exports = {
   get,
   patch,
   remove,
-  preflightExport,
+  initiateExportJob,
   export: exportRepository,
   import: importRepository,
   pin,

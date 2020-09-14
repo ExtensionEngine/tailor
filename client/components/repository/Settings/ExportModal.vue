@@ -53,7 +53,7 @@ export default {
     }
   },
   created() {
-    return api.preflightExport(this.repository.id)
+    return api.initiateExportJob(this.repository.id)
       .then(jobId => (this.jobId = jobId))
       .finally(() => (this.loading = false));
   },

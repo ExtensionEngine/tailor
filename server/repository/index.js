@@ -22,7 +22,7 @@ const contentElement = require('../content-element');
 const upload = multer({ storage: multer.diskStorage({}) });
 
 router
-  .post('/import', upload.single('archive'), ctrl.import);
+  .post('/import', authorize(), upload.single('archive'), ctrl.import);
 
 router
   .param('repositoryId', getRepository)
@@ -42,7 +42,7 @@ router
   .post('/:repositoryId/clone', authorize(), ctrl.clone)
   .post('/:repositoryId/publish', ctrl.publishRepoInfo)
   .get('/:repositoryId/users', ctrl.getUsers)
-  .get('/:repositoryId/export/preflight', ctrl.preflightExport)
+  .get('/:repositoryId/export/setup', ctrl.initiateExportJob)
   .post('/:repositoryId/export/:jobId', ctrl.export)
   .post('/:repositoryId/users', ctrl.upsertUser)
   .delete('/:repositoryId/users/:userId', ctrl.removeUser)
