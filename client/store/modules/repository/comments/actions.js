@@ -25,7 +25,7 @@ const subscribe = ({ rootState, commit }) => {
   const url = urlJoin(baseUrl, api.url('/subscribe'));
   feed
     .connect(url, { params })
-    .subscribe(Events.Create, item => api.setCid(item) || commit('sseAdd', item))
+    .subscribe(Events.Create, item => commit('add', item))
     .subscribe(Events.Update, item => commit('sseUpdate', item))
     .subscribe(Events.Delete, item => commit('sseUpdate', item));
 };

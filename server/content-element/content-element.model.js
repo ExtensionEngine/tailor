@@ -7,6 +7,12 @@ const isNumber = require('lodash/isNumber');
 const pick = require('lodash/pick');
 const { resolveStatics } = require('../shared/storage/helpers');
 
+const Events = {
+  Create: 'contentElement:create',
+  Update: 'contentElement:update',
+  Delete: 'contentElement:delete'
+};
+
 class ContentElement extends Model {
   static fields(DataTypes) {
     const { BOOLEAN, DATE, DOUBLE, JSONB, STRING, UUID, UUIDV4 } = DataTypes;
@@ -154,6 +160,10 @@ class ContentElement extends Model {
       if (this.type === 'ASSESSMENT') return { type: 'ASSESSMENT' };
       return { type: { [Op.not]: 'ASSESSMENT' } };
     });
+  }
+
+  static get Events() {
+    return Events;
   }
 }
 
