@@ -25,7 +25,8 @@ passport.use('jwt', new Strategy({
   audience: Audience.Scope.Access,
   jwtFromRequest: ExtractJwt.fromExtractors([
     ExtractJwt.fromAuthHeaderWithScheme(config.scheme),
-    ExtractJwt.fromUrlQueryParameter('token')
+    ExtractJwt.fromUrlQueryParameter('token'),
+    ExtractJwt.fromBodyField('token')
   ]),
   secretOrKey: config.secret
 }, verify));

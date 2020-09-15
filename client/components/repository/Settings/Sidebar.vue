@@ -52,6 +52,7 @@ export default {
       return [
         { label: 'Clone', icon: 'content-copy', name: 'clone' },
         { label: 'Publish', icon: 'upload', name: 'publish' },
+        { label: 'Export', icon: 'export', name: 'export' },
         { label: 'Delete', icon: 'delete', name: 'delete', color: 'error' }
       ];
     }

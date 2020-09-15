@@ -5,21 +5,33 @@
     header-icon="mdi-tag-outline">
     <template #header>Add Tag</template>
     <template #body>
-      <v-combobox
-        v-model="tagInput"
-        v-validate="'required|min:2|max:20'"
-        @keydown.enter="submit"
-        :items="availableTags"
-        :error-messages="vErrors.collect('name')"
-        name="name"
-        label="Select a tag or add a new one"
-        outlined />
-    </template>
-    <template #actions>
-      <v-btn @click="hide" text>Cancel</v-btn>
-      <v-btn @click="submit" :disabled="vErrors.any()" color="primary" text>
-        Save
-      </v-btn>
+      <validation-observer
+        ref="form"
+        v-slot="{ handleSubmit }"
+        @submit.prevent="$refs.form.handleSubmit(submit)"
+        tag="form"
+        novalidate>
+        <validation-provider
+          ref="nameProvider"
+          v-slot="{ errors }"
+          name="name"
+          rules="required|min:2|max:20">
+          <!-- Avoid binding using v-model due to https://github.com/vuetifyjs/vuetify/issues/4679 -->
+          <v-combobox
+            @update:search-input="update"
+            @keydown.enter="handleSubmit(submit)"
+            :items="availableTags"
+            :error-messages="errors"
+            label="Select a tag or add a new one"
+            outlined />
+        </validation-provider>
+        <div class="d-flex justify-end">
+          <v-btn @click="hide" text>Cancel</v-btn>
+          <v-btn type="submit" color="blue-grey darken-4" text>
+            Save
+          </v-btn>
+        </div>
+      </validation-observer>
     </template>
   </tailor-dialog>
 </template>
@@ -30,11 +42,9 @@ import differenceBy from 'lodash/differenceBy';
 import map from 'lodash/map';
 import { mapActions } from 'vuex';
 import TailorDialog from '@/components/common/TailorDialog';
-import { withValidation } from 'utils/validation';
 
 export default {
   name: 'add-tag',
-  mixins: [withValidation()],
   props: {
     repository: { type: Object, required: true }
   },
@@ -49,14 +59,13 @@ export default {
       this.$emit('close');
     },
     async submit() {
-      // Temp timeout due to https://github.com/vuetifyjs/vuetify/issues/4679
-      setTimeout(async () => {
-        const isValid = await this.$validator.validateAll();
-        if (!isValid) return;
-        const data = { name: this.tagInput, repositoryId: this.repository.id };
-        await this.addTag(data);
-        this.hide();
-      });
+      const data = { name: this.tagInput, repositoryId: this.repository.id };
+      await this.addTag(data);
+      this.hide();
+    },
+    update(value) {
+      this.$refs.nameProvider.syncValue(value);
+      this.tagInput = value;
     }
   },
   created() {

@@ -5,7 +5,7 @@
       :is-focused="isFocused"
       :is-disabled="isDisabled"
       :dense="dense"
-      name="Image"
+      name="Image component"
       icon="mdi-image-plus"
       active-placeholder="Use toolbar to upload the image"
       active-icon="mdi-arrow-up" />

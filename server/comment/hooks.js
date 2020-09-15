@@ -1,5 +1,7 @@
 'use strict';
 
+const { broadcast, events } = require('./channel');
+const { getLevel } = require('../../config/shared/activities');
 const mail = require('../shared/mail');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
@@ -45,7 +47,10 @@ async function sendEmailNotification(comment, db) {
   });
   const { author, repository, activity } = comment;
   const data = {
-    repository: repository.name,
+    repositoryId: repository.id,
+    repositoryName: repository.name,
+    activityId: activity.id,
+    activityLabel: getLevel(activity.type).label,
     topic: activity.data.name,
     author: author.profile,
     ...pick(comment, ['id', 'content', 'createdAt'])

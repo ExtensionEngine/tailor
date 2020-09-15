@@ -4,7 +4,7 @@
       v-if="showPlaceholder"
       :is-focused="isFocused"
       :is-disabled="isDisabled"
-      name="Video"
+      name="Video component"
       icon="mdi-video-image"
       active-placeholder="Use toolbar to upload the video"
       active-icon="mdi-arrow-up" />

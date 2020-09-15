@@ -1,17 +1,22 @@
 /* eslint-disable sort-imports */
 import './polyfills';
 import 'bootstrap-sass/assets/javascripts/bootstrap';
+import '@/utils/validation';
 
 import assetsApi from '@/api/asset';
 import ContentPluginRegistry from './content-plugins';
 
 import { formatDate, truncate } from '@/filters';
+import {
+  setInteractionMode,
+  ValidationObserver,
+  ValidationProvider
+} from 'vee-validate';
 import FileFilter from '@/directives/file-filter';
 import QuestionContainer from 'tce-core/QuestionContainer';
 import request from './api/request';
 import { sync } from 'vuex-router-sync';
 import Timeago from 'vue-timeago';
-import VeeValidate from './utils/validation';
 import Vue from 'vue';
 import VueClipboard from 'vue-clipboard2';
 import VueCroppa from 'vue-croppa';
@@ -23,6 +28,10 @@ import router from './router';
 import App from './App';
 
 Vue.component('tce-question-container', QuestionContainer);
+Vue.component('ValidationObserver', ValidationObserver);
+Vue.component('ValidationProvider', ValidationProvider);
+setInteractionMode('eager');
+
 Vue.filter('formatDate', formatDate);
 Vue.filter('truncate', truncate);
 
@@ -30,12 +39,6 @@ Vue.use(FileFilter);
 Vue.use(VueHotkey);
 Vue.use(VueClipboard);
 Vue.use(VueCroppa);
-Vue.use(VeeValidate, {
-  delay: 700,
-  fieldsBagName: 'vFields',
-  errorBagName: 'vErrors',
-  inject: false
-});
 Vue.use(Timeago, {
   locale: 'en-US',
   locales: {
