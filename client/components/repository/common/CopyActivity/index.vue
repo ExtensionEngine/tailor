@@ -76,8 +76,8 @@ export default {
   props: {
     repositoryId: { type: Number, required: true },
     levels: { type: Array, required: true },
+    action: { type: String, required: true },
     anchor: { type: Object, default: null },
-    action: { type: String, default: '' },
     showActivator: { type: Boolean, default: false }
   },
   data: () => ({
@@ -119,7 +119,7 @@ export default {
         srcRepositoryId,
         repositoryId: this.repositoryId,
         type,
-        position: this.calculateInsertPosition(activity, anchor)
+        position: this.calculateInsertPosition(activity, anchor, action)
       };
       if (anchor) {
         payload.parentId = action === ADD_INTO ? anchor.id : anchor.parentId;

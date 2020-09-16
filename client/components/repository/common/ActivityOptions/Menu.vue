@@ -89,7 +89,7 @@ export default {
       const items = [{
         name: 'Copy existing below',
         icon: 'content-copy',
-        action: () => this.setCopyContext(this.sameLevel)
+        action: () => this.setCopyContext(this.sameLevel, ADD_AFTER)
       }];
       if (!this.subLevels.length) return items;
       return items.concat({
