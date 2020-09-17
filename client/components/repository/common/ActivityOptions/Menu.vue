@@ -107,14 +107,6 @@ export default {
           action: () => this.delete(this.activity)
         }
       ];
-    },
-    createDialogHeading: ({ action }) => {
-      const heading = {
-        [ADD_BEFORE]: 'Add above',
-        [ADD_AFTER]: 'Add below',
-        [ADD_INTO]: 'Add into'
-      };
-      return heading[action];
     }
   },
   methods: {

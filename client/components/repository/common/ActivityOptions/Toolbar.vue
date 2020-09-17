@@ -76,15 +76,7 @@ export default {
     action: null
   }),
   computed: {
-    options: vm => getOptions(vm),
-    createDialogHeading: ({ action }) => {
-      const heading = {
-        [ADD_BEFORE]: 'Add above',
-        [ADD_AFTER]: 'Add below',
-        [ADD_INTO]: 'Add into'
-      };
-      return heading[action];
-    }
+    options: vm => getOptions(vm)
   },
   methods: {
     isEqual,
