@@ -1,10 +1,10 @@
 <template>
   <v-toolbar
-    height="72"
+    height="80"
     color="transparent"
     class="tce-embed-toolbar elevation-0">
     <v-toolbar-title class="pl-1">Embed component</v-toolbar-title>
-    <div class="input-container">
+    <div class="input-container mt-5">
       <v-text-field
         v-model="height"
         @input="onChange"
@@ -13,7 +13,7 @@
         label="Height (px)"
         placeholder="Height..."
         prepend-icon="mdi-resize"
-        hide-details dense filled
+        dense filled
         class="height-input" />
       <validation-provider
         ref="urlValidator"
@@ -28,7 +28,7 @@
           label="URL"
           placeholder="Enter URL..."
           prepend-icon="mdi-link"
-          hide-details dense filled />
+          dense filled />
       </validation-provider>
     </div>
   </v-toolbar>
