@@ -28,7 +28,7 @@ export default function ({ newPosition, items, isFirstChild, action = REORDER })
 
   if (action === ADD_AFTER) {
     prev = items[newPosition];
-  } else {
+  } else if (action === REORDER) {
     first = items[1];
   }
 
