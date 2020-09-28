@@ -27,7 +27,7 @@ export default {
       const subLevels = get(config, 'subLevels', []);
       return this.structure.filter(it => subLevels.includes(it.type));
     },
-    createDialogHeading: ({ action }) => {
+    dialogHeading: ({ action }) => {
       const heading = {
         [ADD_BEFORE]: 'Add above',
         [ADD_AFTER]: 'Add below',

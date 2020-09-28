@@ -27,7 +27,7 @@
       :levels="supportedLevels"
       :anchor="activity"
       :action="action"
-      :heading="`${createDialogHeading} ${activity.data.name}`" />
+      :heading="`${dialogHeading} ${activity.data.name}`" />
     <copy-dialog
       v-if="showCopyDialog"
       @close="showCopyDialog = null"

@@ -24,7 +24,7 @@
       :levels="supportedLevels"
       :anchor="activity"
       :action="action"
-      :heading="`${createDialogHeading} ${activity.data.name}`" />
+      :heading="`${dialogHeading} ${activity.data.name}`" />
   </div>
 </template>
 
