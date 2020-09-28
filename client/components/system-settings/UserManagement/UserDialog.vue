@@ -2,61 +2,80 @@
   <tailor-dialog v-model="show" header-icon="mdi-account">
     <template v-slot:header>{{ userData ? 'Edit' : 'Create' }} User</template>
     <template v-slot:body>
-      <div v-if="userData" class="text-left">
-        <v-btn
-          @click="reinvite"
-          :loading="isReinviting"
-          :disabled="isReinviting"
-          color="primary"
-          outlined
-          class="mb-6">
-          Reinvite
-        </v-btn>
-      </div>
-      <v-text-field
-        v-model="user.email"
-        v-validate="{ required: true, email: true, 'unique-email': userData }"
-        :error-messages="vErrors.collect('email')"
-        :disabled="!isNewUser"
-        label="E-mail"
-        placeholder="Enter email..."
-        data-vv-name="email"
-        outlined
-        class="mb-3" />
-      <v-text-field
-        v-model="user.firstName"
-        v-validate="'required|min:2|max:50'"
-        :error-messages="vErrors.collect('firstName')"
-        label="First name"
-        placeholder="Enter first name..."
-        data-vv-as="First name"
-        data-vv-name="firstName"
-        outlined
-        class="mb-3" />
-      <v-text-field
-        v-model="user.lastName"
-        v-validate="'required|min:2|max:50'"
-        :error-messages="vErrors.collect('lastName')"
-        label="Last name"
-        placeholder="Enter last name..."
-        data-vv-as="Last name"
-        data-vv-name="lastName"
-        outlined
-        class="mb-3" />
-      <v-select
-        v-model="user.role"
-        v-validate="{ required: true }"
-        :items="roles"
-        :error-messages="vErrors.collect('role')"
-        label="Role"
-        placeholder="Select role..."
-        data-vv-name="role"
-        outlined
-        class="mb-3" />
-    </template>
-    <template v-slot:actions>
-      <v-btn @click="close" text>Cancel</v-btn>
-      <v-btn @click="save" color="blue-grey darken-4" text>Save</v-btn>
+      <v-btn
+        v-if="userData"
+        @click="reinvite"
+        :loading="isReinviting"
+        :disabled="isReinviting"
+        color="primary darken-2"
+        text
+        class="d-block ml-auto mb-4">
+        Reinvite
+      </v-btn>
+      <validation-observer
+        ref="form"
+        v-slot="{ invalid, pristine }"
+        @submit.prevent="$refs.form.handleSubmit(submit)"
+        tag="form"
+        novalidate>
+        <validation-provider
+          v-slot="{ errors }"
+          name="email"
+          :rules="{ required: true, email: true, unique_email: { userData } }">
+          <v-text-field
+            v-model="user.email"
+            :error-messages="errors"
+            :disabled="!isNewUser"
+            label="E-mail"
+            placeholder="Enter email..."
+            outlined
+            class="mb-3" />
+        </validation-provider>
+        <validation-provider
+          v-slot="{ errors }"
+          name="first name"
+          rules="required|min:2|max:50">
+          <v-text-field
+            v-model="user.firstName"
+            :error-messages="errors"
+            label="First name"
+            placeholder="Enter first name..."
+            outlined
+            class="mb-3" />
+        </validation-provider>
+        <validation-provider
+          v-slot="{ errors }"
+          name="last name"
+          rules="required|min:2|max:50">
+          <v-text-field
+            v-model="user.lastName"
+            :error-messages="errors"
+            label="Last name"
+            placeholder="Enter last name..."
+            outlined
+            class="mb-3" />
+        </validation-provider>
+        <validation-provider v-slot="{ errors }" name="role" rules="required">
+          <v-select
+            v-model="user.role"
+            :error-messages="errors"
+            :items="roles"
+            label="Role"
+            placeholder="Select role..."
+            outlined
+            class="mb-3" />
+        </validation-provider>
+        <div class="d-flex justify-end">
+          <v-btn @click="close" text>Cancel</v-btn>
+          <v-btn
+            :disabled="invalid || pristine"
+            type="submit"
+            color="blue-grey darken-4"
+            text>
+            Save
+          </v-btn>
+        </div>
+      </validation-observer>
     </template>
   </tailor-dialog>
 </template>
@@ -69,7 +88,6 @@ import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 import { user as roles } from 'shared/role';
 import TailorDialog from '@/components/common/TailorDialog';
-import { withValidation } from 'utils/validation';
 
 const resetUser = () => ({
   email: '',
@@ -80,7 +98,6 @@ const resetUser = () => ({
 
 export default {
   name: 'user-dialog',
-  mixins: [withValidation()],
   props: {
     visible: { type: Boolean, default: false },
     userData: { type: Object, default: () => ({}) }
@@ -103,9 +120,7 @@ export default {
       this.user = resetUser();
       this.$emit('update:visible', false);
     },
-    async save() {
-      const isValid = await this.$validator.validateAll();
-      if (!isValid) return;
+    async submit() {
       const action = this.isNewUser ? 'create' : 'update';
       api.upsert(this.user).then(() => this.$emit(`${action}d`));
       this.close();
@@ -118,7 +133,7 @@ export default {
   watch: {
     show(val) {
       if (!val) return;
-      this.vErrors.clear();
+      this.$nextTick(() => this.$refs.form.reset());
       if (!isEmpty(this.userData)) this.user = cloneDeep(this.userData);
     }
   },
