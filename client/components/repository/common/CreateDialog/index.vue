@@ -38,7 +38,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import { getActivityMetadata } from 'shared/activities';
-import insertActions from '@/utils/insertActions';
+import InsertLocation from '@/utils/InsertLocation';
 import MetaInput from 'tce-core/MetaInput';
 import TailorDialog from '@/components/common/TailorDialog';
 import TypeSelect from './TypeSelect';
@@ -48,7 +48,7 @@ const initActivityState = (repositoryId, levels) => ({
   type: levels.length > 1 ? null : levels[0].type,
   data: {}
 });
-const { ADD_AFTER, ADD_INTO } = insertActions;
+const { ADD_AFTER, ADD_INTO } = InsertLocation;
 
 export default {
   name: 'create-activity-dialog',

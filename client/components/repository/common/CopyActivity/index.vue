@@ -60,7 +60,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import activityApi from 'client/api/activity';
-import insertActions from '@/utils/insertActions';
+import InsertLocation from '@/utils/InsertLocation';
 import pluralize from 'pluralize';
 import Promise from 'bluebird';
 import repositoryApi from 'client/api/repository';
@@ -69,7 +69,7 @@ import { SCHEMAS } from 'shared/activities';
 import sortBy from 'lodash/sortBy';
 import TailorDialog from '@/components/common/TailorDialog';
 
-const { ADD_INTO } = insertActions;
+const { ADD_INTO } = InsertLocation;
 
 export default {
   name: 'copy-activity',

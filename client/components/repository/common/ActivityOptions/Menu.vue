@@ -46,14 +46,14 @@ import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import first from 'lodash/first';
-import insertActions from '@/utils/insertActions';
+import InsertLocation from '@/utils/InsertLocation';
 import { mapActions } from 'vuex';
 import optionsMixin from './common';
 import sortBy from 'lodash/sortBy';
 
 const appChannel = EventBus.channel('app');
 const TREE_VIEW_ROUTE = 'tree-view';
-const { ADD_AFTER, ADD_BEFORE, ADD_INTO } = insertActions;
+const { ADD_AFTER, ADD_BEFORE, ADD_INTO } = InsertLocation;
 
 export default {
   name: 'activity-options-menu',

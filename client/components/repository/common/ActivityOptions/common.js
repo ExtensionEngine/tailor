@@ -1,12 +1,12 @@
 import { mapGetters, mapMutations } from 'vuex';
 import find from 'lodash/find';
 import get from 'lodash/get';
-import insertActions from '@/utils/insertActions';
+import InsertLocation from '@/utils/InsertLocation';
 import { isEditable } from 'shared/activities';
 import selectActivity from '@/components/repository/common/selectActivity';
 import uniqBy from 'lodash/uniqBy';
 
-const { ADD_AFTER, ADD_BEFORE, ADD_INTO } = insertActions;
+const { ADD_AFTER, ADD_BEFORE, ADD_INTO } = InsertLocation;
 
 export default {
   mixins: [selectActivity],

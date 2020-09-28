@@ -30,11 +30,11 @@
 
 <script>
 import CreateDialog from '@/components/repository/common/CreateDialog';
-import insertActions from '@/utils/insertActions';
+import InsertLocation from '@/utils/InsertLocation';
 import isEqual from 'lodash/isEqual';
 import optionsMixin from './common';
 
-const { ADD_AFTER, ADD_BEFORE, ADD_INTO } = insertActions;
+const { ADD_AFTER, ADD_BEFORE, ADD_INTO } = InsertLocation;
 
 const getOptions = vm => {
   const items = [{

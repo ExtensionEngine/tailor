@@ -1,6 +1,6 @@
-import insertActions from './insertActions';
+import InsertLocation from './InsertLocation';
 
-const { ADD_AFTER, ADD_BEFORE } = insertActions;
+const { ADD_AFTER, ADD_BEFORE } = InsertLocation;
 
 /**
  * Calculates item position based on the options provided.
