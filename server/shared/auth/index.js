@@ -23,7 +23,10 @@ passport.use(new LocalStrategy(options, (email, password, done) => {
 passport.use(new Strategy({
   ...config,
   audience: Audience.Scope.Access,
-  jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme(config.scheme),
+  jwtFromRequest: ExtractJwt.fromExtractors([
+    ExtractJwt.fromAuthHeaderWithScheme(config.scheme),
+    ExtractJwt.fromBodyField('token')
+  ]),
   secretOrKey: config.secret
 }, verify));
 
