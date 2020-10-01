@@ -40,8 +40,11 @@
 import ContentElement from '../../ContentElement';
 import ElementList from '../ElementList';
 import filter from 'lodash/filter';
+import InsertLocation from '@/utils/InsertLocation';
 import { mapActions } from 'vuex';
 import sortBy from 'lodash/sortBy';
+
+const { ADD_AFTER } = InsertLocation;
 
 export default {
   name: 'content-container',
@@ -75,7 +78,7 @@ export default {
       const items = this.contentElements;
       const { position: newPosition } = element;
       const isFirstChild = newPosition === -1;
-      const context = { items, newPosition, isFirstChild, insert: true };
+      const context = { items, newPosition, isFirstChild, action: ADD_AFTER };
       this.insertElement({ element, context });
     }
   },
