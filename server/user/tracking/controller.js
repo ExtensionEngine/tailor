@@ -36,9 +36,9 @@ function add({ user, body: { context } }, res) {
 function remove({ user, body: { context } }, res) {
   res.end();
   user = pick(user, USER_ATTRS);
-  const { createdAt, ...targetContext } = context;
+  const { connectedAt, ...targetContext } = context;
   activeUsers.removeContext(user,
-    ({ createdAt, ...context }) => isEqual(context, targetContext));
+    ({ connectedAt, ...context }) => isEqual(context, targetContext));
   const channel = sse.channel(context.repositoryId);
   if (channel) channel.send(UserActivity.End, { user, context });
 }

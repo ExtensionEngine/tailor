@@ -2,16 +2,11 @@
 
 const { Model, Op } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
+const { ContentElement: Events } = require('../../common/sse');
 const hooks = require('./hooks');
 const isNumber = require('lodash/isNumber');
 const pick = require('lodash/pick');
 const { resolveStatics } = require('../shared/storage/helpers');
-
-const Events = {
-  Create: 'contentElement:create',
-  Update: 'contentElement:update',
-  Delete: 'contentElement:delete'
-};
 
 class ContentElement extends Model {
   static fields(DataTypes) {

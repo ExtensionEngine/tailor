@@ -1,13 +1,8 @@
 'use strict';
 
+const { Comment: Events } = require('../../common/sse');
 const hooks = require('./hooks');
 const { Model } = require('sequelize');
-
-const Events = {
-  Create: 'comment:create',
-  Update: 'comment:update',
-  Delete: 'comment:delete'
-};
 
 class Comment extends Model {
   static fields(DataTypes) {

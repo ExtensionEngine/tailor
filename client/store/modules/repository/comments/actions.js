@@ -1,3 +1,4 @@
+import { Comment as Events } from '@/../common/sse';
 import generateActions from '@/store/helpers/actions';
 import SSEClient from '@/SSEClient';
 import urlJoin from 'url-join';
@@ -5,12 +6,6 @@ import urlJoin from 'url-join';
 const { api, get, save, setEndpoint, update } = generateActions();
 const baseUrl = process.env.API_PATH;
 const feed = new SSEClient();
-
-const Events = {
-  Create: 'comment:create',
-  Update: 'comment:update',
-  Delete: 'comment:delete'
-};
 
 const fetch = ({ commit }, activityId) => {
   return api.fetch({ activityId })

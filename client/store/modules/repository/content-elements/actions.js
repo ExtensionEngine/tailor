@@ -1,4 +1,5 @@
 import calculatePosition from 'utils/calculatePosition.js';
+import { ContentElement as Events } from '@/../common/sse';
 import generateActions from '@/store/helpers/actions';
 import SSEClient from '@/SSEClient';
 import urlJoin from 'url-join';
@@ -17,13 +18,7 @@ const {
 const baseUrl = process.env.API_PATH;
 const feed = new SSEClient();
 
-const Events = {
-  Create: 'contentElement:create',
-  Update: 'contentElement:update',
-  Delete: 'contentElement:delete'
-};
-
-const subscribe = ({ dispatch, rootState, commit }) => {
+const subscribe = ({ rootState, commit }) => {
   const { repositoryId } = rootState.route.params;
   const token = rootState.auth.token;
   const params = { repositoryId, token };
