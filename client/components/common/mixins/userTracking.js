@@ -25,7 +25,7 @@ export default {
       unsubscribeFromActiveUsers: 'unsubscribe',
       fetchActiveUsers: 'fetch',
       addContext: 'start',
-      removeContext: 'end',
+      removeContext: 'end'
     })
   },
   watch: {
