@@ -26,10 +26,8 @@
       :repository-id="activity.repositoryId"
       :levels="supportedLevels"
       :anchor="activity"
-      :add-child="addSublevel"
-      :heading="`
-        Add ${addSublevel ? 'into' : 'below'}
-        ${activity.data.name}`" />
+      :action="action"
+      :heading="`${dialogHeading} ${activity.data.name}`" />
     <copy-dialog
       v-if="showCopyDialog"
       @close="showCopyDialog = null"
@@ -37,7 +35,7 @@
       :repository-id="activity.repositoryId"
       :levels="supportedLevels"
       :anchor="activity"
-      :copy-into="addSublevel" />
+      :action="action" />
   </div>
 </template>
 
@@ -48,12 +46,14 @@ import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import first from 'lodash/first';
+import InsertLocation from '@/utils/InsertLocation';
 import { mapActions } from 'vuex';
 import optionsMixin from './common';
 import sortBy from 'lodash/sortBy';
 
 const appChannel = EventBus.channel('app');
 const TREE_VIEW_ROUTE = 'tree-view';
+const { ADD_AFTER, ADD_BEFORE, ADD_INTO } = InsertLocation;
 
 export default {
   name: 'activity-options-menu',
@@ -64,34 +64,38 @@ export default {
   data: () => ({
     showCreateDialog: false,
     showCopyDialog: false,
-    addSublevel: false,
+    action: null,
     supportedLevels: []
   }),
   computed: {
     addMenuOptions() {
       const items = [{
+        name: 'Add item above',
+        icon: 'arrow-up',
+        action: () => this.setCreateContext(this.sameLevel, ADD_BEFORE)
+      }, {
         name: 'Add item below',
         icon: 'arrow-down',
-        action: () => this.setCreateContext(this.sameLevel)
+        action: () => this.setCreateContext(this.sameLevel, ADD_AFTER)
       }];
       if (!this.subLevels.length) return items;
       return items.concat({
         name: 'Add item into',
         icon: 'subdirectory-arrow-right',
-        action: () => this.setCreateContext(this.subLevels, true)
+        action: () => this.setCreateContext(this.subLevels, ADD_INTO)
       });
     },
     copyMenuOptions() {
       const items = [{
         name: 'Copy existing below',
         icon: 'content-copy',
-        action: () => this.setCopyContext(this.sameLevel)
+        action: () => this.setCopyContext(this.sameLevel, ADD_AFTER)
       }];
       if (!this.subLevels.length) return items;
       return items.concat({
         name: 'Copy existing into',
         icon: 'content-copy',
-        action: () => this.setCopyContext(this.subLevels, true)
+        action: () => this.setCopyContext(this.subLevels, ADD_INTO)
       });
     },
     menuOptions() {
@@ -107,17 +111,17 @@ export default {
   },
   methods: {
     ...mapActions('repository/activities', ['remove']),
-    setCreateContext(levels, addSublevel) {
-      this.setSupportedLevels(levels, addSublevel);
+    setCreateContext(levels, action = null) {
+      this.setSupportedLevels(levels, action);
       this.showCreateDialog = true;
     },
-    setCopyContext(levels, addSublevel) {
-      this.setSupportedLevels(levels, addSublevel);
+    setCopyContext(levels, action = null) {
+      this.setSupportedLevels(levels, action);
       this.showCopyDialog = true;
     },
-    setSupportedLevels(levels, isSublevel = false) {
+    setSupportedLevels(levels, action = null) {
       this.supportedLevels = levels;
-      this.addSublevel = isSublevel;
+      this.action = action;
     },
     delete() {
       const { activity, $route: { name: routeName } } = this;

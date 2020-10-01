@@ -33,13 +33,13 @@ export const getLineage = state => {
 };
 
 export const calculateInsertPosition = state => {
-  return (activity, anchor) => {
+  return (activity, anchor, action) => {
     const items = getOutlineChildren(state.items, activity.parentId);
     const newPosition = anchor ? findIndex(items, { id: anchor.id }) : 1;
     const isFirstChild = !anchor ||
       (activity.parentId !== anchor.parentId) ||
       (newPosition === -1);
-    const context = { items, newPosition, isFirstChild, insert: true };
+    const context = { items, newPosition, isFirstChild, action };
     return calculatePosition(context);
   };
 };
