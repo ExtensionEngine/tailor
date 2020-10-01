@@ -49,7 +49,6 @@ import ContentElement from '../../ContentElement';
 import ElementList from '../ElementList';
 import filter from 'lodash/filter';
 import InsertLocation from '@/utils/InsertLocation';
-import { mapActions } from 'vuex';
 import sortBy from 'lodash/sortBy';
 
 const { ADD_AFTER } = InsertLocation;

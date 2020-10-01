@@ -52,7 +52,7 @@ function setContext(activeUsers, user, context) {
     Vue.set(activeUsers, user.id, { ...user, contexts: [context] });
     return;
   }
-  const existingContext = find(existingUser.contexts, omit(context, ['createdAt']));
+  const existingContext = find(existingUser.contexts, omit(context, ['connectedAt']));
   if (existingContext) return;
   existingUser.contexts.push(context);
 }

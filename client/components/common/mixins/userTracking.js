@@ -11,22 +11,21 @@ export default {
   computed: {
     ...mapState('repository/userTracking', ['sseId']),
     context() {
-      const context = {
-        activityId: Number(this.$route.params.activityId),
-        repositoryId: Number(this.$route.params.repositoryId),
+      return pickBy({
         sseId: this.sseId,
+        repositoryId: Number(this.$route.params.repositoryId),
+        activityId: Number(this.$route.params.activityId),
         created: new Date()
-      };
-      return pickBy(context);
+      });
     }
   },
   methods: {
     ...mapActions('repository/userTracking', {
       subscribeToActiveUsers: 'subscribe',
       unsubscribeFromActiveUsers: 'unsubscribe',
+      fetchActiveUsers: 'fetch',
       addContext: 'start',
       removeContext: 'end',
-      fetchActiveUsers: 'fetch'
     })
   },
   watch: {
