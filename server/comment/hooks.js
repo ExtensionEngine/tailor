@@ -11,13 +11,13 @@ const without = require('lodash/without');
 exports.add = (Comment, Hooks, db) => {
   const { Events } = Comment;
 
-  Comment.addHook(Hooks.afterCreate, comment => {
-    comment.getAuthor().then(a => {
-      const author = { id: a.id, email: a.email };
-      const channel = sse.channel(comment.repositoryId);
-      if (channel) channel.send(Events.Create, { ...comment.toJSON(), author });
-      sendEmailNotification(comment, db);
+  Comment.addHook(Hooks.afterCreate, async comment => {
+    const author = await comment.getAuthor({
+      attributes: ['id', 'email', 'firstName', 'lastName', 'fullName', 'imgUrl']
     });
+    const channel = sse.channel(comment.repositoryId);
+    if (channel) channel.send(Events.Create, { ...comment.toJSON(), author });
+    sendEmailNotification(comment, db);
   });
 
   Comment.addHook(Hooks.afterUpdate, comment => {

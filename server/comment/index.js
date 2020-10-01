@@ -34,7 +34,7 @@ function getComment(req, _res, next, commentId) {
   const include = [{
     model: User,
     as: 'author',
-    attributes: ['id', 'email']
+    attributes: ['id', 'email', 'firstName', 'lastName', 'fullName', 'imgUrl']
   }];
   const options = { include, paranoid: false, rejectOnEmpty: true };
   return Comment.findByPk(commentId, options)
