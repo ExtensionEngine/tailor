@@ -1,9 +1,8 @@
 <template>
   <div class="d-flex align-center pl-2 pr-6">
     <v-avatar
-      v-for="{ id, fullName, email, palette, imgUrl } in users"
+      v-for="{ id, fullName, imgUrl } in users"
       :key="id"
-      :style="{ boxShadow: `0 0 0 2px ${palette.border}` }"
       :size="size"
       class="avatar">
       <v-tooltip :disabled="!fullName" bottom>
@@ -29,7 +28,7 @@ export default {
   name: 'active-users',
   props: {
     users: { type: Array, default: () => [] },
-    size: { type: Number, default: 30 }
+    size: { type: Number, default: 32 }
   },
   filters: {
     capitalize
@@ -39,6 +38,7 @@ export default {
 
 <style scoped lang="scss">
 .avatar {
+  box-shadow: 0 0 0 2px #b0bec5;
   transition: all 0.2s;
 
   &:hover, &:focus-within {

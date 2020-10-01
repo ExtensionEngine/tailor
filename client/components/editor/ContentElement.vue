@@ -9,8 +9,7 @@
       v-bind="$attrs"
       :element="element"
       :is-dragged="dragged"
-      :is-disabled="disabled"
-      :style="elementStyle" />
+      :is-disabled="disabled" />
   </div>
 </template>
 
@@ -27,12 +26,11 @@ export default {
   props: {
     element: { type: Object, required: true },
     disabled: { type: Boolean, default: false },
-    dragged: { type: Boolean, default: false },
-    elementStyle: { type: Object, default: () => null }
+    dragged: { type: Boolean, default: false }
   },
   data: () => ({ isFocused: false }),
   computed: {
-    ...mapState('activeUsers', ['sseId']),
+    ...mapState('repository/userTracking', ['sseId']),
     context() {
       const { repositoryId, activityId, contentId: elementId } = this.element;
       const { sseId } = this;
@@ -45,9 +43,9 @@ export default {
       updateElement: 'update',
       removeElement: 'remove'
     }),
-    ...mapActions('activeUsers', {
-      addActiveUserContext: 'add',
-      removeActiveUserContext: 'remove'
+    ...mapActions('repository/userTracking', {
+      addActiveUserContext: 'start',
+      removeActiveUserContext: 'end'
     }),
     ...mapMutations('repository/contentElements', { addElement: 'add' }),
     add(element) {

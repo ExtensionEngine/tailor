@@ -9,7 +9,7 @@ const trackedRoutes = {
 
 export default {
   computed: {
-    ...mapState('activeUsers', ['sseId']),
+    ...mapState('repository/userTracking', ['sseId']),
     context() {
       const context = {
         activityId: Number(this.$route.params.activityId),
@@ -21,11 +21,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions('activeUsers', {
-      addContext: 'add',
-      removeContext: 'remove',
+    ...mapActions('repository/userTracking', {
       subscribeToActiveUsers: 'subscribe',
       unsubscribeFromActiveUsers: 'unsubscribe',
+      addContext: 'start',
+      removeContext: 'end',
       fetchActiveUsers: 'fetch'
     })
   },

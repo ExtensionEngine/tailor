@@ -40,7 +40,7 @@ export default {
   },
   data: () => ({ showLoader: true, lastSelectedActivity: null }),
   computed: {
-    ...mapGetters('activeUsers', ['getActiveUsers']),
+    ...mapGetters('repository/userTracking', ['getActiveUsers']),
     ...mapGetters(['isAdmin']),
     ...mapGetters('repository', ['repository', 'activities', 'isRepositoryAdmin']),
     activeUsers() {

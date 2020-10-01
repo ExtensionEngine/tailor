@@ -59,7 +59,7 @@ import SearchResult from './SearchResult';
 import selectActivity from '@/components/repository/common/selectActivity';
 import Sidebar from '../common/Sidebar';
 import StructureToolbar from './Toolbar';
-import withActiveUsers from 'components/common/mixins/activeUsers';
+import withActiveUsers from 'components/common/mixins/userTracking';
 
 export default {
   mixins: [reorderMixin, selectActivity, withActiveUsers],

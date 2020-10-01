@@ -1,7 +1,7 @@
 'use strict';
 
-const ctrl = require('./activeUser.controller');
-const { middleware: sse } = require('../shared/sse');
+const ctrl = require('./controller');
+const { middleware: sse } = require('../../shared/sse');
 const router = require('express').Router();
 
 router.get('/subscribe', sse, ctrl.subscribe);
@@ -12,6 +12,6 @@ router.route('/')
   .delete(ctrl.remove);
 
 module.exports = {
-  ctrl,
+  path: '/active-users',
   router
 };

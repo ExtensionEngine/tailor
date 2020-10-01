@@ -30,8 +30,7 @@
         <content-element
           :set-width="setWidth"
           :dragged="dragged"
-          :element="item"
-          :element-style="getElementStyle(item.contentId)">
+          :element="item">
           <active-users
             v-if="getActiveUsers('element', item.contentId)"
             :users="getActiveUsers('element', item.contentId)"
@@ -49,7 +48,6 @@ import ActiveUsers from 'components/common/ActiveUsers';
 import ContentElement from '../../ContentElement';
 import ElementList from '../ElementList';
 import filter from 'lodash/filter';
-import first from 'lodash/first';
 import sortBy from 'lodash/sortBy';
 
 export default {
@@ -62,7 +60,7 @@ export default {
     layout: { type: Boolean, default: true }
   },
   computed: {
-    ...mapGetters('activeUsers', ['getActiveUsers']),
+    ...mapGetters('repository/userTracking', ['getActiveUsers']),
     contentElements() {
       const activityId = this.container.id;
       return sortBy(filter(this.elements, { activityId }), 'position');
@@ -87,13 +85,6 @@ export default {
       const isFirstChild = newPosition === -1;
       const context = { items, newPosition, isFirstChild, insert: true };
       this.insertElement({ element, context });
-    },
-    getElementStyle(elementId) {
-      const activeUsers = this.getActiveUsers('element', elementId);
-      if (!activeUsers.length) return;
-      const { palette } = first(activeUsers);
-      const color = palette.border;
-      return { boxShadow: `0 0 0 2px ${color}` };
     }
   },
   components: { ActiveUsers, ContentElement, ElementList }

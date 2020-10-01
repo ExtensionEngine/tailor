@@ -28,7 +28,7 @@ import ActivityContent from './ActivityContent';
 import get from 'lodash/get';
 import Sidebar from './Sidebar';
 import Toolbar from './Toolbar';
-import withActiveUsers from 'components/common/mixins/activeUsers';
+import withActiveUsers from 'components/common/mixins/userTracking';
 
 export default {
   name: 'content-editor',
@@ -42,7 +42,7 @@ export default {
     selectedElement: null
   }),
   computed: {
-    ...mapGetters('activeUsers', ['getActiveUsers']),
+    ...mapGetters('repository/userTracking', ['getActiveUsers']),
     ...mapGetters('repository', ['repository', 'outlineActivities']),
     ...mapGetters('editor', ['activity', 'contentContainers']),
     activeUsers() {

@@ -3,10 +3,9 @@ import * as getters from './getters';
 import * as mutations from './mutations';
 
 const state = {
-  activeUsers: {},
   sseId: null,
   repositoryId: null,
-  $apiUrl: null
+  users: {}
 };
 
 export default {

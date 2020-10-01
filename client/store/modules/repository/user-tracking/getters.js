@@ -3,28 +3,26 @@ import find from 'lodash/find';
 import orderBy from 'lodash/orderBy';
 import pick from 'lodash/pick';
 
-export const activeUsers = state => {
+export const users = state => {
   const result = { repository: {}, activity: {}, element: {} };
-  const activeUsers = Object.values(state.activeUsers);
+  const activeUsers = Object.values(state.users);
   activeUsers.forEach(({ contexts, ...user }) => {
-    contexts.forEach(context => {
-      setUserActivityForContext(result, user, context);
-    });
+    contexts.forEach(context => setUserActivityForContext(result, user, context));
   });
   return result;
 };
 
 export const getActiveUsers = (_state, getters, { auth: { user } }) => {
   return (entity, entityId) => {
-    const activeUsers = orderBy(getters.activeUsers[entity][entityId], 'created', 'desc') || [];
+    const activeUsers = orderBy(getters.users[entity][entityId], 'createdAt', 'desc') || [];
     const filteredUsers = filter(activeUsers, item => item.email !== user.email);
     return filteredUsers;
   };
 };
 
 function setUserActivityForContext(activeUsers, user, context) {
-  const { repositoryId, activityId, elementId, created } = context;
-  const userData = { ...pick(user, ['id', 'fullName', 'email', 'palette', 'imgUrl']), created };
+  const { repositoryId, activityId, elementId } = context;
+  const userData = pick(user, ['id', 'email', 'fullName', 'imgUrl']);
   setEntityActivity(activeUsers, 'repository', repositoryId, userData);
   if (activityId) setEntityActivity(activeUsers, 'activity', activityId, userData);
   if (elementId) setEntityActivity(activeUsers, 'element', elementId, userData);
