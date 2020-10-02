@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex align-center pl-2 pr-6">
+  <div class="d-flex align-center">
     <v-avatar
       v-for="{ id, fullName, imgUrl } in users"
       :key="id"
@@ -10,12 +10,12 @@
           <img
             v-if="imgUrl"
             v-on="on"
-            :aria-describedby="`active-user-${ id }`"
             :src="imgUrl"
             :alt="fullName"
+            :aria-describedby="`activeUser-${ id }`"
             tabindex="0">
         </template>
-        <span :id="`active-user-${ id }`">{{ fullName }} </span>
+        <span :id="`activeUser-${ id }`">{{ fullName }} </span>
       </v-tooltip>
     </v-avatar>
   </div>
@@ -36,7 +36,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .avatar {
   box-shadow: 0 0 0 2px #b0bec5;
   transition: all 0.2s;

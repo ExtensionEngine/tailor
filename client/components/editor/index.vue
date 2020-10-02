@@ -1,11 +1,7 @@
 <template>
   <div class="editor-container">
     <template v-if="!isLoading">
-      <toolbar :element="selectedElement">
-        <template #active-users>
-          <active-users :users="activeUsers" />
-        </template>
-      </toolbar>
+      <toolbar :element="selectedElement" :active-users="activeUsers" />
       <sidebar
         :repository="repository"
         :activities="outlineActivities"
@@ -23,7 +19,6 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import ActiveUsers from 'components/common/ActiveUsers';
 import ActivityContent from './ActivityContent';
 import get from 'lodash/get';
 import Sidebar from './Sidebar';
@@ -51,8 +46,7 @@ export default {
   },
   methods: {
     ...mapActions('repository', ['initialize']),
-    ...mapActions('repository/contentElements',
-      ['subscribe'])
+    ...mapActions('repository/contentElements', ['subscribe'])
   },
   async created() {
     const { repositoryId: currentRepositoryId, repository: storeRepository } = this;
@@ -65,7 +59,6 @@ export default {
     this.isLoading = false;
   },
   components: {
-    ActiveUsers,
     ActivityContent,
     Sidebar,
     Toolbar

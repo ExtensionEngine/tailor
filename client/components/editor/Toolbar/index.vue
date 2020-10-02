@@ -1,5 +1,5 @@
 <template>
-  <div class="toolbar-wrapper primary elevation-1">
+  <div class="toolbar-wrapper">
     <div v-show="activity" class="activity-toolbar blue-grey darken-3">
       <activity-actions class="activity-actions" />
       <h1 class="pt-2 headline text-truncate">
@@ -9,7 +9,7 @@
           {{ activity.data.name }}
         </span>
       </h1>
-      <slot name="active-users"></slot>
+      <active-users :users="activeUsers" class="mx-6" />
     </div>
     <element-toolbar
       v-if="element && element.parent"
@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import ActiveUsers from '@/components/common/ActiveUsers';
 import ActivityActions from './ActivityActions';
 import { ElementToolbar } from 'tce-core';
 import { getElementId } from 'tce-core/utils';
@@ -44,7 +45,8 @@ import { mapGetters } from 'vuex';
 export default {
   name: 'editor-toolbar',
   props: {
-    element: { type: Object, default: null }
+    element: { type: Object, default: null },
+    activeUsers: { type: Array, default: () => [] }
   },
   computed: {
     ...mapGetters('editor', ['activity']),
@@ -55,7 +57,7 @@ export default {
   methods: {
     getElementId
   },
-  components: { ActivityActions, ElementToolbar }
+  components: { ActivityActions, ActiveUsers, ElementToolbar }
 };
 </script>
 
