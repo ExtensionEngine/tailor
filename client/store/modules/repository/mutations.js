@@ -28,3 +28,7 @@ export const setUsers = (state, users) => {
   state.users = {};
   users.forEach(it => Vue.set(state.users, it.id, it));
 };
+
+export const setSseId = (state, sseId) => {
+  state.sseId = sseId;
+};

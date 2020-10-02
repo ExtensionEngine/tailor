@@ -44,10 +44,7 @@ export default {
       return this.getActiveUsers('activity', this.activityId);
     }
   },
-  methods: {
-    ...mapActions('repository', ['initialize']),
-    ...mapActions('repository/contentElements', ['subscribe'])
-  },
+  methods: mapActions('repository', ['initialize']),
   async created() {
     const { repositoryId: currentRepositoryId, repository: storeRepository } = this;
     const repositoryLoaded = !!storeRepository;
@@ -55,7 +52,6 @@ export default {
     if (!repositoryLoaded || repositoryChanged) {
       await this.initialize(currentRepositoryId);
     }
-    await this.subscribe();
     this.isLoading = false;
   },
   components: {

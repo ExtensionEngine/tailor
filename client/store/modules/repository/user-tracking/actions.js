@@ -1,41 +1,27 @@
-import { Connection, UserActivity } from '@/../common/sse';
-import api from '@/api/userTracking';
-import SSEClient from '@/SSEClient';
-import urlJoin from 'url-join';
+import api from '@/api/feed';
+import { feed } from '../feed';
+import { UserActivity } from '@/../common/sse';
 
-const baseUrl = process.env.API_PATH;
-const feed = new SSEClient();
-
-const subscribe = ({ rootState, commit }, repositoryId) => {
-  if (feed.isConnected) return;
-  const url = urlJoin(baseUrl, api.urls.subscribe(repositoryId));
+const plugSSE = ({ commit }) => {
   feed
-    .connect(url, { params: { token: rootState.auth.token } })
     .subscribe(UserActivity.Start,
       ({ user, context }) => commit('start', { user, context }))
     .subscribe(UserActivity.End,
       ({ user, context }) => commit('end', { user, context }))
     .subscribe(UserActivity.EndSession,
-      ({ sseId, userId }) => commit('endSession', { sseId, userId }))
-    .subscribe(Connection.Initialized, e => commit('setSseId', e.sseId));
+      ({ sseId, userId }) => commit('endSession', { sseId, userId }));
 };
 
-const unsubscribe = ({ commit }) => {
-  feed.disconnect();
-  commit('reset');
-  commit('setSseId', null);
-};
+const start = (_, context) => api.start(context);
+
+const end = (_, context) => api.end(context);
 
 const fetch = ({ commit }, repositoryId) => {
   return api.fetch(repositoryId).then(({ items }) => commit('fetch', items));
 };
 
-const start = (_, context) => api.start(context);
-const end = (_, context) => api.end(context);
-
 export {
-  subscribe,
-  unsubscribe,
+  plugSSE,
   fetch,
   start,
   end

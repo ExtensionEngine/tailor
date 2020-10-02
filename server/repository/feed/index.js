@@ -7,11 +7,11 @@ const router = require('express').Router();
 router.get('/subscribe', sse, ctrl.subscribe);
 
 router.route('/')
-  .get(ctrl.fetch)
-  .post(ctrl.add)
-  .delete(ctrl.remove);
+  .get(ctrl.fetchUserActivities)
+  .post(ctrl.addUserActivity)
+  .delete(ctrl.removeUserActivity);
 
 module.exports = {
-  path: '/active-users',
+  path: '/feed',
   router
 };

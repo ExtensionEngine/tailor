@@ -21,11 +21,11 @@ function onUnsubscribe({ sseId, user, repository }) {
   channel.send(UserActivity.EndSession, { sseId, userId: user.id });
 }
 
-function fetch(_req, res) {
+function fetchUserActivities(_req, res) {
   res.json({ data: { items: activeUsers } });
 }
 
-function add({ user, body: { context } }, res) {
+function addUserActivity({ user, body: { context } }, res) {
   res.end();
   user = pick(user, USER_ATTRS);
   activeUsers.addContext(user, context);
@@ -33,7 +33,7 @@ function add({ user, body: { context } }, res) {
   if (channel) channel.send(UserActivity.Start, { user, context });
 }
 
-function remove({ user, body: { context } }, res) {
+function removeUserActivity({ user, body: { context } }, res) {
   res.end();
   user = pick(user, USER_ATTRS);
   const { connectedAt, ...targetContext } = context;
@@ -45,7 +45,7 @@ function remove({ user, body: { context } }, res) {
 
 module.exports = {
   subscribe,
-  fetch,
-  add,
-  remove
+  fetchUserActivities,
+  addUserActivity,
+  removeUserActivity
 };

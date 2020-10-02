@@ -21,8 +21,6 @@ export default {
   },
   methods: {
     ...mapActions('repository/userTracking', {
-      subscribeToActiveUsers: 'subscribe',
-      unsubscribeFromActiveUsers: 'unsubscribe',
       fetchActiveUsers: 'fetch',
       addContext: 'start',
       removeContext: 'end'
@@ -36,10 +34,6 @@ export default {
       },
       immediate: true
     }
-  },
-  created() {
-    this.subscribeToActiveUsers(this.repositoryId);
-    this.fetchActiveUsers(this.repositoryId);
   },
   beforeRouteLeave(to, from, next) {
     if (!has(trackedRoutes, to.name)) {

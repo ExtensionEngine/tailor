@@ -5,7 +5,6 @@ const { FORBIDDEN, NOT_FOUND } = require('http-status-codes');
 const { createError } = require('../shared/error/helpers');
 const ctrl = require('./comment.controller');
 const processQuery = require('../shared/util/processListQuery');
-const { middleware: sse } = require('../shared/sse');
 const router = require('express').Router();
 const { EmptyResultError } = Sequelize;
 
@@ -13,8 +12,6 @@ const defaultListQuery = {
   order: [['createdAt', 'DESC']],
   paranoid: false
 };
-
-router.get('/subscribe', sse, createFeed);
 
 router.param('commentId', getComment);
 
@@ -25,10 +22,6 @@ router.route('/')
 router.route('/:commentId')
   .patch(canEdit, ctrl.patch)
   .delete(canEdit, ctrl.remove);
-
-function createFeed({ query }, { sse }) {
-  sse.join(query.repositoryId);
-}
 
 function getComment(req, _res, next, commentId) {
   const include = [{

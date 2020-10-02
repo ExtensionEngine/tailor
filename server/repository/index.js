@@ -4,12 +4,12 @@ const { NOT_FOUND, UNAUTHORIZED } = require('http-status-codes');
 const { authorize } = require('../shared/auth/mw');
 const { createError } = require('../shared/error/helpers');
 const ctrl = require('./repository.controller');
+const feed = require('./feed');
 const multer = require('multer');
 const path = require('path');
 const processQuery = require('../shared/util/processListQuery')();
 const { Repository } = require('../shared/database');
 const router = require('express').Router();
-const userTracking = require('../user/tracking');
 
 /* eslint-disable require-sort/require-sort */
 const activity = require('../activity');
@@ -50,7 +50,7 @@ router
   .post('/:repositoryId/tags', ctrl.addTag)
   .delete('/:repositoryId/tags/:tagId', ctrl.removeTag);
 
-mount(router, '/:repositoryId', userTracking);
+mount(router, '/:repositoryId', feed);
 mount(router, '/:repositoryId', activity);
 mount(router, '/:repositoryId', revision);
 mount(router, '/:repositoryId', contentElement);

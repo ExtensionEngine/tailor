@@ -2,7 +2,7 @@ import { extractData } from './helpers';
 import request from './request';
 
 const urls = {
-  root: repositoryId => `/repositories/${repositoryId}/active-users`,
+  root: repositoryId => `/repositories/${repositoryId}/feed`,
   subscribe: repositoryId => `${urls.root(repositoryId)}/subscribe`
 };
 

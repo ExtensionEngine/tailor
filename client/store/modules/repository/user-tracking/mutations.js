@@ -6,10 +6,6 @@ import pick from 'lodash/pick';
 import remove from 'lodash/remove';
 import Vue from 'vue';
 
-const setSseId = (state, sseId) => {
-  state.sseId = sseId;
-};
-
 const fetch = (state, users) => {
   state.users = users;
 };
@@ -38,7 +34,6 @@ const reset = state => {
 };
 
 export {
-  setSseId,
   fetch,
   start,
   end,

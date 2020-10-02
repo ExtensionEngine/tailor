@@ -1,9 +1,13 @@
 import api from '@/api/repository';
 import each from 'lodash/each';
+import { Connection as Events } from '@/../common/sse';
 import filter from 'lodash/filter';
+import { connect as initSSEConnection } from './feed';
 import Promise from 'bluebird';
 
-export const initialize = ({ commit, dispatch }, id) => {
+export const initialize = (store, id) => {
+  initializeSSE(id, store);
+  const { commit, dispatch } = store;
   const getRoute = entity => `repositories/${id}/${entity}`;
   const modules = {
     activities: 'activities',
@@ -12,6 +16,8 @@ export const initialize = ({ commit, dispatch }, id) => {
     comments: 'comments'
   };
   // Reset store and setup api endpoints
+  commit('setSseId', null);
+  commit('userTracking/reset');
   each(modules, (path, module) => {
     commit(`${module}/reset`);
     dispatch(`${module}/setEndpoint`, getRoute(path));
@@ -49,3 +55,11 @@ export const removeUser = ({ commit }, { repositoryId, userId }) => {
   return api.removeUser(repositoryId, userId)
     .then(() => commit('removeUser', userId));
 };
+
+function initializeSSE(id, store) {
+  const { rootState, dispatch, commit } = store;
+  const feed = initSSEConnection(id, rootState.auth.token);
+  feed.subscribe(Events.Initialized, e => commit('setSseId', e.sseId));
+  const modules = ['userTracking', 'comments', 'contentElements'];
+  each(modules, module => dispatch(`${module}/plugSSE`));
+}
