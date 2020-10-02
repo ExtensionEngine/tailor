@@ -1,10 +1,12 @@
 'use strict';
 
+const miss = require('mississippi');
 const path = require('path');
 const S3 = require('aws-sdk/clients/s3');
 const { validateConfig } = require('../validation');
 const yup = require('yup');
 
+const noop = () => {};
 const isNotFound = err => err.code === 'NoSuchKey';
 const DEFAULT_EXPIRATION_TIME = 3600; // seconds
 
@@ -53,10 +55,24 @@ class Amazon {
       });
   }
 
+  // API docs: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#getObject-property
+  createReadStream(key, options = {}) {
+    const params = Object.assign(options, { Bucket: this.bucket, Key: key });
+    return this.client.getObject(params).createReadStream();
+  }
+
   // API docs: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#putObject-property
   saveFile(key, data, options = {}) {
     const params = Object.assign(options, { Bucket: this.bucket, Key: key, Body: data });
     return this.client.putObject(params).promise();
+  }
+
+  // API docs: https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#upload-property
+  createWriteStream(key, options = {}) {
+    const throughStream = miss.through();
+    const params = Object.assign(options, { Bucket: this.bucket, Key: key, Body: throughStream });
+    this.client.upload(params, noop);
+    return throughStream;
   }
 
   // API docs: https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#copyObject-property

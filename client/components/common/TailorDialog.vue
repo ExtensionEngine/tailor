@@ -19,7 +19,7 @@
           <slot name="header"></slot>
         </div>
       </v-card-title>
-      <v-card-text class="pt-7">
+      <v-card-text :class="[paddingless ? 'pa-0' : 'pt-7 px-4 pb-2']">
         <slot name="body"></slot>
       </v-card-text>
       <v-card-actions v-if="$slots.actions" class="px-4 pb-3">
@@ -35,7 +35,8 @@ export default {
   name: 'tailor-dialog',
   props: {
     headerIcon: { type: String, default: null },
-    width: { type: [Number, String], default: 500 }
+    width: { type: [Number, String], default: 500 },
+    paddingless: { type: Boolean, default: false }
   }
 };
 </script>
