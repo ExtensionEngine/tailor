@@ -59,10 +59,9 @@ import SearchResult from './SearchResult';
 import selectActivity from '@/components/repository/common/selectActivity';
 import Sidebar from '../common/Sidebar';
 import StructureToolbar from './Toolbar';
-import withActiveUsers from 'components/common/mixins/userTracking';
 
 export default {
-  mixins: [reorderMixin, selectActivity, withActiveUsers],
+  mixins: [reorderMixin, selectActivity],
   props: {
     showLoader: { type: Boolean, default: false },
     repositoryId: { type: Number, required: true }

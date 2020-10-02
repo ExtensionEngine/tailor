@@ -25,9 +25,9 @@ const remove = ({ commit }, comment) => {
 export {
   fetch,
   get,
+  plugSSE,
   remove,
   save,
-  plugSSE,
   setEndpoint,
   update
 };

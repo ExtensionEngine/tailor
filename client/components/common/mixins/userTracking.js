@@ -9,17 +9,16 @@ const trackedRoutes = {
 
 export default {
   computed: {
-    ...mapState('repository/userTracking', ['sseId']),
-    context() {
-      return pickBy({
-        sseId: this.sseId,
-        repositoryId: Number(this.$route.params.repositoryId),
-        activityId: Number(this.$route.params.activityId),
-        created: new Date()
-      });
-    }
+    ...mapState('repository', ['sseId']),
+    context: vm => pickBy({
+      sseId: vm.sseId,
+      repositoryId: Number(vm.$route.params.repositoryId),
+      activityId: Number(vm.$route.params.activityId),
+      created: new Date()
+    })
   },
   methods: {
+    ...mapActions('repository', ['reset']),
     ...mapActions('repository/userTracking', {
       fetchActiveUsers: 'fetch',
       addContext: 'start',
@@ -28,17 +27,15 @@ export default {
   },
   watch: {
     sseId: {
+      immediate: true,
       handler() {
         if (!this.sseId) return;
         this.addContext(this.context);
-      },
-      immediate: true
+      }
     }
   },
-  beforeRouteLeave(to, from, next) {
-    if (!has(trackedRoutes, to.name)) {
-      this.unsubscribeFromActiveUsers(this.context);
-    }
+  beforeRouteLeave(to, _from, next) {
+    if (!has(trackedRoutes, to.name)) this.reset(this.context);
     // Remove context when leaving route except when navigating
     // to course route (Outline component)
     if (to.name === trackedRoutes.repository) this.removeContext(this.context);

@@ -23,11 +23,11 @@ import ActivityContent from './ActivityContent';
 import get from 'lodash/get';
 import Sidebar from './Sidebar';
 import Toolbar from './Toolbar';
-import withActiveUsers from 'components/common/mixins/userTracking';
+import withUserTracking from 'components/common/mixins/userTracking';
 
 export default {
   name: 'content-editor',
-  mixins: [withActiveUsers],
+  mixins: [withUserTracking],
   props: {
     repositoryId: { type: Number, required: true },
     activityId: { type: Number, required: true }
@@ -40,9 +40,7 @@ export default {
     ...mapGetters('repository/userTracking', ['getActiveUsers']),
     ...mapGetters('repository', ['repository', 'outlineActivities']),
     ...mapGetters('editor', ['activity', 'contentContainers']),
-    activeUsers() {
-      return this.getActiveUsers('activity', this.activityId);
-    }
+    activeUsers: vm => vm.getActiveUsers('activity', vm.activityId)
   },
   methods: mapActions('repository', ['initialize']),
   async created() {

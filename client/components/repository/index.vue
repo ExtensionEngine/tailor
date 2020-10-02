@@ -32,9 +32,10 @@ import filter from 'lodash/filter';
 import get from 'lodash/get';
 import selectActivity from '@/components/repository/common/selectActivity';
 import sortBy from 'lodash/sortBy';
+import withUserTracking from 'components/common/mixins/userTracking';
 
 export default {
-  mixins: [selectActivity],
+  mixins: [selectActivity, withUserTracking],
   props: {
     repositoryId: { type: Number, required: true }
   },

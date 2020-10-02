@@ -7,8 +7,10 @@ const feed = new SSEClient();
 let subscribedRepositoryId = null;
 
 function connect(repositoryId, token) {
-  if (feed.isConnected && (repositoryId === subscribedRepositoryId)) return;
-  if (subscribedRepositoryId) feed.disconnect();
+  if (feed.isConnected) {
+    if (repositoryId === subscribedRepositoryId) return feed;
+    feed.disconnect();
+  }
   subscribedRepositoryId = repositoryId;
   const url = urlJoin(baseUrl, api.urls.subscribe(repositoryId));
   feed.connect(url, { params: { token } });
