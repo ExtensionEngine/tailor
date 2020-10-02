@@ -15,7 +15,7 @@
             :aria-describedby="`activeUser-${ id }`"
             tabindex="0">
         </template>
-        <span :id="`activeUser-${ id }`">{{ fullName }} </span>
+        <span :id="`activeUser-${ id }`">{{ fullName }}</span>
       </v-tooltip>
     </v-avatar>
   </div>
