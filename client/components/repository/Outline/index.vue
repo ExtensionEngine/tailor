@@ -63,8 +63,7 @@ import StructureToolbar from './Toolbar';
 export default {
   mixins: [reorderMixin, selectActivity],
   props: {
-    showLoader: { type: Boolean, default: false },
-    repositoryId: { type: Number, required: true }
+    showLoader: { type: Boolean, default: false }
   },
   data: () => ({ search: '' }),
   computed: {
