@@ -20,7 +20,7 @@
         <mj-table padding="10px">
           <tr class="content" style="display: flex;">
             <td>
-              <img class="avatar" src="{{author.imgUrl}}" />
+              <span class="avatar">{{#getInitials}}{{author.label}}{{/getInitials}}</span>
             </td>
             <td style="padding: 0 0 0 20px">
               <div class="label">{{author.label}}</div>
@@ -36,7 +36,7 @@
           <mj-table padding="10px">
             <tr class="content" style="display: flex;">
               <td>
-                <img class="avatar" src="{{author.imgUrl}}" />
+                <span class="avatar">{{#getInitials}}{{author.label}}{{/getInitials}}</span>
               </td>
               <td style="padding: 0 0 0 20px">
                 <div class="label">{{author.label}}</div>
