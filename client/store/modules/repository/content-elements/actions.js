@@ -19,7 +19,7 @@ const plugSSE = ({ commit }) => {
   feed
     .subscribe(Events.Create, item => commit('add', item))
     .subscribe(Events.Update, item => commit('update', item))
-    .subscribe(Events.Delete, item => commit('customRemove', item));
+    .subscribe(Events.Delete, item => commit('remove', [item]));
 };
 
 const insert = ({ dispatch }, { element, context }) => {
