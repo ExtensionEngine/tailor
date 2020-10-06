@@ -13,8 +13,7 @@ class Task extends Model {
         type: ENUM(priorityIds)
       },
       dueDate: {
-        type: DATE,
-        field: 'due_date'
+        type: DATE
       },
       status: {
         type: STRING
@@ -26,22 +25,18 @@ class Task extends Model {
         type: TEXT
       },
       archivedAt: {
-        type: DATE,
-        field: 'archived_at'
+        type: DATE
       },
       createdAt: {
         type: DATE,
-        field: 'created_at',
         allowNull: false
       },
       updatedAt: {
         type: DATE,
-        field: 'updated_at',
         allowNull: false
       },
       deletedAt: {
-        type: DATE,
-        field: 'deleted_at'
+        type: DATE
       }
     };
   }
@@ -64,7 +59,8 @@ class Task extends Model {
       modelName: 'task',
       timestamps: true,
       paranoid: true,
-      freezeTableName: true
+      freezeTableName: true,
+      underscored: true
     };
   }
 
