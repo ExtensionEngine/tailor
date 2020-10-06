@@ -1,8 +1,8 @@
 <template>
   <draggable
     :key="status.id"
-    @change="setTaskStatus($event, status.id)"
-    :list="tasksByStatus"
+    @change="updateTask"
+    :list="[...tasksByStatus]"
     group="tasks"
     class="d-flex flex-column align-center grey lighten-3">
     <task-card
@@ -19,8 +19,11 @@
 <script>
 import Draggable from 'vuedraggable';
 import get from 'lodash/get';
+import head from 'lodash/head';
+import last from 'lodash/last';
 import { mapActions } from 'vuex';
 import selectTask from '../common/selectTask';
+import sortBy from 'lodash/sortBy';
 import TaskCard from './Card';
 
 export default {
@@ -31,14 +34,27 @@ export default {
     tasks: { type: Object, default: () => ({}) }
   },
   computed: {
-    tasksByStatus: vm => get(vm.tasks, vm.status.id, [])
+    tasksByStatus: vm => sortBy(get(vm.tasks, vm.status.id, []), ['columnPosition'])
   },
   methods: {
     ...mapActions('repository/tasks', ['save']),
-    setTaskStatus(update, status) {
-      if (!update.added) return;
-      const { element: task } = update.added;
-      return this.save({ ...task, status });
+    getPosition(index, isNewElement) {
+      if (!this.tasksByStatus.length) return 1;
+      const isFirst = index === 0;
+      const isLast = isNewElement
+        ? index === this.tasksByStatus.length
+        : index === this.tasksByStatus.length - 1;
+      if (isFirst) return head(this.tasksByStatus).columnPosition * 0.5;
+      if (isLast) return last(this.tasksByStatus).columnPosition + 1;
+      const prev = this.tasksByStatus[index];
+      const next = this.tasksByStatus[index + 1];
+      return (prev.columnPosition + next.columnPosition) / 2;
+    },
+    updateTask(update, status) {
+      if (!update.added && !update.moved) return;
+      const { element: task, newIndex } = update.added || update.moved;
+      const columnPosition = this.getPosition(newIndex, Boolean(update.added));
+      return this.save({ ...task, columnPosition, status: this.status.id });
     }
   },
   components: { Draggable, TaskCard }
