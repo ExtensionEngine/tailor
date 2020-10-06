@@ -104,7 +104,6 @@ export default class Resource {
    */
   remove(model) {
     return this.delete(model.id).then(() => {
-      this.unmap(model);
       return [model];
     });
   }
