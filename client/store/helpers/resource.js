@@ -45,6 +45,7 @@ export default class Resource {
   processEntries(items) {
     return reduce(items, (acc, it) => {
       acc[it.uid] = it;
+      this.map(it.uid, it.id);
       return acc;
     }, {});
   }
@@ -93,8 +94,8 @@ export default class Resource {
    * @param {object} changes - Key-value collection of properties to update.
    */
   update(uid, changes) {
-    const key = this.mappings(uid);
-    return this.patch(key, changes)
+    const id = this.mappings[uid];
+    return this.patch(id, changes)
       .then(extractData);
   }
 
