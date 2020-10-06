@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken');
 const mail = require('../shared/mail');
 const map = require('lodash/map');
 const { Model } = require('sequelize');
+const omit = require('lodash/omit');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const randomstring = require('randomstring');
@@ -145,7 +146,8 @@ class User extends Model {
     const { email } = data;
     return User.findOne({ where: { email }, paranoid: false }).then(user => {
       if (!user) return User.invite(data);
-      map(({ ...data, deletedAt: null }), (v, k) => user.setDataValue(k, v));
+      const payload = omit(data, ['id', 'uid']);
+      map(({ ...payload, deletedAt: null }), (v, k) => user.setDataValue(k, v));
       return user.save();
     });
   }
