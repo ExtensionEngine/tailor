@@ -23,14 +23,6 @@ export default class Resource {
   }
 
   /**
-   * Get id based on uid.
-   * @param {string} uid
-   */
-  getKey(uid) {
-    return this.mappings[uid];
-  }
-
-  /**
    * Returns copy of model without client metadata.
    * @param {object} model
    */
@@ -51,24 +43,24 @@ export default class Resource {
   }
 
   /**
-   * Retrieves model by id.
-   */
-  getById(id) {
-    return this.get(id).then(extractData);
-  }
-
-  /**
    * Create mapping between uid and id
    * and store it inside resource cache. Cache is used when
    * model is modified before being created on the server. Using cache
    * module can use key recieved from previous action in order
    * to execute apropriate action.
    * @param {string} uid
-   * @param {string} id
+   * @param {number} id
    */
   map(uid, id) {
     this.mappings[uid] = id;
     this.mappings[id] = uid;
+  }
+
+  /**
+   * Retrieves model by id.
+   */
+  getById(id) {
+    return this.get(id).then(extractData);
   }
 
   /**
@@ -90,13 +82,12 @@ export default class Resource {
 
   /**
    * Partially updates an existing model.
-   * @param {object} uid - uid of the model to update.
+   * @param {string} uid - uid of the model to update.
    * @param {object} changes - Key-value collection of properties to update.
    */
   update(uid, changes) {
     const id = this.mappings[uid];
-    return this.patch(id, changes)
-      .then(extractData);
+    return this.patch(id, changes).then(extractData);
   }
 
   /**
@@ -104,9 +95,7 @@ export default class Resource {
    * @param {object} model
    */
   remove(model) {
-    return this.delete(model.id).then(() => {
-      return [model];
-    });
+    return this.delete(model.id).then(() => [model]);
   }
 
   /**
