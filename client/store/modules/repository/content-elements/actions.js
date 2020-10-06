@@ -17,7 +17,7 @@ const {
 
 const plugSSE = ({ commit }) => {
   feed
-    .subscribe(Events.Create, item => commit('add', item))
+    .subscribe(Events.Create, item => commit('save', item))
     .subscribe(Events.Update, item => commit('update', item))
     .subscribe(Events.Delete, item => commit('remove', [item]));
 };
@@ -25,8 +25,6 @@ const plugSSE = ({ commit }) => {
 const insert = ({ dispatch }, { element, context }) => {
   return dispatch('save', { ...element, position: calculatePosition(context) });
 };
-
-const sseElementAdd = ({ commit }, model) => commit('sseElementAdd', model);
 
 const reorder = ({ commit }, { element, context }) => {
   const position = calculatePosition(context);
@@ -37,7 +35,6 @@ const reorder = ({ commit }, { element, context }) => {
 
 export {
   add,
-  sseElementAdd,
   get,
   fetch,
   insert,
