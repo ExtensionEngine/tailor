@@ -13,7 +13,8 @@ export const initialize = async (store, id) => {
   return Promise.all([
     dispatch('repositories/get', id, { root: true }),
     dispatch('activities/reset'),
-    dispatch('getUsers')]);
+    dispatch('getUsers'),
+    dispatch('userTracking/fetch', id)]);
 };
 
 function initializeSSE(id, store) {
