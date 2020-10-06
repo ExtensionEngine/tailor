@@ -6,9 +6,9 @@ const { api, get, save, setEndpoint, update } = generateActions();
 
 const plugSSE = ({ commit }) => {
   feed
-    .subscribe(Events.Create, item => commit('add', item))
-    .subscribe(Events.Update, item => commit('sseUpdate', item))
-    .subscribe(Events.Delete, item => commit('sseUpdate', item));
+    .subscribe(Events.Create, item => commit('save', item))
+    .subscribe(Events.Update, item => commit('update', item))
+    .subscribe(Events.Delete, item => commit('update', item));
 };
 
 const fetch = ({ commit }, activityId) => {

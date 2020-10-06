@@ -13,7 +13,7 @@
     </div>
     <element-toolbar
       v-if="element && element.parent"
-      :key="`${element.parent._cid}-${element.id}`"
+      :key="`${element.parent.uid}-${element.id}`"
       :element="element.parent"
       :embed="element">
       <template slot="embed-toolbar">

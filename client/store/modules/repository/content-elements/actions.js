@@ -18,7 +18,7 @@ const {
 const plugSSE = ({ commit }) => {
   feed
     .subscribe(Events.Create, item => commit('add', item))
-    .subscribe(Events.Update, item => commit('sseUpdate', item))
+    .subscribe(Events.Update, item => commit('update', item))
     .subscribe(Events.Delete, item => commit('customRemove', item));
 };
 

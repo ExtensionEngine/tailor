@@ -6,8 +6,14 @@ const { Model } = require('sequelize');
 
 class Comment extends Model {
   static fields(DataTypes) {
-    const { DATE, TEXT } = DataTypes;
+    const { DATE, TEXT, UUID, UUIDV4 } = DataTypes;
     return {
+      uid: {
+        type: UUID,
+        unique: true,
+        allowNull: false,
+        defaultValue: UUIDV4
+      },
       content: {
         type: TEXT,
         allowNull: false,

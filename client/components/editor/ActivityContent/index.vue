@@ -76,7 +76,7 @@ export default {
         const { type, payload: element } = mutation;
         const { focusedElement } = this;
         if (!focusedElement || !ELEMENT_MUTATIONS.includes(type)) return;
-        if (element._cid === focusedElement._cid) {
+        if (element.uid === focusedElement.uid) {
           this.focusedElement = { ...focusedElement, ...element };
           return;
         }

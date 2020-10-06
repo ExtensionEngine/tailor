@@ -17,8 +17,14 @@ const { user: { ADMIN, USER, INTEGRATION } } = roles;
 const gravatarConfig = { size: 130, default: 'identicon' };
 
 class User extends Model {
-  static fields({ DATE, ENUM, STRING, TEXT, VIRTUAL }) {
+  static fields({ DATE, ENUM, STRING, TEXT, UUID, UUIDV4, VIRTUAL }) {
     return {
+      uid: {
+        type: UUID,
+        unique: true,
+        allowNull: false,
+        defaultValue: UUIDV4
+      },
       email: {
         type: STRING,
         set(email) {

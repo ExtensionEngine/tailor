@@ -12,7 +12,7 @@
     <ul class="list-group pl-0">
       <assessment-item
         v-for="it in assessments"
-        :key="it._cid"
+        :key="it.uid"
         @selected="toggleSelect(it)"
         @save="saveAssessment"
         @delete="$emit('deleteElement', it)"
@@ -33,10 +33,10 @@
 <script>
 import AddElement from 'tce-core/AddElement';
 import AssessmentItem from 'tce-core/AssessmentItem';
-import cuid from 'cuid';
 import filter from 'lodash/filter';
 import last from 'lodash/last';
 import sortBy from 'lodash/sortBy';
+import uuid from '@/utils/uuid';
 
 export default {
   name: 'assessment-pool',
@@ -62,9 +62,9 @@ export default {
   },
   methods: {
     addAssessment(assessment) {
-      const cid = cuid();
-      this.$emit('addElement', { ...assessment, _cid: cid });
-      this.selected.push(cid);
+      const uid = uuid();
+      this.$emit('addElement', { ...assessment, uid });
+      this.selected.push(uid);
     },
     saveAssessment(assessment) {
       const event = assessment.id ? 'updateElement' : 'saveElement';

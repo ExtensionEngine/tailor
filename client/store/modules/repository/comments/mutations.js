@@ -1,15 +1,12 @@
-import { add, fetch, remove, reset, save, setEndpoint } from '@/store/helpers/mutations';
-import find from 'lodash/find';
-import pick from 'lodash/pick';
-import Vue from 'vue';
-
-const sseUpdate = (state, comment) => {
-  const existing = find(state.items, { id: comment.id });
-  if (!existing) return;
-  const data = pick(comment, ['content', 'createdAt', 'updatedAt', 'deletedAt']);
-  const updated = { ...existing, ...data };
-  Vue.set(state.items, updated._cid, updated);
-};
+import {
+  add,
+  fetch,
+  remove,
+  reset,
+  save,
+  setEndpoint,
+  update
+} from '@/store/helpers/mutations';
 
 const markSeenComments = (state, { activityUid, lastCommentAt }) => {
   state.seenByActivity = {
@@ -21,10 +18,10 @@ const markSeenComments = (state, { activityUid, lastCommentAt }) => {
 export {
   add,
   fetch,
+  markSeenComments,
   remove,
   reset,
   save,
   setEndpoint,
-  sseUpdate,
-  markSeenComments
+  update
 };

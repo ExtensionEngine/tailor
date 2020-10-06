@@ -40,10 +40,10 @@ export default {
     ...mapMutations('repository', ['toggleActivity']),
     expandParent(item) {
       const { activity, parent } = this;
-      const _cid = item.parentId === activity.id
-        ? activity._cid
-        : get(parent, '_cid');
-      if (_cid) this.toggleActivity({ _cid, expanded: true });
+      const uid = item.parentId === activity.id
+        ? activity.uid
+        : get(parent, 'uid');
+      if (uid) this.toggleActivity({ uid, expanded: true });
     }
   }
 };
