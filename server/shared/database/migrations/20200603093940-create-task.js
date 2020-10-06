@@ -47,6 +47,10 @@ exports.up = (queryInterface, Sequelize) => queryInterface.createTable(TABLE_NAM
   description: {
     type: Sequelize.TEXT
   },
+  column_position: {
+    type: Sequelize.FLOAT,
+    allowNull: false
+  },
   archivedAt: {
     type: Sequelize.DATE,
     field: 'archived_at'

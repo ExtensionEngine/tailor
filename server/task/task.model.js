@@ -7,7 +7,7 @@ const { priorities } = require('../../config/shared/workflow');
 const priorityIds = priorities.map(it => it.id);
 
 class Task extends Model {
-  static fields({ DATE, ENUM, STRING, TEXT }) {
+  static fields({ DATE, ENUM, STRING, TEXT, FLOAT }) {
     return {
       priority: {
         type: ENUM(priorityIds)
@@ -23,6 +23,9 @@ class Task extends Model {
       },
       description: {
         type: TEXT
+      },
+      columnPosition: {
+        type: FLOAT
       },
       archivedAt: {
         type: DATE

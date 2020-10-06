@@ -1,11 +1,11 @@
 'use strict';
 
-const { Activity } = require('../shared/database');
+const { Activity, Task } = require('../shared/database');
 const { CONFLICT } = require('http-status-codes');
 const { createError } = require('../shared/error/helpers');
 const pick = require('lodash/pick');
 const ATTRIBUTES = [
-  'name', 'description', 'priority', 'status', 'dueDate',
+  'name', 'description', 'priority', 'status', 'dueDate', 'columnPosition',
   'assigneeId', 'activityId'
 ];
 
@@ -17,14 +17,21 @@ async function list({ repository }, res) {
 async function create({ body, repository, user }, res) {
   const { activityId, ...data } = pick(body, ATTRIBUTES);
   const activity = await Activity.findOne({
-    where: { id: activityId }
+    where: { id: activityId },
+    include: [{ model: Task, required: false }]
   });
-  const tasks = await activity.getTasks();
-  if (tasks.length) {
+  if (activity.tasks.length) {
     return createError(CONFLICT, 'Active task for activity already exists.');
   }
+  const lastColumnPosition = await Task.max('columnPosition', {
+    where: { status: body.status }
+  });
+  const columnPosition = Number.isNaN(lastColumnPosition)
+    ? 0
+    : lastColumnPosition + 1;
   const task = await activity.createTask({
     ...data,
+    columnPosition,
     repositoryId: repository.id,
     authorId: user.id
   });
