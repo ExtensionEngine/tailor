@@ -20,7 +20,10 @@ export default function ($apiUrl) {
     return api.fetch(opts).then(res => commit('reset', res));
   };
 
-  const add = ({ commit }, model) => commit('add', model);
+  const add = ({ commit }, model) => {
+    const payload = model.uid ? model : { ...model, uid: uuid() };
+    commit('add', payload);
+  };
 
   const save = ({ state, commit }, model) => {
     if (!model.uid) model.uid = uuid();
@@ -39,8 +42,8 @@ export default function ($apiUrl) {
   };
 
   const update = ({ commit }, model) => {
-    const uid = model.uid;
     const changes = { ...model };
+    const uid = model.uid;
     delete changes.uid;
     return api.update(uid, changes)
       .then(updated => commit('save', { ...model, ...updated }));
