@@ -25,7 +25,6 @@ export default {
     disabled: { type: Boolean, default: false },
     dragged: { type: Boolean, default: false }
   },
-  data: () => ({ isFocused: false }),
   methods: {
     ...mapActions('repository/contentElements', {
       saveElement: 'save',
