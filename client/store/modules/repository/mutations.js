@@ -2,6 +2,10 @@ import compact from 'lodash/compact';
 import transform from 'lodash/transform';
 import Vue from 'vue';
 
+export const setRepositoryId = (state, repositoryId) => {
+  state.repositoryId = repositoryId;
+};
+
 export const toggleActivity = (state, { uid, expanded }) => {
   const expandedItems = state.outline.expanded;
   expanded = expanded === undefined ? !expandedItems[uid] : expanded;

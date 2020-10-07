@@ -34,6 +34,7 @@ export const reset = ({ commit, dispatch }, id) => {
     revisions: 'revisions',
     comments: 'comments'
   };
+  commit('setRepositoryId', id);
   commit('setSseId', null);
   commit('userTracking/reset');
   each(modules, (_path, module) => commit(`${module}/reset`));

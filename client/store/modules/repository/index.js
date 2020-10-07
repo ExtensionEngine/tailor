@@ -8,9 +8,10 @@ import revisions from './revisions';
 import userTracking from './user-tracking';
 
 const state = {
+  repositoryId: null,
   sseId: null,
-  outline: { expanded: {} },
   users: {},
+  outline: { expanded: {} },
   $apiUrl: null
 };
 

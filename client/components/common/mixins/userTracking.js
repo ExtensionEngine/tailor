@@ -1,5 +1,5 @@
-import { mapActions, mapState } from 'vuex';
 import has from 'lodash/has';
+import { mapActions } from 'vuex';
 import pickBy from 'lodash/pickBy';
 
 const trackedRoutes = {
@@ -9,18 +9,11 @@ const trackedRoutes = {
 
 export default {
   computed: {
-    ...mapState('repository', ['sseId']),
-    context: vm => pickBy({
-      sseId: vm.sseId,
-      repositoryId: Number(vm.$route.params.repositoryId),
-      activityId: Number(vm.$route.params.activityId),
-      created: new Date()
-    })
+    context: vm => pickBy({ activityId: Number(vm.$route.params.activityId) })
   },
   methods: {
     ...mapActions('repository', ['reset']),
     ...mapActions('repository/userTracking', {
-      fetchActiveUsers: 'fetch',
       addContext: 'start',
       removeContext: 'end'
     })

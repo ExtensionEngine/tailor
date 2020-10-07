@@ -12,9 +12,15 @@ const plugSSE = ({ commit }) => {
       ({ sseId, userId }) => commit('endSession', { sseId, userId }));
 };
 
-const start = (_, context) => api.start(context);
+const start = ({ rootState }, context) => {
+  const { sseId, repositoryId } = rootState.repository;
+  return api.start({ sseId, repositoryId, ...context });
+};
 
-const end = (_, context) => api.end(context);
+const end = ({ rootState }, context) => {
+  const { sseId, repositoryId } = rootState.repository;
+  return api.end({ sseId, repositoryId, ...context });
+};
 
 const fetch = ({ commit }, repositoryId) => {
   return api.fetch(repositoryId).then(({ items }) => commit('fetch', items));
