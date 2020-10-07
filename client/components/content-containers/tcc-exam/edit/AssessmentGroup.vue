@@ -10,6 +10,7 @@
           rules="integer|min_value:0">
           <v-text-field
             v-model.number="timeLimit"
+            @keydown="disallowNonIntegers"
             :error-messages="errors"
             name="timeLimit"
             hint="Time limit (minutes)"
@@ -120,6 +121,10 @@ export default {
       const ids = assessments.map(it => it.cid);
       const cond = it => !ids.includes(it.cid);
       this.unsavedAssessments = pickBy(this.unsavedAssessments, cond);
+    },
+    disallowNonIntegers(event) {
+      const disallowedCodeKeys = [69, 187, 189]; // e, +, -
+      if (disallowedCodeKeys.includes(event.keyCode)) event.preventDefault();
     }
   },
   watch: {
