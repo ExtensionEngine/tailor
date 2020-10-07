@@ -36,9 +36,9 @@ function addUserActivity({ user, body: { context } }, res) {
 function removeUserActivity({ user, body: { context } }, res) {
   res.end();
   user = pick(user, USER_ATTRS);
-  const { connectedAt, ...targetContext } = context;
-  activeUsers.removeContext(user,
-    ({ connectedAt, ...context }) => isEqual(context, targetContext));
+  const { connectedAt, ...targetCtx } = context;
+  const compareBy = Object.keys(targetCtx);
+  activeUsers.removeContext(user, it => isEqual(pick(it, compareBy), targetCtx));
   const channel = sse.channel(context.repositoryId);
   if (channel) channel.send(UserActivity.End, { user, context });
 }

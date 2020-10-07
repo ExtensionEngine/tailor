@@ -30,25 +30,18 @@
         <content-element
           :set-width="setWidth"
           :dragged="dragged"
-          :element="item">
-          <active-users
-            v-if="getActiveUsers('element', item.contentId)"
-            :users="getActiveUsers('element', item.contentId)"
-            :size="26"
-            class="active-users-wrapper" />
-        </content-element>
+          :element="item" />
       </template>
     </element-list>
   </v-card>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
-import ActiveUsers from 'components/common/ActiveUsers';
 import ContentElement from '../../ContentElement';
 import ElementList from '../ElementList';
 import filter from 'lodash/filter';
 import InsertLocation from '@/utils/InsertLocation';
+import { mapActions } from 'vuex';
 import sortBy from 'lodash/sortBy';
 
 const { ADD_AFTER } = InsertLocation;
@@ -63,7 +56,6 @@ export default {
     layout: { type: Boolean, default: true }
   },
   computed: {
-    ...mapGetters('repository/userTracking', ['getActiveUsers']),
     contentElements() {
       const activityId = this.container.id;
       return sortBy(filter(this.elements, { activityId }), 'position');
@@ -90,7 +82,7 @@ export default {
       this.insertElement({ element, context });
     }
   },
-  components: { ActiveUsers, ContentElement, ElementList }
+  components: { ContentElement, ElementList }
 };
 </script>
 
@@ -99,11 +91,5 @@ export default {
   width: 100%;
   min-height: 2.25rem;
   margin-bottom: 0.5rem;
-}
-
-.active-users-wrapper {
-  display: flex;
-  justify-content: flex-end;
-  position: relative;
 }
 </style>

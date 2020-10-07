@@ -1,20 +1,17 @@
 <template>
-  <div>
-    <slot></slot>
-    <contained-content
-      @add="add"
-      @save="save"
-      @save:meta="meta => updateElement({ uid: element.uid, meta })"
-      @delete="remove"
-      v-bind="$attrs"
-      :element="element"
-      :is-dragged="dragged"
-      :is-disabled="disabled" />
-  </div>
+  <contained-content
+    @add="add"
+    @save="save"
+    @save:meta="meta => updateElement({ uid: element.uid, meta })"
+    @delete="remove"
+    v-bind="$attrs"
+    :element="element"
+    :is-dragged="dragged"
+    :is-disabled="disabled" />
 </template>
 
 <script>
-import { mapActions, mapMutations, mapState } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
 import EventBus from 'EventBus';
@@ -29,23 +26,11 @@ export default {
     dragged: { type: Boolean, default: false }
   },
   data: () => ({ isFocused: false }),
-  computed: {
-    ...mapState('repository/userTracking', ['sseId']),
-    context() {
-      const { repositoryId, activityId, contentId: elementId } = this.element;
-      const { sseId } = this;
-      return { repositoryId, activityId, elementId, sseId };
-    }
-  },
   methods: {
     ...mapActions('repository/contentElements', {
       saveElement: 'save',
       updateElement: 'update',
       removeElement: 'remove'
-    }),
-    ...mapActions('repository/userTracking', {
-      addActiveUserContext: 'start',
-      removeActiveUserContext: 'end'
     }),
     ...mapMutations('repository/contentElements', { addElement: 'add' }),
     add(element) {
@@ -66,21 +51,6 @@ export default {
         this.$nextTick(() => EventBus.emit('element:focus'));
       });
     }
-  },
-  watch: {
-    isFocused() {
-      this.context.created = new Date();
-      if (this.isFocused) {
-        this.addActiveUserContext(this.context);
-        return;
-      }
-      this.removeActiveUserContext(this.context);
-    }
-  },
-  created() {
-    EventBus.on('element:focus', element => {
-      this.isFocused = !!element && (element.id === this.element.id);
-    });
   },
   components: { ContainedContent }
 };

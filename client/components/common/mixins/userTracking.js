@@ -1,5 +1,6 @@
+import { mapActions, mapState } from 'vuex';
 import has from 'lodash/has';
-import { mapActions } from 'vuex';
+import isEqual from 'lodash/isEqual';
 import pickBy from 'lodash/pickBy';
 
 const trackedRoutes = {
@@ -9,29 +10,34 @@ const trackedRoutes = {
 
 export default {
   computed: {
-    context: vm => pickBy({ activityId: Number(vm.$route.params.activityId) })
+    ...mapState('repository', ['sseId']),
+    trackingParams: vm => pickBy({
+      sseId: vm.sseId,
+      repositoryId: Number(vm.$route.params.repositoryId),
+      activityId: Number(vm.$route.params.activityId)
+    })
   },
   methods: {
-    ...mapActions('repository', ['reset']),
+    ...mapActions('repository', { resetRepositoryStore: 'reset' }),
     ...mapActions('repository/userTracking', {
-      addContext: 'start',
-      removeContext: 'end'
+      reportActivityStart: 'start',
+      reportActivityEnd: 'end'
     })
   },
   watch: {
-    sseId: {
+    trackingParams: {
+      deep: true,
       immediate: true,
-      handler() {
-        if (!this.sseId) return;
-        this.addContext(this.context);
+      handler(val, prevVal = {}) {
+        if (!val.sseId || isEqual(val, prevVal)) return;
+        if (prevVal.sseId) this.reportActivityEnd(prevVal);
+        this.reportActivityStart(val);
       }
     }
   },
   beforeRouteLeave(to, _from, next) {
-    if (!has(trackedRoutes, to.name)) this.reset(this.context);
-    // Remove context when leaving route except when navigating
-    // to course route (Outline component)
-    if (to.name === trackedRoutes.repository) this.removeContext(this.context);
+    this.reportActivityEnd(this.trackingParams);
+    if (!has(trackedRoutes, to.name)) this.resetRepositoryStore();
     next();
   }
 };

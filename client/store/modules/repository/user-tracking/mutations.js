@@ -3,7 +3,6 @@ import isEmpty from 'lodash/isEmpty';
 import isEqual from 'lodash/isEqual';
 import omit from 'lodash/omit';
 import pick from 'lodash/pick';
-import remove from 'lodash/remove';
 import Vue from 'vue';
 
 const fetch = (state, users) => {
@@ -11,22 +10,28 @@ const fetch = (state, users) => {
 };
 
 const start = (state, { user, context }) => {
-  setContext(state.users, user, context);
+  const userState = state.users[user.id] || { ...user, contexts: [] };
+  const existingContext = find(userState.contexts, omit(context, ['connectedAt']));
+  if (existingContext) return;
+  Vue.set(state.users, user.id, {
+    ...userState,
+    contexts: [...userState.contexts, context]
+  });
 };
 
 const end = (state, { user, context }) => {
   const userState = state.users[user.id];
   if (!userState) return;
-  const index = userState.contexts.findIndex(it => isContextEqual(it, context));
-  if (index === -1) return;
-  userState.contexts.splice(index, 1);
+  const contexts = userState.contexts.filter(it => !isContextEqual(it, context));
+  Vue.set(state.users, user.id, { ...userState, contexts });
 };
 
 const endSession = (state, { sseId, userId }) => {
   const userState = state.users[userId];
   if (!userState) return;
-  remove(userState.contexts, { sseId });
-  if (isEmpty(userState.contexts)) Vue.delete(state.users, userId);
+  const contexts = userState.contexts.filter(it => it.sseId === sseId);
+  if (isEmpty(contexts)) return Vue.delete(state.users, userId);
+  Vue.set(state.users, userId, { ...userState, contexts });
 };
 
 const reset = state => {
@@ -40,17 +45,6 @@ export {
   endSession,
   reset
 };
-
-function setContext(activeUsers, user, context) {
-  const existingUser = activeUsers[user.id];
-  if (!existingUser) {
-    Vue.set(activeUsers, user.id, { ...user, contexts: [context] });
-    return;
-  }
-  const existingContext = find(existingUser.contexts, omit(context, ['connectedAt']));
-  if (existingContext) return;
-  existingUser.contexts.push(context);
-}
 
 function isContextEqual(sourceContext, targetContext) {
   const fields = ['sseId', 'repositoryId'];
