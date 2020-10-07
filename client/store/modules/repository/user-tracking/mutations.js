@@ -29,7 +29,7 @@ const end = (state, { user, context }) => {
 const endSession = (state, { sseId, userId }) => {
   const userState = state.users[userId];
   if (!userState) return;
-  const contexts = userState.contexts.filter(it => it.sseId === sseId);
+  const contexts = userState.contexts.filter(it => it.sseId !== sseId);
   if (isEmpty(contexts)) return Vue.delete(state.users, userId);
   Vue.set(state.users, userId, { ...userState, contexts });
 };
