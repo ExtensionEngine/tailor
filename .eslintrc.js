@@ -4,7 +4,8 @@ module.exports = {
   root: true,
   extends: '@extensionengine',
   plugins: [
-    'vuetify'
+    'vuetify',
+    '@babel'
   ],
   rules: {
     'vuetify/no-deprecated-classes': 'error',
@@ -14,7 +15,7 @@ module.exports = {
   overrides: [{
     files: ['extensions/**'],
     parserOptions: {
-      parser: 'babel-eslint',
+      parser: '@babel/eslint-parser',
       sourceType: 'module'
     }
   }],
