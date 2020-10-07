@@ -4,8 +4,7 @@ module.exports = {
   root: true,
   extends: '@extensionengine',
   plugins: [
-    'vuetify',
-    '@babel'
+    'vuetify'
   ],
   rules: {
     'vuetify/no-deprecated-classes': 'error',
