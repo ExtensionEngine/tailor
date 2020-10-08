@@ -68,8 +68,7 @@ export default {
     editor: vm => vm.$refs.editor.$el
   },
   methods: {
-    ...mapActions('repository/comments',
-      ['fetch', 'save', 'subscribe', 'unsubscribe']),
+    ...mapActions('repository/comments', ['fetch', 'save']),
     async post() {
       if (!this.comment.content) return;
       const payload = {
@@ -93,10 +92,6 @@ export default {
   async created() {
     await this.fetch(this.activity.id);
     this.comment = initCommentInput();
-    this.subscribe();
-  },
-  beforeDestroy() {
-    this.unsubscribe();
   },
   components: {
     DiscussionThread,

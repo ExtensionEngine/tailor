@@ -22,7 +22,7 @@ function list({ repository, query, opts }, res) {
 function create({ user, repository, body }, res) {
   const outlineConfig = find(getOutlineLevels(repository.schema), { type: body.type });
   const data = {
-    ...pick(body, ['type', 'parentId', 'position']),
+    ...pick(body, ['uid', 'type', 'parentId', 'position']),
     data: { ...get(outlineConfig, 'defaultMeta', {}), ...body.data },
     repositoryId: repository.id
   };

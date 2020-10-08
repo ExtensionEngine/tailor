@@ -1,7 +1,7 @@
 {
   "name": "tailor",
-  "version": "4.0.1",
-  "codename": "velour",
+  "version": "5.0.0-alpha.1",
+  "codename": "twill",
   "description": "Content authoring platform",
   "author": "ExtensionEngine <info@extensionengine.com>",
   "private": true,

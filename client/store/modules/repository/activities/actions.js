@@ -1,10 +1,19 @@
 import { getDescendants as getDeepChildren, getOutlineChildren } from 'utils/activity';
 import calculatePosition from 'utils/calculatePosition';
+import { Activity as Events } from '@/../common/sse';
+import { feed } from '../feed';
 import findIndex from 'lodash/findIndex';
 import generateActions from '@/store/helpers/actions';
 import request from '@/api/request';
 
 const { api, fetch, get, reset, save, setEndpoint, update } = generateActions();
+
+const plugSSE = ({ commit }) => {
+  feed
+    .subscribe(Events.Create, item => commit('save', item))
+    .subscribe(Events.Update, item => commit('save', item))
+    .subscribe(Events.Delete, item => commit('remove', [item]));
+};
 
 const reorder = ({ commit }, { activity, context }) => {
   const position = calculatePosition(context);
@@ -51,6 +60,7 @@ export {
   clone,
   get,
   fetch,
+  plugSSE,
   publish,
   remove,
   reorder,

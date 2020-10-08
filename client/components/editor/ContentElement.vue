@@ -2,7 +2,7 @@
   <contained-content
     @add="add"
     @save="save"
-    @save:meta="meta => updateElement({ _cid: element._cid, meta })"
+    @save:meta="meta => updateElement({ uid: element.uid, meta })"
     @delete="remove"
     v-bind="$attrs"
     :element="element"
