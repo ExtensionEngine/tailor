@@ -24,7 +24,7 @@ function show({ params }, res) {
 }
 
 function create({ user, repository, body }, res) {
-  const attr = ['activityId', 'type', 'data', 'position', 'refs'];
+  const attr = ['uid', 'activityId', 'type', 'data', 'position', 'refs'];
   const data = { ...pick(body, attr), repositoryId: repository.id };
   const context = { userId: user.id, repository };
   return ContentElement.create(data, { context })

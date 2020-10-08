@@ -16,7 +16,7 @@
             v-bind="{ handle: '.activity' }">
             <activity
               v-for="(activity, index) in rootActivities"
-              :key="activity._cid"
+              :key="activity.uid"
               v-bind="activity"
               :index="index + 1"
               :level="1"
@@ -27,7 +27,7 @@
         <template v-else>
           <search-result
             v-for="activity in filteredActivities"
-            :key="activity._cid"
+            :key="activity.uid"
             @select="selectActivity(activity.id)"
             @show="goTo(activity)"
             :activity="activity" />
@@ -98,7 +98,7 @@ export default {
     },
     scrollToActivity(activity, timeout = 500) {
       setTimeout(() => {
-        const elementId = `#activity_${activity._cid}`;
+        const elementId = `#activity_${activity.uid}`;
         const element = this.$refs.structure.querySelector(elementId);
         element.scrollIntoView();
       }, timeout);

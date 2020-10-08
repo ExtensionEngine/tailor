@@ -67,11 +67,11 @@
 </template>
 
 <script>
-import cuid from 'cuid';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
 import { isQuestion } from '../utils';
 import reduce from 'lodash/reduce';
+import uuid from '@/utils/uuid';
 
 const DEFAULT_ELEMENT_WIDTH = 100;
 const LAYOUT = { HALF_WIDTH: 6, FULL_WIDTH: 12 };
@@ -147,12 +147,12 @@ export default {
         element.position = this.position;
       } else {
         // If embed, assign id
-        element.id = cuid();
+        element.id = uuid();
         element.embedded = true;
       }
       if (isQuestion(element.type)) {
         const data = { width: LAYOUT.FULL_WIDTH };
-        const question = [{ id: cuid(), data, type: 'JODIT_HTML', embedded: true }];
+        const question = [{ id: uuid(), data, type: 'JODIT_HTML', embedded: true }];
         element.data = { ...element.data, question, type: subtype };
       }
       element.data = { ...element.data, ...initState() };

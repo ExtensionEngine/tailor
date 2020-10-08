@@ -1,7 +1,7 @@
 <template>
   <div class="editor-container">
     <template v-if="!isLoading">
-      <toolbar :element="selectedElement" />
+      <toolbar :element="selectedElement" :active-users="activeUsers" />
       <sidebar
         :repository="repository"
         :activities="outlineActivities"
@@ -24,19 +24,24 @@ import ActivityContent from './ActivityContent';
 import get from 'lodash/get';
 import Sidebar from './Sidebar';
 import Toolbar from './Toolbar';
+import withUserTracking from 'components/common/mixins/userTracking';
 
 export default {
   name: 'content-editor',
+  mixins: [withUserTracking],
   props: {
-    repositoryId: { type: Number, required: true }
+    repositoryId: { type: Number, required: true },
+    activityId: { type: Number, required: true }
   },
   data: () => ({
     isLoading: true,
     selectedElement: null
   }),
   computed: {
+    ...mapGetters('repository/userTracking', ['getActiveUsers']),
     ...mapGetters('repository', ['repository', 'outlineActivities']),
-    ...mapGetters('editor', ['activity', 'contentContainers', 'rootContainerGroups'])
+    ...mapGetters('editor', ['activity', 'contentContainers', 'rootContainerGroups']),
+    activeUsers: vm => vm.getActiveUsers('activity', vm.activityId)
   },
   methods: mapActions('repository', ['initialize']),
   async created() {
