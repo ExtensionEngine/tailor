@@ -6,13 +6,13 @@ import pick from 'lodash/pick';
 export const getActiveUsers = (_state, getters, rootState) => {
   const { auth: { user: currentUser } } = rootState;
   return (entity, entityId) => {
-    const users = getters.users[entity][entityId] || [];
+    const users = getters.activityByEntity[entity][entityId] || [];
     return orderBy(users, 'connectedAt', 'desc')
       .filter(it => it.email !== currentUser.email);
   };
 };
 
-export const users = state => {
+export const activityByEntity = state => {
   return Object.values(state.users).reduce((acc, { contexts, ...user }) => {
     contexts.forEach(ctx => setUserContext(acc, user, ctx));
     return acc;
