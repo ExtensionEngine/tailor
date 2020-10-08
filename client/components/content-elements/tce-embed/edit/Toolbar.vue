@@ -1,35 +1,44 @@
 <template>
   <v-toolbar
-    height="80"
+    height="90"
     color="transparent"
     class="tce-embed-toolbar elevation-0">
     <v-toolbar-title class="pl-1">Embed component</v-toolbar-title>
     <div class="input-container mt-5">
-      <v-text-field
-        v-model="height"
-        @input="onChange"
-        type="number"
-        name="height"
-        label="Height (px)"
-        placeholder="Height..."
-        prepend-icon="mdi-resize"
-        dense filled
-        class="height-input" />
-      <validation-provider
-        ref="urlValidator"
-        v-slot="{ errors }"
-        name="url"
-        rules="url">
-        <v-text-field
-          v-model="url"
-          @keyup="onChange"
-          :error-messages="errors"
+      <validation-observer ref="embedObserver" tag="div" class="d-flex">
+        <validation-provider
+          v-slot="{ errors }"
+          name="height"
+          rules="required|min_value:200|max_value:3000"
+          slim>
+          <v-text-field
+            v-model="height"
+            @keyup="onChange"
+            :error-messages="errors"
+            type="number"
+            name="height"
+            label="Height (px)"
+            placeholder="Height..."
+            prepend-icon="mdi-resize"
+            dense filled
+            class="height-input" />
+        </validation-provider>
+        <validation-provider
+          v-slot="{ errors }"
           name="url"
-          label="URL"
-          placeholder="Enter URL..."
-          prepend-icon="mdi-link"
-          dense filled />
-      </validation-provider>
+          rules="url"
+          slim>
+          <v-text-field
+            v-model="url"
+            @keyup="onChange"
+            :error-messages="errors"
+            name="url"
+            label="URL"
+            placeholder="Enter URL..."
+            prepend-icon="mdi-link"
+            dense filled />
+        </validation-provider>
+      </validation-observer>
     </div>
   </v-toolbar>
 </template>
@@ -50,7 +59,7 @@ export default {
   methods: {
     async onChange() {
       const { height, url } = this;
-      const { valid } = await this.$refs.urlValidator.validate();
+      const valid = await this.$refs.embedObserver.validate();
       if (!valid) return;
       this.save({ height, url });
     },
@@ -79,7 +88,7 @@ export default {
 }
 
 .v-input.height-input {
-  max-width: 10rem;
+  max-width: 14rem;
   margin-right: 1.25rem;
 }
 </style>
