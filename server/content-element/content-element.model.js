@@ -99,6 +99,10 @@ class ContentElement extends Model {
     };
   }
 
+  static get Events() {
+    return Events;
+  }
+
   static fetch(opt) {
     return isNumber(opt)
       ? ContentElement.findByPk(opt).then(it => it && resolveStatics(it))
@@ -156,10 +160,6 @@ class ContentElement extends Model {
       if (this.type === 'ASSESSMENT') return { type: 'ASSESSMENT' };
       return { type: { [Op.not]: 'ASSESSMENT' } };
     });
-  }
-
-  static get Events() {
-    return Events;
   }
 }
 

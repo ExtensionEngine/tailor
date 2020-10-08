@@ -21,7 +21,7 @@ function initializeSSE(id, store) {
   const { rootState, dispatch, commit } = store;
   const feed = initSSEConnection(id, rootState.auth.token);
   feed.subscribe(Events.Initialized, e => commit('setSseId', e.sseId));
-  const modules = ['userTracking', 'comments', 'contentElements'];
+  const modules = ['activities', 'contentElements', 'comments', 'userTracking'];
   each(modules, module => dispatch(`${module}/plugSSE`));
 }
 
