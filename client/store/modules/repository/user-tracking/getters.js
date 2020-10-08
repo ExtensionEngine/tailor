@@ -13,12 +13,10 @@ export const getActiveUsers = (_state, getters, rootState) => {
 };
 
 export const users = state => {
-  const result = { repository: {}, activity: {}, element: {} };
-  const users = Object.values(state.users);
-  users.forEach(({ contexts, ...user }) => {
-    contexts.forEach(ctx => setUserContext(result, user, ctx));
-  });
-  return result;
+  return Object.values(state.users).reduce((acc, { contexts, ...user }) => {
+    contexts.forEach(ctx => setUserContext(acc, user, ctx));
+    return acc;
+  }, { repository: {}, activity: {}, element: {} });
 };
 
 function setUserContext(state, user, context) {
