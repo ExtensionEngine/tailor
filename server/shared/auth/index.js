@@ -1,6 +1,6 @@
 'use strict';
 
-const { ExtractJwt, Strategy } = require('passport-jwt');
+const { ExtractJwt, Strategy: JwtStrategy } = require('passport-jwt');
 const Audience = require('./audience');
 const config = require('../../../config/server').auth;
 const jwt = require('jsonwebtoken');
@@ -20,7 +20,7 @@ passport.use(new LocalStrategy(options, (email, password, done) => {
     .error(err => done(err, false));
 }));
 
-passport.use('jwt', new Strategy({
+passport.use(new JwtStrategy({
   ...config,
   audience: Audience.Scope.Access,
   jwtFromRequest: ExtractJwt.fromExtractors([
@@ -31,7 +31,7 @@ passport.use('jwt', new Strategy({
   secretOrKey: config.secret
 }, verify));
 
-passport.use('token', new Strategy({
+passport.use('token', new JwtStrategy({
   ...config,
   audience: Audience.Scope.Setup,
   jwtFromRequest: ExtractJwt.fromBodyField('token'),
