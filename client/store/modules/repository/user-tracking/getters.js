@@ -1,40 +1,41 @@
-import filter from 'lodash/filter';
+import each from 'lodash/each';
 import find from 'lodash/find';
 import orderBy from 'lodash/orderBy';
 import pick from 'lodash/pick';
 
 export const users = state => {
   const result = { repository: {}, activity: {}, element: {} };
-  const activeUsers = Object.values(state.users);
-  activeUsers.forEach(({ contexts, ...user }) => {
-    contexts.forEach(context => setUserActivityForContext(result, user, context));
+  const users = Object.values(state.users);
+  users.forEach(({ contexts, ...user }) => {
+    contexts.forEach(ctx => setUserContext(result, user, ctx));
   });
   return result;
 };
 
-export const getActiveUsers = (_state, getters, { auth: { user } }) => {
+export const getActiveUsers = (_state, getters, state) => {
+  const { auth: { user: currentUser } } = state;
   return (entity, entityId) => {
-    const activeUsers = orderBy(getters.users[entity][entityId], 'createdAt', 'desc') || [];
-    const filteredUsers = filter(activeUsers, item => item.email !== user.email);
-    return filteredUsers;
+    const users = getters.users[entity][entityId] || [];
+    return orderBy(users, 'connectedAt', 'desc')
+      .filter(it => it.email !== currentUser.email);
   };
 };
 
-function setUserActivityForContext(activeUsers, user, context) {
-  const { repositoryId, activityId, elementId } = context;
-  const userData = pick(user, ['id', 'email', 'fullName', 'imgUrl']);
-  setEntityActivity(activeUsers, 'repository', repositoryId, userData);
-  if (activityId) setEntityActivity(activeUsers, 'activity', activityId, userData);
-  if (elementId) setEntityActivity(activeUsers, 'element', elementId, userData);
-}
-
-function setEntityActivity(activeUsers, entity, entityId, user) {
-  const activityData = pick(user, ['id', 'fullName', 'email', 'palette', 'created', 'imgUrl']);
-  const activeUsersOnEntity = activeUsers[entity][entityId];
-  if (!activeUsersOnEntity) {
-    activeUsers[entity][entityId] = [activityData];
-    return;
-  }
-  if (find(activeUsersOnEntity, { id: user.id })) return;
-  activeUsersOnEntity.push(activityData);
+function setUserContext(state, user, context) {
+  const data = pick(user, ['id', 'email', 'fullName', 'imgUrl']);
+  const mappings = {
+    repository: context.repositoryId,
+    activity: context.activityId,
+    element: context.elementId
+  };
+  each(mappings, (id, type) => {
+    if (!id) return;
+    const entity = state[type][id];
+    if (!entity) {
+      state[type][id] = [data];
+      return;
+    }
+    if (find(entity, { id: user.id })) return;
+    entity.push(data);
+  });
 }
