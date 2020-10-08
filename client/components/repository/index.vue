@@ -10,7 +10,7 @@
         <v-tab
           v-for="tab in tabs"
           :key="tab.name"
-          :to="{ name: tab.route }"
+          :to="{ name: tab.route, query: tab.query }"
           active-class="tab-active"
           ripple exact
           class="px-4">
