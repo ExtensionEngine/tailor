@@ -1,7 +1,7 @@
 <template>
   <div
     :key="id"
-    class="grey lighten-5 elevation-3">
+    class="element-toolbar-wrapper grey lighten-5 elevation-3">
     <component
       :is="componentName"
       v-if="componentExists"
