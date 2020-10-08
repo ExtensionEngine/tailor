@@ -5,16 +5,20 @@ const forEach = require('lodash/forEach');
 const get = require('lodash/get');
 const hash = require('hash-obj');
 const { isOutlineActivity } = require('../../config/shared/activities');
+const sse = require('../shared/sse');
 
 module.exports = { add };
 
 function add(ContentElement, Hooks, Models) {
+  const { Events } = ContentElement;
+
   const mappings = {
     [Hooks.beforeCreate]: [processAssets],
     [Hooks.beforeUpdate]: [processAssets],
-    [Hooks.afterCreate]: [resolveAssets, touchRepository, touchOutline],
-    [Hooks.afterUpdate]: [resolveAssets, touchRepository, touchOutline],
-    [Hooks.beforeDestroy]: [touchRepository, touchOutline]
+    [Hooks.afterCreate]: [resolveAssets, sseCreate, touchRepository, touchOutline],
+    [Hooks.afterUpdate]: [resolveAssets, sseUpdate, touchRepository, touchOutline],
+    [Hooks.beforeDestroy]: [touchRepository, touchOutline],
+    [Hooks.afterDestroy]: [sseDelete]
   };
 
   forEach(mappings, (hooks, type) => {
@@ -24,6 +28,22 @@ function add(ContentElement, Hooks, Models) {
   });
 
   const isRepository = it => it instanceof Models.Repository;
+
+  function sseCreate(_, element) {
+    const channel = sse.channel(element.repositoryId);
+    if (channel) channel.send(Events.Create, element);
+  }
+
+  function sseUpdate(_, element) {
+    const channel = sse.channel(element.repositoryId);
+    if (channel) channel.send(Events.Update, element);
+  }
+
+  async function sseDelete(_, element) {
+    await element.reload({ paranoid: false });
+    const channel = sse.channel(element.repositoryId);
+    if (channel) channel.send(Events.Delete, element);
+  }
 
   function processAssets(hookType, element) {
     // pruneVirtualProps
@@ -42,7 +62,7 @@ function add(ContentElement, Hooks, Models) {
     return resolveStatics(element);
   }
 
-  function touchRepository(_, element, { context = {} }) {
+  function touchRepository(_, _element, { context = {} }) {
     if (!isRepository(context.repository)) return Promise.resolve();
     return context.repository.update({ hasUnpublishedChanges: true });
   }

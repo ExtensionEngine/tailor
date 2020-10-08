@@ -9,7 +9,7 @@ const save = (state, repository) => {
   const search = state.search && state.search.toLowerCase();
   const name = repository.name.toLowerCase();
   if (search && !name.includes(search)) return;
-  Vue.set(state.items, repository._cid, repository);
+  Vue.set(state.items, repository.uid, repository);
 };
 
 const togglePinned = state => {

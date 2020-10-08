@@ -21,8 +21,8 @@ function list({ query: { email, role, filter, archived }, options }, res) {
     });
 }
 
-function upsert({ body: { email, firstName, lastName, role } }, res) {
-  return User.inviteOrUpdate({ email, firstName, lastName, role })
+function upsert({ body: { uid, email, firstName, lastName, role } }, res) {
+  return User.inviteOrUpdate({ uid, email, firstName, lastName, role })
     .then(data => res.json({ data }));
 }
 
