@@ -1,12 +1,19 @@
 'use strict';
 
+const { Comment: Events } = require('../../common/sse');
 const hooks = require('./hooks');
 const { Model } = require('sequelize');
 
 class Comment extends Model {
   static fields(DataTypes) {
-    const { DATE, TEXT } = DataTypes;
+    const { DATE, TEXT, UUID, UUIDV4 } = DataTypes;
     return {
+      uid: {
+        type: UUID,
+        unique: true,
+        allowNull: false,
+        defaultValue: UUIDV4
+      },
       content: {
         type: TEXT,
         allowNull: false,
@@ -56,6 +63,10 @@ class Comment extends Model {
       paranoid: true,
       freezeTableName: true
     };
+  }
+
+  static get Events() {
+    return Events;
   }
 }
 

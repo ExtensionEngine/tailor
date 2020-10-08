@@ -5,8 +5,14 @@ const { Model } = require('sequelize');
 
 class Revision extends Model {
   static fields(DataTypes) {
-    const { DATE, ENUM, JSONB } = DataTypes;
+    const { DATE, ENUM, JSONB, UUID, UUIDV4 } = DataTypes;
     return {
+      uid: {
+        type: UUID,
+        unique: true,
+        allowNull: false,
+        defaultValue: UUIDV4
+      },
       entity: {
         type: ENUM,
         values: ['ACTIVITY', 'REPOSITORY', 'CONTENT_ELEMENT'],

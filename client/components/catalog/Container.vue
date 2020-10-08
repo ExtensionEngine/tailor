@@ -36,7 +36,7 @@
       <v-row>
         <v-col
           v-for="repository in repositories"
-          :key="repository._cid"
+          :key="repository.uid"
           cols="4"
           class="px-2 py-3">
           <repository-card :repository="repository" />
