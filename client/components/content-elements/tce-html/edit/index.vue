@@ -3,7 +3,9 @@
     <element-placeholder
       v-if="!isFocused && !content && showPlaceholder"
       :is-focused="isFocused"
-      name="Text (deprecated)"
+      :is-disabled="isDisabled"
+      :dense="dense"
+      name="Text (deprecated) component"
       icon="mdi-text"
       class="element-placeholder" />
     <div v-else>
@@ -57,7 +59,9 @@ export default {
   props: {
     element: { type: Object, required: true },
     isFocused: { type: Boolean, default: false },
-    showPlaceholder: { type: Boolean, default: true }
+    isDisabled: { type: Boolean, default: false },
+    showPlaceholder: { type: Boolean, default: true },
+    dense: { type: Boolean, default: false }
   },
   data() {
     return {

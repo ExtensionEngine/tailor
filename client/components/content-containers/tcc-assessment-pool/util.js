@@ -17,7 +17,7 @@ function fetch(parent, type) {
 }
 
 async function resolve(container, resolveStatics) {
-  container.elements = await Promise.map(container, resolveStatics);
+  container.elements = await Promise.map(container.elements, resolveStatics);
   return container;
 }
 

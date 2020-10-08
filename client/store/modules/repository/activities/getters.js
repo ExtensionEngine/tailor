@@ -1,8 +1,7 @@
 import {
   getDescendants as getDeepChildren,
   getOutlineChildren,
-  getAncestors as getParents,
-  isSameLevel
+  getAncestors as getParents
 } from 'utils/activity';
 import calculatePosition from 'utils/calculatePosition';
 import find from 'lodash/find';
@@ -34,11 +33,13 @@ export const getLineage = state => {
 };
 
 export const calculateInsertPosition = state => {
-  return (activity, anchor) => {
+  return (activity, anchor, action) => {
     const items = getOutlineChildren(state.items, activity.parentId);
     const newPosition = anchor ? findIndex(items, { id: anchor.id }) : 1;
-    const isFirstChild = !anchor || !isSameLevel(activity, anchor) || newPosition === -1;
-    const context = { items, newPosition, isFirstChild, insert: true };
+    const isFirstChild = !anchor ||
+      (activity.parentId !== anchor.parentId) ||
+      (newPosition === -1);
+    const context = { items, newPosition, isFirstChild, action };
     return calculatePosition(context);
   };
 };

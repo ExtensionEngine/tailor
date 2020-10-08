@@ -3,7 +3,8 @@
     <element-placeholder
       v-if="showPlaceholder"
       :is-focused="isFocused"
-      name="Audio"
+      :is-disabled="isDisabled"
+      name="Audio component"
       icon="mdi-speaker"
       active-placeholder="Use toolbar to upload the audio file"
       active-icon="mdi-arrow-up"
@@ -34,7 +35,8 @@ export default {
   name: 'tce-audio',
   props: {
     element: { type: Object, required: true },
-    isFocused: { type: Boolean, default: false }
+    isFocused: { type: Boolean, default: false },
+    isDisabled: { type: Boolean, default: false }
   },
   data() {
     return { error: null };

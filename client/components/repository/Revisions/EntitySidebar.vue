@@ -11,7 +11,7 @@
           class="revision">
           <div class="description">
             <div>{{ formatDate(revision) }}</div>
-            <div>{{ revision.user.email }}</div>
+            <div>{{ revision.user.label }}</div>
           </div>
           <div
             v-show="!isDetached && index > 0 && !revision.loading"

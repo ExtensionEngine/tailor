@@ -5,6 +5,7 @@ import {
 } from 'tce-core/utils';
 import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
+import kebabCase from 'lodash/kebabCase';
 import pick from 'lodash/pick';
 import Promise from 'bluebird';
 import sortBy from 'lodash/sortBy';
@@ -22,10 +23,11 @@ function getIdentifier({ templateId, type, subtype }) {
 }
 
 export default class ComponentRegistry {
-  constructor(Vue, { type, extensions, attrs, getName, getCondition }) {
+  constructor(Vue, { name, extensions, attrs, getName, getCondition }) {
     this._registry = [];
     this.Vue = Vue;
-    this._type = type;
+    this._name = name;
+    this._type = kebabCase(name);
     this._extensions = extensions;
     this._attrs = attrs;
     this._getName = getName;
@@ -47,8 +49,8 @@ export default class ComponentRegistry {
     const { _registry, _type, _attrs, Vue } = this;
     const { position = _registry.length, isExtension } = options;
     const element = isExtension
-      ? (await import(`extensions/content-${_type}s/${path}`)).default
-      : (await import(`components/content-${_type}s/${path}`)).default;
+      ? (await import(`extensions/${_type}s/${path}`)).default
+      : (await import(`components/${_type}s/${path}`)).default;
     const id = getIdentifier(element);
     const componentName = this._getName(id);
     _registry.push({ ...pick(element, _attrs), componentName, position });
@@ -68,8 +70,8 @@ export default class ComponentRegistry {
   }
 
   loadExtensionList() {
-    return import(`extensions/content-${this._type}s/${EXTENSIONS_LIST}`)
+    return import(`extensions/${this._type}s/${EXTENSIONS_LIST}`)
       .then(module => module.default)
-      .catch(() => console.log(`No ${this._type} extensions loaded!`) || []);
+      .catch(() => console.log(`No ${this._name} extensions loaded!`) || []);
   }
 }

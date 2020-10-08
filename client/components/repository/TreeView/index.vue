@@ -10,6 +10,7 @@
         @node:select="onNodeSelect"
         v-bind="graphOptions"
         :data="graphData"
+        :selected-node-id="selectedActivity && selectedActivity.id"
         class="tree" />
       <sidebar />
     </div>
@@ -17,14 +18,13 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
-import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
-import includes from 'lodash/includes';
-import map from 'lodash/map';
+import { mapGetters } from 'vuex';
 import reduce from 'lodash/reduce';
+import selectActivity from '@/components/repository/common/selectActivity';
 import Sidebar from 'components/repository/common/Sidebar';
+import sortBy from 'lodash/sortBy';
 import TreeGraph from './TreeGraph';
 
 const isActivityNode = node => node.depth > 0;
@@ -36,6 +36,7 @@ const graphOptions = {
 
 export default {
   name: 'tree-view',
+  mixins: [selectActivity],
   props: {
     showLoader: { type: Boolean, default: false }
   },
@@ -46,19 +47,17 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('repository', ['activities', 'repository', 'structure']),
+    ...mapGetters('repository', ['repository', 'structure', 'outlineActivities']),
     // TODO: Remove this hack!
     visibility() {
       return this.showLoader ? 'hidden' : 'visible';
     },
     graphData() {
       // TODO: Make sure repository is always available!
-      if (!this.repository) return {};
-      const allowedTypes = map(this.structure, 'type');
-      const activities = filter(this.activities, it => {
-        return includes(allowedTypes, it.type);
-      });
-      const repositoryTree = tree(activities, this.structure);
+      if (!this.outlineActivities) return {};
+      // Render graph only for persisted activities
+      const savedActivities = this.outlineActivities.filter(it => it.id);
+      const repositoryTree = tree(sortBy(savedActivities, 'id'), this.structure);
       const repositoryColor = get(this.repository, 'data.color', '#FFFFFF');
       return {
         ...this.repository,
@@ -68,16 +67,10 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('repository', ['selectActivity']),
-    setSelected(node) {
-      if (this.selectedNode) this.selectedNode.classList.remove('selected');
-      this.selectedNode = node;
-      this.selectedNode.classList.add('selected');
-    },
     onNodeSelect(node, activity, circle) {
+      if (activity.id === this.selectedActivity.id) return;
       if (!isActivityNode(node)) return;
-      this.setSelected(circle);
-      this.selectActivity(activity._cid);
+      this.selectActivity(activity.id);
     }
   },
   components: {
@@ -106,7 +99,7 @@ function getColor(type, structure) {
 </script>
 
 <style lang='scss' scoped>
-$accent: #337ab7;
+$accent: #37474f;
 
 .loader-outer {
   position: absolute;
@@ -149,6 +142,8 @@ $accent: #337ab7;
 
     .circle {
       filter: url(#drop-shadow);
+      transform: scale(1.3);
+      transition: transform 0.4s;
     }
 
     .label {

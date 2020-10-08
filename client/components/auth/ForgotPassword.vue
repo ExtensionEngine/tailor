@@ -7,35 +7,39 @@
       class="mb-5">
       {{ error || 'Sending reset email...' }}
     </v-alert>
-    <form v-if="!error" @submit.prevent="submit">
-      <v-text-field
-        v-model="email"
-        v-validate="{ required: true, email: true }"
-        :error-messages="vErrors.collect('email')"
-        type="email"
+    <validation-observer
+      v-if="!error"
+      ref="form"
+      @submit.prevent="$refs.form.handleSubmit(submit)"
+      tag="form"
+      novalidate>
+      <validation-provider
+        v-slot="{ errors }"
         name="email"
-        label="Email"
-        placeholder="Email"
-        prepend-inner-icon="mdi-email-outline"
-        outlined />
+        rules="required|email">
+        <v-text-field
+          v-model="email"
+          :error-messages="errors"
+          type="email"
+          label="Email"
+          placeholder="Email"
+          prepend-inner-icon="mdi-email-outline"
+          outlined />
+      </validation-provider>
       <div class="d-flex">
-        <v-btn
-          @click="$router.go(-1)"
-          tag="a"
-          text
-          class="px-1">
+        <v-btn @click="$router.go(-1)" tag="a" text class="px-1">
           <v-icon>mdi-chevron-left</v-icon>
           Back
         </v-btn>
         <v-spacer />
         <v-btn
-          :disabled="!isValid || showMessage"
+          :disabled="showMessage"
           type="submit"
           color="primary darken-1">
           Send reset email
         </v-btn>
       </div>
-    </form>
+    </validation-observer>
     <v-btn v-else @click.stop="resetInput" text>
       Retry
     </v-btn>
@@ -45,7 +49,6 @@
 <script>
 import { delay } from 'bluebird';
 import { mapActions } from 'vuex';
-import { withValidation } from 'utils/validation';
 
 const getDefaultData = () => ({
   email: '',
@@ -54,11 +57,7 @@ const getDefaultData = () => ({
 });
 
 export default {
-  mixins: [withValidation()],
   data: () => getDefaultData(),
-  computed: {
-    isValid: vm => vm.email && vm.vErrors.count() === 0
-  },
   methods: {
     ...mapActions(['forgotPassword']),
     submit() {

@@ -111,8 +111,9 @@ class ContentElement extends Model {
       : ContentElement.findAll(opt).map(resolveStatics);
   }
 
-  static cloneElements(src, container, transaction) {
+  static cloneElements(src, container, options) {
     const { id: activityId, repositoryId } = container;
+    const { context, transaction } = options;
     return this.bulkCreate(src.map(it => {
       return Object.assign(pick(it, [
         'type',
@@ -123,7 +124,7 @@ class ContentElement extends Model {
         'refs',
         'meta'
       ]), { activityId, repositoryId });
-    }), { returning: true, transaction });
+    }), { returning: true, context, transaction });
   }
 
   /**

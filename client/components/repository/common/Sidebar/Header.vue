@@ -21,7 +21,7 @@
       activator-label="Add into"
       activator-color="blue-grey darken-3"
       activator-icon="mdi-folder-plus-outline"
-      show-activator />
+      add-child show-activator />
     <publishing
       v-if="isAdmin || isRepositoryAdmin"
       :activity="activity"
@@ -51,9 +51,11 @@ export default {
       return type && isEditable(type);
     },
     subLevels() {
-      const { structure, activity } = this;
-      const { subLevels = [] } = structure.find(it => it.type === activity.type);
-      return this.structure.filter(it => subLevels.includes(it.type));
+      const { activity, structure = [] } = this;
+      if (!activity) return [];
+      const config = structure.find(it => it.type === activity.type);
+      const subLevels = get(config, 'subLevels', []);
+      return structure.filter(it => subLevels.includes(it.type));
     }
   },
   methods: {

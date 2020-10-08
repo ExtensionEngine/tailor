@@ -26,16 +26,16 @@
       :repository-id="activity.repositoryId"
       :levels="supportedLevels"
       :anchor="activity"
-      :heading="`
-        Add ${supportedLevels === subLevels ? 'into' : 'below'}
-        ${activity.data.name}`" />
+      :action="action"
+      :heading="`${dialogHeading} ${activity.data.name}`" />
     <copy-dialog
       v-if="showCopyDialog"
       @close="showCopyDialog = null"
       @completed="parentId => expandParent({ parentId })"
       :repository-id="activity.repositoryId"
       :levels="supportedLevels"
-      :anchor="activity" />
+      :anchor="activity"
+      :action="action" />
   </div>
 </template>
 
@@ -46,12 +46,14 @@ import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import first from 'lodash/first';
+import InsertLocation from '@/utils/InsertLocation';
 import { mapActions } from 'vuex';
 import optionsMixin from './common';
 import sortBy from 'lodash/sortBy';
 
 const appChannel = EventBus.channel('app');
 const TREE_VIEW_ROUTE = 'tree-view';
+const { ADD_AFTER, ADD_BEFORE, ADD_INTO } = InsertLocation;
 
 export default {
   name: 'activity-options-menu',
@@ -62,43 +64,64 @@ export default {
   data: () => ({
     showCreateDialog: false,
     showCopyDialog: false,
+    action: null,
     supportedLevels: []
   }),
   computed: {
     addMenuOptions() {
       const items = [{
+        name: 'Add item above',
+        icon: 'arrow-up',
+        action: () => this.setCreateContext(this.sameLevel, ADD_BEFORE)
+      }, {
         name: 'Add item below',
         icon: 'arrow-down',
-        action: () => this.setCreateContext(this.sameLevel)
-      }, {
+        action: () => this.setCreateContext(this.sameLevel, ADD_AFTER)
+      }];
+      if (!this.subLevels.length) return items;
+      return items.concat({
         name: 'Add item into',
         icon: 'subdirectory-arrow-right',
-        action: () => this.setCreateContext(this.subLevels)
+        action: () => this.setCreateContext(this.subLevels, ADD_INTO)
+      });
+    },
+    copyMenuOptions() {
+      const items = [{
+        name: 'Copy existing below',
+        icon: 'content-copy',
+        action: () => this.setCopyContext(this.sameLevel, ADD_AFTER)
       }];
-      if (!this.subLevels.length) items.pop();
-      return items;
+      if (!this.subLevels.length) return items;
+      return items.concat({
+        name: 'Copy existing into',
+        icon: 'content-copy',
+        action: () => this.setCopyContext(this.subLevels, ADD_INTO)
+      });
     },
     menuOptions() {
-      return [...this.addMenuOptions, {
-        name: 'Copy existing',
-        icon: 'content-copy',
-        action: () => this.setCopyContext()
-      }, {
-        name: 'Remove',
-        icon: 'delete',
-        action: () => this.delete(this.activity)
-      }];
+      return [
+        ...this.addMenuOptions,
+        ...this.copyMenuOptions, {
+          name: 'Remove',
+          icon: 'delete',
+          action: () => this.delete(this.activity)
+        }
+      ];
     }
   },
   methods: {
     ...mapActions('repository/activities', ['remove']),
-    setCreateContext(levels) {
+    setCreateContext(levels, action = null) {
+      this.setSupportedLevels(levels, action);
       this.showCreateDialog = true;
-      this.supportedLevels = levels;
     },
-    setCopyContext() {
+    setCopyContext(levels, action = null) {
+      this.setSupportedLevels(levels, action);
       this.showCopyDialog = true;
-      this.supportedLevels = this.levels;
+    },
+    setSupportedLevels(levels, action = null) {
+      this.supportedLevels = levels;
+      this.action = action;
     },
     delete() {
       const { activity, $route: { name: routeName } } = this;
@@ -110,7 +133,7 @@ export default {
           ? find(this.activities, { id: activity.parentId })
           : first(sortBy(filter(this.activities, rootFilter), 'position'));
         this.remove(this.activity);
-        if (focusNode) this.selectActivity(focusNode._cid);
+        if (focusNode) this.selectActivity(focusNode.id);
       };
       const name = `${isTreeView ? `${activity.id}: ` : ''}${activity.data.name}`;
       appChannel.emit('showConfirmationModal', {

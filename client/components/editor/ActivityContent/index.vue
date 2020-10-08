@@ -19,6 +19,7 @@
 
 <script>
 import { getElementId, isQuestion } from 'tce-core/utils';
+import { mapActions, mapGetters } from 'vuex';
 import ContentContainers from '../structure/ContentContainers';
 import ContentLoader from './Loader';
 import debounce from 'lodash/debounce';
@@ -26,7 +27,6 @@ import EventBus from 'EventBus';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import { getSupportedContainers } from 'shared/activities';
-import { mapActions } from 'vuex';
 import Promise from 'bluebird';
 import throttle from 'lodash/throttle';
 
@@ -51,6 +51,7 @@ export default {
     focusedElement: null
   }),
   computed: {
+    ...mapGetters('repository', ['activities']),
     containerConfigs: vm => getSupportedContainers(vm.activity.type)
   },
   methods: {

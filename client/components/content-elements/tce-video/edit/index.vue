@@ -3,13 +3,16 @@
     <element-placeholder
       v-if="showPlaceholder"
       :is-focused="isFocused"
-      name="Video"
+      :is-disabled="isDisabled"
+      name="Video component"
       icon="mdi-video-image"
       active-placeholder="Use toolbar to upload the video"
       active-icon="mdi-arrow-up" />
     <div v-else>
-      <div v-if="!isFocused" class="overlay">
-        <div class="message secondary--text">Double click to preview</div>
+      <div v-if="!isDisabled && !isFocused" class="overlay">
+        <div class="message grey--text text--lighten-2">
+          Double click to preview
+        </div>
       </div>
       <div v-if="showError" class="overlay">
         <div class="message secondary--text">
@@ -59,7 +62,8 @@ export default {
   props: {
     element: { type: Object, required: true },
     isFocused: { type: Boolean, default: false },
-    isDragged: { type: Boolean, default: false }
+    isDragged: { type: Boolean, default: false },
+    isDisabled: { type: Boolean, default: false }
   },
   data: () => ({ error: null, switchingVideo: false }),
   computed: {
@@ -125,7 +129,7 @@ function mimetype({ pathname }) {
   .message {
     position: relative;
     top: 45%;
-    font-size: 1.25rem !important;
+    font-size: 1.125rem !important;
   }
 }
 
