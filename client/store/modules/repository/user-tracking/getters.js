@@ -3,8 +3,8 @@ import find from 'lodash/find';
 import orderBy from 'lodash/orderBy';
 import pick from 'lodash/pick';
 
-export const getActiveUsers = (_state, getters, state) => {
-  const { auth: { user: currentUser } } = state;
+export const getActiveUsers = (_state, getters, rootState) => {
+  const { auth: { user: currentUser } } = rootState;
   return (entity, entityId) => {
     const users = getters.users[entity][entityId] || [];
     return orderBy(users, 'connectedAt', 'desc')
