@@ -31,16 +31,6 @@ passport.use('jwt', new Strategy({
   secretOrKey: config.secret
 }, verify));
 
-// passport.use('jwt-sse', new Strategy({
-//   ...config,
-//   audience: Audience.Scope.Access,
-//   jwtFromRequest: ExtractJwt.fromExtractors([
-//     ExtractJwt.fromAuthHeaderWithScheme(config.scheme),
-//     ExtractJwt.fromUrlQueryParameter('token')
-//   ]),
-//   secretOrKey: config.secret
-// }, verify));
-
 passport.use('token', new Strategy({
   ...config,
   audience: Audience.Scope.Setup,
