@@ -81,7 +81,7 @@ export const workflowActivities = (_state, { structure }) => {
 };
 
 export const isCollapsed = state => {
-  return activity => activity && !state.outline.expanded[activity._cid];
+  return activity => activity && !state.outline.expanded[activity.uid];
 };
 
 export const users = state => values(state.users);

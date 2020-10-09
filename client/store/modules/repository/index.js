@@ -6,10 +6,13 @@ import comments from './comments';
 import contentElements from './content-elements';
 import revisions from './revisions';
 import tasks from './tasks';
+import userTracking from './user-tracking';
 
 const state = {
-  outline: { expanded: {} },
+  repositoryId: null,
+  sseId: null,
   users: {},
+  outline: { expanded: {} },
   $apiUrl: null
 };
 
@@ -24,6 +27,7 @@ export default {
     comments,
     contentElements,
     tasks,
-    revisions
+    revisions,
+    userTracking
   }
 };

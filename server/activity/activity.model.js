@@ -6,6 +6,7 @@ const {
 } = require('../../config/shared/activities');
 const { Model, Op } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
+const { Activity: Events } = require('../../common/sse');
 const hooks = require('./hooks');
 const isEmpty = require('lodash/isEmpty');
 const map = require('lodash/map');
@@ -109,6 +110,10 @@ class Activity extends Model {
       paranoid: true,
       freezeTableName: true
     };
+  }
+
+  static get Events() {
+    return Events;
   }
 
   static async cloneActivities(src, dstRepositoryId, dstParentId, opts) {

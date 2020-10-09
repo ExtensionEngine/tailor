@@ -43,7 +43,7 @@
     <div class="meta-elements">
       <meta-input
         v-for="it in metadata"
-        :key="`${activity._cid}.${it.key}`"
+        :key="`${activity.uid}.${it.key}`"
         @update="updateActivity"
         :meta="it" />
     </div>
@@ -54,7 +54,7 @@
     <div>
       <relationship
         v-for="relationship in config.relationships"
-        :key="`${activity._cid}.${relationship.type}`"
+        :key="`${activity.uid}.${relationship.type}`"
         :activity="activity"
         v-bind="relationship" />
     </div>
@@ -87,7 +87,7 @@ export default {
     ...mapActions('repository/activities', ['update']),
     async updateActivity(key, value) {
       const data = { ...this.activity.data, [key]: value };
-      await this.update({ _cid: this.activity._cid, data });
+      await this.update({ uid: this.activity.uid, data });
       this.$snackbar.show(`${this.config.label} saved`);
     }
   },

@@ -3,7 +3,7 @@
     width="450"
     color="grey lighten-5"
     absolute right permanent>
-    <div v-if="selectedActivity" :key="selectedActivity._cid">
+    <div v-if="selectedActivity" :key="selectedActivity.uid">
       <sidebar-header :activity="selectedActivity" />
       <sidebar-body :activity="selectedActivity" />
     </div>

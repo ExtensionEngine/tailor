@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken');
 const mail = require('../shared/mail');
 const map = require('lodash/map');
 const { Model } = require('sequelize');
+const omit = require('lodash/omit');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const randomstring = require('randomstring');
@@ -17,8 +18,14 @@ const { user: { ADMIN, USER, INTEGRATION } } = roles;
 const gravatarConfig = { size: 130, default: 'identicon' };
 
 class User extends Model {
-  static fields({ DATE, ENUM, STRING, TEXT, VIRTUAL }) {
+  static fields({ DATE, ENUM, STRING, TEXT, UUID, UUIDV4, VIRTUAL }) {
     return {
+      uid: {
+        type: UUID,
+        unique: true,
+        allowNull: false,
+        defaultValue: UUIDV4
+      },
       email: {
         type: STRING,
         set(email) {
@@ -147,7 +154,8 @@ class User extends Model {
     const { email } = data;
     return User.findOne({ where: { email }, paranoid: false }).then(user => {
       if (!user) return User.invite(data);
-      map(({ ...data, deletedAt: null }), (v, k) => user.setDataValue(k, v));
+      const payload = omit(data, ['id', 'uid']);
+      map(({ ...payload, deletedAt: null }), (v, k) => user.setDataValue(k, v));
       return user.save();
     });
   }
