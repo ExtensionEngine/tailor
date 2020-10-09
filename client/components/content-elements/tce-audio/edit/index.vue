@@ -83,10 +83,10 @@ export default {
 <style lang="scss" scoped>
 .tce-audio {
   display: flex;
-  position: relative;
-  min-height: 4.5rem;
   align-items: center;
   justify-content: center;
+  position: relative;
+  min-height: 4.5rem;
 
   ::v-deep .element-placeholder {
     padding: 0.5rem !important;
