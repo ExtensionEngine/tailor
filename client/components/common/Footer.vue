@@ -1,5 +1,6 @@
 <template>
-  <v-footer height="46" color="blue-grey darken-3" absolute>
+  <v-footer height="46" color="blue-grey darken-4" absolute>
+    <waves class="waves" />
     <v-row justify="center" no-gutters>
       <v-col
         cols="12"
@@ -20,6 +21,7 @@
 
 <script>
 import { codename, version } from '@/../package.json';
+import Waves from '@/components/common/Waves';
 
 const capitalize = str => str.charAt(0).toUpperCase() + str.substr(1);
 
@@ -28,6 +30,9 @@ export default {
   computed: {
     version: () => version,
     codename: () => capitalize(codename)
+  },
+  components: {
+    Waves
   }
 };
 </script>
@@ -35,5 +40,11 @@ export default {
 <style lang="scss" scoped>
 .v-footer {
   box-shadow: 0 -1px 1px 0 rgba(0,0,0,0.2);
+}
+
+.waves {
+  position: absolute;
+  left: 0;
+  width: 100%;
 }
 </style>

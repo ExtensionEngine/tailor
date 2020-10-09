@@ -50,7 +50,7 @@ function resetPassword(user, token) {
   const href = resetUrl(token);
   const recipient = user.email;
   const recipientName = user.firstName || user.email;
-  const data = { href, recipientName };
+  const data = { href, recipientName, origin };
   const html = renderHtml(path.join(templatesDir, 'reset.mjml'), data);
   const text = renderText(path.join(templatesDir, 'reset.txt'), data);
   logger.info({ recipient, sender: from }, '📧  Sending reset password email to:', recipient);
@@ -67,7 +67,7 @@ function sendCommentNotification(users, comment) {
   const { repositoryId, activityId } = comment;
   const href = activityUrl(repositoryId, activityId);
   const recipients = users.concat(',');
-  const data = { href, ...comment };
+  const data = { href, origin, ...comment };
   const html = renderHtml(path.join(templatesDir, 'comment.mjml'), data);
   const text = renderText(path.join(templatesDir, 'comment.txt'), data);
   logger.info({ recipients, sender: from }, '📧  Sending notification email to:', recipients);

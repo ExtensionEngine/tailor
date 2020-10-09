@@ -1,5 +1,11 @@
+import axios, { Axios } from 'axios';
 import { FORBIDDEN, UNAUTHORIZED } from 'http-status-codes';
-import axios from 'axios';
+import buildFullPath from 'axios/lib/core/buildFullPath';
+
+Axios.prototype.submitForm = function (url, fields, options) {
+  const action = buildFullPath(this.defaults.baseURL, url);
+  return Promise.resolve(submitForm(action, fields, options));
+};
 
 const authScheme = process.env.AUTH_JWT_SCHEME;
 const config = {
@@ -37,3 +43,16 @@ client.interceptors.response.use(res => res, err => {
 });
 
 export default client;
+
+function submitForm(action, fields = {}, options) {
+  const form = document.createElement('form');
+  Object.assign(form, { method: 'POST', target: 'blank', action }, options);
+  Object.entries(fields).forEach(([name, attrs]) => {
+    const input = document.createElement('input');
+    Object.assign(input, { name }, attrs);
+    form.appendChild(input);
+  });
+  document.body.appendChild(form);
+  form.submit();
+  form.remove();
+}

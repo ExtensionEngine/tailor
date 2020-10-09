@@ -11,7 +11,7 @@
     <component
       :is="containerName"
       v-for="(container, index) in containerGroup"
-      :key="container._cid || container.id"
+      :key="container.uid || container.id"
       @addSubcontainer="save"
       @updateSubcontainer="update"
       @deleteSubcontainer="requestContainerDeletion"
