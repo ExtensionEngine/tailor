@@ -1,8 +1,7 @@
 'use strict';
 
-module.exports = {
-  babelrc: false,
-  presets: [
-    [require.resolve('babel-preset-poi'), { jsx: 'vue' }]
-  ]
-};
+const babel = require('@babel/core');
+const poiPresetCfg = babel.createConfigItem(require('poi/babel'), { type: 'preset' });
+const babelOptions = { presets: [poiPresetCfg] };
+
+module.exports = babelOptions;
