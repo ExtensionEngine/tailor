@@ -1,10 +1,10 @@
 <template>
   <v-toolbar
-    height="80"
+    height="72"
     color="transparent"
     class="tce-embed-toolbar elevation-0">
     <v-toolbar-title class="pl-1">Embed component</v-toolbar-title>
-    <div class="input-container mt-5">
+    <v-toolbar-items class="mx-auto pt-1">
       <v-text-field
         v-model="height"
         @input="onChange"
@@ -19,7 +19,8 @@
         ref="urlValidator"
         v-slot="{ errors }"
         name="url"
-        rules="url">
+        rules="url"
+        slim>
         <v-text-field
           v-model="url"
           @keyup="onChange"
@@ -30,7 +31,7 @@
           prepend-icon="mdi-link"
           dense filled />
       </validation-provider>
-    </div>
+    </v-toolbar-items>
   </v-toolbar>
 </template>
 
@@ -65,13 +66,6 @@ export default {
 .v-toolbar__title {
   min-width: 23.875rem;
   text-align: left;
-}
-
-.input-container {
-  display: flex;
-  flex: 1;
-  justify-content: center;
-  padding-right: 2.5rem;
 }
 
 .v-input {

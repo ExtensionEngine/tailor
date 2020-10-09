@@ -1,7 +1,7 @@
 <template>
-  <v-toolbar height="80" color="transparent" class="elevation-0">
+  <v-toolbar height="72" color="transparent" class="elevation-0">
     <v-toolbar-title class="pl-1">Carousel toolbar</v-toolbar-title>
-    <v-toolbar-items class="mx-auto">
+    <v-toolbar-items class="mx-auto pt-1">
       <v-btn @click="add" text>
         <v-icon class="pr-2">mdi-plus</v-icon> Add slide
       </v-btn>
@@ -12,7 +12,8 @@
         ref="heightValidator"
         v-slot="{ errors }"
         name="height"
-        rules="required|min_value:200|max_value:3000">
+        rules="required|min_value:200|max_value:3000"
+        slim>
         <v-text-field
           v-model="height"
           :error-messages="errors"
@@ -22,7 +23,7 @@
           placeholder="Height..."
           prepend-icon="mdi-resize"
           filled dense
-          class="mt-2 ml-5" />
+          class="ml-5" />
       </validation-provider>
     </v-toolbar-items>
   </v-toolbar>
