@@ -1,51 +1,51 @@
 <template>
-  <validation-observer v-slot="{ handleSubmit}" ref="form" slim>
-    <tailor-dialog :value="show" header-icon="mdi-content-copy" persistent>
-      <template v-slot:header>Clone {{ schema.toLowerCase() }}</template>
-      <template v-slot:body>
+  <tailor-dialog :value="show" header-icon="mdi-content-copy" persistent>
+    <template v-slot:header>Clone {{ schema.toLowerCase() }}</template>
+    <template v-slot:body>
+      <validation-observer
+        ref="form"
+        @submit.prevent="$refs.form.handleSubmit(submit)"
+        tag="form"
+        novalidate>
         <validation-provider
           v-slot="{ errors }"
-          mode="eager"
-          rules="required|min:2|max:250"
-          name="name">
+          name="name"
+          rules="required|min:2|max:250">
           <v-text-field
             v-model="name"
             :error-messages="errors"
             :disabled="inProgress"
             label="Name"
             placeholder="Enter name..."
-            data-vv-name="name"
             outlined
             class="mb-4" />
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
-          mode="eager"
-          rules="required|min:2|max:2000"
-          name="description">
+          name="description"
+          rules="required|min:2|max:2000">
           <v-textarea
             v-model="description"
             :error-messages="errors"
             :disabled="inProgress"
             label="Description"
             placeholder="Enter description..."
-            data-vv-name="description"
             outlined
             class="mb-4" />
         </validation-provider>
-      </template>
-      <template v-slot:actions>
-        <v-btn @click="close" :disabled="inProgress" text>Cancel</v-btn>
-        <v-btn
-          @click.prevent="handleSubmit(cloneRepository)"
-          :loading="inProgress"
-          color="primary"
-          text>
-          Clone
-        </v-btn>
-      </template>
-    </tailor-dialog>
-  </validation-observer>
+        <div class="d-flex justify-end">
+          <v-btn @click="close" :disabled="inProgress" text>Cancel</v-btn>
+          <v-btn
+            :loading="inProgress"
+            type="submit"
+            color="blue-grey darken-4"
+            text>
+            Clone
+          </v-btn>
+        </div>
+      </validation-observer>
+    </template>
+  </tailor-dialog>
 </template>
 
 <script>
@@ -72,7 +72,7 @@ export default {
       Object.assign(this, getDefaultState());
       this.$refs.form.reset();
     },
-    async cloneRepository() {
+    async submit() {
       this.inProgress = true;
       const { repositoryId } = this.$route.params;
       const data = { id: repositoryId, ...pick(this, ['name', 'description']) };

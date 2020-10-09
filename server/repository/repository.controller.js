@@ -16,12 +16,22 @@ const getVal = require('lodash/get');
 const map = require('lodash/map');
 const { Op } = require('sequelize');
 const pick = require('lodash/pick');
+const Promise = require('bluebird');
 const publishingService = require('../shared/publishing/publishing.service');
 const { repository: role } = require('../../config/shared').role;
 const sample = require('lodash/sample');
+const { snakeCase } = require('change-case');
+const TransferService = require('../shared/transfer/transfer.service');
+
+const fs = Promise.promisifyAll(require('fs'));
+const miss = Promise.promisifyAll(require('mississippi'));
+const tmp = Promise.promisifyAll(require('tmp'), { multiArgs: true });
 
 const DEFAULT_COLORS = ['#689F38', '#FF5722', '#2196F3'];
 const lowercaseName = sequelize.fn('lower', sequelize.col('repository.name'));
+
+const JobCache = new Map();
+
 const includeLastRevision = () => ({
   model: Revision,
   include: [{
@@ -34,6 +44,7 @@ const includeLastRevision = () => ({
   order: [['createdAt', 'DESC']],
   limit: 1
 });
+
 const includeRepositoryUser = (user, query) => {
   const options = query && query.pinned
     ? { where: { userId: user.id, pinned: true }, required: true }
@@ -166,12 +177,58 @@ async function removeTag({ params: { tagId, repositoryId } }, res) {
   return res.status(NO_CONTENT).send();
 }
 
+async function initiateExportJob({ repository }, res) {
+  const [outFile] = await tmp.fileAsync();
+  const options = { repositoryId: repository.id, schemaId: repository.schema };
+  return TransferService
+    .createExportJob(outFile, options)
+    .toPromise()
+    .then(job => {
+      // TODO: unlink job.filepath after timeout
+      JobCache.set(job.id, job);
+      res.json({ data: job.id });
+    })
+    .catch(() => {
+      fs.unlinkAsync(outFile);
+      return createError(NOT_FOUND);
+    });
+}
+
+function exportRepository({ repository, params }, res) {
+  const { jobId } = params;
+  const job = JobCache.get(jobId);
+  if (!job) return createError(NOT_FOUND);
+  res.attachment(`${snakeCase(repository.name)}.tgz`);
+  const exportStream = fs.createReadStream(job.filepath);
+  return miss.pipeAsync(exportStream, res)
+    .then(() => {
+      JobCache.delete(jobId);
+      return fs.unlinkAsync(job.filepath);
+    });
+}
+
+function importRepository({ body, file, user }, res) {
+  const { path } = file;
+  const { description, name } = body;
+  const options = { description, name, userId: user.id };
+  return TransferService
+    .createImportJob(path, options)
+    .toPromise()
+    .finally(() => {
+      fs.unlinkAsync(path);
+      res.end();
+    });
+}
+
 module.exports = {
   index,
   create,
   get,
   patch,
   remove,
+  initiateExportJob,
+  export: exportRepository,
+  import: importRepository,
   pin,
   clone,
   getUsers,

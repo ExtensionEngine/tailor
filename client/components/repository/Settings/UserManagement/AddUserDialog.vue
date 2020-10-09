@@ -1,25 +1,29 @@
 <template>
-  <validation-observer v-slot="{ handleSubmit }" slim>
-    <tailor-dialog
-      :key="isVisible"
-      v-model="isVisible"
-      header-icon="mdi-account"
-      persistent>
-      <template v-slot:activator="{ on }">
-        <v-btn
-          v-on="on"
-          color="primary darken-1"
-          text>
-          <v-icon class="mr-2">mdi-account-plus</v-icon>Add User
-        </v-btn>
-      </template>
-      <template v-slot:header>Add user</template>
-      <template v-slot:body>
+  <tailor-dialog
+    :key="isVisible"
+    v-model="isVisible"
+    header-icon="mdi-account"
+    persistent>
+    <template v-slot:activator="{ on }">
+      <v-btn
+        v-on="on"
+        color="primary darken-1"
+        text>
+        <v-icon class="mr-2">mdi-account-plus</v-icon>Add User
+      </v-btn>
+    </template>
+    <template v-slot:header>Add user</template>
+    <template v-slot:body>
+      <validation-observer
+        ref="form"
+        @submit.prevent="submit"
+        tag="form"
+        novalidate>
         <validation-provider
           v-slot="{ errors }"
-          mode="eager"
-          rules="required|email"
-          name="email">
+          :rules="{ required: true, email: true, not_within: [users, 'email'] }"
+          name="email"
+          mode="lazy">
           <v-combobox
             v-model="email"
             @update:search-input="fetchUsers"
@@ -27,40 +31,38 @@
             :error-messages="errors"
             label="Email"
             placeholder="Enter email..."
-            data-vv-name="email"
             outlined />
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
-          rules="required"
-          name="role">
+          name="role"
+          rules="required">
           <v-select
             v-model="role"
             :items="roles"
             :error-messages="errors"
             label="Role"
             placeholder="Role..."
-            data-vv-name="role"
             outlined />
         </validation-provider>
-      </template>
-      <template v-slot:actions>
-        <v-btn @click="close" :disabled="isSaving" text>Cancel</v-btn>
-        <v-btn
-          @click.prevent="handleSubmit(addUser)"
-          :disabled="isSaving"
-          color="primary darken-2"
-          text>
-          Add
-        </v-btn>
-      </template>
-    </tailor-dialog>
-  </validation-observer>
+        <div class="d-flex justify-end">
+          <v-btn @click="close" :disabled="isSaving" text>Cancel</v-btn>
+          <v-btn
+            :disabled="isSaving"
+            type="submit"
+            color="blue-grey darken-4"
+            text>
+            Add
+          </v-btn>
+        </div>
+      </validation-observer>
+    </template>
+  </tailor-dialog>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import api from '@/api/user';
-import { mapActions } from 'vuex';
 import TailorDialog from '@/components/common/TailorDialog';
 import throttle from 'lodash/throttle';
 
@@ -81,10 +83,13 @@ export default {
       ...getDefaultData(this.roles)
     };
   },
+  computed: mapGetters('repository', ['users']),
   methods: {
     ...mapActions('repository', ['upsertUser']),
-    addUser() {
+    submit() {
       setTimeout(async () => {
+        const isValid = await this.$refs.form.validate();
+        if (!isValid) return;
         this.isSaving = true;
         const { email, role, $route: { params: { repositoryId } } } = this;
         await this.upsertUser({ repositoryId, email, role });

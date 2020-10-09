@@ -1,33 +1,39 @@
 <template>
-  <validation-observer v-slot="{ handleSubmit }" slim>
-    <tailor-dialog
-      @click:outside="$emit('close')"
-      :value="true"
-      header-icon="mdi-tag-outline">
-      <template #header>Add Tag</template>
-      <template #body>
+  <tailor-dialog
+    @click:outside="$emit('close')"
+    :value="true"
+    header-icon="mdi-tag-outline">
+    <template #header>Add Tag</template>
+    <template #body>
+      <validation-observer
+        ref="form"
+        v-slot="{ handleSubmit }"
+        @submit.prevent="$refs.form.handleSubmit(submit)"
+        tag="form"
+        novalidate>
         <validation-provider
+          ref="nameProvider"
           v-slot="{ errors }"
-          mode="eager"
-          rules="required|min:2|max:20"
-          name="name">
+          name="name"
+          rules="required|min:2|max:20">
+          <!-- Avoid binding using v-model due to https://github.com/vuetifyjs/vuetify/issues/4679 -->
           <v-combobox
-            v-model="tagInput"
-            @keydown.enter="submit"
+            @update:search-input="update"
+            @keydown.enter="handleSubmit(submit)"
             :items="availableTags"
             :error-messages="errors"
             label="Select a tag or add a new one"
             outlined />
         </validation-provider>
-      </template>
-      <template #actions>
-        <v-btn @click="hide" text>Cancel</v-btn>
-        <v-btn @click.prevent="handleSubmit(submit)" color="primary" text>
-          Save
-        </v-btn>
-      </template>
-    </tailor-dialog>
-  </validation-observer>
+        <div class="d-flex justify-end">
+          <v-btn @click="hide" text>Cancel</v-btn>
+          <v-btn type="submit" color="blue-grey darken-4" text>
+            Save
+          </v-btn>
+        </div>
+      </validation-observer>
+    </template>
+  </tailor-dialog>
 </template>
 
 <script>
@@ -53,12 +59,13 @@ export default {
       this.$emit('close');
     },
     async submit() {
-      // Temp timeout due to https://github.com/vuetifyjs/vuetify/issues/4679
-      setTimeout(async () => {
-        const data = { name: this.tagInput, repositoryId: this.repository.id };
-        await this.addTag(data);
-        this.hide();
-      });
+      const data = { name: this.tagInput, repositoryId: this.repository.id };
+      await this.addTag(data);
+      this.hide();
+    },
+    update(value) {
+      this.$refs.nameProvider.syncValue(value);
+      this.tagInput = value;
     }
   },
   created() {

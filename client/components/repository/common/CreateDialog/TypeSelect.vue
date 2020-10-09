@@ -1,10 +1,9 @@
 <template>
   <validation-provider
     v-slot="{ errors }"
-    rules="required"
-    name="type">
+    name="type"
+    rules="required">
     <v-select
-      v-validate="{ required: true }"
       @change="$emit('input', $event)"
       :value="value"
       :items="options"

@@ -9,10 +9,10 @@
         <v-icon class="pr-2">mdi-minus</v-icon> Remove current slide
       </v-btn>
       <validation-provider
-        ref="provider"
+        ref="heightValidator"
         v-slot="{ errors }"
-        rules="required|min_value:200|max_value:3000"
-        name="height">
+        name="height"
+        rules="required|min_value:200|max_value:3000">
         <v-text-field
           v-model="height"
           :error-messages="errors"
@@ -47,7 +47,7 @@ export default {
   },
   watch: {
     height: debounce(async function () {
-      const { valid } = await this.$refs.provider.validate();
+      const { valid } = await this.$refs.heightValidator.validate();
       if (valid) this.$elementBus.emit('height', this.height);
     }, 2000)
   }

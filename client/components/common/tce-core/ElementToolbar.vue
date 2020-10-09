@@ -16,9 +16,7 @@
         v-if="!embed"
         @click="requestDeleteConfirmation"
         color="secondary darken-1"
-        dark fab small
-        absolute right top
-        class="mr-8">
+        dark fab small>
         <v-icon color="grey lighten-3">mdi-delete</v-icon>
       </v-btn>
     </div>
@@ -103,5 +101,12 @@ export default {
   position: absolute;
   width: 100%;
   min-height: 3.5rem;
+  padding-right: 2.75rem;
+
+  .delete-element {
+    position: absolute;
+    right: 1.25rem;
+    bottom: 1rem;
+  }
 }
 </style>

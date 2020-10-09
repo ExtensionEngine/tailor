@@ -2,7 +2,7 @@
   <div infinite-wrapper class="catalog-wrapper">
     <v-container :class="{ 'catalog-empty': !hasRepositories }" class="catalog mt-3">
       <v-row no-gutters class="catalog-actions">
-        <create-repository @created="onCreate" />
+        <add-repository @done="onRepositoryAdd" />
         <v-col md="4" sm="10" offset-md="4" offset-sm="1">
           <search
             @update="onFilterChange(setSearch, $event)"
@@ -36,7 +36,7 @@
       <v-row>
         <v-col
           v-for="repository in repositories"
-          :key="repository._cid"
+          :key="repository.uid"
           cols="4"
           class="px-2 py-3">
           <repository-card :repository="repository" />
@@ -63,7 +63,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
-import CreateRepository from './Create';
+import AddRepository from './Add';
 import get from 'lodash/get';
 import InfiniteLoading from 'vue-infinite-loading';
 import RepositoryCard from './Card';
@@ -112,7 +112,7 @@ export default {
       if (!this.hasMoreResults) this.loader.complete();
       this.loading = false;
     },
-    async onCreate() {
+    async onRepositoryAdd() {
       this.setOrder({ field: 'createdAt', order: 'DESC' });
       this.resetFilters();
       await this.load();
@@ -138,7 +138,7 @@ export default {
     this.fetchTags();
   },
   components: {
-    CreateRepository,
+    AddRepository,
     InfiniteLoading,
     RepositoryCard,
     Search,

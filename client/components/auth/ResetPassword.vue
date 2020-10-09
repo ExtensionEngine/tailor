@@ -8,10 +8,10 @@
       {{ error }}
     </v-alert>
     <validation-observer
-      v-slot="{ invalid }"
       ref="form"
       @submit.prevent="$refs.form.handleSubmit(submit)"
-      tag="form">
+      tag="form"
+      novalidate>
       <validation-provider
         v-slot="{ errors }"
         vid="password"
@@ -44,7 +44,6 @@
           outlined />
       </validation-provider>
       <v-btn
-        :disabled="invalid"
         type="submit"
         color="primary darken-1"
         class="my-1">

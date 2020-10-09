@@ -1,9 +1,10 @@
 <template>
   <validation-provider
-    ref="provider"
+    ref="validator"
     v-slot="{ errors }"
     :rules="{ required: !allowEmpty }"
-    name="activity">
+    :name="lowerCase(label)"
+    immediate>
     <v-autocomplete
       v-model="value"
       @input="onRelationshipChanged"
@@ -11,7 +12,6 @@
       :name="type"
       :label="label"
       :placeholder="selectPlaceholder"
-      :data-vv-as="label"
       :multiple="multiple"
       :chips="multiple"
       :clearable="!multiple"
@@ -36,6 +36,7 @@ import get from 'lodash/get';
 import groupBy from 'lodash/groupBy';
 import includes from 'lodash/includes';
 import isEmpty from 'lodash/isEmpty';
+import lowerCase from 'lodash/lowerCase';
 import map from 'lodash/map';
 import pluralize from 'pluralize';
 import set from 'lodash/set';
@@ -90,12 +91,13 @@ export default {
     }
   },
   methods: {
+    lowerCase,
     ...mapActions('repository/activities', ['update']),
     getAssociationIds(activity) {
       return get(activity, `refs.${this.type}`, []);
     },
     async onRelationshipChanged(value) {
-      const { valid } = await this.$refs.provider.validate();
+      const { valid } = await this.$refs.validator.validate();
       if (!valid) return;
       const associations = compact(castArray(value));
       const activity = cloneDeep(this.activity) || {};

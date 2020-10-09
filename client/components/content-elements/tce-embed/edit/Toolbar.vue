@@ -16,19 +16,18 @@
         hide-details dense filled
         class="height-input" />
       <validation-provider
-        ref="url"
+        ref="urlValidator"
         v-slot="{ errors }"
-        rules="url"
-        name="url">
+        name="url"
+        rules="url">
         <v-text-field
           v-model="url"
-          @input="onChange"
+          @keyup="onChange"
           :error-messages="errors"
           name="url"
           label="URL"
           placeholder="Enter URL..."
           prepend-icon="mdi-link"
-          data-vv-delay="0"
           hide-details dense filled />
       </validation-provider>
     </div>
@@ -51,7 +50,7 @@ export default {
   methods: {
     async onChange() {
       const { height, url } = this;
-      const { valid } = await this.$refs.url.validate();
+      const { valid } = await this.$refs.urlValidator.validate();
       if (!valid) return;
       this.save({ height, url });
     },
