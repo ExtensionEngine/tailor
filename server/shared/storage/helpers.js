@@ -2,6 +2,7 @@
 
 const crypto = require('crypto');
 const { elementRegistry } = require('../content-plugins');
+const get = require('lodash/get');
 const isString = require('lodash/isString');
 const isUrl = require('is-url');
 const mime = require('mime-types');
@@ -12,15 +13,11 @@ const toPairs = require('lodash/toPairs');
 const values = require('lodash/values');
 
 const STORAGE_PROTOCOL = 'storage://';
-const PRIMITIVES = [
-  'JODIT_HTML', 'IMAGE', 'BRIGHTCOVE_VIDEO', 'VIDEO', 'EMBED', 'HTML',
-  'AUDIO', 'PDF', 'BREAK'
-];
 const DEFAULT_IMAGE_EXTENSION = 'png';
-const isPrimitive = asset => PRIMITIVES.indexOf(asset.type) > -1;
-const isQuestion = type => ['QUESTION', 'REFLECTION', 'ASSESSMENT'].includes(type);
-
 const ASSET_ROOT = 'repository/assets';
+
+const isPrimitive = element => !get(element, 'data.embeds');
+const isQuestion = element => get(element, 'data.question');
 
 function processStatics(item) {
   const customProcessor = elementRegistry.getStaticsHandler(item.type);
