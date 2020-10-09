@@ -27,13 +27,15 @@ function processStatics(item) {
 }
 
 function defaultStaticsProcessor(item) {
-  return isQuestion(item.type)
+  return isQuestion(item)
     ? processQuestion(item)
     : processAsset(item);
 }
 
 function processAsset(asset) {
-  return isPrimitive(asset) ? processPrimitive(asset) : processComposite(asset);
+  return isPrimitive(asset)
+    ? processPrimitive(asset)
+    : processComposite(asset);
 }
 
 function processQuestion(element) {
@@ -43,13 +45,13 @@ function processQuestion(element) {
 }
 
 function processPrimitive(primitive) {
+  if (!isPrimitive(primitive)) throw new Error('Invalid primitive');
   if (!processor[primitive.type]) return Promise.resolve(primitive);
   return processor[primitive.type](primitive);
 }
 
 function processComposite(composite) {
-  if (!composite.data.embeds) Promise.resolve(composite);
-  return Promise.each(values(composite.data.embeds), it => processPrimitive(it))
+  return Promise.each(values(composite.data.embeds), processPrimitive)
     .then(() => composite);
 }
 
@@ -87,7 +89,9 @@ function resolveStatics(item) {
 }
 
 function defaultStaticsResolver(item) {
-  return isQuestion(item.type) ? resolveQuestion(item) : resolveAsset(item);
+  return isQuestion(item)
+    ? resolveQuestion(item)
+    : resolveAsset(item);
 }
 
 async function resolveAssetsMap(element) {
@@ -102,10 +106,11 @@ async function resolveAssetsMap(element) {
   return element;
 }
 
-function resolveQuestion(element) {
+async function resolveQuestion(element) {
+  await resolveAssetsMap(element);
   const question = element.data.question;
   if (!question || question.length < 1) return Promise.resolve(element);
-  return Promise.each(question, it => resolveAsset(it)).then(() => element);
+  return Promise.each(question, resolveAsset).then(() => element);
 }
 
 function resolveAsset(element) {
@@ -115,11 +120,13 @@ function resolveAsset(element) {
 }
 
 function resolvePrimitive(primitive) {
+  if (!isPrimitive(primitive)) throw new Error('Invalid primitive');
   const primitiveResolver = resolver[primitive.type] || resolveAssetsMap;
   return primitiveResolver(primitive);
 }
 
-function resolveComposite(composite) {
+async function resolveComposite(composite) {
+  await resolveAssetsMap(composite);
   return Promise.each(values(composite.data.embeds), resolvePrimitive)
     .then(() => composite);
 }
