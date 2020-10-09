@@ -45,6 +45,12 @@ async function sendEmailNotification(comment, db) {
     ]
   });
   const { author, repository, activity } = comment;
+  const previousComments = await activity.getComments({
+    offset: 1,
+    limit: 3,
+    order: [['createdAt', 'DESC']],
+    include: [{ model: User, as: 'author' }]
+  });
   const data = {
     repositoryId: repository.id,
     repositoryName: repository.name,
@@ -52,6 +58,7 @@ async function sendEmailNotification(comment, db) {
     activityLabel: getLevel(activity.type).label,
     topic: activity.data.name,
     author: author.profile,
+    previousComments,
     ...pick(comment, ['id', 'content', 'createdAt'])
   };
   const collaborators = map(repository.repositoryUsers, 'user.email');
