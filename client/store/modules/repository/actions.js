@@ -1,9 +1,32 @@
+import { feed, connect as initSSEConnection } from './feed';
 import api from '@/api/repository';
 import each from 'lodash/each';
+import { Connection as Events } from '@/../common/sse';
 import filter from 'lodash/filter';
 import Promise from 'bluebird';
 
-export const initialize = ({ commit, dispatch }, id) => {
+export const initialize = async (store, id) => {
+  const { dispatch } = store;
+  await dispatch('reset', id);
+  initializeSSE(id, store);
+  // Initialize repository state
+  return Promise.all([
+    dispatch('repositories/get', id, { root: true }),
+    dispatch('activities/reset'),
+    dispatch('getUsers'),
+    dispatch('userTracking/fetch', id)]);
+};
+
+function initializeSSE(id, store) {
+  const { rootState, dispatch, commit } = store;
+  const feed = initSSEConnection(id, rootState.auth.token);
+  feed.subscribe(Events.Initialized, e => commit('setSseId', e.sseId));
+  const modules = ['activities', 'contentElements', 'comments', 'userTracking'];
+  each(modules, module => dispatch(`${module}/plugSSE`));
+}
+
+export const reset = ({ commit, dispatch }, id) => {
+  if (feed.isConnected) feed.disconnect();
   const getRoute = entity => `repositories/${id}/${entity}`;
   const modules = {
     activities: 'activities',
@@ -11,17 +34,12 @@ export const initialize = ({ commit, dispatch }, id) => {
     revisions: 'revisions',
     comments: 'comments'
   };
-  // Reset store and setup api endpoints
-  each(modules, (path, module) => {
-    commit(`${module}/reset`);
-    dispatch(`${module}/setEndpoint`, getRoute(path));
-  });
-  dispatch('revisions/resetPagination');
-  // Initialize repository state
-  return Promise.all([
-    dispatch('repositories/get', id, { root: true }),
-    dispatch('activities/reset'),
-    dispatch('getUsers')]);
+  commit('setSseId', null);
+  commit('setRepositoryId', id);
+  commit('userTracking/reset');
+  each(modules, (_path, module) => commit(`${module}/reset`));
+  if (!id) return;
+  each(modules, (path, module) => dispatch(`${module}/setEndpoint`, getRoute(path)));
 };
 
 export const expandParents = ({ getters, commit }, activity) => {

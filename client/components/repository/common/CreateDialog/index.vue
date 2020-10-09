@@ -36,9 +36,9 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
 import { getActivityMetadata } from 'shared/activities';
 import InsertLocation from '@/utils/InsertLocation';
+import { mapActions } from 'vuex';
 import MetaInput from 'tce-core/MetaInput';
 import TailorDialog from '@/components/common/TailorDialog';
 import TypeSelect from './TypeSelect';
@@ -70,7 +70,6 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('repository/activities', ['calculateInsertPosition']),
     metadata() {
       if (!this.activity.type) return null;
       return getActivityMetadata(this.activity);
@@ -79,7 +78,7 @@ export default {
     defaultLabel: vm => vm.hasSingleOption ? `Add ${vm.levels[0].label}` : 'Add'
   },
   methods: {
-    ...mapActions('repository/activities', ['save']),
+    ...mapActions('repository/activities', ['save', 'calculateInsertPosition']),
     setMetaValue(key, val) {
       this.activity.data[key] = val;
     },
@@ -88,7 +87,7 @@ export default {
       if (anchor) {
         activity.parentId = action === ADD_INTO ? anchor.id : anchor.parentId;
       }
-      activity.position = this.calculateInsertPosition(activity, anchor, action);
+      activity.position = await this.calculateInsertPosition({ activity, anchor, action });
       const item = await this.save({ ...activity });
       if (anchor && (anchor.id === activity.parentId)) this.$emit('expand', anchor);
       this.$emit('created', item);
