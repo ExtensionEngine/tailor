@@ -24,7 +24,6 @@
       border-width="1px"
       border-color="#d2d2d2"
       border-style="dashed" />
-    <mj-class name="avatar" padding="10px" />
   </mj-attributes>
   <mj-style inline="inline">
     strong {
@@ -56,7 +55,7 @@
       font-weight: 100;
       text-align: center;
       border-radius: 50%;
-      background-color: #36474F;
+      background-color: #36474f;
     }
   </mj-style>
 </mj-head>
