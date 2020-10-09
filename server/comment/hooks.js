@@ -1,6 +1,5 @@
 'use strict';
 
-const { broadcast, events } = require('./channel');
 const { getLevel } = require('../../config/shared/activities');
 const mail = require('../shared/mail');
 const map = require('lodash/map');
