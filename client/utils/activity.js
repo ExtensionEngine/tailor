@@ -5,7 +5,8 @@ import { getLevel } from 'shared/activities';
 import sortBy from 'lodash/sortBy';
 
 export function isChanged(activity) {
-  return new Date(activity.modifiedAt) > new Date(activity.publishedAt);
+  return !activity.publishedAt ||
+    (new Date(activity.modifiedAt) > new Date(activity.publishedAt));
 }
 
 export function getLabel(activity) {
