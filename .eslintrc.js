@@ -1,5 +1,6 @@
 'use strict';
 
+/** @type {import('eslint').Linter.Config} */
 module.exports = {
   root: true,
   extends: '@extensionengine',
@@ -14,7 +15,7 @@ module.exports = {
   overrides: [{
     files: ['extensions/**'],
     parserOptions: {
-      parser: 'babel-eslint',
+      parser: '@babel/eslint-parser',
       sourceType: 'module'
     }
   }],
