@@ -10,47 +10,53 @@
     </template>
     <template v-slot:header>{{ heading || defaultLabel }}</template>
     <template v-slot:body>
-      <type-select
-        v-model="activity.type"
-        :options="levels"
-        :disabled="hasSingleOption" />
-      <template v-if="activity.type && visible">
+      <validation-observer
+        :key="visible"
+        ref="form"
+        @submit.prevent="$refs.form.handleSubmit(submit)"
+        tag="form">
+        <type-select
+          v-model="activity.type"
+          :options="levels"
+          :disabled="hasSingleOption" />
         <meta-input
           v-for="input in metadata"
           :key="input.key"
           @update="setMetaValue"
           :meta="input" />
-      </template>
-    </template>
-    <template v-slot:actions>
-      <v-btn @click="visible = false" text>Cancel</v-btn>
-      <v-btn @click="create" color="primary darken-1" text>Create</v-btn>
+        <div class="d-flex justify-end">
+          <v-btn @click="visible = false" text>Cancel</v-btn>
+          <v-btn type="submit" color="blue-grey darken-4" text>
+            Create
+          </v-btn>
+        </div>
+      </validation-observer>
     </template>
   </tailor-dialog>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
 import { getActivityMetadata } from 'shared/activities';
+import InsertLocation from '@/utils/InsertLocation';
+import { mapActions } from 'vuex';
 import MetaInput from 'tce-core/MetaInput';
 import TailorDialog from '@/components/common/TailorDialog';
 import TypeSelect from './TypeSelect';
-import { withValidation } from 'utils/validation';
 
 const initActivityState = (repositoryId, levels) => ({
   repositoryId,
   type: levels.length > 1 ? null : levels[0].type,
   data: {}
 });
+const { ADD_AFTER, ADD_INTO } = InsertLocation;
 
 export default {
   name: 'create-activity-dialog',
-  mixins: [withValidation()],
   props: {
     repositoryId: { type: Number, required: true },
     levels: { type: Array, required: true },
     anchor: { type: Object, default: null },
-    addChild: { type: Boolean, default: false },
+    action: { type: String, default: ADD_AFTER },
     heading: { type: String, default: '' },
     showActivator: { type: Boolean, default: false },
     activatorLabel: { type: String, default: '' },
@@ -64,7 +70,6 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('repository/activities', ['calculateInsertPosition']),
     metadata() {
       if (!this.activity.type) return null;
       return getActivityMetadata(this.activity);
@@ -73,18 +78,16 @@ export default {
     defaultLabel: vm => vm.hasSingleOption ? `Add ${vm.levels[0].label}` : 'Add'
   },
   methods: {
-    ...mapActions('repository/activities', ['save']),
+    ...mapActions('repository/activities', ['save', 'calculateInsertPosition']),
     setMetaValue(key, val) {
       this.activity.data[key] = val;
     },
-    async create() {
-      const isValid = await this.$validator.validateAll();
-      if (!isValid) return;
-      const { activity, anchor } = this;
+    async submit() {
+      const { activity, anchor, action } = this;
       if (anchor) {
-        activity.parentId = this.addChild ? anchor.id : anchor.parentId;
+        activity.parentId = action === ADD_INTO ? anchor.id : anchor.parentId;
       }
-      activity.position = this.calculateInsertPosition(activity, anchor);
+      activity.position = await this.calculateInsertPosition({ activity, anchor, action });
       const item = await this.save({ ...activity });
       if (anchor && (anchor.id === activity.parentId)) this.$emit('expand', anchor);
       this.$emit('created', item);

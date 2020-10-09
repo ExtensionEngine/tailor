@@ -8,28 +8,31 @@
       <v-btn @click="remove" text>
         <v-icon class="pr-2">mdi-minus</v-icon> Remove current slide
       </v-btn>
-      <v-text-field
-        v-model="height"
-        v-validate="'required|min_value:200|max_value:3000'"
-        :error-messages="vErrors.collect('height')"
+      <validation-provider
+        ref="heightValidator"
+        v-slot="{ errors }"
         name="height"
-        label="Height (px)"
-        placeholder="Height..."
-        prepend-icon="mdi-resize"
-        hide-details filled dense
-        class="mt-2 ml-5" />
+        rules="required|min_value:200|max_value:3000">
+        <v-text-field
+          v-model="height"
+          :error-messages="errors"
+          name="height"
+          label="Height (px)"
+          placeholder="Height..."
+          prepend-icon="mdi-resize"
+          hide-details filled dense
+          class="mt-2 ml-5" />
+      </validation-provider>
     </v-toolbar-items>
   </v-toolbar>
 </template>
 
 <script>
 import debounce from 'lodash/debounce';
-import { withValidation } from 'utils/validation';
 
 export default {
   name: 'tce-carousel-toolbar',
   inject: ['$elementBus'],
-  mixins: [withValidation()],
   props: {
     element: { type: Object, required: true }
   },
@@ -43,10 +46,9 @@ export default {
     }
   },
   watch: {
-    height: debounce(function () {
-      if (!this.vErrors.has('height')) {
-        this.$elementBus.emit('height', this.height);
-      }
+    height: debounce(async function () {
+      const { valid } = await this.$refs.heightValidator.validate();
+      if (valid) this.$elementBus.emit('height', this.height);
     }, 2000)
   }
 };

@@ -9,10 +9,11 @@
           {{ activity.data.name }}
         </span>
       </h1>
+      <active-users :users="activeUsers" class="mx-6" />
     </div>
     <element-toolbar
       v-if="element && element.parent"
-      :key="`${element.parent._cid}-${element.id}`"
+      :key="`${element.parent.uid}-${element.id}`"
       :element="element.parent"
       :embed="element">
       <template slot="embed-toolbar">
@@ -34,6 +35,7 @@
 </template>
 
 <script>
+import ActiveUsers from '@/components/common/ActiveUsers';
 import ActivityActions from './ActivityActions';
 import { ElementToolbar } from 'tce-core';
 import { getElementId } from 'tce-core/utils';
@@ -43,7 +45,8 @@ import { mapGetters } from 'vuex';
 export default {
   name: 'editor-toolbar',
   props: {
-    element: { type: Object, default: null }
+    element: { type: Object, default: null },
+    activeUsers: { type: Array, default: () => [] }
   },
   computed: {
     ...mapGetters('editor', ['activity']),
@@ -54,7 +57,7 @@ export default {
   methods: {
     getElementId
   },
-  components: { ActivityActions, ElementToolbar }
+  components: { ActivityActions, ActiveUsers, ElementToolbar }
 };
 </script>
 

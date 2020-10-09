@@ -11,7 +11,7 @@
       class="row">
       <div
         v-for="(item, index) in list"
-        :key="item._cid || item.id"
+        :key="item.uid || item.id"
         :class="getContainerClasses(item)"
         class="list-item-container">
         <inline-activator

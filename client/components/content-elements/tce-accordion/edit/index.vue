@@ -14,7 +14,7 @@
         v-if="!hasItems"
         :is-focused="isFocused"
         :is-disabled="isDisabled"
-        name="Accordion"
+        name="Accordion component"
         icon="mdi-view-list"
         active-placeholder="Click the button below to create the first item"
         active-icon="mdi-arrow-down" />

@@ -4,7 +4,7 @@
       <ul>
         <revision-item
           v-for="revision in bundledRevisions"
-          :key="revision._cid"
+          :key="revision.uid"
           :revision="revision" />
       </ul>
     </div>

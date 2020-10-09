@@ -6,6 +6,7 @@ const {
 } = require('../../config/shared/activities');
 const { Model, Op } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
+const { Activity: Events } = require('../../common/sse');
 const hooks = require('./hooks');
 const isEmpty = require('lodash/isEmpty');
 const map = require('lodash/map');
@@ -108,32 +109,36 @@ class Activity extends Model {
     };
   }
 
+  static get Events() {
+    return Events;
+  }
+
   static async cloneActivities(src, dstRepositoryId, dstParentId, opts) {
     if (!opts.idMappings) opts.idMappings = {};
-    const { idMappings, transaction } = opts;
+    const { idMappings, context, transaction } = opts;
     const dstActivities = await Activity.bulkCreate(map(src, it => ({
       repositoryId: dstRepositoryId,
       parentId: dstParentId,
       ...pick(it, ['type', 'position', 'data', 'refs', 'modifiedAt'])
-    })), { returning: true, transaction });
+    })), { returning: true, context, transaction });
     const ContentElement = this.sequelize.model('ContentElement');
     return Promise.reduce(src, async (acc, it, index) => {
       const parent = dstActivities[index];
       acc[it.id] = parent.id;
       const where = { activityId: it.id, detached: false };
       const elements = await ContentElement.findAll({ where, transaction });
-      await ContentElement.cloneElements(elements, parent, transaction);
+      await ContentElement.cloneElements(elements, parent, { context, transaction });
       const children = await it.getChildren({ where: { detached: false } });
       if (!children.length) return acc;
       return Activity.cloneActivities(children, dstRepositoryId, parent.id, opts);
     }, idMappings);
   }
 
-  clone(repositoryId, parentId, position) {
+  clone(repositoryId, parentId, position, context) {
     return this.sequelize.transaction(transaction => {
       if (position) this.position = position;
       return Activity.cloneActivities(
-        [this], repositoryId, parentId, { transaction }
+        [this], repositoryId, parentId, { context, transaction }
       );
     });
   }
