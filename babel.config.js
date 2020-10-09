@@ -1,7 +1,8 @@
 'use strict';
 
-const babel = require('@babel/core');
-const poiPresetCfg = babel.createConfigItem(require('poi/babel'), { type: 'preset' });
-const babelOptions = { presets: [poiPresetCfg] };
-
-module.exports = babelOptions;
+/** @type {import('@babel/core').TransformOptions} */
+module.exports = {
+  presets: [
+    ['poi/babel']
+  ]
+};

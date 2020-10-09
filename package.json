@@ -152,6 +152,7 @@
     "@extensionengine/stylelint-config": "^1.1.1",
     "@poi/plugin-bundle-report": "^12.1.2",
     "@poi/plugin-eslint": "^12.0.1",
+    "@types/babel-core": "^6.25.6",
     "@types/poi": "^12.5.0",
     "@types/webpack": "^4.41.0",
     "clean-webpack-plugin": "^3.0.0",
