@@ -1,10 +1,10 @@
-import cuid from 'cuid';
 import generateActions from '@/store/helpers/actions';
+import uuid from '@/utils/uuid';
 
 const { api, fetch, reset, save, setEndpoint, update, remove } = generateActions();
 
 const create = ({ commit, dispatch }, data) => {
-  const model = { ...data, _cid: cuid() };
+  const model = { ...data, uid: uuid() };
   return api.save(model)
     .then(model => {
       commit('add', model);

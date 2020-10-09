@@ -8,6 +8,12 @@ exports.up = (queryInterface, Sequelize) => queryInterface.createTable(TABLE_NAM
     primaryKey: true,
     autoIncrement: true
   },
+  uid: {
+    type: Sequelize.UUID,
+    unique: true,
+    allowNull: false,
+    defaultValue: Sequelize.literal('uuid_generate_v4()')
+  },
   authorId: {
     type: Sequelize.INTEGER,
     field: 'author_id',

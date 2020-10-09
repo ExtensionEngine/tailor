@@ -4,7 +4,7 @@ import {
 import Vue from 'vue';
 
 const archive = (state, model) => {
-  Vue.delete(state.items, model._cid);
+  Vue.delete(state.items, model.uid);
 };
 
 export { fetch, add, archive, remove, reset, save, setEndpoint };

@@ -5,9 +5,9 @@
     absolute right permanent>
     <article
       v-if="selectedTask"
-      :key="selectedTask._cid"
+      :key="selectedTask.uid"
       class="px-4 pt-4 pb-10">
-      <sidebar-header v-bind="selectedTask" :cid="selectedTask._cid" />
+      <sidebar-header v-bind="selectedTask" />
       <task-form :task="selectedTask" />
       <section>
         <h5>Related content</h5>

@@ -57,7 +57,7 @@ const appChannel = EventBus.channel('app');
 
 export default {
   props: {
-    cid: { type: String, required: true },
+    uid: { type: String, required: true },
     id: { type: Number, required: true },
     name: { type: String, required: true },
     shortId: { type: String, required: true },
@@ -70,7 +70,7 @@ export default {
   methods: {
     ...mapActions('repository/tasks', ['archive']),
     requestArchiveConfirmation() {
-      const model = { id: this.id, _cid: this.cid };
+      const model = { id: this.id, uid: this.uid };
       appChannel.emit('showConfirmationModal', {
         title: 'Archive task?',
         message: 'Are you sure you want to archive task?',
