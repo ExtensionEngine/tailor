@@ -15,8 +15,8 @@ function list({ repository, opts, query }, res) {
 }
 
 function create({ user, repository: { id: repositoryId }, body }, res) {
-  const { activityId, content } = body;
-  const payload = { repositoryId, activityId, authorId: user.id, content };
+  const { uid, activityId, content } = body;
+  const payload = { uid, repositoryId, activityId, authorId: user.id, content };
   return Comment.create(payload, { include: [author] })
     .then(data => res.json({ data }));
 }
