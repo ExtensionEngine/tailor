@@ -13,7 +13,7 @@
       <plyrue
         v-if="source"
         v-show="!error"
-        :key="element._cid"
+        :key="element.uid"
         :sources="sources"
         type="audio" />
       <div v-if="error" class="error">
