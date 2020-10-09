@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { getDescendants, getLabel, isChanged } from 'client/utils/activity';
+import { getDescendants, getLabel, isChanged } from '@/utils/activity';
 import countBy from 'lodash/countBy';
 import filter from 'lodash/filter';
 import map from 'lodash/map';
