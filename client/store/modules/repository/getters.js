@@ -50,7 +50,7 @@ export const selectedActivity = (_state, getters, rootState) => {
 };
 
 export const isCollapsed = state => {
-  return activity => activity && !state.outline.expanded[activity._cid];
+  return activity => activity && !state.outline.expanded[activity.uid];
 };
 
 export const users = state => values(state.users);

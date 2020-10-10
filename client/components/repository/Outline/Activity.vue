@@ -5,7 +5,7 @@
         @click="selectActivity(id)"
         @mouseover="isHovered = true"
         @mouseout="isHovered = false"
-        :id="`activity_${_cid}`"
+        :id="`activity_${uid}`"
         :class="{
           selected: isSelected,
           'elevation-6': isHighlighted,
@@ -24,7 +24,7 @@
         <div v-show="isHighlighted" class="actions">
           <v-spacer />
           <options-toolbar
-            :activity="{ id, _cid, repositoryId, parentId, type, position, data }"
+            :activity="{ id, uid, repositoryId, parentId, type, position, data }"
             class="options-toolbar" />
           <v-btn
             v-show="hasSubtypes"
@@ -35,19 +35,19 @@
             <v-icon>mdi-chevron-{{ isExpanded ? 'up' : 'down' }}</v-icon>
           </v-btn>
           <options-menu
-            :activity="{ id, _cid, repositoryId, parentId, type, position, data }"
+            :activity="{ id, uid, repositoryId, parentId, type, position, data }"
             class="options-menu" />
         </div>
       </div>
     </div>
-    <div v-if="!isCollapsed({ _cid }) && hasChildren">
+    <div v-if="!isCollapsed({ uid }) && hasChildren">
       <draggable
         @update="data => reorder(data, children)"
         :list="children"
         v-bind="{ handle: '.activity' }">
         <activity
           v-for="(subActivity, childIndex) in children"
-          :key="subActivity._cid"
+          :key="subActivity.uid"
           v-bind="subActivity"
           :index="childIndex + 1"
           :activities="activities"
@@ -75,7 +75,7 @@ export default {
   inheritAttrs: false,
   props: {
     /* eslint-disable-next-line vue/prop-name-casing */
-    _cid: { type: String, required: true },
+    uid: { type: String, required: true },
     id: { type: Number, default: null },
     parentId: { type: Number, default: null },
     repositoryId: { type: Number, required: true },
@@ -96,9 +96,9 @@ export default {
     config: vm => find(vm.structure, { type: vm.type }),
     color: vm => vm.config.color,
     isEditable: vm => isEditable(vm.type),
-    isSelected: vm => vm.selectedActivity && (vm.selectedActivity._cid === vm._cid),
+    isSelected: vm => vm.selectedActivity && (vm.selectedActivity.uid === vm.uid),
     isHighlighted: vm => vm.isHovered || vm.isSelected,
-    isExpanded: vm => !vm.isCollapsed({ _cid: vm._cid }),
+    isExpanded: vm => !vm.isCollapsed({ uid: vm.uid }),
     hasSubtypes: vm => !!size(vm.config.subLevels),
     hasChildren: vm => (vm.children.length > 0) && vm.hasSubtypes,
     children() {
@@ -117,7 +117,7 @@ export default {
   methods: {
     ...mapMutations('repository', ['toggleActivity']),
     toggle(expanded = !this.isExpanded) {
-      this.toggleActivity({ _cid: this._cid, expanded });
+      this.toggleActivity({ uid: this.uid, expanded });
     }
   },
   components: { Draggable, OptionsMenu, OptionsToolbar }

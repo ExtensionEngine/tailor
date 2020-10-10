@@ -25,7 +25,7 @@
       </div>
       <assessment-group
         v-for="(group, index) in groups"
-        :key="group._cid"
+        :key="group.uid"
         @saveElement="$emit('saveElement', $event)"
         @updateElement="$emit('updateElement', $event)"
         @reorderElement="$emit('reorderElement', $event)"
