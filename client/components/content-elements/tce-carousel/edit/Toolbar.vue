@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar height="80" color="transparent" class="elevation-0">
+  <v-toolbar height="72" color="transparent" class="elevation-0">
     <v-toolbar-title class="pl-1">Carousel toolbar</v-toolbar-title>
     <v-toolbar-items class="mx-auto">
       <v-btn @click="add" text>

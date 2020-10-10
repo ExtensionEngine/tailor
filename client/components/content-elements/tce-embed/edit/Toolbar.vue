@@ -1,11 +1,11 @@
 <template>
   <v-toolbar
-    height="80"
+    height="72"
     color="transparent"
     class="tce-embed-toolbar elevation-0">
     <v-toolbar-title class="pl-1">Embed component</v-toolbar-title>
     <div class="input-container mt-5">
-      <validation-observer ref="embedObserver" tag="div" class="d-flex">
+      <validation-observer ref="form" tag="form" class="d-flex">
         <validation-provider
           v-slot="{ errors }"
           name="height"
@@ -59,7 +59,7 @@ export default {
   methods: {
     async onChange() {
       const { height, url } = this;
-      const valid = await this.$refs.embedObserver.validate();
+      const valid = await this.$refs.form.validate();
       if (!valid) return;
       this.save({ height, url });
     },
