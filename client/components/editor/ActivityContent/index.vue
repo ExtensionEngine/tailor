@@ -89,14 +89,15 @@ export default {
       }, 100));
     },
     initElementFocusListener() {
-      this.eventBus = EventBus.on(CE_FOCUS_EVENT, throttle((element, composite) => {
+      this.focusHandler = throttle((element, composite) => {
         if (!element) {
           this.focusedElement = null;
           return;
         }
         if (getElementId(this.focusedElement) === getElementId(element)) return;
         this.focusedElement = { ...element, parent: composite };
-      }, 50));
+      }, 50);
+      EventBus.on(CE_FOCUS_EVENT, this.focusHandler);
     }
   },
   watch: {
@@ -128,7 +129,7 @@ export default {
   },
   beforeDestroy() {
     this.storeUnsubscribe && this.storeUnsubscribe();
-    this.eventBus && this.eventBus.$off(CE_FOCUS_EVENT);
+    this.focusHandler && EventBus.off(CE_FOCUS_EVENT, this.focusHandler);
   },
   components: {
     ContentContainers,
