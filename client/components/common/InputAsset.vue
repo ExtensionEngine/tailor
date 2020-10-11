@@ -32,7 +32,13 @@
     <validation-provider
       ref="provider"
       v-slot="{ errors }"
-      :rules="{ ext_url: { extensions } }"
+      :rules="{
+        url: {
+          protocols: ['http', 'https'],
+          require_protocol: true,
+          require_valid_protocol: true
+        }
+      }"
       name="URL">
       <v-text-field
         v-if="!uploading && (urlInput || !hasAsset)"

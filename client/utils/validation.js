@@ -12,10 +12,10 @@ import {
 } from 'vee-validate/dist/rules';
 import { extend } from 'vee-validate';
 import forEach from 'lodash/forEach';
+import isURL from 'validator/lib/isURL';
 import { messages } from 'vee-validate/dist/locale/en.json';
 import snakeCase from 'lodash/snakeCase';
 import some from 'lodash/some';
-import urlRegex from 'url-regex';
 import userApi from '@/api/user';
 
 const alphanumerical = {
@@ -32,16 +32,9 @@ const uniqueEmail = {
   message: 'The {_field_} is not unique'
 };
 
-const extUrl = {
-  params: ['extensions'],
-  validate: (url, { extensions }) => extensions.some(ext => {
-    return new RegExp(`\\w\\${ext}$`).test(url);
-  }),
-  message: 'The {_field_} is invalid.'
-};
-
 const url = {
-  validate: value => urlRegex({ exact: true }).test(value),
+  params: ['protocols', 'require_valid_protocol', 'require_protocol'],
+  validate: (val, opts) => isURL(val, opts),
   message: 'The {_field_} is not a valid URL'
 };
 
@@ -59,7 +52,6 @@ const rules = {
   confirmed,
   email,
   ext,
-  extUrl,
   integer,
   isNot: { ...isNot, message: 'The {_field_} is equal to the {other} value' },
   max,
