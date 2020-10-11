@@ -25,5 +25,5 @@ export default {
   channel,
   emit: (name, ...args) => bus.$emit(name, ...args),
   on: (name, ...args) => bus.$on(name, ...args),
-  off: name => bus.$off(name)
+  off: (name, ...args) => bus.$off(name, ...args)
 };

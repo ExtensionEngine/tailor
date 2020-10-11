@@ -67,7 +67,12 @@ function sendCommentNotification(users, comment) {
   const { repositoryId, activityId } = comment;
   const href = activityUrl(repositoryId, activityId);
   const recipients = users.concat(',');
-  const data = { href, origin, ...comment };
+  const data = {
+    href,
+    origin,
+    getInitials: () => (text, render) => render(text).substr(0, 2).toUpperCase(),
+    ...comment
+  };
   const html = renderHtml(path.join(templatesDir, 'comment.mjml'), data);
   const text = renderText(path.join(templatesDir, 'comment.txt'), data);
   logger.info({ recipients, sender: from }, '📧  Sending notification email to:', recipients);
