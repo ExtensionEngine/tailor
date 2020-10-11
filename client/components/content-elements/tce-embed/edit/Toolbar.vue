@@ -26,7 +26,13 @@
         <validation-provider
           v-slot="{ errors }"
           name="url"
-          rules="url"
+          :rules="{
+            url: {
+              protocols: ['http', 'https'],
+              require_protocol: true,
+              require_valid_protocol: true
+            }
+          }"
           slim>
           <v-text-field
             v-model="url"
