@@ -36,8 +36,9 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
 import { getActivityMetadata } from 'shared/activities';
+import InsertLocation from '@/utils/InsertLocation';
+import { mapActions } from 'vuex';
 import MetaInput from 'tce-core/MetaInput';
 import TailorDialog from '@/components/common/TailorDialog';
 import TypeSelect from './TypeSelect';
@@ -47,6 +48,7 @@ const initActivityState = (repositoryId, levels) => ({
   type: levels.length > 1 ? null : levels[0].type,
   data: {}
 });
+const { ADD_AFTER, ADD_INTO } = InsertLocation;
 
 export default {
   name: 'create-activity-dialog',
@@ -54,7 +56,7 @@ export default {
     repositoryId: { type: Number, required: true },
     levels: { type: Array, required: true },
     anchor: { type: Object, default: null },
-    addChild: { type: Boolean, default: false },
+    action: { type: String, default: ADD_AFTER },
     heading: { type: String, default: '' },
     showActivator: { type: Boolean, default: false },
     activatorLabel: { type: String, default: '' },
@@ -68,7 +70,6 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('repository/activities', ['calculateInsertPosition']),
     metadata() {
       if (!this.activity.type) return null;
       return getActivityMetadata(this.activity);
@@ -77,16 +78,16 @@ export default {
     defaultLabel: vm => vm.hasSingleOption ? `Add ${vm.levels[0].label}` : 'Add'
   },
   methods: {
-    ...mapActions('repository/activities', ['save']),
+    ...mapActions('repository/activities', ['save', 'calculateInsertPosition']),
     setMetaValue(key, val) {
       this.activity.data[key] = val;
     },
     async submit() {
-      const { activity, anchor } = this;
+      const { activity, anchor, action } = this;
       if (anchor) {
-        activity.parentId = this.addChild ? anchor.id : anchor.parentId;
+        activity.parentId = action === ADD_INTO ? anchor.id : anchor.parentId;
       }
-      activity.position = this.calculateInsertPosition(activity, anchor);
+      activity.position = await this.calculateInsertPosition({ activity, anchor, action });
       const item = await this.save({ ...activity });
       if (anchor && (anchor.id === activity.parentId)) this.$emit('expand', anchor);
       this.$emit('created', item);
