@@ -30,6 +30,7 @@
         readonly hide-details filled />
     </template>
     <validation-provider
+      v-if="!uploading && (urlInput || !hasAsset)"
       ref="provider"
       v-slot="{ errors }"
       :rules="{
@@ -41,7 +42,6 @@
       }"
       name="URL">
       <v-text-field
-        v-if="!uploading && (urlInput || !hasAsset)"
         v-model="urlInput"
         :error-messages="errors"
         :disabled="!isEditing"
@@ -109,8 +109,10 @@ export default {
   },
   methods: {
     async save() {
-      const { valid } = await this.$refs.provider.validate();
-      if (!valid) return;
+      if (this.$refs.provider) {
+        const { valid } = await this.$refs.provider.validate();
+        if (!valid) return;
+      }
       this.isEditing = false;
       const payload = this.file || { url: this.urlInput, publicUrl: this.urlInput };
       this.$emit('input', payload);
@@ -123,16 +125,7 @@ export default {
 <style lang="scss" scoped>
 .v-text-field {
   min-width: 21.875rem;
-  margin: 0.75rem 0.75rem 0 1.75rem;
-
-  ::v-deep .v-input__slot {
-    min-height: 2.75rem;
-    margin-bottom: 0.1875rem;
-
-    .v-input__append-inner {
-      margin-top: 0.75rem;
-    }
-  }
+  margin: 0.5rem 0.75rem 0 1.75rem;
 }
 
 .action ::v-deep .v-btn__content {
