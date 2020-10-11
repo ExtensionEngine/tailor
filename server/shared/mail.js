@@ -1,7 +1,7 @@
 'use strict';
 
-const { createLogger, Level } = require('../shared/logger');
 const { mail: config, origin } = require('../../config/server');
+const { createLogger, Level } = require('../shared/logger');
 const email = require('emailjs');
 const pick = require('lodash/pick');
 const { promisify } = require('util');

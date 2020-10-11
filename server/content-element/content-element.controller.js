@@ -9,14 +9,12 @@ const pick = require('lodash/pick');
 function list({ query, opts }, res) {
   if (!query.detached) opts.where = { detached: false };
   if (query.ids) {
-    const ids = query.ids.map(id => Number(id));
-    const cond = { [Op.in]: ids };
-    const where = { [Op.or]: [{ id: cond }, { parentId: cond }] };
+    const ids = query.ids.map(id => parseInt(id, 10));
+    const where = { id: { [Op.in]: ids } };
     opts.include = { model: Activity, attributes: [], where };
   }
 
-  return ContentElement.fetch(opts)
-    .then(data => res.json({ data }));
+  return ContentElement.fetch(opts).then(data => res.json({ data }));
 }
 
 function show({ params }, res) {
@@ -27,26 +25,29 @@ function show({ params }, res) {
 }
 
 function create({ user, repository, body }, res) {
-  const attr = ['activityId', 'type', 'data', 'position', 'refs'];
+  const attr = ['uid', 'activityId', 'type', 'data', 'position', 'refs'];
   const data = { ...pick(body, attr), repositoryId: repository.id };
-  return ContentElement.create(data, { context: { userId: user.id } })
+  const context = { userId: user.id, repository };
+  return ContentElement.create(data, { context })
     .then(asset => res.json({ data: asset }));
 }
 
-function patch({ user, body, params: { elementId } }, res) {
+function patch({ repository, user, body, params: { elementId } }, res) {
   const attrs = ['type', 'data', 'position', 'meta', 'refs', 'deletedAt'];
   const data = pick(body, attrs);
   const paranoid = body.paranoid !== false;
+  const context = { userId: user.id, repository };
   return ContentElement.findByPk(elementId, { paranoid })
     .then(asset => asset || createError(NOT_FOUND, 'Element not found'))
-    .then(asset => asset.update(data, { context: { userId: user.id } }))
+    .then(asset => asset.update(data, { context }))
     .then(asset => res.json({ data: asset }));
 }
 
-function remove({ user, params: { elementId } }, res) {
+function remove({ repository, user, params: { elementId } }, res) {
+  const context = { userId: user.id, repository };
   return ContentElement.findByPk(elementId)
     .then(asset => asset || createError(NOT_FOUND, 'Element not found'))
-    .then(asset => asset.destroy({ context: { userId: user.id } }))
+    .then(asset => asset.destroy({ context }))
     .then(() => res.end());
 }
 

@@ -1,48 +1,39 @@
 <template>
-  <div class="tce-brightcove-toolbar">
-    <div class="input-group">
-      <div class="row">
-        <div class="col-xs-4">
-          <input
-            v-model="accountId"
-            :disabled="!edit"
-            class="form-control"
-            type="text"
-            placeholder="Account Id">
-        </div>
-        <div class="col-xs-4">
-          <input
-            v-model="playerId"
-            :disabled="!edit"
-            class="form-control"
-            type="text"
-            placeholder="Player Id">
-        </div>
-        <div class="col-xs-4">
-          <input
-            v-model="videoId"
-            :disabled="!edit"
-            class="form-control"
-            type="text"
-            placeholder="Video Id">
-        </div>
-      </div>
-    </div>
-    <button
-      v-if="!edit"
-      @click="edit = true"
-      class="btn btn-default"
-      type="button">
-      Edit
-    </button>
-    <button
-      v-if="edit"
-      @click="save"
-      class="btn btn-success"
-      type="button">
-      Save
-    </button>
-  </div>
+  <v-toolbar
+    height="72"
+    color="transparent"
+    class="tce-brightcove-toolbar elevation-0">
+    <v-toolbar-title class="pl-1">Brightcove Video</v-toolbar-title>
+    <v-toolbar-items class="mx-auto">
+      <v-text-field
+        v-model="accountId"
+        :disabled="!edit"
+        label="Account Id"
+        placeholder="Account Id..."
+        filled dense hide-details
+        class="mt-2 mr-3" />
+      <v-text-field
+        v-model="playerId"
+        :disabled="!edit"
+        label="Player Id"
+        placeholder="Player Id..."
+        filled dense hide-details
+        class="mt-2 mr-3" />
+      <v-text-field
+        v-model="videoId"
+        :disabled="!edit"
+        label="Video Id"
+        placeholder="Video Id..."
+        filled dense hide-details
+        class="mt-2 mr-3" />
+      <v-btn v-if="!edit" @click="edit = true" text>
+        Edit
+      </v-btn>
+      <v-btn v-if="edit" @click="save" text>
+        Save
+      </v-btn>
+    </v-toolbar-items>
+  </v-toolbar>
 </template>
 
 <script>
@@ -78,35 +69,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.tce-brightcove-toolbar {
-  position: relative;
-  z-index: 999;
-  width: 100%;
-  height: 60px;
-  padding: 13px 45px 0;
+.tce-brightcove-toolbar ::v-deep .v-btn__content {
+  min-width: 2.75rem;
 }
 
-.input-group {
-  display: block;
-  width: 100%;
-  float: left;
-  margin-right: -200px;
-  padding-right: 200px;
-}
-
-.form-control {
-  padding: 0 7px;
-  background: transparent;
-}
-
-.btn {
-  position: relative;
-  z-index: 1;
-  padding: 6px 15px;
-  font-size: 11px;
-
-  &:active {
-    outline: none;
-  }
+.v-toolbar__title {
+  min-width: 23.875rem;
+  text-align: left;
 }
 </style>

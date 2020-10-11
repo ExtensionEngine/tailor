@@ -3,91 +3,93 @@
     <div class="actions">
       <v-btn
         @click="$emit('delete')"
-        color="error"
-        outlined
+        color="secondary darken-1"
+        text
         class="pull-right">
         Delete {{ name }}
       </v-btn>
     </div>
     <v-alert
-      :value="!teachingElements.length"
-      color="primary"
+      :value="!contentElements.length"
+      color="blue-grey darken-3"
       icon="mdi-information-variant"
-      outlined>
+      text
+      prominent
+      class="my-5 mx-3">
       Click the button below to create content.
     </v-alert>
-    <tes-list
+    <element-list
       @add="addElement"
       @insert="insert"
       @update="reorder"
-      :list="teachingElements"
+      :list="contentElements"
       :activity="container"
       :types="types"
       :layout="layout">
       <template v-slot:list-item="{ item, dragged, setWidth }">
-        <teaching-element
+        <content-element
           :set-width="setWidth"
           :dragged="dragged"
           :element="item" />
       </template>
-    </tes-list>
+    </element-list>
   </v-card>
 </template>
 
 <script>
+import ContentElement from '../../ContentElement';
+import ElementList from '../ElementList';
 import filter from 'lodash/filter';
+import InsertLocation from '@/utils/InsertLocation';
 import { mapActions } from 'vuex';
 import sortBy from 'lodash/sortBy';
-import TeachingElement from '../../TeachingElement';
-import TesList from '../TesList';
+
+const { ADD_AFTER } = InsertLocation;
 
 export default {
   name: 'content-container',
   props: {
     container: { type: Object, required: true },
-    tes: { type: Object, required: true },
+    elements: { type: Object, required: true },
     types: { type: Array, default: null },
     name: { type: String, required: true },
     layout: { type: Boolean, default: true }
   },
   computed: {
-    teachingElements() {
+    contentElements() {
       const activityId = this.container.id;
-      return sortBy(filter(this.tes, { activityId }), 'position');
+      return sortBy(filter(this.elements, { activityId }), 'position');
     }
   },
   methods: {
-    ...mapActions('tes', {
+    ...mapActions('repository/contentElements', {
       reorderElements: 'reorder',
       insertElement: 'insert',
       addElement: 'save'
     }),
     reorder({ newIndex: newPosition }) {
-      const items = this.teachingElements;
+      const items = this.contentElements;
       const element = items[newPosition];
       const isFirstChild = newPosition === 0;
       const context = { items, newPosition, isFirstChild };
       this.reorderElements({ element, context });
     },
     insert(element) {
-      const items = this.teachingElements;
+      const items = this.contentElements;
       const { position: newPosition } = element;
       const isFirstChild = newPosition === -1;
-      const context = { items, newPosition, isFirstChild, insert: true };
+      const context = { items, newPosition, isFirstChild, action: ADD_AFTER };
       this.insertElement({ element, context });
     }
   },
-  components: {
-    TesList,
-    TeachingElement
-  }
+  components: { ContentElement, ElementList }
 };
 </script>
 
 <style lang="scss" scoped>
 .actions {
   width: 100%;
-  min-height: 36px;
-  margin-bottom: 25px;
+  min-height: 2.25rem;
+  margin-bottom: 0.5rem;
 }
 </style>

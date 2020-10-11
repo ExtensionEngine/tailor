@@ -1,0 +1,45 @@
+<mjml>
+  <mj-include path="./components/head.mjml"/>
+  <mj-body padding="10px">
+    <mj-include path="./components/header.mjml"/>
+    <mj-section
+      padding="0 10px 20px"
+      text-align="left">
+      <mj-column>
+        <mj-text
+          mj-class="content"
+          padding-left="0"
+          color="#444"
+          font-size="16px">
+          <b>{{author.label}}</b> left a comment on <b>{{repositoryName}}</b>, <b>{{topic}}</b>.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section padding="0 10px">
+			<mj-column border-bottom="2px dashed #d2d2d2">
+        <mj-include path="./components/user-row.mjml"/>
+       </mj-column>
+    </mj-section>
+    {{#previousComments}}
+      <mj-section padding="0 10px">
+        <mj-column background-color="#f5f5f5" border-bottom="2px dashed #d2d2d2">
+          <mj-include path="./components/user-row.mjml"/>
+        </mj-column>
+      </mj-section>
+    {{/previousComments}}
+    <mj-section padding="20px 10px 0">
+      <mj-column>
+        <mj-text
+          mj-class="content"
+          padding-left="0"
+          color="#444"
+          font-size="16px">
+          View the {{activityLabel}} by clicking the button below:
+        </mj-text>
+        <mj-button mj-class="ctaButton" href="{{href}}">
+          View {{activityLabel}}
+        </mj-button>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

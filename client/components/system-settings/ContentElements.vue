@@ -1,26 +1,33 @@
 <template>
-  <v-card class="element-list-container">
+  <div class="element-list-container">
     <v-text-field
       v-model.trim="search"
       label="Search"
       append-icon="mdi-magnify"
-      clearable />
-    <v-list :expand="true" avatar two-line class="text-left">
+      outlined clearable
+      class="mx-2" />
+    <v-list
+      :expand="true"
+      color="transparent"
+      avatar two-line
+      class="text-left">
       <v-list-group
         v-for="(group, groupName) in filteredRegistry"
         :key="groupName"
+        color="blue-grey darken-4"
         value="true">
         <template v-slot:activator>
-          <v-list-item>
+          <v-list-item color="blue-grey darken-4">
             <v-list-item-title>{{ groupName | parseName }}</v-list-item-title>
           </v-list-item>
         </template>
         <v-list-item
           v-for="({ name, ui, version, position }) in group"
           :key="position"
+          color="blue-grey darken-4"
           ripple>
           <v-list-item-avatar>
-            <v-icon large>{{ ui.icon }}</v-icon>
+            <v-icon color="blue-grey darken-4" large>{{ ui.icon }}</v-icon>
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title v-text="name" />
@@ -29,7 +36,7 @@
         </v-list-item>
       </v-list-group>
     </v-list>
-  </v-card>
+  </div>
 </template>
 
 <script>
@@ -74,7 +81,7 @@ export default {
 
 <style lang="scss" scoped>
 .element-list-container {
-  padding: 30px;
+  padding: 1.875rem;
 }
 
 .theme--light.v-list {

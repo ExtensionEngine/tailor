@@ -4,6 +4,15 @@ import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
 import sortBy from 'lodash/sortBy';
 
+export function isChanged(activity) {
+  return !activity.publishedAt ||
+    (new Date(activity.modifiedAt) > new Date(activity.publishedAt));
+}
+
+export function getLabel(activity) {
+  return getLevel(activity.type).label;
+}
+
 export function getParent(activities, activity) {
   const id = get(activity, 'parentId', null);
   return id && find(activities, { id });
@@ -33,4 +42,14 @@ export function getAncestors(activities, activity) {
   if (!parent) return [];
   const ancestors = getAncestors(activities, parent);
   return [...ancestors, parent];
+}
+
+export function toTreeFormat(activities, targetLevels, parentId = null, level = 1) {
+  return getOutlineChildren(activities, parentId).map(activity => ({
+    ...activity,
+    name: activity.data.name,
+    level,
+    selectable: !!targetLevels.find(it => it.type === activity.type),
+    children: toTreeFormat(activities, targetLevels, activity.id, level + 1)
+  }));
 }

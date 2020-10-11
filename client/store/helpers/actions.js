@@ -1,5 +1,5 @@
-import cuid from 'cuid';
 import Resource from './resource';
+import uuid from '@/utils/uuid';
 
 export default function ($apiUrl) {
   const api = new Resource($apiUrl);
@@ -20,8 +20,13 @@ export default function ($apiUrl) {
     return api.fetch(opts).then(res => commit('reset', res));
   };
 
+  const add = ({ commit }, model) => {
+    const payload = model.uid ? model : { ...model, uid: uuid() };
+    commit('add', payload);
+  };
+
   const save = ({ state, commit }, model) => {
-    if (!model._cid) model._cid = cuid();
+    if (!model.uid) model.uid = uuid();
     model._synced = false;
     model._version = Date.now();
     // Create or update model locally.
@@ -29,17 +34,18 @@ export default function ($apiUrl) {
     return api.save(model).then(model => {
       // Check if new change happened locally during api call.
       // Do not update meta if there is newer change.
-      const previous = state.items[model._cid];
+      const previous = state.items[model.uid];
       if (previous && previous._version === model._version) model._synced = true;
       commit('save', model);
+      return model;
     });
   };
 
   const update = ({ commit }, model) => {
-    const cid = model._cid;
     const changes = { ...model };
-    delete changes._cid;
-    return api.update(cid, changes)
+    const uid = model.uid;
+    delete changes.uid;
+    return api.update(uid, changes)
       .then(updated => commit('save', { ...model, ...updated }));
   };
 
@@ -59,6 +65,7 @@ export default function ($apiUrl) {
   };
 
   return {
+    add,
     api,
     fetch,
     filter,

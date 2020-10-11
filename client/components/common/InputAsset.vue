@@ -1,16 +1,14 @@
 <template>
-  <div class="input-asset">
+  <v-toolbar-items>
     <v-btn
       v-if="url && !isEditing"
       :href="publicUrl || url"
       target="_blank"
-      text
-      small
-      icon
-      color="info">
+      color="info"
+      text>
       <v-icon>mdi-open-in-new</v-icon>
     </v-btn>
-    <file-upload
+    <upload-btn
       v-if="allowFileUpload"
       v-show="!file && isEditing"
       @upload="val => (file = val) && (urlInput = null)"
@@ -18,49 +16,61 @@
       :validate="{ ext: extensions }"
       :confirm-deletion="false"
       :label="uploadLabel"
-      sm />
+      class="upload-btn" />
     <template v-if="file">
       <v-btn
         v-if="isEditing"
         @click.stop="file = null"
-        text
-        small
-        icon
-        color="red">
+        color="red"
+        text>
         <v-icon>mdi-delete</v-icon>
       </v-btn>
-      <v-text-field :value="fileName" disabled />
+      <v-text-field
+        :value="fileName"
+        readonly hide-details filled />
     </template>
-    <v-text-field
+    <validation-provider
       v-if="!uploading && (urlInput || !hasAsset)"
-      v-model="urlInput"
-      :disabled="!isEditing"
-      :placeholder="allowFileUpload ? 'or paste a URL' : 'Paste a URL'" />
-    <span class="actions">
-      <v-btn
-        v-if="!isEditing"
-        @click.stop="isEditing = true"
-        small>
-        Edit
-      </v-btn>
-      <v-btn
-        v-else
-        @click.stop="save"
-        :disabled="uploading || !hasAsset"
-        text
-        small
-        class="my-1">
-        {{ hasChanges ? 'Save' : 'Cancel' }}
-      </v-btn>
-    </span>
-  </div>
+      ref="provider"
+      v-slot="{ errors }"
+      :rules="{
+        url: {
+          protocols: ['http', 'https'],
+          require_protocol: true,
+          require_valid_protocol: true
+        }
+      }"
+      name="URL">
+      <v-text-field
+        v-model="urlInput"
+        :error-messages="errors"
+        :disabled="!isEditing"
+        :placeholder="allowFileUpload ? 'or paste a URL...' : 'Paste a URL...'"
+        filled clearable />
+    </validation-provider>
+    <v-btn
+      v-if="!isEditing"
+      @click.stop="isEditing = true"
+      text
+      class="action">
+      Edit
+    </v-btn>
+    <v-btn
+      v-else
+      @click.stop="save"
+      :disabled="uploading || !hasAsset"
+      text
+      class="action">
+      {{ hasChanges ? 'Save' : 'Cancel' }}
+    </v-btn>
+  </v-toolbar-items>
 </template>
 
 <script>
-import FileUpload from '@/components/common/FileUpload';
 import get from 'lodash/get';
 import last from 'lodash/last';
 import pick from 'lodash/pick';
+import UploadBtn from 'tce-core/UploadBtn';
 
 function isUploaded(url) {
   try {
@@ -89,51 +99,44 @@ export default {
     };
   },
   computed: {
-    hasAsset() {
-      return this.file || this.urlInput;
-    },
-    isLinked() {
-      return !!this.urlInput;
-    },
-    hasChanges() {
-      return this.url !== (this.isLinked ? this.urlInput : get(this, 'file.url'));
-    },
+    hasAsset: vm => vm.file || vm.urlInput,
+    isLinked: vm => !!vm.urlInput,
+    hasChanges: vm => vm.url !== (vm.isLinked ? vm.urlInput : get(vm, 'file.url')),
     fileName() {
       if (!this.file) return null;
       return last(this.file.url.split('___'));
     }
   },
   methods: {
-    save() {
+    async save() {
+      if (this.$refs.provider) {
+        const { valid } = await this.$refs.provider.validate();
+        if (!valid) return;
+      }
       this.isEditing = false;
       const payload = this.file || { url: this.urlInput, publicUrl: this.urlInput };
       this.$emit('input', payload);
     }
   },
-  components: { FileUpload }
+  components: { UploadBtn }
 };
 </script>
 
 <style lang="scss" scoped>
-.input-asset {
-  display: flex;
-  justify-content: center;
-}
-
 .v-text-field {
-  max-width: 600px;
-  margin: 0 20px;
-  margin-top: 2px;
-  padding: 0 7px;
-  padding-bottom: 0;
+  min-width: 21.875rem;
+  margin: 0.5rem 0.75rem 0 1.75rem;
 }
 
-::v-deep .help-block {
-  display: none;
+.action ::v-deep .v-btn__content {
+  min-width: 4rem !important;
 }
 
-::v-deep .circular-progress {
-  width: 20px;
-  margin: 0 30px;
+.upload-btn ::v-deep .v-btn {
+  height: 100%;
+
+  .v-btn__content {
+    padding: 1.5rem 0;
+  }
 }
 </style>

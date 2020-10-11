@@ -14,12 +14,13 @@ npm-debug.log*
 # Configuration
 .env
 ecosystem.*
-.activitiesrc*
-# TODO: Deprecate `activities-rc` config name
-.activities-rc*
+tailor.config.js
+.tailorrc*
+# TODO: Deprecate legacy configuration files
 activities.config.js
-.brandrc*
+.activities-rc*
 brand.config.js
+.brandrc*
 !*.example
 
 # Extensions
@@ -27,6 +28,8 @@ extensions/content-elements/*
 !extensions/content-elements/.gitkeep
 extensions/content-containers/*
 !extensions/content-containers/.gitkeep
+extensions/meta-inputs/*
+!extensions/meta-inputs/.gitkeep
 
 # Branding
 client/assets/img/*

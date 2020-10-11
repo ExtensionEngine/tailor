@@ -2,22 +2,22 @@
 
 const crypto = require('crypto');
 const { elementRegistry } = require('../content-plugins');
-const { getFileUrl } = require('./');
+const get = require('lodash/get');
 const isString = require('lodash/isString');
 const isUrl = require('is-url');
 const mime = require('mime-types');
 const Promise = require('bluebird');
-const storage = require('./index');
+const set = require('lodash/set');
+const storage = require('./');
 const toPairs = require('lodash/toPairs');
 const values = require('lodash/values');
 
 const STORAGE_PROTOCOL = 'storage://';
-const PRIMITIVES = ['HTML', 'TABLE-CELL', 'IMAGE', 'BRIGHTCOVE_VIDEO', 'VIDEO', 'EMBED'];
 const DEFAULT_IMAGE_EXTENSION = 'png';
-const isPrimitive = asset => PRIMITIVES.indexOf(asset.type) > -1;
-const isQuestion = type => ['QUESTION', 'REFLECTION', 'ASSESSMENT'].includes(type);
-
 const ASSET_ROOT = 'repository/assets';
+
+const isPrimitive = element => !get(element, 'data.embeds');
+const isQuestion = element => get(element, 'data.question');
 
 function processStatics(item) {
   const customProcessor = elementRegistry.getStaticsHandler(item.type);
@@ -27,13 +27,15 @@ function processStatics(item) {
 }
 
 function defaultStaticsProcessor(item) {
-  return isQuestion(item.type)
+  return isQuestion(item)
     ? processQuestion(item)
     : processAsset(item);
 }
 
 function processAsset(asset) {
-  return isPrimitive(asset) ? processPrimitive(asset) : processComposite(asset);
+  return isPrimitive(asset)
+    ? processPrimitive(asset)
+    : processComposite(asset);
 }
 
 function processQuestion(element) {
@@ -49,8 +51,7 @@ function processPrimitive(primitive) {
 }
 
 function processComposite(composite) {
-  if (!composite.data.embeds) Promise.resolve(composite);
-  return Promise.each(values(composite.data.embeds), it => processPrimitive(it))
+  return Promise.each(values(composite.data.embeds), processPrimitive)
     .then(() => composite);
 }
 
@@ -87,24 +88,29 @@ function resolveStatics(item) {
     : defaultStaticsResolver(item);
 }
 
-async function defaultStaticsResolver(item) {
-  const element = await (isQuestion(item.type)
+function defaultStaticsResolver(item) {
+  return isQuestion(item)
     ? resolveQuestion(item)
-    : resolveAsset(item));
+    : resolveAsset(item);
+}
+
+async function resolveAssetsMap(element) {
   if (!element.data.assets) return element;
   await Promise.map(toPairs(element.data.assets), async ([key, url]) => {
     const isStorageResource = url.startsWith(STORAGE_PROTOCOL);
-    element.data[key] = isStorageResource
-      ? (await getFileUrl(url.substr(STORAGE_PROTOCOL.length, url.length)))
+    const resolvedUrl = isStorageResource
+      ? (await storage.getFileUrl(url.substr(STORAGE_PROTOCOL.length, url.length)))
       : url;
+    set(element.data, key, resolvedUrl);
   });
   return element;
 }
 
-function resolveQuestion(element) {
+async function resolveQuestion(element) {
+  await resolveAssetsMap(element);
   const question = element.data.question;
   if (!question || question.length < 1) return Promise.resolve(element);
-  return Promise.each(question, it => resolveAsset(it)).then(() => element);
+  return Promise.each(question, resolveAsset).then(() => element);
 }
 
 function resolveAsset(element) {
@@ -114,11 +120,13 @@ function resolveAsset(element) {
 }
 
 function resolvePrimitive(primitive) {
-  if (!resolver[primitive.type]) return Promise.resolve(primitive);
-  return resolver[primitive.type](primitive);
+  if (!isPrimitive(primitive)) throw new Error('Invalid primitive');
+  const primitiveResolver = resolver[primitive.type] || resolveAssetsMap;
+  return primitiveResolver(primitive);
 }
 
-function resolveComposite(composite) {
+async function resolveComposite(composite) {
+  await resolveAssetsMap(composite);
   return Promise.each(values(composite.data.embeds), resolvePrimitive)
     .then(() => composite);
 }

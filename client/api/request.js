@@ -1,6 +1,11 @@
+import axios, { Axios } from 'axios';
 import { FORBIDDEN, UNAUTHORIZED } from 'http-status-codes';
-import axios from 'axios';
-import { EventEmitter } from 'events';
+import buildFullPath from 'axios/lib/core/buildFullPath';
+
+Axios.prototype.submitForm = function (url, fields, options) {
+  const action = buildFullPath(this.defaults.baseURL, url);
+  return Promise.resolve(submitForm(action, fields, options));
+};
 
 const authScheme = process.env.AUTH_JWT_SCHEME;
 const config = {
@@ -9,30 +14,8 @@ const config = {
   headers: { 'Content-Type': 'application/json' }
 };
 
-class Auth extends EventEmitter {
-  constructor(storage = localStorage) {
-    super();
-    this.storage = storage;
-    this.storageKey = 'JWT_TOKEN';
-  }
-
-  get token() {
-    return this.storage.getItem(this.storageKey);
-  }
-
-  set token(val) {
-    if (!val) {
-      this.storage.removeItem(this.storageKey);
-      return this.emit('token:remove');
-    }
-    this.storage.setItem(this.storageKey, val);
-    this.emit('token:set', val);
-  }
-}
-
 // Instance of axios to be used for all API requests.
 const client = axios.create(config);
-client.auth = new Auth();
 
 // Attach additional instance without interceptors
 Object.defineProperty(client, 'base', {
@@ -43,7 +26,7 @@ Object.defineProperty(client, 'base', {
 });
 
 client.interceptors.request.use(config => {
-  const { token } = client.auth;
+  const { token } = client;
   if (token) {
     config.headers.Authorization = [authScheme, token].join(' ');
     return config;
@@ -54,9 +37,22 @@ client.interceptors.request.use(config => {
 
 client.interceptors.response.use(res => res, err => {
   if (err.response && [FORBIDDEN, UNAUTHORIZED].includes(err.response.status)) {
-    return client.auth.emit('error', err);
+    client.token = null;
   }
   throw err;
 });
 
 export default client;
+
+function submitForm(action, fields = {}, options) {
+  const form = document.createElement('form');
+  Object.assign(form, { method: 'POST', target: 'blank', action }, options);
+  Object.entries(fields).forEach(([name, attrs]) => {
+    const input = document.createElement('input');
+    Object.assign(input, { name }, attrs);
+    form.appendChild(input);
+  });
+  document.body.appendChild(form);
+  form.submit();
+  form.remove();
+}

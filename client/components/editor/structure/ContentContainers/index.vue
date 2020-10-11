@@ -1,19 +1,21 @@
 <template>
   <div class="content-containers">
-    <h2 v-if="displayHeading">{{ name | capitalize }}</h2>
+    <h2 v-if="displayHeading" class="headline">{{ name | capitalize }}</h2>
     <v-alert
       :value="!containerGroup.length"
-      color="white"
-      icon="mdi-information-variant">
+      color="blue-grey darken-4"
+      icon="mdi-information-variant"
+      prominent text>
       Click the button below to create first {{ name | capitalize }}.
     </v-alert>
     <component
       :is="containerName"
       v-for="(container, index) in containerGroup"
-      :key="container._cid || container.id"
+      :key="container.uid || container.id"
       @addSubcontainer="save"
       @updateSubcontainer="update"
       @deleteSubcontainer="requestContainerDeletion"
+      @addElement="addElement"
       @saveElement="saveContentElement"
       @updateElement="updateElement"
       @reorderElement="reorderContentElements"
@@ -23,10 +25,10 @@
       :name="name"
       :position="index"
       :activities="activities"
-      :tes="tes"
+      :elements="elements"
       v-bind="$attrs" />
     <div v-if="addBtnEnabled">
-      <v-btn @click="addContainer" color="primary">
+      <v-btn @click="addContainer" color="blue-grey darken-3" text class="mt-4">
         <v-icon class="pr-2">mdi-plus</v-icon>
         Create {{ name }}
       </v-btn>
@@ -35,7 +37,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import capitalize from 'lodash/capitalize';
 import ContentContainer from './Container';
 import EventBus from 'EventBus';
@@ -61,7 +63,8 @@ export default {
     required: { type: Boolean, default: true }
   },
   computed: {
-    ...mapGetters(['activities', 'tes']),
+    ...mapState('repository/activities', { activities: 'items' }),
+    ...mapState('repository/contentElements', { elements: 'items' }),
     containerName() {
       const { type, $ccRegistry: registry } = this;
       return registry.get(type) ? getContainerName(type) : 'content-container';
@@ -78,8 +81,9 @@ export default {
     }
   },
   methods: {
-    ...mapActions('activities', ['save', 'update', 'remove']),
-    ...mapActions('tes', {
+    ...mapActions('repository/activities', ['save', 'update', 'remove']),
+    ...mapActions('repository/contentElements', {
+      addElement: 'add',
       saveElement: 'save',
       updateElement: 'update',
       reorderElements: 'reorder',
@@ -127,27 +131,20 @@ export default {
 
 <style lang="scss" scoped>
 .content-containers {
-  margin: 70px 0;
-
-  > .v-alert {
-    margin: 30px 0;
-    color: #555;
-  }
+  margin: 4.375rem 0;
 }
 
-h2 {
-  margin: 50px 0 20px;
+.headline {
+  margin: 3.125rem 0 1.25rem;
   padding: 0;
-  color: #444;
-  font-size: 18px;
   text-align: left;
 }
 
 .content-container {
   width: 100%;
-  min-height: 245px;
-  margin: 25px 0;
-  padding: 20px 40px;
+  min-height: 15.5rem;
+  margin: 1.5rem 0;
+  padding: 0.625rem;
   background-color: #fff;
 }
 </style>

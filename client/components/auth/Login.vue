@@ -1,56 +1,73 @@
 <template>
   <div>
-    <div class="message">{{ message }}</div>
-    <form @submit.prevent="submit" novalidate>
-      <v-text-field
-        v-model="email"
-        v-validate="{ required: true, email: true }"
-        :error-messages="vErrors.collect('email')"
-        prepend-icon="mdi-email-outline"
-        type="email"
+    <v-alert
+      :value="!!message"
+      color="grey darken-3"
+      transition="fade-transition"
+      dismissible text dense
+      class="mb-7 text-left">
+      {{ message }}
+    </v-alert>
+    <validation-observer
+      ref="form"
+      @submit.prevent="$refs.form.handleSubmit(submit)"
+      tag="form"
+      novalidate>
+      <validation-provider
+        v-slot="{ errors }"
         name="email"
-        label="Email"
-        class="py-2" />
-      <v-text-field
-        v-model="password"
-        v-validate="{ required: true }"
-        :error-messages="vErrors.collect('password')"
-        prepend-icon="mdi-lock-outline"
-        browser-autocomplete="new-password"
-        type="password"
+        rules="required|email">
+        <v-text-field
+          v-model="email"
+          :error-messages="errors"
+          type="email"
+          name="email"
+          label="Email"
+          placeholder="Email"
+          autocomplete="username"
+          prepend-inner-icon="mdi-email-outline"
+          outlined
+          class="mb-1" />
+      </validation-provider>
+      <validation-provider
+        v-slot="{ errors }"
         name="password"
-        label="Password"
-        class="py-2" />
-      <v-btn :disabled="!isValid" color="primary" outlined block type="submit">
-        Log in
-      </v-btn>
+        rules="required">
+        <v-text-field
+          v-model="password"
+          :error-messages="errors"
+          type="password"
+          name="password"
+          label="Password"
+          placeholder="Password"
+          prepend-inner-icon="mdi-lock-outline"
+          autocomplete="current-password"
+          outlined />
+      </validation-provider>
+      <div class="d-flex">
+        <v-spacer />
+        <v-btn type="submit" color="primary darken-1">Log in</v-btn>
+      </div>
       <div class="options">
         <router-link :to="{ name: 'forgot-password' }">
-          Forgot password ?
+          Forgot password?
         </router-link>
       </div>
-    </form>
+    </validation-observer>
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex';
-import { withValidation } from 'utils/validation';
-const LOGIN_ERR_MESSAGE = 'User email and password do not match';
+const LOGIN_ERR_MESSAGE = 'The email or password you entered is incorrect.';
 
 export default {
-  name: 'login',
-  mixins: [withValidation()],
-  data() {
-    return {
-      email: '',
-      password: '',
-      message: ''
-    };
-  },
-  computed: {
-    isValid: vm => vm.email && vm.password && (vm.vErrors.count() === 0)
-  },
+  name: 'user-login',
+  data: () => ({
+    email: '',
+    password: '',
+    message: ''
+  }),
   methods: {
     ...mapActions(['login']),
     submit() {
@@ -65,7 +82,7 @@ export default {
 
 <style lang="scss" scoped>
 .options {
-  padding: 15px 0 5px;
+  padding: 0.875rem 0 0.25rem;
   text-align: right;
 }
 </style>

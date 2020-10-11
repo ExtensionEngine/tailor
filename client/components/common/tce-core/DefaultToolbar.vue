@@ -1,19 +1,14 @@
 <template>
-  <div class="default-toolbar"></div>
+  <v-toolbar height="72" color="grey lighten-5" class="elevation-0">
+    <v-toolbar-title class="pl-1">{{ label }}</v-toolbar-title>
+  </v-toolbar>
 </template>
 
 <script>
 export default {
-  name: 'default-toolbar'
+  name: 'default-toolbar',
+  props: {
+    label: { type: String, required: true }
+  }
 };
 </script>
-
-<style lang="scss" scoped>
-.default-toolbar {
-  position: relative;
-  z-index: 999;
-  width: 100%;
-  height: 50px;
-  padding: 13px 45px 0;
-}
-</style>

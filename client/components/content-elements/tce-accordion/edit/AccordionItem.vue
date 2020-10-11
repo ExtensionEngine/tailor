@@ -1,59 +1,86 @@
 <template>
-  <li>
-    <div class="accordion-header">
-      <div v-if="!isEditingHeader" @click="toggle" class="contents">
-        <span class="title">{{ item.header }}</span>
-        <span @click.stop="editHeader" class="mdi mdi-pencil edit-header"></span>
-        <span @click.stop="deleteItem" class="mdi mdi-delete delete-item"></span>
-      </div>
-      <div v-else class="contents">
-        <input v-model="header" class="form-control" type="text" placeholder="Header">
-        <span @click.stop="saveHeader" class="mdi mdi-content-save"></span>
-        <span @click.stop="isEditingHeader = false" class="mdi mdi-close"></span>
-      </div>
-    </div>
-    <transition name="slide-fade">
-      <div v-show="!isCollapsed" class="container-fluid accordion-body">
-        <div v-if="!hasElements" class="well">
-          Click the button below to Create your first teaching element.
+  <v-expansion-panel>
+    <v-expansion-panel-header color="blue-grey lighten-4">
+      <v-text-field
+        v-if="isEditingHeader"
+        v-model="header"
+        @click.stop
+        @keyup.space.prevent
+        hide-details filled dense />
+      <div v-else class="pl-3 text-truncate">{{ item.header }}</div>
+      <template v-if="!isDisabled">
+        <div v-if="isEditingHeader" class="actions">
+          <v-btn @click.stop="saveHeader" color="green darken-2" icon>
+            <v-icon>mdi-check</v-icon>
+          </v-btn>
+          <v-btn @click.stop="isEditingHeader = false" icon>
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
         </div>
-        <embedded-container
-          @save="({ embeds }) => save(item, embeds)"
-          @delete="deleteEmbed($event)"
-          :container="{ embeds }" />
-      </div>
-    </transition>
-  </li>
+        <div v-else class="actions">
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on }">
+              <v-btn v-on="on" @click.stop="editHeader" icon>
+                <v-icon>mdi-pencil</v-icon>
+              </v-btn>
+            </template>
+            <span>Edit heading</span>
+          </v-tooltip>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on }">
+              <v-btn v-on="on" @click.stop="deleteItem" icon>
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </template>
+            <span>Delete item</span>
+          </v-tooltip>
+        </div>
+      </template>
+    </v-expansion-panel-header>
+    <v-expansion-panel-content color="blue-grey lighten-5">
+      <v-alert
+        v-if="!hasElements && !isDisabled"
+        color="blue-grey darken-2"
+        icon="mdi-information-variant"
+        text prominent
+        class="mt-6">
+        Click the button below to add content element.
+      </v-alert>
+      <embedded-container
+        @save="({ embeds }) => save(item, embeds)"
+        @delete="deleteEmbed($event)"
+        :container="{ embeds }"
+        :is-disabled="isDisabled" />
+    </v-expansion-panel-content>
+  </v-expansion-panel>
 </template>
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 import { EmbeddedContainer } from 'tce-core';
+import EventBus from 'EventBus';
 import forEach from 'lodash/forEach';
 import isEmpty from 'lodash/isEmpty';
+
+const appChannel = EventBus.channel('app');
 
 export default {
   name: 'accordion-item',
   props: {
     item: { type: Object, required: true },
-    embeds: { type: Object, default: () => ({}) }
+    embeds: { type: Object, default: () => ({}) },
+    isDisabled: { type: Boolean, default: false }
   },
   data() {
     return {
       header: this.item.header,
-      isCollapsed: true,
       isEditingHeader: false
     };
   },
   computed: {
-    hasElements() {
-      return !isEmpty(this.embeds);
-    }
+    hasElements: vm => !isEmpty(vm.embeds)
   },
   methods: {
-    toggle() {
-      this.isCollapsed = !this.isCollapsed;
-    },
     editHeader() {
       this.isEditingHeader = true;
       this.header = this.item.header;
@@ -68,7 +95,11 @@ export default {
       this.$emit('save', { item, embeds });
     },
     deleteItem() {
-      this.$emit('delete', this.item.id);
+      appChannel.emit('showConfirmationModal', {
+        title: 'Delete accordion item',
+        message: 'Are you sure you want to delete selected item?',
+        action: () => this.$emit('delete', this.item.id)
+      });
     },
     deleteEmbed(embed) {
       const embeds = cloneDeep(this.embeds);
@@ -83,96 +114,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.accordion-header {
-  height: 60px;
-  padding: 12px;
-  font-size: 16px;
-  border-bottom: 1px solid #ddd;
-  text-align: justify;
-  cursor: pointer;
-
-  .contents {
-    line-height: 34px;
-
-    &::after {
-      content: '';
-      display: inline-block;
-      width: 100%;
-    }
-
-    span {
-      display: inline-block;
-      vertical-align: middle;
-      line-height: 1em;
-    }
-
-    .title {
-      display: inline-block;
-      width: 90%;
-      max-width: 90%;
-      padding-top: 1px;
-      color: #555;
-      font-size: 16px !important;
-      font-weight: normal;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .form-control {
-      display: inline-block;
-      width: 90%;
-      outline-style: none;
-    }
-
-    .btn {
-      display: inline-block;
-      font-size: 11px;
-
-      &:active {
-        outline: none;
-      }
-    }
-
-    .mdi {
-      color: #707070;
-
-      &:hover {
-        color: #444;
-      }
-    }
-  }
-}
-
-.accordion-body {
-  height: auto;
-  border-bottom: 1px solid #ddd;
-  box-sizing: border-box;
-  padding: 32px 8px;
-}
-
-.slide-fade-enter-active, .slide-fade-leave-active {
-  overflow: hidden;
-  margin-top: 0;
-  margin-bottom: 0;
-  transition: all 350ms cubic-bezier(0.165, 0.84, 0.44, 1); // "easeOutQuart"
-}
-
-.slide-fade-enter, .slide-fade-leave-to {
-  height: 0;
-  padding-top: 0;
-  padding-bottom: 0;
-}
-
-.disabled {
-  .accordion-header {
-    .edit-header, .delete-item {
-      display: none;
-    }
-  }
-
-  .add-element {
-    display: none;
-  }
+.actions {
+  width: 6rem;
+  max-width: 6rem;
+  padding-left: 0.5rem;
 }
 </style>

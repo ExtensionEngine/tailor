@@ -1,19 +1,24 @@
 <template>
-  <div class="tce-table-toolbar">
-    <span class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown">
-      <span class="mdi mdi-table"></span>
-      Table
-    </span>
-    <ul class="dropdown-menu" role="menu">
-      <li
-        v-for="action in actions"
-        :key="action.name"
-        @click="trigger(action.name)"
-        class="btn btn-link btn-sm">
-        {{ action.label }}
-      </li>
-    </ul>
-  </div>
+  <v-toolbar color="transparent" class="tce-table-toolbar elevation-0">
+    <v-toolbar-items>
+      <v-menu bottom>
+        <template v-slot:activator="{ on }">
+          <v-btn v-on="on" text>
+            Table options
+            <v-icon>mdi-chevron-down</v-icon>
+          </v-btn>
+        </template>
+        <v-list class="text-left">
+          <v-list-item
+            v-for="action in actions"
+            :key="action.name"
+            @click="trigger(action.name)">
+            <v-list-item-title>{{ action.label }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </v-toolbar-items>
+  </v-toolbar>
 </template>
 
 <script>
@@ -43,58 +48,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.tce-table-toolbar {
-  position: relative;
-  width: 100%;
-  height: 48px;
-
-  > * {
-    float: left;
-    height: 100%;
-    margin: 0;
-    padding: 0 10px;
-  }
-
-  .dropdown-toggle {
-    margin-left: 10px;
-    padding-top: 15px;
-    color: #444;
-
-    .mdi {
-      margin-right: 5px;
-      font-size: 20px;
-      line-height: 20px;
-      vertical-align: middle;
-    }
-
-    &.active {
-      background-color: #e8e8e8;
-    }
-  }
-
-  .quill-options {
-    height: 100%;
-    padding-top: 13px;
-  }
-
-  .quill-group {
-    padding-left: 5px;
-  }
-
-  .dropdown-menu {
-    height: auto;
-    margin-left: 10px;
-    padding: 5px 0;
-
-    li {
-      display: block;
-    }
-
-    .btn {
-      padding: 10px 12px;
-      text-align: left;
-    }
-  }
+::v-deep .v-toolbar__content {
+  padding-left: 0;
 }
 
 .tce-table-toolbar.ql-toolbar.ql-snow {

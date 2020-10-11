@@ -1,20 +1,21 @@
 'use strict';
 
 const config = require('../../../../config/server');
-const Promise = require('bluebird');
 const exists = require('path-exists');
 const expandPath = require('untildify');
-const fs = Promise.promisifyAll(require('fs'));
-const Joi = require('joi');
-const mkdirp = Promise.promisify(require('mkdirp'));
+const mkdirp = require('mkdirp');
 const path = require('path');
+const Promise = require('bluebird');
 const { validateConfig } = require('../validation');
+const yup = require('yup');
+
+const fs = Promise.promisifyAll(require('fs'));
 
 const isNotFound = err => err.code === 'ENOENT';
 const resolvePath = str => path.resolve(expandPath(str));
 
-const schema = Joi.object().keys({
-  path: Joi.string().required()
+const schema = yup.object().shape({
+  path: yup.string().required()
 });
 
 class FilesystemStorage {
@@ -40,10 +41,22 @@ class FilesystemStorage {
       });
   }
 
+  createReadStream(key, options = {}) {
+    return fs.createReadStream(this.path(key), options);
+  }
+
   saveFile(key, data, options = {}) {
     const filePath = this.path(key);
     return mkdirp(path.dirname(filePath))
       .then(() => fs.writeFileAsync(filePath, data, options));
+  }
+
+  createWriteStream(key, options = {}) {
+    const filepath = this.path(key);
+    const dirname = path.dirname(filepath);
+    // TODO: Replace with async mkdir
+    fs.mkdirSync(dirname, { recursive: true });
+    return fs.createWriteStream(filepath, options);
   }
 
   copyFile(key, newKey) {

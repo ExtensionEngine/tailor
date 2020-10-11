@@ -1,25 +1,31 @@
 <template>
-  <div class="controls">
-    <div v-if="isEditing" class="pull-right">
-      <v-btn @click="$emit('cancel')" text>
-        Cancel
-      </v-btn>
-      <v-btn @click="save" color="primary">
+  <div class="d-flex pb-4">
+    <v-spacer />
+    <div v-if="isEditing">
+      <v-btn @click="$emit('cancel')" text large>Cancel</v-btn>
+      <v-btn
+        @click="save"
+        color="green darken-3"
+        text large>
+        <v-icon class="pr-1">mdi-check</v-icon>
         Save
       </v-btn>
     </div>
-    <div v-else class="pull-right">
-      <v-btn @click="$emit('edit')" color="primary">
-        Edit
-      </v-btn>
-    </div>
+    <v-btn
+      v-else
+      @click="$emit('edit')"
+      color="blue-grey darken-4"
+      text large>
+      Edit
+    </v-btn>
   </div>
 </template>
 
 <script>
 export default {
   props: {
-    isEditing: { type: Boolean, default: false }
+    isEditing: { type: Boolean, default: false },
+    hasErrors: { type: Boolean, default: false }
   },
   methods: {
     save() {
@@ -29,17 +35,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.controls {
-  width: 100%;
-  height: 55px;
-  margin-top: 20px;
-  padding: 10px 20px;
-
-  .v-btn {
-    min-width: 85px;
-    margin-left: 5px;
-  }
-}
-</style>

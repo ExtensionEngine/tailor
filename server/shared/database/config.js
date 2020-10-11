@@ -7,7 +7,6 @@ const logger = createLogger('db', { level: Level.DEBUG });
 
 module.exports = {
   ...readConfig(),
-  operatorsAliases: false,
   migrationStorageTableName: 'sequelize_meta',
   benchmark: !isProduction,
   logging(query, time) {

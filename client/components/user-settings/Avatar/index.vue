@@ -6,24 +6,24 @@
           <div class="img-container">
             <img :src="image">
             <v-icon
-              dark
-              large
+              dark large
               class="overlay">
               mdi-camera
             </v-icon>
           </div>
         </v-avatar>
       </template>
-      <v-btn @click="selectAvatar" fab dark small color="primary">
+      <v-btn
+        @click="selectAvatar"
+        color="blue-grey darken-3"
+        fab dark small>
         <v-icon>mdi-upload</v-icon>
       </v-btn>
       <v-btn
         v-if="!isGravatar"
         @click="deleteAvatar"
-        fab
-        dark
-        small
-        color="secondary">
+        color="secondary lighten-1"
+        fab dark small>
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </v-speed-dial>

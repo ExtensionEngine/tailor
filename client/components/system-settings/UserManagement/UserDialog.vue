@@ -1,61 +1,83 @@
 <template>
-  <v-dialog v-model="show" v-hotkey="{ esc: close }" width="700">
-    <v-form @submit.prevent="save">
-      <v-card class="pa-3">
-        <v-card-title class="headline pr-0">
-          <span>{{ userData ? 'Edit' : 'Create' }} User</span>
-          <v-spacer />
-          <v-btn
-            v-if="!isNewUser"
-            @click="reinvite"
-            :disabled="isLoading"
-            :loading="isLoading"
-            color="blue-grey"
-            outlined>
-            Reinvite
-          </v-btn>
-        </v-card-title>
-        <v-card-text>
+  <tailor-dialog v-model="show" header-icon="mdi-account">
+    <template v-slot:header>{{ userData ? 'Edit' : 'Create' }} User</template>
+    <template v-slot:body>
+      <v-btn
+        v-if="userData"
+        @click="reinvite"
+        :loading="isReinviting"
+        :disabled="isReinviting"
+        color="primary darken-2"
+        text
+        class="d-block ml-auto mb-4">
+        Reinvite
+      </v-btn>
+      <validation-observer
+        ref="form"
+        v-slot="{ invalid, pristine }"
+        @submit.prevent="$refs.form.handleSubmit(submit)"
+        tag="form"
+        novalidate>
+        <validation-provider
+          v-slot="{ errors }"
+          name="email"
+          :rules="{ required: true, email: true, unique_email: { userData } }">
           <v-text-field
             v-model="user.email"
-            v-validate="{ required: true, email: true, 'unique-email': userData }"
-            :error-messages="vErrors.collect('email')"
+            :error-messages="errors"
+            :disabled="!isNewUser"
             label="E-mail"
-            data-vv-name="email"
+            placeholder="Enter email..."
+            outlined
             class="mb-3" />
+        </validation-provider>
+        <validation-provider
+          v-slot="{ errors }"
+          name="first name"
+          rules="required|min:2|max:50">
           <v-text-field
             v-model="user.firstName"
-            v-validate="'required|min:2|max:50'"
-            :error-messages="vErrors.collect('firstName')"
+            :error-messages="errors"
             label="First name"
-            data-vv-as="First name"
-            data-vv-name="firstName"
+            placeholder="Enter first name..."
+            outlined
             class="mb-3" />
+        </validation-provider>
+        <validation-provider
+          v-slot="{ errors }"
+          name="last name"
+          rules="required|min:2|max:50">
           <v-text-field
             v-model="user.lastName"
-            v-validate="'required|min:2|max:50'"
-            :error-messages="vErrors.collect('lastName')"
+            :error-messages="errors"
             label="Last name"
-            data-vv-as="Last name"
-            data-vv-name="lastName"
+            placeholder="Enter last name..."
+            outlined
             class="mb-3" />
+        </validation-provider>
+        <validation-provider v-slot="{ errors }" name="role" rules="required">
           <v-select
             v-model="user.role"
-            v-validate="{ required: true }"
+            :error-messages="errors"
             :items="roles"
-            :error-messages="vErrors.collect('role')"
             label="Role"
-            data-vv-name="role"
+            placeholder="Select role..."
+            outlined
             class="mb-3" />
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn @click="close">Cancel</v-btn>
-          <v-btn color="primary" type="submit" outlined>Save</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-form>
-  </v-dialog>
+        </validation-provider>
+        <div class="d-flex justify-end">
+          <v-btn @click="close" text>Cancel</v-btn>
+          <v-btn
+            :disabled="invalid || pristine"
+            type="submit"
+            color="blue-grey darken-4"
+            text>
+            Save
+          </v-btn>
+        </div>
+      </validation-observer>
+    </template>
+  </tailor-dialog>
 </template>
 
 <script>
@@ -64,32 +86,26 @@ import cloneDeep from 'lodash/cloneDeep';
 import humanize from 'humanize-string';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
-import { role } from 'shared';
-import { withValidation } from 'utils/validation';
+import { user as roles } from 'shared/role';
+import TailorDialog from '@/components/common/TailorDialog';
 
-const resetUser = () => {
-  return {
-    email: '',
-    firstName: '',
-    lastName: '',
-    role: null
-  };
-};
+const resetUser = () => ({
+  email: '',
+  firstName: '',
+  lastName: '',
+  role: null
+});
 
 export default {
   name: 'user-dialog',
-  mixins: [withValidation()],
   props: {
     visible: { type: Boolean, default: false },
     userData: { type: Object, default: () => ({}) }
   },
-  data() {
-    return {
-      user: resetUser(),
-      isLoading: false
-    };
-  },
+  data: () => ({ user: resetUser(), isReinviting: false }),
   computed: {
+    isNewUser: vm => !vm.user.id,
+    roles: vm => map(roles, it => ({ text: humanize(it), value: it })),
     show: {
       get() {
         return this.visible;
@@ -97,13 +113,6 @@ export default {
       set(value) {
         if (!value) this.close();
       }
-    },
-    roles() {
-      const roles = role.getRoleValues('user');
-      return map(roles, it => ({ text: humanize(it), value: it }));
-    },
-    isNewUser() {
-      return !this.user.id;
     }
   },
   methods: {
@@ -111,26 +120,24 @@ export default {
       this.user = resetUser();
       this.$emit('update:visible', false);
     },
-    save() {
-      this.$validator.validateAll().then(isValid => {
-        if (!isValid) return;
-        const action = this.isNewUser ? 'create' : 'update';
-        api.upsert(this.user).then(() => this.$emit(`${action}d`));
-        this.close();
-      });
+    async submit() {
+      const action = this.isNewUser ? 'create' : 'update';
+      api.upsert(this.user).then(() => this.$emit(`${action}d`));
+      this.close();
     },
     reinvite() {
-      this.isLoading = true;
-      api.reinvite(this.user).finally(() => (this.isLoading = false));
+      this.isReinviting = true;
+      api.reinvite(this.user).finally(() => (this.isReinviting = false));
     }
   },
   watch: {
     show(val) {
       if (!val) return;
-      this.vErrors.clear();
+      this.$nextTick(() => this.$refs.form.reset());
       if (!isEmpty(this.userData)) this.user = cloneDeep(this.userData);
     }
-  }
+  },
+  components: { TailorDialog }
 };
 </script>
 

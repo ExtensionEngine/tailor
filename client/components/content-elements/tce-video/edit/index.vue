@@ -1,22 +1,22 @@
 <template>
   <div class="tce-video">
-    <div v-if="showPlaceholder">
-      <div class="well video-placeholder">
-        <div class="message">
-          <span class="heading">Video placeholder</span>
-          <span v-if="!isFocused">Select to edit</span>
-          <span v-else>Please use toolbar to enter url</span>
+    <element-placeholder
+      v-if="showPlaceholder"
+      :is-focused="isFocused"
+      :is-disabled="isDisabled"
+      name="Video component"
+      icon="mdi-video-image"
+      active-placeholder="Use toolbar to upload the video"
+      active-icon="mdi-arrow-up" />
+    <div v-else>
+      <div v-if="!isDisabled && !isFocused" class="overlay">
+        <div class="message grey--text text--lighten-2">
+          Double click to preview
         </div>
       </div>
-    </div>
-    <div v-else>
-      <div v-if="!isFocused" class="overlay">
-        <div class="message">Double click to preview</div>
-      </div>
-      <div v-if="showError" class="error">
-        <div class="message">
-          <span class="icon mdi mdi-alert"></span>
-          <p>Error loading media!</p>
+      <div v-if="showError" class="overlay">
+        <div class="message secondary--text">
+          <v-icon>mdi-alert</v-icon> Error loading media!
         </div>
       </div>
       <div class="player">
@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import { ElementPlaceholder } from 'tce-core';
 import { extname } from 'path';
 import get from 'lodash/get';
 import { PlyrueComponent as Plyrue } from 'plyrue';
@@ -61,7 +62,8 @@ export default {
   props: {
     element: { type: Object, required: true },
     isFocused: { type: Boolean, default: false },
-    isDragged: { type: Boolean, default: false }
+    isDragged: { type: Boolean, default: false },
+    isDisabled: { type: Boolean, default: false }
   },
   data: () => ({ error: null, switchingVideo: false }),
   computed: {
@@ -99,7 +101,7 @@ export default {
   mounted() {
     this.$elementBus.on('save', ({ data }) => this.$emit('save', data));
   },
-  components: { Plyrue }
+  components: { ElementPlaceholder, Plyrue }
 };
 
 function isShareLink({ hostname }) {
@@ -117,65 +119,22 @@ function mimetype({ pathname }) {
   position: relative;
 }
 
-.video-placeholder {
-  .message {
-    padding: 155px 20px;
-
-    .heading {
-      font-size: 24px;
-    }
-
-    span {
-      display: block;
-      font-size: 18px;
-    }
-  }
-}
-
 .overlay {
   position: absolute;
   z-index: 3;
   width: 100%;
   height: 100%;
-  background-color: #333;
-  opacity: 0.9;
+  background: rgba(16, 16, 16, 0.85);
 
   .message {
     position: relative;
     top: 45%;
-    color: green;
-    font-size: 22px;
+    font-size: 1.125rem !important;
   }
-}
-
-.error {
-  position: absolute;
-  z-index: 98;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.9);
-}
-
-.error .message {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #fff;
-  font-size: 18px;
-  font-weight: 500;
-
-  .icon {
-    font-size: 42px;
-  }
-}
-
-.well {
-  margin: 0;
 }
 
 .player {
-  height: 410px;
+  height: 25.625rem;
   background: #000;
 
   ::v-deep {

@@ -1,55 +1,62 @@
 <template>
-  <v-form @submit.prevent="updateUser">
-    <v-row class="pt-2 px-4 mx-3">
-      <v-col cols="12">
-        <v-text-field
-          v-model="userData.email"
-          v-validate="{ required: true, email: true, 'unique-email': user }"
-          :error-messages="vErrors.collect('email')"
-          name="email"
-          label="Email" />
-      </v-col>
-      <v-col cols="12">
-        <v-text-field
-          v-model="userData.firstName"
-          v-validate="'required|min:2|max:20'"
-          :error-messages="vErrors.collect('firstName')"
-          data-vv-as="First name"
-          data-vv-name="firstName"
-          label="First name" />
-      </v-col>
-      <v-col cols="12">
-        <v-text-field
-          v-model="userData.lastName"
-          v-validate="'required|min:2|max:20'"
-          :error-messages="vErrors.collect('lastName')"
-          data-vv-as="Last Name"
-          data-vv-name="lastName"
-          label="Last name" />
-      </v-col>
-    </v-row>
-    <v-row class="pb-3 px-4 mx-6">
-      <v-spacer />
-      <v-btn
-        @click="resetForm"
-        :disabled="!hasChanges && !vErrors.any()"
-        text>
+  <validation-observer
+    ref="form"
+    v-slot="{ invalid }"
+    @submit.prevent="$refs.form.handleSubmit(submit)"
+    tag="form"
+    novalidate
+    class="pt-4 px-4">
+    <validation-provider
+      v-slot="{ errors }"
+      name="email"
+      :rules="{ required: true, email: true, unique_email: { userData: user } }">
+      <v-text-field
+        v-model="userData.email"
+        :error-messages="errors"
+        name="email"
+        label="Email"
+        outlined />
+    </validation-provider>
+    <validation-provider
+      v-slot="{ errors }"
+      name="first name"
+      rules="required|min:2|max:50">
+      <v-text-field
+        v-model="userData.firstName"
+        :error-messages="errors"
+        name="firstName"
+        label="First name"
+        outlined />
+    </validation-provider>
+    <validation-provider
+      v-slot="{ errors }"
+      name="last name"
+      rules="required|min:2|max:50">
+      <v-text-field
+        v-model="userData.lastName"
+        :error-messages="errors"
+        name="lastName"
+        label="Last name"
+        outlined />
+    </validation-provider>
+    <div class="d-flex justify-end">
+      <v-btn @click="resetForm" :disabled="!hasChanges" text>
         Cancel
       </v-btn>
       <v-btn
-        :disabled="!hasChanges || vErrors.any()"
-        outlined
-        type="submit">
+        :disabled="invalid || !hasChanges"
+        type="submit"
+        color="blue-grey darken-4"
+        text>
         Update
       </v-btn>
-    </v-row>
-  </v-form>
+    </div>
+  </validation-observer>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex';
 import pick from 'lodash/pick';
-import { withValidation } from 'utils/validation';
 
 const ATTRIBUTES = ['firstName', 'lastName', 'email'];
 
@@ -61,7 +68,6 @@ const resetUser = () => ({
 
 export default {
   name: 'user-info',
-  mixins: [withValidation()],
   data: () => ({ userData: resetUser() }),
   computed: {
     ...mapState({ user: state => state.auth.user }),
@@ -69,9 +75,7 @@ export default {
   },
   methods: {
     ...mapActions(['updateInfo']),
-    async updateUser() {
-      const isValid = this.$validator.validateAll();
-      if (!isValid) return;
+    submit() {
       return this.updateInfo(pick(this.userData, ATTRIBUTES))
         .then(() => {
           this.$snackbar.show('User information updated!');
@@ -80,11 +84,11 @@ export default {
         .catch(() => this.$snackbar.error('Something went wrong!'));
     },
     resetForm() {
-      this.$validator.reset();
-      return Object.assign(this.userData, pick(this.user, ATTRIBUTES));
+      Object.assign(this.userData, pick(this.user, ATTRIBUTES));
+      this.$refs.form.reset();
     }
   },
-  created() {
+  mounted() {
     return this.resetForm();
   }
 };

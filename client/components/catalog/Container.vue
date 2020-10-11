@@ -2,14 +2,20 @@
   <div infinite-wrapper class="catalog-wrapper">
     <v-container :class="{ 'catalog-empty': !hasRepositories }" class="catalog mt-3">
       <v-row no-gutters class="catalog-actions">
-        <create-repository />
+        <add-repository @done="onRepositoryAdd" />
         <v-col md="4" sm="10" offset-md="4" offset-sm="1">
-          <search @update="setSearch($event)" :value="queryParams.search" />
+          <search
+            @update="onFilterChange(setSearch, $event)"
+            :value="queryParams.search" />
         </v-col>
         <v-col md="3" sm="1" class="text-sm-left pl-2">
           <v-tooltip open-delay="800" right>
             <template v-slot:activator="{ on }">
-              <v-btn v-on="on" @click="togglePinned()" icon text class="my-1">
+              <v-btn
+                v-on="on"
+                @click="onFilterChange(togglePinned)"
+                icon text
+                class="my-1">
                 <v-icon :color="showPinned ? 'lime accent-3' : 'primary lighten-4'">
                   mdi-pin
                 </v-icon>
@@ -17,13 +23,20 @@
             </template>
             <span>Toggle pinned</span>
           </v-tooltip>
-          <select-order @update="setOrder" :sort-by="sortBy" class="pl-2" />
+          <select-order
+            @update="onFilterChange(setOrder, $event)"
+            :sort-by="sortBy"
+            class="pl-2" />
+          <tag-filter @update="onFilterChange(toggleTagFilter, $event)" />
         </v-col>
       </v-row>
+      <tag-filter-selection
+        @close="onFilterChange(toggleTagFilter, $event)"
+        @clear:all="onFilterChange(clearTagFilter, $event)" />
       <v-row>
         <v-col
           v-for="repository in repositories"
-          :key="repository._cid"
+          :key="repository.uid"
           cols="4"
           class="px-2 py-3">
           <repository-card :repository="repository" />
@@ -50,29 +63,26 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
-import CreateRepository from './Create';
+import AddRepository from './Add';
 import get from 'lodash/get';
 import InfiniteLoading from 'vue-infinite-loading';
-import isEqual from 'lodash/isEqual';
-import pick from 'lodash/pick';
 import RepositoryCard from './Card';
 import Search from './Search';
 import SelectOrder from './SelectOrder';
+import TagFilter from './TagFilter';
+import TagFilterSelection from './TagFilterSelection';
 
 export default {
-  data() {
-    return {
-      loading: true
-    };
-  },
+  data: () => ({ loading: true }),
   computed: {
-    ...mapState('courses', {
+    ...mapState('repositories', {
       sortBy: state => state.$internals.sort,
+      tags: 'tags',
       showPinned: 'showPinned'
     }),
-    ...mapGetters('courses', {
-      repositories: 'courses',
-      queryParams: 'courseQueryParams',
+    ...mapGetters('repositories', {
+      repositories: 'repositories',
+      queryParams: 'repositoryQueryParams',
       hasMoreResults: 'hasMoreResults'
     }),
     loader() {
@@ -90,35 +100,51 @@ export default {
     }
   },
   methods: {
-    ...mapActions('courses', ['fetch']),
-    ...mapMutations('courses', ['togglePinned', 'setSearch', 'setOrder']),
-    load() {
+    ...mapActions('repositories', ['fetch', 'fetchTags']),
+    ...mapMutations('repositories', [
+      'togglePinned', 'setSearch', 'setOrder', 'reset', 'resetFilters',
+      'resetPagination', 'toggleTagFilter', 'clearTagFilter'
+    ]),
+    async load() {
       this.loading = true;
-      return this.fetch().then(() => {
-        if (this.hasRepositories) this.loader.loaded();
-        if (!this.hasMoreResults) this.loader.complete();
-        this.loading = false;
-      });
+      await this.fetch();
+      if (this.hasRepositories) this.loader.loaded();
+      if (!this.hasMoreResults) this.loader.complete();
+      this.loading = false;
+    },
+    async onRepositoryAdd() {
+      this.setOrder({ field: 'createdAt', order: 'DESC' });
+      this.resetFilters();
+      await this.load();
+      this.loader.reset();
+    },
+    async onFilterChange(filter, val) {
+      filter(val);
+      await this.load();
+      await this.loader.reset();
     }
   },
   watch: {
     repositories() {
       // If all items get unpinned
       if (!this.hasRepositories && this.showPinned) this.loader.reset();
-    },
-    queryParams(val, oldVal) {
-      const attrs = ['search', 'sortOrder', 'sortBy', 'pinned'];
-      const changedFilter = !isEqual(pick(val, attrs), pick(oldVal, attrs));
-      if (!changedFilter) return;
-      this.load().then(() => this.loader.reset());
     }
   },
+  created() {
+    // repositories must be reloaded for publishing badge to work properly
+    // reset state manually to trigger "infinite" event in all cases
+    this.resetPagination();
+    this.reset();
+    this.fetchTags();
+  },
   components: {
-    CreateRepository,
+    AddRepository,
     InfiniteLoading,
     RepositoryCard,
     Search,
-    SelectOrder
+    SelectOrder,
+    TagFilter,
+    TagFilterSelection
   }
 };
 </script>
@@ -139,7 +165,7 @@ export default {
     left: 0;
     width: 100%;
     height: 230px;
-    background: #455a64;
+    background: #37474f;
     box-shadow:
       0 3px 5px -1px rgba(0,0,0,0.2),
       0 5px 8px 0 rgba(0,0,0,0.14),
@@ -160,7 +186,6 @@ export default {
 
 .catalog-actions {
   position: relative;
-  margin-bottom: 20px;
   padding-top: 12px;
 
   ::v-deep .add-repo {

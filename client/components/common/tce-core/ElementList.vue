@@ -9,7 +9,7 @@
       class="row">
       <div
         v-for="(element, index) in elements"
-        :key="element.id"
+        :key="getElementId(element)"
         @dragstart="dragElementIndex = index"
         @dragend="dragElementIndex = -1"
         :class="`col-xs-${get(element, 'data.width', 12)}`">
@@ -26,6 +26,8 @@
       @add="el => $emit('add', el)"
       :include="supportedTypes"
       :activity="activity"
+      :label="addElementOptions.label"
+      :large="addElementOptions.large"
       :position="nextPosition"
       :layout="layout" />
   </div>
@@ -35,6 +37,7 @@
 import AddElement from './AddElement';
 import Draggable from 'vuedraggable';
 import get from 'lodash/get';
+import { getElementId } from 'tce-core/utils';
 import last from 'lodash/last';
 
 export default {
@@ -44,7 +47,8 @@ export default {
     supportedTypes: { type: Array, default: null },
     activity: { type: Object, default: null },
     layout: { type: Boolean, default: false },
-    enableAdd: { type: Boolean, default: true }
+    enableAdd: { type: Boolean, default: true },
+    addElementOptions: { type: Object, default: () => ({}) }
   },
   data() {
     return { dragElementIndex: null };
@@ -64,6 +68,7 @@ export default {
   },
   methods: {
     get,
+    getElementId,
     reorder({ newIndex: newPosition }) {
       const items = this.elements;
       this.$emit('update', { newPosition, items });

@@ -1,75 +1,78 @@
 <template>
-  <div>
-    <div v-if="!hasItems" class="well">
-      Use the toolbar to add the first item to the carousel.
-    </div>
-    <div v-else :style="{ height: `${height}px` }" class="carousel">
-      <ul :style="{ height: height - 40 + 'px' }" class="carousel-items">
-        <carousel-item
-          v-for="it in items"
-          :key="it.id"
-          @save="saveItem"
-          @delete="deleteItem"
-          :item="it"
-          :embeds="embedsByItem[it.id]"
-          :active-item="activeItem" />
-      </ul>
-      <ul class="indicators">
-        <li
-          v-for="it in items"
-          :key="it.id"
-          @click="activateItem(it)"
-          :class="{ 'active': activeItem === it.id }"
-          class="indicator-item">
-        </li>
-      </ul>
-    </div>
+  <div class="tce-carousel">
+    <v-toolbar
+      v-if="hasItems"
+      height="32"
+      color="grey darken-3"
+      dark
+      class="text-left elevation-5">
+      <span class="subtitle-2 mr-4">Carousel</span>
+      <span class="text-truncate">
+        Use the bottom navigation to switch to the next item
+      </span>
+    </v-toolbar>
+    <element-placeholder
+      v-if="!hasItems"
+      :is-focused="isFocused"
+      :is-disabled="isDisabled"
+      name="Carousel component"
+      icon="mdi-view-carousel"
+      active-placeholder="Use toolbar to add the first slide to the carousel"
+      active-icon="mdi-arrow-up" />
+    <v-carousel
+      v-else
+      v-model="activeItem"
+      :height="height"
+      :show-arrows="false">
+      <carousel-item
+        v-for="item in items"
+        :key="item.id"
+        @save="saveItem"
+        :item="item"
+        :embeds="embedsByItem[item.id]"
+        :is-disabled="isDisabled" />
+    </v-carousel>
   </div>
 </template>
 
 <script>
 import CarouselItem from './CarouselItem';
 import cloneDeep from 'lodash/cloneDeep';
-import find from 'lodash/find';
+import { ElementPlaceholder } from 'tce-core';
+import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
+import last from 'lodash/last';
 import map from 'lodash/map';
 import omit from 'lodash/omit';
 import pick from 'lodash/pick';
 import reduce from 'lodash/reduce';
 
 const DEFAULT_HEIGHT = 500;
-const getIndices = obj => map(obj, (val, key) => parseInt(key)).sort().reverse();
+const getIndices = obj => map(obj, (val, key) => parseInt(key)).sort((a, b) => a - b);
 
 export default {
   name: 'tce-carousel',
   inject: ['$elementBus'],
   props: {
-    element: { type: Object, required: true }
+    element: { type: Object, required: true },
+    isFocused: { type: Boolean, required: true },
+    isDisabled: { type: Boolean, default: false }
   },
   data() {
-    const indices = getIndices(this.element.data.items || {});
     return {
-      activeItem: indices.length ? indices[indices.length - 1] : null
+      activeItem: 0
     };
   },
   computed: {
-    items() {
-      return this.element.data.items || {};
-    },
-    embeds() {
-      return this.element.data.embeds || {};
-    },
+    height: vm => vm.element.data.height,
+    items: vm => vm.element.data.items || {},
+    hasItems: vm => !isEmpty(vm.items),
+    embeds: vm => vm.element.data.embeds || {},
     embedsByItem() {
       return reduce(this.items, (acc, item) => {
         acc[item.id] = pick(this.embeds, Object.keys(item.body));
         return acc;
       }, {});
-    },
-    hasItems() {
-      return !isEmpty(this.items);
-    },
-    height() {
-      return this.element.data.height;
     }
   },
   methods: {
@@ -81,27 +84,25 @@ export default {
         embeds: Object.assign(cloneDeep(this.embeds), embeds)
       });
     },
-    deleteItem(itemId) {
-      const items = cloneDeep(this.items);
-      const embeds = cloneDeep(this.embeds);
-      const removedEmbeds = Object.keys(items[itemId].body);
+    deleteItem(index) {
+      const indices = getIndices(this.items);
+      const itemId = indices[index];
+      const items = { ...this.items };
+      const embeds = { ...this.embeds };
+      const removedEmbeds = Object.keys(get(items[itemId], 'body', {}));
       delete items[itemId];
       this.$emit('save', { items, embeds: omit(embeds, removedEmbeds) });
-      const indices = getIndices(items);
-      const previousId = indices.length
-        ? find(indices, it => it < itemId) || indices[indices.length - 1]
-        : null;
-      if (previousId) this.activateItem({ id: previousId });
+      this.activateItem(index > 0 ? index - 1 : 0);
     },
-    activateItem(item) {
-      this.activeItem = item.id;
+    activateItem(index) {
+      this.activeItem = index;
     }
   },
   mounted() {
     this.$elementBus.on('add', () => {
       const element = cloneDeep(this.element);
       const indices = getIndices(this.items) || [];
-      const id = this.hasItems ? indices[0] + 1 : 1;
+      const id = this.hasItems ? last(indices) + 1 : 1;
       if (!element.data.items) {
         Object.assign(element.data, {
           embeds: {}, items: {}, height: DEFAULT_HEIGHT
@@ -109,7 +110,7 @@ export default {
       }
       element.data.items[id] = { id, body: {} };
       this.$emit('save', element.data);
-      this.activateItem({ id });
+      this.activateItem(indices.length);
     });
     this.$elementBus.on('remove', () => this.deleteItem(this.activeItem));
     this.$elementBus.on('height', height => {
@@ -118,47 +119,12 @@ export default {
       this.$emit('save', data);
     });
   },
-  components: { CarouselItem }
+  components: { CarouselItem, ElementPlaceholder }
 };
 </script>
 
 <style lang="scss" scoped>
-.carousel {
-  position: relative;
-  width: 100%;
-}
-
-.carousel-items {
-  margin: 0;
-  padding-left: 0;
-  list-style-type: none;
-}
-
-.indicators {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 22px;
-  margin: 0;
-  padding-left: 0;
-  text-align: center;
-  list-style-type: none;
-
-  .indicator-item {
-    display: inline-block;
-    position: relative;
-    width: 16px;
-    height: 16px;
-    margin: 0 12px;
-    background-color: #ddd;
-    transition: background-color 0.3s;
-    border-radius: 50%;
-    cursor: pointer;
-
-    &.active {
-      background-color: #444;
-    }
-  }
+.tce-carousel {
+  overflow: hidden;
 }
 </style>
