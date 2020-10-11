@@ -5,17 +5,15 @@ const pkg = require('../../package.json');
 const safeRequire = require('safe-require');
 
 const isProduction = process.env.NODE_ENV === 'production';
-const supportsEmoji = process.platform !== 'win32' &&
-  process.env.TERM === 'xterm-256color';
+const isWin32 = process.platform === 'win32';
+const supportsEmoji = !isWin32 && (process.env.TERM === 'xterm-256color');
 
-const Level = getLevels(Bunyan);
+const Level = uppercaseLevelNames(Bunyan.levelFromName);
 const loggers = {};
 
 class Logger extends Bunyan {
   addStream(stream, defaultLevel) {
-    if (!isProduction) {
-      stream = getOutputStream(stream);
-    }
+    if (!isProduction) stream = processOutputStream(stream);
     return super.addStream(stream, defaultLevel);
   }
 
@@ -33,21 +31,18 @@ function createLogger(name, options = {}) {
   }
   return loggers[name];
 }
-Object.assign(createLogger, Logger, { enabled: true, createLogger, Level });
+
+Object.assign(createLogger, Logger, { Level, createLogger, enabled: true });
 
 module.exports = createLogger;
 
-function getLevels(Logger) {
-  const { levelFromName: levels } = Logger;
-  return Object.keys(levels).reduce((acc, name) => {
-    return Object.assign(acc, { [name.toUpperCase()]: levels[name] });
-  }, {});
+function uppercaseLevelNames(levels) {
+  const keys = Object.keys(levels);
+  return keys.reduce((acc, it) => ({ ...acc, [it.toUpperCase()]: levels[it] }), {});
 }
 
-function getOutputStream(loggerStream) {
-  if (loggerStream.stream !== process.stdout || supportsEmoji) {
-    return loggerStream;
-  }
+function processOutputStream(loggerStream) {
+  if ((loggerStream.stream !== process.stdout) || supportsEmoji) return loggerStream;
   const stripEmoji = safeRequire('emoji-strip');
   const split = safeRequire('split2');
   if (!stripEmoji || !split) return loggerStream;
