@@ -16,11 +16,12 @@
         <v-text-field
           v-model="height"
           :error-messages="errors"
+          type="number"
           name="height"
           label="Height (px)"
           placeholder="Height..."
           prepend-icon="mdi-resize"
-          hide-details filled dense
+          filled dense
           class="mt-2 ml-5" />
       </validation-provider>
     </v-toolbar-items>

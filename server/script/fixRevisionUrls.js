@@ -1,13 +1,16 @@
 'use strict';
 
+require('dotenv').config();
+require('../shared/logger').enabled = false;
+
 const { Revision, sequelize } = require('../shared/database');
 const get = require('lodash/get');
 const Promise = require('bluebird');
 
 /**
  * This regex tries to find both possible versions of the url:
- *  - repository/assests/:content-element-id/:asset-name.ext
- *  - repository/assests/:asset-name.ext
+ *  - `repository/assests/:content-element-id/:asset-name.ext`
+ *  - `repository/assests/:asset-name.ext`
  */
 const regex = /(repository\/assets\/(\d+\/)?.+)\?/;
 
