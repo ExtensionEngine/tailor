@@ -60,9 +60,6 @@ export default {
       this.isFocused = !!element && (getElementId(element) === this.id);
     });
   },
-  beforeDestroy() {
-    this.elementBus.unsubscribe();
-  },
   provide() {
     return {
       $elementBus: this.elementBus

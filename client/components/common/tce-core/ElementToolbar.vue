@@ -80,9 +80,6 @@ export default {
       });
     }
   },
-  beforeDestroy() {
-    this.elementBus.unsubscribe();
-  },
   provide() {
     return {
       $elementBus: this.elementBus
