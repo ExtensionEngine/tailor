@@ -42,16 +42,15 @@
 <script>
 import CopyDialog from '@/components/repository/common/CopyActivity';
 import CreateDialog from '@/components/repository/common/CreateDialog';
-import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import first from 'lodash/first';
 import InsertLocation from '@/utils/InsertLocation';
 import { mapActions } from 'vuex';
+import { mapRequests } from '@/plugins/radio';
 import optionsMixin from './common';
 import sortBy from 'lodash/sortBy';
 
-const appChannel = EventBus.channel('app');
 const TREE_VIEW_ROUTE = 'tree-view';
 const { ADD_AFTER, ADD_BEFORE, ADD_INTO } = InsertLocation;
 
@@ -111,6 +110,7 @@ export default {
   },
   methods: {
     ...mapActions('repository/activities', ['remove']),
+    ...mapRequests('app', ['showConfirmationModal']),
     setCreateContext(levels, action = null) {
       this.setSupportedLevels(levels, action);
       this.showCreateDialog = true;
@@ -136,7 +136,7 @@ export default {
         if (focusNode) this.selectActivity(focusNode.id);
       };
       const name = `${isTreeView ? `${activity.id}: ` : ''}${activity.data.name}`;
-      appChannel.emit('showConfirmationModal', {
+      this.showConfirmationModal({
         title: 'Delete item?',
         message: `Are you sure you want to delete ${name}?`,
         action

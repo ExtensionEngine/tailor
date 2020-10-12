@@ -33,12 +33,7 @@ export default {
     frame: { type: Boolean, default: true },
     dense: { type: Boolean, default: false }
   },
-  data() {
-    return {
-      isFocused: false,
-      elementBus: EventBus.channel(`element:${getElementId(this.element)}`)
-    };
-  },
+  data: () => ({ isFocused: false }),
   computed: {
     ...mapChannels({ editorChannel: 'editor' }),
     id() {

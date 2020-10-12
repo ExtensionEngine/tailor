@@ -1,13 +1,12 @@
 import downloadMixin from 'utils/downloadMixin';
-import EventBus from 'EventBus';
-
-const appChannel = EventBus.channel('app');
+import { mapRequests } from '@/plugins/radio';
 
 export default {
   inject: ['$storageService'],
   mixins: [downloadMixin],
   data: () => ({ uploading: false }),
   methods: {
+    ...mapRequests('app', ['showConfirmationModal']),
     createFileForm(e) {
       this.form = new FormData();
       const [file] = e.target.files;
@@ -31,7 +30,7 @@ export default {
       return this.download(url, name);
     },
     deleteFile(item) {
-      appChannel.emit('showConfirmationModal', {
+      this.showConfirmationModal({
         title: 'Delete file?',
         message: `Are you sure you want to remove ${item.fileName}?`,
         action: () => this.$emit('delete', item.id, null)

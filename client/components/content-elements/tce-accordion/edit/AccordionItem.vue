@@ -58,11 +58,9 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 import { EmbeddedContainer } from 'tce-core';
-import EventBus from 'EventBus';
 import forEach from 'lodash/forEach';
 import isEmpty from 'lodash/isEmpty';
-
-const appChannel = EventBus.channel('app');
+import { mapRequests } from '@/plugins/radio';
 
 export default {
   name: 'accordion-item',
@@ -81,6 +79,7 @@ export default {
     hasElements: vm => !isEmpty(vm.embeds)
   },
   methods: {
+    ...mapRequests('app', ['showConfirmationModal']),
     editHeader() {
       this.isEditingHeader = true;
       this.header = this.item.header;
@@ -95,7 +94,7 @@ export default {
       this.$emit('save', { item, embeds });
     },
     deleteItem() {
-      appChannel.emit('showConfirmationModal', {
+      this.showConfirmationModal({
         title: 'Delete accordion item',
         message: 'Are you sure you want to delete selected item?',
         action: () => this.$emit('delete', this.item.id)
