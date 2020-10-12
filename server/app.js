@@ -12,7 +12,7 @@ require('express-async-errors');
 /* eslint-disable require-sort/require-sort */
 const auth = require('./shared/auth');
 const config = require('../config/server');
-const logger = require('./shared/logger');
+const logger = require('./shared/logger')();
 const router = require('./router');
 /* eslint-enable */
 
