@@ -42,6 +42,7 @@ import capitalize from 'lodash/capitalize';
 import ContentContainer from './Container';
 import EventBus from 'EventBus';
 import get from 'lodash/get';
+import { getContainerTemplateId as getContainerId } from 'shared/activities';
 import { getContainerName } from 'tce-core/utils';
 import isEmpty from 'lodash/isEmpty';
 import maxBy from 'lodash/maxBy';
@@ -69,7 +70,7 @@ export default {
     ...mapState('repository/activities', { activities: 'items' }),
     ...mapState('repository/contentElements', { elements: 'items' }),
     containerName() {
-      const id = this.templateId || this.type;
+      const id = getContainerId(this);
       return this.$ccRegistry.get(id) ? getContainerName(id) : DEFAULT_CONTAINER;
     },
     name() {

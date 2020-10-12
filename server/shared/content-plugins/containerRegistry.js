@@ -2,10 +2,9 @@
 
 const BaseRegistry = require('./BaseRegistry');
 const containerList = require('../../../config/shared/core-containers');
+const { getContainerTemplateId: getId } = require('../../../config/shared/activities');
 
 const EXTENSIONS_LIST = '../../../extensions/content-containers/index';
-
-const getId = it => it.templateId || it.type;
 
 class ContainerRegistry extends BaseRegistry {
   constructor() {
