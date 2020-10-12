@@ -19,7 +19,6 @@
     <v-bottom-sheet v-model="isVisible" max-width="1240" inset>
       <div class="element-container">
         <v-toolbar
-          v-if="layout"
           color="blue-grey darken-4"
           dense
           class="mb-2 elevation-1">
@@ -30,25 +29,26 @@
             <v-icon class="mr-2">mdi-content-copy</v-icon>
             Copy existing
           </v-btn>
-          <v-spacer />
-          <v-divider vertical />
-          <v-btn-toggle
-            v-model="elementWidth"
-            active-class="blue-grey darken-2"
-            background-color="transparent"
-            dark tile borderless mandatory>
-            <v-btn :value="100" icon>
-              <v-icon>mdi-square-outline</v-icon>
-            </v-btn>
-            <v-btn :value="50" icon>
-              <v-icon>mdi-select-compare</v-icon>
-            </v-btn>
-          </v-btn-toggle>
-          <v-divider class="mr-3" vertical />
-          <div class="width-label px-1 subtitle-1 grey--text text--lighten-4">
-            Element width
-            <span class="px-1">{{ elementWidth }}</span>%
-          </div>
+          <template v-if="layout">
+            <v-spacer />
+            <v-btn-toggle
+              v-model="elementWidth"
+              active-class="blue-grey darken-2"
+              background-color="transparent"
+              dark tile borderless mandatory>
+              <v-btn :value="100" icon>
+                <v-icon>mdi-square-outline</v-icon>
+              </v-btn>
+              <v-btn :value="50" icon>
+                <v-icon>mdi-select-compare</v-icon>
+              </v-btn>
+            </v-btn-toggle>
+            <v-divider class="mr-3" vertical />
+            <div class="width-label px-1 subtitle-1 grey--text text--lighten-4">
+              Element width
+              <span class="px-1">{{ elementWidth }}</span>%
+            </div>
+          </template>
         </v-toolbar>
         <div
           v-for="group in library"
