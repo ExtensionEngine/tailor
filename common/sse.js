@@ -22,6 +22,12 @@ const ContentElement = {
   Delete: 'content_element:delete'
 };
 
+const Task = {
+  Create: 'task:create',
+  Update: 'task:update',
+  Delete: 'task:delete'
+};
+
 const UserActivity = {
   Start: 'user_activity:start',
   End: 'user_activity:end',
@@ -33,5 +39,6 @@ module.exports = {
   Comment,
   Connection,
   ContentElement,
+  Task,
   UserActivity
 };

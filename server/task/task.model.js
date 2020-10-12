@@ -1,5 +1,6 @@
 'use strict';
 
+const { Task: Events } = require('../../common/sse');
 const hooks = require('./hooks');
 const { Model } = require('sequelize');
 const { priorities } = require('../../config/shared/workflow');
@@ -83,6 +84,10 @@ class Task extends Model {
         where: { archivedAt: null }
       }
     };
+  }
+
+  static get Events() {
+    return Events;
   }
 
   static hooks(Hooks, models) {

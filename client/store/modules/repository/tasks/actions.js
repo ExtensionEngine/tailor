@@ -1,7 +1,16 @@
+import { Task as Events } from '@/../common/sse';
+import { feed } from '../feed';
 import generateActions from '@/store/helpers/actions';
 import uuid from '@/utils/uuid';
 
 const { api, fetch, reset, save, setEndpoint, update, remove } = generateActions();
+
+const plugSSE = ({ commit }) => {
+  feed
+    .subscribe(Events.Create, item => commit('save', item))
+    .subscribe(Events.Update, item => commit('save', item))
+    .subscribe(Events.Delete, item => commit('remove', [item]));
+};
 
 const create = ({ commit, dispatch }, data) => {
   const model = { ...data, uid: uuid() };
@@ -22,6 +31,7 @@ const archive = ({ commit }, model) => {
 export {
   create,
   fetch,
+  plugSSE,
   remove,
   reset,
   save,
