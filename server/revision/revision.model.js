@@ -5,11 +5,17 @@ const { Model } = require('sequelize');
 
 class Revision extends Model {
   static fields(DataTypes) {
-    const { DATE, ENUM, JSONB } = DataTypes;
+    const { DATE, ENUM, JSONB, UUID, UUIDV4 } = DataTypes;
     return {
+      uid: {
+        type: UUID,
+        unique: true,
+        allowNull: false,
+        defaultValue: UUIDV4
+      },
       entity: {
         type: ENUM,
-        values: ['ACTIVITY', 'COURSE', 'TEACHING_ELEMENT'],
+        values: ['ACTIVITY', 'REPOSITORY', 'CONTENT_ELEMENT'],
         allowNull: false
       },
       operation: {
@@ -33,9 +39,9 @@ class Revision extends Model {
     };
   }
 
-  static associate({ Course, User }) {
-    this.belongsTo(Course, {
-      foreignKey: { name: 'courseId', field: 'course_id' }
+  static associate({ User, Repository }) {
+    this.belongsTo(Repository, {
+      foreignKey: { name: 'repositoryId', field: 'repository_id' }
     });
     this.belongsTo(User, {
       foreignKey: { name: 'userId', field: 'user_id' }

@@ -1,45 +1,43 @@
 <template>
-  <div class="tce-image-toolbar">
-    <ul>
-      <li class="btn btn-link btn-sm upload-button">
-        <label for="upload" class="upload-label">
-          <span class="mdi mdi-image"></span> Upload
-          <input @change="upload" id="upload" type="file" class="upload-input"/>
-        </label>
-      </li>
-      <li
-        v-if="isUploaded"
-        :class="{ 'active': currentTool === 'cropper' }"
-        @click="toggleTool('cropper')"
-        class="btn btn-link btn-sm">
-        <span class="mdi mdi-crop"></span> Crop
-      </li>
-    </ul>
-    <div v-if="currentTool === 'cropper'" class="tool">
-      <button @click="undo" class="btn btn-default btn-sm">Undo</button>
-      <button @click="crop" class="btn btn-success btn-sm">Crop</button>
-    </div>
-  </div>
+  <v-toolbar
+    height="72"
+    color="transparent"
+    class="tce-image-toolbar elevation-0">
+    <v-toolbar-title class="pl-1">Image toolbar</v-toolbar-title>
+    <v-toolbar-items class="mx-auto">
+      <upload-btn
+        @change="upload"
+        :label="isUploaded ? 'Upload a new image' : 'Upload image'" />
+      <template v-if="isUploaded">
+        <v-btn @click="toggleTool('cropper')" text>
+          {{ currentTool === 'cropper' ? 'Hide' : 'Show' }} cropper
+        </v-btn>
+        <template v-if="currentTool === 'cropper'">
+          <v-btn @click="undo" text>
+            <v-icon class="pr-2">mdi-undo</v-icon> Undo crop
+          </v-btn>
+          <v-btn @click="crop" text>
+            <v-icon class="pr-2">mdi-crop</v-icon> Crop
+          </v-btn>
+        </template>
+      </template>
+    </v-toolbar-items>
+  </v-toolbar>
 </template>
 
 <script>
 import capitalize from 'lodash/capitalize';
 import isEmpty from 'lodash/isEmpty';
+import UploadBtn from './UploadBtn';
 
 export default {
   inject: ['$elementBus'],
   props: {
     element: { type: Object, required: true }
   },
-  data() {
-    return {
-      currentTool: null
-    };
-  },
+  data: () => ({ currentTool: null }),
   computed: {
-    isUploaded() {
-      return this.element.data && this.element.data.url;
-    }
+    isUploaded: vm => vm.element.data && vm.element.data.url
   },
   methods: {
     upload({ target }) {
@@ -71,64 +69,14 @@ export default {
   },
   beforeDestroy() {
     this.reset();
-  }
+  },
+  components: { UploadBtn }
 };
 </script>
 
 <style lang="scss" scoped>
-.tce-image-toolbar {
-  position: relative;
-  width: 100%;
-  height: 50px;
-
-  ul {
-    float: left;
-    height: 100%;
-    margin: 0;
-    padding: 0 30px 0 10px;
-
-    li {
-      height: 100%;
-      padding-top: 15px;
-      color: #444;
-
-      .mdi {
-        display: inline-block;
-        margin-right: 5px;
-        font-size: 20px;
-        line-height: 20px;
-        vertical-align: middle;
-      }
-
-      &.active {
-        background-color: #e8e8e8;
-      }
-    }
-  }
-
-  .upload-button {
-    padding: 0;
-  }
-
-  .upload-label {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 15px 10px 5px;
-    cursor: pointer;
-  }
-
-  .upload-input {
-    display: none;
-  }
-
-  .tool {
-    float: left;
-    padding: 12px 20px 0;
-
-    .btn {
-      margin-left: 5px;
-    }
-  }
+.v-toolbar__title {
+  min-width: 23.875rem;
+  text-align: left;
 }
 </style>

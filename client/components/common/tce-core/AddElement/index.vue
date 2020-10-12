@@ -3,8 +3,8 @@
     <v-btn
       v-if="large"
       @click.stop="isVisible = true"
-      outline
-      color="primary"
+      color="blue-grey darken-3"
+      text
       class="mt-3 mb-4">
       <v-icon class="pr-2">{{ icon }}</v-icon>{{ label }}
     </v-btn>
@@ -12,42 +12,49 @@
       v-else
       @click.stop="isVisible = true"
       icon
-      flat
-      color="primary">
+      text
+      color="blue-grey darken-3">
       <v-icon>{{ icon }}</v-icon>
     </v-btn>
-    <v-bottom-sheet v-model="isVisible" max-width="1240" inset lazy>
+    <v-bottom-sheet v-model="isVisible" max-width="1240" inset>
       <div class="element-container">
-        <v-toolbar v-if="layout" dense class="mb-2">
-          <v-spacer/>
-          <v-divider vertical class="mx-2"/>
-          <v-btn-toggle v-model="elementWidth" mandatory>
-            <v-btn :value="100" flat>
+        <v-toolbar
+          v-if="layout"
+          color="blue-grey darken-4"
+          dense
+          class="mb-2 elevation-1">
+          <v-spacer />
+          <v-divider vertical />
+          <v-btn-toggle
+            v-model="elementWidth"
+            active-class="blue-grey darken-2"
+            background-color="transparent"
+            dark tile borderless mandatory>
+            <v-btn :value="100" icon>
               <v-icon>mdi-square-outline</v-icon>
             </v-btn>
-            <v-btn :value="50" flat>
+            <v-btn :value="50" icon>
               <v-icon>mdi-select-compare</v-icon>
             </v-btn>
           </v-btn-toggle>
-          <v-divider class="mx-2" vertical/>
-          <v-chip label class="width-label">
-            <span>Element width:</span>
-            <span class="label-value px-1">{{ elementWidth }}</span>%
-          </v-chip>
+          <v-divider class="mr-3" vertical />
+          <div class="width-label px-1 subtitle-1 grey--text text--lighten-4">
+            Element width
+            <span class="px-1">{{ elementWidth }}</span>%
+          </div>
         </v-toolbar>
         <div
           v-for="group in library"
           :key="group.name">
-          <div class="group-heading">
-            <v-icon>{{ group.icon }}</v-icon>
+          <div class="group-heading blue-grey--text text--darken-4">
             <span>{{ group.name }}</span>
           </div>
           <div class="group-elements">
             <button
               v-for="element in group.elements"
               :key="element.position"
-              :disabled="isElementDisabled(element)"
               @click.stop="add(element)"
+              :disabled="isElementDisabled(element)"
               class="element">
               <v-icon v-if="element.ui.icon">{{ element.ui.icon }}</v-icon>
               <h5 class="body-2">{{ element.name }}</h5>
@@ -60,12 +67,12 @@
 </template>
 
 <script>
-import cuid from 'cuid';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
 import { isQuestion } from '../utils';
 import reduce from 'lodash/reduce';
 import sortBy from 'lodash/sortBy';
+import uuid from '@/utils/uuid';
 
 const DEFAULT_ELEMENT_WIDTH = 100;
 const LAYOUT = { HALF_WIDTH: 6, FULL_WIDTH: 12 };
@@ -135,18 +142,18 @@ export default {
   methods: {
     add({ type, subtype, initState = () => ({}) }) {
       const element = { type, data: { width: this.processedWidth } };
-      // If teaching element within activity
+      // If content element within activity
       if (this.activity) {
         element.activityId = this.activity.id;
         element.position = this.position;
       } else {
         // If embed, assign id
-        element.id = cuid();
+        element.id = uuid();
         element.embedded = true;
       }
       if (isQuestion(element.type)) {
         const data = { width: LAYOUT.FULL_WIDTH };
-        const question = [{ id: cuid(), data, type: 'HTML', embedded: true }];
+        const question = [{ id: uuid(), data, type: 'JODIT_HTML', embedded: true }];
         element.data = { ...element.data, question, type: subtype };
       }
       element.data = { ...element.data, ...initState() };
@@ -180,27 +187,26 @@ $accent-color: #d81b60;
 $disabled-color: #a1a1a1;
 
 .element-container {
-  min-height: 400px;
-  padding: 0 0 30px;
+  min-height: 25rem;
+  padding: 0 0 1.875rem;
   background: #fff;
 }
 
 .group-heading {
-  margin: 0 40px 5px;
-  padding-top: 20px;
-  color: #555;
-  font-size: 16px;
+  margin: 0 2.5rem 0.375rem;
+  padding-top: 1.25rem;
+  font-size: 1rem;
   font-weight: 500;
-  line-height: 28px;
+  line-height: 1.75rem;
   text-align: left;
 
   .v-icon, span {
-    line-height: 28px;
+    line-height: 1.75rem;
     vertical-align: middle;
   }
 
   .v-icon {
-    margin-right: 6px;
+    margin-right: 0.375rem;
     color: #546e7a;
   }
 }
@@ -208,27 +214,27 @@ $disabled-color: #a1a1a1;
 .group-elements {
   display: flex;
   width: 100%;
-  padding: 0 30px;
+  padding: 0 1.875rem;
   flex-wrap: wrap;
 }
 
 .element {
   align-self: center;
-  width: 130px;
-  min-width: 130px;
-  min-height: 70px;
-  padding: 5px;
+  width: 8.125rem;
+  min-width: 8.125rem;
+  min-height: 4.375rem;
+  padding: 0.375rem;
   color: $font-color;
-  font-size: 20px;
+  font-size: 1.25rem;
   border: 1px solid #fff;
   border-radius: 4px;
   outline: none;
   cursor: pointer;
 
   .v-icon {
-    padding: 2px 0;
+    padding: 0.125rem 0;
     color: $font-color;
-    font-size: 30px;
+    font-size: 1.875rem;
   }
 
   &:disabled {
@@ -254,7 +260,7 @@ $disabled-color: #a1a1a1;
     margin: 0;
     padding: 0;
     font-weight: 500;
-    line-height: 20px;
+    line-height: 1.25rem;
   }
 }
 
@@ -264,13 +270,7 @@ $disabled-color: #a1a1a1;
   }
 
   .width-label {
-    min-width: 165px;
-    font-size: 14px;
-    font-weight: 500;
-  }
-
-  .label-value {
-    color: $accent-color;
+    min-width: 11.25rem;
   }
 }
 </style>

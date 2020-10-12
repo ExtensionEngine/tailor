@@ -1,17 +1,23 @@
 <template>
-  <div :key="id" class="element-toolbar-wrapper white elevation-1">
+  <div
+    :key="id"
+    class="element-toolbar-wrapper grey lighten-5 elevation-3">
     <component
-      v-if="componentExists"
       :is="componentName"
+      v-if="componentExists"
+      @save="saveElement"
       :element="element"
-      :embed="embed"
-      @save="saveElement"/>
-    <default-toolbar v-else/>
+      :embed="embed" />
+    <default-toolbar v-else :label="config.name" />
     <slot name="embed-toolbar"></slot>
     <div class="delete-element">
       <slot name="actions"></slot>
-      <v-btn v-if="!embed" @click="requestDeleteConfirmation" color="error" fab dark>
-        <v-icon>mdi-delete</v-icon>
+      <v-btn
+        v-if="!embed"
+        @click="requestDeleteConfirmation"
+        color="secondary darken-1"
+        dark fab small>
+        <v-icon color="grey lighten-3">mdi-delete</v-icon>
       </v-btn>
     </div>
   </div>
@@ -23,27 +29,30 @@ import { mapChannels, mapRequests } from '@/plugins/radio';
 import DefaultToolbar from './DefaultToolbar';
 import { mapActions } from 'vuex-module';
 import Vue from 'vue';
-import { withValidation } from 'utils/validation';
 
 export default {
   name: 'element-toolbar-wrapper',
-  mixins: [withValidation()],
+  inject: ['$teRegistry'],
   props: {
     element: { type: Object, required: true },
     embed: { type: Object, default: null }
   },
   computed: {
     ...mapChannels({ editorChannel: 'editor' }),
-    id() {
-      return getElementId(this.element);
-    },
-    elementBus() {
-      return this.$radio.channel(`element:${this.id}`);
-    },
+    id: vm => getElementId(vm.element),
     componentName() {
+      if (this.isQuestion) return;
       const { type } = this.element;
-      if (isQuestion(type)) return;
       return getToolbarName(type);
+    },
+    isQuestion: vm => isQuestion(vm.element.type),
+    elementBus: vm => vm.$radio.channel(`element:${vm.id}`),
+    config() {
+      const { element, isQuestion } = this;
+      const type = isQuestion
+        ? element.data.type
+        : element.type;
+      return this.$teRegistry.get(type);
     },
     componentExists() {
       return !!Vue.options.components[this.componentName];
@@ -51,7 +60,10 @@ export default {
   },
   methods: {
     ...mapRequests('app', ['showConfirmationModal']),
-    ...mapActions({ saveElement: 'save', removeElement: 'remove' }, 'tes'),
+    ...mapActions('repository/contentElements', {
+      saveElement: 'save',
+      removeElement: 'remove'
+    }),
     remove(element) {
       this.focusoutElement();
       if (element.embedded) return this.elementBus.emit('delete');
@@ -68,6 +80,9 @@ export default {
       });
     }
   },
+  beforeDestroy() {
+    this.elementBus.unsubscribe();
+  },
   provide() {
     return {
       $elementBus: this.elementBus
@@ -81,17 +96,13 @@ export default {
 .element-toolbar-wrapper {
   position: absolute;
   width: 100%;
-  min-height: 45px;
-}
+  min-height: 3.5rem;
+  padding-right: 2.75rem;
 
-.delete-element {
-  position: absolute;
-  z-index: 999;
-  right: 0;
-  transform: translate(-90%, -45%);
-
-  .v-btn {
-    margin: 4px;
+  .delete-element {
+    position: absolute;
+    right: 1.25rem;
+    bottom: 1rem;
   }
 }
 </style>

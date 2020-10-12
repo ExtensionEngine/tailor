@@ -1,12 +1,19 @@
 'use strict';
 
+const { Comment: Events } = require('../../common/sse');
 const hooks = require('./hooks');
 const { Model } = require('sequelize');
 
 class Comment extends Model {
   static fields(DataTypes) {
-    const { DATE, TEXT } = DataTypes;
+    const { DATE, TEXT, UUID, UUIDV4 } = DataTypes;
     return {
+      uid: {
+        type: UUID,
+        unique: true,
+        allowNull: false,
+        defaultValue: UUIDV4
+      },
       content: {
         type: TEXT,
         allowNull: false,
@@ -36,12 +43,12 @@ class Comment extends Model {
     hooks.add(this, Hooks, models);
   }
 
-  static associate({ Activity, Course, User }) {
+  static associate({ Activity, Repository, User }) {
     this.belongsTo(Activity, {
       foreignKey: { name: 'activityId', field: 'activity_id' }
     });
-    this.belongsTo(Course, {
-      foreignKey: { name: 'courseId', field: 'course_id' }
+    this.belongsTo(Repository, {
+      foreignKey: { name: 'repositoryId', field: 'repository_id' }
     });
     this.belongsTo(User, {
       as: 'author',
@@ -56,6 +63,10 @@ class Comment extends Model {
       paranoid: true,
       freezeTableName: true
     };
+  }
+
+  static get Events() {
+    return Events;
   }
 }
 

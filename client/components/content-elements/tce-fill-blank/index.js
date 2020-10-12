@@ -1,7 +1,8 @@
+import * as yup from 'yup';
 import Edit from './edit';
 import find from 'lodash/find';
-import yup from 'yup';
 
+const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
 const BLANK_PLACEHOLDER = /(@blank)/g;
 
 const schema = {
@@ -31,7 +32,7 @@ export default {
 };
 
 function containsText(asset) {
-  return asset.type === 'HTML' &&
+  return TEXT_CONTAINERS.includes(asset.type) &&
     asset.data.content &&
     asset.data.content.trim().length > 0;
 }

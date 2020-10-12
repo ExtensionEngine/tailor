@@ -1,49 +1,73 @@
 <template>
   <div>
-    <div class="message">
-      <span v-if="message">{{ message }}</span>
-    </div>
-    <form @submit.prevent="submit" novalidate>
-      <div class="form-group">
-        <input
+    <v-alert
+      :value="!!message"
+      color="grey darken-3"
+      transition="fade-transition"
+      dismissible text dense
+      class="mb-7 text-left">
+      {{ message }}
+    </v-alert>
+    <validation-observer
+      ref="form"
+      @submit.prevent="$refs.form.handleSubmit(submit)"
+      tag="form"
+      novalidate>
+      <validation-provider
+        v-slot="{ errors }"
+        name="email"
+        rules="required|email">
+        <v-text-field
           v-model="email"
-          class="form-control"
+          :error-messages="errors"
           type="email"
-          placeholder="Email"/>
-      </div>
-      <div class="form-group">
-        <input
+          name="email"
+          label="Email"
+          placeholder="Email"
+          autocomplete="username"
+          prepend-inner-icon="mdi-email-outline"
+          outlined
+          class="mb-1" />
+      </validation-provider>
+      <validation-provider
+        v-slot="{ errors }"
+        name="password"
+        rules="required">
+        <v-text-field
           v-model="password"
-          class="form-control"
+          :error-messages="errors"
           type="password"
-          placeholder="Password"/>
+          name="password"
+          label="Password"
+          placeholder="Password"
+          prepend-inner-icon="mdi-lock-outline"
+          autocomplete="current-password"
+          outlined />
+      </validation-provider>
+      <div class="d-flex">
+        <v-spacer />
+        <v-btn type="submit" color="primary darken-1">Log in</v-btn>
       </div>
       <div class="options">
         <router-link :to="{ name: 'forgot-password' }">
-          Forgot password ?
+          Forgot password?
         </router-link>
       </div>
-      <button type="submit" class="btn btn-default btn-material btn-block">
-        Log in
-      </button>
-    </form>
+    </validation-observer>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
-const LOGIN_ERR_MESSAGE = 'User email and password do not match';
+import { mapActions } from 'vuex';
+const LOGIN_ERR_MESSAGE = 'The email or password you entered is incorrect.';
 
 export default {
-  name: 'login',
-  data() {
-    return {
-      email: '',
-      password: '',
-      message: ''
-    };
-  },
-  computed: mapGetters(['user']),
+  name: 'user-login',
+  data: () => ({
+    email: '',
+    password: '',
+    message: ''
+  }),
   methods: {
     ...mapActions(['login']),
     submit() {
@@ -58,7 +82,7 @@ export default {
 
 <style lang="scss" scoped>
 .options {
-  padding: 5px 0 10px;
+  padding: 0.875rem 0 0.25rem;
   text-align: right;
 }
 </style>

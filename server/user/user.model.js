@@ -1,19 +1,31 @@
 'use strict';
 
+const Audience = require('../shared/auth/audience');
+const bcrypt = require('bcrypt');
 const config = require('../../config/server');
+const gravatar = require('gravatar');
 const jwt = require('jsonwebtoken');
 const mail = require('../shared/mail');
+const map = require('lodash/map');
 const { Model } = require('sequelize');
+const omit = require('lodash/omit');
+const pick = require('lodash/pick');
 const Promise = require('bluebird');
-const { user: Role } = require('../../config/shared').role;
+const randomstring = require('randomstring');
+const { role: roles } = require('../../config/shared');
 
-const bcrypt = Promise.promisifyAll(require('bcryptjs'));
-const AUTH_SECRET = process.env.AUTH_JWT_SECRET;
-const noop = Function.prototype;
+const { user: { ADMIN, USER, INTEGRATION } } = roles;
+const gravatarConfig = { size: 130, default: 'identicon' };
 
 class User extends Model {
-  static fields({ DATE, ENUM, STRING, VIRTUAL }) {
+  static fields({ DATE, ENUM, STRING, TEXT, UUID, UUIDV4, VIRTUAL }) {
     return {
+      uid: {
+        type: UUID,
+        unique: true,
+        allowNull: false,
+        defaultValue: UUIDV4
+      },
       email: {
         type: STRING,
         set(email) {
@@ -24,25 +36,51 @@ class User extends Model {
       },
       password: {
         type: STRING,
-        validate: { notEmpty: true, len: [5, 100] }
+        validate: { notEmpty: true, len: [5, 100] },
+        defaultValue: () => randomstring.generate()
       },
       role: {
-        type: ENUM(Role.ADMIN, Role.USER, Role.INTEGRATION),
-        defaultValue: Role.USER
+        type: ENUM(ADMIN, USER, INTEGRATION),
+        defaultValue: USER
+      },
+      firstName: {
+        type: STRING,
+        field: 'first_name',
+        validate: { len: [2, 50] }
+      },
+      lastName: {
+        type: STRING,
+        field: 'last_name',
+        validate: { len: [2, 50] }
+      },
+      fullName: {
+        type: VIRTUAL,
+        get() {
+          return [this.firstName, this.lastName].filter(Boolean).join(' ') || null;
+        }
+      },
+      label: {
+        type: VIRTUAL,
+        get() {
+          return this.fullName || this.email;
+        }
+      },
+      imgUrl: {
+        type: TEXT,
+        field: 'img_url',
+        get() {
+          const imgUrl = this.getDataValue('imgUrl');
+          return imgUrl || gravatar.url(this.email, gravatarConfig, true /* https */);
+        }
       },
       profile: {
         type: VIRTUAL,
         get() {
-          return {
-            id: this.id,
-            email: this.email,
-            role: this.role
-          };
+          return pick(this, [
+            'id', 'email', 'role', 'firstName', 'lastName', 'fullName', 'label',
+            'imgUrl', 'createdAt', 'updatedAt', 'deletedAt'
+          ]);
         }
-      },
-      token: {
-        type: STRING,
-        unique: true
       },
       createdAt: {
         type: DATE,
@@ -59,12 +97,12 @@ class User extends Model {
     };
   }
 
-  static associate({ Comment, Course, CourseUser }) {
+  static associate({ Comment, Repository, RepositoryUser }) {
     this.hasMany(Comment, {
       foreignKey: { name: 'authorId', field: 'author_id' }
     });
-    this.belongsToMany(Course, {
-      through: CourseUser,
+    this.belongsToMany(Repository, {
+      through: RepositoryUser,
       foreignKey: { name: 'userId', field: 'user_id' }
     });
   }
@@ -80,7 +118,7 @@ class User extends Model {
           : Promise.resolve();
       },
       [Hooks.beforeBulkCreate](users) {
-        let updates = [];
+        const updates = [];
         users.forEach(user => updates.push(user.encryptPassword()));
         return Promise.all(updates);
       }
@@ -97,17 +135,33 @@ class User extends Model {
     };
   }
 
-  static invite(user, emailCb = noop) {
-    return this.create(user)
-      .then(user => {
-        user.token = user.createToken({ expiresIn: '5 days' });
-        mail.invite(user).asCallback(emailCb);
-        return user.save();
-      });
+  static invite(user) {
+    return this.create(user).then(user => {
+      this.sendInvitation(user);
+      return user.reload();
+    });
+  }
+
+  static inviteOrUpdate(data) {
+    const { email } = data;
+    return User.findOne({ where: { email }, paranoid: false }).then(user => {
+      if (!user) return User.invite(data);
+      const payload = omit(data, ['id', 'uid']);
+      map(({ ...payload, deletedAt: null }), (v, k) => user.setDataValue(k, v));
+      return user.save();
+    });
+  }
+
+  static sendInvitation(user) {
+    const token = user.createToken({
+      expiresIn: '5 days',
+      audience: Audience.Scope.Setup
+    });
+    mail.invite(user, token);
   }
 
   isAdmin() {
-    return this.role === Role.ADMIN || this.role === Role.INTEGRATION;
+    return this.role === ADMIN || this.role === INTEGRATION;
   }
 
   authenticate(password) {
@@ -130,13 +184,25 @@ class User extends Model {
 
   createToken(options = {}) {
     const payload = { id: this.id, email: this.email };
-    return jwt.sign(payload, AUTH_SECRET, options);
+    Object.assign(options, {
+      issuer: config.auth.issuer,
+      audience: options.audience || Audience.Scope.Access
+    });
+    return jwt.sign(payload, this.getTokenSecret(options.audience), options);
   }
 
   sendResetToken() {
-    this.token = this.createToken({ expiresIn: '5 days' });
-    mail.resetPassword(this);
-    return this.save();
+    const token = this.createToken({
+      audience: Audience.Scope.Setup,
+      expiresIn: '2 days'
+    });
+    mail.resetPassword(this, token);
+  }
+
+  getTokenSecret(audience) {
+    const { secret } = config.auth;
+    if (audience === Audience.Scope.Access) return secret;
+    return [secret, this.password, this.createdAt.getTime()].join('');
   }
 }
 

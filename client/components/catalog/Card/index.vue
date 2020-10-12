@@ -1,113 +1,151 @@
 <template>
-  <div class="col-lg-4">
-    <div @click="navigateTo" class="repo-card white elevation-2">
-      <div class="body">
-        <div class="repo-title">
-          <acronym :course="course"/>
-          {{ name }}
-        </div>
-        <div class="description">{{ description }}</div>
+  <v-card class="repository-card">
+    <div @click="navigateTo()" class="card-body blue-grey darken-4">
+      <v-chip :color="repository.data.color" x-small class="ml-4 px-1" />
+      <span class="schema-name">{{ schema }}</span>
+      <div class="controls float-right">
+        <v-tooltip open-delay="100" top>
+          <template v-slot:activator="{ on }">
+            <span v-on="on">
+              <v-badge
+                :color="hasUnpublishedChanges ? 'orange' : 'green'"
+                inline dot
+                class="pa-1" />
+            </span>
+          </template>
+          {{ publishingInfo }}
+        </v-tooltip>
+        <v-btn
+          v-if="repository.hasAdminAccess"
+          @click.stop="navigateTo('repository-info')"
+          color="blue-grey darken-1"
+          icon small
+          class="mr-2">
+          <v-icon>mdi-settings</v-icon>
+        </v-btn>
       </div>
-      <div class="row">
-        <span class="col-xs-6">
-          <stat :name="objectiveLabel" :value="objectives"/>
-        </span>
-        <span class="col-xs-6">
-          <stat :value="assessments" name="Knowledge checks"/>
-        </span>
+      <v-card-title class="grey--text text--lighten-3 text-break pt-2">
+        {{ name | truncate(70) }}
+      </v-card-title>
+      <div class="grey--text text--lighten-4 px-4">
+        <v-avatar size="38" class="float-left">
+          <img :src="lastActivity.user.imgUrl">
+        </v-avatar>
+        <div class="float-left ml-4">
+          <div class="caption">Last edited by</div>
+          <div class="user-label body-2 text-truncate">
+            {{ lastActivity.user.label }}
+          </div>
+        </div>
+        <div class="float-left activity-date">
+          <div class="subtitle-1">
+            {{ lastActivity.createdAt | formatDate('H:mm') }}
+          </div>
+          <div class="subtitle-2">
+            {{ lastActivity.createdAt | formatDate('D/M/YY') }}
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+    <v-card-actions class="pa-1 grey lighten-4">
+      <v-btn @click.stop="pin({ id: repository.id, pin: !isPinned })" icon>
+        <v-icon
+          :color="isPinned ? 'grey darken-3': 'grey'"
+          :class="{ 'mdi-rotate-45': isPinned }">
+          mdi-pin
+        </v-icon>
+      </v-btn>
+      <tags :repository="repository" />
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script>
-import Acronym from 'components/common/Acronym';
+import first from 'lodash/first';
 import get from 'lodash/get';
-import { getObjectives } from 'shared/activities';
-import map from 'lodash/map';
-import pluralize from 'pluralize';
-import Stat from './Stat';
-import truncate from 'truncate';
+import { getSchema } from 'shared/activities';
+import { mapActions } from 'vuex';
+import Tags from './Tags';
+
+const getPublishingInfo = hasChanges => hasChanges
+  ? 'Has unpublished changes.'
+  : 'Published.';
 
 export default {
   props: {
-    course: { type: Object, required: true }
+    repository: { type: Object, required: true }
   },
   computed: {
-    name() {
-      return truncate(this.course.name, 75);
-    },
-    description() {
-      return truncate(this.course.description, 180);
-    },
-    objectiveLabel() {
-      const objectives = map(getObjectives(this.course.schema), 'label');
-      return objectives.length > 1 ? 'Objectives' : pluralize(objectives[0]);
-    },
-    assessments() {
-      return get(this.course, 'stats.assessments', 0);
-    },
-    objectives() {
-      return get(this.course, 'stats.objectives', 0);
-    }
+    name: ({ repository }) => repository.name,
+    description: ({ repository }) => repository.description,
+    schema: ({ repository }) => getSchema(repository.schema).name,
+    lastActivity: ({ repository }) => first(repository.revisions),
+    hasUnpublishedChanges: ({ repository }) => repository.hasUnpublishedChanges,
+    isPinned: ({ repository }) => get(repository, 'repositoryUser.pinned', false),
+    publishingInfo: vm => getPublishingInfo(vm.hasUnpublishedChanges)
   },
   methods: {
-    navigateTo() {
+    ...mapActions('repositories', ['pin']),
+    navigateTo(name = 'repository') {
       if (window.getSelection().toString()) return;
       this.$router.push({
-        name: 'course',
-        params: { courseId: this.course.id }
+        name,
+        params: { repositoryId: this.repository.id }
       });
     }
   },
-  components: {
-    Acronym,
-    Stat
-  }
+  components: { Tags }
 };
 </script>
 
 <style lang="scss" scoped>
-.repo-card {
-  min-height: 300px;
-  margin-top: 40px;
-  padding: 30px 30px 20px;
-  color: #555;
-  border-radius: 3px;
-  transition: box-shadow 0.2s ease;
+.repository-card {
+  text-align: left;
+  transition: box-shadow 0.1s ease;
   cursor: pointer;
 
   &:hover {
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 8px 8px rgba(0,0,0,0.18) !important;
-  }
-
-  .body {
-    height: 220px;
-    margin-bottom: 15px;
-    overflow: hidden;
-
-    @media (min-width: 1200px) and (max-width: 1300px) {
-      height: 250px;
-    }
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2), 0 6px 6px rgba(0,0,0,0.18);
   }
 }
 
-.repo-title {
-  height: 100px;
-  margin: 20px 0 10px;
-  font-size: 20px;
-  font-weight: 300;
-  line-height: 34px;
-  text-align: left;
+.card-body {
+  height: 14rem;
+  padding: 0.625rem 0 0;
+  overflow: hidden;
 
-  @media (min-width: 1200px) and (max-width: 1300px) {
-    height: 125px;
+  @media (max-width: 1263px) {
+    height: 17rem;
+  }
+
+  .schema-name {
+    padding: 0 0 0 0.25rem;
+    color: #fafafa;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
+  }
+
+  .v-avatar {
+    margin-top: 0.125rem;
   }
 }
 
-.description {
-  max-height: 130px;
-  font-size: 14px;
-  text-align: left;
+.user-label {
+  max-width: 8.5rem;
+}
+
+.activity-date {
+  padding-left: 1rem;
+
+  .subtitle-1 {
+    line-height: 1.25rem;
+  }
 }
 </style>

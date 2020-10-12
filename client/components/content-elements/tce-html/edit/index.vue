@@ -1,22 +1,23 @@
 <template>
   <div class="tce-html">
-    <div v-if="!isFocused && !content && showPlaceholder">
-      <div class="well text-placeholder">
-        <div class="message">
-          <span class="heading">Text placeholder</span>
-          <span>Click to edit</span>
-        </div>
-      </div>
-    </div>
+    <element-placeholder
+      v-if="!isFocused && !content && showPlaceholder"
+      :is-focused="isFocused"
+      :is-disabled="isDisabled"
+      :dense="dense"
+      name="Text (deprecated) component"
+      icon="mdi-text"
+      class="element-placeholder" />
     <div v-else>
       <quill-editor
         v-if="isFocused"
         v-model="content"
-        :options="options"
-        @ready="onQuillReady">
-      </quill-editor>
+        @ready="onQuillReady"
+        :options="options" />
       <div v-else class="ql-container ql-snow">
-        <div v-html="content" class="ql-editor"></div>
+        <!-- eslint-disable vue/no-v-html -->
+        <div class="ql-editor" v-html="content"></div>
+        <!-- eslint-enable -->
       </div>
     </div>
   </div>
@@ -24,11 +25,13 @@
 
 <script>
 import { Quill, quillEditor as QuillEditor } from 'vue-quill-editor';
+import createCustomTheme from './theme';
 import debounce from 'lodash/debounce';
+import { ElementPlaceholder } from 'tce-core';
 import get from 'lodash/get';
-import ImageEmbed from './image-embed';
 
-Quill.register('modules/imageEmbed', ImageEmbed);
+const CustomTheme = createCustomTheme(Quill);
+Quill.register(`themes/${CustomTheme.NAME}`, CustomTheme, true);
 
 const toolbar = {
   container: '#quillToolbar',
@@ -38,14 +41,12 @@ const toolbar = {
     },
     undo() {
       this.quill.history.undo();
-    },
-    image() {
-      this.quill.tooltips.imageEmbed.show();
     }
   }
 };
 
 const options = {
+  theme: CustomTheme.NAME,
   modules: {
     toolbar,
     imageEmbed: { spacing: 1 },
@@ -58,7 +59,9 @@ export default {
   props: {
     element: { type: Object, required: true },
     isFocused: { type: Boolean, default: false },
-    showPlaceholder: { type: Boolean, default: true }
+    isDisabled: { type: Boolean, default: false },
+    showPlaceholder: { type: Boolean, default: true },
+    dense: { type: Boolean, default: false }
   },
   data() {
     return {
@@ -100,47 +103,31 @@ export default {
       this.save();
     }, 4000)
   },
-  components: { QuillEditor }
+  components: { ElementPlaceholder, QuillEditor }
 };
 </script>
 
 <style lang="scss" scoped>
-.text-placeholder {
-  .message {
-    padding: 9px;
-
-    .heading {
-      font-size: 24px;
-    }
-
-    span {
-      display: block;
-      font-size: 18px;
-    }
-  }
-}
-
-.well {
-  margin-bottom: 0;
+::v-deep .element-placeholder {
+  padding: 0.5rem !important;
 }
 </style>
 
 <style lang="scss">
-.tce-html {
-  .ql-editor {
-    min-height: 121px;
+.ql-container.ql-snow {
+  font-size: 1rem;
+  border: none;
+}
 
-    img {
-      vertical-align: initial;
-    }
-  }
+.ql-editor {
+  min-height: 10.5rem;
 
-  .ql-container.ql-snow {
-    border: none !important;
-  }
-
-  .ql-editor.ql-blank::before {
+  &.ql-blank::before {
     width: 100%;
+  }
+
+  img {
+    vertical-align: initial;
   }
 }
 </style>

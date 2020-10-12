@@ -1,12 +1,14 @@
 <template>
   <div class="auth-container">
-    <div class="auth-panel">
-      <div class="auth-header">
-        <img :src="logo" alt="Logo"/>
-        <h1>{{ title }}</h1>
+    <div class="auth-panel elevation-2">
+      <div class="auth-header py-8">
+        <v-avatar size="50" color="blue-grey darken-3" class="my-1 pa-2">
+          <img :src="logo" alt="Logo" class="logo">
+        </v-avatar>
+        <h1 class="ma-0 headline primary--text text--darken-1">{{ title }}</h1>
       </div>
       <div class="auth-body">
-        <router-view></router-view>
+        <router-view />
       </div>
     </div>
   </div>
@@ -14,11 +16,9 @@
 
 <script>
 export default {
-  data() {
-    return {
-      title: BRAND_CONFIG.TITLE,
-      logo: BRAND_CONFIG.LOGO_FULL
-    };
+  computed: {
+    title: () => BRAND_CONFIG.TITLE,
+    logo: () => BRAND_CONFIG.LOGO_FULL
   }
 };
 </script>
@@ -29,50 +29,27 @@ export default {
 }
 
 .auth-panel {
-  width: 440px;
+  width: 26.5rem;
   margin: auto;
   background-color: #fff;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
   border-radius: 4px;
-  transition: all 0.3s cubic-bezier(0.25,0.8,0.25,1);
-
-  &:hover {
-    box-shadow: 0 6px 10px rgba(0,0,0,0.2), 0 6px 8px rgba(0,0,0,0.22);
-  }
-
-  img {
-    width: 130px;
-    margin: 15px 0 10px;
-  }
-
-  h1 {
-    margin: 0;
-    color: white;
-    font-size: 22px;
-    line-height: 18px;
-  }
+  border-top: 4px solid var(--v-primary-darken1);
 
   .auth-header {
-    padding-bottom: 20px;
-    background: linear-gradient(90deg, $brandColor 65%, $altBrandColor);
-    border-radius: 4px 4px 0 0;
-  }
+    padding-bottom: 0;
 
-  .auth-body {
-    padding: 20px 30px;
-
-    a {
-      color: inherit;
-      font-weight: 500;
+    .logo {
+      width: 2.75rem;
     }
   }
 
-  .message {
-    min-height: 16px;
-    margin-bottom: 20px;
-    color: #da126d;
-    font-size: 16px;
-    line-height: 16px;
+  .auth-body {
+    padding: 0.25rem 1.5rem 0.875rem;
+
+    a {
+      color: inherit;
+      font-weight: 400;
+    }
   }
 }
 </style>

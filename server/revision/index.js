@@ -1,15 +1,16 @@
 'use strict';
 
-const { createError } = require('../shared/error/helpers');
-const { NOT_FOUND } = require('http-status-codes');
 const { Revision, User } = require('../shared/database');
+const { createError } = require('../shared/error/helpers');
 const ctrl = require('./revision.controller');
+const { NOT_FOUND } = require('http-status-codes');
 const router = require('express').Router();
 
+router.param('revisionId', getRevision);
+
 router
-  .param('revisionId', getRevision)
-  .get('/courses/:id/revisions', ctrl.index)
-  .get('/courses/:id/revisions/:revisionId', ctrl.resolve);
+  .get('/', ctrl.index)
+  .get('/:revisionId', ctrl.resolve);
 
 function getRevision(req, _res, next, revisionId) {
   const include = [{ model: User, attributes: ['id', 'email'] }];
@@ -22,6 +23,6 @@ function getRevision(req, _res, next, revisionId) {
 }
 
 module.exports = {
-  controller: ctrl,
+  path: '/revisions',
   router
 };

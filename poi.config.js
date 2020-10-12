@@ -2,8 +2,14 @@
 
 const path = require('path');
 const serverPort = require('./config/server').port;
+const yn = require('yn');
 
-const { NODE_ENV, STORAGE_PATH } = process.env;
+const {
+  AUTH_JWT_SCHEME,
+  ENABLE_DEFAULT_SCHEMA,
+  NODE_ENV,
+  STORAGE_PATH
+} = process.env;
 const imagesPath = 'assets/img';
 const isProduction = NODE_ENV === 'production';
 const serverUrl = `http://127.0.0.1:${serverPort}`;
@@ -16,7 +22,8 @@ const aliases = {
   'tce-core': '@/components/common/tce-core',
   utils: '@/utils',
   shared: path.join(__dirname, 'config/shared'),
-  tce: path.join(__dirname, 'content-elements')
+  tce: path.join(__dirname, 'content-elements'),
+  extensions: path.join(__dirname, 'extensions')
 };
 
 const copy = [{ from: 'client/assets/img', to: imagesPath }];
@@ -56,7 +63,9 @@ module.exports = {
       options: { patterns: copy }
     }, {
       resolve: require.resolve('./build/plugins/clean-out-dir'),
-      options: { exclude: '.gitkeep' }
+      options: {
+        cleanOnceBeforeBuildPatterns: ['**/*', '!.gitkeep']
+      }
     },
     require.resolve('./build/plugins/html-version-spec'),
     {
@@ -79,6 +88,22 @@ module.exports = {
     dir: 'dist',
     sourceMap: !isProduction
   },
+  envs: {
+    API_PATH: '/api/v1/',
+    AUTH_JWT_SCHEME,
+    ENABLE_DEFAULT_SCHEMA: yn(ENABLE_DEFAULT_SCHEMA),
+    VUEX_STORAGE_KEY: 'TAILOR_APP_STATE'
+  },
+  babel: {
+    transpileModules: [
+      // NOTE: Remove after new version of tce-jodit
+      'auto-bind',
+      // NOTE: Packages do NOT contain transpiled code.
+      'humanize-string', 'decamelize',
+      // NOTE: Unclear why is this necessary :/
+      'vue-quill-editor'
+    ]
+  },
   chainWebpack(config, { mode }) {
     config.resolve.alias.merge(aliases);
     config.resolve.extensions.merge(extensions);
@@ -90,23 +115,18 @@ module.exports = {
       .loader(require.resolve('imports-loader'))
       .options({ jQuery: 'jquery' });
 
+    config.module.rule('event-source-polyfill')
+      .test(require.resolve('event-source-polyfill'))
+      .post()
+      .use('exports-loader')
+      .loader(require.resolve('exports-loader'))
+      .options({ EventSource: 'exports.EventSource || exports.NativeEventSource' });
+
     config.module.rule('val')
       .test(/\.load\.js$/)
       .post()
       .use('val-loader')
       .loader(require.resolve('val-loader'));
-
-    config
-      .plugin('dotenv')
-      .use(require.resolve('dotenv-webpack'));
-
-    if (mode !== 'production') return;
-    config
-      .plugin('minimize')
-      .tap(([options]) => {
-        options.terserOptions.keep_fnames = true;
-        return [options];
-      });
   },
   devServer
 };

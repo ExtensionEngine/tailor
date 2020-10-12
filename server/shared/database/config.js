@@ -1,12 +1,12 @@
 'use strict';
 
-const logger = require('../logger');
+const { createLogger, Level } = require('../logger');
 
 const isProduction = process.env.NODE_ENV === 'production';
+const logger = createLogger('db', { level: Level.DEBUG });
 
 module.exports = {
   ...readConfig(),
-  operatorsAliases: false,
   migrationStorageTableName: 'sequelize_meta',
   benchmark: !isProduction,
   logging(query, time) {
@@ -17,7 +17,7 @@ module.exports = {
 };
 
 function readConfig(config = process.env) {
-  const DATABASE_URI = config['DATABASE_URI'] || config['POSTGRES_URI'];
+  const DATABASE_URI = config.DATABASE_URI || config.POSTGRES_URI;
   if (DATABASE_URI) return { url: DATABASE_URI };
   if (!config.DATABASE_NAME) {
     throw new TypeError(`Invalid \`DATABASE_NAME\` provided: ${config.DATABASE_NAME}`);

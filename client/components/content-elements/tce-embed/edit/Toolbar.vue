@@ -1,50 +1,52 @@
 <template>
-  <div class="tce-embed-toolbar">
-    <div class="toolbar-item">
-      <label for="heightInput">
-        <span class="mdi mdi-arrow-expand"></span>
-        Height
-      </label>
-      <span
-        :class="{ 'has-error': vErrors.has('height') }"
-        class="input">
-        <input
-          v-validate="{ required: true, numeric: true, min_value: 50, max_value: 3000 }"
-          v-model="height"
-          @input="onChange"
-          id="heightInput"
-          data-vv-delay="0"
-          class="form-control"
+  <v-toolbar
+    height="72"
+    color="transparent"
+    class="tce-embed-toolbar elevation-0">
+    <v-toolbar-title class="pl-1">Embed component</v-toolbar-title>
+    <div class="input-container mt-5">
+      <validation-observer ref="form" tag="form" class="d-flex">
+        <validation-provider
+          v-slot="{ errors }"
           name="height"
-          type="text"
-          placeholder="Height">
-      </span>
-      <span v-show="vErrors.has('height')" class="help-block">
-        {{ vErrors.first('height') }}
-      </span>
-    </div>
-    <div class="toolbar-item">
-      <label for="urlInput">
-        <span class="mdi mdi-link"></span>
-        URL
-      </label>
-      <span :class="{ 'has-error': vErrors.has('url') }" class="input url">
-        <input
-          v-validate="{ required: true, url: true }"
-          v-model="url"
-          @input="onChange"
-          id="urlInput"
-          data-vv-delay="0"
-          class="form-control"
+          rules="required|min_value:200|max_value:3000"
+          slim>
+          <v-text-field
+            v-model="height"
+            @keyup="onChange"
+            :error-messages="errors"
+            type="number"
+            name="height"
+            label="Height (px)"
+            placeholder="Height..."
+            prepend-icon="mdi-resize"
+            dense filled
+            class="height-input" />
+        </validation-provider>
+        <validation-provider
+          v-slot="{ errors }"
           name="url"
-          type="text"
-          placeholder="Url">
-      </span>
-      <span v-show="vErrors.has('url')" class="help-block">
-        {{ vErrors.first('url') }}
-      </span>
+          :rules="{
+            url: {
+              protocols: ['http', 'https'],
+              require_protocol: true,
+              require_valid_protocol: true
+            }
+          }"
+          slim>
+          <v-text-field
+            v-model="url"
+            @keyup="onChange"
+            :error-messages="errors"
+            name="url"
+            label="URL"
+            placeholder="Enter URL..."
+            prepend-icon="mdi-link"
+            dense filled />
+        </validation-provider>
+      </validation-observer>
     </div>
-  </div>
+  </v-toolbar>
 </template>
 
 <script>
@@ -52,7 +54,7 @@ import debounce from 'lodash/debounce';
 
 export default {
   name: 'tce-embed-toolbar',
-  inject: ['$validator', '$elementBus'],
+  inject: ['$elementBus'],
   props: {
     element: { type: Object, required: true }
   },
@@ -61,12 +63,11 @@ export default {
     return { height, url };
   },
   methods: {
-    onChange() {
+    async onChange() {
       const { height, url } = this;
-      this.$validator.validateAll().then(isValid => {
-        if (!isValid) return;
-        this.save({ height, url });
-      });
+      const valid = await this.$refs.form.validate();
+      if (!valid) return;
+      this.save({ height, url });
     },
     save: debounce(function (data) {
       this.$elementBus.emit('save', data);
@@ -76,58 +77,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.tce-embed-toolbar {
-  width: 100%;
-  height: 48px;
-  padding: 0 30px 0 10px;
-  line-height: 48px;
+.v-toolbar__title {
+  min-width: 23.875rem;
   text-align: left;
-  vertical-align: middle;
+}
 
-  .toolbar-item {
-    display: inline-block;
-    color: #444;
+.input-container {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  padding-right: 2.5rem;
+}
 
-    label, .input {
-      display: inline-block;
-    }
+.v-input {
+  max-width: 37.5rem;
+}
 
-    label {
-      padding: 0 10px;
-      font-size: 12px;
-      line-height: 12px;
-      text-transform: uppercase;
-    }
-
-    input {
-      height: 25px;
-      margin: 0;
-      padding: 0;
-      font-size: 14px;
-      line-height: 14px;
-    }
-
-    .url {
-      width: 256px;
-    }
-
-    .help-block {
-      display: inline-block;
-      margin: 0;
-      padding-left: 10px;
-    }
-
-    .mdi {
-      display: inline-block;
-      margin-right: 5px;
-      font-size: 20px;
-      line-height: 20px;
-      vertical-align: middle;
-    }
-  }
-
-  .toolbar-item + .toolbar-item {
-    margin-left: 8px;
-  }
+.v-input.height-input {
+  max-width: 14rem;
+  margin-right: 1.25rem;
 }
 </style>

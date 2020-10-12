@@ -1,68 +1,74 @@
 <template>
   <div>
-    <div v-if="showMessage" class="well">
-      <span>{{ message }}</span>
-    </div>
-    <div v-else>
-      <form @submit.prevent="submit">
-        <div class="form-group">
-          <input
-            v-model="email"
-            class="form-control"
-            type="email"
-            placeholder="Please enter your email"/>
-        </div>
-        <button type="submit" class="btn btn-default btn-block">
+    <v-alert
+      :value="showMessage"
+      :color="error ? 'primary darken-2' : 'grey darken-3'"
+      text
+      class="mb-5">
+      {{ error || 'Sending reset email...' }}
+    </v-alert>
+    <validation-observer
+      v-if="!error"
+      ref="form"
+      @submit.prevent="$refs.form.handleSubmit(submit)"
+      tag="form"
+      novalidate>
+      <validation-provider
+        v-slot="{ errors }"
+        name="email"
+        rules="required|email">
+        <v-text-field
+          v-model="email"
+          :error-messages="errors"
+          type="email"
+          label="Email"
+          placeholder="Email"
+          prepend-inner-icon="mdi-email-outline"
+          outlined />
+      </validation-provider>
+      <div class="d-flex">
+        <v-btn @click="$router.go(-1)" tag="a" text class="px-1">
+          <v-icon>mdi-chevron-left</v-icon>
+          Back
+        </v-btn>
+        <v-spacer />
+        <v-btn
+          :disabled="showMessage"
+          type="submit"
+          color="primary darken-1">
           Send reset email
-        </button>
-        <div class="options">
-          <a @click="$router.go(-1)">Back</a>
-        </div>
-      </form>
-    </div>
+        </v-btn>
+      </div>
+    </validation-observer>
+    <v-btn v-else @click.stop="resetInput" text>
+      Retry
+    </v-btn>
   </div>
 </template>
 
 <script>
 import { delay } from 'bluebird';
-import { mapActions } from 'vuex-module';
+import { mapActions } from 'vuex';
+
+const getDefaultData = () => ({
+  email: '',
+  showMessage: false,
+  error: null
+});
 
 export default {
-  data() {
-    return {
-      email: '',
-      message: 'Reset email sent',
-      showMessage: false
-    };
-  },
+  data: () => getDefaultData(),
   methods: {
     ...mapActions(['forgotPassword']),
     submit() {
-      // TODO: Temp
       this.showMessage = true;
-      this.forgotPassword({ email: this.email })
-        .then(() => delay(1000))
+      Promise.all([this.forgotPassword({ email: this.email }), delay(5000)])
         .then(() => this.$router.push('/'))
-        .catch(() => (this.message = 'Error'));
+        .catch(() => (this.error = 'Something went wrong!'));
+    },
+    resetInput() {
+      Object.assign(this, getDefaultData());
     }
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.well {
-  font-size: 16px;
-}
-
-.options {
-  padding-top: 16px;
-
-  a {
-    display: inline-block;
-    font-size: 14px;
-    line-height: 14px;
-    vertical-align: bottom;
-    cursor: pointer;
-  }
-}
-</style>

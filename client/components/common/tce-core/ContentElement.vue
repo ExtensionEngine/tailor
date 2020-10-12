@@ -1,18 +1,20 @@
 <template>
   <div
-    :class="{ focused: isFocused, frame }"
     @click="focus"
+    :class="{ focused: isFocused, frame }"
     class="content-element">
     <component
-      v-bind="$attrs"
       :is="componentName"
-      :element="element"
-      :isFocused="isFocused"
-      :isDragged="isDragged"
       @add="$emit('add', $event)"
       @save="$emit('save', $event)"
       @delete="$emit('delete')"
-      @focus="focus"/>
+      @focus="focus"
+      v-bind="$attrs"
+      :element="element"
+      :is-focused="isFocused"
+      :is-dragged="isDragged"
+      :is-disabled="isDisabled"
+      :dense="dense" />
   </div>
 </template>
 
@@ -28,10 +30,14 @@ export default {
     parent: { type: Object, default: null },
     isDragged: { type: Boolean, default: false },
     isDisabled: { type: Boolean, default: false },
-    frame: { type: Boolean, default: true }
+    frame: { type: Boolean, default: true },
+    dense: { type: Boolean, default: false }
   },
   data() {
-    return { isFocused: false };
+    return {
+      isFocused: false,
+      elementBus: EventBus.channel(`element:${getElementId(this.element)}`)
+    };
   },
   computed: {
     ...mapChannels({ editorChannel: 'editor' }),
@@ -53,10 +59,14 @@ export default {
     }
   },
   created() {
+    this.elementBus.on('save:meta', meta => this.$emit('save:meta', meta));
+    this.elementBus.on('delete', () => this.$emit('delete'));
     this.editorChannel.on('element:focus', element => {
       this.isFocused = !!element && (getElementId(element) === this.id);
     });
-    this.elementBus.on('delete', () => this.$emit('delete'));
+  },
+  beforeDestroy() {
+    this.elementBus.unsubscribe();
   },
   provide() {
     return {

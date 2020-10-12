@@ -1,0 +1,20 @@
+import filter from 'lodash/filter';
+import find from 'lodash/find';
+import get from 'lodash/get';
+import { getSupportedContainers } from 'shared/activities';
+import reduce from 'lodash/reduce';
+
+export const activity = (_state, _getters, { route, repository }) => {
+  const id = parseInt(get(route, 'params.activityId'), 10);
+  return find(repository.activities.items, { id });
+};
+
+export const contentContainers = (_state, { activity }, { repository }) => {
+  const { items: activities } = repository.activities;
+  if (!activity) return {};
+  const containers = getSupportedContainers(activity.type);
+  return reduce(containers, (acc, { type }) => {
+    acc[type] = filter(activities, { parentId: activity.id, type });
+    return acc;
+  }, {});
+};

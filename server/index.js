@@ -1,27 +1,29 @@
 'use strict';
 
 const app = require('./app');
-const bluebird = require('bluebird');
 const boxen = require('boxen');
 const capitalize = require('to-case').capital;
+const contentPluginRegistry = require('./shared/content-plugins');
 const pkg = require('../package.json');
+const Promise = require('bluebird');
 const { promisify } = require('util');
-const sequelize = require('sequelize');
 
 // NOTE: This needs to be done before db models get loaded!
-if (process.env.NODE_ENV !== 'production') {
-  sequelize.Promise.config({ longStackTraces: true });
-  bluebird.config({ longStackTraces: true });
-}
+const isProduction = process.env.NODE_ENV === 'production';
+Promise.config({ longStackTraces: !isProduction });
 
+/* eslint-disable require-sort/require-sort */
 const config = require('../config/server');
 const database = require('./shared/database');
-const logger = require('./shared/logger');
+const logger = require('./shared/logger')();
+/* eslint-enable */
+
 const runApp = promisify(app.listen.bind(app));
 
 database.initialize()
-  .then(() => logger.info(`Database initialized`))
+  .then(() => logger.info('Database initialized'))
   .then(() => require('../config/shared/activities'))
+  .then(() => contentPluginRegistry.initialize())
   .then(() => runApp(config.port))
   .then(() => {
     logger.info(`Server listening on port ${config.port}`);

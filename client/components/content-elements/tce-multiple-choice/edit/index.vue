@@ -1,93 +1,91 @@
 <template>
-  <div :class="{ disabled }">
-    <h5>{{ isGraded ? 'Answers' : 'Options' }}</h5>
-    <span @click="addAnswer" class="btn btn-link mdi mdi-plus pull-right"></span>
-    <ul>
-      <li
-        v-for="(answer, index) in answers"
-        :key="index"
-        :class="{ 'non-graded': !isGraded }">
-        <span v-if="isGraded" :class="{ 'has-error': !hasCorrectAnswers }">
-          <input
-            :checked="correct.includes(index)"
-            :disabled="disabled"
-            @change="toggleAnswer(index)"
-            type="checkbox">
-        </span>
-        <v-avatar v-else size="32" color="primary">{{ index + 1 }}</v-avatar>
-        <span :class="errorClass(index)" class="input-container">
-          <input
-            :ref="`input${index}`"
-            :value="answers[index]"
-            :disabled="disabled"
-            :placeholder="isGraded ? 'Answer...' : 'Option...'"
-            @change="updateAnswer(index)"
-            class="form-control">
-        </span>
-        <span @click="removeAnswer(index)" class="mdi mdi-close control"></span>
-      </li>
-    </ul>
+  <div>
+    <div class="subtitle-2 pb-4">{{ title }}</div>
+    <v-text-field
+      v-for="(answer, idx) in answers" :key="idx"
+      @change="updateAnswer($event, idx)"
+      :value="answer"
+      :error="answerError(idx)"
+      :disabled="disabled"
+      :color="color"
+      :placeholder="placeholder"
+      filled>
+      <template slot="prepend-inner">
+        <v-checkbox
+          v-if="isGraded"
+          v-model="correct"
+          :value="idx"
+          :error="correctError"
+          :disabled="disabled"
+          :color="color"
+          hide-details
+          class="pt-0 mt-0" />
+        <v-avatar v-else :color="color" size="24" class="subtitle-2 mr-2">
+          {{ idx + 1 }}
+        </v-avatar>
+      </template>
+      <template slot="append">
+        <v-btn v-if="isEditing" @click="removeAnswer(idx)" small icon>
+          <v-icon small>mdi-close</v-icon>
+        </v-btn>
+      </template>
+    </v-text-field>
+    <div :class="['d-flex', 'justify-end', { 'pb-2': isEditing }]">
+      <v-btn
+        v-if="isEditing"
+        @click="addAnswer"
+        :color="color"
+        text
+        class="px-2">
+        <v-icon>mdi-plus</v-icon>
+        {{ addButtonLabel }}
+      </v-btn>
+    </div>
   </div>
 </template>
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
+import { defaults } from 'utils/assessment';
 import range from 'lodash/range';
+import set from 'lodash/set';
 
-const customAlert = {
-  type: 'alert-danger',
-  text: 'Please make at least two answers available !'
+const MIN_ANSWER_ALERT = {
+  type: 'error',
+  text: 'Please make at least two answers available!'
 };
+
+const getTitle = isGraded => isGraded ? 'Select correct answer(s)' : 'Options';
+const getPlaceholder = isGraded => isGraded ? 'Answer...' : 'Option...';
+const getButtonLabel = isGraded => isGraded ? 'Add answer' : 'Add option';
 
 export default {
   props: {
-    assessment: { type: Object, required: true },
-    isGraded: { type: Boolean, default: false },
+    assessment: { type: Object, default: defaults.MC },
     errors: { type: Array, default: () => ([]) },
-    isEditing: { type: Boolean, default: false }
+    isEditing: { type: Boolean, default: false },
+    isGraded: { type: Boolean, default: false }
   },
   computed: {
-    answers() {
-      return this.assessment.answers;
+    correct: {
+      get() { return this.assessment.correct; },
+      set(index) { this.update({ correct: index }); }
     },
-    correct() {
-      return this.assessment.correct;
-    },
-    feedback() {
-      return this.assessment.feedback;
-    },
-    hasCorrectAnswers() {
-      return !this.errors.includes('correct');
-    },
-    disabled() {
-      return !this.isEditing;
-    }
+    disabled: vm => !vm.isEditing,
+    answers: vm => vm.assessment.answers,
+    feedback: vm => vm.assessment.feedback,
+    color: vm => vm.disabled ? 'grey' : 'grey darken-3',
+    correctError: vm => vm.errors.includes('correct'),
+    title: vm => getTitle(vm.isGraded),
+    placeholder: vm => getPlaceholder(vm.isGraded),
+    addButtonLabel: vm => getButtonLabel(vm.isGraded)
   },
   methods: {
-    update(data) {
-      this.$emit('update', data);
-    },
-    toggleAnswer(index) {
-      const correct = cloneDeep(this.correct);
-      const position = correct.indexOf(index);
-
-      if (position < 0) {
-        correct.push(index);
-      } else {
-        correct.splice(position, 1);
-      }
-
-      this.update({ correct });
-    },
-    updateAnswer(index) {
-      const answers = cloneDeep(this.answers);
-      answers[index] = this.$refs[`input${index}`][0].value;
-      this.update({ answers });
-    },
     addAnswer() {
-      const answers = cloneDeep(this.answers);
-      answers.push('');
-      this.update({ answers });
+      this.update({ answers: [...this.answers, ''] });
+    },
+    updateAnswer(value, index) {
+      this.update({ answers: set(cloneDeep(this.answers), index, value) });
     },
     removeAnswer(answerIndex) {
       const answers = cloneDeep(this.answers);
@@ -114,99 +112,23 @@ export default {
       this.update({ answers, correct, feedback });
     },
     validate() {
-      this.$emit('alert', this.answers.length < 2 ? customAlert : {});
+      this.$emit('alert', this.answers.length < 2 ? MIN_ANSWER_ALERT : {});
     },
-    errorClass(index) {
-      return {
-        'has-error': this.errors.includes(`answers[${index}]`)
-      };
+    answerError(index) {
+      return this.errors.includes(`answers[${index}]`);
+    },
+    update(data) {
+      this.$emit('update', data);
     }
   },
   watch: {
-    assessment: {
-      deep: true,
-      handler: function () {
-        this.validate();
-      }
-    }
+    'assessment.answers'() { this.validate(); }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-h5 {
-  display: block;
-  margin: 30px 0 10px;
-  font-size: 18px;
-  text-align: left;
-}
-
-ul {
-  clear: both;
-  padding: 5px 0 0 10px;
-  list-style: none;
-
-  li {
-    position: relative;
-    margin: 20px 0;
-    padding-left: 40px;
-
-    &.non-graded {
-      padding-left: 0;
-    }
-
-    .v-avatar {
-      float: left;
-      margin-top: 1px;
-      margin-right: 10px;
-      color: #fff;
-      font-weight: 700;
-    }
-
-    .input-container {
-      display: flex;
-    }
-
-    .form-control {
-      padding-left: 10px;
-    }
-
-    input[type=checkbox] {
-      position: absolute;
-      top: 5px;
-      left: 0;
-    }
-  }
-
-  .mdi-close {
-    position: absolute;
-    right: 5px;
-    bottom: 5px;
-    padding: 5px;
-    color: #888;
-    cursor: pointer;
-
-    &:hover {
-      color: darken(#888, 20%);
-    }
-  }
-}
-
-.has-error {
-  input[type="checkbox"]::after {
-    border-color: #d9534f;
-  }
-
-  input[type="checkbox"]:checked::after {
-    border-color: #337ab7;
-  }
-}
-
-.disabled {
-  pointer-events: none;
-
-  .control, .btn {
-    opacity: 0;
-  }
+.v-avatar {
+  color: #fff;
 }
 </style>

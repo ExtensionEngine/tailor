@@ -1,21 +1,22 @@
 <template>
-  <v-dialog v-model="show" width="500">
-    <v-card>
-      <v-card-title class="headline">{{ context.title }}</v-card-title>
-      <v-card-text class="text-sm-left">{{ context.message }}</v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn @click="close" flat>Close</v-btn>
-        <v-btn v-focus="show" @click="confirm" color="error" flat>Confirm</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+  <tailor-dialog v-model="show" header-icon="mdi-alert">
+    <template v-slot:header>{{ context.title }}</template>
+    <template v-slot:body>
+      <div class="body-1 primary--text text--darken-2 text-left">
+        {{ context.message }}
+      </div>
+    </template>
+    <template v-slot:actions>
+      <v-btn @click="close" text>Close</v-btn>
+      <v-btn v-focus="show" @click="confirm" color="secondary" text>Confirm</v-btn>
+    </template>
+  </tailor-dialog>
 </template>
 
 <script>
 import { focus } from 'vue-focus';
 import { mapChannels } from '@/plugins/radio';
-import Modal from './Modal';
+import TailorDialog from '@/components/common/TailorDialog';
 
 const createContext = () => ({
   title: '',
@@ -46,6 +47,6 @@ export default {
     this.appChannel.reply('showConfirmationModal', this.open);
   },
   directives: { focus },
-  components: { Modal }
+  components: { TailorDialog }
 };
 </script>

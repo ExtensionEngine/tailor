@@ -1,0 +1,9 @@
+<mj-section>
+  <mj-column>
+    <mj-image width="80px" height="80px" src="{{origin}}/assets/img/default-email-logo.svg" />
+    <mj-text align="center" mj-class="title">
+      Tailor
+    </mj-text>
+    <mj-divider mj-class="divider" border-width="2px" />
+  </mj-column>
+</mj-section>

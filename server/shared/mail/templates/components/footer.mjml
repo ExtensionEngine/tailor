@@ -1,0 +1,4 @@
+<mj-divider mj-class="divider" border-width="2px" />
+<mj-text mj-class="footer" align="center">
+  If you didn't request this, please ignore this email.
+</mj-text>

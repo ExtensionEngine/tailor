@@ -1,0 +1,44 @@
+<template>
+  <div class="element-sidebar">
+    <h3 class="body-1">Additional settings</h3>
+    <element-meta :element="element" v-bind="metadata" />
+  </div>
+</template>
+
+<script>
+import ElementMeta from './ElementMeta';
+import EventBus from 'EventBus';
+import { getElementId } from 'tce-core/utils';
+
+export default {
+  name: 'element-sidebar',
+  props: {
+    element: { type: Object, required: true },
+    metadata: { type: Object, default: () => ({}) }
+  },
+  data() {
+    return {
+      elementBus: EventBus.channel(`element:${getElementId(this.element)}`)
+    };
+  },
+  beforeDestroy() {
+    this.elementBus.unsubscribe();
+  },
+  provide() {
+    return {
+      $elementBus: this.elementBus
+    };
+  },
+  components: { ElementMeta }
+};
+</script>
+
+<style lang="scss" scoped>
+.element-sidebar {
+  padding: 1.75rem 0.875rem 1.5rem;
+
+  h3 {
+    margin: 0 0.25rem 1.5rem;
+  }
+}
+</style>

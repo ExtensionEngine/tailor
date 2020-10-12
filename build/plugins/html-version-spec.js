@@ -8,27 +8,30 @@ const isObject = arg => arg !== null && typeof arg === 'object';
 
 exports.name = 'html-version-spec';
 
+/**
+ * @param {import('poi')} api
+ */
 exports.apply = ({ config, pkg }) => {
   const meta = {
     get version() {
       return getVersion(pkg);
     }
   };
-  if (isObject(config.html)) {
-    return Object.assign(config.html, { meta });
-  }
   if (isObject(config.pages)) {
     return forEach(config.pages, page => Object.assign(page, { meta }));
   }
+  const { output } = config;
+  output.html = output.html || {};
+  Object.assign(output.html, { meta });
 };
 
 function getVersion(pkg) {
-  const semver = pkg.data.version;
+  const { codename, version } = pkg.data;
   try {
     const rev = execSync('git', ['rev-parse', '--short', 'HEAD']);
-    return `${semver}-rev-${rev}`;
+    return `${version}-rev-${rev} (${codename})`;
   } catch (err) {
     console.error(err);
   }
-  return `${semver}`;
+  return `${version} (${codename})`;
 }

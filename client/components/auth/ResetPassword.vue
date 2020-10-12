@@ -1,69 +1,82 @@
 <template>
   <div>
-    <div class="message"><span>{{ error }}</span></div>
-    <form @submit.prevent="submit">
-      <div :class="{ 'has-error': vErrors.has('password') }" class="form-group">
-        <input
-          v-validate="{ required: true, min: 6, alphanumerical: true }"
-          ref="password"
+    <v-alert
+      :value="!!error"
+      color="grey darken-3"
+      text
+      class="mb-5">
+      {{ error }}
+    </v-alert>
+    <validation-observer
+      ref="form"
+      @submit.prevent="$refs.form.handleSubmit(submit)"
+      tag="form"
+      novalidate>
+      <validation-provider
+        v-slot="{ errors }"
+        vid="password"
+        name="password"
+        rules="required|alphanumerical|min:6">
+        <v-text-field
           v-model="password"
-          class="form-control"
+          :error-messages="errors"
+          type="password"
           name="password"
+          label="Password"
+          placeholder="Password"
+          prepend-inner-icon="mdi-lock"
+          outlined
+          class="mb-1" />
+      </validation-provider>
+      <validation-provider
+        v-slot="{ errors }"
+        vid="passwordConfirmation"
+        name="password"
+        rules="required|confirmed:password">
+        <v-text-field
+          v-model="passwordConfirmation"
+          :error-messages="errors"
           type="password"
-          placeholder="Password"/>
-        <span class="help-block">{{ vErrors.first('password') }}</span>
-      </div>
-      <div
-        :class="{ 'has-error': vErrors.has('passwordConfirmation') }"
-        class="form-group">
-        <input
-          v-validate="{ required: true, confirmed: 'password' }"
-          data-vv-as="password"
-          class="form-control"
           name="passwordConfirmation"
-          type="password"
-          placeholder="Please re-enter your password"/>
-        <span class="help-block">
-          {{ vErrors.first('passwordConfirmation') }}
-        </span>
-      </div>
-      <button
-        :disabled="!isValid"
-        class="btn btn-default btn-block"
-        type="submit">
+          label="Re-enter password"
+          placeholder="Password confirmation"
+          prepend-inner-icon="mdi-lock-outline"
+          outlined />
+      </validation-provider>
+      <v-btn
+        type="submit"
+        color="primary darken-1"
+        class="my-1">
         Change password
-      </button>
-    </form>
+      </v-btn>
+    </validation-observer>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex-module';
-import { withValidation } from 'utils/validation';
+import { mapActions } from 'vuex';
 
 export default {
-  mixins: [withValidation()],
-  data() {
-    return {
-      error: null,
-      password: ''
-    };
-  },
-  computed: {
-    isValid() {
-      return this.password && this.vErrors.count() === 0;
-    }
-  },
+  data: () => ({
+    error: null,
+    password: '',
+    passwordConfirmation: ''
+  }),
   methods: {
     ...mapActions(['resetPassword']),
     submit() {
-      const token = this.$route.params.token;
-      this.$validator.validateAll().then(result => {
-        return this.resetPassword({ password: this.password, token })
-          .then(() => this.$router.push('/'))
-          .catch(() => (this.error = 'An error has occurred!'));
-      });
+      const { token } = this.$route.params;
+      return this.resetPassword({ password: this.password, token })
+        .then(() => this.$router.push('/'))
+        .catch(() => (this.error = 'An error has occurred!'));
     }
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.v-input ::v-deep label {
+  padding-right: 0.25rem;
+  background: #fff;
+}
+</style>
