@@ -153,7 +153,7 @@ export default {
         message: `Are you sure you want to ${action} user "${user.email}"?`,
         action: () => actions[action](user).then(() => this.fetch())
       };
-      this.showConfirmationModal('showConfirmationModal', this.confirmation);
+      this.showConfirmationModal(this.confirmation);
     }
   },
   watch: {
