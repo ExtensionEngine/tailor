@@ -1,6 +1,6 @@
 <template>
   <div class="navigation-container">
-    <v-sheet color="transparent" class="navigation-header" elevation="1" tile>
+    <v-sheet color="transparent" elevation="1" tile class="navigation-header">
       <v-text-field
         v-model="search"
         label="Search..."
@@ -15,21 +15,29 @@
       :items="activityTree"
       :active="active"
       :search="search"
-      open-all
-      hoverable>
+      open-all hoverable>
       <template v-slot:label="{ item: { id, name, selectable } }">
-        <div @click.stop="navigateTo(id)" :class="{ selectable }">
+        <v-btn
+          @click.stop="navigateTo(id)"
+          :disabled="!selectable"
+          :ripple="false"
+          elevation="0"
+          block tile text>
           {{ name }}
-          <v-btn
-            v-if="selectable"
+          <v-icon
             color="blue-grey darken-4"
-            icon
-            class="mr-1 open-button">
-            <v-icon>mdi-open-in-app</v-icon>
-          </v-btn>
-        </div>
+            class="mr-1 open-icon">
+            mdi-open-in-app
+          </v-icon>
+        </v-btn>
       </template>
     </v-treeview>
+    <v-alert
+      :value="!hasSearchResults"
+      color="primary"
+      text>
+      No matches found.
+    </v-alert>
   </div>
 </template>
 
@@ -57,6 +65,11 @@ export default {
     editableTypes: vm => vm.editableActivityConfigs.map(it => it.type),
     editableActivityConfigs() {
       return this.activityConfigs.filter(it => isEditable(it.type));
+    },
+    hasSearchResults() {
+      if (!this.search || !this.$refs) return true;
+      const { excludedItems, nodes } = this.$refs.activityTree;
+      return excludedItems.size !== Object.keys(nodes).length;
     }
   },
   methods: {
@@ -93,7 +106,6 @@ export default {
 }
 
 .v-treeview {
-  padding: 0.5rem 0.25rem;
   overflow-y: auto;
 
   ::v-deep {
@@ -111,20 +123,28 @@ export default {
   }
 }
 
-.selectable {
+.v-btn {
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  .open-button {
+  &, &:hover {
+    background-color: transparent;
+    transition: none;
+
+    &::before {
+      background-color: transparent;
+      transition: none;
+    }
+  }
+
+  .open-icon {
     transition: opacity 0.3s ease 0.15s;
     opacity: 0;
   }
 
   &:hover {
-    cursor: pointer;
-
-    .open-button {
+    .open-icon {
       opacity: 1;
     }
   }

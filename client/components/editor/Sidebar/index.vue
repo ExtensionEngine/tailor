@@ -3,7 +3,11 @@
     width="400"
     absolute permanent
     class="sidebar grey lighten-4 elevation-2">
-    <div :class="toolbarClasses" class="sidebar-container">
+    <div
+      :class="{
+        'toolbar-visible': selectedElement,
+        'toolbar-composite': selectedElement && selectedElement.parent
+      }" class="sidebar-container">
       <activity-navigation
         v-if="selectedTab === 'browser'"
         :repository="repository"
