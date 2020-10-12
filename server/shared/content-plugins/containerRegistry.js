@@ -5,6 +5,8 @@ const containerList = require('../../../config/shared/core-containers');
 
 const EXTENSIONS_LIST = '../../../extensions/content-containers/index';
 
+const getId = it => it.templateId || it.type;
+
 class ContainerRegistry extends BaseRegistry {
   constructor() {
     super('container', containerList, EXTENSIONS_LIST);
@@ -20,22 +22,24 @@ class ContainerRegistry extends BaseRegistry {
 
   buildLookups() {
     this._registry.forEach(it => {
-      Object.assign(this._publishStructureBuilder, { [it.templateId]: it.fetch });
-      Object.assign(this._staticsResolver, { [it.templateId]: it.resolve });
-      Object.assign(this._summaryBuilder, { [it.templateId]: it.buildSummary });
+      const id = getId(it);
+
+      Object.assign(this._publishStructureBuilder, { [id]: it.fetch });
+      Object.assign(this._staticsResolver, { [id]: it.resolve });
+      Object.assign(this._summaryBuilder, { [id]: it.buildSummary });
     });
   }
 
-  getPublishStructureBuilder(templateId) {
-    return this._publishStructureBuilder[templateId];
+  getPublishStructureBuilder(container) {
+    return this._publishStructureBuilder[getId(container)];
   }
 
-  getStaticsResolver(templateId) {
-    return this._staticsResolver[templateId];
+  getStaticsResolver(container) {
+    return this._staticsResolver[getId(container)];
   }
 
-  getSummaryBuilder(templateId) {
-    return this._summaryBuilder[templateId];
+  getSummaryBuilder(container) {
+    return this._summaryBuilder[getId(container)];
   }
 }
 

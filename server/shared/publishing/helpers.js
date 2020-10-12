@@ -159,9 +159,10 @@ function fetchContainers(parent) {
 function fetchDefaultContainers(parent, config) {
   const include = [{ model: ContentElement.scope('publish') }];
   const types = config
-    .filter(it => !containerRegistry.getPublishStructureBuilder(it.templateId))
+    .filter(it => !containerRegistry.getPublishStructureBuilder(it))
     .map(it => it.type);
   const where = { type: types };
+
   return parent
     .getChildren({ attributes: CC_ATTRS, where, include })
     .map(container => {
@@ -174,7 +175,7 @@ function fetchDefaultContainers(parent, config) {
 async function fetchCustomContainers(parent, config) {
   const include = [{ model: ContentElement.scope('publish') }];
   return Promise.reduce(config, async (containers, it) => {
-    const builder = containerRegistry.getPublishStructureBuilder(it.templateId);
+    const builder = containerRegistry.getPublishStructureBuilder(it);
     if (!builder) return containers;
     const customContainers = await builder(parent, it.type, { include });
     return containers.concat(customContainers);
@@ -182,11 +183,10 @@ async function fetchCustomContainers(parent, config) {
 }
 
 function resolveContainer(container) {
-  const { elements, templateId } = container;
-  const resolver = containerRegistry.getStaticsResolver(templateId);
+  const resolver = containerRegistry.getStaticsResolver(container);
   return resolver
     ? resolver(container, resolveStatics)
-    : Promise.map(elements, resolveStatics).then(() => container);
+    : Promise.map(container.elements, resolveStatics).then(() => container);
 }
 
 function saveFile(parent, key, data) {
@@ -243,7 +243,7 @@ function attachContentSummary(obj, { containers }) {
 }
 
 function getContainerSummary(container) {
-  const customBuilder = containerRegistry.getSummaryBuilder(container.templateId);
+  const customBuilder = containerRegistry.getSummaryBuilder(container);
   return customBuilder
     ? customBuilder(container)
     : defaultSummaryBuilder(container);

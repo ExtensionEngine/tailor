@@ -69,8 +69,8 @@ export default {
     ...mapState('repository/activities', { activities: 'items' }),
     ...mapState('repository/contentElements', { elements: 'items' }),
     containerName() {
-      const { templateId: id, $ccRegistry: registry } = this;
-      return registry.get(id) ? getContainerName(id) : DEFAULT_CONTAINER;
+      const id = this.templateId || this.type;
+      return this.$ccRegistry.get(id) ? getContainerName(id) : DEFAULT_CONTAINER;
     },
     name() {
       return this.label.toLowerCase();

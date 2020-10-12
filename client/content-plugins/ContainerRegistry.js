@@ -6,6 +6,6 @@ export default Vue => new ComponentRegistry(Vue, {
   name: 'content container',
   extensions: containerList,
   attrs: ['type', 'templateId', 'version'],
-  getCondition: id => it => it.templateId === id,
+  getCondition: id => it => it.templateId === id || it.type === id,
   getName
 });
