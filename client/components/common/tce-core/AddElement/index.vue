@@ -83,6 +83,7 @@
 <script>
 import cuid from 'cuid';
 import filter from 'lodash/filter';
+import intersection from 'lodash/intersection';
 import { isQuestion } from '../utils';
 import reduce from 'lodash/reduce';
 import reject from 'lodash/reject';
@@ -155,11 +156,13 @@ export default {
       return this.elementWidth === 50 ? LAYOUT.HALF_WIDTH : LAYOUT.FULL_WIDTH;
     },
     allowedTypes() {
-      const { elementWidth, registry } = this;
+      const { elementWidth, include, layout, registry } = this;
+      if (!layout) return include;
       const allowedElements = elementWidth === DEFAULT_ELEMENT_WIDTH
         ? registry
         : reject(registry, 'ui.forceFullWidth');
-      return allowedElements.map(it => it.type);
+      const allowedTypes = allowedElements.map(it => it.type);
+      return intersection(include, allowedTypes);
     }
   },
   methods: {
