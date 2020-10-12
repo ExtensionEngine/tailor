@@ -49,11 +49,9 @@
 </template>
 
 <script>
-import EventBus from 'EventBus';
 import LabelChip from '@/components/repository/common/LabelChip';
 import { mapActions } from 'vuex';
-
-const appChannel = EventBus.channel('app');
+import { mapRequests } from '@/plugins/radio';
 
 export default {
   props: {
@@ -69,9 +67,10 @@ export default {
   },
   methods: {
     ...mapActions('repository/tasks', ['archive']),
+    ...mapRequests('app', ['showConfirmationModal']),
     requestArchiveConfirmation() {
       const model = { id: this.id, uid: this.uid };
-      appChannel.emit('showConfirmationModal', {
+      this.showConfirmationModal({
         title: 'Archive task?',
         message: 'Are you sure you want to archive task?',
         action: () => this.archive(model)
