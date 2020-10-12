@@ -15,21 +15,17 @@
       :items="activityTree"
       :active="active"
       :search="search"
-      open-all hoverable>
+      open-all>
       <template v-slot:label="{ item: { id, name, selectable } }">
-        <v-btn
-          @click.stop="navigateTo(id)"
-          :disabled="!selectable"
-          :ripple="false"
-          elevation="0"
-          block tile text>
+        <div @click.stop="navigateTo(id)" :class="{ selectable }">
           {{ name }}
           <v-icon
+            v-if="selectable"
             color="blue-grey darken-4"
             class="mr-1 open-icon">
             mdi-open-in-app
           </v-icon>
-        </v-btn>
+        </div>
       </template>
     </v-treeview>
     <v-alert
@@ -123,19 +119,21 @@ export default {
   }
 }
 
-.v-btn {
+.selectable {
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  &, &:hover {
-    background-color: transparent;
-    transition: none;
-
-    &::before {
-      background-color: transparent;
-      transition: none;
-    }
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    background-color: currentColor;
+    transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
   }
 
   .open-icon {
@@ -144,6 +142,12 @@ export default {
   }
 
   &:hover {
+    cursor: pointer;
+
+    &::before {
+      opacity: 0.12;
+    }
+
     .open-icon {
       opacity: 1;
     }
