@@ -87,8 +87,9 @@ import intersection from 'lodash/intersection';
 import { isQuestion } from '../utils';
 import reduce from 'lodash/reduce';
 import reject from 'lodash/reject';
-import SelectElement from '@/components/common/SelectElement';
 import sortBy from 'lodash/sortBy';
+
+const SelectElement = () => import('components/common/SelectElement');
 
 const DEFAULT_ELEMENT_WIDTH = 100;
 const LAYOUT = { HALF_WIDTH: 6, FULL_WIDTH: 12 };
