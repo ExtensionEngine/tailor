@@ -2,7 +2,7 @@
 
 const { constant } = require('to-case');
 const forEach = require('lodash/forEach');
-const logger = require('../shared/logger');
+const logger = require('../shared/logger')('db');
 
 const castArray = arg => Array.isArray(arg) ? arg : [arg];
 

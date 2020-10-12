@@ -1,5 +1,8 @@
 'use strict';
 
+require('dotenv').config();
+require('../shared/logger').enabled = false;
+
 const Deffered = require('../shared/util/Deffered');
 const { User } = require('../shared/database');
 const { user: role } = require('../../config/shared').role;

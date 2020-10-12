@@ -1,15 +1,39 @@
 'use strict';
 
+const forEach = require('lodash/forEach');
 const { isOutlineActivity } = require('../../config/shared/activities');
+const sse = require('../shared/sse');
 
 module.exports = { add };
 
 function add(Activity, Hooks, Models) {
-  [Hooks.afterCreate, Hooks.afterUpdate, Hooks.afterDestroy]
-    .forEach(type => {
-      Activity.addHook(type, Hooks.withType(type, touchRepository));
-      Activity.addHook(type, touchOutline);
-    });
+  const { Events } = Activity;
+
+  const mappings = {
+    [Hooks.afterCreate]: [sseCreate, touchRepository, touchOutline],
+    [Hooks.afterUpdate]: [sseUpdate, touchRepository, touchOutline],
+    [Hooks.afterDestroy]: [sseDelete, touchRepository, touchOutline]
+  };
+
+  forEach(mappings, (hooks, type) => {
+    forEach(hooks, hook => Activity.addHook(type, Hooks.withType(type, hook)));
+  });
+
+  function sseCreate(_, activity) {
+    const channel = sse.channel(activity.repositoryId);
+    if (channel) channel.send(Events.Create, activity);
+  }
+
+  function sseUpdate(_, activity) {
+    const channel = sse.channel(activity.repositoryId);
+    if (channel) channel.send(Events.Update, activity);
+  }
+
+  async function sseDelete(_, activity) {
+    await activity.reload({ paranoid: false });
+    const channel = sse.channel(activity.repositoryId);
+    if (channel) channel.send(Events.Delete, activity);
+  }
 
   const isRepository = it => it instanceof Models.Repository;
 

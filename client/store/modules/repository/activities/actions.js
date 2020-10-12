@@ -1,9 +1,19 @@
+import { getDescendants as getDeepChildren, getOutlineChildren } from 'utils/activity';
 import calculatePosition from 'utils/calculatePosition';
+import { Activity as Events } from '@/../common/sse';
+import { feed } from '../feed';
+import findIndex from 'lodash/findIndex';
 import generateActions from '@/store/helpers/actions';
-import { getDescendants as getDeepChildren } from 'utils/activity';
 import request from '@/api/request';
 
 const { api, fetch, get, reset, save, setEndpoint, update } = generateActions();
+
+const plugSSE = ({ commit }) => {
+  feed
+    .subscribe(Events.Create, item => commit('save', item))
+    .subscribe(Events.Update, item => commit('save', item))
+    .subscribe(Events.Delete, item => commit('remove', [item]));
+};
 
 const reorder = ({ commit }, { activity, context }) => {
   const position = calculatePosition(context);
@@ -35,10 +45,22 @@ const clone = ({ commit }, mapping) => {
     .then(({ data: { data } }) => commit('fetch', api.processEntries(data)));
 };
 
+const calculateInsertPosition = ({ state }, { activity, anchor, action }) => {
+  const items = getOutlineChildren(state.items, activity.parentId);
+  const newPosition = anchor ? findIndex(items, { id: anchor.id }) : 1;
+  const isFirstChild = !anchor ||
+    (activity.parentId !== anchor.parentId) ||
+    (newPosition === -1);
+  const context = { items, newPosition, isFirstChild, action };
+  return calculatePosition(context);
+};
+
 export {
+  calculateInsertPosition,
   clone,
   get,
   fetch,
+  plugSSE,
   publish,
   remove,
   reorder,

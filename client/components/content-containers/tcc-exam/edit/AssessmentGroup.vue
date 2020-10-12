@@ -10,6 +10,7 @@
           rules="integer|min_value:0">
           <v-text-field
             v-model.number="timeLimit"
+            @keydown="e => ['e', '+', '-', '.'].includes(e.key) && e.preventDefault()"
             :error-messages="errors"
             name="timeLimit"
             hint="Time limit (minutes)"
@@ -56,7 +57,6 @@
 <script>
 import AssessmentItem from './Assessment';
 import cloneDeep from 'lodash/cloneDeep';
-import cuid from 'cuid';
 import debounce from 'lodash/debounce';
 import { ElementList } from 'tce-core';
 import filter from 'lodash/filter';
@@ -69,6 +69,7 @@ import numberToLetter from 'utils/numberToLetter';
 import pickBy from 'lodash/pickBy';
 import sortBy from 'lodash/sortBy';
 import uniq from 'lodash/uniq';
+import uuid from '@/utils/uuid';
 
 export default {
   name: 'assessment-group',
@@ -105,8 +106,8 @@ export default {
   },
   methods: {
     addAssessment(assessment) {
-      Object.assign(assessment, { cid: cuid() });
-      this.$set(this.unsavedAssessments, assessment.cid, assessment);
+      Object.assign(assessment, { uid: uuid() });
+      this.$set(this.unsavedAssessments, assessment.uid, assessment);
     },
     saveAssessment(assessment) {
       if (assessment.id) return this.$emit('updateElement', assessment);
@@ -117,8 +118,8 @@ export default {
       this.$emit('deleteElement', assessment);
     },
     clearUnsavedAssessments(assessments) {
-      const ids = assessments.map(it => it.cid);
-      const cond = it => !ids.includes(it.cid);
+      const ids = assessments.map(it => it.uid);
+      const cond = it => !ids.includes(it.uid);
       this.unsavedAssessments = pickBy(this.unsavedAssessments, cond);
     }
   },

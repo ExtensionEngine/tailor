@@ -20,7 +20,7 @@
       font-size="12px"
       background-color="white" />
     <mj-class name="divider"
-      padding="20px 25px"
+      padding="20px 10px"
       border-width="1px"
       border-color="#d2d2d2"
       border-style="dashed" />
@@ -33,6 +33,29 @@
     a {
       color: #c2185b;
       text-decoration: none;
+    }
+
+    .content {
+      color: #222222;
+      font-size: 16px;
+      font-family: 'Helvetica Neue', helvetica, arial, sans-serif;
+    }
+
+    .label {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .avatar {
+      display: block;
+      width: 36px;
+      height: 36px;
+      color: #fff;
+      line-height: 36px;
+      font-weight: 100;
+      text-align: center;
+      border-radius: 50%;
+      background-color: #36474f;
     }
   </mj-style>
 </mj-head>
