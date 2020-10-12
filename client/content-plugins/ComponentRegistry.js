@@ -6,6 +6,7 @@ import {
 import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
 import kebabCase from 'lodash/kebabCase';
+import noop from 'lodash/noop';
 import pick from 'lodash/pick';
 import Promise from 'bluebird';
 import sortBy from 'lodash/sortBy';
@@ -23,7 +24,7 @@ function getIdentifier({ templateId, type, subtype }) {
 }
 
 export default class ComponentRegistry {
-  constructor(Vue, { name, extensions, attrs, getName, getCondition }) {
+  constructor(Vue, { name, extensions, attrs, getName, getCondition, validator }) {
     this._registry = [];
     this.Vue = Vue;
     this._name = name;
@@ -32,6 +33,7 @@ export default class ComponentRegistry {
     this._attrs = attrs;
     this._getName = getName;
     this._getCondition = getCondition;
+    this._validator = validator || noop;
   }
 
   async initialize() {
@@ -51,6 +53,8 @@ export default class ComponentRegistry {
     const element = isExtension
       ? (await import(`extensions/${_type}s/${path}`)).default
       : (await import(`components/${_type}s/${path}`)).default;
+    this._validator(element);
+
     const id = getIdentifier(element);
     const componentName = this._getName(id);
     _registry.push({ ...pick(element, _attrs), componentName, position });
