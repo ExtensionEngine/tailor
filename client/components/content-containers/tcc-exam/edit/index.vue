@@ -55,7 +55,6 @@ import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import { getDescendants as getDeepChildren } from 'utils/activity';
-import { mapRequests } from '@/plugins/radio';
 import numberToLetter from 'utils/numberToLetter';
 import pluralize from 'pluralize';
 
@@ -92,19 +91,11 @@ export default {
     }
   },
   methods: {
-    ...mapRequests('app', ['showConfirmationModal']),
     createGroup() {
       this.$emit('addSubcontainer', {
         type: 'ASSESSMENT_GROUP',
         parentId: this.container.id,
         position: this.groups.length + 1
-      });
-    },
-    requestDeletion(item) {
-      this.showConfirmationModal({
-        title: 'Delete exam?',
-        message: 'Are you sure you want to delete exam?',
-        action: () => this.remove(item)
       });
     }
   },
