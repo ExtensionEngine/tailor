@@ -64,15 +64,13 @@
 import cloneDeep from 'lodash/cloneDeep';
 import { defaults } from 'utils/assessment';
 import Draggable from 'vuedraggable';
-import EventBus from 'EventBus';
 import get from 'lodash/get';
+import { mapRequests } from '@/plugins/radio';
 import pluralize from 'pluralize';
 import pullAt from 'lodash/pullAt';
 import reduce from 'lodash/reduce';
 import size from 'lodash/size';
 import times from 'lodash/times';
-
-const appChannel = EventBus.channel('app');
 
 const TEXT_TYPES = ['JODIT_HTML', 'HTML'];
 const BLANK = /(@blank)/g;
@@ -115,6 +113,7 @@ export default {
     color: vm => vm.disabled ? 'grey' : 'grey darken-3'
   },
   methods: {
+    ...mapRequests('app', ['showConfirmationModal']),
     addAnswer(groupIndex) {
       const correct = cloneDeep(this.correct);
       correct[groupIndex].push('');
@@ -131,7 +130,7 @@ export default {
       this.update({ correct });
     },
     removeAnswerGroup(groupIndex) {
-      appChannel.emit('showConfirmationModal', {
+      this.showConfirmationModal({
         title: 'Delete answer group',
         message: 'Are you sure you want to delete this answer group?',
         action: () => {

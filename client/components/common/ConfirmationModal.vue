@@ -14,15 +14,21 @@
 </template>
 
 <script>
-import EventBus from 'EventBus';
 import { focus } from 'vue-focus';
+import { mapChannels } from '@/plugins/radio';
 import TailorDialog from '@/components/common/TailorDialog';
 
-const appChannel = EventBus.channel('app');
-const defaultData = () => ({ title: '', message: '' });
+const createContext = () => ({
+  title: '',
+  message: ''
+});
 
 export default {
-  data: () => ({ show: false, context: defaultData() }),
+  data: () => ({
+    show: false,
+    context: createContext()
+  }),
+  computed: mapChannels({ appChannel: 'app' }),
   methods: {
     open(context) {
       this.context = context;
@@ -30,7 +36,7 @@ export default {
     },
     close() {
       this.show = false;
-      this.context = defaultData();
+      this.context = createContext();
     },
     confirm() {
       this.context.action();
@@ -38,7 +44,7 @@ export default {
     }
   },
   created() {
-    appChannel.on('showConfirmationModal', this.open);
+    this.appChannel.reply('showConfirmationModal', this.open);
   },
   directives: { focus },
   components: { TailorDialog }
