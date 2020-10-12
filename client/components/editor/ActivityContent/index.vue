@@ -23,13 +23,13 @@ import { mapActions, mapGetters } from 'vuex';
 import ContentContainers from '../structure/ContentContainers';
 import ContentLoader from './Loader';
 import debounce from 'lodash/debounce';
-import EventBus from 'EventBus';
 import find from 'lodash/find';
 import flatMap from 'lodash/flatMap';
 import get from 'lodash/get';
 import { getDescendants } from 'client/utils/activity';
 import { getSupportedContainers } from 'shared/activities';
 import map from 'lodash/map';
+import { mapChannels } from '@/plugins/radio';
 import Promise from 'bluebird';
 import throttle from 'lodash/throttle';
 
@@ -54,6 +54,7 @@ export default {
   }),
   computed: {
     ...mapGetters('repository', ['activities']),
+    ...mapChannels({ editorChannel: 'editor' }),
     containerConfigs: vm => getSupportedContainers(vm.activity.type)
   },
   methods: {
@@ -68,7 +69,7 @@ export default {
       // Reset
       this.mousedownCaptured = false;
       if (get(e, 'component.name') !== 'content-element') {
-        EventBus.emit('element:focus');
+        this.editorChannel.emit(CE_FOCUS_EVENT);
       }
     },
     initElementChangeWatcher() {
@@ -97,7 +98,7 @@ export default {
         if (getElementId(this.focusedElement) === getElementId(element)) return;
         this.focusedElement = { ...element, parent: composite };
       }, 50);
-      EventBus.on(CE_FOCUS_EVENT, this.focusHandler);
+      this.editorChannel.on(CE_FOCUS_EVENT, this.focusHandler);
     }
   },
   watch: {
@@ -129,7 +130,6 @@ export default {
   },
   beforeDestroy() {
     this.storeUnsubscribe && this.storeUnsubscribe();
-    this.focusHandler && EventBus.off(CE_FOCUS_EVENT, this.focusHandler);
   },
   components: {
     ContentContainers,

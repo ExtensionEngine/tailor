@@ -8,6 +8,7 @@ import {
   max_value as maxValue,
   min,
   min_value as minValue,
+  numeric,
   required
 } from 'vee-validate/dist/rules';
 import { extend } from 'vee-validate';
@@ -59,6 +60,7 @@ const rules = {
   min,
   minValue: { ...minValue, message: 'The {_field_} must be {min} or more' },
   notWithin,
+  numeric,
   required,
   uniqueEmail,
   url
