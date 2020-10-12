@@ -23,6 +23,13 @@
           color="blue-grey darken-4"
           dense
           class="mb-2 elevation-1">
+          <v-btn
+            @click="showElementBrowser = !showElementBrowser"
+            dark text
+            class="ml-2">
+            <v-icon class="mr-2">mdi-content-copy</v-icon>
+            Copy existing
+          </v-btn>
           <v-spacer />
           <v-divider vertical />
           <v-btn-toggle
@@ -54,7 +61,7 @@
               v-for="element in group.elements"
               :key="element.position"
               @click.stop="add(element)"
-              :disabled="isElementDisabled(element)"
+              :disabled="!allowedTypes.includes(element.type)"
               class="element">
               <v-icon v-if="element.ui.icon">{{ element.ui.icon }}</v-icon>
               <h5 class="body-2">{{ element.name }}</h5>
@@ -63,15 +70,23 @@
         </div>
       </div>
     </v-bottom-sheet>
+    <select-element
+      v-if="showElementBrowser"
+      @selected="addElements"
+      @close="showElementBrowser = false"
+      :allowed-types="allowedTypes"
+      heading="Select elements"
+      multiple />
   </div>
 </template>
 
 <script>
 import cuid from 'cuid';
 import filter from 'lodash/filter';
-import get from 'lodash/get';
 import { isQuestion } from '../utils';
 import reduce from 'lodash/reduce';
+import reject from 'lodash/reject';
+import SelectElement from '@/components/common/SelectElement';
 import sortBy from 'lodash/sortBy';
 
 const DEFAULT_ELEMENT_WIDTH = 100;
@@ -98,7 +113,8 @@ export default {
   data() {
     return {
       isVisible: false,
-      elementWidth: DEFAULT_ELEMENT_WIDTH
+      elementWidth: DEFAULT_ELEMENT_WIDTH,
+      showElementBrowser: false
     };
   },
   computed: {
@@ -137,11 +153,21 @@ export default {
     },
     processedWidth() {
       return this.elementWidth === 50 ? LAYOUT.HALF_WIDTH : LAYOUT.FULL_WIDTH;
+    },
+    allowedTypes() {
+      const { elementWidth, registry } = this;
+      const allowedElements = elementWidth === DEFAULT_ELEMENT_WIDTH
+        ? registry
+        : reject(registry, 'ui.forceFullWidth');
+      return allowedElements.map(it => it.type);
     }
   },
   methods: {
-    add({ type, subtype, initState = () => ({}) }) {
-      const element = { type, data: { width: this.processedWidth } };
+    addElements(elements) {
+      elements.forEach(it => this.add(it));
+    },
+    add({ type, subtype, data = {}, initState = () => ({}) }) {
+      const element = { type, data: { ...data, width: this.processedWidth } };
       // If content element within activity
       if (this.activity) {
         element.activityId = this.activity.id;
@@ -161,10 +187,6 @@ export default {
       this.$emit('add', element);
       this.isVisible = false;
     },
-    isElementDisabled(element) {
-      if (this.elementWidth === DEFAULT_ELEMENT_WIDTH) return false;
-      return get(element, 'ui.forceFullWidth', false);
-    },
     onHidden() {
       this.elementWidth = DEFAULT_ELEMENT_WIDTH;
       this.$emit('hidden');
@@ -177,7 +199,8 @@ export default {
     isVisible(val, oldVal) {
       if (!val && oldVal) this.onHidden();
     }
-  }
+  },
+  components: { SelectElement }
 };
 </script>
 

@@ -75,14 +75,10 @@ export default {
     },
     toggleElementSelection(element) {
       const { selectedActivity: activity, selectedElements: elements } = this;
-      const elementLocation = {
-        containerId: element.activityId,
-        outlineId: activity.id
-      };
       const existing = elements.find(it => it.id === element.id);
       this.selectedElements = existing
         ? elements.filter(it => it.id !== element.id)
-        : [...elements, { id: element.id, ...elementLocation }];
+        : elements.concat({ ...element, activity });
     },
     fetchElements(containers) {
       const { repository: { id: repositoryId } } = this;
