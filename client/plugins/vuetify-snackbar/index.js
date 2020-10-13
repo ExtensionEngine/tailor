@@ -4,16 +4,16 @@ import Snackbar from './Snackbar';
 
 const queue = new Queue(1, Infinity);
 
-export const install = (Vue, { parent } = {}) => {
+export const install = Vue => {
   const SnackbarCtor = Vue.extend(Snackbar);
-  // Create unmounted snackbar instance; $mount called without selector
-  const vm = new SnackbarCtor().$mount();
-  document.addEventListener('DOMContentLoaded', () => {
-    // TODO: Temp fix, should be properly registrated
-    setTimeout(() => {
-      const element = parent || document.getElementById('app');
-      element.appendChild(vm.$el);
-    }, 1000);
+  const vm = new SnackbarCtor();
+
+  Vue.mixin({
+    mounted() {
+      if (this.$options.name !== 'v-app') return;
+      vm.$vuetify = this.$root.$vuetify;
+      this.$el.appendChild(vm.$mount().$el);
+    }
   });
 
   const toQueue = (msg, opts) => queue.add(() => vm.show(msg, opts));

@@ -1,4 +1,4 @@
 module.exports = {
-  type: 'ASSESSMENT_POOL',
+  templateId: 'ASSESSMENT_POOL',
   version: '1.0'
 };

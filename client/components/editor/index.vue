@@ -12,6 +12,7 @@
         @selected="selectedElement = $event"
         :repository="repository"
         :activity="activity"
+        :root-container-groups="rootContainerGroups"
         :content-containers="contentContainers" />
     </template>
   </div>
@@ -39,7 +40,7 @@ export default {
   computed: {
     ...mapGetters('repository/userTracking', ['getActiveUsers']),
     ...mapGetters('repository', ['repository', 'outlineActivities']),
-    ...mapGetters('editor', ['activity', 'contentContainers']),
+    ...mapGetters('editor', ['activity', 'contentContainers', 'rootContainerGroups']),
     activeUsers: vm => vm.getActiveUsers('activity', vm.activityId)
   },
   methods: mapActions('repository', ['initialize']),
