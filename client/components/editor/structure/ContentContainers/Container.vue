@@ -27,7 +27,7 @@
       class="element-list">
       <template v-slot:list-item="{ element, isDragged, position }">
         <inline-activator @click.native="showElementDrawer(position - 1)" />
-        <content-element
+   <content-element v-bind="{ isDragged, element, setWidth: false }" />
           :set-width="false"
           :is-dragged="isDragged"
           :element="element" />
