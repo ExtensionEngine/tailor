@@ -48,3 +48,9 @@ function Deferred() {
   this.promise = new Promise(resolve => (this.resolve = resolve));
 }
 </script>
+
+<style lang="scss" scoped>
+.v-snack {
+  z-index: 9999;
+}
+</style>
