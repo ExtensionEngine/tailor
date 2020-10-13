@@ -30,7 +30,7 @@
         <v-icon>mdi-arrow-left</v-icon> Back
       </v-btn>
       <v-btn @click="close" text class="ml-1">Cancel</v-btn>
-      <v-btn @click="save" color="secondary" text>Save</v-btn>
+      <v-btn @click="save" color="secondary" text>{{ submitLabel }}</v-btn>
     </template>
   </tailor-dialog>
 </template>
@@ -51,7 +51,8 @@ export default {
     selected: { type: Array, default: () => [] },
     heading: { type: String, required: true },
     multiple: { type: Boolean, default: true },
-    allowedTypes: { type: Array, default: () => [] }
+    allowedTypes: { type: Array, default: () => [] },
+    submitLabel: { type: String, default: 'Save' }
   },
   data: () => ({
     selectedActivity: null,

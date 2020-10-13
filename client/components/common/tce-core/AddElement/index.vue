@@ -75,6 +75,7 @@
       @selected="addElements"
       @close="showElementBrowser = false"
       :allowed-types="allowedTypes"
+      submit-label="Copy"
       heading="Select elements"
       multiple />
   </div>
