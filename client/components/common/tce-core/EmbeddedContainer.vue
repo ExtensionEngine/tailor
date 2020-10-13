@@ -14,7 +14,8 @@
         :element="element"
         :is-dragged="isDragged"
         :is-disabled="isDisabled"
-        v-bind="$attrs" />
+        v-bind="$attrs"
+        class="my-2" />
     </template>
   </element-list>
 </template>
