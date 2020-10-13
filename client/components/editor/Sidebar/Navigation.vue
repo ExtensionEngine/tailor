@@ -17,7 +17,10 @@
       :search="search"
       open-all>
       <template v-slot:label="{ item: { id, name, selectable } }">
-        <div @click.stop="navigateTo(id)" :class="{ selectable }">
+        <div
+          @click.stop="navigateTo(id)"
+          :class="{ selectable, selected: isSelected(id) }"
+          class="tree-node">
           {{ name }}
           <v-icon
             v-if="selectable"
@@ -80,6 +83,9 @@ export default {
     },
     isActivityEditable(activity) {
       return this.editableTypes.includes(activity.type);
+    },
+    isSelected(activityId) {
+      return this.selected.id === activityId;
     }
   },
   watch: {
@@ -109,6 +115,12 @@ export default {
       outline: none;
     }
 
+    .v-treeview-node__root {
+      &::before {
+        content: none;
+      }
+    }
+
     .v-treeview-node__content {
       margin-left: 0;
     }
@@ -119,9 +131,8 @@ export default {
   }
 }
 
-.selectable {
+.tree-node {
   display: flex;
-  justify-content: space-between;
   align-items: center;
 
   &::before {
@@ -136,20 +147,30 @@ export default {
     transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
   }
 
-  .open-icon {
-    transition: opacity 0.3s ease 0.15s;
-    opacity: 0;
-  }
-
-  &:hover {
-    cursor: pointer;
-
-    &::before {
-      opacity: 0.12;
-    }
+  &.selectable {
+    justify-content: space-between;
 
     .open-icon {
-      opacity: 1;
+      transition: opacity 0.3s ease 0.15s;
+      opacity: 0;
+    }
+
+    &:not(.selected):hover {
+      cursor: pointer;
+
+      &::before {
+        opacity: 0.04;
+      }
+
+      .open-icon {
+        opacity: 1;
+      }
+    }
+  }
+
+  &.selected {
+    &::before {
+      opacity: 0.12;
     }
   }
 }
