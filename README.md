@@ -113,8 +113,8 @@ An array of Schema objects.
 Configuration for schema structure nodes (activities). Contains the following
 properties:
 
-- **level** `Number` - The hierarchy level for that particular activity type.
 - **type** `String` - Const for marking activity type.
+- **rootLevel** `Boolean` - Used to define first level (root) activity types
 - **subLevels** `Array<String>` - An array of sub-types.
 - **label** `String` - Display label.
 - **color** `String` - Display color in hexadecimal notation.
@@ -176,6 +176,10 @@ An array of ContentContainer objects.
 Configuration for content containers. Contains the following properties:
 
 - **type** `String` - `const-cased` string for marking `ContentContainer` type.
+- **templateId** `String` - `const-cased` string that defines which custom
+  `ContentContainer` is used to display this container. Needs to match the
+  `templateId` property of the desired custom `ContentContainer`. If not
+  specified the default `ContentContainer` is used to display this container.
 - **label** `String` - String used for referencing `ContentContainer` on the UI.
 - **multiple** `Boolean` - Defines if there can be multiple instances of the
   `ContentContainer` inside a single `Activity`. False by default.
@@ -189,10 +193,10 @@ Configuration for content containers. Contains the following properties:
 - **config** `Object` - Defines `ContentContainer` specific properties.
 - **required** `Boolean` - Defines if an instance of the `ContentContainer` is
   created if non exist. True by default.
-- **publishedAs** `String` - Defines the `ContentContainer` the name of the file
-  under which the container will be published. Defaults to `container`. The name
-  of the structure component used is the `kebab-cased` version of the `type`
-  property. (example: ABC_DEF -> abc-def)
+- **publishedAs** `String` - Defines the name of the file under which the
+  container will be published. Defaults to `container`. The name of the
+  structure component used is the `kebab-cased` version of the `type` property.
+  (example: ABC_DEF -> abc-def)
 
 #### ElementMetaConfig
 

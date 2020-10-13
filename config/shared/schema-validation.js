@@ -29,11 +29,11 @@ const schema = yup.object().shape({
   name: yup.string().min(2).max(200).required(),
   meta,
   structure: yup.array().of(yup.object().shape({
-    level: yup.number().integer().min(1).max(10).required(),
     type: activityType.required(),
+    rootLevel: yup.boolean(),
+    subLevels: yup.array().of(activityType),
     label: yup.string().min(2).max(100).required(),
     color: yup.string().matches(/^#(?:[0-9a-fA-F]{3}){1,2}$/).required(),
-    subLevels: yup.array().of(activityType),
     isObjective: yup.boolean(),
     contentContainers: yup.array().of(activityType),
     hasAssessments: yup.boolean(),

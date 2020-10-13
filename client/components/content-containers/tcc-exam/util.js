@@ -19,8 +19,8 @@ async function fetchGroups(exam, { include }) {
   };
 }
 
-function fetch(parent, childOptions) {
-  const opts = { where: { type: 'EXAM' } };
+function fetch(parent, type, childOptions) {
+  const opts = { where: { type } };
   return parent.getChildren(opts).map(exam => fetchGroups(exam, childOptions));
 }
 

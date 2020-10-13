@@ -78,13 +78,11 @@
 
 <script>
 import api from '@/api/user';
-import EventBus from 'EventBus';
 import humanize from 'humanize-string';
+import { mapRequests } from '@/plugins/radio';
 import { mapState } from 'vuex';
 import throttle from 'lodash/throttle';
 import UserDialog from './UserDialog';
-
-const appChannel = EventBus.channel('app');
 
 const defaultPage = () => ({
   sortBy: ['updatedAt'],
@@ -128,6 +126,7 @@ export default {
     defaultPage
   },
   methods: {
+    ...mapRequests('app', ['showConfirmationModal']),
     showUserDialog(user = null) {
       this.editedUser = user;
       this.userDialog = true;
@@ -154,7 +153,7 @@ export default {
         message: `Are you sure you want to ${action} user "${user.email}"?`,
         action: () => actions[action](user).then(() => this.fetch())
       };
-      appChannel.emit('showConfirmationModal', this.confirmation);
+      this.showConfirmationModal(this.confirmation);
     }
   },
   watch: {

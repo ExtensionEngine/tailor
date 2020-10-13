@@ -3,14 +3,13 @@
 const { Activity, ContentElement } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
-const { Op } = require('sequelize');
 const pick = require('lodash/pick');
 
 function list({ query, opts }, res) {
-  if (!query.detached) opts.where = { detached: false };
-  if (query.ids) {
-    const ids = query.ids.map(id => parseInt(id, 10));
-    const where = { id: { [Op.in]: ids } };
+  const { detached, ids } = query;
+  if (!detached) opts.where = { detached: false };
+  if (ids) {
+    const where = { id: ids.map(Number) };
     opts.include = { model: Activity, attributes: [], where };
   }
 
@@ -25,7 +24,7 @@ function show({ params }, res) {
 }
 
 function create({ user, repository, body }, res) {
-  const attr = ['activityId', 'type', 'data', 'position', 'refs'];
+  const attr = ['uid', 'activityId', 'type', 'data', 'position', 'refs'];
   const data = { ...pick(body, attr), repositoryId: repository.id };
   const context = { userId: user.id, repository };
   return ContentElement.create(data, { context })

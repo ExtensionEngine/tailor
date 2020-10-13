@@ -2,9 +2,8 @@
   <div class="tce-pdf">
     <element-placeholder
       v-if="showPlaceholder"
-      :is-focused="isFocused"
-      :is-disabled="isDisabled"
-      name="PDF"
+      v-bind="{ isFocused, isDisabled }"
+      name="PDF component"
       icon="mdi-file-pdf"
       active-placeholder="Use toolbar to upload the pdf"
       active-icon="mdi-arrow-up" />
@@ -18,10 +17,7 @@
         </div>
       </div>
       <div class="pdf-container">
-        <div
-          v-show="showViewer"
-          ref="pdf"
-          class="pdf">
+        <div v-show="showViewer" ref="pdf" class="pdf">
         </div>
         <img
           v-if="safari"
@@ -57,27 +53,19 @@ export default {
     isFocused: { type: Boolean, default: false },
     isDisabled: { type: Boolean, default: false }
   },
-  data() {
-    return {
-      showError: false,
-      showViewer: true
-    };
-  },
+  data: () => ({
+    showError: false,
+    showViewer: true
+  }),
   computed: {
     source() {
       const src = get(this.element, 'data.url');
       if (!src) return;
       return { type: TYPE, src };
     },
-    showPlaceholder() {
-      return !this.source;
-    },
-    safari() {
-      return isSafari;
-    },
-    showElement() {
-      return !isIE || this.isFocused;
-    }
+    showPlaceholder: vm => !vm.source,
+    safari: () => isSafari,
+    showElement: vm => !isIE || vm.isFocused
   },
   methods: {
     createObject() {
@@ -137,7 +125,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.9);
+  background: rgba(0, 0, 0, 0.9);
   z-index: 1;
 }
 

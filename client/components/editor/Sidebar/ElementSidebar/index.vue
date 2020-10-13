@@ -7,7 +7,6 @@
 
 <script>
 import ElementMeta from './ElementMeta';
-import EventBus from 'EventBus';
 import { getElementId } from 'tce-core/utils';
 
 export default {
@@ -16,13 +15,9 @@ export default {
     element: { type: Object, required: true },
     metadata: { type: Object, default: () => ({}) }
   },
-  data() {
-    return {
-      elementBus: EventBus.channel(`element:${getElementId(this.element)}`)
-    };
-  },
-  beforeDestroy() {
-    this.elementBus.unsubscribe();
+  computed: {
+    id: vm => getElementId(vm.element),
+    elementBus: vm => vm.$radio.channel(`element:${vm.id}`)
   },
   provide() {
     return {

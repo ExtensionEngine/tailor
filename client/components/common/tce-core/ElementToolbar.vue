@@ -16,9 +16,7 @@
         v-if="!embed"
         @click="requestDeleteConfirmation"
         color="secondary darken-1"
-        dark fab small
-        absolute right top
-        class="mr-8">
+        dark fab small>
         <v-icon color="grey lighten-3">mdi-delete</v-icon>
       </v-btn>
     </div>
@@ -27,30 +25,28 @@
 
 <script>
 import { getElementId, getToolbarName, isQuestion } from './utils';
+import { mapChannels, mapRequests } from '@/plugins/radio';
 import DefaultToolbar from './DefaultToolbar';
-import EventBus from 'EventBus';
 import { mapActions } from 'vuex';
 import Vue from 'vue';
-import { withValidation } from 'utils/validation';
-
-const appBus = EventBus.channel('app');
 
 export default {
   name: 'element-toolbar-wrapper',
   inject: ['$teRegistry'],
-  mixins: [withValidation()],
   props: {
     element: { type: Object, required: true },
     embed: { type: Object, default: null }
   },
-  data() {
-    return {
-      elementBus: EventBus.channel(`element:${getElementId(this.element)}`)
-    };
-  },
   computed: {
+    ...mapChannels({ editorChannel: 'editor' }),
     id: vm => getElementId(vm.element),
+    componentName() {
+      if (this.isQuestion) return;
+      const { type } = this.element;
+      return getToolbarName(type);
+    },
     isQuestion: vm => isQuestion(vm.element.type),
+    elementBus: vm => vm.$radio.channel(`element:${vm.id}`),
     config() {
       const { element, isQuestion } = this;
       const type = isQuestion
@@ -58,16 +54,12 @@ export default {
         : element.type;
       return this.$teRegistry.get(type);
     },
-    componentName() {
-      if (this.isQuestion) return;
-      const { type } = this.element;
-      return getToolbarName(type);
-    },
     componentExists() {
       return !!Vue.options.components[this.componentName];
     }
   },
   methods: {
+    ...mapRequests('app', ['showConfirmationModal']),
     ...mapActions('repository/contentElements', {
       saveElement: 'save',
       removeElement: 'remove'
@@ -78,18 +70,15 @@ export default {
       this.removeElement(element);
     },
     focusoutElement() {
-      EventBus.emit('element:focus');
+      this.editorChannel.emit('element:focus');
     },
     requestDeleteConfirmation() {
-      appBus.emit('showConfirmationModal', {
+      this.showConfirmationModal({
         title: 'Delete element?',
         message: 'Are you sure you want to delete element?',
         action: () => this.remove(this.element.parent || this.element)
       });
     }
-  },
-  beforeDestroy() {
-    this.elementBus.unsubscribe();
   },
   provide() {
     return {
@@ -105,5 +94,12 @@ export default {
   position: absolute;
   width: 100%;
   min-height: 3.5rem;
+  padding-right: 2.75rem;
+
+  .delete-element {
+    position: absolute;
+    right: 1.25rem;
+    bottom: 1rem;
+  }
 }
 </style>

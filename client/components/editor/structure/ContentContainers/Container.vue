@@ -54,8 +54,11 @@ import ContentElement from '@/components/editor/ContentElement';
 import ElementList from 'tce-core/ElementList';
 import filter from 'lodash/filter';
 import InlineActivator from './InlineActivator';
+import InsertLocation from '@/utils/InsertLocation';
 import { mapActions } from 'vuex';
 import sortBy from 'lodash/sortBy';
+
+const { ADD_AFTER } = InsertLocation;
 
 export default {
   name: 'content-container',
@@ -104,7 +107,7 @@ export default {
       const items = this.contentElements;
       const { position: newPosition } = element;
       const isFirstChild = newPosition === -1;
-      const context = { items, newPosition, isFirstChild, insert: true };
+      const context = { items, newPosition, isFirstChild, action: ADD_AFTER };
       this.insertElement({ element, context });
     }
   },

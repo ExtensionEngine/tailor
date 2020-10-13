@@ -29,9 +29,12 @@
         :layout="layout"
         name="list-add">
         <add-element
+          v-if="enableAdd"
           @add="el => $emit('add', el)"
           :include="supportedTypes"
           :activity="activity"
+          :label="addElementOptions.label"
+          :large="addElementOptions.large"
           :position="nextPosition"
           :layout="layout" />
       </slot>
@@ -54,7 +57,8 @@ export default {
     supportedTypes: { type: Array, default: null },
     activity: { type: Object, default: null },
     layout: { type: Boolean, default: false },
-    enableAdd: { type: Boolean, default: true }
+    enableAdd: { type: Boolean, default: true },
+    addElementOptions: { type: Object, default: () => ({}) }
   },
   data() {
     return { dragElementIndex: null };

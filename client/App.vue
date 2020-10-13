@@ -1,9 +1,9 @@
 <template>
   <v-app id="app">
     <navbar v-if="user" :user="user" />
-    <v-content>
+    <v-main>
       <router-view class="view grey lighten-4" />
-    </v-content>
+    </v-main>
     <confirmation-modal />
   </v-app>
 </template>
@@ -50,12 +50,12 @@ html {
   overflow: hidden;
 }
 
-.application, .v-application--wrap, .v-content, .view {
+.application, .v-application--wrap, .v-main, .view {
   width: 100%;
   height: 100%;
 }
 
-.v-content .view {
+.v-main .view {
   overflow-y: scroll;
   overflow-y: overlay;
 }

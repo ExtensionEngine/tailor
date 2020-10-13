@@ -28,7 +28,7 @@ function resolveHostname() {
   const { HOSTNAME, SERVER_URL } = process.env;
   if (HOSTNAME) return HOSTNAME;
   const LEGACY_HOSTNAME = parse(SERVER_URL).hostname;
-  return LEGACY_HOSTNAME || '127.0.0.1';
+  return LEGACY_HOSTNAME || 'localhost';
 }
 
 function resolveProtocol(hostname) {
@@ -42,7 +42,7 @@ function resolvePort() {
   return PORT || SERVER_PORT || 3000;
 }
 
-function resolveOrigin(hostname = '127.0.0.1', protocol = 'http', port = 3000) {
+function resolveOrigin(hostname = 'localhost', protocol = 'http', port = 3000) {
   return `${protocol}://${hostname}${resolveOriginPort(hostname)}`;
 }
 

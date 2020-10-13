@@ -2,48 +2,43 @@
 
 const BaseRegistry = require('./BaseRegistry');
 const containerList = require('../../../config/shared/core-containers');
-const Promise = require('bluebird');
+const { getContainerTemplateId: getId } = require('../../../config/shared/activities');
 
 const EXTENSIONS_LIST = '../../../extensions/content-containers/index';
 
 class ContainerRegistry extends BaseRegistry {
   constructor() {
     super('container', containerList, EXTENSIONS_LIST);
+    this._publishStructureBuilder = {};
     this._staticsResolver = {};
     this._summaryBuilder = {};
   }
 
   async initialize() {
     await super.initialize();
-    this.buildStaticResolver();
-    this.buildSummaryBuilder();
+    this.buildLookups();
   }
 
-  fetch(...attrs) {
-    return Promise.reduce(this._registry, async (acc, container) => {
-      const data = await container.fetch(...attrs);
-      return acc.concat(data);
-    }, []);
+  buildLookups() {
+    this._registry.forEach(it => {
+      const id = getId(it);
+
+      Object.assign(this._publishStructureBuilder, { [id]: it.fetch });
+      Object.assign(this._staticsResolver, { [id]: it.resolve });
+      Object.assign(this._summaryBuilder, { [id]: it.buildSummary });
+    });
   }
 
-  buildStaticResolver() {
-    const { _registry: registry, _staticsResolver: resolver } = this;
-    registry
-      .forEach(it => Object.assign(resolver, { [it.type]: it.resolve }));
+  getPublishStructureBuilder(container) {
+    return this._publishStructureBuilder[getId(container)];
   }
 
-  buildSummaryBuilder() {
-    const { _registry: registry, _summaryBuilder: builder } = this;
-    registry
-      .forEach(it => Object.assign(builder, { [it.type]: it.buildSummary }));
+  getStaticsResolver(container) {
+    return this._staticsResolver[getId(container)];
   }
 
-  getStaticsResolver(type) {
-    return this._staticsResolver[type];
-  }
-
-  getSummaryBuilder(type) {
-    return this._summaryBuilder[type];
+  getSummaryBuilder(container) {
+    return this._summaryBuilder[getId(container)];
   }
 }
 

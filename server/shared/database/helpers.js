@@ -7,17 +7,14 @@ const inRange = require('lodash/inRange');
 const last = require('lodash/last');
 const mapValues = require('lodash/mapValues');
 
-// eslint-disable-next-line no-extra-parens
-const AsyncFunction = (async function () {}).constructor;
-
-const isAsyncFunction = arg => arg instanceof AsyncFunction;
+const isFunction = arg => typeof arg === 'function';
 const notEmpty = input => input.length > 0;
 
 module.exports = {
   sql: { concat, where },
   getValidator,
   setLogging,
-  wrapAsyncMethods,
+  wrapMethods,
   parsePath,
   build: Model => ({
     column: (col, model) => dbColumn(col, model || Model),
@@ -82,17 +79,33 @@ function where(attribute, logic, options = {}) {
   return !scope ? where : { [Op.and]: [where] };
 }
 
-function transformProperties(obj, cb) {
-  const descriptors = Object.getOwnPropertyDescriptors(obj);
-  Object.keys(descriptors).forEach(name => {
-    const val = cb(descriptors[name], name);
-    if (val) obj[name] = val;
-  });
+function wrapMethods(Model, Promise) {
+  let Ctor = Model;
+  do {
+    const methods = getMethods(Ctor.prototype);
+    const staticMethods = getMethods(Ctor);
+    [...methods, ...staticMethods].forEach(method => wrapMethod(method, Promise));
+    Ctor = Object.getPrototypeOf(Ctor);
+  } while (Ctor !== Sequelize.Model && Ctor !== Function.prototype);
+  return Model;
 }
 
-function wrapAsyncMethods(Model, wrapper = require('bluebird').method) {
-  const transformer = ({ value }) => isAsyncFunction(value) && wrapper(value);
-  transformProperties(Model, transformer);
-  transformProperties(Model.prototype, transformer);
-  return Model;
+function wrapMethod({ key, value, target }, Promise) {
+  target[key] = function () {
+    const result = value.apply(this, arguments);
+    if (!result || !isFunction(result.catch)) return result;
+    return Promise.resolve(result);
+  };
+}
+
+function getMethods(object) {
+  return getProperties(object)
+    .filter(({ key, value }) => isFunction(value) && key !== 'constructor');
+}
+
+function getProperties(object) {
+  return Reflect.ownKeys(object).map(key => {
+    const { value } = Reflect.getOwnPropertyDescriptor(object, key);
+    return { key, value, target: object };
+  });
 }

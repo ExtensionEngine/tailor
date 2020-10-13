@@ -2,7 +2,7 @@
   <ul class="discussion-thread mt-2">
     <thread-comment
       v-for="comment in visibleItems"
-      :key="comment._cid || comment.id"
+      :key="comment.uid || comment.id"
       @update="onUpdate"
       @remove="item => remove(item)"
       :comment="comment" />

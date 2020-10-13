@@ -19,8 +19,8 @@ const SCHEMAS = [{
   name: 'Sample course',
   meta: [],
   structure: [{
-    level: 1,
     type: 'COMPETENCY',
+    rootLevel: true,
     subLevels: ['OBJECTIVE'],
     label: 'Competency',
     color: '#42A5F5',
@@ -38,7 +38,6 @@ const SCHEMAS = [{
       validate: { max: 250 }
     }]
   }, {
-    level: 2,
     type: 'OBJECTIVE',
     subLevels: ['TOPIC'],
     label: 'Learning Objective',
@@ -57,7 +56,6 @@ const SCHEMAS = [{
       validate: { required: false, max: 250 }
     }]
   }, {
-    level: 3,
     type: 'TOPIC',
     label: 'Topic',
     color: '#EC407A',
@@ -78,16 +76,18 @@ const SCHEMAS = [{
   }],
   contentContainers: [{
     type: 'EXAM',
+    templateId: 'EXAM',
     label: 'Exam',
     displayHeading: true,
     multiple: true,
     required: false,
     publishedAs: 'exam',
     config: {
-      objectives: ['COURSE/TOPIC']
+      objectives: ['DEFAULT_SCHEMA/TOPIC']
     }
   }, {
     type: 'ASSESSMENT_POOL',
+    templateId: 'ASSESSMENT_POOL',
     label: 'Assessments',
     publishedAs: 'assessments'
   }],
