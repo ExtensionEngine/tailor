@@ -1,5 +1,5 @@
 <template>
-  <v-snackbar v-model="snackbar" v-bind="context" multi-line>
+  <v-snackbar v-model="snackbar" v-bind="context" absolute multi-line>
     {{ context.message }}
     <v-btn
       @click="close"
