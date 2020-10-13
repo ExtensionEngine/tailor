@@ -8,6 +8,9 @@
         <router-view />
       </v-col>
     </v-row>
+    <export-modal
+      v-if="showExportModal"
+      @close="showExportModal = false" />
     <clone-modal
       v-if="showCloneModal"
       @close="showCloneModal = false" />
@@ -20,20 +23,18 @@
 import { mapActions, mapGetters } from 'vuex';
 import AppFooter from '@/components/common/Footer';
 import CloneModal from './CloneModal';
-import EventBus from 'EventBus';
+import ExportModal from './ExportModal';
+import { mapRequests } from '@/plugins/radio';
 import ProgressDialog from '@/components/common/ProgressDialog';
 import publishMixin from '@/components/common/mixins/publish';
 import Sidebar from './Sidebar';
 
-const appChannel = EventBus.channel('app');
-
 export default {
   mixins: [publishMixin],
-  data() {
-    return {
-      showCloneModal: false
-    };
-  },
+  data: () => ({
+    showCloneModal: false,
+    showExportModal: false
+  }),
   computed: {
     ...mapGetters(['isAdmin']),
     ...mapGetters('repository',
@@ -41,10 +42,11 @@ export default {
     publishPercentage: ({ publishStatus }) => publishStatus.progress * 100
   },
   methods: {
+    ...mapRequests('app', ['showConfirmationModal']),
     ...mapActions('repositories', { removeRepository: 'remove' }),
     ...mapActions('repository/activities', { publishActivity: 'publish' }),
     showDeleteConfirmation() {
-      appChannel.emit('showConfirmationModal', {
+      this.showConfirmationModal({
         title: 'Delete repository?',
         message: `Are you sure you want to delete repository ${this.repository.name}?`,
         action: async () => {
@@ -57,6 +59,7 @@ export default {
       const actions = {
         publish: this.publishRepository,
         clone: this.clone,
+        export: this.export,
         delete: this.showDeleteConfirmation
       };
       actions[name]();
@@ -66,6 +69,9 @@ export default {
     },
     clone() {
       this.showCloneModal = true;
+    },
+    export() {
+      this.showExportModal = true;
     }
   },
   created() {
@@ -75,6 +81,7 @@ export default {
   components: {
     AppFooter,
     CloneModal,
+    ExportModal,
     ProgressDialog,
     Sidebar
   }

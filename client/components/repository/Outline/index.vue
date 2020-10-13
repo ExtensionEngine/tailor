@@ -16,7 +16,7 @@
             v-bind="{ handle: '.activity' }">
             <activity
               v-for="(activity, index) in rootActivities"
-              :key="activity._cid"
+              :key="activity.uid"
               v-bind="activity"
               :index="index + 1"
               :level="1"
@@ -27,7 +27,7 @@
         <template v-else>
           <search-result
             v-for="activity in filteredActivities"
-            :key="activity._cid"
+            :key="activity.uid"
             @select="selectActivity(activity.id)"
             @show="goTo(activity)"
             :activity="activity" />
@@ -70,13 +70,13 @@ export default {
     ...mapGetters('repository', ['structure', 'outlineActivities']),
     hasActivities: vm => !!vm.rootActivities.length,
     isFlat() {
-      const types = map(filter(this.structure, { level: 2 }), 'type');
+      const types = map(filter(this.structure, it => !it.rootLevel), 'type');
       if (!types.length) return false;
       return !find(this.outlineActivities, it => types.includes(it.type));
     },
     rootActivities() {
-      const types = map(filter(this.structure, { level: 1 }), 'type');
-      return filter(this.outlineActivities, it => types.includes(it.type))
+      const types = map(this.structure.filter(it => it.rootLevel), 'type');
+      return filter(this.outlineActivities, it => types.includes(it.type) && !it.parentId)
         .sort((x, y) => x.position - y.position);
     },
     filteredActivities() {
@@ -98,7 +98,7 @@ export default {
     },
     scrollToActivity(activity, timeout = 500) {
       setTimeout(() => {
-        const elementId = `#activity_${activity._cid}`;
+        const elementId = `#activity_${activity.uid}`;
         const element = this.$refs.structure.querySelector(elementId);
         element.scrollIntoView();
       }, timeout);

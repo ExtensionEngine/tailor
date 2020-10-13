@@ -4,39 +4,56 @@
     color="transparent"
     class="tce-embed-toolbar elevation-0">
     <v-toolbar-title class="pl-1">Embed component</v-toolbar-title>
-    <div class="input-container">
-      <v-text-field
-        v-model="height"
-        @input="onChange"
-        type="number"
-        name="height"
-        label="Height (px)"
-        placeholder="Height..."
-        prepend-icon="mdi-resize"
-        hide-details dense filled
-        class="height-input" />
-      <v-text-field
-        v-model="url"
-        v-validate="{ url: true }"
-        @input="onChange"
-        :error-messages="vErrors.collect('url')"
-        name="url"
-        label="URL"
-        placeholder="Enter URL..."
-        prepend-icon="mdi-link"
-        data-vv-delay="0"
-        hide-details dense filled />
+    <div class="input-container mt-5">
+      <validation-observer ref="form" tag="form" class="d-flex">
+        <validation-provider
+          v-slot="{ errors }"
+          name="height"
+          rules="required|min_value:200|max_value:3000"
+          slim>
+          <v-text-field
+            v-model="height"
+            @keyup="onChange"
+            :error-messages="errors"
+            type="number"
+            name="height"
+            label="Height (px)"
+            placeholder="Height..."
+            prepend-icon="mdi-resize"
+            dense filled
+            class="height-input" />
+        </validation-provider>
+        <validation-provider
+          v-slot="{ errors }"
+          name="url"
+          :rules="{
+            url: {
+              protocols: ['http', 'https'],
+              require_protocol: true,
+              require_valid_protocol: true
+            }
+          }"
+          slim>
+          <v-text-field
+            v-model="url"
+            @keyup="onChange"
+            :error-messages="errors"
+            name="url"
+            label="URL"
+            placeholder="Enter URL..."
+            prepend-icon="mdi-link"
+            dense filled />
+        </validation-provider>
+      </validation-observer>
     </div>
   </v-toolbar>
 </template>
 
 <script>
 import debounce from 'lodash/debounce';
-import { withValidation } from 'utils/validation';
 
 export default {
   name: 'tce-embed-toolbar',
-  mixins: [withValidation()],
   inject: ['$elementBus'],
   props: {
     element: { type: Object, required: true }
@@ -48,8 +65,8 @@ export default {
   methods: {
     async onChange() {
       const { height, url } = this;
-      const isValid = await this.$validator.validateAll();
-      if (!isValid) return;
+      const valid = await this.$refs.form.validate();
+      if (!valid) return;
       this.save({ height, url });
     },
     save: debounce(function (data) {
@@ -77,7 +94,7 @@ export default {
 }
 
 .v-input.height-input {
-  max-width: 10rem;
+  max-width: 14rem;
   margin-right: 1.25rem;
 }
 </style>

@@ -3,8 +3,14 @@
 const { Model } = require('sequelize');
 
 class Tag extends Model {
-  static fields({ STRING }) {
+  static fields({ STRING, UUID, UUIDV4 }) {
     return {
+      uid: {
+        type: UUID,
+        unique: true,
+        allowNull: false,
+        defaultValue: UUIDV4
+      },
       name: {
         type: STRING,
         allowNull: false,

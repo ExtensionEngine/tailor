@@ -42,12 +42,10 @@
 </template>
 
 <script>
-import EventBus from 'EventBus';
 import { mapGetters } from 'vuex';
+import { mapRequests } from '@/plugins/radio';
 import pluralize from 'pluralize';
 import SelectElement from '@/components/common/SelectElement';
-
-const appChannel = EventBus.channel('app');
 
 function getTotalsByActivity(activities, relationships) {
   return activities.reduce((acc, { id, data: { name } }) => {
@@ -77,10 +75,11 @@ export default {
     }
   },
   methods: {
+    ...mapRequests('app', ['showConfirmationModal']),
     removeAll() {
       let label = this.label.toLowerCase();
       label = this.multiple ? pluralize(label) : label;
-      appChannel.emit('showConfirmationModal', {
+      this.showConfirmationModal({
         title: `Remove ${label}?`,
         message: `Are you sure you want to remove ${label}?`,
         action: () => this.$emit('save', [])

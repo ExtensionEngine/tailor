@@ -2,6 +2,7 @@
 
 const { Model, Op } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
+const { ContentElement: Events } = require('../../common/sse');
 const hooks = require('./hooks');
 const isNumber = require('lodash/isNumber');
 const pick = require('lodash/pick');
@@ -98,14 +99,19 @@ class ContentElement extends Model {
     };
   }
 
+  static get Events() {
+    return Events;
+  }
+
   static fetch(opt) {
     return isNumber(opt)
       ? ContentElement.findByPk(opt).then(it => it && resolveStatics(it))
       : ContentElement.findAll(opt).map(resolveStatics);
   }
 
-  static cloneElements(src, container, transaction) {
+  static cloneElements(src, container, options) {
     const { id: activityId, repositoryId } = container;
+    const { context, transaction } = options;
     return this.bulkCreate(src.map(it => {
       return Object.assign(pick(it, [
         'type',
@@ -116,7 +122,7 @@ class ContentElement extends Model {
         'refs',
         'meta'
       ]), { activityId, repositoryId });
-    }), { returning: true, transaction });
+    }), { returning: true, context, transaction });
   }
 
   /**

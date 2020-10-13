@@ -23,13 +23,13 @@ import { mapActions, mapGetters } from 'vuex';
 import ContentContainers from '../structure/ContentContainers';
 import ContentLoader from './Loader';
 import debounce from 'lodash/debounce';
-import EventBus from 'EventBus';
 import find from 'lodash/find';
 import flatMap from 'lodash/flatMap';
 import get from 'lodash/get';
 import { getDescendants } from 'client/utils/activity';
 import { getSupportedContainers } from 'shared/activities';
 import map from 'lodash/map';
+import { mapChannels } from '@/plugins/radio';
 import Promise from 'bluebird';
 import throttle from 'lodash/throttle';
 
@@ -54,6 +54,7 @@ export default {
   }),
   computed: {
     ...mapGetters('repository', ['activities']),
+    ...mapChannels({ editorChannel: 'editor' }),
     containerConfigs: vm => getSupportedContainers(vm.activity.type)
   },
   methods: {
@@ -68,7 +69,7 @@ export default {
       // Reset
       this.mousedownCaptured = false;
       if (get(e, 'component.name') !== 'content-element') {
-        EventBus.emit('element:focus');
+        this.editorChannel.emit(CE_FOCUS_EVENT);
       }
     },
     initElementChangeWatcher() {
@@ -76,7 +77,7 @@ export default {
         const { type, payload: element } = mutation;
         const { focusedElement } = this;
         if (!focusedElement || !ELEMENT_MUTATIONS.includes(type)) return;
-        if (element._cid === focusedElement._cid) {
+        if (element.uid === focusedElement.uid) {
           this.focusedElement = { ...focusedElement, ...element };
           return;
         }
@@ -89,14 +90,15 @@ export default {
       }, 100));
     },
     initElementFocusListener() {
-      this.eventBus = EventBus.on(CE_FOCUS_EVENT, throttle((element, composite) => {
+      this.focusHandler = throttle((element, composite) => {
         if (!element) {
           this.focusedElement = null;
           return;
         }
         if (getElementId(this.focusedElement) === getElementId(element)) return;
         this.focusedElement = { ...element, parent: composite };
-      }, 50));
+      }, 50);
+      this.editorChannel.on(CE_FOCUS_EVENT, this.focusHandler);
     }
   },
   watch: {
@@ -128,7 +130,6 @@ export default {
   },
   beforeDestroy() {
     this.storeUnsubscribe && this.storeUnsubscribe();
-    this.eventBus && this.eventBus.$off(CE_FOCUS_EVENT);
   },
   components: {
     ContentContainers,

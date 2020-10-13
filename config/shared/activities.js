@@ -1,7 +1,6 @@
 'use strict';
 
 const castArray = require('lodash/castArray');
-const filter = require('lodash/filter');
 const find = require('lodash/find');
 const first = require('lodash/first');
 const flatMap = require('lodash/flatMap');
@@ -11,7 +10,9 @@ const isString = require('lodash/isString');
 const map = require('lodash/map');
 const mergeConfig = require('../utils/mergeConfig');
 const parseSchemas = require('./schema-parser');
+const reduce = require('lodash/reduce');
 const union = require('lodash/union');
+const uniq = require('lodash/uniq');
 
 /* eslint-disable */
 const defaultConfiguration = require('./activities-rc');
@@ -36,7 +37,7 @@ module.exports = {
   getElementMetadata,
   getLevelRelationships,
   getRepositoryRelationships,
-  getSiblingLevels,
+  getSiblingTypes,
   getSupportedContainers,
   hasAssessments: level => getActivityConfig(level).hasAssessments,
   isEditable: activityType => {
@@ -124,13 +125,17 @@ function getElementConfig(schemaId, type) {
   return find(config, it => castArray(it.type).includes(type)) || {};
 }
 
-function getSiblingLevels(type) {
+function getSiblingTypes(type) {
+  if (!isOutlineActivity(type)) return [type];
   const schemaId = getSchemaId(type);
-  if (!schemaId) return [{ type }];
-  const levels = getOutlineLevels(schemaId);
-  const { level } = find(levels, { type }) || {};
-  if (!level) return [{ type }];
-  return filter(levels, { level });
+  const outline = getOutlineLevels(schemaId);
+  const activityConfig = getActivityConfig(type);
+  const isRootLevel = activityConfig.rootLevel;
+  return uniq(reduce(outline, (acc, it) => {
+    if (isRootLevel && it.rootLevel) acc.push(it.type);
+    if (!it.subLevels || !it.subLevels.includes(type)) return acc;
+    return [...acc, ...it.subLevels];
+  }, []));
 }
 
 function getSupportedContainers(type) {

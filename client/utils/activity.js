@@ -5,7 +5,8 @@ import { getLevel } from 'shared/activities';
 import sortBy from 'lodash/sortBy';
 
 export function isChanged(activity) {
-  return new Date(activity.modifiedAt) > new Date(activity.publishedAt);
+  return !activity.publishedAt ||
+    (new Date(activity.modifiedAt) > new Date(activity.publishedAt));
 }
 
 export function getLabel(activity) {
@@ -41,10 +42,6 @@ export function getAncestors(activities, activity) {
   if (!parent) return [];
   const ancestors = getAncestors(activities, parent);
   return [...ancestors, parent];
-}
-
-export function isSameLevel(activityX, activityY) {
-  return getLevel(activityX.type).level === getLevel(activityY.type).level;
 }
 
 export function toTreeFormat(activities, targetLevels, parentId = null, level = 1) {

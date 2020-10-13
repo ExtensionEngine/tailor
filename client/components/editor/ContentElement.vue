@@ -2,7 +2,7 @@
   <contained-content
     @add="add"
     @save="save"
-    @save:meta="meta => updateElement({ _cid: element._cid, meta })"
+    @save:meta="meta => updateElement({ uid: element.uid, meta })"
     @delete="remove"
     v-bind="$attrs"
     :element="element"
@@ -14,7 +14,7 @@
 import { mapActions, mapMutations } from 'vuex';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
-import EventBus from 'EventBus';
+import { mapChannels } from '@/plugins/radio';
 import throttle from 'lodash/throttle';
 
 export default {
@@ -25,6 +25,7 @@ export default {
     disabled: { type: Boolean, default: false },
     dragged: { type: Boolean, default: false }
   },
+  computed: mapChannels({ editorChannel: 'editor' }),
   methods: {
     ...mapActions('repository/contentElements', {
       saveElement: 'save',
@@ -47,7 +48,7 @@ export default {
     }, 4000),
     remove() {
       this.removeElement(this.element).then(() => {
-        this.$nextTick(() => EventBus.emit('element:focus'));
+        this.$nextTick(() => this.editorChannel.emit('element:focus'));
       });
     }
   },

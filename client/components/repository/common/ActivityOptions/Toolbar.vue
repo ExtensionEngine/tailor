@@ -23,28 +23,34 @@
       :repository-id="activity.repositoryId"
       :levels="supportedLevels"
       :anchor="activity"
-      :heading="`
-        Add ${isEqual(supportedLevels, subLevels) ? 'into' : 'below'}
-        ${activity.data.name}`" />
+      :action="action"
+      :heading="`${dialogHeading} ${activity.data.name}`" />
   </div>
 </template>
 
 <script>
 import CreateDialog from '@/components/repository/common/CreateDialog';
+import InsertLocation from '@/utils/InsertLocation';
 import isEqual from 'lodash/isEqual';
 import optionsMixin from './common';
 
+const { ADD_AFTER, ADD_BEFORE, ADD_INTO } = InsertLocation;
+
 const getOptions = vm => {
   const items = [{
+    name: 'Add item above',
+    icon: 'arrow-up',
+    action: () => vm.setCreateContext(vm.sameLevel, ADD_BEFORE)
+  }, {
     name: 'Add item below',
     icon: 'arrow-down',
-    action: () => vm.setCreateContext(vm.sameLevel)
+    action: () => vm.setCreateContext(vm.sameLevel, ADD_AFTER)
   }];
   if (vm.subLevels.length) {
     items.push({
       name: 'Add item into',
       icon: 'subdirectory-arrow-right',
-      action: () => vm.setCreateContext(vm.subLevels)
+      action: () => vm.setCreateContext(vm.subLevels, ADD_INTO)
     });
   }
   if (vm.isEditable) {
@@ -66,16 +72,18 @@ export default {
   },
   data: () => ({
     showCreateDialog: false,
-    supportedLevels: []
+    supportedLevels: [],
+    action: null
   }),
   computed: {
     options: vm => getOptions(vm)
   },
   methods: {
     isEqual,
-    setCreateContext(levels) {
+    setCreateContext(levels, action = null) {
       this.supportedLevels = levels;
       this.showCreateDialog = true;
+      this.action = action;
     }
   },
   components: { CreateDialog }
