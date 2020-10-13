@@ -59,17 +59,14 @@ export default {
     enableAdd: { type: Boolean, default: true },
     addElementOptions: { type: Object, default: () => ({}) }
   },
-  data() {
-    return { dragElementIndex: null };
-  },
+  data: () => ({ dragElementIndex: null }),
   computed: {
-    options() {
-      return Object.assign(this.dragOptions, {
-        handle: '.drag-handle',
-        scrollSpeed: 15,
-        scrollSensitivity: 125
-      });
-    },
+    options: vm => ({
+      ...vm.dragOptions,
+      handle: '.drag-handle',
+      scrollSpeed: 15,
+      scrollSensitivity: 125
+    }),
     nextPosition() {
       const lastItem = last(this.elements);
       return lastItem ? lastItem.position + 1 : 1;

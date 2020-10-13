@@ -124,7 +124,7 @@ export default {
 }
 
 .element-list .sortable-drag {
-  margin: 10px 0;
+  margin: 0.625rem 0;
   padding: 0;
 
   ::v-deep .inline-activator {
