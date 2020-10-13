@@ -7,7 +7,7 @@
       <content-loader v-if="isLoading" class="loader" />
       <template v-else>
         <content-containers
-          v-for="(containerGroup, type) in contentContainers"
+          v-for="(containerGroup, type) in rootContainerGroups"
           :key="type"
           :container-group="containerGroup"
           :parent-id="activity.id"
@@ -24,11 +24,8 @@ import ContentContainers from '../structure/ContentContainers';
 import ContentLoader from './Loader';
 import debounce from 'lodash/debounce';
 import find from 'lodash/find';
-import flatMap from 'lodash/flatMap';
 import get from 'lodash/get';
-import { getDescendants } from 'client/utils/activity';
 import { getSupportedContainers } from 'shared/activities';
-import map from 'lodash/map';
 import { mapChannels } from '@/plugins/radio';
 import Promise from 'bluebird';
 import throttle from 'lodash/throttle';
@@ -45,7 +42,8 @@ export default {
     repository: { type: Object, required: true },
     activity: { type: Object, required: true },
     // grouped by type
-    contentContainers: { type: Object, required: true }
+    rootContainerGroups: { type: Object, required: true },
+    contentContainers: { type: Array, required: true }
   },
   data: () => ({
     isLoading: true,
@@ -112,18 +110,11 @@ export default {
   async created() {
     // Reset element focus
     this.$emit('selected', null);
-    const rootContainerIds = flatMap(this.contentContainers, it => map(it, 'id'));
-    const childContainerIds = rootContainerIds.reduce((acc, id) => {
-      return acc.concat(getDescendants(this.activities, { id }).map(it => it.id));
-    }, []);
-    const ids = rootContainerIds.concat(childContainerIds);
-    if (ids.length) {
-      await Promise.all([
-        this.getContentElements({ ids }),
-        Promise.delay(800)
-      ]);
-    }
-
+    const ids = this.contentContainers.map(it => it.id);
+    await Promise.all([
+      this.getContentElements({ ids }),
+      Promise.delay(800)
+    ]);
     this.isLoading = false;
     this.initElementFocusListener();
     this.initElementChangeWatcher();

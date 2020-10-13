@@ -39,6 +39,7 @@ module.exports = {
   getRepositoryRelationships,
   getSiblingTypes,
   getSupportedContainers,
+  getContainerTemplateId,
   hasAssessments: level => getActivityConfig(level).hasAssessments,
   isEditable: activityType => {
     const config = getActivityConfig(activityType);
@@ -146,6 +147,11 @@ function getSupportedContainers(type) {
   return map(activityConfig, type =>
     find(schemaConfig, { type }) || find(defaultConfig, { type })
   );
+}
+
+// type is checked because of legacy support
+function getContainerTemplateId(container) {
+  return container.templateId || container.type;
 }
 
 function getRepositoryMetadata(repository) {

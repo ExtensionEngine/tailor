@@ -1,8 +1,11 @@
 import ComponentRegistry from './ComponentRegistry';
-import { getMetaName } from 'tce-core/utils';
+import { getMetaName as getName } from 'tce-core/utils';
 import inputsList from 'shared/core-meta';
 
-const ATTRS = ['type', 'version'];
-const options = ['meta input', inputsList, ATTRS, getMetaName];
-
-export default Vue => new ComponentRegistry(Vue, ...options);
+export default Vue => new ComponentRegistry(Vue, {
+  name: 'meta input',
+  extensions: inputsList,
+  attrs: ['type', 'version'],
+  getCondition: type => it => it.type === type,
+  getName
+});

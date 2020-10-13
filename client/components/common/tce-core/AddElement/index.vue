@@ -87,7 +87,6 @@ import intersection from 'lodash/intersection';
 import { isQuestion } from '../utils';
 import reduce from 'lodash/reduce';
 import reject from 'lodash/reject';
-import sortBy from 'lodash/sortBy';
 import uuid from '@/utils/uuid';
 
 const SelectElement = () => import('components/common/SelectElement');
@@ -122,7 +121,7 @@ export default {
   },
   computed: {
     registry() {
-      return sortBy(this.$teRegistry.get(), 'position');
+      return this.$teRegistry.all;
     },
     questions() {
       return filter(this.registry, { type: 'QUESTION' });
