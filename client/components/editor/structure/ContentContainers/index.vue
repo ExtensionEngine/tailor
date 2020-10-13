@@ -40,14 +40,15 @@
 import { mapActions, mapState } from 'vuex';
 import capitalize from 'lodash/capitalize';
 import ContentContainer from './Container';
-import EventBus from 'EventBus';
 import get from 'lodash/get';
+import { getContainerTemplateId as getContainerId } from 'shared/activities';
 import { getContainerName } from 'tce-core/utils';
 import isEmpty from 'lodash/isEmpty';
+import { mapRequests } from '@/plugins/radio';
 import maxBy from 'lodash/maxBy';
 import throttle from 'lodash/throttle';
 
-const appChannel = EventBus.channel('app');
+const DEFAULT_CONTAINER = 'content-container';
 
 export default {
   name: 'content-containers',
@@ -55,19 +56,20 @@ export default {
   inject: ['$ccRegistry'],
   props: {
     containerGroup: { type: Array, default() { return []; } },
-    parentId: { type: Number, required: true },
-    displayHeading: { type: Boolean, default: false },
     type: { type: String, required: true },
+    templateId: { type: String, default: null },
+    parentId: { type: Number, required: true },
     label: { type: String, required: true },
+    required: { type: Boolean, default: true },
     multiple: { type: Boolean, default: false },
-    required: { type: Boolean, default: true }
+    displayHeading: { type: Boolean, default: false }
   },
   computed: {
     ...mapState('repository/activities', { activities: 'items' }),
     ...mapState('repository/contentElements', { elements: 'items' }),
     containerName() {
-      const { type, $ccRegistry: registry } = this;
-      return registry.get(type) ? getContainerName(type) : 'content-container';
+      const id = getContainerId(this);
+      return this.$ccRegistry.get(id) ? getContainerName(id) : DEFAULT_CONTAINER;
     },
     name() {
       return this.label.toLowerCase();
@@ -81,6 +83,7 @@ export default {
     }
   },
   methods: {
+    ...mapRequests('app', ['showConfirmationModal']),
     ...mapActions('repository/activities', ['save', 'update', 'remove']),
     ...mapActions('repository/contentElements', {
       addElement: 'add',
@@ -103,7 +106,7 @@ export default {
       this.reorderElements({ element, context });
     },
     requestDeletion(content, action, name) {
-      appChannel.emit('showConfirmationModal', {
+      this.showConfirmationModal({
         title: `Delete ${name}?`,
         message: `Are you sure you want to delete ${name}?`,
         action: () => this[action](content)

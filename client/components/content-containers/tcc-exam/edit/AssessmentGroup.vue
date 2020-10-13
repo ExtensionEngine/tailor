@@ -12,6 +12,7 @@
             v-model.number="timeLimit"
             @keydown="e => ['e', '+', '-', '.'].includes(e.key) && e.preventDefault()"
             :error-messages="errors"
+            min="0"
             name="timeLimit"
             hint="Time limit (minutes)"
             type="number"
