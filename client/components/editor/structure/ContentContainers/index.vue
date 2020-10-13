@@ -41,11 +41,14 @@ import { mapActions, mapState } from 'vuex';
 import capitalize from 'lodash/capitalize';
 import ContentContainer from './Container';
 import get from 'lodash/get';
+import { getContainerTemplateId as getContainerId } from 'shared/activities';
 import { getContainerName } from 'tce-core/utils';
 import isEmpty from 'lodash/isEmpty';
 import { mapRequests } from '@/plugins/radio';
 import maxBy from 'lodash/maxBy';
 import throttle from 'lodash/throttle';
+
+const DEFAULT_CONTAINER = 'content-container';
 
 export default {
   name: 'content-containers',
@@ -53,19 +56,20 @@ export default {
   inject: ['$ccRegistry'],
   props: {
     containerGroup: { type: Array, default() { return []; } },
-    parentId: { type: Number, required: true },
-    displayHeading: { type: Boolean, default: false },
     type: { type: String, required: true },
+    templateId: { type: String, default: null },
+    parentId: { type: Number, required: true },
     label: { type: String, required: true },
+    required: { type: Boolean, default: true },
     multiple: { type: Boolean, default: false },
-    required: { type: Boolean, default: true }
+    displayHeading: { type: Boolean, default: false }
   },
   computed: {
     ...mapState('repository/activities', { activities: 'items' }),
     ...mapState('repository/contentElements', { elements: 'items' }),
     containerName() {
-      const { type, $ccRegistry: registry } = this;
-      return registry.get(type) ? getContainerName(type) : 'content-container';
+      const id = getContainerId(this);
+      return this.$ccRegistry.get(id) ? getContainerName(id) : DEFAULT_CONTAINER;
     },
     name() {
       return this.label.toLowerCase();

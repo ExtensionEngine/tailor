@@ -76,16 +76,18 @@ const SCHEMAS = [{
   }],
   contentContainers: [{
     type: 'EXAM',
+    templateId: 'EXAM',
     label: 'Exam',
     displayHeading: true,
     multiple: true,
     required: false,
     publishedAs: 'exam',
     config: {
-      objectives: ['COURSE/TOPIC']
+      objectives: ['DEFAULT_SCHEMA/TOPIC']
     }
   }, {
     type: 'ASSESSMENT_POOL',
+    templateId: 'ASSESSMENT_POOL',
     label: 'Assessments',
     publishedAs: 'assessments'
   }],

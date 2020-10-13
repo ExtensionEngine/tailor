@@ -71,7 +71,6 @@ import filter from 'lodash/filter';
 import get from 'lodash/get';
 import { isQuestion } from '../utils';
 import reduce from 'lodash/reduce';
-import sortBy from 'lodash/sortBy';
 import uuid from '@/utils/uuid';
 
 const DEFAULT_ELEMENT_WIDTH = 100;
@@ -103,7 +102,7 @@ export default {
   },
   computed: {
     registry() {
-      return sortBy(this.$teRegistry.get(), 'position');
+      return this.$teRegistry.all;
     },
     questions() {
       return filter(this.registry, { type: 'QUESTION' });
