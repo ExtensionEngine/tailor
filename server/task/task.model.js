@@ -69,7 +69,8 @@ class Task extends Model {
       timestamps: true,
       paranoid: true,
       freezeTableName: true,
-      underscored: true
+      underscored: true,
+      indexes: [{ unique: true, fields: ['columnPosition', 'status'] }]
     };
   }
 
