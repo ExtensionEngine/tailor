@@ -29,7 +29,6 @@
         :layout="layout"
         name="list-add">
         <add-element
-          v-if="enableAdd"
           @add="el => $emit('add', el)"
           :include="supportedTypes"
           :activity="activity"
