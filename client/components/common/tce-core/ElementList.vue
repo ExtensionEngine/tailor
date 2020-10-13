@@ -35,7 +35,8 @@
           :label="addElementOptions.label"
           :large="addElementOptions.large"
           :position="nextPosition"
-          :layout="layout" />
+          :layout="layout"
+          class="mt-1" />
       </slot>
     </template>
   </div>
