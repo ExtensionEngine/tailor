@@ -20,7 +20,7 @@
 
 <script>
 import { getComponentName, getElementId } from './utils';
-import EventBus from 'EventBus';
+import { mapChannels } from '@/plugins/radio';
 
 export default {
   name: 'content-element',
@@ -33,36 +33,32 @@ export default {
     frame: { type: Boolean, default: true },
     dense: { type: Boolean, default: false }
   },
-  data() {
-    return {
-      isFocused: false,
-      elementBus: EventBus.channel(`element:${getElementId(this.element)}`)
-    };
-  },
+  data: () => ({ isFocused: false }),
   computed: {
+    ...mapChannels({ editorChannel: 'editor' }),
     id() {
       return getElementId(this.element);
     },
     componentName() {
       return getComponentName(this.element.type);
+    },
+    elementBus() {
+      return this.$radio.channel(`element:${this.id}`);
     }
   },
   methods: {
     focus(e, element = this.element, parent = this.parent) {
       if (this.isDisabled || e.component) return;
-      EventBus.emit('element:focus', element, parent);
+      this.editorChannel.emit('element:focus', element, parent);
       e.component = { name: 'content-element', data: element };
     }
   },
   created() {
     this.elementBus.on('save:meta', meta => this.$emit('save:meta', meta));
     this.elementBus.on('delete', () => this.$emit('delete'));
-    EventBus.on('element:focus', element => {
+    this.editorChannel.on('element:focus', element => {
       this.isFocused = !!element && (getElementId(element) === this.id);
     });
-  },
-  beforeDestroy() {
-    this.elementBus.unsubscribe();
   },
   provide() {
     return {

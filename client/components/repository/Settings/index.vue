@@ -23,13 +23,11 @@
 import { mapActions, mapGetters } from 'vuex';
 import AppFooter from '@/components/common/Footer';
 import CloneModal from './CloneModal';
-import EventBus from 'EventBus';
 import ExportModal from './ExportModal';
+import { mapRequests } from '@/plugins/radio';
 import ProgressDialog from '@/components/common/ProgressDialog';
 import publishMixin from '@/components/common/mixins/publish';
 import Sidebar from './Sidebar';
-
-const appChannel = EventBus.channel('app');
 
 export default {
   mixins: [publishMixin],
@@ -44,10 +42,11 @@ export default {
     publishPercentage: ({ publishStatus }) => publishStatus.progress * 100
   },
   methods: {
+    ...mapRequests('app', ['showConfirmationModal']),
     ...mapActions('repositories', { removeRepository: 'remove' }),
     ...mapActions('repository/activities', { publishActivity: 'publish' }),
     showDeleteConfirmation() {
-      appChannel.emit('showConfirmationModal', {
+      this.showConfirmationModal({
         title: 'Delete repository?',
         message: `Are you sure you want to delete repository ${this.repository.name}?`,
         action: async () => {

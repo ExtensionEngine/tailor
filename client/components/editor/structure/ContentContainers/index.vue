@@ -40,17 +40,15 @@
 import { mapActions, mapState } from 'vuex';
 import capitalize from 'lodash/capitalize';
 import ContentContainer from './Container';
-import EventBus from 'EventBus';
 import get from 'lodash/get';
 import { getContainerTemplateId as getContainerId } from 'shared/activities';
 import { getContainerName } from 'tce-core/utils';
 import isEmpty from 'lodash/isEmpty';
+import { mapRequests } from '@/plugins/radio';
 import maxBy from 'lodash/maxBy';
 import throttle from 'lodash/throttle';
 
 const DEFAULT_CONTAINER = 'content-container';
-
-const appChannel = EventBus.channel('app');
 
 export default {
   name: 'content-containers',
@@ -85,6 +83,7 @@ export default {
     }
   },
   methods: {
+    ...mapRequests('app', ['showConfirmationModal']),
     ...mapActions('repository/activities', ['save', 'update', 'remove']),
     ...mapActions('repository/contentElements', {
       addElement: 'add',
@@ -107,7 +106,7 @@ export default {
       this.reorderElements({ element, context });
     },
     requestDeletion(content, action, name) {
-      appChannel.emit('showConfirmationModal', {
+      this.showConfirmationModal({
         title: `Delete ${name}?`,
         message: `Are you sure you want to delete ${name}?`,
         action: () => this[action](content)

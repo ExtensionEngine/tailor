@@ -16,6 +16,7 @@ import FileFilter from '@/directives/file-filter';
 import QuestionContainer from 'tce-core/QuestionContainer';
 import request from './api/request';
 import { sync } from 'vuex-router-sync';
+import Radio from '@/plugins/radio';
 import Timeago from 'vue-timeago';
 import Vue from 'vue';
 import VueClipboard from 'vue-clipboard2';
@@ -35,6 +36,7 @@ setInteractionMode('eager');
 Vue.filter('formatDate', formatDate);
 Vue.filter('truncate', truncate);
 
+Vue.use(Radio);
 Vue.use(FileFilter);
 Vue.use(VueHotkey);
 Vue.use(VueClipboard);
