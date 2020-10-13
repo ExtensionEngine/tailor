@@ -81,13 +81,13 @@
 </template>
 
 <script>
-import cuid from 'cuid';
 import filter from 'lodash/filter';
 import intersection from 'lodash/intersection';
 import { isQuestion } from '../utils';
 import reduce from 'lodash/reduce';
 import reject from 'lodash/reject';
 import sortBy from 'lodash/sortBy';
+import uuid from '@/utils/uuid';
 
 const SelectElement = () => import('components/common/SelectElement');
 
@@ -178,12 +178,12 @@ export default {
         element.position = this.position;
       } else {
         // If embed, assign id
-        element.id = cuid();
+        element.id = uuid();
         element.embedded = true;
       }
       if (isQuestion(element.type)) {
         const data = { width: LAYOUT.FULL_WIDTH };
-        const question = [{ id: cuid(), data, type: 'JODIT_HTML', embedded: true }];
+        const question = [{ id: uuid(), data, type: 'JODIT_HTML', embedded: true }];
         element.data = { ...element.data, question, type: subtype };
       }
       element.data = { ...element.data, ...initState() };

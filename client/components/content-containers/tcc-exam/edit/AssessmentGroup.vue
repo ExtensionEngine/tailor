@@ -3,20 +3,26 @@
     <div class="divider"></div>
     <v-row justify="end" no-gutters class="pa-0">
       <v-col cols="2">
-        <v-text-field
-          v-model="timeLimit"
-          v-validate="{ numeric: true, min_value: 0 }"
-          :error-messages="timeLimitError"
-          name="timeLimit"
-          data-vv-as="time limit"
-          hint="Time limit (minutes)"
-          type="number"
-          step="15"
-          persistent-hint>
-          <template v-slot:append-outer>
-            <v-icon @click="$emit('delete')">mdi-delete</v-icon>
-          </template>
-        </v-text-field>
+        <validation-provider
+          ref="timeValidator"
+          v-slot="{ errors }"
+          name="time limit"
+          rules="integer|min_value:0">
+          <v-text-field
+            v-model.number="timeLimit"
+            @keydown="e => ['e', '+', '-', '.'].includes(e.key) && e.preventDefault()"
+            :error-messages="errors"
+            min="0"
+            name="timeLimit"
+            hint="Time limit (minutes)"
+            type="number"
+            step="15"
+            persistent-hint>
+            <template v-slot:append-outer>
+              <v-icon @click="$emit('delete')">mdi-delete</v-icon>
+            </template>
+          </v-text-field>
+        </validation-provider>
       </v-col>
     </v-row>
     <h3>Question group {{ position | toLetter }}</h3>
@@ -52,7 +58,6 @@
 <script>
 import AssessmentItem from './Assessment';
 import cloneDeep from 'lodash/cloneDeep';
-import cuid from 'cuid';
 import debounce from 'lodash/debounce';
 import { ElementList } from 'tce-core';
 import filter from 'lodash/filter';
@@ -65,11 +70,10 @@ import numberToLetter from 'utils/numberToLetter';
 import pickBy from 'lodash/pickBy';
 import sortBy from 'lodash/sortBy';
 import uniq from 'lodash/uniq';
-import { withValidation } from 'utils/validation';
+import uuid from '@/utils/uuid';
 
 export default {
   name: 'assessment-group',
-  mixins: [withValidation()],
   props: {
     group: { type: Object, required: true },
     elements: { type: Object, required: true },
@@ -83,10 +87,6 @@ export default {
     };
   },
   computed: {
-    timeLimitError() {
-      if (!this.vErrors.collect('timeLimit').length) return;
-      return ['Must be above 0.'];
-    },
     savedAssessments() {
       const cond = { activityId: this.group.id, type: 'ASSESSMENT' };
       return sortBy(filter(this.elements, cond), 'position');
@@ -107,8 +107,8 @@ export default {
   },
   methods: {
     addAssessment(assessment) {
-      Object.assign(assessment, { cid: cuid() });
-      this.$set(this.unsavedAssessments, assessment.cid, assessment);
+      Object.assign(assessment, { uid: uuid() });
+      this.$set(this.unsavedAssessments, assessment.uid, assessment);
     },
     saveAssessment(assessment) {
       if (assessment.id) return this.$emit('updateElement', assessment);
@@ -119,16 +119,16 @@ export default {
       this.$emit('deleteElement', assessment);
     },
     clearUnsavedAssessments(assessments) {
-      const ids = assessments.map(it => it.cid);
-      const cond = it => !ids.includes(it.cid);
+      const ids = assessments.map(it => it.uid);
+      const cond = it => !ids.includes(it.uid);
       this.unsavedAssessments = pickBy(this.unsavedAssessments, cond);
     }
   },
   watch: {
     savedAssessments: 'clearUnsavedAssessments',
     timeLimit: debounce(function (val) {
-      this.$validator.validateAll().then(isValid => {
-        if (!isValid) return;
+      this.$refs.timeValidator.validate().then(({ valid }) => {
+        if (!valid) return;
         const group = cloneDeep(this.group);
         group.data = group.data || {};
         group.data.timeLimit = val;

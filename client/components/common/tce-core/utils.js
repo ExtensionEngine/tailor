@@ -1,5 +1,9 @@
 import toCase from 'to-case';
 
+export function getMetaName(type) {
+  return `meta-${toCase.slug(type)}`;
+}
+
 export function getContainerName(type) {
   return `tcc-${toCase.slug(type)}`;
 }
@@ -25,7 +29,7 @@ export function getToolbarName(type) {
 }
 
 export function getElementId(element) {
-  return element && (element._cid || element.id);
+  return element && (element.uid || element.id);
 }
 
 export function resolveElementPosition(context) {

@@ -1,20 +1,25 @@
 <template>
-  <v-autocomplete
-    v-model="value"
-    v-validate="{ required: !allowEmpty }"
-    @input="onRelationshipChanged"
-    :items="groupedOptions"
-    :name="type"
-    :label="label"
-    :placeholder="selectPlaceholder"
-    :data-vv-as="label"
-    :multiple="multiple"
-    :chips="multiple"
-    :clearable="!multiple"
-    :disabled="!options.length"
-    :error-messages="vErrors.collect(type)"
-    item-text="data.name"
-    deletable-chips return-object outlined />
+  <validation-provider
+    ref="validator"
+    v-slot="{ errors }"
+    :rules="{ required: !allowEmpty }"
+    :name="lowerCase(label)"
+    immediate>
+    <v-autocomplete
+      v-model="value"
+      @input="onRelationshipChanged"
+      :items="groupedOptions"
+      :name="type"
+      :label="label"
+      :placeholder="selectPlaceholder"
+      :multiple="multiple"
+      :chips="multiple"
+      :clearable="!multiple"
+      :disabled="!options.length"
+      :error-messages="errors"
+      item-text="data.name"
+      deletable-chips return-object outlined />
+  </validation-provider>
 </template>
 
 <script>
@@ -31,15 +36,14 @@ import get from 'lodash/get';
 import groupBy from 'lodash/groupBy';
 import includes from 'lodash/includes';
 import isEmpty from 'lodash/isEmpty';
+import lowerCase from 'lodash/lowerCase';
 import map from 'lodash/map';
 import pluralize from 'pluralize';
 import set from 'lodash/set';
 import without from 'lodash/without';
-import { withValidation } from 'utils/validation';
 
 export default {
   name: 'activity-relationship',
-  mixins: [withValidation()],
   props: {
     activity: { type: Object, required: true },
     type: { type: String, required: true },
@@ -87,13 +91,14 @@ export default {
     }
   },
   methods: {
+    lowerCase,
     ...mapActions('repository/activities', ['update']),
     getAssociationIds(activity) {
       return get(activity, `refs.${this.type}`, []);
     },
     async onRelationshipChanged(value) {
-      const isValid = await this.$validator.validateAll();
-      if (!isValid) return;
+      const { valid } = await this.$refs.validator.validate();
+      if (!valid) return;
       const associations = compact(castArray(value));
       const activity = cloneDeep(this.activity) || {};
       set(activity, `refs.${this.type}`, map(associations, 'id'));

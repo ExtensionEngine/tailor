@@ -1,11 +1,12 @@
 'use strict';
 
 const {
-  getSiblingLevels,
+  getSiblingTypes,
   isOutlineActivity
 } = require('../../config/shared/activities');
 const { Model, Op } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
+const { Activity: Events } = require('../../common/sse');
 const hooks = require('./hooks');
 const isEmpty = require('lodash/isEmpty');
 const map = require('lodash/map');
@@ -108,32 +109,36 @@ class Activity extends Model {
     };
   }
 
+  static get Events() {
+    return Events;
+  }
+
   static async cloneActivities(src, dstRepositoryId, dstParentId, opts) {
     if (!opts.idMappings) opts.idMappings = {};
-    const { idMappings, transaction } = opts;
+    const { idMappings, context, transaction } = opts;
     const dstActivities = await Activity.bulkCreate(map(src, it => ({
       repositoryId: dstRepositoryId,
       parentId: dstParentId,
       ...pick(it, ['type', 'position', 'data', 'refs', 'modifiedAt'])
-    })), { returning: true, transaction });
+    })), { returning: true, context, transaction });
     const ContentElement = this.sequelize.model('ContentElement');
     return Promise.reduce(src, async (acc, it, index) => {
       const parent = dstActivities[index];
       acc[it.id] = parent.id;
       const where = { activityId: it.id, detached: false };
       const elements = await ContentElement.findAll({ where, transaction });
-      await ContentElement.cloneElements(elements, parent, transaction);
+      await ContentElement.cloneElements(elements, parent, { context, transaction });
       const children = await it.getChildren({ where: { detached: false } });
       if (!children.length) return acc;
       return Activity.cloneActivities(children, dstRepositoryId, parent.id, opts);
     }, idMappings);
   }
 
-  clone(repositoryId, parentId, position) {
+  clone(repositoryId, parentId, position, context) {
     return this.sequelize.transaction(transaction => {
       if (position) this.position = position;
       return Activity.cloneActivities(
-        [this], repositoryId, parentId, { transaction }
+        [this], repositoryId, parentId, { context, transaction }
       );
     });
   }
@@ -182,7 +187,8 @@ class Activity extends Model {
 
   remove(options = {}) {
     if (!options.recursive) return this.destroy(options);
-    return this.sequelize.transaction(t => {
+    const { soft } = options;
+    return this.sequelize.transaction(transaction => {
       return this.descendants({ attributes: ['id'] })
         .then(descendants => {
           descendants.all = [...descendants.nodes, ...descendants.leaves];
@@ -192,23 +198,22 @@ class Activity extends Model {
           const ContentElement = this.sequelize.model('ContentElement');
           const activities = map(descendants.all, 'id');
           const where = { activityId: [...activities, this.id] };
-          return removeAll(ContentElement, where, options.soft)
+          return removeAll(ContentElement, where, { soft, transaction })
             .then(() => descendants);
         })
         .then(descendants => {
           const activities = map(descendants.nodes, 'id');
           const where = { parentId: [...activities, this.id] };
-          return removeAll(Activity, where, options.soft);
+          return removeAll(Activity, where, { soft, transaction });
         })
-        .then(() => this.destroy(options))
+        .then(() => this.destroy({ ...options, transaction }))
         .then(() => this);
     });
   }
 
   reorder(index, context) {
     return this.sequelize.transaction(transaction => {
-      const types = getSiblingLevels(this.type).map(it => it.type);
-      const filter = { type: types };
+      const filter = { type: getSiblingTypes(this.type) };
       return this.siblings({ filter, transaction }).then(siblings => {
         this.position = calculatePosition(this.id, index, siblings);
         return this.save({ transaction, context });
@@ -229,9 +234,10 @@ class Activity extends Model {
   }
 }
 
-function removeAll(Model, where = {}, soft = false) {
+function removeAll(Model, where = {}, options = {}) {
+  const { soft, transaction } = options;
   if (!soft) return Model.destroy({ where });
-  return Model.update({ detached: true }, { where });
+  return Model.update({ detached: true }, { where, transaction });
 }
 
 module.exports = Activity;

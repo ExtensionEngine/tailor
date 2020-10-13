@@ -1,5 +1,8 @@
 'use strict';
 
+require('dotenv').config();
+require('../shared/logger').enabled = false;
+
 const { User } = require('../shared/database');
 
 User.findOne({ where: { role: 'INTEGRATION' } })

@@ -2,36 +2,48 @@
   <tailor-dialog :value="show" header-icon="mdi-content-copy" persistent>
     <template v-slot:header>Clone {{ schema.toLowerCase() }}</template>
     <template v-slot:body>
-      <v-text-field
-        v-model="name"
-        v-validate="{ required: true, min: 2, max: 250 }"
-        :disabled="inProgress"
-        :error-messages="vErrors.collect('name')"
-        label="Name"
-        placeholder="Enter name..."
-        data-vv-name="name"
-        outlined
-        class="mb-4" />
-      <v-textarea
-        v-model="description"
-        v-validate="{ required: true, min: 2, max: 2000 }"
-        :disabled="inProgress"
-        :error-messages="vErrors.collect('description')"
-        label="Description"
-        placeholder="Enter description..."
-        data-vv-name="description"
-        outlined
-        class="mb-4" />
-    </template>
-    <template v-slot:actions>
-      <v-btn @click="close" :disabled="inProgress" text>Cancel</v-btn>
-      <v-btn
-        @click="cloneRepository"
-        :loading="inProgress"
-        color="primary"
-        text>
-        Clone
-      </v-btn>
+      <validation-observer
+        ref="form"
+        @submit.prevent="$refs.form.handleSubmit(submit)"
+        tag="form"
+        novalidate>
+        <validation-provider
+          v-slot="{ errors }"
+          name="name"
+          rules="required|min:2|max:250">
+          <v-text-field
+            v-model="name"
+            :error-messages="errors"
+            :disabled="inProgress"
+            label="Name"
+            placeholder="Enter name..."
+            outlined
+            class="mb-4" />
+        </validation-provider>
+        <validation-provider
+          v-slot="{ errors }"
+          name="description"
+          rules="required|min:2|max:2000">
+          <v-textarea
+            v-model="description"
+            :error-messages="errors"
+            :disabled="inProgress"
+            label="Description"
+            placeholder="Enter description..."
+            outlined
+            class="mb-4" />
+        </validation-provider>
+        <div class="d-flex justify-end">
+          <v-btn @click="close" :disabled="inProgress" text>Cancel</v-btn>
+          <v-btn
+            :loading="inProgress"
+            type="submit"
+            color="blue-grey darken-4"
+            text>
+            Clone
+          </v-btn>
+        </div>
+      </validation-observer>
     </template>
   </tailor-dialog>
 </template>
@@ -40,7 +52,6 @@
 import { mapActions, mapGetters } from 'vuex';
 import pick from 'lodash/pick';
 import TailorDialog from '@/components/common/TailorDialog';
-import { withValidation } from 'utils/validation';
 
 const getDefaultState = () => ({
   inProgress: false,
@@ -49,7 +60,6 @@ const getDefaultState = () => ({
 });
 
 export default {
-  mixins: [withValidation()],
   props: {
     show: { type: Boolean, default: true }
   },
@@ -60,11 +70,9 @@ export default {
     close() {
       this.$emit('close');
       Object.assign(this, getDefaultState());
-      this.$validator.reset();
+      this.$refs.form.reset();
     },
-    async cloneRepository() {
-      const isValid = await this.$validator.validateAll();
-      if (!isValid) return;
+    async submit() {
       this.inProgress = true;
       const { repositoryId } = this.$route.params;
       const data = { id: repositoryId, ...pick(this, ['name', 'description']) };

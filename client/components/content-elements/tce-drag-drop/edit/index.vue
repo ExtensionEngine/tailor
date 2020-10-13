@@ -71,13 +71,11 @@
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
 import { defaults } from 'utils/assessment';
-import EventBus from 'EventBus';
 import forEach from 'lodash/forEach';
+import { mapRequests } from '@/plugins/radio';
 import pick from 'lodash/pick';
 import pull from 'lodash/pull';
 import size from 'lodash/size';
-
-const appChannel = EventBus.channel('app');
 
 export default {
   props: {
@@ -94,6 +92,7 @@ export default {
     color: vm => vm.disabled ? 'grey' : 'grey darken-3'
   },
   methods: {
+    ...mapRequests('app', ['showConfirmationModal']),
     updateGroupName(groupKey, value) {
       const groups = cloneDeep(this.groups);
       groups[groupKey] = value;
@@ -138,7 +137,7 @@ export default {
       this.update({ answers, correct });
     },
     removeGroup(groupKey) {
-      appChannel.emit('showConfirmationModal', {
+      this.showConfirmationModal({
         title: 'Delete answer group',
         message: 'Are you sure you want to delete this answer group?',
         action: () => {
