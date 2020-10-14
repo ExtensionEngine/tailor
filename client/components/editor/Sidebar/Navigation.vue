@@ -1,25 +1,45 @@
 <template>
-  <div>
-    <v-sheet color="transparent" class="navigation-header">
-      <v-text-field
-        v-model="search"
-        label="Search..."
-        background-color="grey lighten-2"
-        clear-icon="mdi-close"
-        prepend-inner-icon="mdi-magnify"
-        solo clearable hide-details
-        class="my-3 mx-1" />
+  <div class="navigation-container">
+    <v-sheet color="grey lighten-5" elevation="1" tile class="navigation-header">
+      <v-hover v-slot:default="{ hover }">
+        <v-text-field
+          v-model="search"
+          label="Search..."
+          :background-color="hover ? 'blue-grey lighten-3' : 'blue-grey lighten-4'"
+          clear-icon="mdi-close"
+          prepend-inner-icon="mdi-magnify"
+          solo clearable hide-details
+          class="my-3 mx-1" />
+      </v-hover>
     </v-sheet>
     <v-treeview
-      @update:active="navigateTo"
+      ref="activityTree"
       :items="activityTree"
-      :active.sync="active"
+      :active="active"
       :search="search"
-      open-all activatable hoverable dense>
-      <template v-slot:label="{ item: { name, selectable } }">
-        <span :class="{ selectable }">{{ name }}</span>
+      open-all
+      class="pt-4">
+      <template v-slot:label="{ item: { id, name, selectable } }">
+        <div
+          @click.stop="navigateTo(id)"
+          :class="{ selectable, selected: isSelected(id) }"
+          class="tree-node pl-2">
+          {{ name }}
+          <v-icon
+            v-if="selectable"
+            color="blue-grey darken-4"
+            class="ml-2 mr-3 open-icon">
+            mdi-open-in-app
+          </v-icon>
+        </div>
       </template>
     </v-treeview>
+    <v-alert
+      :value="!hasSearchResults"
+      color="primary"
+      text>
+      No matches found.
+    </v-alert>
   </div>
 </template>
 
@@ -47,51 +67,112 @@ export default {
     editableTypes: vm => vm.editableActivityConfigs.map(it => it.type),
     editableActivityConfigs() {
       return this.activityConfigs.filter(it => isEditable(it.type));
+    },
+    hasSearchResults() {
+      if (!this.search || !this.$refs) return true;
+      const { excludedItems, nodes } = this.$refs.activityTree;
+      return excludedItems.size !== Object.keys(nodes).length;
     }
   },
   methods: {
-    navigateTo([activityId]) {
+    navigateTo(activityId) {
       if (activityId === this.selected.id) return;
+
       const activity = this.activities.find(it => it.id === activityId);
       if (!activity || !this.isActivityEditable(activity)) return;
+
+      this.active = [activityId];
       this.$router.push({ name: 'editor', params: { activityId } });
     },
     isActivityEditable(activity) {
       return this.editableTypes.includes(activity.type);
+    },
+    isSelected(activityId) {
+      return this.selected.id === activityId;
     }
   },
   watch: {
-    active([activityId]) {
-      const activity = this.activities.find(it => it.id === activityId);
-      // If not editable activity, keep the current one as active
-      if (!activity || !this.isActivityEditable(activity)) {
-        this.active = [this.selected.id];
-      }
+    search() {
+      return this.$refs.activityTree.updateAll(true);
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.navigation-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .navigation-header {
-  padding: 1.5rem 1rem 0.25rem 0.75rem;
+  padding: 0.75rem 1rem 0.75rem 0.75rem;
 }
 
-.v-treeview ::v-deep {
-  .v-treeview-node__toggle {
-    outline: none;
-  }
+.v-treeview {
+  overflow-y: auto;
 
-  .v-treeview-node__content {
-    margin-left: 0;
-  }
+  ::v-deep {
+    .v-treeview-node__toggle {
+      outline: none;
+    }
 
-  .v-treeview-node__level {
-    width: 0.75rem;
+    .v-treeview-node__root::before {
+      content: none;
+    }
+
+    .v-treeview-node__content {
+      margin-left: 0;
+    }
+
+    .v-treeview-node__level {
+      width: 0.75rem;
+    }
   }
 }
 
-.selectable {
-  cursor: pointer;
+.tree-node {
+  display: flex;
+  align-items: center;
+  min-height: 3rem;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    background-color: currentColor;
+    transition: 0.1s cubic-bezier(0.25, 0.8, 0.5, 1);
+    pointer-events: none;
+  }
+
+  &.selected::before {
+    opacity: 0.12;
+  }
+
+  &.selectable {
+    justify-content: space-between;
+
+    .open-icon {
+      transition: opacity 0.15s ease 0.1s;
+      opacity: 0;
+    }
+
+    &:not(.selected):hover {
+      cursor: pointer;
+
+      &::before {
+        opacity: 0.04;
+      }
+
+      .open-icon {
+        opacity: 1;
+      }
+    }
+  }
 }
 </style>
