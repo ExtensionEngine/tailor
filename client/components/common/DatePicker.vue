@@ -12,6 +12,7 @@
         @click="showDatePicker = true"
         :value="value | formatDate('MMM D, YYYY')"
         :label="label"
+        :placeholder="placeholder"
         outlined
         clearable
         readonly />
