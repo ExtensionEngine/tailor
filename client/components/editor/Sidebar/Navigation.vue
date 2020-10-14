@@ -1,31 +1,34 @@
 <template>
   <div class="navigation-container">
-    <v-sheet color="transparent" elevation="1" tile class="navigation-header">
-      <v-text-field
-        v-model="search"
-        label="Search..."
-        background-color="grey lighten-2"
-        clear-icon="mdi-close"
-        prepend-inner-icon="mdi-magnify"
-        solo clearable hide-details
-        class="my-3 mx-1" />
+    <v-sheet color="grey lighten-5" elevation="1" tile class="navigation-header">
+      <v-hover v-slot:default="{ hover }">
+        <v-text-field
+          v-model="search"
+          label="Search..."
+          :background-color="hover ? 'blue-grey lighten-3' : 'blue-grey lighten-4'"
+          clear-icon="mdi-close"
+          prepend-inner-icon="mdi-magnify"
+          solo clearable hide-details
+          class="my-3 mx-1" />
+      </v-hover>
     </v-sheet>
     <v-treeview
       ref="activityTree"
       :items="activityTree"
       :active="active"
       :search="search"
-      open-all>
+      open-all
+      class="pt-4">
       <template v-slot:label="{ item: { id, name, selectable } }">
         <div
           @click.stop="navigateTo(id)"
           :class="{ selectable, selected: isSelected(id) }"
-          class="tree-node">
+          class="tree-node pl-2">
           {{ name }}
           <v-icon
             v-if="selectable"
             color="blue-grey darken-4"
-            class="mr-1 open-icon">
+            class="ml-2 mr-3 open-icon">
             mdi-open-in-app
           </v-icon>
         </div>
@@ -115,10 +118,8 @@ export default {
       outline: none;
     }
 
-    .v-treeview-node__root {
-      &::before {
-        content: none;
-      }
+    .v-treeview-node__root::before {
+      content: none;
     }
 
     .v-treeview-node__content {
@@ -134,7 +135,7 @@ export default {
 .tree-node {
   display: flex;
   align-items: center;
-  min-height: 48px;
+  min-height: 3rem;
 
   &::before {
     content: "";
@@ -145,15 +146,19 @@ export default {
     left: 0;
     opacity: 0;
     background-color: currentColor;
-    transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+    transition: 0.1s cubic-bezier(0.25, 0.8, 0.5, 1);
     pointer-events: none;
+  }
+
+  &.selected::before {
+    opacity: 0.12;
   }
 
   &.selectable {
     justify-content: space-between;
 
     .open-icon {
-      transition: opacity 0.3s ease 0.15s;
+      transition: opacity 0.15s ease 0.1s;
       opacity: 0;
     }
 
@@ -167,12 +172,6 @@ export default {
       .open-icon {
         opacity: 1;
       }
-    }
-  }
-
-  &.selected {
-    &::before {
-      opacity: 0.12;
     }
   }
 }
