@@ -244,13 +244,27 @@ Defines what meta fields content element has.
     }]
   ```
 
+### `PREVIEW_URL`
+
+A string template that will be interpolated on the client using two route
+params, `repositoryId` and `activityId`, into a preview URL for each activity.
+Example:
+`https://my.url.com/#/repository/{repositoryId}/activity/{activityId}/preview`
+
+## Workflows
+
+For each schema, workflow can be defined to enable users to track and assign tasks related to activities. Each workflow is defined by a set of statuses that the task can take.
+Workflows are assigned to schemas through schema's `workflowId` option in tailor configuration file.
+
+Workflows are configured with the following options in the tailor configuration file:
+
 ### `WORKFLOWS`
 
 An array of Workflow objects.
 
 #### Workflow
 
-Defines activity task statuses for repository workflow. Workflow can be reused across multiple schemas.
+Defines activity task statuses for repository workflow. Workflow can be reused across multiple schemas by assigning same workflow ID to schema's `workflowId` option.
 
 - **id** `String` - Workflow identifier.
 - **statuses** `Array<TaskStatus>` - An array of possible task statuses.
@@ -258,13 +272,6 @@ Defines activity task statuses for repository workflow. Workflow can be reused a
 #### TaskStatus
 - **id** `String` - Task status identifier.
 - **label** `String` - Display label.
-
-### `PREVIEW_URL`
-
-A string template that will be interpolated on the client using two route
-params, `repositoryId` and `activityId`, into a preview URL for each activity.
-Example:
-`https://my.url.com/#/repository/{repositoryId}/activity/{activityId}/preview`
 
 ## EXTENSIONS
 
