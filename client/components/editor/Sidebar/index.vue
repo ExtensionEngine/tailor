@@ -7,7 +7,8 @@
       :class="{
         'toolbar-visible': selectedElement,
         'toolbar-composite': selectedElement && selectedElement.parent
-      }" class="sidebar-container">
+      }"
+      class="sidebar-container">
       <activity-navigation
         v-if="selectedTab === 'browser'"
         :repository="repository"
@@ -91,14 +92,6 @@ export default {
     metadata() {
       const { repository, selectedElement } = this;
       return getElementMetadata(get(repository, 'schema'), selectedElement);
-    },
-    toolbarClasses() {
-      const { selectedElement } = this;
-      if (!selectedElement) return;
-
-      const classes = ['toolbar-visible'];
-      if (selectedElement.parent) classes.push('toolbar-composite');
-      return classes;
     }
   },
   methods: {
