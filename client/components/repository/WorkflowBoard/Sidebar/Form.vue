@@ -33,6 +33,7 @@
       :items="users"
       :item-text="getUserLabel"
       label="Assignee"
+      placeholder="Click to set assignee"
       item-value="id"
       class="my-2"
       outlined
@@ -46,6 +47,7 @@
       @input="updateTask('dueDate', $event)"
       :value="task.dueDate"
       label="Due date"
+      placeholder="Click to set due date"
       class="my-2" />
   </section>
 </template>

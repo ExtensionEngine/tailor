@@ -40,12 +40,17 @@
           :items="users"
           :item-text="getUserLabel"
           label="Assignee"
+          placeholder="Click to set assignee"
           item-value="id"
           class="my-2"
           outlined
           clearable />
         <select-priority v-model="task.priority" class="my-2" />
-        <date-picker v-model="task.dueDate" label="Due date" class="my-2" />
+        <date-picker
+          v-model="task.dueDate"
+          label="Due date"
+          placeholder="Click to set due date"
+          class="my-2" />
       </template>
       <template #actions>
         <v-btn @click="visible = false" text>Cancel</v-btn>
