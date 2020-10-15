@@ -1,7 +1,7 @@
 'use strict';
 
 const { ExportJob, ImportJob } = require('./job');
-const logger = require('../logger');
+const logger = require('../logger')();
 const PromiseQueue = require('promise-queue');
 
 class TransferService {

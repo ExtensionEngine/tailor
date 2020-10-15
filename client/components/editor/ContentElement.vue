@@ -6,7 +6,7 @@
     @delete="remove"
     v-bind="$attrs"
     :element="element"
-    :is-dragged="dragged"
+    :is-dragged="isDragged"
     :is-disabled="disabled" />
 </template>
 
@@ -14,7 +14,7 @@
 import { mapActions, mapMutations } from 'vuex';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
-import EventBus from 'EventBus';
+import { mapChannels } from '@/plugins/radio';
 import throttle from 'lodash/throttle';
 
 export default {
@@ -23,8 +23,9 @@ export default {
   props: {
     element: { type: Object, required: true },
     disabled: { type: Boolean, default: false },
-    dragged: { type: Boolean, default: false }
+    isDragged: { type: Boolean, default: false }
   },
+  computed: mapChannels({ editorChannel: 'editor' }),
   methods: {
     ...mapActions('repository/contentElements', {
       saveElement: 'save',
@@ -47,7 +48,7 @@ export default {
     }, 4000),
     remove() {
       this.removeElement(this.element).then(() => {
-        this.$nextTick(() => EventBus.emit('element:focus'));
+        this.$nextTick(() => this.editorChannel.emit('element:focus'));
       });
     }
   },

@@ -37,9 +37,7 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import AvatarDialog from './AvatarDialog';
-import EventBus from 'EventBus';
-
-const appChannel = EventBus.channel('app');
+import { mapRequests } from '@/plugins/radio';
 
 const isGravatar = img => /gravatar.com/.test(img);
 
@@ -52,6 +50,7 @@ export default {
   },
   methods: {
     ...mapActions(['updateInfo']),
+    ...mapRequests('app', ['showConfirmationModal']),
     selectAvatar() {
       this.$refs.avatarDialog.$refs.croppa.chooseFile();
     },
@@ -61,7 +60,7 @@ export default {
       });
     },
     deleteAvatar() {
-      appChannel.emit('showConfirmationModal', {
+      this.showConfirmationModal({
         title: 'Delete avatar?',
         message: 'Are you sure you want to delete your profile picture?',
         action: () => this.updateAvatar(null)

@@ -8,14 +8,15 @@ import {
   max_value as maxValue,
   min,
   min_value as minValue,
+  numeric,
   required
 } from 'vee-validate/dist/rules';
 import { extend } from 'vee-validate';
 import forEach from 'lodash/forEach';
+import isURL from 'validator/lib/isURL';
 import { messages } from 'vee-validate/dist/locale/en.json';
 import snakeCase from 'lodash/snakeCase';
 import some from 'lodash/some';
-import urlRegex from 'url-regex';
 import userApi from '@/api/user';
 
 const alphanumerical = {
@@ -33,7 +34,8 @@ const uniqueEmail = {
 };
 
 const url = {
-  validate: value => urlRegex({ exact: true }).test(value),
+  params: ['protocols', 'require_valid_protocol', 'require_protocol'],
+  validate: (val, opts) => isURL(val, opts),
   message: 'The {_field_} is not a valid URL'
 };
 
@@ -58,9 +60,13 @@ const rules = {
   min,
   minValue: { ...minValue, message: 'The {_field_} must be {min} or more' },
   notWithin,
+  numeric,
   required,
   uniqueEmail,
   url
 };
 
-forEach(rules, (rule, name) => extend(snakeCase(name), { message: messages[name], ...rule }));
+forEach(rules, (rule, name) => extend(snakeCase(name), {
+  message: messages[name],
+  ...rule
+}));

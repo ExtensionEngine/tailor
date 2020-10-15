@@ -29,10 +29,7 @@ const without = require('lodash/without');
 
 const { FLAT_REPO_STRUCTURE } = process.env;
 
-const CE_ATTRS = [
-  'id', 'uid', 'type', 'contentId', 'contentSignature',
-  'position', 'data', 'meta', 'refs', 'createdAt', 'updatedAt'
-];
+const CC_ATTRS = ['id', 'uid', 'type', 'position', 'createdAt', 'updatedAt'];
 
 function publishActivity(activity) {
   return getStructureData(activity).then(data => {
@@ -144,44 +141,52 @@ function publishContainers(parent) {
 
 function fetchContainers(parent) {
   const typeConfigs = getSupportedContainers(parent.type);
-  const isCore = it => !containerRegistry.getStaticsResolver(it.type);
-  const coreTypes = typeConfigs.filter(isCore).map(it => it.type);
 
   return Promise.all([
-    parent.getChildren({ where: { type: coreTypes } }).map(fetchDefaultContainer),
-    fetchCustomContainers(parent)
+    fetchDefaultContainers(parent, typeConfigs),
+    fetchCustomContainers(parent, typeConfigs)
   ])
   .reduce((containers, groupedContainers) => {
     const mappedContainers = groupedContainers.map(it => {
       const config = find(typeConfigs, { type: it.type });
       const publishedAs = get(config, 'publishedAs', 'container');
-      return { ...it, publishedAs };
+      return { ...it, publishedAs, templateId: config.templateId };
     });
     return containers.concat(mappedContainers);
   }, []);
 }
 
-function fetchDefaultContainer(container) {
-  const order = [['position', 'ASC']];
-  return container
-    .getContentElements({ attributes: CE_ATTRS, order })
-    .then(ces => ({
-      ...pick(container, ['id', 'uid', 'type', 'position', 'createdAt', 'updatedAt']),
-      elements: map(ces, (it, pos) => Object.assign(it, { position: pos + 1 }))
-    }));
+function fetchDefaultContainers(parent, config) {
+  const include = [{ model: ContentElement.scope('publish') }];
+  const types = config
+    .filter(it => !containerRegistry.getPublishStructureBuilder(it))
+    .map(it => it.type);
+  const where = { type: types };
+
+  return parent
+    .getChildren({ attributes: CC_ATTRS, where, include })
+    .map(container => {
+      const { ContentElements: ces, ...data } = container.toJSON();
+      const elements = map(ces, (it, pos) => ({ ...it, position: pos + 1 }));
+      return { ...data, elements };
+    });
 }
 
-function fetchCustomContainers(parent) {
-  const options = { include: [{ model: ContentElement, attributes: CE_ATTRS }] };
-  return containerRegistry.fetch(parent, options);
+async function fetchCustomContainers(parent, config) {
+  const include = [{ model: ContentElement.scope('publish') }];
+  return Promise.reduce(config, async (containers, it) => {
+    const builder = containerRegistry.getPublishStructureBuilder(it);
+    if (!builder) return containers;
+    const customContainers = await builder(parent, it.type, { include });
+    return containers.concat(customContainers);
+  }, []);
 }
 
 function resolveContainer(container) {
-  const { elements, type } = container;
-  const resolver = containerRegistry.getStaticsResolver(type);
+  const resolver = containerRegistry.getStaticsResolver(container);
   return resolver
     ? resolver(container, resolveStatics)
-    : Promise.map(elements, resolveStatics).then(() => container);
+    : Promise.map(container.elements, resolveStatics).then(() => container);
 }
 
 function saveFile(parent, key, data) {
@@ -238,7 +243,7 @@ function attachContentSummary(obj, { containers }) {
 }
 
 function getContainerSummary(container) {
-  const customBuilder = containerRegistry.getSummaryBuilder(container.type);
+  const customBuilder = containerRegistry.getSummaryBuilder(container);
   return customBuilder
     ? customBuilder(container)
     : defaultSummaryBuilder(container);

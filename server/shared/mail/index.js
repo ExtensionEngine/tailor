@@ -1,17 +1,21 @@
 'use strict';
 
 const { mail: config, origin } = require('../../../config/server');
+const { createLogger, Level } = require('../../shared/logger');
 const { renderHtml, renderText } = require('./render');
 const email = require('emailjs');
-const logger = require('../logger');
 const path = require('path');
 const pick = require('lodash/pick');
 const { promisify } = require('util');
 const { URL } = require('url');
 const urlJoin = require('url-join');
 
+const logger = createLogger('mailer', { level: Level.DEBUG });
+
 const from = `${config.sender.name} <${config.sender.address}>`;
 const server = email.server.connect(config);
+// NOTE: Enable SMTP tracing if DEBUG is set.
+server.smtp.debug(Number(Boolean(process.env.DEBUG)));
 logger.info(getConfig(server), '📧  SMTP client created');
 
 const send = promisify(server.send.bind(server));
@@ -86,7 +90,8 @@ function sendCommentNotification(users, comment) {
 }
 
 function getConfig(server) {
-  // NOTE: List public keys: https://git.io/fxV4j
+  // NOTE: List public keys:
+  // https://github.com/eleith/emailjs/blob/7fddabe/smtp/smtp.js#L86
   return pick(server.smtp, [
     'host', 'port', 'domain',
     'authentication', 'ssl', 'tls',

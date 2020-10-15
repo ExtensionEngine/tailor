@@ -20,7 +20,6 @@ const aliases = {
   assets: '@/assets',
   components: '@/components',
   'tce-core': '@/components/common/tce-core',
-  EventBus: '@/EventBus',
   utils: '@/utils',
   shared: path.join(__dirname, 'config/shared'),
   tce: path.join(__dirname, 'content-elements'),

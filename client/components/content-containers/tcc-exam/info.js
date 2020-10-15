@@ -1,4 +1,4 @@
 module.exports = {
-  type: 'EXAM',
+  templateId: 'EXAM',
   version: '1.0'
 };

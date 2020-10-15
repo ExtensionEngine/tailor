@@ -24,12 +24,11 @@
 <script>
 import AddTag from './AddTag';
 import clamp from 'lodash/clamp';
-import EventBus from 'EventBus';
 import get from 'lodash/get';
 import { mapActions } from 'vuex';
+import { mapRequests } from '@/plugins/radio';
 import truncate from 'lodash/truncate';
 
-const appChannel = EventBus.channel('app');
 const TAG_LIMIT = 3;
 
 export default {
@@ -43,9 +42,10 @@ export default {
   },
   methods: {
     ...mapActions('repositories', ['removeTag']),
+    ...mapRequests('app', ['showConfirmationModal']),
     showDeleteConfirmation(tag) {
       const data = { repositoryId: this.repository.id, tagId: tag.id };
-      appChannel.emit('showConfirmationModal', {
+      this.showConfirmationModal({
         title: 'Delete tag',
         message: `Are you sure you want to delete tag ${tag.name}?`,
         action: () => this.removeTag(data)
