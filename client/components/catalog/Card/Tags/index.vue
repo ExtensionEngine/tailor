@@ -1,19 +1,29 @@
 <template>
   <div class="tags-container">
-    <div>
+    <div class="tag-list">
       <v-chip
         v-for="tag in repository.tags"
         :key="tag.id"
         @click:close="showDeleteConfirmation(tag)"
-        color="grey darken-1"
-        text-color="white"
-        close>
-        {{ truncateTagName(tag.name) }}
+        color="blue-grey lighten-4"
+        label light small close
+        class="mr-2">
+        <v-tooltip open-delay="100" bottom>
+          <template v-slot:activator="{ on }">
+            <span v-on="on">{{ truncateTagName(tag.name) }}</span>
+          </template>
+          {{ tag.name }}
+        </v-tooltip>
       </v-chip>
     </div>
-    <v-btn v-if="!exceededTagLimit" @click="showTagDialog = true" icon small>
-      <v-icon>mdi-plus</v-icon>
-    </v-btn>
+    <v-tooltip v-if="!exceededTagLimit" open-delay="400" bottom>
+      <template v-slot:activator="{ on }">
+        <v-btn v-on="on" @click="showTagDialog = true" icon>
+          <v-icon color="blue-grey lighten-3" dense>mdi-tag-plus</v-icon>
+        </v-btn>
+      </template>
+      Add tag
+    </v-tooltip>
     <add-tag
       v-if="showTagDialog"
       @close="showTagDialog = false"
@@ -64,13 +74,12 @@ export default {
 <style lang="scss" scoped>
 .tags-container {
   display: flex;
+  height: 2.125rem;
   justify-content: space-between;
   flex-basis: 100%;
+}
 
-  .v-chip {
-    height: 1.75rem !important;
-    margin-right: 0.25rem;
-    font-size: 0.75rem;
-  }
+.tag-list {
+  padding: 0.25rem 0 0 0.25rem;
 }
 </style>
