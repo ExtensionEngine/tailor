@@ -8,7 +8,12 @@
         color="blue-grey lighten-4"
         label light small close
         class="mr-2">
-        {{ truncateTagName(tag.name) }}
+        <v-tooltip open-delay="100" bottom>
+          <template v-slot:activator="{ on }">
+            <span v-on="on">{{ truncateTagName(tag.name) }}</span>
+          </template>
+          {{ tag.name }}
+        </v-tooltip>
       </v-chip>
     </div>
     <v-tooltip v-if="!exceededTagLimit" open-delay="400" bottom>
