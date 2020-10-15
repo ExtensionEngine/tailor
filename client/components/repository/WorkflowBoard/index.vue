@@ -1,6 +1,6 @@
 <template>
   <div class="board d-flex flex-column grey lighten-4 py-3">
-    <div class="filters d-flex align-center px-4">
+    <div class="d-flex align-center px-4">
       <v-text-field
         v-model="searchText"
         class="search-field"
@@ -18,8 +18,8 @@
               v-on="on"
               @click="toggleAssignee(id)"
               :size="34"
-              class="avatar grey white--text"
-              :class="{ active: isActive }">
+              :class="{ active: isActive }"
+              class="avatar grey white--text">
               <img :src="imgUrl">
             </v-avatar>
           </template>
@@ -43,7 +43,7 @@
       <v-btn
         @click="showRecentOnly = !showRecentOnly"
         :class="{ active: showRecentOnly }"
-        class="filters__btn mx-1 text-capitalize"
+        class="filters-btn mx-1 text-capitalize"
         text>
         Recently updated
       </v-btn>
@@ -61,7 +61,7 @@
         <board-column
           v-for="status in workflow.statuses"
           :key="status.id"
-          :tasks="groupedTasks"
+          :tasks="groupedTasksByStatus"
           :status="status"
           class="cards" />
       </div>
@@ -114,7 +114,7 @@ export default {
       };
       return this.searchableTasks.filter(conforms(filters));
     },
-    groupedTasks: vm => groupBy(vm.filteredTasks, 'status'),
+    groupedTasksByStatus: vm => groupBy(vm.filteredTasks, 'status'),
     assignees() {
       const assignees = this.tasks.reduce((all, { assignee }) => {
         if (!assignee) return all;
@@ -202,7 +202,7 @@ $sidebar-width: 27.1875rem;
   }
 }
 
-.filters__btn {
+.filters-btn {
   letter-spacing: inherit;
 
   &.active {

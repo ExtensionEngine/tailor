@@ -1,7 +1,5 @@
 <template>
-  <v-card
-    :to="route"
-    class="px-3 pt-1 pb-4">
+  <v-card :to="route" class="px-3 pt-1 pb-4">
     <h4 class="mb-4">{{ name }}</h4>
     <div class="d-flex align-center mt-auto">
       <v-tooltip open-delay="500" bottom>

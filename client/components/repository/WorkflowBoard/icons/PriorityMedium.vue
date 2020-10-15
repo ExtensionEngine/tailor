@@ -15,7 +15,5 @@
 </template>
 
 <script>
-export default {
-  name: 'priority-medium-icon'
-};
+export default { name: 'priority-medium-icon' };
 </script>

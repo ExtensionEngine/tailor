@@ -21,8 +21,9 @@ import pluralize from 'pluralize';
 const getDescriptor = (count, type) => `${count} ${pluralize(type, count)}`;
 const arrayToSentence = arr => arr.join(', ').replace(/, ([^,]*)$/, ' and $1');
 
-const getActivityInfo = (hasChanges, label) =>
-  hasChanges ? `${label} has unpublished changes. ` : `${label} is published. `;
+const getActivityInfo = (hasChanges, label) => hasChanges
+  ? `${label} has unpublished changes. `
+  : `${label} is published. `;
 
 const getDescendantsInfo = (descendants, count, label) => {
   return `${descendants} within this ${label} ${pluralize('has', count)}

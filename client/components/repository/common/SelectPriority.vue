@@ -1,6 +1,7 @@
 <template>
   <v-select
     v-on="$listeners"
+    v-bind="$attrs"
     :value="value"
     :items="priorities"
     label="Priority"

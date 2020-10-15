@@ -46,7 +46,7 @@ export default {
     enableEditing() {
       this.editing = true;
       const { quill } = this.$refs.editor;
-      return this.$nextTick(() => quill.focus());
+      this.$nextTick(() => quill.focus());
     },
     emitChange(editor) {
       if (!this.hasActiveTooltip(editor)) this.editing = false;

@@ -12,7 +12,7 @@
       v-bind="task"
       :assignee="task.assignee"
       :is-selected="selectedTask && selectedTask.id === task.id"
-      class="my-2 mx-3" />
+      class="card my-2 mx-3" />
   </draggable>
 </template>
 
@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     ...mapActions('repository/tasks', ['save']),
-    getPosition(index, isNewElement) {
+    getNewPosition(index, isNewElement) {
       if (!this.tasksByStatus.length) return 1;
       const isFirst = index === 0;
       const isLast = isNewElement
@@ -53,10 +53,16 @@ export default {
     updateTask(update, status) {
       if (!update.added && !update.moved) return;
       const { element: task, newIndex } = update.added || update.moved;
-      const columnPosition = this.getPosition(newIndex, Boolean(update.added));
+      const columnPosition = this.getNewPosition(newIndex, Boolean(update.added));
       return this.save({ ...task, columnPosition, status: this.status.id });
     }
   },
   components: { Draggable, TaskCard }
 };
 </script>
+
+<style lang="scss" scoped>
+.card {
+  align-self: stretch;
+}
+</style>

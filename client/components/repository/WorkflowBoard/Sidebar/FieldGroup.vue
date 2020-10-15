@@ -73,7 +73,7 @@ import { priorities } from 'shared/workflow';
 import SelectPriority from '@/components/repository/common/SelectPriority';
 
 export default {
-  name: 'workflow-board-task-field-group',
+  name: 'task-field-group',
   props: {
     name: { type: String, default: '' },
     description: { type: String, default: null },

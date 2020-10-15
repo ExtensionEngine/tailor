@@ -2,9 +2,9 @@
   <v-card
     @click="$emit('click', id)"
     :elevation="isSelected ? 0 : 1"
-    class="card d-flex flex-column align-start pa-3"
+    :ripple="false"
     :class="{ 'bordered': isSelected }"
-    :ripple="false">
+    class="card d-flex flex-column align-start pa-3">
     <div class="card-title mt-3 mb-5 text-left font-weight-regular">
       {{ name }}
     </div>
@@ -80,7 +80,6 @@ export default {
 <style lang="scss" scoped>
   .card.v-card {
     min-height: 10rem;
-    align-self: stretch;
 
     .card-title {
       font-size: 1rem;

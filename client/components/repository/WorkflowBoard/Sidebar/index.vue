@@ -8,21 +8,16 @@
       :key="selectedTask.uid"
       class="px-4 pt-4 pb-10">
       <sidebar-header v-bind="selectedTask" />
-      <task-field-group
-        @update="updateTask" v-bind="selectedTask" class="mt-9 mb-4" />
+      <task-field-group @update="updateTask" v-bind="selectedTask" class="mt-9 mb-4" />
       <section>
         <h5>Related content</h5>
-        <activity-card
-          v-bind="activity"
-          :name="activity.data.name" />
+        <activity-card v-bind="activity" :name="activity.data.name" />
       </section>
     </article>
     <article v-else class="placeholder grey--text text--darken-3">
       <h4>Task Sidebar</h4>
       <v-icon>mdi-chevron-left</v-icon>
-      <div class="info-content">
-        {{ emptyMessage }}
-      </div>
+      <div class="info-content">{{ emptyMessage }}</div>
     </article>
   </v-navigation-drawer>
 </template>
