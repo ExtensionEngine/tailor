@@ -18,15 +18,22 @@
       :value="description"
       label="Description"
       class="editor-field mt-2" />
-    <v-select
-      @change="update('status', $event)"
-      :value="status"
-      :items="workflow.statuses"
-      label="Status"
-      item-value="id"
-      item-text="label"
-      class="my-2"
-      outlined />
+    <validation-provider
+      v-slot="{ errors }"
+      ref="status"
+      :rules="{ required: true }"
+      name="status">
+      <v-select
+        @change="update('status', $event)"
+        :value="status"
+        :items="workflow.statuses"
+        :error-messages="errors"
+        label="Status"
+        item-value="id"
+        item-text="label"
+        class="my-2"
+        outlined />
+    </validation-provider>
     <v-select
       @change="update('assigneeId', $event)"
       :value="assigneeId"
@@ -36,13 +43,19 @@
       placeholder="Click to set assignee"
       item-value="id"
       class="my-2"
-      outlined
-      clearable />
-    <select-priority
-      @change="update('priority', $event)"
-      :value="priority"
-      :items="priorities"
-      class="my-2" />
+      outlined clearable />
+    <validation-provider
+      v-slot="{ errors }"
+      ref="priority"
+      :rules="{ required: true }"
+      name="priority">
+      <select-priority
+        @change="update('priority', $event)"
+        :value="priority"
+        :items="priorities"
+        :error-messages="errors"
+        class="my-2" />
+    </validation-provider>
     <date-picker
       @input="update('dueDate', $event)"
       :value="dueDate"
