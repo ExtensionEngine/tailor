@@ -77,7 +77,10 @@ exports.up = async (queryInterface, Sequelize) => {
       field: 'deleted_at'
     }
   });
-  return queryInterface.addIndex(TABLE_NAME, ['column_position', 'status'], { unique: true });
+  return queryInterface.addIndex(TABLE_NAME, ['column_position', 'status'], {
+    unique: true,
+    where: { archived_at: null }
+  });
 };
 
 exports.down = async queryInterface => {
