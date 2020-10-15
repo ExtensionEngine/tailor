@@ -1,6 +1,6 @@
 <template>
   <div class="navigation-container">
-    <v-sheet color="grey lighten-5" elevation="1" tile class="navigation-header">
+    <v-sheet color="grey lighten-5" tile class="navigation-header">
       <v-hover v-slot:default="{ hover }">
         <v-text-field
           v-model="search"
@@ -9,8 +9,9 @@
           clear-icon="mdi-close"
           prepend-inner-icon="mdi-magnify"
           solo clearable hide-details
-          class="my-3 mx-1" />
+          class="my-4 mx-3" />
       </v-hover>
+      <v-divider />
     </v-sheet>
     <v-treeview
       ref="activityTree"
@@ -107,7 +108,7 @@ export default {
 }
 
 .navigation-header {
-  padding: 0.75rem 1rem 0.75rem 0.75rem;
+  padding: 0.75rem 0;
 }
 
 .v-treeview {

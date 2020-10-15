@@ -2,7 +2,7 @@
   <v-navigation-drawer
     width="400"
     absolute permanent
-    class="sidebar grey lighten-4 elevation-2">
+    class="sidebar grey lighten-5 elevation-3">
     <div
       :class="{
         'toolbar-visible': selectedElement,
