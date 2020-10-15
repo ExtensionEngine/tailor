@@ -7,8 +7,8 @@
         @mouseout="isHovered = false"
         :id="`activity_${uid}`"
         :class="{
-          'selected': isSelected,
-          'highlighted': isHovered || isSelected,
+          selected: isSelected,
+          highlighted: isHovered || isSelected,
         }"
         :style="{ 'border-left-color': color }"
         class="activity">
