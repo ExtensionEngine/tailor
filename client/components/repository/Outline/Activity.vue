@@ -24,13 +24,13 @@
           <v-spacer />
           <options-toolbar
             :activity="{ id, uid, repositoryId, parentId, type, position, data }"
-            class="options-toolbar" />
+            class="options-toolbar my-auto" />
           <v-btn
             v-show="hasSubtypes"
             @click="toggle()"
             color="blue-grey darken-4"
-            icon small
-            class="mx-0">
+            icon
+            class="my-auto mx-0">
             <v-icon>mdi-chevron-{{ isExpanded ? 'up' : 'down' }}</v-icon>
           </v-btn>
           <options-menu
@@ -135,14 +135,6 @@ $background-color:  #eceff1;
   border-left-style: solid;
   transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
 
-  &.highlighted {
-    background-color: darken($background-color, 5);
-  }
-
-  &.selected {
-    border-left-width: 2rem;
-  }
-
   &-name {
     padding: 0.125rem 0.375rem 0;
     color: #222;
@@ -151,10 +143,25 @@ $background-color:  #eceff1;
     line-height: 2.75rem;
   }
 
+  &.highlighted {
+    opacity: 1;
+    background-color: darken($background-color, 5);
+
+    .activity-name {
+      color: #333;
+    }
+  }
+
+  &.selected {
+    border-left-width: 2.25rem;
+  }
+
   .actions {
     display: flex;
     min-width: 11.5rem;
-    margin-left: auto;
+    height: 100%;
+    margin: 0 0 0 auto;
+    padding: 0;
 
     .v-btn {
       margin: 0.375rem 0.5rem;
