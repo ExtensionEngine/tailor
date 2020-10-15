@@ -13,7 +13,8 @@
           <draggable
             @update="data => reorder(data, rootActivities)"
             :list="rootActivities"
-            v-bind="{ handle: '.activity' }">
+            v-bind="{ handle: '.activity' }"
+            class="mt-5">
             <activity
               v-for="(activity, index) in rootActivities"
               :key="activity.uid"

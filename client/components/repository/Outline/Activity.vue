@@ -7,9 +7,8 @@
         @mouseout="isHovered = false"
         :id="`activity_${uid}`"
         :class="{
-          selected: isSelected,
-          'elevation-6': isHighlighted,
-          'elevation-1': !isHighlighted
+          'selected': isSelected,
+          'highlighted': isHovered || isSelected,
         }"
         :style="{ 'border-left-color': color }"
         class="activity">
@@ -17,11 +16,11 @@
           v-if="hasSubtypes"
           @click.stop="toggle()"
           icon
-          class="activity-icon">
+          class="my-auto">
           <v-icon size="30" color="blue-grey darken-3">mdi-{{ icon }}</v-icon>
         </v-btn>
-        <div class="activity-name text-truncate">{{ data.name }}</div>
-        <div v-show="isHighlighted" class="actions">
+        <div class="activity-name h5 my-auto text-truncate">{{ data.name }}</div>
+        <div v-show="isHighlighted" class="actions my-auto">
           <v-spacer />
           <options-toolbar
             :activity="{ id, uid, repositoryId, parentId, type, position, data }"
@@ -85,11 +84,7 @@ export default {
     data: { type: Object, required: true },
     activities: { type: Array, default: () => ([]) }
   },
-  data() {
-    return {
-      isHovered: false
-    };
-  },
+  data: () => ({ isHovered: false }),
   computed: {
     ...mapGetters('repository', ['structure', 'isCollapsed']),
     ...mapState('repository', { outlineState: 'outline' }),
@@ -125,29 +120,35 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$background-color:  #eceff1;
+
 .activity {
   display: flex;
-  margin: 0.875rem 0;
+  height: 2.75rem;
+  margin: 0.625rem 0;
   padding: 0 0 0 0.5rem;
-  font-size: 1.125rem;
-  background-color: #fafafa;
   border-radius: 2px;
+  background-color: $background-color;
   cursor: pointer;
-  border-left-width: 8px;
+  opacity: 0.9;
+  border-left-width: 4px;
   border-left-style: solid;
   transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
 
-  &.selected {
-    background: #f5f5f5;
-    border-left-width: 28px;
-
-    > * {
-      color: #111;
-    }
+  &.highlighted {
+    background-color: darken($background-color, 5);
   }
 
-  &-icon {
-    margin: 0.125rem 0 0 0;
+  &.selected {
+    border-left-width: 2rem;
+  }
+
+  &-name {
+    padding: 0.125rem 0.375rem 0;
+    color: #222;
+    font-size: 1rem !important;
+    font-weight: 400 !important;
+    line-height: 2.75rem;
   }
 
   .actions {
@@ -169,13 +170,7 @@ export default {
   }
 }
 
-.activity-name {
-  padding: 0.125rem 0.375rem 0;
-  color: #424242;
-  line-height: 2.375rem;
-}
-
 .sub-activity {
-  margin-left: 2.125rem;
+  margin-left: 1.25rem;
 }
 </style>
