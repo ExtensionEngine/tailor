@@ -11,9 +11,14 @@
         {{ truncateTagName(tag.name) }}
       </v-chip>
     </div>
-    <v-btn v-if="!exceededTagLimit" @click="showTagDialog = true" icon>
-      <v-icon color="blue-grey lighten-3" dense>mdi-tag-plus</v-icon>
-    </v-btn>
+    <v-tooltip v-if="!exceededTagLimit" open-delay="400" bottom>
+      <template v-slot:activator="{ on }">
+        <v-btn v-on="on" @click="showTagDialog = true" icon>
+          <v-icon color="blue-grey lighten-3" dense>mdi-tag-plus</v-icon>
+        </v-btn>
+      </template>
+      Add tag
+    </v-tooltip>
     <add-tag
       v-if="showTagDialog"
       @close="showTagDialog = false"
