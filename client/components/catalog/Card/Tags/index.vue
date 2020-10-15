@@ -1,18 +1,18 @@
 <template>
   <div class="tags-container">
-    <div>
+    <div class="tag-list">
       <v-chip
         v-for="tag in repository.tags"
         :key="tag.id"
         @click:close="showDeleteConfirmation(tag)"
-        color="grey darken-1"
-        text-color="white"
-        close>
+        color="blue-grey lighten-4"
+        label light small close
+        class="mr-2">
         {{ truncateTagName(tag.name) }}
       </v-chip>
     </div>
-    <v-btn v-if="!exceededTagLimit" @click="showTagDialog = true" icon small>
-      <v-icon>mdi-plus</v-icon>
+    <v-btn v-if="!exceededTagLimit" @click="showTagDialog = true" icon>
+      <v-icon color="blue-grey lighten-3" dense>mdi-tag-plus</v-icon>
     </v-btn>
     <add-tag
       v-if="showTagDialog"
@@ -64,13 +64,12 @@ export default {
 <style lang="scss" scoped>
 .tags-container {
   display: flex;
+  height: 2.125rem;
   justify-content: space-between;
   flex-basis: 100%;
+}
 
-  .v-chip {
-    height: 1.75rem !important;
-    margin-right: 0.25rem;
-    font-size: 0.75rem;
-  }
+.tag-list {
+  padding: 0.25rem 0 0 0.25rem;
 }
 </style>
