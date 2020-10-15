@@ -8,10 +8,13 @@
       :key="selectedTask.uid"
       class="px-4 pt-4 pb-10">
       <sidebar-header v-bind="selectedTask" />
-      <task-form :task="selectedTask" />
+      <task-field-group
+        @update="updateTask" v-bind="selectedTask" class="mt-9 mb-4" />
       <section>
         <h5>Related content</h5>
-        <activity-card v-bind="activity" :name="activity.data.name" />
+        <activity-card
+          v-bind="activity"
+          :name="activity.data.name" />
       </section>
     </article>
     <article v-else class="placeholder grey--text text--darken-3">
@@ -25,10 +28,10 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import ActivityCard from './ActivityCard';
-import { mapGetters } from 'vuex';
 import SidebarHeader from './Header';
-import TaskForm from './Form';
+import TaskFieldGroup from './FieldGroup';
 
 export default {
   props: {
@@ -39,15 +42,16 @@ export default {
   },
   computed: {
     ...mapGetters('repository', ['selectedTask', 'activities']),
-    activity() {
-      return this.activities.find(it => it.id === this.selectedTask.activityId);
+    activity: vm => vm.activities.find(({ id }) => vm.selectedTask.activityId === id)
+  },
+  methods: {
+    ...mapActions('repository/tasks', ['save']),
+    updateTask(descriptor, value) {
+      this.save({ ...this.selectedTask, [descriptor]: value || null })
+        .then(() => { this.$snackbar.show(`${this.selectedTask.name} saved`); });
     }
   },
-  components: {
-    ActivityCard,
-    TaskForm,
-    SidebarHeader
-  }
+  components: { ActivityCard, TaskFieldGroup, SidebarHeader }
 };
 </script>
 

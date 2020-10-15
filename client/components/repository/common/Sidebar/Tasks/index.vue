@@ -2,14 +2,16 @@
   <div>
     <div class="d-flex justify-space-between align-center">
       <h5>Related Task</h5>
-      <create-task-dialog v-if="!activityTasks.length" :activity="activity" heading="Add task" />
+      <create-dialog
+        v-if="!activityTasks.length"
+        :activity="activity"
+        heading="Add task" />
     </div>
     <div class="d-flex flex-column">
       <task-card
         v-for="task in activityTasks"
         :key="task.id"
         v-bind="task"
-        :assignee="task.assignee"
         class="px-3 pt-1 pb-4" />
     </div>
   </div>
@@ -17,7 +19,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import CreateTaskDialog from '../CreateTaskDialog';
+import CreateDialog from './CreateDialog';
 import TaskCard from './Card';
 
 export default {
@@ -33,6 +35,6 @@ export default {
   created() {
     this.fetch();
   },
-  components: { CreateTaskDialog, TaskCard }
+  components: { CreateDialog, TaskCard }
 };
 </script>

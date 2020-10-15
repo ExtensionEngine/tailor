@@ -1,26 +1,26 @@
 <template>
-  <section class="mt-9 mb-4">
+  <section>
     <validation-provider
       v-slot="{ errors }"
       ref="name"
       :rules="{ required: true }"
       name="name">
       <v-text-field
-        @change="updateTask('name', $event)"
-        :value="task.name"
+        @change="update('name', $event)"
+        :value="name"
         :error-messages="errors"
         label="Name"
         class="my-2"
         outlined />
     </validation-provider>
     <editor-field
-      @change="updateTask('description', $event)"
-      :value="task.description"
+      @change="update('description', $event)"
+      :value="description"
       label="Description"
       class="editor-field mt-2" />
     <v-select
-      @change="updateTask('status', $event)"
-      :value="task.status"
+      @change="update('status', $event)"
+      :value="status"
       :items="workflow.statuses"
       label="Status"
       item-value="id"
@@ -28,8 +28,8 @@
       class="my-2"
       outlined />
     <v-select
-      @change="updateTask('assigneeId', $event)"
-      :value="task.assigneeId"
+      @change="update('assigneeId', $event)"
+      :value="assigneeId"
       :items="users"
       :item-text="getUserLabel"
       label="Assignee"
@@ -39,13 +39,13 @@
       outlined
       clearable />
     <select-priority
-      @change="updateTask('priority', $event)"
-      :value="task.priority"
+      @change="update('priority', $event)"
+      :value="priority"
       :items="priorities"
       class="my-2" />
     <date-picker
-      @input="updateTask('dueDate', $event)"
-      :value="task.dueDate"
+      @input="update('dueDate', $event)"
+      :value="dueDate"
       label="Due date"
       placeholder="Click to set due date"
       class="my-2" />
@@ -60,15 +60,19 @@ import { priorities } from 'shared/workflow';
 import SelectPriority from '@/components/repository/common/SelectPriority';
 
 export default {
-  name: 'workflow-board-task-form',
+  name: 'workflow-board-task-field-group',
   props: {
-    task: { type: Object, default: () => ({}) }
+    name: { type: String, default: '' },
+    description: { type: String, default: null },
+    status: { type: String, default: null },
+    assigneeId: { type: Number, default: null },
+    priority: { type: String, default: priorities[2].id },
+    dueDate: { type: Date, default: null }
   },
   data: () => ({ priorities, showDatePicker: false }),
   computed: mapGetters('repository', ['users', 'workflow']),
   methods: {
     ...mapActions('repository', ['getUsers']),
-    ...mapActions('repository/tasks', ['save']),
     getUserLabel({ fullName, email }) {
       return fullName || email;
     },
@@ -79,12 +83,12 @@ export default {
       await field.applyResult(validationResult);
       return validationResult.valid;
     },
-    async updateTask(descriptor, value) {
-      if (this.task[descriptor] === value) return;
+    async update(descriptor, value) {
+      if (this[descriptor] === value) return;
       const isValid = await this.validateField(descriptor, value);
       if (!isValid) return;
-      await this.save({ ...this.task, [descriptor]: value || null });
-      this.$snackbar.show(`${this.task.name} saved`);
+      this.$emit('update', descriptor, value);
+      this.$emit(`update:${descriptor}`, value);
     }
   },
   components: { DatePicker, EditorField, SelectPriority }
