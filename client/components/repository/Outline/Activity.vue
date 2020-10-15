@@ -140,7 +140,7 @@ $background-color:  #eceff1;
     color: #222;
     font-size: 1rem !important;
     font-weight: 400 !important;
-    line-height: 2.75rem;
+    line-height: 2.5rem;
   }
 
   &.highlighted {

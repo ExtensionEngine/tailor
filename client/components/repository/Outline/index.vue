@@ -34,7 +34,7 @@
             :activity="activity" />
           <v-alert
             :value="!filteredActivities.length"
-            color="blue-grey darken-3"
+            color="blue-grey darken-2"
             icon="mdi-magnify"
             prominent text
             class="mt-5">
