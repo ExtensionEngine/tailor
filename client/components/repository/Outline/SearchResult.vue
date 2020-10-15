@@ -1,13 +1,12 @@
 <template>
-  <v-card
+  <v-sheet
     @click="$emit('select')"
-    :ripple="false"
-    class="my-5 py-1 grey lighten-5 text-left">
+    class="my-5 py-1 blue-grey lighten-5 text-left">
     <v-card-subtitle class="pb-1 d-flex align-center">
       <v-chip
         :color="color"
         label small dark
-        class="mr-2 subtitle-2">
+        class="mr-2 body-2">
         {{ typeLabel }}
       </v-chip>
       <v-chip
@@ -17,7 +16,7 @@
         {{ activity.shortId }}
       </v-chip>
     </v-card-subtitle>
-    <v-card-title class="py-1 text-truncate">
+    <v-card-title class="py-1 headline text-truncate">
       {{ activity.data.name }}
     </v-card-title>
     <v-card-actions class="py-1">
@@ -26,7 +25,7 @@
         <v-icon small class="pl-1">mdi-arrow-right</v-icon>
       </v-btn>
     </v-card-actions>
-  </v-card>
+  </v-sheet>
 </template>
 
 <script>
