@@ -13,8 +13,8 @@
         :value="value | formatDate('MMM D, YYYY')"
         :label="label"
         :placeholder="placeholder"
+        :clearable="clearable"
         outlined
-        clearable
         readonly />
     </template>
     <v-date-picker
@@ -32,6 +32,7 @@ export default {
   props: {
     value: { type: String, default: null },
     label: { type: String, default: null },
+    clearable: { type: Boolean, default: true },
     placeholder: { type: String, default: 'Click to set...' }
   },
   data: () => ({ showDatePicker: false }),
