@@ -79,6 +79,7 @@
 <script>
 import api from '@/api/user';
 import humanize from 'humanize-string';
+import loader from '@/components/common/loader';
 import { mapRequests } from '@/plugins/radio';
 import { mapState } from 'vuex';
 import throttle from 'lodash/throttle';
@@ -131,8 +132,7 @@ export default {
       this.editedUser = user;
       this.userDialog = true;
     },
-    fetch: throttle(async function (opts) {
-      this.loading = true;
+    fetch: throttle(loader(async function (opts) {
       Object.assign(this.dataTable, opts);
       const { items, total } = await api.fetch({
         sortBy: this.dataTable.sortBy[0],
@@ -144,8 +144,7 @@ export default {
       });
       this.users = items;
       this.totalItems = total;
-      this.loading = false;
-    }, 400),
+    }, 'loading'), 400),
     archiveOrRestore(user) {
       const action = user.deletedAt ? 'restore' : 'archive';
       this.confirmation = {

@@ -26,8 +26,8 @@ import debounce from 'lodash/debounce';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import { getSupportedContainers } from 'shared/activities';
+import loader from '@/components/common/loader';
 import { mapChannels } from '@/plugins/radio';
-import pMinDelay from 'p-min-delay';
 import throttle from 'lodash/throttle';
 
 const CE_FOCUS_EVENT = 'element:focus';
@@ -127,14 +127,6 @@ export default {
     ContentLoader
   }
 };
-
-function loader(action, name, minDuration = 0) {
-  return function () {
-    this[name] = true;
-    return pMinDelay(Promise.resolve(action.call(this)), minDuration)
-      .finally(() => (this[name] = false));
-  };
-}
 </script>
 
 <style lang="scss" scoped>

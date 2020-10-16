@@ -66,6 +66,7 @@ import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import AddRepository from './Add';
 import get from 'lodash/get';
 import InfiniteLoading from 'vue-infinite-loading';
+import loader from '@/components/common/loader';
 import RepositoryCard from './Card';
 import Search from './Search';
 import SelectOrder from './SelectOrder';
@@ -105,13 +106,11 @@ export default {
       'togglePinned', 'setSearch', 'setOrder', 'reset', 'resetFilters',
       'resetPagination', 'toggleTagFilter', 'clearTagFilter'
     ]),
-    async load() {
-      this.loading = true;
+    load: loader(async function () {
       await this.fetch();
       if (this.hasRepositories) this.loader.loaded();
       if (!this.hasMoreResults) this.loader.complete();
-      this.loading = false;
-    },
+    }, 'loading'),
     async onRepositoryAdd() {
       this.setOrder({ field: 'createdAt', order: 'DESC' });
       this.resetFilters();

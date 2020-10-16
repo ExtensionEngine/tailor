@@ -35,6 +35,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import debounce from 'lodash/debounce';
+import loader from '@/components/common/loader';
 
 const HEADERS = ['User', 'Email', 'Full Name', 'Role', ''];
 
@@ -53,10 +54,6 @@ export default {
   },
   methods: {
     ...mapActions('repository', ['getUsers', 'upsertUser', 'removeUser']),
-    fetchUsers() {
-      this.isLoading = true;
-      return this.getUsers().then(() => (this.isLoading = false));
-    },
     changeRole(email, role) {
       const { repositoryId } = this.$route.params;
       debounce(this.upsertUser, 500)({ repositoryId, email, role });
@@ -66,9 +63,9 @@ export default {
       this.removeUser({ userId: user.id, repositoryId });
     }
   },
-  created() {
-    this.fetchUsers();
-  }
+  created: loader(function () {
+    this.getUsers();
+  }, 'isLoading')
 };
 </script>
 
