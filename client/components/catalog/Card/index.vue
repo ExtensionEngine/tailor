@@ -37,11 +37,11 @@
         <v-card-title class="pt-2 blue-grey--text text--lighten-4 text-break">
           {{ name | truncate($vuetify.breakpoint.lg ? 60 : 40) }}
         </v-card-title>
-        <div class="px-4 blue-grey--text text--lighten-4">
-          <v-avatar :size="isCardHovered ? 40 : 38" class="float-left">
+        <div class="d-flex justify-start px-4 blue-grey--text text--lighten-4">
+          <v-avatar size="38">
             <img :src="lastActivity.user.imgUrl">
           </v-avatar>
-          <div class="float-left ml-4">
+          <div class="ml-3 overflow-hidden">
             <div
               :class="{ 'subtitle-1 font-weight-bold': isCardHovered }"
               class="caption">
