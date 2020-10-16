@@ -17,11 +17,12 @@
       :repository-id="activity.repositoryId"
       :levels="subLevels"
       :anchor="activity"
+      :action="insertLocation"
       :heading="`Add into ${activity.data.name}`"
       activator-label="Add into"
       activator-color="blue-grey darken-3"
       activator-icon="mdi-subdirectory-arrow-right"
-      add-child show-activator />
+      show-activator />
     <publishing
       v-if="isAdmin || isRepositoryAdmin"
       :activity="activity"
@@ -33,6 +34,7 @@
 import ActivityOptions from '@/components/repository/common/ActivityOptions/Menu';
 import CreateDialog from '@/components/repository/common/CreateDialog';
 import get from 'lodash/get';
+import InsertLocation from '@/utils/InsertLocation';
 import { isEditable } from 'shared/activities';
 import { mapGetters } from 'vuex';
 import Publishing from './Publishing';
@@ -56,7 +58,8 @@ export default {
       const config = structure.find(it => it.type === activity.type);
       const subLevels = get(config, 'subLevels', []);
       return structure.filter(it => subLevels.includes(it.type));
-    }
+    },
+    insertLocation: vm => InsertLocation.ADD_INTO
   },
   methods: {
     edit() {
