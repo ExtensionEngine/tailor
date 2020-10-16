@@ -19,27 +19,38 @@
       Click the button below to create content.
     </v-alert>
     <element-list
-      @add="addElement"
-      @insert="insert"
       @update="reorder"
-      :list="contentElements"
+      :elements="contentElements"
       :activity="container"
-      :types="types"
-      :layout="layout">
-      <template v-slot:list-item="{ item, dragged, setWidth }">
-        <content-element
-          :set-width="setWidth"
-          :dragged="dragged"
-          :element="item" />
+      :supported-types="types"
+      :layout="layout"
+      class="element-list">
+      <template v-slot:list-item="{ element, isDragged, position }">
+        <inline-activator @click.native="showElementDrawer(position - 1)" />
+        <content-element v-bind="{ element, isDragged, setWidth: false }" />
+      </template>
+      <template v-slot:list-add="{ position: lastPosition, ...slotProps }">
+        <div class="add-element-container mt-5">
+          <add-element
+            @add="element => onAddElement(element, lastPosition)"
+            @hidden="onHiddenElementDrawer"
+            v-bind="slotProps"
+            :position="Math.min(insertPosition, lastPosition)"
+            :show="isElementDrawerVisible"
+            :large="true"
+            icon="mdi-toy-brick-plus" />
+        </div>
       </template>
     </element-list>
   </v-card>
 </template>
 
 <script>
-import ContentElement from '../../ContentElement';
-import ElementList from '../ElementList';
+import AddElement from 'tce-core/AddElement';
+import ContentElement from '@/components/editor/ContentElement';
+import ElementList from 'tce-core/ElementList';
 import filter from 'lodash/filter';
+import InlineActivator from './InlineActivator';
 import InsertLocation from '@/utils/InsertLocation';
 import { mapActions } from 'vuex';
 import sortBy from 'lodash/sortBy';
@@ -55,6 +66,10 @@ export default {
     name: { type: String, required: true },
     layout: { type: Boolean, default: true }
   },
+  data: () => ({
+    insertPosition: Infinity,
+    isElementDrawerVisible: false
+  }),
   computed: {
     contentElements() {
       const activityId = this.container.id;
@@ -67,14 +82,25 @@ export default {
       insertElement: 'insert',
       addElement: 'save'
     }),
-    reorder({ newIndex: newPosition }) {
+    reorder({ newPosition }) {
       const items = this.contentElements;
       const element = items[newPosition];
       const isFirstChild = newPosition === 0;
       const context = { items, newPosition, isFirstChild };
       this.reorderElements({ element, context });
     },
-    insert(element) {
+    showElementDrawer(position) {
+      this.insertPosition = position;
+      this.isElementDrawerVisible = true;
+    },
+    onHiddenElementDrawer() {
+      this.isElementDrawerVisible = false;
+      this.insertPosition = Infinity;
+    },
+    onAddElement(element, lastPosition) {
+      if (element.position === lastPosition) {
+        return this.addElement(element);
+      }
       const items = this.contentElements;
       const { position: newPosition } = element;
       const isFirstChild = newPosition === -1;
@@ -82,7 +108,7 @@ export default {
       this.insertElement({ element, context });
     }
   },
-  components: { ContentElement, ElementList }
+  components: { AddElement, ContentElement, ElementList, InlineActivator }
 };
 </script>
 
@@ -91,5 +117,18 @@ export default {
   width: 100%;
   min-height: 2.25rem;
   margin-bottom: 0.5rem;
+}
+
+.element-list ::v-deep .contained-content {
+  margin: 0;
+}
+
+.element-list .sortable-drag {
+  margin: 0.625rem 0;
+  padding: 0;
+
+  ::v-deep .inline-activator {
+    display: none;
+  }
 }
 </style>

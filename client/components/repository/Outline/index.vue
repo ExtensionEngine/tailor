@@ -13,7 +13,8 @@
           <draggable
             @update="data => reorder(data, rootActivities)"
             :list="rootActivities"
-            v-bind="{ handle: '.activity' }">
+            v-bind="{ handle: '.activity' }"
+            class="mt-5">
             <activity
               v-for="(activity, index) in rootActivities"
               :key="activity.uid"
@@ -33,7 +34,7 @@
             :activity="activity" />
           <v-alert
             :value="!filteredActivities.length"
-            color="blue-grey darken-3"
+            color="blue-grey darken-2"
             icon="mdi-magnify"
             prominent text
             class="mt-5">

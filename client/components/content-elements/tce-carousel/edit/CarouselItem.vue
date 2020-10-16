@@ -1,5 +1,5 @@
 <template>
-  <v-carousel-item class="carousel-item blue-grey lighten-5">
+  <v-carousel-item light class="carousel-item blue-grey lighten-5">
     <v-alert
       v-if="!hasElements && !isDisabled"
       color="blue-grey darken-2"

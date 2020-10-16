@@ -1,13 +1,20 @@
 <template>
-  <contained-content
-    @add="add"
-    @save="save"
-    @save:meta="meta => updateElement({ uid: element.uid, meta })"
-    @delete="remove"
-    v-bind="$attrs"
-    :element="element"
-    :is-dragged="dragged"
-    :is-disabled="disabled" />
+  <div>
+    <contained-content
+      @add="add"
+      @save="save"
+      @save:meta="meta => updateElement({ uid: element.uid, meta })"
+      @delete="remove"
+      v-bind="$attrs"
+      :element="element"
+      :is-dragged="isDragged"
+      :is-disabled="disabled" />
+    <v-progress-linear
+      v-if="isSaving"
+      color="grey darken-2"
+      height="1"
+      indeterminate />
+  </div>
 </template>
 
 <script>
@@ -15,6 +22,7 @@ import { mapActions, mapMutations } from 'vuex';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
 import { mapChannels } from '@/plugins/radio';
+import Promise from 'bluebird';
 import throttle from 'lodash/throttle';
 
 export default {
@@ -23,8 +31,9 @@ export default {
   props: {
     element: { type: Object, required: true },
     disabled: { type: Boolean, default: false },
-    dragged: { type: Boolean, default: false }
+    isDragged: { type: Boolean, default: false }
   },
+  data: () => ({ isSaving: false }),
   computed: mapChannels({ editorChannel: 'editor' }),
   methods: {
     ...mapActions('repository/contentElements', {
@@ -40,8 +49,12 @@ export default {
       const element = cloneDeep(this.element);
       Object.assign(element.data, data);
       if (element.embedded) return this.$emit('save', element);
-      return this.saveElement(element)
-        .then(() => this.showNotification());
+      this.isSaving = true;
+      const delay = Promise.delay(1000);
+      return Promise.all([this.saveElement(element), delay]).then(() => {
+        this.isSaving = false;
+        this.showNotification();
+      });
     },
     showNotification: throttle(function () {
       this.$snackbar.show('Element saved');
