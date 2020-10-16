@@ -5,14 +5,14 @@
       @change="correct = $event"
       :value="correct"
       :disabled="answerDisabled"
-      :error="correctError"
+      :error-messages="correctErrors"
       color="blue-grey darken-3"
       filled clearable auto-grow />
   </div>
 </template>
 
 <script>
-import { defaults } from 'utils/assessment';
+import { defaults, getErrorMessages } from 'utils/assessment';
 
 const getTitle = isGraded => isGraded ? 'Answer' : 'Response';
 
@@ -30,7 +30,7 @@ export default {
     },
     title: vm => getTitle(vm.isGraded),
     answerDisabled: vm => !vm.isEditing || !vm.isGraded,
-    correctError: vm => vm.errors.includes('correct')
+    correctErrors: vm => getErrorMessages(vm.errors, 'correct')
   }
 };
 </script>

@@ -1,9 +1,13 @@
 import * as yup from 'yup';
 import Edit from './edit';
 
+const MESSAGE = 'Please choose at least one correct answer';
+
+const answer = () => yup.string().trim().max(500).required().label('Answer');
+
 const schema = {
-  answers: yup.array().min(2).of(yup.string().trim().min(1).max(500)).required(),
-  correct: yup.array().min(1).of(yup.number()).required()
+  answers: yup.array().min(2).of(answer()).required(),
+  correct: yup.array().min(1, MESSAGE).of(yup.number()).required()
 };
 
 const initState = () => ({

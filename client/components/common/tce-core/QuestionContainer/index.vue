@@ -6,17 +6,17 @@
       dark
       class="mb-5 px-0 elevation-2 text-left">
       <v-icon color="secondary lighten-2" size="18" class="mr-2">mdi-help</v-icon>
-      <span class="subtitle-2">{{ conifg.name }}</span>
+      <span class="subtitle-2">{{ config.name }}</span>
     </v-toolbar>
     <slot :isEditing="isEditing"></slot>
-    <question
-      @update="update"
-      :assessment="editedElement"
-      :is-editing="isEditing"
-      :errors="errors" />
     <div class="content">
+      <question
+        @update="update"
+        :assessment="editedElement"
+        :is-editing="isEditing"
+        :errors="errors" />
       <component
-        :is="resolveComponentName(element)"
+        :is="componentName"
         @update="update"
         @alert="alert = $event"
         :assessment="editedElement.data"
@@ -27,7 +27,7 @@
       <div class="subtitle-2 mb-2">Hint</div>
       <v-text-field
         v-model="editedElement.data.hint"
-        :errors="hintError"
+        :error-messages="hintErrors"
         :disabled="!isEditing"
         placeholder="Optional hint..."
         color="blue-darken darken-3"
@@ -52,7 +52,6 @@
         @save="save"
         @cancel="cancel"
         :is-editing="isEditing"
-        :has-errors="hasErrors"
         class="controls" />
     </div>
   </v-card>
@@ -63,15 +62,13 @@ import * as yup from 'yup';
 import { getComponentName, processAnswerType } from '../utils';
 import cloneDeep from 'lodash/cloneDeep';
 import Controls from './Controls';
-import dropRight from 'lodash/dropRight';
 import Feedback from './Feedback';
-import get from 'lodash/get';
+import { getErrorMessages } from 'utils/assessment';
 import isEmpty from 'lodash/isEmpty';
-import last from 'lodash/last';
-import map from 'lodash/map';
 import omit from 'lodash/omit';
 import Question from './Question';
-import toPath from 'lodash/toPath';
+
+const resolveComponentName = type => getComponentName(processAnswerType(type));
 
 const WITH_FEEDBACK = ['MC', 'SC', 'TF'];
 const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
@@ -92,24 +89,21 @@ export default {
     alert: {}
   }),
   computed: {
-    conifg: vm => vm.$teRegistry.get(vm.answerType),
-    schema() {
-      const elementSchema = this.conifg.schema;
-      return yup.object().shape({
-        ...baseSchema,
-        ...this.isGraded ? elementSchema : omit(elementSchema, ['correct'])
-      });
-    },
-    hasErrors: vm => !!vm.errors.length,
     answerType: vm => vm.element.data.type,
     isGraded: vm => vm.element.type === 'ASSESSMENT',
     showFeedback: vm => WITH_FEEDBACK.includes(vm.answerType),
-    hintError: vm => vm.errors.includes('hint')
+    componentName: vm => resolveComponentName(vm.answerType),
+    config: vm => vm.$teRegistry.get(vm.answerType),
+    hintErrors: vm => getErrorMessages(vm.errors, 'hint'),
+    schema() {
+      const { schema } = this.config;
+      return yup.object().shape({
+        ...baseSchema,
+        ...this.isGraded ? schema : omit(schema, ['correct'])
+      });
+    }
   },
   methods: {
-    resolveComponentName(element) {
-      return getComponentName(processAnswerType(this.answerType));
-    },
     edit() {
       this.editedElement = cloneDeep(this.element);
       this.undoState = cloneDeep(this.element);
@@ -119,17 +113,16 @@ export default {
       Object.assign(this.editedElement.data, data);
       if (validate && !isEmpty(this.errors)) {
         this.errors = [];
-        this.validate().catch(err => (this.errors = errorProcessor(err)));
+        this.validate().catch(err => (this.errors = err.inner));
       }
       this.$emit('add', this.editedElement);
     },
     save() {
-      if (!this.isEditing) return;
-      this.errors = [];
       this.validate().then(() => {
         this.$emit('save', cloneDeep(this.editedElement.data));
         this.isEditing = false;
-      }).catch(err => (this.errors = errorProcessor(err)));
+        this.errors = [];
+      }).catch(err => (this.errors = err.inner));
     },
     cancel() {
       if (!this.editedElement.id) return this.$emit('delete');
@@ -149,19 +142,6 @@ export default {
   },
   components: { Controls, Feedback, Question }
 };
-
-function errorProcessor(error) {
-  const item = error.value;
-  if (item.type !== 'DD') return map(error.inner, it => it.path);
-  // TODO: Nasty !!
-  return map(error.inner, it => {
-    const path = toPath(it.path);
-    if (path.length === 1) return it.path;
-    if (last(path) !== 'value') return;
-    const key = get(error.value, dropRight(path).concat('key'));
-    return `${path[0]}${key}`;
-  });
-}
 
 const question = yup.array().test(
   'has-text', 'Please define question', question => !!question.find(containsText)
@@ -193,16 +173,16 @@ const baseSchema = {
     font-weight: 400;
   }
 
-  .tce-answer {
-    overflow: hidden;
-  }
-
   .content {
-    padding: 0.5rem 1.625rem;
+    margin: 0.5rem 1.625rem;
 
     @media (max-width: 1263px) {
-      padding: 0.5rem;
+      margin: 0.5rem;
     }
+  }
+
+  .tce-answer {
+    overflow: hidden;
   }
 }
 
