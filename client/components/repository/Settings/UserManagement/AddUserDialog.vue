@@ -31,7 +31,8 @@
             :error-messages="errors"
             label="Email"
             placeholder="Enter email..."
-            outlined />
+            outlined
+            class="required" />
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
@@ -43,7 +44,8 @@
             :error-messages="errors"
             label="Role"
             placeholder="Role..."
-            outlined />
+            outlined
+            class="required" />
         </validation-provider>
         <div class="d-flex justify-end">
           <v-btn @click="close" :disabled="isSaving" text>Cancel</v-btn>

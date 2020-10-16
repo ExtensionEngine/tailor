@@ -29,7 +29,7 @@
             label="E-mail"
             placeholder="Enter email..."
             outlined
-            class="mb-3" />
+            class="required mb-3" />
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
@@ -41,7 +41,7 @@
             label="First name"
             placeholder="Enter first name..."
             outlined
-            class="mb-3" />
+            class="required mb-3" />
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
@@ -53,7 +53,7 @@
             label="Last name"
             placeholder="Enter last name..."
             outlined
-            class="mb-3" />
+            class="required mb-3" />
         </validation-provider>
         <validation-provider v-slot="{ errors }" name="role" rules="required">
           <v-select
@@ -63,7 +63,7 @@
             label="Role"
             placeholder="Select role..."
             outlined
-            class="mb-3" />
+            class="required mb-3" />
         </validation-provider>
         <div class="d-flex justify-end">
           <v-btn @click="close" text>Cancel</v-btn>

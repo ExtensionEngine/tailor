@@ -24,7 +24,8 @@
           label="Email"
           placeholder="Email"
           prepend-inner-icon="mdi-email-outline"
-          outlined />
+          outlined
+          class="required" />
       </validation-provider>
       <div class="d-flex">
         <v-btn @click="$router.go(-1)" tag="a" text class="px-1">

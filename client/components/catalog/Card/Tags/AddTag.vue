@@ -23,7 +23,8 @@
             :items="availableTags"
             :error-messages="errors"
             label="Select a tag or add a new one"
-            outlined />
+            outlined
+            class="required" />
         </validation-provider>
         <div class="d-flex justify-end">
           <v-btn @click="hide" text>Cancel</v-btn>
