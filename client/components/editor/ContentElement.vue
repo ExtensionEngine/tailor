@@ -21,8 +21,8 @@
 import { mapActions, mapMutations } from 'vuex';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
+import loader from '@/components/common/loader';
 import { mapChannels } from '@/plugins/radio';
-import Promise from 'bluebird';
 import throttle from 'lodash/throttle';
 
 export default {
@@ -45,17 +45,13 @@ export default {
     add(element) {
       this.addElement({ ...this.element, ...cloneDeep(element) });
     },
-    save(data) {
+    save: loader(async function (data) {
       const element = cloneDeep(this.element);
       Object.assign(element.data, data);
       if (element.embedded) return this.$emit('save', element);
-      this.isSaving = true;
-      const delay = Promise.delay(1000);
-      return Promise.all([this.saveElement(element), delay]).then(() => {
-        this.isSaving = false;
-        this.showNotification();
-      });
-    },
+      await this.saveElement(element);
+      this.showNotification();
+    }, 'isSaving', 1000),
     showNotification: throttle(function () {
       this.$snackbar.show('Element saved');
     }, 4000),

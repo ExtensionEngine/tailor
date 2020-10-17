@@ -1,4 +1,5 @@
 import downloadMixin from 'utils/downloadMixin';
+import loader from '@/components/common/loader';
 import { mapRequests } from '@/plugins/radio';
 
 export default {
@@ -13,18 +14,16 @@ export default {
       if (!file) return;
       this.form.append('file', file, file.name);
     },
-    upload(e) {
+    upload: loader(function (e) {
       this.createFileForm(e);
-      this.uploading = true;
       return this.$storageService.upload(this.form)
         .then(({ url, publicUrl, key }) => {
-          this.uploading = false;
           const { name } = this.form.get('file');
           this.$emit('upload', { url, publicUrl, key, name });
         }).catch(() => {
           this.error = 'An error has occurred!';
         });
-    },
+    }, 'uploading'),
     async downloadFile(key, name) {
       const url = await this.$storageService.getUrl(key);
       return this.download(url, name);
