@@ -26,8 +26,8 @@ import debounce from 'lodash/debounce';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import { getSupportedContainers } from 'shared/activities';
+import loader from '@/components/common/loader';
 import { mapChannels } from '@/plugins/radio';
-import Promise from 'bluebird';
 import throttle from 'lodash/throttle';
 
 const CE_FOCUS_EVENT = 'element:focus';
@@ -70,6 +70,11 @@ export default {
         this.editorChannel.emit(CE_FOCUS_EVENT);
       }
     },
+    loadContents: loader(function () {
+      const ids = this.contentContainers.map(it => it.id);
+      if (ids.length <= 0) return;
+      return this.getContentElements({ ids });
+    }, 'isLoading', 800),
     initElementChangeWatcher() {
       this.storeUnsubscribe = this.$store.subscribe(debounce((mutation, state) => {
         const { type, payload: element } = mutation;
@@ -110,12 +115,7 @@ export default {
   async created() {
     // Reset element focus
     this.$emit('selected', null);
-    const ids = this.contentContainers.map(it => it.id);
-    await Promise.all([
-      this.getContentElements({ ids }),
-      Promise.delay(800)
-    ]);
-    this.isLoading = false;
+    await this.loadContents();
     this.initElementFocusListener();
     this.initElementChangeWatcher();
   },

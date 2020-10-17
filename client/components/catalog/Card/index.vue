@@ -1,63 +1,79 @@
 <template>
-  <v-card class="repository-card">
-    <div @click="navigateTo()" class="card-body blue-grey darken-4">
-      <v-chip :color="repository.data.color" x-small class="ml-4 px-1" />
-      <span class="schema-name">{{ schema }}</span>
-      <div class="controls float-right">
-        <v-tooltip open-delay="100" top>
+  <v-hover v-slot:default="{ hover: isCardHovered }">
+    <v-card
+      :elevation="isCardHovered ? 20 : 1"
+      color="blue-grey darken-4"
+      dark
+      class="repository-card">
+      <div @click="navigateTo()" class="card-body">
+        <v-chip :color="repository.data.color" x-small class="ml-4 px-1" />
+        <span class="schema-name">{{ schema }}</span>
+        <div class="controls float-right">
+          <v-tooltip open-delay="100" top>
+            <template v-slot:activator="{ on }">
+              <span v-on="on">
+                <v-badge
+                  :color="hasUnpublishedChanges ? 'orange' : 'green'"
+                  inline dot
+                  class="pa-1" />
+              </span>
+            </template>
+            {{ publishingInfo }}
+          </v-tooltip>
+          <v-tooltip v-if="repository.hasAdminAccess" open-delay="400" top>
+            <template v-slot:activator="{ on }">
+              <v-btn
+                v-on="on"
+                @click.stop="navigateTo('repository-info')"
+                color="blue-grey darken-1"
+                icon
+                class="mr-2">
+                <v-icon>mdi-settings</v-icon>
+              </v-btn>
+            </template>
+            Open settings
+          </v-tooltip>
+        </div>
+        <v-card-title class="pt-2 blue-grey--text text--lighten-4 text-break">
+          {{ name | truncate($vuetify.breakpoint.lg ? 60 : 40) }}
+        </v-card-title>
+        <div class="d-flex justify-start px-4 blue-grey--text text--lighten-4">
+          <v-avatar size="38">
+            <img :src="lastActivity.user.imgUrl">
+          </v-avatar>
+          <div class="ml-3 overflow-hidden">
+            <div
+              :class="{ 'subtitle-1 font-weight-bold': isCardHovered }"
+              class="caption">
+              Edited
+              <timeago :datetime="lastActivity.createdAt" :auto-update="60" />
+              by
+            </div>
+            <div class="body-2 text-truncate">{{ lastActivity.user.label }}</div>
+          </div>
+        </div>
+      </div>
+      <v-card-actions class="pb-2 px-2">
+        <v-tooltip open-delay="400" bottom>
           <template v-slot:activator="{ on }">
-            <span v-on="on">
-              <v-badge
-                :color="hasUnpublishedChanges ? 'orange' : 'green'"
-                inline dot
-                class="pa-1" />
-            </span>
+            <v-btn
+              v-on="on"
+              @click.stop="pin({ id: repository.id, pin: !isPinned })"
+              icon
+              class="mr-1">
+              <v-icon
+                :color="isPinned ? 'lime accent-4': 'blue-grey lighten-2'"
+                :class="{ 'mdi-rotate-45': isPinned }">
+                mdi-pin
+              </v-icon>
+            </v-btn>
           </template>
-          {{ publishingInfo }}
+          {{ isPinned ? 'Unpin' : 'Pin' }} {{ schema }}
         </v-tooltip>
-        <v-btn
-          v-if="repository.hasAdminAccess"
-          @click.stop="navigateTo('repository-info')"
-          color="blue-grey darken-1"
-          icon small
-          class="mr-2">
-          <v-icon>mdi-settings</v-icon>
-        </v-btn>
-      </div>
-      <v-card-title class="grey--text text--lighten-3 text-break pt-2">
-        {{ name | truncate(70) }}
-      </v-card-title>
-      <div class="grey--text text--lighten-4 px-4">
-        <v-avatar size="38" class="float-left">
-          <img :src="lastActivity.user.imgUrl">
-        </v-avatar>
-        <div class="float-left ml-4">
-          <div class="caption">Last edited by</div>
-          <div class="user-label body-2 text-truncate">
-            {{ lastActivity.user.label }}
-          </div>
-        </div>
-        <div class="float-left activity-date">
-          <div class="subtitle-1">
-            {{ lastActivity.createdAt | formatDate('H:mm') }}
-          </div>
-          <div class="subtitle-2">
-            {{ lastActivity.createdAt | formatDate('D/M/YY') }}
-          </div>
-        </div>
-      </div>
-    </div>
-    <v-card-actions class="pa-1 grey lighten-4">
-      <v-btn @click.stop="pin({ id: repository.id, pin: !isPinned })" icon>
-        <v-icon
-          :color="isPinned ? 'grey darken-3': 'grey'"
-          :class="{ 'mdi-rotate-45': isPinned }">
-          mdi-pin
-        </v-icon>
-      </v-btn>
-      <tags :repository="repository" />
-    </v-card-actions>
-  </v-card>
+        <tags :repository="repository" />
+      </v-card-actions>
+    </v-card>
+  </v-hover>
 </template>
 
 <script>
@@ -101,21 +117,21 @@ export default {
 <style lang="scss" scoped>
 .repository-card {
   text-align: left;
-  transition: box-shadow 0.1s ease;
+  transition: all 0.3s ease;
   cursor: pointer;
 
   &:hover {
-    box-shadow: 0 6px 12px rgba(0,0,0,0.2), 0 6px 6px rgba(0,0,0,0.18);
+    transform: translateY(-0.25rem);
   }
 }
 
 .card-body {
-  height: 14rem;
+  height: 12.25rem;
   padding: 0.625rem 0 0;
   overflow: hidden;
 
   @media (max-width: 1263px) {
-    height: 17rem;
+    height: 14rem;
   }
 
   .schema-name {
@@ -134,18 +150,6 @@ export default {
 
   .v-avatar {
     margin-top: 0.125rem;
-  }
-}
-
-.user-label {
-  max-width: 8.5rem;
-}
-
-.activity-date {
-  padding-left: 1rem;
-
-  .subtitle-1 {
-    line-height: 1.25rem;
   }
 }
 </style>

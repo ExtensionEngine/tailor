@@ -1,12 +1,14 @@
 <template>
   <v-snackbar v-model="snackbar" v-bind="context" multi-line>
     {{ context.message }}
-    <v-btn
-      @click="close"
-      color="secondary lighten-2"
-      text>
-      Close
-    </v-btn>
+    <template v-slot:action>
+      <v-btn
+        @click="close"
+        color="secondary lighten-2"
+        text>
+        Close
+      </v-btn>
+    </template>
   </v-snackbar>
 </template>
 

@@ -114,6 +114,7 @@
 
 <script>
 import api from '@/api/repository';
+import loader from '@/components/common/loader';
 import { mapGetters } from 'vuex';
 import { SCHEMAS } from 'shared/activities';
 import TailorDialog from '@/components/common/TailorDialog';
@@ -142,14 +143,12 @@ export default {
     schemas: () => SCHEMAS
   },
   methods: {
-    async submit() {
-      this.showLoader = true;
+    submit: loader(async function () {
       const action = this.isCreate ? 'create' : 'import';
       return this[action]()
         .then(() => this.$emit('done') && this.hide())
-        .catch(() => (this.serverError = 'An error has occurred!'))
-        .finally(() => (this.showLoader = false));
-    },
+        .catch(() => (this.serverError = 'An error has occurred!'));
+    }, 'showLoader'),
     create() {
       return api.save(this.repository);
     },

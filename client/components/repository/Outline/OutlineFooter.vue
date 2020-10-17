@@ -3,7 +3,7 @@
     <v-col class="text-left">
       <v-alert
         v-if="!anchor"
-        color="blue-grey darken-4"
+        color="blue-grey darken-2"
         icon="mdi-information-variant"
         prominent text
         class="mb-5">

@@ -38,7 +38,7 @@
           v-for="repository in repositories"
           :key="repository.uid"
           cols="4"
-          class="px-2 py-3">
+          class="px-2 pb-5">
           <repository-card :repository="repository" />
         </v-col>
       </v-row>
@@ -66,6 +66,7 @@ import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import AddRepository from './Add';
 import get from 'lodash/get';
 import InfiniteLoading from 'vue-infinite-loading';
+import loader from '@/components/common/loader';
 import RepositoryCard from './Card';
 import Search from './Search';
 import SelectOrder from './SelectOrder';
@@ -105,13 +106,11 @@ export default {
       'togglePinned', 'setSearch', 'setOrder', 'reset', 'resetFilters',
       'resetPagination', 'toggleTagFilter', 'clearTagFilter'
     ]),
-    async load() {
-      this.loading = true;
+    load: loader(async function () {
       await this.fetch();
       if (this.hasRepositories) this.loader.loaded();
       if (!this.hasMoreResults) this.loader.complete();
-      this.loading = false;
-    },
+    }, 'loading'),
     async onRepositoryAdd() {
       this.setOrder({ field: 'createdAt', order: 'DESC' });
       this.resetFilters();
@@ -166,10 +165,11 @@ export default {
     width: 100%;
     height: 230px;
     background: #37474f;
+    border-bottom: 2px solid #b0bec5;
     box-shadow:
-      0 3px 5px -1px rgba(0,0,0,0.2),
-      0 5px 8px 0 rgba(0,0,0,0.14),
-      0 1px 14px 0 rgba(0,0,0,0.12);
+      0 3px 1px -2px rgba(0,0,0,0.2),
+      0 2px 2px 0 rgba(0,0,0,0.14),
+      0 1px 5px 0 rgba(0,0,0,0.12);
   }
 
   &.catalog-empty {

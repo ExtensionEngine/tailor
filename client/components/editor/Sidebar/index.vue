@@ -2,12 +2,13 @@
   <v-navigation-drawer
     width="400"
     absolute permanent
-    class="sidebar grey lighten-4 elevation-2">
+    class="sidebar grey lighten-5 elevation-3">
     <div
       :class="{
         'toolbar-visible': selectedElement,
         'toolbar-composite': selectedElement && selectedElement.parent
-      }">
+      }"
+      class="sidebar-container">
       <activity-navigation
         v-if="selectedTab === 'browser'"
         :repository="repository"
@@ -120,11 +121,15 @@ export default {
   text-align: left;
 }
 
-.toolbar-visible {
-  margin-top: 4.5rem;
+.sidebar-container {
+  height: 100%;
 
-  &.toolbar-composite {
-    margin-top: 7.5rem;
+  &.toolbar-visible {
+    padding-top: 4.75rem;
+
+    &.toolbar-composite {
+      padding-top: 8.75rem;
+    }
   }
 }
 </style>
