@@ -60,7 +60,7 @@
             <button
               v-for="element in group.elements"
               :key="element.position"
-              @click.stop="add(element)"
+              @click.stop="addElements([element])"
               :disabled="!allowedTypes.includes(element.type)"
               class="element">
               <v-icon v-if="element.ui.icon">{{ element.ui.icon }}</v-icon>
@@ -85,6 +85,7 @@
 import filter from 'lodash/filter';
 import intersection from 'lodash/intersection';
 import { isQuestion } from '../utils';
+import pick from 'lodash/pick';
 import reduce from 'lodash/reduce';
 import reject from 'lodash/reject';
 import uuid from '@/utils/uuid';
@@ -98,6 +99,12 @@ const ELEMENT_GROUPS = [
   { name: 'Assessments', icon: 'mdi-help-rhombus' },
   { name: 'Nongraded questions', icon: 'mdi-comment-question-outline' }
 ];
+
+const getQuestionData = element => {
+  const data = { width: LAYOUT.FULL_WIDTH };
+  const question = [{ id: uuid(), data, type: 'JODIT_HTML', embedded: true }];
+  return { question, type: element.subtype, ...element.data };
+};
 
 export default {
   name: 'add-element',
@@ -163,33 +170,33 @@ export default {
         ? registry
         : reject(registry, 'ui.forceFullWidth');
       const allowedTypes = allowedElements.map(it => it.type);
-      return intersection(include, allowedTypes);
+      return include ? intersection(include, allowedTypes) : allowedTypes;
     }
   },
   methods: {
     addElements(elements) {
-      elements.forEach(it => this.add(it));
-    },
-    add({ type, subtype, data = {}, initState = () => ({}) }) {
-      const element = { type, data: { ...data, width: this.processedWidth } };
-      // If content element within activity
-      if (this.activity) {
-        element.activityId = this.activity.id;
-        element.position = this.position;
-      } else {
-        // If embed, assign id
-        element.id = uuid();
-        element.embedded = true;
-      }
-      if (isQuestion(element.type)) {
-        const data = { width: LAYOUT.FULL_WIDTH };
-        const question = [{ id: uuid(), data, type: 'JODIT_HTML', embedded: true }];
-        element.data = { ...element.data, question, type: subtype };
-      }
-      element.data = { ...element.data, ...initState() };
-      if (element.type === 'REFLECTION') delete element.data.correct;
-      this.$emit('add', element);
+      const items = elements.map((it, index) => {
+        const position = this.position + index;
+        return this.buildElement({ ...it, position });
+      });
+      this.$emit('add', items);
       this.isVisible = false;
+    },
+    buildElement(el) {
+      const { position, processedWidth: width, activity } = this;
+      const { data = {}, initState = () => ({}) } = el;
+      const element = {
+        position,
+        ...pick(el, ['type', 'refs']),
+        data: { ...initState(), ...data, width }
+      };
+      const contextData = activity
+        ? { activityId: activity.id } // If content element within activity
+        : { id: uuid(), embedded: true }; // If embed, assign id
+      Object.assign(element, contextData);
+      if (isQuestion(element.type)) element.data = getQuestionData(element);
+      if (element.type === 'REFLECTION') delete element.data.correct;
+      return element;
     },
     onHidden() {
       this.elementWidth = DEFAULT_ELEMENT_WIDTH;
