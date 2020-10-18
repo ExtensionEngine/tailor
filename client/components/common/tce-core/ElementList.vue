@@ -29,7 +29,7 @@
         :layout="layout"
         name="list-add">
         <add-element
-          @add="el => $emit('add', el)"
+          @add="$emit('add', $event)"
           :include="supportedTypes"
           :activity="activity"
           :label="addElementOptions.label"
