@@ -38,7 +38,7 @@
       Click the button below to Create first Assessment.
     </div>
     <element-list
-      @add="addAssessment"
+      @add="addAssessments"
       @update="$emit('reorderElement', $event)"
       :elements="assessments"
       :activity="group"
@@ -93,7 +93,7 @@ export default {
     },
     assessments() {
       const { savedAssessments: saved, unsavedAssessments: unsaved } = this;
-      return [...saved, ...Object.values(unsaved)];
+      return sortBy(saved.concat(Object.values(unsaved)), 'position');
     },
     hasAssessments() {
       return !isEmpty(this.assessments);
@@ -106,9 +106,11 @@ export default {
     }
   },
   methods: {
-    addAssessment(assessment) {
-      Object.assign(assessment, { uid: uuid() });
-      this.$set(this.unsavedAssessments, assessment.uid, assessment);
+    addAssessments(assessments) {
+      assessments.forEach(it => {
+        const uid = uuid();
+        this.$set(this.unsavedAssessments, uid, { ...it, uid });
+      });
     },
     saveAssessment(assessment) {
       if (assessment.id) return this.$emit('updateElement', assessment);
