@@ -1,6 +1,6 @@
 <template>
   <element-list
-    @add="addItem"
+    @add="addItems"
     @update="reorderItem"
     :add-element-options="addElementOptions"
     :elements="embeds"
@@ -48,11 +48,13 @@ export default {
     }
   },
   methods: {
-    addItem(item) {
+    addItems(items) {
       const container = cloneDeep(this.container);
-      if (!item.position) item.position = this.nextPosition;
-      container.embeds = container.embeds || {};
-      container.embeds[item.id] = item;
+      items.forEach(item => {
+        if (!item.position) item.position = this.nextPosition;
+        container.embeds = container.embeds || {};
+        container.embeds[item.id] = item;
+      });
       this.$emit('save', container);
     },
     reorderItem({ newPosition, items }) {
