@@ -20,7 +20,7 @@
         :expanded="isSelected(it)" />
     </ul>
     <add-element
-      @add="addAssessment"
+      @add="addAssessments"
       :include="['ASSESSMENT']"
       :activity="container"
       :position="nextPosition"
@@ -61,10 +61,12 @@ export default {
     hasAssessments: vm => vm.assessments.length
   },
   methods: {
-    addAssessment(assessment) {
-      const uid = uuid();
-      this.$emit('addElement', { ...assessment, uid });
-      this.selected.push(uid);
+    addAssessments(assessments) {
+      assessments.forEach(it => {
+        const uid = uuid();
+        this.$emit('addElement', { ...it, uid });
+        this.selected.push(uid);
+      });
     },
     saveAssessment(assessment) {
       const event = assessment.id ? 'updateElement' : 'saveElement';
