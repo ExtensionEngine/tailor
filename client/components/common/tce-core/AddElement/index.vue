@@ -16,7 +16,11 @@
       color="blue-grey darken-3">
       <v-icon>{{ icon }}</v-icon>
     </v-btn>
-    <v-bottom-sheet v-model="isVisible" max-width="1240" inset>
+    <v-bottom-sheet
+      @input="isVisible = $event"
+      :value="isVisible && !showElementBrowser"
+      max-width="1240"
+      inset>
       <div class="element-container">
         <v-toolbar
           color="blue-grey darken-4"
