@@ -77,6 +77,7 @@
       :allowed-types="allowedTypes"
       submit-label="Copy"
       heading="Select elements"
+      header-icon="mdi-content-duplicate"
       multiple />
   </div>
 </template>

@@ -2,7 +2,7 @@
   <tailor-dialog
     @click:outside="close"
     :value="true"
-    header-icon="mdi-transit-connection-variant"
+    :header-icon="headerIcon"
     width="650">
     <template v-slot:header>{{ heading }}</template>
     <template v-slot:body>
@@ -52,7 +52,8 @@ export default {
     heading: { type: String, required: true },
     multiple: { type: Boolean, default: true },
     allowedTypes: { type: Array, default: () => [] },
-    submitLabel: { type: String, default: 'Save' }
+    submitLabel: { type: String, default: 'Save' },
+    headerIcon: { type: String, default: null }
   },
   data: () => ({
     selectedActivity: null,
