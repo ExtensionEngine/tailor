@@ -32,7 +32,7 @@
       <template v-slot:list-add="{ position: lastPosition, ...slotProps }">
         <div class="add-element-container mt-5">
           <add-element
-            @add="element => onAddElement(element, lastPosition)"
+            @add="onAddElements($event, lastPosition)"
             @hidden="onHiddenElementDrawer"
             v-bind="slotProps"
             :position="Math.min(insertPosition, lastPosition)"
@@ -97,15 +97,17 @@ export default {
       this.isElementDrawerVisible = false;
       this.insertPosition = Infinity;
     },
-    onAddElement(element, lastPosition) {
-      if (element.position === lastPosition) {
-        return this.addElement(element);
-      }
-      const items = this.contentElements;
-      const { position: newPosition } = element;
-      const isFirstChild = newPosition === -1;
-      const context = { items, newPosition, isFirstChild, action: ADD_AFTER };
-      this.insertElement({ element, context });
+    onAddElements(elements, lastPosition) {
+      elements.forEach((element, index) => {
+        if (element.position >= lastPosition) {
+          return this.addElement(element);
+        }
+        const items = this.contentElements;
+        const { position: newPosition } = element;
+        const isFirstChild = newPosition === -1;
+        const context = { items, newPosition, isFirstChild, action: ADD_AFTER };
+        this.insertElement({ element, context });
+      });
     }
   },
   components: { AddElement, ContentElement, ElementList, InlineActivator }
