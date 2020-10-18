@@ -12,7 +12,7 @@
           dense />
       </draggable>
       <add-element
-        @add="addElement"
+        @add="addElements"
         :layout="false"
         :disabled="!isEditing"
         :include="['JODIT_HTML', 'IMAGE', 'EMBED', 'HTML']"
@@ -58,9 +58,9 @@ export default {
     dragOptions: () => DRAG_OPTIONS
   },
   methods: {
-    addElement(element) {
+    addElements(elements) {
       const question = cloneDeep(this.assessment.data.question);
-      this.$emit('update', { question: question.concat(element) });
+      this.$emit('update', { question: question.concat(elements) });
     },
     updateElement(element, data) {
       if (!this.isEditing) return;
