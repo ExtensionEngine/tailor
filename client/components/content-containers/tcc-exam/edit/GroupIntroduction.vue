@@ -1,7 +1,7 @@
 <template>
   <div class="group-introduction">
     <element-list
-      @add="$emit('saveElement', $event)"
+      @add="$emit('saveElements', $event)"
       @update="$emit('reorderElement', $event)"
       :elements="introductionElements"
       :activity="group"
@@ -43,7 +43,7 @@ export default {
     save(element, data) {
       element = cloneDeep(element);
       Object.assign(element.data, data);
-      this.$emit('saveElement', element);
+      this.$emit('saveElements', element);
     }
   },
   components: {

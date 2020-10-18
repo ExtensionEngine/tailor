@@ -28,7 +28,7 @@
     <h3>Question group {{ position | toLetter }}</h3>
     <h4>Introduction</h4>
     <group-introduction
-      @saveElement="$emit('saveElement', $event)"
+      @saveElements="$emit('saveElements', $event)"
       @reorderElement="$emit('reorderElement', $event)"
       @deleteElement="$emit('deleteElement', $event)"
       :group="group"
@@ -114,7 +114,7 @@ export default {
     },
     saveAssessment(assessment) {
       if (assessment.id) return this.$emit('updateElement', assessment);
-      this.$emit('saveElement', assessment);
+      this.$emit('saveElements', assessment);
     },
     deleteAssessment(assessment) {
       if (!assessment.id) return this.clearUnsavedAssessments([assessment]);

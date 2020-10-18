@@ -16,7 +16,7 @@
       @updateSubcontainer="update"
       @deleteSubcontainer="requestContainerDeletion"
       @addElement="addElement"
-      @saveElement="saveContentElement"
+      @saveElements="saveContentElements"
       @updateElement="updateElement"
       @reorderElement="reorderContentElements"
       @deleteElement="requestElementDeletion"
@@ -39,6 +39,7 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import capitalize from 'lodash/capitalize';
+import castArray from 'lodash/castArray';
 import ContentContainer from './Container';
 import get from 'lodash/get';
 import { getContainerTemplateId as getContainerId } from 'shared/activities';
@@ -96,8 +97,10 @@ export default {
       const { type, parentId, nextPosition: position } = this;
       this.save({ type, parentId, position });
     },
-    saveContentElement(element) {
-      return this.saveElement(element).then(() => this.showNotification());
+    saveContentElements(elements) {
+      castArray(elements).forEach(element => {
+        return this.saveElement(element).then(() => this.showNotification());
+      });
     },
     reorderContentElements({ newPosition, items }) {
       const element = items[newPosition];

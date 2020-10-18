@@ -69,7 +69,7 @@ export default {
       });
     },
     saveAssessment(assessment) {
-      const event = assessment.id ? 'updateElement' : 'saveElement';
+      const event = assessment.id ? 'updateElement' : 'saveElements';
       return this.$emit(event, assessment);
     },
     toggleSelect(assessment) {

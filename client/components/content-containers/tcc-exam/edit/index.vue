@@ -26,7 +26,7 @@
       <assessment-group
         v-for="(group, index) in groups"
         :key="group.uid"
-        @saveElement="$emit('saveElement', $event)"
+        @saveElements="$emit('saveElements', $event)"
         @updateElement="$emit('updateElement', $event)"
         @reorderElement="$emit('reorderElement', $event)"
         @deleteElement="$emit('deleteElement', $event)"
