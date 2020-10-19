@@ -20,8 +20,7 @@
             <v-icon v-else :size="16">mdi-account</v-icon>
           </v-avatar>
         </template>
-        <span v-if="assignee">{{ assignee.fullName || assignee.email }}</span>
-        <span v-else>Unassigned</span>
+        <span>{{ assignee ? assignee.label : 'Unassigned' }}</span>
       </v-tooltip>
       <v-tooltip open-delay="500" bottom>
         <template #activator="{ on }">

@@ -38,7 +38,7 @@
       @change="update('assigneeId', $event)"
       :value="assigneeId"
       :items="users"
-      :item-text="getUserLabel"
+      item-text="label"
       label="Assignee"
       placeholder="Click to set assignee"
       item-value="id"
@@ -86,9 +86,6 @@ export default {
   computed: mapGetters('repository', ['users', 'workflow']),
   methods: {
     ...mapActions('repository', ['getUsers']),
-    getUserLabel({ fullName, email }) {
-      return fullName || email;
-    },
     async validateField(descriptor, value) {
       const field = this.$refs[descriptor];
       if (!field) return true;

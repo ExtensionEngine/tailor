@@ -1,7 +1,7 @@
 <template>
   <router-link :to="route">
     <v-sheet elevation="2" class="card px-3 pt-1 pb-4">
-      <h4 class="mb-4">{{ name }}</h4>
+      <h4 class="h4 mb-4">{{ name }}</h4>
       <div class="d-flex align-center mt-auto">
         <v-tooltip open-delay="500" bottom>
           <template #activator="{ on }">
@@ -13,7 +13,7 @@
               <v-icon v-else>mdi-account</v-icon>
             </v-avatar>
           </template>
-          <span v-if="assignee">{{ assignee.fullName || assignee.email }}</span>
+          <span v-if="assignee">{{ assignee.label }}</span>
           <span v-else>Unassigned</span>
         </v-tooltip>
         <v-tooltip open-delay="500" bottom>

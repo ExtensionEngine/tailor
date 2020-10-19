@@ -9,7 +9,7 @@
         clearable />
       <div v-if="assignees.length" class="ml-7 mr-3">
         <v-tooltip
-          v-for="{ id, fullName, email, isActive, imgUrl } in assignees"
+          v-for="{ id, label, isActive, imgUrl } in assignees"
           :key="`assignee-${id}`"
           open-delay="500"
           bottom>
@@ -23,7 +23,7 @@
               <img :src="imgUrl">
             </v-avatar>
           </template>
-          {{ fullName || email }}
+          {{ label }}
         </v-tooltip>
         <v-tooltip bottom>
           <template #activator="{ on }">
