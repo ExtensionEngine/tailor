@@ -78,28 +78,28 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .card.v-card {
-    min-height: 10rem;
+.card.v-card {
+  min-height: 10rem;
 
-    .card-title {
-      font-size: 1rem;
-      line-height: 1.2;
-    }
-
-    &.bordered {
-      border: 2px solid var(--v-primary-base);
-    }
-
-    .avatar.v-avatar {
-      border-radius: 50%;
-    }
-
-    .priority-icon {
-      width: 0.75rem;
-    }
-
-    &::before {
-      opacity: 0;
-    }
+  .card-title {
+    font-size: 1rem;
+    line-height: 1.2;
   }
+
+  &.bordered {
+    border: 2px solid var(--v-primary-base);
+  }
+
+  .avatar.v-avatar {
+    border-radius: 50%;
+  }
+
+  .priority-icon {
+    width: 0.75rem;
+  }
+
+  &::before {
+    opacity: 0;
+  }
+}
 </style>
