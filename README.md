@@ -253,7 +253,7 @@ Example:
 
 ## Workflows
 
-For each schema, workflow can be defined to enable users to track and assign tasks related to activities. Each workflow is defined by a set of statuses that the task can take.
+For each schema, workflow can be defined to enable users to track and assign tasks related to activities. Each workflow is defined by a set of statuses that the task can have.
 Workflows are assigned to schemas through schema's `workflowId` option in tailor configuration file.
 
 Workflows are configured with the following options in the tailor configuration file:
