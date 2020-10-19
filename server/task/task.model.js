@@ -75,7 +75,10 @@ class Task extends Model {
       paranoid: true,
       freezeTableName: true,
       underscored: true,
-      indexes: [{ unique: true, fields: ['columnPosition', 'status'] }]
+      indexes: [{
+        unique: true,
+        fields: ['columnPosition', 'status', 'repositoryId']
+      }]
     };
   }
 
