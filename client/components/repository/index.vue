@@ -56,15 +56,27 @@ export default {
       const hasActivities = get(this.activities, 'length');
       const activityId = get(this.lastSelectedActivity, 'id');
       const query = { ...this.$route.query, activityId };
-      const items = [
+      return [
         { name: 'Structure', route: 'repository', icon: 'file-tree', query },
-        hasActivities && this.hasWorkflow && { name: 'Board', route: 'board', icon: 'view-dashboard-variant', query },
-        hasActivities && { name: 'Graph View', route: 'tree-view', icon: 'graph-outline', query },
+        hasActivities && this.hasWorkflow && {
+          name: 'Board',
+          route: 'board',
+          icon: 'view-dashboard-variant',
+          query
+        },
+        hasActivities && {
+          name: 'Graph View',
+          route: 'tree-view',
+          icon: 'graph-outline',
+          query
+        },
         hasActivities && { name: 'History', route: 'revisions', icon: 'history' },
-        { name: 'Settings', route: 'repository-info', icon: 'settings-outline' }
+        (this.isAdmin || this.isRepositoryAdmin) && {
+          name: 'Settings',
+          route: 'repository-info',
+          icon: 'settings-outline'
+        }
       ].filter(Boolean);
-      if (!this.isAdmin && !this.isRepositoryAdmin) items.pop();
-      return items;
     }
   },
   methods: mapActions('repository', ['initialize', 'expandParents']),
