@@ -28,7 +28,7 @@ export default {
     activity: { type: Object, default: () => ({}) }
   },
   computed: {
-    ...mapGetters('repository', ['tasks', 'users']),
+    ...mapGetters('repository', ['tasks']),
     activityTasks: vm => vm.tasks.filter(it => it.activityId === vm.activity.id)
   },
   methods: mapActions('repository/tasks', ['fetch']),
