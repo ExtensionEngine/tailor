@@ -14,7 +14,7 @@
             v-on="on"
             :size="24"
             color="grey lighten-3"
-            class="avatar mr-3 d-flex white--text">
+            class="mr-3 d-flex white--text">
             <img v-if="assignee" :src="assignee.imgUrl">
             <v-icon v-else :size="16">mdi-account</v-icon>
           </v-avatar>
@@ -90,10 +90,6 @@ export default {
 
   &.bordered {
     border: 2px solid var(--v-primary-base);
-  }
-
-  .avatar.v-avatar {
-    border-radius: 50%;
   }
 
   .priority-icon {
