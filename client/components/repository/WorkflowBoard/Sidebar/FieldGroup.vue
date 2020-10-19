@@ -10,8 +10,8 @@
         :value="name"
         :error-messages="errors"
         label="Name"
-        class="my-2"
-        outlined />
+        outlined
+        class="my-2" />
     </validation-provider>
     <editor-field
       @change="update('description', $event)"
@@ -31,8 +31,8 @@
         label="Status"
         item-value="id"
         item-text="label"
-        class="my-2"
-        outlined />
+        outlined
+        class="my-2" />
     </validation-provider>
     <v-select
       @change="update('assigneeId', $event)"
@@ -42,8 +42,8 @@
       label="Assignee"
       placeholder="Click to set assignee"
       item-value="id"
-      class="my-2"
-      outlined clearable />
+      outlined clearable
+      class="my-2" />
     <validation-provider
       v-slot="{ errors }"
       ref="priority"

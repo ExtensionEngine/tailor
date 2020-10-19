@@ -3,10 +3,10 @@
     <div class="d-flex align-center px-4">
       <v-text-field
         v-model="searchText"
-        class="search-field"
         prepend-inner-icon="mdi-magnify"
         placeholder="Search by ID or name"
-        clearable />
+        clearable
+        class="search-field" />
       <div v-if="assignees" class="ml-7 mr-3">
         <v-tooltip
           v-for="{ id, label, isActive, imgUrl } in assignees"
@@ -17,7 +17,7 @@
             <v-avatar
               v-on="on"
               @click="toggleAssignee(id)"
-              :size="34"
+              size="34"
               :class="{ active: isActive }"
               class="avatar grey white--text">
               <img :src="imgUrl">
@@ -31,7 +31,7 @@
               v-if="unassignedTaskExists"
               v-on="on"
               @click="filterUnassigned = !filterUnassigned"
-              :size="34"
+              size="34"
               :class="{ active: filterUnassigned }"
               color="avatar grey lighten-3 white--text">
               <v-icon>mdi-account</v-icon>
@@ -43,8 +43,8 @@
       <v-btn
         @click="showRecentOnly = !showRecentOnly"
         :class="{ active: showRecentOnly }"
-        class="filters-btn mx-1 text-capitalize"
-        text>
+        text
+        class="btn-filters mx-1 text-capitalize">
         Recently updated
       </v-btn>
     </div>
@@ -53,7 +53,7 @@
         <h5
           v-for="status in workflow.statuses"
           :key="status.id"
-          class="status-title pa-3 grey lighten-3 text-uppercase align-self-start">
+          class="status-title align-self-start pa-3 grey lighten-3 text-uppercase">
           {{ status.label }}
         </h5>
       </div>
@@ -200,7 +200,7 @@ $sidebar-width: 27.1875rem;
   }
 }
 
-.filters-btn {
+.btn-filters {
   letter-spacing: inherit;
 
   &.active {

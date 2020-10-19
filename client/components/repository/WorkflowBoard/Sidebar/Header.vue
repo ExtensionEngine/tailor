@@ -15,8 +15,8 @@
         }"
         v-clipboard:error="() => $snackbar.show('Not able to copy the ID')"
         color="blue-grey darken-3"
-        class="ml-2 px-1"
-        text small>
+        text small
+        class="ml-2 px-1">
         <v-icon dense class="pr-2">mdi-identifier</v-icon>
         Copy id
       </v-btn>
@@ -27,16 +27,16 @@
         }"
         v-clipboard:error="() => $snackbar.show('Not able to copy the link')"
         color="blue-grey darken-3"
-        class="ml-2 px-1"
-        text small>
+        text small
+        class="ml-2 px-1">
         <v-icon class="pr-2">mdi-link</v-icon>
         Copy link
       </v-btn>
       <v-btn
         @click="requestArchiveConfirmation"
-        class="ml-2 px-1"
         color="blue-grey darken-3"
-        text small>
+        text small
+        class="ml-2 px-1">
         <v-icon class="pr-2">mdi-package-down</v-icon> Archive
       </v-btn>
       <div class="mt-1 caption grey--text text--darken-1">

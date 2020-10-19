@@ -59,13 +59,13 @@ export default {
   name: 'workflow-board-card',
   props: {
     id: { type: Number, required: true },
+    shortId: { type: String, required: true },
     name: { type: String, required: true },
+    priority: { type: String, required: true },
+    status: { type: String, required: true },
+    dueDate: { type: String, default: null },
     assignee: { type: Object, default: null },
     avatarUrl: { type: String, default: null },
-    priority: { type: String, required: true },
-    dueDate: { type: String, default: null },
-    shortId: { type: String, required: true },
-    status: { type: String, required: true },
     isSelected: { type: Boolean, default: false }
   },
   computed: {

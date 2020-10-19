@@ -1,9 +1,9 @@
 <template functional>
   <v-chip
     v-on="listeners"
+    :class="[data.staticClass, data.class, { active: listeners.mouseenter }]"
     color="blue-grey lighten-5"
     class="chip caption text-uppercase"
-    :class="[data.staticClass, data.class, { active: listeners.mouseenter }]"
     label small>
     <slot></slot>
   </v-chip>
