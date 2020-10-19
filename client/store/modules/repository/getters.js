@@ -25,14 +25,6 @@ export const schema = (_state, { repository }) => {
   return repository && getSchema(repository.schema).name;
 };
 
-export const workflow = (_state, { repository }) => {
-  if (!repository) return null;
-  const schema = getSchema(repository.schema);
-  return getWorkflow(schema.workflowId);
-};
-
-export const hasWorkflow = (_state, { workflow }) => Boolean(workflow);
-
 export const structure = (_, { repository }) => {
   return repository && getOutlineLevels(repository.schema);
 };
@@ -43,17 +35,6 @@ export const activities = (_state, getters, rootState) => {
   return map(items, it => ({
     ...it,
     shortId: `A-${hashids.encode(it.id)}`
-  }));
-};
-
-export const tasks = (state, getters, rootState) => {
-  if (!getters.repository) return [];
-  const { repository: { tasks: { items } } } = rootState;
-  return map(items, it => ({
-    ...it,
-    assignee: get(state.users, it.assigneeId),
-    author: get(state.users, it.authorId),
-    shortId: `T-${hashids.encode(it.id)}`
   }));
 };
 
@@ -69,14 +50,33 @@ export const selectedActivity = (_state, getters, rootState) => {
   return find(getters.activities, { id: parseInt(activityId, 10) });
 };
 
+export const workflow = (_state, { repository }) => {
+  if (!repository) return null;
+  const schema = getSchema(repository.schema);
+  return getWorkflow(schema.workflowId);
+};
+
+export const hasWorkflow = (_state, { workflow }) => Boolean(workflow);
+
+export const workflowActivities = (_state, { structure = [] }) =>
+  structure.filter(activity => activity.isTrackedInWorkflow);
+
+export const tasks = (state, getters, rootState) => {
+  if (!getters.repository) return [];
+  const { repository: { tasks: { items } } } = rootState;
+  return map(items, it => ({
+    ...it,
+    assignee: get(state.users, it.assigneeId),
+    author: get(state.users, it.authorId),
+    shortId: `T-${hashids.encode(it.id)}`
+  }));
+};
+
 export const selectedTask = (_state, getters, rootState) => {
   const { route: { query: { taskId } } } = rootState;
   if (!taskId) return;
   return find(getters.tasks, { id: parseInt(taskId, 10) });
 };
-
-export const workflowActivities = (_state, { structure = [] }) =>
-  structure.filter(activity => activity.isTrackedInWorkflow);
 
 export const isCollapsed = state => {
   return activity => activity && !state.outline.expanded[activity.uid];
