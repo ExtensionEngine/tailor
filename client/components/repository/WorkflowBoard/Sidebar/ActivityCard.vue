@@ -16,7 +16,7 @@ import LabelChip from '@/components/repository/common/LabelChip';
 import { mapGetters } from 'vuex';
 
 export default {
-  name: 'workflow-board-sidebar-activity-card',
+  name: 'workflow-board-activity-card',
   props: {
     id: { type: Number, required: true },
     name: { type: String, required: true },
