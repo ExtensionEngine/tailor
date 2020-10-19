@@ -82,8 +82,11 @@ export default {
     priority: { type: String, default: priorities[2].id },
     dueDate: { type: Date, default: null }
   },
-  data: () => ({ priorities, showDatePicker: false }),
-  computed: mapGetters('repository', ['users', 'workflow']),
+  data: () => ({ showDatePicker: false }),
+  computed: {
+    ...mapGetters('repository', ['users', 'workflow']),
+    priorities: () => priorities
+  },
   methods: {
     ...mapActions('repository', ['getUsers']),
     async validateField(descriptor, value) {
