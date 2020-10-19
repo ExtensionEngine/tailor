@@ -7,7 +7,7 @@
         prepend-inner-icon="mdi-magnify"
         placeholder="Search by ID or name"
         clearable />
-      <div v-if="assignees.length" class="ml-7 mr-3">
+      <div v-if="assignees" class="ml-7 mr-3">
         <v-tooltip
           v-for="{ id, label, isActive, imgUrl } in assignees"
           :key="`assignee-${id}`"
@@ -78,7 +78,6 @@ import groupBy from 'lodash/groupBy';
 import isAfter from 'date-fns/isAfter';
 import Sidebar from './Sidebar';
 import sub from 'date-fns/sub';
-import uniqBy from 'lodash/uniqBy';
 import xor from 'lodash/xor';
 
 const RECENCY_THRESHOLD = { days: 2 };
@@ -116,12 +115,11 @@ export default {
     },
     groupedTasksByStatus: vm => groupBy(vm.filteredTasks, 'status'),
     assignees() {
-      const assignees = this.tasks.reduce((all, { assignee }) => {
+      return this.tasks.reduce((all, { assignee }) => {
         if (!assignee) return all;
         const isActive = this.filteredAssigneeIds.includes(assignee.id);
-        return [...all, { ...assignee, isActive }];
-      }, []);
-      return uniqBy(assignees, 'id');
+        return { ...all, [assignee.id]: { ...assignee, isActive } };
+      }, null);
     }
   },
   methods: {
