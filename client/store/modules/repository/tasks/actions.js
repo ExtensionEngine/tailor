@@ -12,9 +12,9 @@ const plugSSE = ({ commit }) => {
 };
 
 const archive = ({ commit }, model) => {
-  if (!model.id) return commit('archive', model);
+  if (!model.id) return commit('remove', [model]);
   return api.post(`${model.id}/archive`)
-    .then(() => commit('archive', model));
+    .then(() => commit('remove', [model]));
 };
 
 export {
