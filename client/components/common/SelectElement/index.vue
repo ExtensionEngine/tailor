@@ -82,11 +82,10 @@ export default {
         ? elements.filter(it => it.id !== element.id)
         : [...elements, { id: element.id, ...elementLocation }];
     },
-    fetchElements: loader(async function (containers) {
+    fetchElements: loader(function (containers) {
       const { repository: { id: repositoryId } } = this;
       const queryOpts = { repositoryId, ids: containers.map(it => it.id) };
-      const [elements] = contentElementApi.fetch(queryOpts);
-      return elements;
+      return contentElementApi.fetch(queryOpts);
     }, 'loadingContent', 500),
     save() {
       this.$emit('selected', [...this.selectedElements]);
