@@ -18,7 +18,7 @@ module.exports = function (config) {
   try {
     workflows.validateSync(config);
   } catch (err) {
-    console.error('Invalid schema config!', err.message);
+    console.error('Invalid workflow config!', err.message);
     throw err;
   }
 };
