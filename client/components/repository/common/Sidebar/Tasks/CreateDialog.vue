@@ -1,23 +1,26 @@
 <template>
-  <validation-observer v-slot="{ handleSubmit }" slim>
-    <tailor-dialog
-      v-model="visible"
-      header-icon="mdi-folder-plus-outline">
-      <template #activator="{ on }">
-        <v-btn v-on="on" text small>+ Create task</v-btn>
-      </template>
-      <template #header>
-        <h4>Add task</h4>
-      </template>
-      <template #body>
+  <tailor-dialog
+    v-model="visible"
+    header-icon="mdi-folder-plus-outline">
+    <template #activator="{ on }">
+      <v-btn v-on="on" text small>+ Create task</v-btn>
+    </template>
+    <template #header>
+      <h4>Add task</h4>
+    </template>
+    <template #body>
+      <validation-observer
+        ref="form"
+        @submit.prevent="$refs.form.handleSubmit(create)"
+        tag="form">
         <task-field-group v-bind.sync="task" />
-      </template>
-      <template #actions>
-        <v-btn @click="visible = false" text>Cancel</v-btn>
-        <v-btn @click="handleSubmit(create)" color="primary" text>Create</v-btn>
-      </template>
-    </tailor-dialog>
-  </validation-observer>
+        <div class="d-flex justify-end">
+          <v-btn @click="visible = false" text>Cancel</v-btn>
+          <v-btn type="submit" color="primary" text>Create</v-btn>
+        </div>
+      </validation-observer>
+    </template>
+  </tailor-dialog>
 </template>
 
 <script>
