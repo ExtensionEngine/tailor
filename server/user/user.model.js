@@ -106,11 +106,11 @@ class User extends Model {
       foreignKey: { name: 'userId', field: 'user_id' }
     });
     this.hasMany(Task, {
-      as: 'CreatedTasks',
+      as: 'createdTasks',
       foreignKey: { name: 'authorId', field: 'author_id' }
     });
     this.hasMany(Task, {
-      as: 'AssignedTasks',
+      as: 'assignedTasks',
       foreignKey: { name: 'assigneeId', field: 'assignee_id' }
     });
   }
