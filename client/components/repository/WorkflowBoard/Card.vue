@@ -1,13 +1,12 @@
 <template>
-  <v-card
+  <v-sheet
     @click="$emit('click', id)"
     :elevation="isSelected ? 0 : 1"
-    :ripple="false"
     :class="{ bordered: isSelected }"
-    class="card d-flex flex-column align-start pa-3">
-    <div class="card-title mt-3 mb-5 text-left font-weight-regular">
+    class="board-card card d-flex flex-column align-start pa-3">
+    <v-card-title class="card-title pa-0 mt-3 mb-5 text-left font-weight-regular">
       {{ name }}
-    </div>
+    </v-card-title>
     <div class="d-flex align-center mt-auto">
       <v-tooltip open-delay="500" bottom>
         <template #activator="{ on }">
@@ -49,7 +48,7 @@
         Task ID
       </v-tooltip>
     </div>
-  </v-card>
+  </v-sheet>
 </template>
 
 <script>
@@ -77,8 +76,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.card.v-card {
+.card {
   min-height: 10rem;
+
+  &:hover {
+    cursor: pointer;
+  }
 
   .card-title {
     font-size: 1rem;
