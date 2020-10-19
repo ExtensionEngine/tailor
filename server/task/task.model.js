@@ -13,25 +13,30 @@ class Task extends Model {
       uid: {
         type: UUID,
         unique: true,
+        allowNull: false,
         defaultValue: UUIDV4
       },
-      priority: {
-        type: ENUM(priorityIds)
-      },
-      dueDate: {
-        type: DATE
+      name: {
+        type: STRING,
+        allowNull: false
       },
       status: {
-        type: STRING
+        type: STRING,
+        allowNull: false
       },
-      name: {
-        type: STRING
+      priority: {
+        type: ENUM(priorityIds),
+        allowNull: false
+      },
+      columnPosition: {
+        type: FLOAT,
+        allowNull: false
       },
       description: {
         type: TEXT
       },
-      columnPosition: {
-        type: FLOAT
+      dueDate: {
+        type: DATE
       },
       archivedAt: {
         type: DATE

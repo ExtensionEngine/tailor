@@ -35,28 +35,28 @@ exports.up = async (queryInterface, Sequelize) => {
       field: 'activity_id',
       references: { model: 'activity', key: 'id' }
     },
-    priority: {
-      type: Sequelize.ENUM(['TRIVIAL', 'LOW', 'MEDIUM', 'HIGH', 'CRITICAL']),
+    name: {
+      type: Sequelize.STRING,
       allowNull: false
-    },
-    dueDate: {
-      type: Sequelize.DATE,
-      field: 'due_date'
     },
     status: {
       type: Sequelize.STRING(50),
       allowNull: false
     },
-    name: {
-      type: Sequelize.STRING,
+    priority: {
+      type: Sequelize.ENUM(['TRIVIAL', 'LOW', 'MEDIUM', 'HIGH', 'CRITICAL']),
+      allowNull: false
+    },
+    column_position: {
+      type: Sequelize.FLOAT,
       allowNull: false
     },
     description: {
       type: Sequelize.TEXT
     },
-    column_position: {
-      type: Sequelize.FLOAT,
-      allowNull: false
+    dueDate: {
+      type: Sequelize.DATE,
+      field: 'due_date'
     },
     archivedAt: {
       type: Sequelize.DATE,
