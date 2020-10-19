@@ -1,52 +1,54 @@
 <template>
-  <v-card :to="route" class="px-3 pt-1 pb-4">
-    <h4 class="mb-4">{{ name }}</h4>
-    <div class="d-flex align-center mt-auto">
-      <v-tooltip open-delay="500" bottom>
-        <template #activator="{ on }">
-          <v-avatar
-            v-on="on"
-            :size="32"
-            color="grey lighten-3">
-            <img v-if="assignee" :src="assignee.imgUrl">
-            <v-icon v-else>mdi-account</v-icon>
-          </v-avatar>
-        </template>
-        <span v-if="assignee">{{ assignee.fullName || assignee.email }}</span>
-        <span v-else>Unassigned</span>
-      </v-tooltip>
-      <v-tooltip open-delay="500" bottom>
-        <template #activator="{ on }">
-          <v-icon v-on="on" class="priority-icon mx-5">
-            {{ `$vuetify.icons.${priorityConfig.icon}` }}
-          </v-icon>
-        </template>
-        {{ priorityConfig.label }} priority
-      </v-tooltip>
-      <v-tooltip v-if="dueDate" open-delay="500" bottom>
-        <template #activator="{ on }">
-          <label-chip v-on="on" class="mr-3">
-            {{ dueDate | formatDate('MM/DD/YY') }}
-          </label-chip>
-        </template>
-        Due date
-      </v-tooltip>
-      <v-tooltip open-delay="500" bottom>
-        <template #activator="{ on }">
-          <label-chip v-on="on" class="mr-3">
-            {{ statusConfig.label }}
-          </label-chip>
-        </template>
-        Status
-      </v-tooltip>
-      <v-tooltip open-delay="500" bottom>
-        <template #activator="{ on }">
-          <label-chip v-on="on">{{ shortId }}</label-chip>
-        </template>
-        Task ID
-      </v-tooltip>
-    </div>
-  </v-card>
+  <router-link :to="route">
+    <v-sheet elevation="2" class="card px-3 pt-1 pb-4">
+      <h4 class="mb-4">{{ name }}</h4>
+      <div class="d-flex align-center mt-auto">
+        <v-tooltip open-delay="500" bottom>
+          <template #activator="{ on }">
+            <v-avatar
+              v-on="on"
+              :size="32"
+              color="grey lighten-3">
+              <img v-if="assignee" :src="assignee.imgUrl">
+              <v-icon v-else>mdi-account</v-icon>
+            </v-avatar>
+          </template>
+          <span v-if="assignee">{{ assignee.fullName || assignee.email }}</span>
+          <span v-else>Unassigned</span>
+        </v-tooltip>
+        <v-tooltip open-delay="500" bottom>
+          <template #activator="{ on }">
+            <v-icon v-on="on" class="priority-icon mx-5">
+              {{ `$vuetify.icons.${priorityConfig.icon}` }}
+            </v-icon>
+          </template>
+          {{ priorityConfig.label }} priority
+        </v-tooltip>
+        <v-tooltip v-if="dueDate" open-delay="500" bottom>
+          <template #activator="{ on }">
+            <label-chip v-on="on" class="mr-3">
+              {{ dueDate | formatDate('MM/DD/YY') }}
+            </label-chip>
+          </template>
+          Due date
+        </v-tooltip>
+        <v-tooltip open-delay="500" bottom>
+          <template #activator="{ on }">
+            <label-chip v-on="on" class="mr-3">
+              {{ statusConfig.label }}
+            </label-chip>
+          </template>
+          Status
+        </v-tooltip>
+        <v-tooltip open-delay="500" bottom>
+          <template #activator="{ on }">
+            <label-chip v-on="on">{{ shortId }}</label-chip>
+          </template>
+          Task ID
+        </v-tooltip>
+      </div>
+    </v-sheet>
+  </router-link>
 </template>
 
 <script>
@@ -77,6 +79,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.card {
+  border-radius: 4px;
+}
+
 .priority-icon {
   width: 1rem;
 }
