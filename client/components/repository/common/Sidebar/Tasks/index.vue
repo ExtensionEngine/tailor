@@ -7,13 +7,11 @@
         :activity="activity"
         heading="Add task" />
     </div>
-    <div class="d-flex flex-column">
-      <task-card
-        v-for="task in activityTasks"
-        :key="task.uid"
-        v-bind="task"
-        class="px-3 pt-1 pb-4" />
-    </div>
+    <task-card
+      v-for="task in activityTasks"
+      :key="task.uid"
+      v-bind="task"
+      class="px-3 pt-1 pb-4" />
   </div>
 </template>
 
