@@ -7,7 +7,7 @@
           <v-avatar
             v-on="on"
             :size="32"
-            color="d-flex grey lighten-3 white--text">
+            color="grey lighten-3">
             <img v-if="assignee" :src="assignee.imgUrl">
             <v-icon v-else>mdi-account</v-icon>
           </v-avatar>
