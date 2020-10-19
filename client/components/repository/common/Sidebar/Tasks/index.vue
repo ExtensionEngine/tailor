@@ -10,7 +10,7 @@
     <div class="d-flex flex-column">
       <task-card
         v-for="task in activityTasks"
-        :key="task.id"
+        :key="task.uid"
         v-bind="task"
         class="px-3 pt-1 pb-4" />
     </div>

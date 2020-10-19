@@ -58,7 +58,7 @@ import { priorities } from 'shared/workflow';
 export default {
   name: 'activity-sidebar-task-card',
   props: {
-    id: { type: Number, required: true },
+    id: { type: Number, default: null },
     name: { type: String, required: true },
     assignee: { type: Object, default: null },
     priority: { type: String, required: true },

@@ -46,13 +46,13 @@ export default {
   }),
   computed: mapGetters('repository', ['workflow']),
   methods: {
-    ...mapActions('repository/tasks', { createTask: 'create' }),
+    ...mapActions('repository/tasks', ['save']),
     close() {
       this.visible = false;
     },
     create() {
       const data = { ...this.task, activityId: this.activity.id };
-      this.createTask(data).then(this.close);
+      this.save(data).then(this.close);
     }
   },
   watch: {

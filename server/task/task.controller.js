@@ -6,7 +6,7 @@ const { createError } = require('../shared/error/helpers');
 const pick = require('lodash/pick');
 const ATTRIBUTES = [
   'name', 'description', 'priority', 'status', 'dueDate', 'columnPosition',
-  'assigneeId', 'activityId'
+  'uid', 'assigneeId', 'activityId'
 ];
 
 async function list({ repository }, res) {
