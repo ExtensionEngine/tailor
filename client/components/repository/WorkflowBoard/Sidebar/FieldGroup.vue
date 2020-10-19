@@ -89,19 +89,19 @@ export default {
   },
   methods: {
     ...mapActions('repository', ['getUsers']),
-    async validateField(descriptor, value) {
-      const field = this.$refs[descriptor];
+    async validateField(key, value) {
+      const field = this.$refs[key];
       if (!field) return true;
       const validationResult = await field.validate(value);
       await field.applyResult(validationResult);
       return validationResult.valid;
     },
-    async update(descriptor, value) {
-      if (this[descriptor] === value) return;
-      const isValid = await this.validateField(descriptor, value);
+    async update(key, value) {
+      if (this[key] === value) return;
+      const isValid = await this.validateField(key, value);
       if (!isValid) return;
-      this.$emit('update', descriptor, value);
-      this.$emit(`update:${descriptor}`, value);
+      this.$emit('update', key, value);
+      this.$emit(`update:${key}`, value);
     }
   },
   components: { DatePicker, EditorField, SelectPriority }

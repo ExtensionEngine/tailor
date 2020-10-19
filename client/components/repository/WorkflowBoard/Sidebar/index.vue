@@ -41,8 +41,8 @@ export default {
   },
   methods: {
     ...mapActions('repository/tasks', ['save']),
-    updateTask(descriptor, value) {
-      this.save({ ...this.selectedTask, [descriptor]: value || null })
+    updateTask(key, value) {
+      this.save({ ...this.selectedTask, [key]: value || null })
         .then(() => { this.$snackbar.show(`${this.selectedTask.name} saved`); });
     }
   },
