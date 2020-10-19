@@ -1,13 +1,15 @@
 <template>
-  <v-card :to="route" :color="color" class="card px-3 pt-1 pb-4">
-    <h4 class="mb-4">{{ name }}</h4>
-    <v-tooltip open-delay="500" bottom>
-      <template #activator="{ on }">
-        <label-chip v-on="on">{{ shortId }}</label-chip>
-      </template>
-      {{ config.label }} ID
-    </v-tooltip>
-  </v-card>
+  <router-link :to="route">
+    <v-sheet :color="color" elevation="2" class="card px-3 pt-1 pb-4">
+      <h4 class="mb-4">{{ name }}</h4>
+      <v-tooltip open-delay="500" bottom>
+        <template #activator="{ on }">
+          <label-chip v-on="on">{{ shortId }}</label-chip>
+        </template>
+        {{ config.label }} ID
+      </v-tooltip>
+    </v-sheet>
+  </router-link>
 </template>
 
 <script>
@@ -34,8 +36,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.card.v-card {
+.card {
   background: #fafafa !important;
+  border-radius: 4px;
   border-left: 4px solid currentColor;
 }
 </style>
