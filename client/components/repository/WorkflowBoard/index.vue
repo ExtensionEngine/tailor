@@ -101,18 +101,18 @@ export default {
         searchableText: `${it.shortId} ${it.name}`.toLowerCase()
       }));
     },
+    isFilteredByAssignee() {
+      return this.filteredAssigneeIds.length || this.filterUnassigned;
+    },
+    isFilteredBySearchText() {
+      return this.searchText?.length > SEARCH_TEXT_LENGTH_THRESHOLD;
+    },
     filteredTasks() {
-      const isFilteredByAssignee = this.filteredAssigneeIds.length ||
-        this.filterUnassigned;
-      const isFilteredBySearchText = this.searchText &&
-       this.searchText.length > SEARCH_TEXT_LENGTH_THRESHOLD;
-
-      const filters = {
+      return this.searchableTasks.filter(conforms({
         ...this.showRecentOnly && { updatedAt: this.filterByRecency },
-        ...isFilteredByAssignee && { assigneeId: this.filterByAssignee },
-        ...isFilteredBySearchText && { searchableText: this.filterBySearchText }
-      };
-      return this.searchableTasks.filter(conforms(filters));
+        ...this.isFilteredByAssignee && { assigneeId: this.filterByAssignee },
+        ...this.isFilteredBySearchText && { searchableText: this.filterBySearchText }
+      }));
     },
     groupedTasksByStatus: vm => groupBy(vm.filteredTasks, 'status'),
     assignees() {
