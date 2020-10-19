@@ -80,7 +80,7 @@ export default {
     status: { type: String, default: null },
     assigneeId: { type: Number, default: null },
     priority: { type: String, default: priorities[2].id },
-    dueDate: { type: Date, default: null }
+    dueDate: { type: String, default: null }
   },
   data: () => ({ showDatePicker: false }),
   computed: {

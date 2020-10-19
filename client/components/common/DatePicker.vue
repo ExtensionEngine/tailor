@@ -30,7 +30,7 @@
 export default {
   name: 'date-picker',
   props: {
-    value: { type: String, default: null },
+    value: { type: [String, Date], default: null },
     label: { type: String, default: null },
     clearable: { type: Boolean, default: true },
     placeholder: { type: String, default: 'Click to set...' }
