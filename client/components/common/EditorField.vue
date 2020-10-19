@@ -1,5 +1,5 @@
 <template>
-  <v-input :class="{ editing }" class="field d-flex px-3">
+  <v-input :class="{ editing }" class="editor-field d-flex px-3">
     <label class="label v-label theme--light font-weight-regular">
       {{ label }}
     </label>
@@ -62,7 +62,7 @@ export default {
 </script>
 
 <style lang="scss">
-.field {
+.editor-field {
   position: relative;
   border: none;
   cursor: pointer;
