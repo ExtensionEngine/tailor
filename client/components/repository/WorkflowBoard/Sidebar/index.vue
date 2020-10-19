@@ -3,7 +3,7 @@
     width="450"
     color="grey lighten-5"
     absolute right permanent>
-    <article
+    <section
       v-if="selectedTask"
       :key="selectedTask.uid"
       class="px-4 pt-4 pb-10">
@@ -13,12 +13,12 @@
         <h5>Related content</h5>
         <activity-card v-bind="activity" :name="activity.data.name" />
       </section>
-    </article>
-    <article v-else class="placeholder grey--text text--darken-3">
+    </section>
+    <section v-else class="placeholder grey--text text--darken-3">
       <h4>Task Sidebar</h4>
       <v-icon>mdi-chevron-left</v-icon>
       <div class="info-content">{{ emptyMessage }}</div>
-    </article>
+    </section>
   </v-navigation-drawer>
 </template>
 
