@@ -1,7 +1,7 @@
 <template>
   <router-link :to="route">
     <v-sheet :color="color" elevation="2" class="card px-3 pt-1 pb-4">
-      <h4 class="mb-4">{{ name }}</h4>
+      <h4 class="mb-4 h4">{{ name }}</h4>
       <v-tooltip open-delay="500" bottom>
         <template #activator="{ on }">
           <label-chip v-on="on">{{ shortId }}</label-chip>

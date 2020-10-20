@@ -4,7 +4,7 @@
       <h5
         v-for="status in workflow.statuses"
         :key="status.id"
-        class="status-title align-self-start pa-3 grey lighten-3 text-uppercase">
+        class="status-title align-self-start pa-3 grey lighten-3 h5 text-uppercase">
         {{ status.label }}
       </h5>
     </div>

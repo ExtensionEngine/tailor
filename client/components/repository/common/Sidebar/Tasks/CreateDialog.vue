@@ -6,7 +6,7 @@
       <v-btn v-on="on" text small>+ Create task</v-btn>
     </template>
     <template #header>
-      <h4>Add task</h4>
+      <h4 class="h4">Add task</h4>
     </template>
     <template #body>
       <validation-observer

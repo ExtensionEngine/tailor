@@ -10,7 +10,7 @@
       <sidebar-header v-bind="selectedTask" />
       <task-field-group @update="updateTask" v-bind="selectedTask" class="mt-9 mb-4" />
       <section>
-        <h5>Related content</h5>
+        <h5 class="h5">Related content</h5>
         <activity-card v-bind="activity" :name="activity.data.name" />
       </section>
     </section>
