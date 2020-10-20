@@ -23,6 +23,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
 import loader from '@/components/common/loader';
 import { mapChannels } from '@/plugins/radio';
+import set from 'lodash/set';
 import throttle from 'lodash/throttle';
 
 export default {
@@ -47,7 +48,7 @@ export default {
     },
     save: loader(async function (data) {
       const element = cloneDeep(this.element);
-      Object.assign(element.data, data);
+      set(element, 'data', data);
       if (element.embedded) return this.$emit('save', element);
       await this.saveElement(element);
       this.showNotification();
