@@ -7,7 +7,7 @@ You've been assigned to a task.
 
 View the task by visiting the link:
 
-{{href}}
+{{{href}}}
 
 Or copy and paste this URL into your browser.
 
