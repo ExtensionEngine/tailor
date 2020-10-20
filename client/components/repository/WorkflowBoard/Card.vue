@@ -4,9 +4,9 @@
     :elevation="isSelected ? 0 : 1"
     :class="{ bordered: isSelected }"
     class="card d-flex flex-column align-start pa-3">
-    <v-card-title class="card-title pa-0 mt-3 mb-5 text-left font-weight-regular">
+    <div class="card-title mt-3 mb-5 text-left font-weight-regular">
       {{ name }}
-    </v-card-title>
+    </div>
     <div class="d-flex align-center mt-auto">
       <assignee-avatar v-bind="assignee" small class="mr-3" />
       <v-tooltip open-delay="500" bottom>
