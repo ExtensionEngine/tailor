@@ -14,7 +14,7 @@
             v-on="on"
             :size="24"
             color="grey lighten-3"
-            class="mr-3 d-flex white--text">
+            class="mr-3">
             <img v-if="assignee" :src="assignee.imgUrl">
             <v-icon v-else :size="16">mdi-account</v-icon>
           </v-avatar>
