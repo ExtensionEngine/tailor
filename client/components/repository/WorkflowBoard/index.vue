@@ -1,34 +1,9 @@
 <template>
   <div class="board d-flex flex-column grey lighten-4 py-3">
-    <div class="d-flex align-center px-4">
-      <v-text-field
-        v-model="searchText"
-        prepend-inner-icon="mdi-magnify"
-        placeholder="Search by ID or name"
-        clearable
-        class="search-field" />
-      <div v-if="assignees" class="ml-7 mr-3">
-        <assignee-avatar
-          v-for="{ id, isActive, ...assignee } in assignees"
-          :key="`assignee-${id}`"
-          @click="toggleAssignee(id)"
-          v-bind="assignee"
-          :class="[{ active: isActive }]"
-          class="avatar" />
-        <assignee-avatar
-          v-if="unassignedTaskExists"
-          @click="filterUnassigned = !filterUnassigned"
-          :class="{ active: filterUnassigned }"
-          class="avatar" />
-      </div>
-      <v-btn
-        @click="showRecentOnly = !showRecentOnly"
-        :class="{ active: showRecentOnly }"
-        text
-        class="btn-filters mx-1 text-capitalize">
-        Recently updated
-      </v-btn>
-    </div>
+    <board-filters
+      v-bind.sync="filters"
+      :assignee-options="assignees"
+      :show-unassigned="unassignedTaskExists" />
     <div class="tasks">
       <div v-if="workflow" class="column-layout mt-4 px-4">
         <h5
@@ -53,14 +28,13 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import AssigneeAvatar from '@/components/repository/common/AssigneeAvatar';
 import BoardColumn from './Column';
+import BoardToolbar from './Toolbar';
 import conforms from 'lodash/conforms';
 import groupBy from 'lodash/groupBy';
 import isAfter from 'date-fns/isAfter';
 import Sidebar from './Sidebar';
 import sub from 'date-fns/sub';
-import xor from 'lodash/xor';
 
 const RECENCY_THRESHOLD = { days: 2 };
 const SEARCH_TEXT_LENGTH_THRESHOLD = 3;
@@ -68,14 +42,16 @@ const SEARCH_TEXT_LENGTH_THRESHOLD = 3;
 export default {
   name: 'workflow-board',
   data: () => ({
-    filteredAssigneeIds: [],
-    filterUnassigned: false,
-    showRecentOnly: false,
-    searchText: null
+    filters: {
+      searchText: null,
+      assigneeIds: [],
+      unassigned: false,
+      recentOnly: false
+    }
   }),
   computed: {
     ...mapGetters('repository', ['repository', 'workflow', 'tasks']),
-    unassignedTaskExists: vm => !!vm.tasks.find(it => !it.assigneeId),
+    unassignedTaskExists: vm => vm.tasks.some(it => !it.assigneeId),
     searchableTasks() {
       return this.tasks.map(it => ({
         ...it,
@@ -83,14 +59,14 @@ export default {
       }));
     },
     isFilteredByAssignee() {
-      return this.filteredAssigneeIds.length || this.filterUnassigned;
+      return this.filters.assigneeIds.length || this.filters.unassigned;
     },
     isFilteredBySearchText() {
-      return this.searchText?.length > SEARCH_TEXT_LENGTH_THRESHOLD;
+      return this.filters.searchText?.length > SEARCH_TEXT_LENGTH_THRESHOLD;
     },
     filteredTasks() {
       return this.searchableTasks.filter(conforms({
-        ...this.showRecentOnly && { updatedAt: this.filterByRecency },
+        ...this.filters.recentOnly && { updatedAt: this.filterByRecency },
         ...this.isFilteredByAssignee && { assigneeId: this.filterByAssignee },
         ...this.isFilteredBySearchText && { searchableText: this.filterBySearchText }
       }));
@@ -99,7 +75,7 @@ export default {
     assignees() {
       return this.tasks.reduce((all, { assignee }) => {
         if (!assignee) return all;
-        const isActive = this.filteredAssigneeIds.includes(assignee.id);
+        const isActive = this.filters.assigneeIds.includes(assignee.id);
         return { ...all, [assignee.id]: { ...assignee, isActive } };
       }, null);
     }
@@ -107,12 +83,9 @@ export default {
   methods: {
     ...mapActions('repository', ['getUsers']),
     ...mapActions('repository/tasks', { getTasks: 'reset' }),
-    toggleAssignee(id) {
-      this.filteredAssigneeIds = xor(this.filteredAssigneeIds, [id]);
-    },
     filterByAssignee(id) {
-      if (this.filterUnassigned && !id) return true;
-      return this.filteredAssigneeIds.includes(id);
+      if (this.filters.unassigned && !id) return true;
+      return this.filters.assigneeIds.includes(id);
     },
     filterByRecency(updatedAt) {
       const parsed = new Date(updatedAt);
@@ -120,14 +93,14 @@ export default {
       return isAfter(parsed, updatedAtLimit);
     },
     filterBySearchText(searchableText) {
-      return searchableText.indexOf(this.searchText.toLowerCase()) !== -1;
+      return searchableText.indexOf(this.filters.searchText.toLowerCase()) !== -1;
     }
   },
   created() {
     this.getTasks();
     this.getUsers();
   },
-  components: { BoardColumn, Sidebar, AssigneeAvatar }
+  components: { BoardFilters, BoardColumn, Sidebar }
 };
 </script>
 
@@ -157,37 +130,5 @@ $sidebar-width: 27.1875rem;
 
 .status-title {
   margin: 0;
-}
-
-.search-field {
-  max-width: 17.5rem;
-}
-
-.avatar.v-avatar {
-  border: 2px solid;
-  border-color: #fff !important;
-
-  &:not(:first-of-type) {
-    margin-left: -0.5rem;
-  }
-
-  &.active {
-    box-shadow: var(--v-secondary-base) 0 0 0 2px;
-  }
-
-  &:hover {
-    transform: scale(1.1);
-    z-index: 1;
-    cursor: pointer;
-  }
-}
-
-.btn-filters {
-  letter-spacing: inherit;
-
-  &.active {
-    color: var(--v-secondary-darken1);
-    background-color: var(--v-secondary-lighten5);
-  }
 }
 </style>
