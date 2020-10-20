@@ -8,19 +8,7 @@
       {{ name }}
     </v-card-title>
     <div class="d-flex align-center mt-auto">
-      <v-tooltip open-delay="500" bottom>
-        <template #activator="{ on }">
-          <v-avatar
-            v-on="on"
-            :size="24"
-            color="grey lighten-3"
-            class="mr-3">
-            <img v-if="assignee" :src="assignee.imgUrl">
-            <v-icon v-else :size="16">mdi-account</v-icon>
-          </v-avatar>
-        </template>
-        <span>{{ assignee ? assignee.label : 'Unassigned' }}</span>
-      </v-tooltip>
+      <assignee-avatar v-bind="assignee" small class="mr-3" />
       <v-tooltip open-delay="500" bottom>
         <template #activator="{ on }">
           <v-icon
@@ -52,6 +40,7 @@
 </template>
 
 <script>
+import AssigneeAvatar from '@/components/repository/common/AssigneeAvatar';
 import LabelChip from '@/components/repository/common/LabelChip';
 import { priorities } from 'shared/workflow';
 
@@ -71,7 +60,7 @@ export default {
   computed: {
     priorityConfig: vm => priorities.find(it => it.id === vm.priority)
   },
-  components: { LabelChip }
+  components: { LabelChip, AssigneeAvatar }
 };
 </script>
 

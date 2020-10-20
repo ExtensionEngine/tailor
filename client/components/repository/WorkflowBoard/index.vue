@@ -8,37 +8,18 @@
         clearable
         class="search-field" />
       <div v-if="assignees" class="ml-7 mr-3">
-        <v-tooltip
-          v-for="{ id, label, isActive, imgUrl } in assignees"
+        <assignee-avatar
+          v-for="{ id, isActive, ...assignee } in assignees"
           :key="`assignee-${id}`"
-          open-delay="500"
-          bottom>
-          <template #activator="{ on }">
-            <v-avatar
-              v-on="on"
-              @click="toggleAssignee(id)"
-              size="34"
-              :class="{ active: isActive }"
-              class="avatar grey white--text">
-              <img :src="imgUrl">
-            </v-avatar>
-          </template>
-          {{ label }}
-        </v-tooltip>
-        <v-tooltip bottom>
-          <template #activator="{ on }">
-            <v-avatar
-              v-if="unassignedTaskExists"
-              v-on="on"
-              @click="filterUnassigned = !filterUnassigned"
-              size="34"
-              :class="{ active: filterUnassigned }"
-              color="avatar grey lighten-3 white--text">
-              <v-icon>mdi-account</v-icon>
-            </v-avatar>
-          </template>
-          Unassigned
-        </v-tooltip>
+          @click="toggleAssignee(id)"
+          v-bind="assignee"
+          :class="[{ active: isActive }]"
+          class="avatar" />
+        <assignee-avatar
+          v-if="unassignedTaskExists"
+          @click="filterUnassigned = !filterUnassigned"
+          :class="{ active: filterUnassigned }"
+          class="avatar" />
       </div>
       <v-btn
         @click="showRecentOnly = !showRecentOnly"
@@ -72,6 +53,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import AssigneeAvatar from '@/components/repository/common/AssigneeAvatar';
 import BoardColumn from './Column';
 import conforms from 'lodash/conforms';
 import groupBy from 'lodash/groupBy';
@@ -145,7 +127,7 @@ export default {
     this.getTasks();
     this.getUsers();
   },
-  components: { BoardColumn, Sidebar }
+  components: { BoardColumn, Sidebar, AssigneeAvatar }
 };
 </script>
 

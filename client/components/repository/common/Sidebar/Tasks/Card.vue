@@ -3,19 +3,7 @@
     <v-sheet elevation="2" class="card px-3 pt-1 pb-4">
       <h4 class="h4 mb-4">{{ name }}</h4>
       <div class="d-flex align-center mt-auto">
-        <v-tooltip open-delay="500" bottom>
-          <template #activator="{ on }">
-            <v-avatar
-              v-on="on"
-              :size="32"
-              color="grey lighten-3">
-              <img v-if="assignee" :src="assignee.imgUrl">
-              <v-icon v-else>mdi-account</v-icon>
-            </v-avatar>
-          </template>
-          <span v-if="assignee">{{ assignee.label }}</span>
-          <span v-else>Unassigned</span>
-        </v-tooltip>
+        <assignee-avatar v-bind="assignee" />
         <v-tooltip open-delay="500" bottom>
           <template #activator="{ on }">
             <v-icon v-on="on" class="priority-icon mx-5">
@@ -52,6 +40,7 @@
 </template>
 
 <script>
+import AssigneeAvatar from '@/components/repository/common/AssigneeAvatar';
 import find from 'lodash/find';
 import LabelChip from '@/components/repository/common/LabelChip';
 import { mapGetters } from 'vuex';
@@ -74,7 +63,7 @@ export default {
     priorityConfig: vm => priorities.find(it => it.id === vm.priority),
     route: vm => ({ name: 'board', query: { ...vm.$route.query, taskId: vm.id } })
   },
-  components: { LabelChip }
+  components: { LabelChip, AssigneeAvatar }
 };
 </script>
 
