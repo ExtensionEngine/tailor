@@ -24,6 +24,8 @@ const templatesDir = path.join(__dirname, './templates/');
 const resetUrl = token => urlJoin(origin, '/#/reset-password/', token);
 const activityUrl = (repositoryId, activityId) =>
   urlJoin(origin, '/#/repository', `${repositoryId}?activityId=${activityId}`);
+const taskUrl = (repositoryId, taskId) =>
+  urlJoin(origin, '/#/repository', `${repositoryId}/board?taskId=${taskId}`);
 
 module.exports = {
   send,
@@ -92,8 +94,9 @@ function sendCommentNotification(users, comment) {
 
 function sendTaskAssigneeNotification(assignee, task) {
   const recipients = assignee;
-  const html = renderHtml(path.join(templatesDir, 'task.mjml'), task);
-  const text = renderText(path.join(templatesDir, 'task.txt'), task);
+  const data = { ...task, href: taskUrl(task.repositoryId, task.id) };
+  const html = renderHtml(path.join(templatesDir, 'task.mjml'), data);
+  const text = renderText(path.join(templatesDir, 'task.txt'), data);
   logger.info({ recipients, sender: from }, '📧  Sending notification email to:', recipients);
   return send({
     from,

@@ -33,5 +33,19 @@
         </mj-text>
       </mj-column>
     </mj-section>
+    <mj-section padding="20px 10px 0">
+      <mj-column>
+        <mj-text
+          mj-class="content"
+          padding-left="0"
+          color="#444"
+          font-size="16px">
+          View the task by clicking the button below:
+        </mj-text>
+        <mj-button mj-class="ctaButton" href="{{href}}">
+          View {{name}}
+        </mj-button>
+      </mj-column>
+    </mj-section>
   </mj-body>
 </mjml>
