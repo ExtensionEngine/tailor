@@ -3,7 +3,7 @@
     @click="$emit('click', id)"
     :elevation="isSelected ? 0 : 1"
     :class="{ bordered: isSelected }"
-    class="board-card card d-flex flex-column align-start pa-3">
+    class="card d-flex flex-column align-start pa-3">
     <v-card-title class="card-title pa-0 mt-3 mb-5 text-left font-weight-regular">
       {{ name }}
     </v-card-title>
@@ -78,6 +78,7 @@ export default {
 <style lang="scss" scoped>
 .card {
   min-height: 10rem;
+  border-radius: 4px;
 
   &:hover {
     cursor: pointer;
