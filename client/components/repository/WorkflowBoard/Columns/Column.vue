@@ -22,9 +22,9 @@ import get from 'lodash/get';
 import head from 'lodash/head';
 import last from 'lodash/last';
 import { mapActions } from 'vuex';
-import selectTask from '../common/selectTask';
+import selectTask from '@/components/repository/common/selectTask';
 import sortBy from 'lodash/sortBy';
-import TaskCard from './Card';
+import TaskCard from '../Card';
 
 export default {
   name: 'workflow-board-column',
