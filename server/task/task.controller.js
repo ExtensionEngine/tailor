@@ -4,9 +4,10 @@ const { Activity, Task } = require('../shared/database');
 const { CONFLICT } = require('http-status-codes');
 const { createError } = require('../shared/error/helpers');
 const pick = require('lodash/pick');
+
 const ATTRIBUTES = [
-  'name', 'description', 'priority', 'status', 'dueDate', 'columnPosition',
-  'uid', 'assigneeId', 'activityId'
+  'assigneeId', 'name', 'description', 'priority',
+  'status', 'dueDate', 'columnPosition'
 ];
 
 async function list({ repository }, res) {
@@ -15,7 +16,7 @@ async function list({ repository }, res) {
 }
 
 async function create({ body, repository, user }, res) {
-  const { activityId, ...data } = pick(body, ATTRIBUTES);
+  const { activityId, ...data } = pick(body, [...ATTRIBUTES, 'uid', 'activityId']);
   const activity = await Activity.findOne({
     where: { id: activityId },
     include: [{ model: Task, required: false }]
