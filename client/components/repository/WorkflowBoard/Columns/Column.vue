@@ -2,7 +2,7 @@
   <draggable
     :key="status.id"
     @change="updateTask"
-    :list="[...tasksByStatus]"
+    :list="tasksByStatus"
     group="tasks"
     class="d-flex flex-column align-center grey lighten-3">
     <task-card
@@ -19,8 +19,6 @@
 <script>
 import Draggable from 'vuedraggable';
 import get from 'lodash/get';
-import head from 'lodash/head';
-import last from 'lodash/last';
 import { mapActions } from 'vuex';
 import selectTask from '@/components/repository/common/selectTask';
 import sortBy from 'lodash/sortBy';
@@ -38,22 +36,20 @@ export default {
   },
   methods: {
     ...mapActions('repository/tasks', ['save']),
-    getNewPosition(index, isNewElement) {
-      if (!this.tasksByStatus.length) return 1;
+    getNewPosition(index) {
+      if (this.tasksByStatus.length === 1) return 1;
       const isFirst = index === 0;
-      const isLast = isNewElement
-        ? index === this.tasksByStatus.length
-        : index === this.tasksByStatus.length - 1;
-      if (isFirst) return head(this.tasksByStatus).columnPosition * 0.5;
-      if (isLast) return last(this.tasksByStatus).columnPosition + 1;
-      const prev = this.tasksByStatus[index];
+      const isLast = index === this.tasksByStatus.length - 1;
       const next = this.tasksByStatus[index + 1];
+      if (isFirst) return next.columnPosition * 0.5;
+      const prev = this.tasksByStatus[index - 1];
+      if (isLast) return prev.columnPosition + 1;
       return (prev.columnPosition + next.columnPosition) / 2;
     },
     updateTask(update, status) {
       if (!update.added && !update.moved) return;
       const { element: task, newIndex } = update.added || update.moved;
-      const columnPosition = this.getNewPosition(newIndex, Boolean(update.added));
+      const columnPosition = this.getNewPosition(newIndex);
       return this.save({ ...task, columnPosition, status: this.status.id });
     }
   },
