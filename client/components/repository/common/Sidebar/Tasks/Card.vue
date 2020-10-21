@@ -50,12 +50,12 @@ export default {
   name: 'activity-sidebar-task-card',
   props: {
     id: { type: Number, default: null },
+    shortId: { type: String, required: true },
     name: { type: String, required: true },
+    status: { type: String, required: true },
     assignee: { type: Object, default: null },
     priority: { type: String, required: true },
-    dueDate: { type: String, default: null },
-    shortId: { type: String, required: true },
-    status: { type: String, required: true }
+    dueDate: { type: String, default: null }
   },
   computed: {
     ...mapGetters('repository', ['workflow']),
