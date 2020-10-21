@@ -1,5 +1,5 @@
 <template>
-  <v-tooltip open-delay="100" max-width="300" v-bind="position">
+  <v-tooltip open-delay="100" max-width="300" left>
     <template v-slot:activator="{ on }">
       <span v-on="on">
         <v-badge :color="badgeColor" inline dot />
@@ -32,15 +32,10 @@ const getDescendantsInfo = (descendants, count, label) => {
 
 export default {
   props: {
-    activity: { type: Object, default: () => ({}) },
-    top: { type: Boolean, default: false }
+    activity: { type: Object, default: () => ({}) }
   },
   computed: {
     ...mapGetters('repository', { outline: 'outlineActivities' }),
-    position() {
-      if (this.top) return { top: true };
-      return { left: true };
-    },
     label() {
       return getLabel(this.activity);
     },
