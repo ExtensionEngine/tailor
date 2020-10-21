@@ -1,10 +1,12 @@
 <template>
   <router-link :to="route">
-    <v-sheet :color="color" elevation="2" class="card px-3 pt-1 pb-4">
-      <h4 class="mb-4 h4">{{ name }}</h4>
+    <v-sheet
+      :color="color"
+      class="card d-flex justify-space-between align-center pa-2">
+      <div class="text-truncate">{{ name }}</div>
       <v-tooltip open-delay="500" bottom>
         <template #activator="{ on }">
-          <label-chip v-on="on">{{ shortId }}</label-chip>
+          <label-chip v-on="on" class="flex-shrink-0 ml-2">{{ shortId }}</label-chip>
         </template>
         {{ config.label }} ID
       </v-tooltip>
@@ -36,9 +38,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$background-color: #eceff1;
+
 .card {
-  background: #fafafa !important;
+  background: $background-color !important;
   border-radius: 4px;
   border-left: 4px solid currentColor;
+
+  &:hover {
+    background-color: darken($background-color, 5) !important;
+  }
+
+  .label {
+    color: inherit;
+  }
 }
 </style>

@@ -8,11 +8,14 @@
       :key="selectedTask.uid"
       class="px-4 pt-4 pb-10">
       <sidebar-header v-bind="selectedTask" />
-      <task-field-group @update="updateTask" v-bind="selectedTask" class="mt-9 mb-4" />
-      <section>
+      <section class="mt-5">
         <h5 class="h5">Related content</h5>
         <activity-card v-bind="activity" :name="activity.data.name" />
       </section>
+      <task-field-group
+        @update="updateTask"
+        v-bind="selectedTask"
+        class="mt-9 mb-4" />
     </section>
     <section v-else class="placeholder grey--text text--darken-3">
       <h4>Task Sidebar</h4>

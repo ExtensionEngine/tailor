@@ -3,8 +3,8 @@
     v-on="listeners"
     :class="[data.staticClass, data.class, { active: listeners.mouseenter }]"
     color="blue-grey lighten-5"
-    class="chip caption text-uppercase"
-    label small>
+    label small
+    class="chip caption text-uppercase">
     <slot></slot>
   </v-chip>
 </template>
