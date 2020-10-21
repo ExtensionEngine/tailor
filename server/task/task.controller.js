@@ -25,10 +25,10 @@ async function create({ body, repository, user }, res) {
     return createError(CONFLICT, 'Active task for activity already exists.');
   }
   const lastColumnPosition = await Task.max('columnPosition', {
-    where: { status: body.status }
+    where: { status: data.status }
   });
   const columnPosition = Number.isNaN(lastColumnPosition)
-    ? 0
+    ? 1
     : lastColumnPosition + 1;
   const task = await activity.createTask({
     ...data,
