@@ -40,9 +40,9 @@ export default {
       if (this.tasksByStatus.length === 1) return 1;
       const isFirst = index === 0;
       const isLast = index === this.tasksByStatus.length - 1;
+      const prev = this.tasksByStatus[index - 1];
       const next = this.tasksByStatus[index + 1];
       if (isFirst) return next.columnPosition * 0.5;
-      const prev = this.tasksByStatus[index - 1];
       if (isLast) return prev.columnPosition + 1;
       return (prev.columnPosition + next.columnPosition) / 2;
     },
