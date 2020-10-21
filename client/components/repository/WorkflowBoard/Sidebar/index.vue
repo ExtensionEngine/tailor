@@ -4,7 +4,7 @@
     color="grey lighten-5"
     absolute right permanent>
     <section
-      v-if="selectedTask"
+      v-if="selectedTask && activity"
       :key="selectedTask.uid"
       class="px-4 pt-4 pb-10">
       <sidebar-header v-bind="selectedTask" />
