@@ -100,7 +100,7 @@ An array of Schema objects.
 
 - **id** `String` - Schema identifier.
 - **name** `String` - Schema display name.
-- **workflowId** `String` - Workflow identifier.
+- **workflowId** `String` - [Workflow](#workflow) identifier.
 - **meta** `Array<Metadata>` - An array of objects defining repository metadata.
 - **structure** `Array<ActivityConfig>` - An array of objects which define
   schema structure.
@@ -254,9 +254,9 @@ Example:
 ## Workflows
 
 For each schema, workflow can be defined to enable users to track and assign tasks related to activities. Each workflow is defined by a set of statuses that the task can have.
-Workflows are assigned to schemas through schema's `workflowId` option in tailor configuration file.
+Workflows are assigned to schemas through schema's `workflowId` option in [tailor configuration file](#content-repository-structure).
 
-Workflows are configured with the following options in the tailor configuration file:
+Workflows are configured with the following options in the [tailor configuration file](#content-repository-structure):
 
 ### `WORKFLOWS`
 
@@ -264,7 +264,7 @@ An array of Workflow objects.
 
 #### Workflow
 
-Defines activity task statuses for repository workflow. Workflow can be reused across multiple schemas by assigning same workflow ID to schema's `workflowId` option.
+Defines activity task statuses for repository workflow. Workflow can be reused across multiple [schemas](#schema) by assigning same workflow ID to schema's `workflowId` option.
 
 - **id** `String` - Workflow identifier.
 - **statuses** `Array<TaskStatus>` - An array of possible task statuses.
