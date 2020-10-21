@@ -12,7 +12,7 @@
       v-bind="task"
       :assignee="task.assignee"
       :is-selected="selectedTask && selectedTask.id === task.id"
-      class="card my-2 mx-3" />
+      class="align-self-stretch my-2 mx-3" />
   </draggable>
 </template>
 
@@ -56,9 +56,3 @@ export default {
   components: { Draggable, TaskCard }
 };
 </script>
-
-<style lang="scss" scoped>
-.card {
-  align-self: stretch;
-}
-</style>
