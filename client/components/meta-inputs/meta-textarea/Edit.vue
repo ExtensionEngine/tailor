@@ -3,7 +3,8 @@
     ref="validator"
     v-slot="{ errors }"
     :name="lowerCase(meta.label)"
-    :rules="validationRules">
+    :rules="validationRules"
+    slim>
     <v-textarea
       v-model="value"
       @change="onChange"

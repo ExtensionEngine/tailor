@@ -18,7 +18,7 @@
             label="Name"
             placeholder="Enter name..."
             outlined
-            class="mb-4" />
+            class="required mb-4" />
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
@@ -31,7 +31,7 @@
             label="Description"
             placeholder="Enter description..."
             outlined
-            class="mb-4" />
+            class="required mb-4" />
         </validation-provider>
         <div class="d-flex justify-end">
           <v-btn @click="close" :disabled="inProgress" text>Cancel</v-btn>

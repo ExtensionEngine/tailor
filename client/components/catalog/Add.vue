@@ -49,6 +49,7 @@
                 v-model="repository.schema"
                 :items="schemas"
                 :error-messages="errors"
+                :class="{ required: isCreate }"
                 item-value="id"
                 item-text="name"
                 label="Schema"
@@ -65,6 +66,7 @@
                 v-model="archive"
                 :error-messages="errors"
                 :clearable="false"
+                :class="{ required: !isCreate }"
                 label="Archive"
                 prepend-icon=""
                 prepend-inner-icon="mdi-paperclip"
@@ -83,7 +85,8 @@
             name="repositoryName"
             label="Name"
             placeholder="Enter name..."
-            outlined />
+            outlined
+            class="required" />
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
@@ -94,7 +97,8 @@
             :error-messages="errors"
             label="Description"
             placeholder="Enter description..."
-            outlined />
+            outlined
+            class="required" />
         </validation-provider>
         <div class="d-flex justify-end">
           <v-btn @click="hide" :disabled="showLoader" text>Cancel</v-btn>

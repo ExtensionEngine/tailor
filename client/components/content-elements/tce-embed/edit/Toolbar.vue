@@ -21,7 +21,7 @@
             placeholder="Height..."
             prepend-icon="mdi-resize"
             dense filled
-            class="height-input" />
+            class="required height-input" />
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
