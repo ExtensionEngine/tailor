@@ -22,7 +22,7 @@
           placeholder="Height..."
           prepend-icon="mdi-resize"
           filled dense
-          class="mt-2 ml-5" />
+          class="required mt-2 ml-5" />
       </validation-provider>
     </v-toolbar-items>
   </v-toolbar>

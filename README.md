@@ -147,6 +147,7 @@ Defines the structure of the activity relationship field.
   prerequisite. False by default.
 - **allowInsideLineage** `Boolean` - Defines if an ancestor or a descendant can
   be a member of the relationship. False by default.
+- **allowedTypes** `Array<String>` - Defines activity types that can be associated in a relationship.
 
 #### Metadata
 

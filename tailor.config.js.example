@@ -7,7 +7,7 @@ exports.SCHEMAS = [{
     type: 'GOAL',
     label: 'Goal',
     color: '#ff6590',
-    level: 1,
+    rootLevel: true,
     meta: [{
       key: 'description',
       type: 'INPUT',

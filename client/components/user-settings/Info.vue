@@ -15,7 +15,8 @@
         :error-messages="errors"
         name="email"
         label="Email"
-        outlined />
+        outlined
+        class="required" />
     </validation-provider>
     <validation-provider
       v-slot="{ errors }"
@@ -26,7 +27,8 @@
         :error-messages="errors"
         name="firstName"
         label="First name"
-        outlined />
+        outlined
+        class="required" />
     </validation-provider>
     <validation-provider
       v-slot="{ errors }"
@@ -37,7 +39,8 @@
         :error-messages="errors"
         name="lastName"
         label="Last name"
-        outlined />
+        outlined
+        class="required" />
     </validation-provider>
     <div class="d-flex justify-end">
       <v-btn @click="resetForm" :disabled="!hasChanges" text>

@@ -11,7 +11,7 @@
           solo clearable hide-details
           class="my-4 mx-3" />
       </v-hover>
-      <v-divider />
+      <v-divider class="mb-0" />
     </v-sheet>
     <v-treeview
       ref="activityTree"
@@ -108,7 +108,7 @@ export default {
 }
 
 .navigation-header {
-  padding: 0.75rem 0;
+  padding: 0.75rem 0 0;
 }
 
 .v-treeview {

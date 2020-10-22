@@ -27,7 +27,7 @@
           autocomplete="username"
           prepend-inner-icon="mdi-email-outline"
           outlined
-          class="mb-1" />
+          class="required mb-1" />
       </validation-provider>
       <validation-provider
         v-slot="{ errors }"
@@ -42,7 +42,8 @@
           placeholder="Password"
           prepend-inner-icon="mdi-lock-outline"
           autocomplete="current-password"
-          outlined />
+          outlined
+          class="required" />
       </validation-provider>
       <div class="d-flex">
         <v-spacer />

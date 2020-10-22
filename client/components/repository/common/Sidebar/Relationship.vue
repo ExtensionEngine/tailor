@@ -17,6 +17,7 @@
       :clearable="!multiple"
       :disabled="!options.length"
       :error-messages="errors"
+      :class="{ required: !allowEmpty }"
       item-text="data.name"
       deletable-chips return-object outlined />
   </validation-provider>

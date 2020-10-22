@@ -28,7 +28,7 @@
             label="Current password"
             placeholder="Enter current password..."
             outlined
-            class="my-4" />
+            class="required my-4" />
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
@@ -42,7 +42,7 @@
             label="New password"
             placeholder="Enter new password..."
             outlined
-            class="mb-4" />
+            class="required mb-4" />
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
@@ -56,7 +56,7 @@
             label="Confirm new password"
             placeholder="Confirm new password..."
             outlined
-            class="mb-4" />
+            class="required mb-4" />
         </validation-provider>
         <div class="d-flex align-center pl-2 py-4">
           <router-link :to="{ name: 'forgot-password' }">
