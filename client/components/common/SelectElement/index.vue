@@ -3,6 +3,7 @@
     @click:outside="close"
     :value="true"
     :header-icon="headerIcon"
+    scrollable
     width="650">
     <template v-slot:header>
       {{ heading }}
