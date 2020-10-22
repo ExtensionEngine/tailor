@@ -33,11 +33,7 @@ export default {
   methods: {
     save({ url }) {
       const element = cloneDeep(this.element);
-      if (url) set(element.data, 'assets.url', url);
-      else {
-        set(element.data, 'assets', null);
-        set(element.data, 'url', null);
-      }
+      set(element.data, 'assets.url', url);
       this.$elementBus.emit('save', element);
     }
   },
