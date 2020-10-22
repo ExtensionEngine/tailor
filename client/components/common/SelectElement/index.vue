@@ -40,7 +40,7 @@
     <template v-slot:actions>
       <v-btn
         v-if="selectedActivity"
-        @click="selectedActivity = null"
+        @click="deselectActivity"
         text outlined
         class="mr-2">
         <v-icon>mdi-arrow-left</v-icon> Back
@@ -106,6 +106,10 @@ export default {
       this.selectedElements = existing
         ? elements.filter(it => it.id !== element.id)
         : elements.concat({ ...element, activity });
+    },
+    deselectActivity() {
+      this.selectedActivity = null;
+      this.selectedElements = [];
     },
     fetchElements: loader(function (containers) {
       const { repository: { id: repositoryId } } = this;
