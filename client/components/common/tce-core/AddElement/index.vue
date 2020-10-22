@@ -105,10 +105,10 @@ const ELEMENT_GROUPS = [
   { name: 'Nongraded questions', icon: 'mdi-comment-question-outline' }
 ];
 
-const getQuestionData = element => {
+const getQuestionData = (element, type) => {
   const data = { width: LAYOUT.FULL_WIDTH };
   const question = [{ id: uuid(), data, type: 'JODIT_HTML', embedded: true }];
-  return { question, type: element.subtype, ...element.data };
+  return { question, type, ...element.data };
 };
 
 export default {
@@ -189,7 +189,7 @@ export default {
     },
     buildElement(el) {
       const { position, processedWidth: width, activity } = this;
-      const { data = {}, initState = () => ({}) } = el;
+      const { subtype, data = {}, initState = () => ({}) } = el;
       const element = {
         position,
         ...pick(el, ['type', 'refs']),
@@ -199,7 +199,7 @@ export default {
         ? { activityId: activity.id } // If content element within activity
         : { id: uuid(), embedded: true }; // If embed, assign id
       Object.assign(element, contextData);
-      if (isQuestion(element.type)) element.data = getQuestionData(element);
+      if (isQuestion(element.type)) element.data = getQuestionData(element, subtype);
       if (element.type === 'REFLECTION') delete element.data.correct;
       return element;
     },
