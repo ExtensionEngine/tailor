@@ -4,7 +4,23 @@
     :value="true"
     :header-icon="headerIcon"
     width="650">
-    <template v-slot:header>{{ heading }}</template>
+    <template v-slot:header>
+      {{ heading }}
+      <v-btn
+        v-if="selectedActivity && !loadingContent"
+        @click="toggleSelectAll"
+        text dark
+        class="float-right">
+        <template v-if="allElementsSelected">
+          <v-icon class="mr-2">mdi-checkbox-multiple-blank-outline</v-icon>
+          Deselect all
+        </template>
+        <template v-else>
+          <v-icon class="mr-2">mdi-checkbox-multiple-marked-outline</v-icon>
+          Select all
+        </template>
+      </v-btn>
+    </template>
     <template v-slot:body>
       <select-activity
         v-if="!selectedActivity"
@@ -38,6 +54,7 @@
 <script>
 import contentElementApi from 'client/api/contentElement';
 import ContentPreview from '@/components/common/ContentPreview';
+import flatMap from 'lodash/flatMap';
 import { getDescendants as getContainers } from '@/utils/activity';
 import loader from '@/components/common/loader';
 import { mapGetters } from 'vuex';
@@ -61,7 +78,14 @@ export default {
     selectedElements: [],
     loadingContent: false
   }),
-  computed: mapGetters('repository', ['repository', 'activities']),
+  computed: {
+    ...mapGetters('repository', ['repository', 'activities']),
+    allElementsSelected: vm => vm.selectedElements.length === vm.elements.length,
+    elements() {
+      return flatMap(this.contentContainers, 'elements')
+        .filter(it => this.allowedTypes.includes(it.type));
+    }
+  },
   methods: {
     async showActivityElements(activity) {
       this.selectedActivity = activity;
@@ -72,6 +96,9 @@ export default {
         ...container,
         elements: elements.filter(element => element.activityId === container.id)
       }));
+    },
+    toggleSelectAll() {
+      this.selectedElements = this.allElementsSelected ? [] : [...this.elements];
     },
     toggleElementSelection(element) {
       const { selectedActivity: activity, selectedElements: elements } = this;
