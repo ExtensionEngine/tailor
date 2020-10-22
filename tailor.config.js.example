@@ -9,8 +9,8 @@ module.exports = {
       type: 'GOAL',
       label: 'Goal',
       color: '#ff6590',
+      rootLevel: true,
       isTrackedInWorkflow: true,
-      level: 1,
       meta: [{
         key: 'description',
         type: 'INPUT',

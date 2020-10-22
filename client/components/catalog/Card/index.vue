@@ -126,12 +126,16 @@ export default {
 }
 
 .card-body {
-  height: 12.25rem;
+  height: 11.5rem;
   padding: 0.625rem 0 0;
   overflow: hidden;
 
   @media (max-width: 1263px) {
     height: 14rem;
+  }
+
+  .v-card__title {
+    line-height: 1.75rem;
   }
 
   .schema-name {
