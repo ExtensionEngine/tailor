@@ -98,7 +98,7 @@ export default {
       this.insertPosition = Infinity;
     },
     onAddElements(elements, lastPosition) {
-      elements.forEach((element, index) => {
+      elements.forEach(element => {
         if (element.position >= lastPosition) {
           return this.addElement(element);
         }

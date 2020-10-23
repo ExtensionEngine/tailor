@@ -93,7 +93,7 @@ export default {
     },
     assessments() {
       const { savedAssessments: saved, unsavedAssessments: unsaved } = this;
-      return sortBy(saved.concat(Object.values(unsaved)), 'position');
+      return sortBy([...saved, ...Object.values(unsaved)], 'position');
     },
     hasAssessments() {
       return !isEmpty(this.assessments);
