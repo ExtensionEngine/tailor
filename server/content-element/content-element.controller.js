@@ -38,7 +38,10 @@ function patch({ repository, user, body, params: { elementId } }, res) {
   const context = { userId: user.id, repository };
   return ContentElement.findByPk(elementId, { paranoid })
     .then(asset => asset || createError(NOT_FOUND, 'Element not found'))
-    .then(asset => asset.update(data, { context }))
+    .then(asset => {
+      asset.setDataValue('deletedAt', data.deletedAt);
+      return asset.update(data, { context });
+    })
     .then(asset => res.json({ data: asset }));
 }
 
