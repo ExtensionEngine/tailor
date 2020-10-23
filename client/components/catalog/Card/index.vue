@@ -6,7 +6,7 @@
       dark
       class="repository-card">
       <div @click="navigateTo()" class="card-body">
-        <v-chip :color="repository.data.color" x-small class="ml-4 px-1" />
+        <v-chip :color="repository.data.color" x-small class="chip ml-4 px-1" />
         <span class="schema-name">{{ schema }}</span>
         <div class="controls float-right">
           <v-tooltip open-delay="100" top>
@@ -136,6 +136,10 @@ export default {
 
   .v-card__title {
     line-height: 1.75rem;
+  }
+
+  .chip::before {
+    display: none;
   }
 
   .schema-name {

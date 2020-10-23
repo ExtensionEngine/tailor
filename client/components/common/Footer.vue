@@ -9,7 +9,7 @@
           color="grey lighten-4"
           label
           small
-          class="mr-3 grey--text text--darken-4">
+          class="chip mr-3 grey--text text--darken-4">
           v{{ version }} {{ codename }}
         </v-chip>
         Built with <v-icon color="pink">mdi-heart</v-icon>
@@ -40,6 +40,10 @@ export default {
 <style lang="scss" scoped>
 .v-footer {
   box-shadow: 0 -1px 1px 0 rgba(0,0,0,0.2);
+}
+
+.chip::before {
+  display: none;
 }
 
 .waves {

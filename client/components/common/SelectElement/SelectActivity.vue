@@ -80,6 +80,10 @@ export default {
 
   .v-chip.custom-chip {
     border-radius: 12px !important;
+
+    &::before {
+      display: none;
+    }
   }
 }
 </style>
