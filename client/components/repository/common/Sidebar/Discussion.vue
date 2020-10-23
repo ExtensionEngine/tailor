@@ -28,7 +28,7 @@ export default {
   methods: {
     ...mapActions('repository/comments', ['fetch', 'save', 'update', 'remove']),
     saveComment(comment) {
-      const action = comment.id ? 'save' : 'update';
+      const action = comment.id ? 'update' : 'save';
       return this[action]({
         ...comment,
         activityId: this.activity.id,
