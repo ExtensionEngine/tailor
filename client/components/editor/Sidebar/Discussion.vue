@@ -8,7 +8,7 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex';
-import Discussion from '@/components/repository/common/Sidebar/Discussion/Embed';
+import Discussion from '@/components/repository/common/Sidebar/Discussion';
 import get from 'lodash/get';
 
 export default {

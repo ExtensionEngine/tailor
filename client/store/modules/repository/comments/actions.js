@@ -11,8 +11,8 @@ const plugSSE = ({ commit }) => {
     .subscribe(Events.Delete, item => commit('update', item));
 };
 
-const fetch = ({ commit }, activityId) => {
-  return api.fetch({ activityId })
+const fetch = ({ commit }, payload) => {
+  return api.fetch(payload)
     .then(items => commit('fetch', items));
 };
 

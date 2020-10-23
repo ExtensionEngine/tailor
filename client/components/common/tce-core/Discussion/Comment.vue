@@ -5,10 +5,8 @@
     </v-avatar>
     <div class="comment-body pl-3">
       <div class="header">
-        <span class="author">{{ author.fullName || author.email }}</span>
-        <v-icon v-if="isEdited" size="16" class="ml-1">
-          mdi-pencil-outline
-        </v-icon>
+        <span class="author">{{ author.label }}</span>
+        <v-icon v-if="isEdited" size="16" class="ml-1">mdi-pencil-outline</v-icon>
       </div>
       <text-editor
         v-model="content"
@@ -50,28 +48,24 @@
 
 <script>
 import { focus } from 'vue-focus';
-import { mapState } from 'vuex';
 import TextEditor from './TextEditor';
 
 export default {
   name: 'thread-comment',
   props: {
-    comment: { type: Object, required: true }
+    comment: { type: Object, required: true },
+    user: { type: Object, required: true }
   },
   data: vm => ({ isEditing: false, content: vm.comment.content }),
   computed: {
-    ...mapState({ user: state => state.auth.user }),
     author: vm => vm.comment.author,
     isEdited: vm => vm.comment.createdAt !== vm.comment.updatedAt,
     isDeleted: vm => !!vm.comment.deletedAt,
     isAuthor: vm => vm.author.id === vm.user.id,
     showOptions: vm => vm.isAuthor && !vm.isDeleted,
-    options() {
-      return [
-        { name: 'Edit', action: this.toggleEdit, icon: 'mdi-pencil' },
-        { name: 'Remove', action: this.remove, icon: 'mdi-delete' }
-      ];
-    }
+    options: vm => [
+      { name: 'Edit', action: vm.toggleEdit, icon: 'mdi-pencil' },
+      { name: 'Remove', action: vm.remove, icon: 'mdi-delete' }]
   },
   methods: {
     toggleEdit() {

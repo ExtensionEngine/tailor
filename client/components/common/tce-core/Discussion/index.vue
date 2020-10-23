@@ -22,6 +22,8 @@
     </v-alert>
     <discussion-thread
       v-if="thread.length"
+      @update="$emit('update', $event)"
+      @remove="$emit('remove', $event)"
       :items="thread"
       :user="user"
       :min-displayed="commentsShownLimit"
@@ -41,7 +43,6 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex';
 import DiscussionThread from './Thread';
 import orderBy from 'lodash/orderBy';
 import TextEditor from './TextEditor';
@@ -52,15 +53,13 @@ export default {
   name: 'embedded-discussion',
   inheritAttrs: true,
   props: {
-    activity: { type: Object, required: true },
+    comments: { type: Array, default: () => [] },
+    user: { type: Object, required: true },
     showHeading: { type: Boolean, default: false },
     showNotifications: { type: Boolean, default: false }
   },
   data: () => ({ showAll: false, comment: initCommentInput() }),
   computed: {
-    ...mapState({ user: state => state.auth.user }),
-    ...mapGetters('repository/comments', ['getActivityComments']),
-    comments: vm => vm.getActivityComments(vm.activity.id),
     thread: vm => orderBy(vm.comments, ['createdAt'], ['asc']),
     commentsCount: vm => vm.thread.length,
     commentsShownLimit: vm => 5,
@@ -68,18 +67,16 @@ export default {
     editor: vm => vm.$refs.editor.$el
   },
   methods: {
-    ...mapActions('repository/comments', ['fetch', 'save']),
     async post() {
       if (!this.comment.content) return;
       const payload = {
         content: this.comment.content,
         author: this.user,
-        activityId: this.activity.id,
         createdAt: Date.now(),
         updatedAt: Date.now()
       };
       this.comment = initCommentInput();
-      await this.save(payload);
+      this.$emit('save', payload);
       // Keep editor inside viewport.
       this.$nextTick(() => this.editor.scrollIntoView());
     }
@@ -90,7 +87,6 @@ export default {
     }
   },
   async created() {
-    await this.fetch(this.activity.id);
     this.comment = initCommentInput();
   },
   components: {
