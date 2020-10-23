@@ -26,7 +26,8 @@ exports.add = (Task, Hooks) => {
 
 async function sendEmailNotification(task) {
   const assignee = await task.getAssignee();
+  const activity = await task.getActivity();
   if (!assignee) return;
-  const data = pick(task, ['id', 'repositoryId', 'name', 'description']);
-  mail.sendTaskAssigneeNotification(assignee.email, data);
+  const data = pick(task, ['id', 'repositoryId', 'description']);
+  mail.sendTaskAssigneeNotification(assignee.email, activity, data);
 }

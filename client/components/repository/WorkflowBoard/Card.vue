@@ -5,7 +5,7 @@
     :class="{ bordered: isSelected }"
     class="card d-flex flex-column pa-3">
     <div class="card-title mt-3 mb-5 text-left font-weight-regular">
-      {{ name }}
+      {{ label }}
     </div>
     <div class="d-flex align-center mt-auto">
       <assignee-avatar v-bind="assignee" small class="mr-3" />
@@ -49,7 +49,7 @@ export default {
   props: {
     id: { type: Number, required: true },
     shortId: { type: String, required: true },
-    name: { type: String, required: true },
+    label: { type: String, required: true },
     priority: { type: String, required: true },
     status: { type: String, required: true },
     dueDate: { type: String, default: null },

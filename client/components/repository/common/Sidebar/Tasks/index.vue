@@ -10,7 +10,8 @@
     <task-card
       v-for="task in activityTasks"
       :key="task.uid"
-      v-bind="task" />
+      v-bind="task"
+      :label="activity.data.name" />
   </div>
 </template>
 

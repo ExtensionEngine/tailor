@@ -7,11 +7,11 @@
       v-if="selectedTask && activity"
       :key="selectedTask.uid"
       class="px-4 pt-4 pb-10">
-      <sidebar-header v-bind="selectedTask" />
       <section class="mt-5">
         <h5 class="h5">Related content</h5>
-        <activity-card v-bind="activity" :name="activity.data.name" />
+        <activity-card v-bind="activity" :name="name" />
       </section>
+      <sidebar-header v-bind="selectedTask" />
       <task-field-group
         @update="updateTask"
         v-bind="selectedTask"
@@ -40,13 +40,14 @@ export default {
   },
   computed: {
     ...mapGetters('repository', ['selectedTask', 'activities']),
-    activity: vm => vm.activities.find(({ id }) => vm.selectedTask.activityId === id)
+    activity: vm => vm.activities.find(({ id }) => vm.selectedTask.activityId === id),
+    name: vm => vm.activity.data.name
   },
   methods: {
     ...mapActions('repository/tasks', ['save']),
     updateTask(key, value) {
       this.save({ ...this.selectedTask, [key]: value || null })
-        .then(() => { this.$snackbar.show(`${this.selectedTask.name} saved`); });
+        .then(() => { this.$snackbar.show(`${this.name} saved`); });
     }
   },
   components: { ActivityCard, TaskFieldGroup, SidebarHeader }

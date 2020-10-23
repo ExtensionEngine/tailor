@@ -26,7 +26,7 @@
           padding="20px"
           color="#444"
           font-size="16px">
-          <b>{{name}}</b>
+          <b>{{label}}</b>
           <br>
           <br>
           {{{description}}}
@@ -43,7 +43,7 @@
           View the task by clicking the button below:
         </mj-text>
         <mj-button mj-class="ctaButton" href="{{href}}">
-          View {{name}}
+          View {{label}}
         </mj-button>
       </mj-column>
     </mj-section>

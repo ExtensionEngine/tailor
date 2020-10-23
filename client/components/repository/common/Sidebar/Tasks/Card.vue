@@ -1,7 +1,7 @@
 <template>
   <router-link :to="route">
     <v-sheet elevation="2" class="card px-3 pt-1 pb-4">
-      <h4 class="mb-4 h4">{{ name }}</h4>
+      <h4 class="mb-4 h4">{{ label }}</h4>
       <div class="d-flex align-center mt-auto">
         <assignee-avatar v-bind="assignee" />
         <v-tooltip open-delay="500" bottom>
@@ -51,7 +51,7 @@ export default {
   props: {
     id: { type: Number, default: null },
     shortId: { type: String, required: true },
-    name: { type: String, required: true },
+    label: { type: String, required: true },
     status: { type: String, required: true },
     assignee: { type: Object, default: null },
     priority: { type: String, required: true },

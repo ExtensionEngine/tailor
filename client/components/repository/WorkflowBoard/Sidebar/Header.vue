@@ -1,6 +1,5 @@
 <template>
   <header>
-    <h3>{{ name }}</h3>
     <div class="mt-8">
       <v-tooltip open-delay="500" bottom>
         <template #activator="{ on }">
@@ -57,7 +56,7 @@ export default {
   props: {
     uid: { type: String, required: true },
     id: { type: Number, required: true },
-    name: { type: String, required: true },
+    label: { type: String, required: true },
     shortId: { type: String, required: true },
     createdAt: { type: String, required: true },
     updatedAt: { type: String, required: true }

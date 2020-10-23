@@ -2,7 +2,7 @@ Tailor
 =================================================
 
 You've been assigned to a task.
-{{name}}
+{{label}}
 {{#html}}{{{description}}}{{/html}}
 
 View the task by visiting the link:

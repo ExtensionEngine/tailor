@@ -1,18 +1,5 @@
 <template>
   <section>
-    <validation-provider
-      v-slot="{ errors }"
-      ref="name"
-      :rules="{ required: true }"
-      name="name">
-      <v-text-field
-        @change="update('name', $event)"
-        :value="name"
-        :error-messages="errors"
-        label="Name"
-        outlined
-        class="my-2" />
-    </validation-provider>
     <editor-field
       @change="update('description', $event)"
       :value="description"

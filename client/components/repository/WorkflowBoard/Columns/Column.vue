@@ -10,6 +10,7 @@
       :key="task.id"
       @click="selectTask"
       v-bind="task"
+      :label="getTaskLabel(task)"
       :assignee="task.assignee"
       :is-selected="selectedTask && selectedTask.id === task.id"
       class="align-self-stretch my-2 mx-3" />
@@ -17,9 +18,9 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import Draggable from 'vuedraggable';
 import get from 'lodash/get';
-import { mapActions } from 'vuex';
 import selectTask from '@/components/repository/common/selectTask';
 import sortBy from 'lodash/sortBy';
 import TaskCard from '../Card';
@@ -32,10 +33,15 @@ export default {
     tasks: { type: Object, default: () => ({}) }
   },
   computed: {
+    ...mapGetters('repository', ['activities']),
     tasksByStatus: vm => sortBy(get(vm.tasks, vm.status.id, []), ['columnPosition'])
   },
   methods: {
     ...mapActions('repository/tasks', ['save']),
+    getTaskLabel(task) {
+      const activity = this.activities.find(it => it.id === task.activityId);
+      return activity.data.name;
+    },
     getNewPosition(index) {
       if (this.tasksByStatus.length === 1) return 1;
       const isFirst = index === 0;
