@@ -1,14 +1,26 @@
 import ComponentRegistry from './ComponentRegistry';
 import containerList from 'shared/core-containers';
+import get from 'lodash/get';
 import { getContainerTemplateId as getId } from 'shared/activities';
 import { getContainerName as getName } from 'tce-core/utils';
+import { service as ValidationService } from './validation';
 
-const validator = ({ templateId, type }) => {
-  if (templateId) return;
-  console.warn(`
-    For container ${type} using depricated type identification!
-    Use templateId instead!
-  `);
+const getTemplateMessage = name => `
+  For container ${name} using depricated 'type' identification!
+  Use 'templateId' instead!
+`;
+
+const getElementsMessage = name => `
+  For container ${name} using depricated 'tes' prop!
+  Use 'elements' instead!
+`;
+
+const validator = ({ Edit: template, templateId, type }) => {
+  const name = templateId || type;
+
+  ValidationService
+    .validate(!templateId, getTemplateMessage(name))
+    .validate(get(template, 'props.tes'), getElementsMessage(name));
 };
 
 export default Vue => new ComponentRegistry(Vue, {
