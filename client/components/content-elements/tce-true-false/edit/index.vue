@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="subtitle-2">{{ title }}</div>
-    <v-radio-group v-model="correct" :error="correctError">
+    <v-radio-group v-model="correct" :error-messages="correctErrors" class="mb-2">
       <v-radio
         v-for="(answer, index) in [true, false]"
         :key="index"
@@ -16,8 +16,8 @@
 </template>
 
 <script>
+import { defaults, getErrorMessages } from 'utils/assessment';
 import { capital } from 'to-case';
-import { defaults } from 'utils/assessment';
 
 const getTitle = isGraded => isGraded ? 'Select correct answer' : 'Options';
 const getLabel = answer => capital(answer.toString());
@@ -36,7 +36,7 @@ export default {
     },
     title: vm => getTitle(vm.isGraded),
     answerDisabled: vm => !vm.isEditing || !vm.isGraded,
-    correctError: vm => vm.errors.includes('correct')
+    correctErrors: vm => getErrorMessages(vm.errors, 'correct')
   },
   methods: { getLabel }
 };
@@ -46,5 +46,9 @@ export default {
 // override global bootstrap
 .answer ::v-deep .v-label {
   margin-bottom: 0;
+}
+
+::v-deep .v-messages {
+  margin-top: 0.25rem;
 }
 </style>

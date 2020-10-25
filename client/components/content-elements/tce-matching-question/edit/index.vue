@@ -6,7 +6,7 @@
         <v-text-field
           @change="updateHeading('premise', $event)"
           :value="headings.premise"
-          :error="errors.includes('headings.premise')"
+          :error-messages="headingErrors('premise')"
           :disabled="disabled"
           placeholder="Premise heading..."
           color="blue-grey darken-3"
@@ -16,7 +16,7 @@
         <v-text-field
           @change="updateHeading('response', $event)"
           :value="headings.response"
-          :error="errors.includes('headings.response')"
+          :error-messages="headingErrors('response')"
           :disabled="disabled"
           placeholder="Response heading..."
           color="blue-grey darken-3"
@@ -28,7 +28,7 @@
         <v-text-field
           @change="updatePremiseContent(premiseKey, $event)"
           :value="getPremiseContent(premiseKey)"
-          :error="hasError(premiseKey, 'premises')"
+          :error-messages="answerErrors(premiseKey, 'premises')"
           :disabled="disabled"
           placeholder="Premise value..."
           color="blue-grey darken-3"
@@ -41,7 +41,7 @@
         <v-text-field
           @change="updateResponseContent(responseKey, $event)"
           :value="getResponseContent(responseKey)"
-          :error="hasError(responseKey, 'responses')"
+          :error-messages="answerErrors(responseKey, 'responses')"
           :disabled="disabled"
           placeholder="Response value..."
           color="blue-grey darken-3"
@@ -73,9 +73,9 @@
 </template>
 
 <script>
+import { defaults, getErrorMessages } from 'utils/assessment';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
-import { defaults } from 'utils/assessment';
 import find from 'lodash/find';
 import pull from 'lodash/pull';
 import set from 'lodash/set';
@@ -147,13 +147,16 @@ export default {
       this.update({ premises, responses, correct });
     },
     update(data = {}) {
-      this.$emit('update', data, true);
+      this.$emit('update', data);
     },
-    hasError(key, type) {
+    headingErrors(type) {
+      return getErrorMessages(this.errors, `headings.${type}`);
+    },
+    answerErrors(key, type) {
       const index = type === 'premises'
         ? this.premises.indexOf(this.getPremiseItem(key))
         : this.responses.indexOf(this.getResponseItem(key));
-      return this.errors.includes(`${type}[${index}].value`);
+      return getErrorMessages(this.errors, `${type}[${index}]`);
     }
   }
 };
