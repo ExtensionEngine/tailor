@@ -20,7 +20,7 @@
     </div>
     <add-element
       v-slot="{ addElement }"
-      @add="addQuestion"
+      @add="addQuestionElement"
       :layout="false"
       :disabled="!isEditing"
       :include="['JODIT_HTML', 'IMAGE', 'EMBED', 'HTML']"
@@ -30,7 +30,7 @@
         <v-btn
           @click="addElement"
           text
-          class="ml-auto px-2 mt-2">
+          class="mt-2 ml-auto px-2">
           <v-icon dense class="mr-1">mdi-plus</v-icon>
           Add question element
         </v-btn>
@@ -80,7 +80,7 @@ export default {
     dragOptions: () => DRAG_OPTIONS
   },
   methods: {
-    addQuestion(element) {
+    addQuestionElement(element) {
       const question = cloneDeep(this.assessment.data.question);
       this.$emit('update', { question: question.concat(element) });
     },
@@ -122,9 +122,9 @@ $swing: cubic-bezier(0.25, 0.8, 0.5, 1);
   position: relative;
   min-height: 8.75rem;
   padding: 1rem 1.75rem 0;
+  text-align: center;
   background: #ebebeb;
   border-radius: 0.125rem;
-  text-align: center;
   transition: 0.3s $swing;
 
   &::before, &::after {
