@@ -17,6 +17,7 @@
       @deleteSubcontainer="requestContainerDeletion"
       @addElement="addElement"
       @saveElements="saveContentElements"
+      @saveElement="saveElement"
       @updateElement="updateElement"
       @reorderElement="reorderContentElements"
       @deleteElement="requestElementDeletion"
@@ -51,6 +52,9 @@ import maxBy from 'lodash/maxBy';
 import throttle from 'lodash/throttle';
 
 const DEFAULT_CONTAINER = 'content-container';
+const DEPRECATED_EVENT_MESSAGE = `Deprecation notice:
+  'saveElement' listener is deprecated and will no longer be used!
+  Please emit 'saveElements' instead on your content containers`;
 
 export default {
   name: 'content-containers',
@@ -97,6 +101,10 @@ export default {
     addContainer() {
       const { type, parentId, nextPosition: position } = this;
       this.save({ type, parentId, position });
+    },
+    saveElement(element) {
+      console.warn(DEPRECATED_EVENT_MESSAGE);
+      return this.saveContentElements(element);
     },
     saveContentElements(elements) {
       castArray(elements).forEach(element => {
