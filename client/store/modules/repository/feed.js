@@ -2,6 +2,7 @@ import api from '@/api/feed';
 import SSEClient from '@/SSEClient';
 import urlJoin from 'url-join';
 
+const authScheme = process.env.AUTH_JWT_SCHEME;
 const baseUrl = process.env.API_PATH;
 const feed = new SSEClient();
 let subscribedRepositoryId = null;
@@ -13,8 +14,9 @@ function connect(repositoryId, token) {
   }
   subscribedRepositoryId = repositoryId;
   const url = urlJoin(baseUrl, api.urls.subscribe(repositoryId));
-  feed.connect(url, { params: { token } });
-  return feed;
+  const headers = { Authorization: `${authScheme} ${token}` };
+  const searchParams = { token };
+  return feed.connect(url, { headers, searchParams });
 }
 
 export {

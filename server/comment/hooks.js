@@ -14,20 +14,18 @@ exports.add = (Comment, Hooks, db) => {
     const author = await comment.getAuthor({
       attributes: ['id', 'email', 'firstName', 'lastName', 'fullName', 'imgUrl']
     });
-    const channel = sse.channel(comment.repositoryId);
-    if (channel) channel.send(Events.Create, { ...comment.toJSON(), author });
+    sse.channel(comment.repositoryId)
+      .send(Events.Create, { ...comment.toJSON(), author });
     sendEmailNotification(comment, db);
   });
 
   Comment.addHook(Hooks.afterUpdate, comment => {
-    const channel = sse.channel(comment.courseId);
-    if (channel) channel.send(Events.Update, comment);
+    sse.channel(comment.repositoryId).send(Events.Update, comment);
   });
 
   Comment.addHook(Hooks.afterDestroy, comment => {
     Comment.findByPk(comment.id, { paranoid: false }).then(comment => {
-      const channel = sse.channel(comment.courseId);
-      if (channel) channel.send(Events.Delete, comment);
+      sse.channel(comment.repositoryId).send(Events.Delete, comment);
     });
   });
 };
