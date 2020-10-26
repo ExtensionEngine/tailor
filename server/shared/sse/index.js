@@ -39,6 +39,10 @@ class SSEConnection extends EventEmitter {
     return this._res.req;
   }
 
+  get socket() {
+    return this._res.socket;
+  }
+
   get timeout() {
     const connectionTimeout = parseInt(this.request.header('connection-timeout'), 10);
     const timeout = connectionTimeout || SSE_DEFAULT_TIMEOUT;
@@ -46,10 +50,9 @@ class SSEConnection extends EventEmitter {
   }
 
   initialize() {
-    const { socket } = this.request;
-    socket.setTimeout(0);
-    socket.setNoDelay(true);
-    socket.setKeepAlive(true);
+    this.socket.setTimeout(0);
+    this.socket.setNoDelay(true);
+    this.socket.setKeepAlive(true);
     // Gracefully handle termination.
     this.request.once('close', () => this.close());
     // Set event stream headers.
