@@ -1,3 +1,7 @@
+import createDebug from 'debug';
+
+const debug = createDebug('sse-client');
+
 class SSEClient {
   constructor() {
     this._listeners = new Map();
@@ -8,8 +12,9 @@ class SSEClient {
     return Boolean(this._connection);
   }
 
-  connect(url, { headers, searchParams, timeout = 45000 /* ms */, ...options } = {}) {
+  connect(url, { headers, searchParams = {}, timeout = 45000 /* ms */, ...options } = {}) {
     if (this._connection) this.disconnect();
+    if (debug.enabled) searchParams.debug = debug.namespace;
     url = createUrl(url, { searchParams });
     this._connection = new EventSource(url, {
       ...options,
@@ -17,7 +22,12 @@ class SSEClient {
       headers: Object.assign({}, headers, { 'Connection-Timeout': timeout }),
       heartbeatTimeout: timeout
     });
+    if (debug.enabled) this._connection.addEventListener('message', this.debug);
     return this;
+  }
+
+  debug({ data }) {
+    debug('emitting event: %j', data);
   }
 
   disconnect() {

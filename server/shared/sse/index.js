@@ -16,6 +16,8 @@ const SSE_HEADERS = {
   'X-Accel-Buffering': 'no'
 };
 
+const hasProp = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
+
 class SSEConnection extends EventEmitter {
   constructor(res) {
     super();
@@ -80,6 +82,15 @@ class SSEConnection extends EventEmitter {
       `data: ${json}`
     ].join('\n');
     this.write(payload);
+    if (hasProp(this.request.query, 'debug')) {
+      this.debug({ id, type: event, data });
+    }
+    return this;
+  }
+
+  debug(data = '') {
+    const json = JSON.stringify(data);
+    this.write(`data: ${json}`);
     return this;
   }
 
