@@ -6,7 +6,9 @@ const pick = require('lodash/pick');
 const sse = require('../../shared/sse');
 const { UserActivity } = require('../../../common/sse');
 
-const USER_ATTRS = ['id', 'email', 'firstName', 'lastName', 'fullName', 'imgUrl'];
+const USER_ATTRS = [
+  'id', 'email', 'firstName', 'lastName', 'fullName', 'label', 'imgUrl'
+];
 
 function subscribe({ repository }, { sse: connection }) {
   connection.once('close', () => onUnsubscribe(connection));
