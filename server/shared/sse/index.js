@@ -23,6 +23,7 @@ class SSEConnection extends EventEmitter {
     this._heartbeat = null;
     this._res = res;
     this.initialize();
+    this.send('connection_initialized', { sseId: this.id });
   }
 
   static create(res) {
@@ -53,30 +54,29 @@ class SSEConnection extends EventEmitter {
     // Set event stream headers.
     this._res.status(200).type('text/event-stream').set(SSE_HEADERS);
     this._res.flushHeaders();
-    // Start stream.
-    this._writeln(':ok');
-    this._writeln();
-    this.send('connection_initialized', { sseId: this.id });
     // Setup heartbeat interval.
-    if (!this.timeout) return;
-    this._heartbeat = setInterval(() => {
-      this._writeln(':ping');
-      this._writeln();
-    }, this.timeout);
+    if (this.timeout > 0) {
+      this._heartbeat = setInterval(() => this.write(':ping'), this.timeout);
+    }
+    // Start stream.
+    return this.write(':ok');
+  }
+
+  write(payload = '') {
+    return this._res.write(`${payload}\n\n`);
   }
 
   send(event, data = '') {
-    this._lastEventId += 1;
-    this._writeln(`id = ${this._lastEventId}`);
-    this._writeln(`event: ${event}`);
-    const lines = JSON.stringify(data).split(/\r?\n/g);
-    lines.forEach(line => this._writeln(`data: ${line}`));
-    this._writeln();
+    const id = this._lastEventId += 1;
+    this.emit('data', { id, event, data });
+    const json = JSON.stringify(data);
+    const payload = [
+      `id: ${id}`,
+      `event: ${event}`,
+      `data: ${json}`
+    ].join('\n');
+    this.write(payload);
     return this;
-  }
-
-  _writeln(data = '') {
-    return this._res.write(`${data}\n`);
   }
 
   close() {
