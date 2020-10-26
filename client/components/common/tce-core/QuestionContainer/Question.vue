@@ -1,7 +1,12 @@
 <template>
-  <v-sheet class="question-container mb-4 pa-5 grey lighten-4 elevation-1">
-    <span class="subtitle-2 grey--text text--darken-4">Question</span>
-    <div :class="['question', { 'question-error': questionError }]">
+  <div>
+    <div class="subtitle-2 mb-2">Question</div>
+    <div
+      :class="['question-container', {
+        focused: isFocused,
+        disabled: !isEditing,
+        incorrect: !!questionError
+      }]">
       <draggable v-model="question" v-bind="dragOptions" class="row">
         <contained-content
           v-for="element in question" :key="element.id"
@@ -9,26 +14,41 @@
           @delete="deleteElement(element)"
           :element="element"
           :is-disabled="!isEditing"
-          dense />
+          dense
+          class="mb-4" />
       </draggable>
-      <add-element
-        @add="addElements"
-        :layout="false"
-        :disabled="!isEditing"
-        :include="['JODIT_HTML', 'IMAGE', 'EMBED', 'HTML']"
-        :class="['add-element', { invisible: !isEditing }]"
-        label="Add question block"
-        large />
     </div>
-  </v-sheet>
+    <add-element
+      v-slot="{ addElement }"
+      @add="addQuestionElement"
+      :layout="false"
+      :disabled="!isEditing"
+      :include="['JODIT_HTML', 'IMAGE', 'EMBED', 'HTML']"
+      :class="{ invisible: !isEditing }">
+      <div class="d-flex justify-space-between mt-2 pl-3">
+        <input-error :error="questionError" />
+        <v-btn
+          @click="addElement"
+          text
+          class="mt-2 ml-auto px-2">
+          <v-icon dense class="mr-1">mdi-plus</v-icon>
+          Add question element
+        </v-btn>
+      </div>
+    </add-element>
+  </div>
 </template>
 
 <script>
+import { ContainedContent, InputError } from 'tce-core';
 import AddElement from '../AddElement';
 import cloneDeep from 'lodash/cloneDeep';
-import { ContainedContent } from 'tce-core';
 import Draggable from 'vuedraggable';
+import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
+import { getErrorMessages } from 'utils/assessment';
+import head from 'lodash/head';
+import { mapChannels } from '@/plugins/radio';
 import pullAt from 'lodash/pullAt';
 import set from 'lodash/set';
 
@@ -45,7 +65,9 @@ export default {
     errors: { type: Array, default: () => ([]) },
     isEditing: { type: Boolean, default: false }
   },
+  data: () => ({ isFocused: false }),
   computed: {
+    ...mapChannels({ editorChannel: 'editor' }),
     question: {
       get() {
         return cloneDeep(this.assessment.data.question);
@@ -54,11 +76,11 @@ export default {
         this.$emit('update', { question });
       }
     },
-    questionError: vm => vm.errors.includes('question'),
+    questionError: vm => head(getErrorMessages(vm.errors, 'question')),
     dragOptions: () => DRAG_OPTIONS
   },
   methods: {
-    addElements(elements) {
+    addQuestionElement(elements) {
       const question = cloneDeep(this.assessment.data.question);
       this.$emit('update', { question: question.concat(elements) });
     },
@@ -78,39 +100,82 @@ export default {
       this.$emit('update', { question });
     }
   },
+  created() {
+    this.editorChannel.on('element:focus', (element = {}) => {
+      this.isFocused = !!find(this.question, { id: element.id });
+    });
+  },
   components: {
     AddElement,
     ContainedContent,
-    Draggable
+    Draggable,
+    InputError
   }
 };
 </script>
 
 <style lang="scss" scoped>
+$disabled-color: rgba(0, 0, 0, 0.38);
+$swing: cubic-bezier(0.25, 0.8, 0.5, 1);
+
 .question-container {
-  clear: both;
-  margin: 0 1.5rem;
+  position: relative;
+  min-height: 8.75rem;
+  padding: 1rem 1.75rem 0;
+  text-align: center;
+  background: #ebebeb;
+  border-radius: 0.125rem;
+  transition: 0.3s $swing;
 
-  @media (max-width: 1263px) {
-    margin: 0;
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    transition: 0.3s $swing;
   }
 
-  .question {
-    padding: 0.75rem 0.75rem 0;
-    font-size: 1.375rem;
-    text-align: center;
+  &::before {
+    border-style: solid;
+    border-width: thin 0 0 0;
+  }
 
-    .add-element {
-      margin-top: 0.375rem;
+  &::after {
+    border-style: solid;
+    border-width: thin 0 thin 0;
+    transform: scaleX(0);
+  }
+
+  &:not(.focused):not(.disabled):not(.incorrect):hover {
+    background: #dcdcdc;
+
+    ::v-deep .content-element {
+      border-color: #bbb;
     }
-
-    .invisible {
-      visibility: none;
-    }
   }
+}
 
-  .question-error {
-    box-shadow: inset 0 -0.125rem 0 #e51c23;
-  }
+.focused::after {
+  transform: scaleX(1);
+}
+
+.disabled::before {
+  border-image:
+    repeating-linear-gradient(
+      to right,
+      $disabled-color 0,
+      $disabled-color 0.125rem,
+      transparent 0.125rem,
+      transparent 0.25rem
+    ) 1 repeat;
+}
+
+.incorrect::before, .incorrect::after {
+  border-color: var(--v-error-base);
+}
+
+.invisible {
+  visibility: none;
 }
 </style>

@@ -1,26 +1,26 @@
 <template>
   <div class="add-element-container">
-    <v-btn
-      v-if="large"
-      @click.stop="isVisible = true"
-      color="blue-grey darken-3"
-      text
-      class="mt-3 mb-4">
-      <v-icon class="pr-2">{{ icon }}</v-icon>{{ label }}
-    </v-btn>
-    <v-btn
-      v-else
-      @click.stop="isVisible = true"
-      icon
-      text
-      color="blue-grey darken-3">
-      <v-icon>{{ icon }}</v-icon>
-    </v-btn>
+    <slot :addElement="showElementPicker">
+      <v-btn
+        v-if="large"
+        @click.stop="showElementPicker"
+        color="blue-grey darken-3"
+        text
+        class="mt-3 mb-4">
+        <v-icon class="pr-2">{{ icon }}</v-icon>{{ label }}
+      </v-btn>
+      <v-btn
+        v-else
+        @click.stop="showElementPicker"
+        color="blue-grey darken-3"
+        icon text>
+        <v-icon>{{ icon }}</v-icon>
+      </v-btn>
+    </slot>
     <v-bottom-sheet
       @input="isVisible = $event"
       :value="isVisible && !showElementBrowser"
-      max-width="1240"
-      inset>
+      max-width="1240" inset>
       <div class="element-container">
         <v-toolbar
           color="blue-grey darken-4"
@@ -206,6 +206,9 @@ export default {
     onHidden() {
       this.elementWidth = DEFAULT_ELEMENT_WIDTH;
       this.$emit('hidden');
+    },
+    showElementPicker() {
+      this.isVisible = true;
     }
   },
   watch: {

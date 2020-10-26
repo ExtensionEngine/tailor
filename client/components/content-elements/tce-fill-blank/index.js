@@ -5,13 +5,15 @@ import find from 'lodash/find';
 const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
 const BLANK_PLACEHOLDER = /(@blank)/g;
 
+const answer = () => yup.string().trim().max(200).required().label('Answer');
+
 const schema = {
   question: yup.array().test(
     'has-blanks', 'At least one @blank required', question => {
       return !!find(question, it => containsText(it) && containsBlanks(it));
     }
   ),
-  correct: yup.array().of(yup.array().min(1).of(yup.string().trim().min(1).max(200).required()))
+  correct: yup.array().of(yup.array().min(1).of(answer()))
 };
 
 const initState = () => ({

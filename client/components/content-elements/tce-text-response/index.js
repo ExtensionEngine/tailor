@@ -2,7 +2,7 @@ import * as yup from 'yup';
 import Edit from './edit';
 
 const schema = {
-  correct: yup.string().trim().min(1).max(7000).required()
+  correct: yup.string().trim().max(7000).required().label('Answer')
 };
 
 const initState = () => ({

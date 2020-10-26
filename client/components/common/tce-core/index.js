@@ -5,6 +5,7 @@ import ElementList from './ElementList';
 import ElementPlaceholder from './ElementPlaceholder';
 import ElementToolbar from './ElementToolbar';
 import EmbeddedContainer from './EmbeddedContainer';
+import InputError from './InputError';
 
 export {
   AddElement,
@@ -13,5 +14,6 @@ export {
   ElementList,
   ElementPlaceholder,
   ElementToolbar,
-  EmbeddedContainer
+  EmbeddedContainer,
+  InputError
 };
