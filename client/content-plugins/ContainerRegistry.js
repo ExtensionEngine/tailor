@@ -6,12 +6,12 @@ import { getContainerName as getName } from 'tce-core/utils';
 import { service as ValidationService } from './validation';
 
 const getTemplateMessage = name => `
-  For container ${name} using depricated 'type' identification!
+  For container ${name} using deprecated 'type' identification!
   Use 'templateId' instead!
 `;
 
 const getElementsMessage = name => `
-  For container ${name} using depricated 'tes' prop!
+  For container ${name} using deprecated 'tes' prop!
   Use 'elements' instead!
 `;
 
