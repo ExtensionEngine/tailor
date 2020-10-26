@@ -20,19 +20,16 @@ function add(Activity, Hooks, Models) {
   });
 
   function sseCreate(_, activity) {
-    const channel = sse.channel(activity.repositoryId);
-    if (channel) channel.send(Events.Create, activity);
+    sse.channel(activity.repositoryId).send(Events.Create, activity);
   }
 
   function sseUpdate(_, activity) {
-    const channel = sse.channel(activity.repositoryId);
-    if (channel) channel.send(Events.Update, activity);
+    sse.channel(activity.repositoryId).send(Events.Update, activity);
   }
 
   async function sseDelete(_, activity) {
     await activity.reload({ paranoid: false });
-    const channel = sse.channel(activity.repositoryId);
-    if (channel) channel.send(Events.Delete, activity);
+    sse.channel(activity.repositoryId).send(Events.Delete, activity);
   }
 
   const isRepository = it => it instanceof Models.Repository;
