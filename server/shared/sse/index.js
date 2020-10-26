@@ -39,7 +39,7 @@ class SSEConnection extends EventEmitter {
   }
 
   get timeout() {
-    const connectionTimeout = parseInt(this.request.header('connection-timeout'), 0);
+    const connectionTimeout = parseInt(this.request.header('connection-timeout'), 10);
     const timeout = connectionTimeout || SSE_DEFAULT_TIMEOUT;
     return timeout * (1 - SSE_TIMEOUT_MARGIN);
   }
