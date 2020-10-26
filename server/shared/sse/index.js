@@ -7,12 +7,13 @@ const { EventEmitter } = require('events');
 const SSE_TIMEOUT_MARGIN = 0.10;
 const SSE_DEFAULT_TIMEOUT = 60000; /* ms */
 const SSE_HEADERS = {
-  connection: 'keep-alive',
-  'transfer-encoding': 'identity',
-  'cache-control': 'no-transform',
+  'Content-Type': 'text/event-stream',
+  'Cache-Control': 'no-transform',
+  Connection: 'keep-alive',
+  'Transfer-Encoding': 'identity',
   // NOTE: This controls nginx proxy buffering
   // https://nginx.com/resources/wiki/start/topics/examples/x-accel/#x-accel-buffering
-  'x-accel-buffering': 'no'
+  'X-Accel-Buffering': 'no'
 };
 
 class SSEConnection extends EventEmitter {
@@ -52,7 +53,7 @@ class SSEConnection extends EventEmitter {
     // Gracefully handle termination.
     this.request.once('close', () => this.close());
     // Set event stream headers.
-    this._res.status(200).type('text/event-stream').set(SSE_HEADERS);
+    this._res.writeHead(200, SSE_HEADERS);
     this._res.flushHeaders();
     // Setup heartbeat interval.
     if (this.timeout > 0) {
