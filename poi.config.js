@@ -120,7 +120,7 @@ module.exports = {
       .post()
       .use('exports-loader')
       .loader(require.resolve('exports-loader'))
-      .options({ EventSource: 'exports.EventSource || exports.NativeEventSource' });
+      .options({ EventSource: 'exports.EventSourcePolyfill || exports.NativeEventSource' });
 
     config.module.rule('val')
       .test(/\.load\.js$/)

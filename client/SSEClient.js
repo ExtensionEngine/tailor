@@ -8,18 +8,13 @@ class SSEClient {
     return Boolean(this._connection);
   }
 
-  connect(url, { params = {}, timeout = 45000 /* ms */, ...options } = {}) {
+  connect(url, { headers, searchParams, timeout = 45000 /* ms */, ...options } = {}) {
     if (this._connection) this.disconnect();
-    const searchParams = new URLSearchParams(Object.entries(params));
-    url = [url, searchParams].filter(Boolean).join('?');
-    const jwt = 'JWT ' + params.token;
+    url = createUrl(url, { searchParams });
     this._connection = new EventSource(url, {
       ...options,
       // NOTE: This is used by `event-source-polyfill`.
-      headers: {
-        'Connection-Timeout': timeout,
-        Authorization: jwt
-      },
+      headers: Object.assign({}, headers, { 'Connection-Timeout': timeout }),
       heartbeatTimeout: timeout
     });
     return this;
@@ -46,6 +41,12 @@ class SSEClient {
 }
 
 export default SSEClient;
+
+function createUrl(pathname, { searchParams = {} }) {
+  const url = new URL(pathname, location);
+  url.search = new URLSearchParams(searchParams).toString();
+  return url.href;
+}
 
 function parseJson(listener) {
   return function ({ data } = {}) {

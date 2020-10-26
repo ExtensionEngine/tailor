@@ -1,21 +1,21 @@
 <template>
   <div class="d-flex align-center">
     <v-avatar
-      v-for="{ id, fullName, imgUrl } in users"
+      v-for="{ id, label, imgUrl } in users"
       :key="id"
       :size="size"
       class="avatar">
-      <v-tooltip :disabled="!fullName" bottom>
+      <v-tooltip bottom>
         <template v-slot:activator="{ on }">
           <img
             v-if="imgUrl"
             v-on="on"
             :src="imgUrl"
-            :alt="fullName"
+            :alt="label"
             :aria-describedby="`activeUser-${ id }`"
             tabindex="0">
         </template>
-        <span :id="`activeUser-${ id }`">{{ fullName }}</span>
+        <span :id="`activeUser-${ id }`">{{ label }}</span>
       </v-tooltip>
     </v-avatar>
   </div>
