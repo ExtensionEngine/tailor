@@ -17,7 +17,7 @@ class Channel extends EventEmitter {
 
   add(connection) {
     this._connections.set(connection.id, connection);
-    connection.on('close', () => this.remove(connection));
+    connection.prependOnceListener('close', () => this.remove(connection));
     return this;
   }
 
@@ -50,7 +50,7 @@ function addConnection(channelId, connection) {
     return channels.get(channelId).add(connection);
   }
   const channel = new Channel(channelId);
-  channel.on('close', () => channels.delete(channelId));
+  channel.prependOnceListener('close', () => channels.delete(channelId));
   channels.set(channelId, channel);
   return channel.add(connection);
 }

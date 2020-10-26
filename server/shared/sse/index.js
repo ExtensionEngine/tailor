@@ -49,7 +49,7 @@ class SSEConnection extends EventEmitter {
     socket.setNoDelay(true);
     socket.setKeepAlive(true);
     // Gracefully handle termination.
-    this.request.on('close', () => this.close());
+    this.request.once('close', () => this.close());
     // Set event stream headers.
     this._res.status(200).type('text/event-stream').set(SSE_HEADERS);
     this._res.flushHeaders();

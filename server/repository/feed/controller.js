@@ -9,8 +9,8 @@ const { UserActivity } = require('../../../common/sse');
 const USER_ATTRS = ['id', 'email', 'firstName', 'lastName', 'fullName', 'imgUrl'];
 
 function subscribe({ repository }, { sse: connection }) {
+  connection.once('close', () => onUnsubscribe(connection));
   connection.join(repository.id);
-  connection.on('close', () => onUnsubscribe(connection));
 }
 
 function onUnsubscribe({ id: sseId, request }) {
