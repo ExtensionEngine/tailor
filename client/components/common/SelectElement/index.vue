@@ -12,14 +12,8 @@
         @click="toggleSelectAll"
         text dark
         class="float-right">
-        <template v-if="allElementsSelected">
-          <v-icon class="mr-2">mdi-checkbox-multiple-blank-outline</v-icon>
-          Deselect all
-        </template>
-        <template v-else>
-          <v-icon class="mr-2">mdi-checkbox-multiple-marked-outline</v-icon>
-          Select all
-        </template>
+        <v-icon class="mr-2">mdi-{{ toggleButton.icon }}</v-icon>
+        {{ toggleButton.label }}
       </v-btn>
     </template>
     <template v-slot:body>
@@ -63,6 +57,11 @@ import SelectActivity from './SelectActivity';
 import sortBy from 'lodash/sortBy';
 import TailorDialog from '@/components/common/TailorDialog';
 
+const TOGGLE_BUTTON = {
+  SELECT: { label: 'Select all', icon: 'checkbox-multiple-marked-outline' },
+  DESELECT: { label: 'Deselect all', icon: 'checkbox-multiple-blank-outline' }
+};
+
 export default {
   name: 'select-element',
   props: {
@@ -85,6 +84,10 @@ export default {
     elements() {
       return flatMap(this.contentContainers, 'elements')
         .filter(it => this.allowedTypes.includes(it.type));
+    },
+    toggleButton() {
+      const { SELECT, DESELECT } = TOGGLE_BUTTON;
+      return this.allElementsSelected ? DESELECT : SELECT;
     }
   },
   methods: {
