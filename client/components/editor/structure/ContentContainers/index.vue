@@ -17,7 +17,7 @@
       @deleteSubcontainer="requestContainerDeletion"
       @addElement="addElement"
       @saveElements="saveContentElements"
-      @saveElement="saveElement"
+      @saveElement="saveElementDeprecated"
       @updateElement="updateElement"
       @reorderElement="reorderContentElements"
       @deleteElement="requestElementDeletion"
@@ -102,7 +102,7 @@ export default {
       const { type, parentId, nextPosition: position } = this;
       this.save({ type, parentId, position });
     },
-    saveElement(element) {
+    saveElementDeprecated(element) {
       console.warn(DEPRECATED_EVENT_MESSAGE);
       return this.saveContentElements(element);
     },
