@@ -78,21 +78,21 @@ export default {
       if (this.isSelected(assessment) && !hasQuestion) {
         this.$emit('deleteElement', assessment);
       } else if (this.isSelected(assessment)) {
-        this.selected.splice(this.selected.indexOf(assessment._cid), 1);
+        this.selected.splice(this.selected.indexOf(assessment.uid), 1);
       } else {
-        this.selected.push(assessment._cid);
+        this.selected.push(assessment.uid);
       }
     },
     isSelected(assessment) {
-      return this.selected.includes(assessment._cid);
+      return this.selected.includes(assessment.uid);
     },
     clearSelected() {
-      const ids = this.assessments.map(it => it._cid);
+      const ids = this.assessments.map(it => it.uid);
       this.selected = this.selected.filter(it => ids.includes(it));
     },
     toggleAssessments() {
       this.allSelected = !this.allSelected;
-      this.selected = this.allSelected ? this.assessments.map(it => it._cid) : [];
+      this.selected = this.allSelected ? this.assessments.map(it => it.uid) : [];
     }
   },
   watch: {
