@@ -20,7 +20,8 @@
     <v-bottom-sheet
       @input="isVisible = $event"
       :value="isVisible && !showElementBrowser"
-      max-width="1240" inset>
+      max-width="1240"
+      inset>
       <div class="element-container">
         <v-toolbar
           color="blue-grey darken-4"

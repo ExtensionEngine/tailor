@@ -3,8 +3,8 @@
     @click:outside="close"
     :value="true"
     :header-icon="headerIcon"
-    scrollable
-    width="650">
+    width="650"
+    scrollable>
     <template v-slot:header>
       {{ heading }}
       <v-btn
