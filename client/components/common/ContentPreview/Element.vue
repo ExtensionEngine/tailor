@@ -1,5 +1,7 @@
 <template>
-  <div @click="toggleSelection" class="element-preview-container">
+  <div
+    @click="toggleSelection"
+    :class="['element-preview-container', elementWidth]">
     <v-checkbox
       v-if="selectable"
       @click.prevent
@@ -7,13 +9,15 @@
       :disabled="disabled" />
     <content-element
       :element="element"
-      :class="{ selected: isSelected }"
+      :class="['content-element', { selected: isSelected }]"
+      :set-width="false"
       disabled />
   </div>
 </template>
 
 <script>
 import ContentElement from '@/components/editor/ContentElement';
+import get from 'lodash/get';
 
 export default {
   name: 'content-element-preview',
@@ -24,7 +28,8 @@ export default {
     selectionDisabled: { type: Boolean, default: false }
   },
   computed: {
-    disabled: vm => vm.selectionDisabled && !vm.isSelected
+    disabled: vm => vm.selectionDisabled && !vm.isSelected,
+    elementWidth: vm => `col-xs-${get(vm.element, 'data.width', 12)}`
   },
   methods: {
     toggleSelection() {
@@ -46,8 +51,12 @@ export default {
   }
 }
 
-.selected {
-  border: 1px solid #444;
+.content-element {
+  flex: 1 0;
+
+  &.selected {
+    border: 1px solid #444;
+  }
 }
 
 .element-preview-container ::v-deep .contained-content {
