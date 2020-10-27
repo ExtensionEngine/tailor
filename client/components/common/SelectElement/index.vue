@@ -7,11 +7,7 @@
     scrollable>
     <template v-slot:header>
       {{ heading }}
-      <v-btn
-        v-if="selectedActivity && !loadingContent"
-        @click="toggleSelectAll"
-        text dark
-        class="float-right">
+      <v-btn v-if="toggleButton" @click="toggleSelectAll" text dark>
         <v-icon class="mr-2">mdi-{{ toggleButton.icon }}</v-icon>
         {{ toggleButton.label }}
       </v-btn>
@@ -27,7 +23,6 @@
         @toggle="element => toggleElementSelection(element)"
         :content-containers="contentContainers"
         :selected="selectedElements"
-        :heading="heading"
         :allowed-types="allowedTypes"
         :multiple="multiple"
         selectable />
@@ -68,7 +63,7 @@ export default {
     selected: { type: Array, default: () => [] },
     heading: { type: String, required: true },
     multiple: { type: Boolean, default: true },
-    allowedTypes: { type: Array, default: () => [] },
+    allowedTypes: { type: Array, default: null },
     submitLabel: { type: String, default: 'Save' },
     headerIcon: { type: String, default: 'mdi-toy-brick-plus-outline' }
   },
@@ -82,12 +77,17 @@ export default {
     ...mapGetters('repository', ['repository', 'activities']),
     allElementsSelected: vm => vm.selectedElements.length === vm.elements.length,
     elements() {
-      return flatMap(this.contentContainers, 'elements')
-        .filter(it => this.allowedTypes.includes(it.type));
+      const elements = flatMap(this.contentContainers, 'elements');
+      if (!this.allowedTypes || !this.allowedTypes.length) return elements;
+      return elements.filter(it => this.allowedTypes.includes(it.type));
     },
     toggleButton() {
+      const {
+        allElementsSelected, loadingContent, multiple, selectedActivity
+      } = this;
+      if (!multiple || !selectedActivity || loadingContent) return;
       const { SELECT, DESELECT } = TOGGLE_BUTTON;
-      return this.allElementsSelected ? DESELECT : SELECT;
+      return allElementsSelected ? DESELECT : SELECT;
     }
   },
   methods: {
@@ -101,15 +101,20 @@ export default {
         elements: elements.filter(element => element.activityId === container.id)
       }));
     },
-    toggleSelectAll() {
-      this.selectedElements = this.allElementsSelected ? [] : [...this.elements];
+    assignActivity(element) {
+      return { ...element, activity: this.selectedActivity };
     },
     toggleElementSelection(element) {
-      const { selectedActivity: activity, selectedElements: elements } = this;
+      const { selectedElements: elements } = this;
       const existing = elements.find(it => it.id === element.id);
       this.selectedElements = existing
         ? elements.filter(it => it.id !== element.id)
-        : elements.concat({ ...element, activity });
+        : elements.concat(this.assignActivity(element));
+    },
+    toggleSelectAll() {
+      this.selectedElements = this.allElementsSelected
+        ? []
+        : this.elements.map(this.assignActivity);
     },
     deselectActivity() {
       this.selectedActivity = null;
