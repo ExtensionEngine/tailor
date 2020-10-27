@@ -70,7 +70,7 @@ export default {
     multiple: { type: Boolean, default: true },
     allowedTypes: { type: Array, default: () => [] },
     submitLabel: { type: String, default: 'Save' },
-    headerIcon: { type: String, default: null }
+    headerIcon: { type: String, default: 'mdi-toy-brick-plus-outline' }
   },
   data: () => ({
     selectedActivity: null,
