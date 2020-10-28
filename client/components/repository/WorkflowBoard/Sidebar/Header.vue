@@ -1,5 +1,9 @@
 <template>
   <header>
+    <div class="mt-5">
+      <h5 class="h5">Related content</h5>
+      <activity-card v-bind="activity" :name="activityName" />
+    </div>
     <div class="mt-8">
       <v-tooltip open-delay="500" bottom>
         <template #activator="{ on }">
@@ -48,6 +52,7 @@
 </template>
 
 <script>
+import ActivityCard from './ActivityCard';
 import LabelChip from '@/components/repository/common/LabelChip';
 import { mapActions } from 'vuex';
 import { mapRequests } from '@/plugins/radio';
@@ -56,13 +61,14 @@ export default {
   props: {
     uid: { type: String, required: true },
     id: { type: Number, required: true },
-    label: { type: String, required: true },
     shortId: { type: String, required: true },
+    activity: { type: Object, required: true },
     createdAt: { type: String, required: true },
     updatedAt: { type: String, required: true }
   },
   computed: {
-    taskUrl: () => window.location.href
+    taskUrl: () => window.location.href,
+    activityName: vm => vm.activity.data.name
   },
   methods: {
     ...mapActions('repository/tasks', ['archive']),
@@ -76,6 +82,6 @@ export default {
       });
     }
   },
-  components: { LabelChip }
+  components: { ActivityCard, LabelChip }
 };
 </script>

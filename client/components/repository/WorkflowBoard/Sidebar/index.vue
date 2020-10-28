@@ -2,21 +2,18 @@
   <v-navigation-drawer
     width="450"
     color="grey lighten-5"
-    absolute right permanent>
-    <section
-      v-if="selectedTask && activity"
-      :key="selectedTask.uid"
-      class="px-4 pt-4 pb-10">
-      <section class="mt-5">
-        <h5 class="h5">Related content</h5>
-        <activity-card v-bind="activity" :name="name" />
-      </section>
-      <sidebar-header v-bind="selectedTask" />
+    absolute right permanent
+    class="px-4">
+    <template v-if="selectedTask && activity">
+      <sidebar-header
+        v-bind="selectedTask"
+        :activity="activity"
+        class="pt-4" />
       <task-field-group
         @update="updateTask"
         v-bind="selectedTask"
-        class="mt-9 mb-4" />
-    </section>
+        class="mt-9 mb-12" />
+    </template>
     <section v-else class="placeholder grey--text text--darken-3">
       <h4>Task Sidebar</h4>
       <v-icon>mdi-chevron-left</v-icon>
@@ -27,7 +24,6 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import ActivityCard from './ActivityCard';
 import SidebarHeader from './Header';
 import TaskFieldGroup from './FieldGroup';
 
@@ -40,8 +36,7 @@ export default {
   },
   computed: {
     ...mapGetters('repository', ['selectedTask', 'activities']),
-    activity: vm => vm.activities.find(({ id }) => vm.selectedTask.activityId === id),
-    name: vm => vm.activity.data.name
+    activity: vm => vm.activities.find(({ id }) => vm.selectedTask.activityId === id)
   },
   methods: {
     ...mapActions('repository/tasks', ['save']),
@@ -50,7 +45,7 @@ export default {
         .then(() => { this.$snackbar.show(`${this.name} saved`); });
     }
   },
-  components: { ActivityCard, TaskFieldGroup, SidebarHeader }
+  components: { TaskFieldGroup, SidebarHeader }
 };
 </script>
 
