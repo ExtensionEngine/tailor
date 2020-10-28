@@ -3,17 +3,17 @@ import cuid from 'cuid';
 import Edit from './edit';
 import times from 'lodash/times';
 
-const objectMap = yup.object().shape({
-  key: yup.string().required(),
-  value: yup.string().required()
+const createValidator = label => yup.object().shape({
+  key: yup.string().required().label(label),
+  value: yup.string().required().label(label)
 });
 
 const schema = {
-  premises: yup.array().of(objectMap),
-  responses: yup.array().of(objectMap),
+  premises: yup.array().of(createValidator('Premise')),
+  responses: yup.array().of(createValidator('Response')),
   headings: yup.object().shape({
-    premise: yup.string().trim().min(1).max(200).required(),
-    response: yup.string().trim().min(1).max(200).required()
+    premise: yup.string().trim().max(200).required().label('Premise heading'),
+    response: yup.string().trim().max(200).required().label('Response heading')
   })
 };
 

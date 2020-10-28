@@ -31,7 +31,7 @@ export default {
     url: vm => get(vm.element, 'data.assets.url')
   },
   methods: {
-    save({ url, publicUrl }) {
+    save({ url }) {
       const element = cloneDeep(this.element);
       set(element.data, 'assets.url', url);
       this.$elementBus.emit('save', element);

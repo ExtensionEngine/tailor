@@ -1,7 +1,6 @@
 import each from 'lodash/each';
 import find from 'lodash/find';
 import orderBy from 'lodash/orderBy';
-import pick from 'lodash/pick';
 
 export const getActiveUsers = (_state, getters, rootState) => {
   const { auth: { user: currentUser } } = rootState;
@@ -20,7 +19,6 @@ export const activityByEntity = state => {
 };
 
 function setUserContext(state, user, context) {
-  const data = pick(user, ['id', 'email', 'fullName', 'imgUrl', 'connectedAt']);
   const mappings = {
     repository: context.repositoryId,
     activity: context.activityId,
@@ -30,10 +28,10 @@ function setUserContext(state, user, context) {
     if (!id) return;
     const entity = state[type][id];
     if (!entity) {
-      state[type][id] = [data];
+      state[type][id] = [user];
       return;
     }
     if (find(entity, { id: user.id })) return;
-    entity.push(data);
+    entity.push(user);
   });
 }

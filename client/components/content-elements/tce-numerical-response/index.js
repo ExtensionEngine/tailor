@@ -1,10 +1,16 @@
 import * as yup from 'yup';
 import Edit from './edit';
 
+const MESSAGE = 'Numeric answer is required (use . as a decimal separator)';
+
+const answer = () => yup.number().required().typeError(MESSAGE).label('Answer');
+const prefix = () => yup.string().trim().max(64).label('Prefix');
+const suffix = () => yup.string().trim().max(64).label('Suffix');
+
 const schema = {
-  prefixes: yup.array().min(1).of(yup.string().trim().max(64)),
-  suffixes: yup.array().min(1).of(yup.string().trim().max(64)),
-  correct: yup.array().min(1).of(yup.number()).required()
+  correct: yup.array().min(1).of(answer()).required(),
+  prefixes: yup.array().min(1).of(prefix()),
+  suffixes: yup.array().min(1).of(suffix())
 };
 
 const initState = () => ({

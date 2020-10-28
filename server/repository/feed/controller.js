@@ -6,19 +6,20 @@ const pick = require('lodash/pick');
 const sse = require('../../shared/sse');
 const { UserActivity } = require('../../../common/sse');
 
-const USER_ATTRS = ['id', 'email', 'firstName', 'lastName', 'fullName', 'imgUrl'];
+const USER_ATTRS = [
+  'id', 'email', 'firstName', 'lastName', 'fullName', 'label', 'imgUrl'
+];
 
-function subscribe({ user, repository }, { sse }) {
-  const { id: sseId } = sse;
-  sse.join(repository.id);
-  sse.on('close', () => onUnsubscribe({ sseId, user, repository }));
+function subscribe({ repository }, { sse: connection }) {
+  connection.once('close', () => onUnsubscribe(connection));
+  connection.join(repository.id);
 }
 
-function onUnsubscribe({ sseId, user, repository }) {
+function onUnsubscribe({ id: sseId, request }) {
+  const { repository, user } = request;
   activeUsers.removeContext(user, it => it.sseId === sseId);
-  const channel = sse.channel(repository.id);
-  if (!channel) return;
-  channel.send(UserActivity.EndSession, { sseId, userId: user.id });
+  sse.channel(repository.id)
+    .send(UserActivity.EndSession, { sseId, userId: user.id });
 }
 
 function fetchUserActivities(_req, res) {
@@ -29,8 +30,7 @@ function addUserActivity({ user, body: { context } }, res) {
   res.end();
   user = pick(user, USER_ATTRS);
   activeUsers.addContext(user, context);
-  const channel = sse.channel(context.repositoryId);
-  if (channel) channel.send(UserActivity.Start, { user, context });
+  sse.channel(context.repositoryId).send(UserActivity.Start, { user, context });
 }
 
 function removeUserActivity({ user, body: { context } }, res) {
@@ -39,8 +39,7 @@ function removeUserActivity({ user, body: { context } }, res) {
   const { connectedAt, ...targetCtx } = context;
   const compareBy = Object.keys(targetCtx);
   activeUsers.removeContext(user, it => isEqual(pick(it, compareBy), targetCtx));
-  const channel = sse.channel(context.repositoryId);
-  if (channel) channel.send(UserActivity.End, { user, context });
+  sse.channel(context.repositoryId).send(UserActivity.End, { user, context });
 }
 
 module.exports = {
