@@ -26,7 +26,7 @@ class SSEConnection extends EventEmitter {
     this._heartbeat = null;
     this._res = res;
     this.initialize();
-    this.send('connection_initialized', { sseId: this.id });
+    this.send('#open', { id: this.id });
   }
 
   static create(res) {
