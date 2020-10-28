@@ -1,8 +1,14 @@
 <template>
   <header>
     <div class="mt-5">
-      <h5 class="h5">Related content</h5>
-      <activity-card v-bind="activity" :name="activityName" />
+      <h5 class="h5">
+        Related <span class="text-lowercase">{{ config.label }}</span>
+      </h5>
+      <activity-card
+        v-bind="activity"
+        :name="activityName"
+        :type="config.label"
+        :color="config.color" />
     </div>
     <div class="mt-8">
       <v-tooltip open-delay="500" bottom>
@@ -52,9 +58,10 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import ActivityCard from './ActivityCard';
+import find from 'lodash/find';
 import LabelChip from '@/components/repository/common/LabelChip';
-import { mapActions } from 'vuex';
 import { mapRequests } from '@/plugins/radio';
 
 export default {
@@ -67,6 +74,8 @@ export default {
     updatedAt: { type: String, required: true }
   },
   computed: {
+    ...mapGetters('repository', ['structure']),
+    config: vm => find(vm.structure, { type: vm.activity.type }),
     taskUrl: () => window.location.href,
     activityName: vm => vm.activity.data.name
   },
