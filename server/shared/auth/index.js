@@ -2,10 +2,10 @@
 
 const { ExtractJwt, Strategy: JwtStrategy } = require('passport-jwt');
 const Audience = require('./audience');
+const auth = require('./authenticator');
 const config = require('../../../config/server').auth;
 const jwt = require('jsonwebtoken');
 const LocalStrategy = require('passport-local');
-const passport = require('passport');
 const { User } = require('../database');
 
 const options = {
@@ -13,14 +13,14 @@ const options = {
   session: false
 };
 
-passport.use(new LocalStrategy(options, (email, password, done) => {
+auth.use(new LocalStrategy(options, (email, password, done) => {
   return User.findOne({ where: { email } })
     .then(user => user && user.authenticate(password))
     .then(user => done(null, user || false))
     .error(err => done(err, false));
 }));
 
-passport.use(new JwtStrategy({
+auth.use(new JwtStrategy({
   ...config,
   audience: Audience.Scope.Access,
   jwtFromRequest: ExtractJwt.fromExtractors([
@@ -31,24 +31,24 @@ passport.use(new JwtStrategy({
   secretOrKey: config.secret
 }, verify));
 
-passport.use('token', new JwtStrategy({
+auth.use('token', new JwtStrategy({
   ...config,
   audience: Audience.Scope.Setup,
   jwtFromRequest: ExtractJwt.fromBodyField('token'),
   secretOrKeyProvider
 }, verify));
 
-passport.serializeUser((user, done) => done(null, user));
-passport.deserializeUser((user, done) => done(null, user));
+auth.serializeUser((user, done) => done(null, user));
+auth.deserializeUser((user, done) => done(null, user));
 
 module.exports = {
   initialize(options = {}) {
-    return passport.initialize(options);
+    return auth.initialize(options);
   },
   authenticate(strategy, options = {}) {
     // NOTE: Setup passport to forward errors down the middleware chain
     // https://github.com/jaredhanson/passport/blob/ad5fe1df/lib/middleware/authenticate.js#L171
-    return passport.authenticate(strategy, { ...options, failWithError: true });
+    return auth.authenticate(strategy, { ...options, failWithError: true });
   }
 };
 
