@@ -21,12 +21,12 @@ const hasProp = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
 class SSEConnection extends EventEmitter {
   constructor(res) {
     super();
-    this._id = cuid();
+    this._id = null;
+    this._res = res;
+    this._req = res.req;
     this._lastEventId = 0;
     this._heartbeat = null;
-    this._res = res;
     this.initialize();
-    this.send('#open', { id: this.id });
   }
 
   static create(res) {
@@ -37,29 +37,36 @@ class SSEConnection extends EventEmitter {
     return this._id;
   }
 
-  get request() {
-    return this._res.req;
-  }
-
   get socket() {
     return this._res.socket;
   }
 
+  get query() {
+    return this._req.query;
+  }
+
+  header(name) {
+    return this._req.header(name);
+  }
+
   get timeout() {
-    const connectionTimeout = parseInt(this.request.header('connection-timeout'), 10);
+    const connectionTimeout = parseInt(this.header('connection-timeout'), 10);
     const timeout = connectionTimeout || SSE_DEFAULT_TIMEOUT;
     return timeout * (1 - SSE_TIMEOUT_MARGIN);
   }
 
   initialize() {
+    // Set socket properties.
     this.socket.setTimeout(0);
     this.socket.setNoDelay(true);
     this.socket.setKeepAlive(true);
     // Gracefully handle termination.
-    this.request.once('close', () => this.close());
+    this._req.once('close', () => this.close());
     // Set event stream headers.
     this._res.writeHead(200, SSE_HEADERS);
     this._res.flushHeaders();
+    // Ensure connection id is correctly set.
+    this._id = cuid.isCuid(this.query.id) ? this.query.id : cuid();
     // Setup heartbeat interval.
     if (this.timeout > 0) {
       this._heartbeat = setInterval(() => this.write(':ping'), this.timeout);
@@ -82,7 +89,7 @@ class SSEConnection extends EventEmitter {
       `data: ${json}`
     ].join('\n');
     this.write(payload);
-    if (hasProp(this.request.query, 'debug')) {
+    if (hasProp(this.query, 'debug')) {
       this.debug({ id, type: event, data });
     }
     return this;
