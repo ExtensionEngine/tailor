@@ -9,7 +9,7 @@
 <body>
   <script>
     var token = '{{ token }}';
-    var user = stringify({{& profile }});
+    var user = {{& profile }};
     var state = stringify({ auth: { token, user } });
     localStorage.setItem('{{ storageKey }}', state);
     location.replace(location.origin);
