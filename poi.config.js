@@ -9,7 +9,8 @@ const {
   API_PATH,
   ENABLE_DEFAULT_SCHEMA,
   NODE_ENV,
-  STORAGE_PATH
+  STORAGE_PATH,
+  STORAGE_STATE_KEY
 } = process.env;
 const imagesPath = 'assets/img';
 const isProduction = NODE_ENV === 'production';
@@ -93,7 +94,7 @@ module.exports = {
     AUTH_JWT_SCHEME,
     API_PATH,
     ENABLE_DEFAULT_SCHEMA: yn(ENABLE_DEFAULT_SCHEMA),
-    VUEX_STORAGE_KEY: 'TAILOR_APP_STATE'
+    STORAGE_STATE_KEY
   },
   babel: {
     transpileModules: [

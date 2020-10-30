@@ -8,7 +8,7 @@ const OBSERVED_MUTATIONS = [
 ];
 
 export default new VuexPersistence({
-  key: process.env.VUEX_STORAGE_KEY,
+  key: process.env.STORAGE_STATE_KEY,
   reducer: state => ({
     auth: state.auth,
     repository: {
