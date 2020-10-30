@@ -1,6 +1,6 @@
 'use strict';
 
-const { auth: config, origin } = require('../../../config/server');
+const { apiPath, auth: config, origin } = require('../../../config/server');
 const { ExtractJwt, Strategy: JwtStrategy } = require('passport-jwt');
 const Audience = require('./audience');
 const auth = require('./authenticator');
@@ -81,5 +81,5 @@ function secretOrKeyProvider(_, rawToken, done) {
 }
 
 function apiUrl(pathname) {
-  return new URL(path.join('/api/v1', pathname), origin).href;
+  return new URL(path.join(apiPath, pathname), origin).href;
 }

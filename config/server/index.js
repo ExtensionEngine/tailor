@@ -10,6 +10,7 @@ const hostname = resolveHostname();
 const protocol = resolveProtocol(hostname);
 const port = resolvePort();
 const origin = resolveOrigin(hostname, protocol, port);
+const apiPath = process.env.API_PATH;
 const previewUrl = process.env.PREVIEW_URL;
 
 module.exports = {
@@ -17,6 +18,7 @@ module.exports = {
   hostname,
   port,
   origin,
+  apiPath,
   auth,
   mail,
   storage,
