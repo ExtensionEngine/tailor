@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-alert
-      :value="!!localError || !!oidcError"
+      :value="!!errorMessage"
       color="grey darken-3"
       transition="fade-transition"
       dismissible text dense
@@ -66,6 +66,7 @@
 
 <script>
 import { mapActions } from 'vuex';
+import path from 'path';
 
 const LOGIN_ERR_MESSAGE = 'The email or password you entered is incorrect.';
 const OIDC_ERR_MESSAGE = 'This account does not exist.';
@@ -80,14 +81,14 @@ export default {
   computed: {
     oidcEnabled: () => process.env.OIDC_ENABLED,
     oidcLoginText: () => process.env.OIDC_LOGIN_TEXT || 'Login with OAuth',
-    oidcError: vm => vm.$route.query.accessDenied && OIDC_ERR_MESSAGE,
+    oidcError: vm => vm.$route.query.accessDenied === 'true' && OIDC_ERR_MESSAGE,
     errorMessage: vm => vm.oidcError || vm.localError
   },
   methods: {
     ...mapActions(['login']),
     loginOIDC() {
-      const apiPath = process.env.API_PATH;
-      window.location.replace(`${apiPath}/oidc`);
+      const oidcPath = path.join(process.env.API_PATH, '/oidc');
+      window.location.replace(oidcPath);
     },
     submit() {
       this.message = '';

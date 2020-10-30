@@ -9,7 +9,7 @@ const router = require('express').Router();
 
 const storageKey = process.env.STORAGE_STATE_KEY;
 
-const ACCESS_DENIED_ROUTE = '/#/login?accessDenied';
+const ACCESS_DENIED_ROUTE = '/#/login?accessDenied=true';
 
 const OIDCErrors = [
   OIDCError.OPError,
