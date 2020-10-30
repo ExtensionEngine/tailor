@@ -1,5 +1,6 @@
 <template>
-  <v-select
+  <component
+    :is="meta.tagging ? 'v-combobox' : 'v-select'"
     @change="update"
     :value="meta.value"
     :name="meta.key"
@@ -8,7 +9,6 @@
     :label="meta.label"
     :multiple="meta.multiple"
     :chips="meta.multiple"
-    :small-chips="!hasImgProp"
     item-text="label"
     item-value="value"
     deletable-chips
@@ -23,7 +23,7 @@
         <span>{{ item.label }}</span>
       </component>
     </template>
-  </v-select>
+  </component>
 </template>
 
 <script>
