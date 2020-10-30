@@ -7,6 +7,8 @@ const { errors: OIDCError } = require('openid-client');
 const path = require('path');
 const router = require('express').Router();
 
+const storageKey = process.env.STORAGE_STATE_KEY;
+
 const ACCESS_DENIED_ROUTE = '/#/login?accessDenied';
 
 const OIDCErrors = [
@@ -31,8 +33,11 @@ router
   })
   .use((err, _req, res, next) => {
     if (!isOIDCError(err)) return res.redirect(ACCESS_DENIED_ROUTE);
+    const template = path.resolve(__dirname, './error.mustache');
     const status = err.status || BAD_REQUEST;
-    res.status(status).send({ err });
+    return res.render(template, err, (_, html) => {
+      res.status(status).send(html);
+    });
   });
 
 module.exports = {
@@ -42,13 +47,14 @@ module.exports = {
 
 function logout(_req, res) {
   const template = path.resolve(__dirname, './logout.mustache');
-  res.render(template);
+  res.render(template, { storageKey });
 }
 
 function login(req, res, next) {
   authenticate('oidc')(req, res, err => {
     if (err) return next(err);
     const { user } = req;
+    const template = path.resolve(__dirname, './authenticated.mustache');
     const token = user.createToken({
       audience: Audience.Scope.Access,
       expiresIn: '5 days'
@@ -56,6 +62,6 @@ function login(req, res, next) {
     const profile = JSON.stringify(user.profile, (_, val) => {
       return isString(val) ? encodeURIComponent(val) : val;
     });
-    res.send({ token, profile });
+    return res.render(template, { token, profile, storageKey });
   });
 }

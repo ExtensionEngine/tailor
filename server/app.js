@@ -1,6 +1,7 @@
 'use strict';
 
 const bodyParser = require('body-parser');
+const consolidate = require('consolidate');
 const cors = require('cors');
 const express = require('express');
 const helmet = require('helmet');
@@ -20,6 +21,8 @@ const router = require('./router');
 const { STORAGE_PATH } = process.env;
 
 const app = express();
+app.engine('mustache', consolidate.mustache);
+app.set('view engine', 'mustache');
 app.use(session(config.auth.session));
 app.use(helmet());
 app.use(cors({ origin: config.auth.corsAllowedOrigins, credentials: true }));
