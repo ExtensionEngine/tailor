@@ -10,7 +10,9 @@ const {
   ENABLE_DEFAULT_SCHEMA,
   NODE_ENV,
   STORAGE_PATH,
-  STORAGE_STATE_KEY
+  STORAGE_STATE_KEY,
+  OIDC_ENABLED,
+  OIDC_LOGIN_TEXT
 } = process.env;
 const imagesPath = 'assets/img';
 const isProduction = NODE_ENV === 'production';
@@ -94,7 +96,9 @@ module.exports = {
     AUTH_JWT_SCHEME,
     API_PATH,
     ENABLE_DEFAULT_SCHEMA: yn(ENABLE_DEFAULT_SCHEMA),
-    STORAGE_STATE_KEY
+    STORAGE_STATE_KEY,
+    OIDC_ENABLED,
+    OIDC_LOGIN_TEXT
   },
   babel: {
     transpileModules: [
