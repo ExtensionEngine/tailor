@@ -22,10 +22,6 @@ const plugSSE = ({ commit }) => {
     .subscribe(Events.Delete, item => commit('remove', [item]));
 };
 
-const insert = ({ dispatch }, { element, context }) => {
-  return dispatch('save', { ...element, position: calculatePosition(context) });
-};
-
 const reorder = ({ commit }, { element, context }) => {
   const position = calculatePosition(context);
   commit('reorder', { element, position });
@@ -37,7 +33,6 @@ export {
   add,
   get,
   fetch,
-  insert,
   remove,
   reorder,
   reset,

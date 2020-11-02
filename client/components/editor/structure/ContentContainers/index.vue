@@ -113,8 +113,7 @@ export default {
     },
     reorderContentElements({ newPosition, items }) {
       const element = items[newPosition];
-      const isFirstChild = newPosition === 0;
-      const context = { items, newPosition, isFirstChild };
+      const context = { items, newPosition };
       this.reorderElements({ element, context });
     },
     requestDeletion(content, action, name) {

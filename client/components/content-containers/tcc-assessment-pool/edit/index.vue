@@ -21,9 +21,10 @@
     </ul>
     <add-element
       @add="addAssessments"
+      :items="assessments"
       :include="['ASSESSMENT']"
       :activity="container"
-      :position="nextPosition"
+      :position="assessments.length"
       :layout="false"
       large
       label="Add assessment" />
@@ -34,7 +35,6 @@
 import AddElement from 'tce-core/AddElement';
 import AssessmentItem from 'tce-core/AssessmentItem';
 import filter from 'lodash/filter';
-import last from 'lodash/last';
 import sortBy from 'lodash/sortBy';
 import uuid from '@/utils/uuid';
 
@@ -53,10 +53,6 @@ export default {
       const activityId = this.container.id;
       const assessments = filter(this.elements, { activityId });
       return sortBy(assessments, 'position');
-    },
-    nextPosition() {
-      const lastItem = last(this.assessments);
-      return lastItem ? lastItem.position + 1 : 1;
     },
     hasAssessments: vm => vm.assessments.length
   },

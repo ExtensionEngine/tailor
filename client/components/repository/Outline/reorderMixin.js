@@ -5,8 +5,7 @@ export default {
     ...mapActions('repository/activities', { updatePosition: 'reorder' }),
     reorder({ newIndex: newPosition }, items) {
       const activity = items[newPosition];
-      const isFirstChild = newPosition === 0;
-      const context = { items, newPosition, isFirstChild };
+      const context = { items, newPosition };
       this.updatePosition({ activity, context });
     }
   }

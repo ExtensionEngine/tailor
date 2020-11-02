@@ -21,7 +21,9 @@
     <add-element
       v-slot="{ addElement }"
       @add="addQuestionElement"
+      :items="question"
       :layout="false"
+      :position="question.length"
       :disabled="!isEditing"
       :include="['JODIT_HTML', 'IMAGE', 'EMBED', 'HTML']"
       :class="{ invisible: !isEditing }">

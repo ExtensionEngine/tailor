@@ -26,15 +26,16 @@
       :layout="layout"
       class="element-list">
       <template v-slot:list-item="{ element, isDragged, position }">
-        <inline-activator @click.native="showElementDrawer(position - 1)" />
+        <inline-activator @click.native="showElementDrawer(position)" />
         <content-element v-bind="{ element, isDragged, setWidth: false }" />
       </template>
       <template v-slot:list-add="{ position: lastPosition, ...slotProps }">
         <div class="add-element-container mt-5">
           <add-element
-            @add="onAddElements($event, lastPosition)"
+            @add="onAddElements"
             @hidden="onHiddenElementDrawer"
             v-bind="slotProps"
+            :items="contentElements"
             :position="Math.min(insertPosition, lastPosition)"
             :show="isElementDrawerVisible"
             :large="true"
@@ -51,11 +52,8 @@ import ContentElement from '@/components/editor/ContentElement';
 import ElementList from 'tce-core/ElementList';
 import filter from 'lodash/filter';
 import InlineActivator from './InlineActivator';
-import InsertLocation from '@/utils/InsertLocation';
 import { mapActions } from 'vuex';
 import sortBy from 'lodash/sortBy';
-
-const { ADD_AFTER } = InsertLocation;
 
 export default {
   name: 'content-container',
@@ -79,14 +77,12 @@ export default {
   methods: {
     ...mapActions('repository/contentElements', {
       reorderElements: 'reorder',
-      insertElement: 'insert',
       addElement: 'save'
     }),
     reorder({ newPosition }) {
       const items = this.contentElements;
       const element = items[newPosition];
-      const isFirstChild = newPosition === 0;
-      const context = { items, newPosition, isFirstChild };
+      const context = { items, newPosition };
       this.reorderElements({ element, context });
     },
     showElementDrawer(position) {
@@ -97,17 +93,9 @@ export default {
       this.isElementDrawerVisible = false;
       this.insertPosition = Infinity;
     },
-    onAddElements(elements, lastPosition) {
-      elements.forEach(element => {
-        if (element.position >= lastPosition) {
-          return this.addElement(element);
-        }
-        const items = this.contentElements;
-        const { position: newPosition } = element;
-        const isFirstChild = newPosition === -1;
-        const context = { items, newPosition, isFirstChild, action: ADD_AFTER };
-        this.insertElement({ element, context });
-      });
+    onAddElements(elements) {
+      // TODO: add route for creating elements in batch
+      elements.forEach(element => this.addElement(element));
     }
   },
   components: { AddElement, ContentElement, ElementList, InlineActivator }

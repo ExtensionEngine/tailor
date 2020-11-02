@@ -25,16 +25,17 @@
       <slot
         :include="supportedTypes"
         :activity="activity"
-        :position="nextPosition"
+        :position="elements.length"
         :layout="layout"
         name="list-add">
         <add-element
           @add="$emit('add', $event)"
+          :items="elements"
           :include="supportedTypes"
           :activity="activity"
           :label="addElementOptions.label"
           :large="addElementOptions.large"
-          :position="nextPosition"
+          :position="elements.length"
           :layout="layout"
           class="mt-1" />
       </slot>
@@ -47,7 +48,6 @@ import AddElement from './AddElement';
 import Draggable from 'vuedraggable';
 import get from 'lodash/get';
 import { getElementId } from 'tce-core/utils';
-import last from 'lodash/last';
 
 export default {
   name: 'element-list',
@@ -67,11 +67,7 @@ export default {
       handle: '.drag-handle',
       scrollSpeed: 15,
       scrollSensitivity: 125
-    }),
-    nextPosition() {
-      const lastItem = last(this.elements);
-      return lastItem ? lastItem.position + 1 : 1;
-    }
+    })
   },
   methods: {
     get,
