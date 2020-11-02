@@ -7,7 +7,7 @@
         color="blue-grey darken-3"
         text
         class="mt-3 mb-4">
-        <v-icon class="pr-2">{{ icon }}</v-icon>{{ label }} asd
+        <v-icon class="pr-2">{{ icon }}</v-icon>{{ label }}
       </v-btn>
       <v-btn
         v-else
@@ -71,6 +71,7 @@
 import AddNewElement from './AddNewElement';
 import filter from 'lodash/filter';
 import flatMap from 'lodash/flatMap';
+import { getPositions } from 'utils/calculatePosition';
 import intersection from 'lodash/intersection';
 import { isQuestion } from '../utils';
 import pick from 'lodash/pick';
@@ -98,10 +99,12 @@ export default {
   name: 'add-element',
   inject: ['$teRegistry'],
   props: {
+    items: { type: Array, required: true },
     activity: { type: Object, default: null },
     position: { type: Number, default: null },
     layout: { type: Boolean, default: true },
     include: { type: Array, default: null },
+    show: { type: Boolean, default: false },
     large: { type: Boolean, default: false },
     label: { type: String, default: 'Add content' },
     icon: { type: String, default: 'mdi-plus' }
@@ -163,16 +166,16 @@ export default {
   },
   methods: {
     addElements(elements) {
+      const positions = getPositions(this.items, this.position, elements.length);
       const items = elements.map((it, index) => {
-        const position = this.position + index;
-        return this.buildElement({ ...it, position });
+        return this.buildElement({ ...it, position: positions[index] });
       });
       this.$emit('add', items);
       this.isVisible = false;
     },
     buildElement(el) {
-      const { position, processedWidth: width, activity } = this;
-      const { subtype, data = {}, initState = () => ({}) } = el;
+      const { processedWidth: width, activity } = this;
+      const { subtype, data = {}, initState = () => ({}), position } = el;
       const element = {
         position,
         ...pick(el, ['type', 'refs']),
@@ -197,6 +200,10 @@ export default {
   watch: {
     isVisible(val, oldVal) {
       if (!val && oldVal) this.onHidden();
+    },
+    show(val) {
+      if (val) return this.showElementPicker();
+      this.onHidden();
     }
   },
   components: { AddNewElement, SelectElement }
