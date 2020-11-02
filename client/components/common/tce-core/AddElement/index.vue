@@ -7,7 +7,7 @@
         color="blue-grey darken-3"
         text
         class="mt-3 mb-4">
-        <v-icon class="pr-2">{{ icon }}</v-icon>{{ label }}
+        <v-icon class="pr-2">{{ icon }}</v-icon>{{ label }} asd
       </v-btn>
       <v-btn
         v-else
@@ -17,16 +17,23 @@
         <v-icon>{{ icon }}</v-icon>
       </v-btn>
     </slot>
-    <v-bottom-sheet
-      @input="isVisible = $event"
-      :value="isVisible && !showElementBrowser"
-      max-width="1240"
-      inset>
-      <div class="element-container">
-        <v-toolbar
-          color="blue-grey darken-4"
-          dense
-          class="mb-2 elevation-1">
+    <template v-if="isVisible">
+      <select-element
+        v-if="showElementBrowser"
+        @selected="addElements"
+        @close="showElementBrowser = false"
+        :allowed-types="allowedTypes"
+        submit-label="Copy"
+        heading="Copy elements"
+        header-icon="mdi-content-duplicate"
+        multiple />
+      <add-new-element
+        v-else
+        v-model="isVisible"
+        @add="addElements"
+        :library="library"
+        :allowed-types="allowedTypes">
+        <template v-slot:header>
           <v-btn
             @click="showElementBrowser = !showElementBrowser"
             dark text
@@ -54,40 +61,14 @@
               <span class="px-1">{{ elementWidth }}</span>%
             </div>
           </template>
-        </v-toolbar>
-        <div
-          v-for="group in library"
-          :key="group.name">
-          <div class="group-heading blue-grey--text text--darken-4">
-            <span>{{ group.name }}</span>
-          </div>
-          <div class="group-elements">
-            <button
-              v-for="element in group.elements"
-              :key="element.position"
-              @click.stop="addElements([element])"
-              :disabled="!allowedTypes.includes(element.type)"
-              class="element">
-              <v-icon v-if="element.ui.icon">{{ element.ui.icon }}</v-icon>
-              <h5 class="body-2">{{ element.name }}</h5>
-            </button>
-          </div>
-        </div>
-      </div>
-    </v-bottom-sheet>
-    <select-element
-      v-if="showElementBrowser"
-      @selected="addElements"
-      @close="showElementBrowser = false"
-      :allowed-types="allowedTypes"
-      submit-label="Copy"
-      heading="Copy elements"
-      header-icon="mdi-content-duplicate"
-      multiple />
+        </template>
+      </add-new-element>
+    </template>
   </div>
 </template>
 
 <script>
+import AddNewElement from './AddNewElement';
 import filter from 'lodash/filter';
 import intersection from 'lodash/intersection';
 import { isQuestion } from '../utils';
@@ -116,7 +97,6 @@ export default {
   name: 'add-element',
   inject: ['$teRegistry'],
   props: {
-    show: { type: Boolean, default: false },
     activity: { type: Object, default: null },
     position: { type: Number, default: null },
     layout: { type: Boolean, default: true },
@@ -213,107 +193,10 @@ export default {
     }
   },
   watch: {
-    show(val) {
-      if (val) this.isVisible = val;
-    },
     isVisible(val, oldVal) {
       if (!val && oldVal) this.onHidden();
     }
   },
-  components: { SelectElement }
+  components: { AddNewElement, SelectElement }
 };
 </script>
-
-<style lang="scss" scoped>
-$font-color: #333;
-$accent-color: #d81b60;
-$disabled-color: #a1a1a1;
-
-.element-container {
-  min-height: 25rem;
-  padding: 0 0 1.875rem;
-  background: #fff;
-}
-
-.group-heading {
-  margin: 0 2.5rem 0.375rem;
-  padding-top: 1.25rem;
-  font-size: 1rem;
-  font-weight: 500;
-  line-height: 1.75rem;
-  text-align: left;
-
-  .v-icon, span {
-    line-height: 1.75rem;
-    vertical-align: middle;
-  }
-
-  .v-icon {
-    margin-right: 0.375rem;
-    color: #546e7a;
-  }
-}
-
-.group-elements {
-  display: flex;
-  width: 100%;
-  padding: 0 1.875rem;
-  flex-wrap: wrap;
-}
-
-.element {
-  align-self: center;
-  width: 8.125rem;
-  min-width: 8.125rem;
-  min-height: 4.375rem;
-  padding: 0.375rem;
-  color: $font-color;
-  font-size: 1.25rem;
-  border: 1px solid #fff;
-  border-radius: 4px;
-  outline: none;
-  cursor: pointer;
-
-  .v-icon {
-    padding: 0.125rem 0;
-    color: $font-color;
-    font-size: 1.875rem;
-  }
-
-  &:disabled {
-    color: $disabled-color;
-    cursor: not-allowed;
-
-    .v-icon {
-      color: $disabled-color;
-    }
-  }
-
-  &:enabled:hover {
-    color: $accent-color;
-    background: #fcfcfc;
-    border: 1px solid #888;
-
-    .v-icon {
-      color: $accent-color;
-    }
-  }
-
-  &-title {
-    margin: 0;
-    padding: 0;
-    font-weight: 500;
-    line-height: 1.25rem;
-  }
-}
-
-.v-toolbar {
-  .v-divider {
-    align-self: auto;
-  }
-
-  .width-label {
-    min-width: 11.25rem;
-  }
-}
-</style>
