@@ -175,7 +175,7 @@ export default {
     },
     buildElement(el) {
       const { processedWidth: width, activity } = this;
-      const { subtype, data = {}, initState = () => ({}), position } = el;
+      const { position, subtype, data = {}, initState = () => ({}) } = el;
       const element = {
         position,
         ...pick(el, ['type', 'refs']),
