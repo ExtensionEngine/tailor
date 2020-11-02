@@ -70,6 +70,7 @@
 <script>
 import AddNewElement from './AddNewElement';
 import filter from 'lodash/filter';
+import flatMap from 'lodash/flatMap';
 import intersection from 'lodash/intersection';
 import { isQuestion } from '../utils';
 import pick from 'lodash/pick';
@@ -150,11 +151,12 @@ export default {
       return this.elementWidth === 50 ? LAYOUT.HALF_WIDTH : LAYOUT.FULL_WIDTH;
     },
     allowedTypes() {
-      const { elementWidth, include, layout, registry } = this;
+      const { elementWidth, include, layout, library } = this;
+      const elements = flatMap(library, 'elements');
       if (!layout) return include;
       const allowedElements = elementWidth === DEFAULT_ELEMENT_WIDTH
-        ? registry
-        : reject(registry, 'ui.forceFullWidth');
+        ? elements
+        : reject(elements, 'ui.forceFullWidth');
       const allowedTypes = allowedElements.map(it => it.type);
       return include ? intersection(include, allowedTypes) : allowedTypes;
     }
