@@ -20,7 +20,7 @@
     </div>
     <add-element
       v-slot="{ addElement }"
-      @add="addQuestionElement"
+      @add="addQuestionElements"
       :items="question"
       :layout="false"
       :position="question.length"
@@ -82,7 +82,7 @@ export default {
     dragOptions: () => DRAG_OPTIONS
   },
   methods: {
-    addQuestionElement(elements) {
+    addQuestionElements(elements) {
       const question = cloneDeep(this.assessment.data.question);
       this.$emit('update', { question: question.concat(elements) });
     },
