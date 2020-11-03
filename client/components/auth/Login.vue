@@ -66,7 +66,6 @@
 
 <script>
 import { mapActions } from 'vuex';
-import path from 'path';
 
 const LOGIN_ERR_MESSAGE = 'The email or password you entered is incorrect.';
 const OIDC_ERR_MESSAGE = 'This account does not exist.';
@@ -87,7 +86,7 @@ export default {
   methods: {
     ...mapActions(['login']),
     loginOIDC() {
-      const oidcPath = path.join(process.env.API_PATH, '/oidc');
+      const oidcPath = 'api/oidc';
       window.location.replace(oidcPath);
     },
     submit() {

@@ -81,5 +81,5 @@ function secretOrKeyProvider(_, rawToken, done) {
 }
 
 function apiUrl(pathname) {
-  return new URL(path.join('/api/v1', pathname), origin).href;
+  return new URL(path.join('/api', pathname), origin).href;
 }

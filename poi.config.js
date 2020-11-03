@@ -92,7 +92,6 @@ module.exports = {
     sourceMap: !isProduction
   },
   envs: {
-    API_PATH: '/api/v1/',
     AUTH_JWT_SCHEME,
     ENABLE_DEFAULT_SCHEMA: yn(ENABLE_DEFAULT_SCHEMA),
     STORAGE_STATE_KEY,
