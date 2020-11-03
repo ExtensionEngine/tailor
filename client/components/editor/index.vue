@@ -1,7 +1,10 @@
 <template>
   <div class="editor-container">
     <template v-if="!isLoading">
-      <toolbar :element="selectedElement" :active-users="activeUsers" />
+      <toolbar
+        :element="selectedElement"
+        :active-users="activeUsers"
+        :is-published-preview.sync="isPublishedPreview" />
       <sidebar
         :repository="repository"
         :activities="outlineActivities"
@@ -13,7 +16,8 @@
         :repository="repository"
         :activity="activity"
         :root-container-groups="rootContainerGroups"
-        :content-containers="contentContainers" />
+        :content-containers="contentContainers"
+        :is-published-preview="isPublishedPreview" />
     </template>
   </div>
 </template>
@@ -35,6 +39,7 @@ export default {
   },
   data: () => ({
     isLoading: true,
+    isPublishedPreview: false,
     selectedElement: null
   }),
   computed: {
@@ -44,6 +49,11 @@ export default {
     activeUsers: vm => vm.getActiveUsers('activity', vm.activityId)
   },
   methods: mapActions('repository', ['initialize']),
+  watch: {
+    activityId() {
+      if (this.isPublishedPreview) this.isPublishedPreview = false;
+    }
+  },
   async created() {
     const { repositoryId: currentRepositoryId, repository: storeRepository } = this;
     const repositoryLoaded = !!storeRepository;

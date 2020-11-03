@@ -1,8 +1,8 @@
 <template>
   <v-toolbar flat dense class="transparent">
-    <v-list color="transparent">
+    <v-list color="transparent" class="d-flex">
       <v-tooltip
-        v-for="({ title, icon, action }) in actions"
+        v-for="({ title, icon, action, active, disabled }) in actions"
         :key="title"
         color="blue-grey darken-3"
         bottom>
@@ -10,6 +10,8 @@
           <v-btn
             v-on="on"
             @click.stop="action"
+            :input-value="active"
+            :disabled="disabled"
             color="grey lighten-3"
             icon
             class="mr-1">
@@ -30,6 +32,9 @@ import publishMixin from 'components/common/mixins/publish';
 export default {
   name: 'activity-actions',
   mixins: [publishMixin],
+  props: {
+    isPublishedPreview: { type: Boolean, default: false }
+  },
   computed: {
     ...mapGetters(['isAdmin']),
     ...mapGetters('editor', ['activity']),
@@ -49,6 +54,12 @@ export default {
         title: 'Preview',
         icon: 'eye',
         action: () => this.preview()
+      }, {
+        title: 'Preview published',
+        icon: 'history',
+        active: this.isPublishedPreview,
+        disabled: !this.activity.publishedAt,
+        action: () => this.previewPublished()
       }];
       if (!this.isAdmin && !this.isRepositoryAdmin) return items;
       return items.concat({
@@ -64,6 +75,9 @@ export default {
       const { repositoryId, id } = this.activity;
       return activityApi.createPreview(repositoryId, id)
         .then(location => window.open(location));
+    },
+    previewPublished() {
+      this.$emit('update:is-published-preview', !this.isPublishedPreview);
     }
   }
 };

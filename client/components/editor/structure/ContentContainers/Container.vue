@@ -27,7 +27,7 @@
       class="element-list">
       <template v-slot:list-item="{ element, isDragged, position }">
         <inline-activator @click.native="showElementDrawer(position - 1)" />
-        <content-element v-bind="{ element, isDragged, setWidth: false }" />
+        <content-element v-bind="{ element, isDragged, disabled, setWidth: false }" />
       </template>
       <template v-slot:list-add="{ position: lastPosition, ...slotProps }">
         <div class="add-element-container mt-5">
@@ -64,7 +64,8 @@ export default {
     elements: { type: Object, required: true },
     types: { type: Array, default: null },
     name: { type: String, required: true },
-    layout: { type: Boolean, default: true }
+    layout: { type: Boolean, default: true },
+    disabled: { type: Boolean, default: false }
   },
   data: () => ({
     insertPosition: Infinity,

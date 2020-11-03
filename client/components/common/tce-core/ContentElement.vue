@@ -73,12 +73,12 @@ export default {
   position: relative;
 
   &.focused {
-    border: 1px solid #bbb;
+    box-shadow: 0 0 0 1px #bbb;
   }
 }
 
 .frame {
   padding: 10px 20px;
-  border: 1px solid #e1e1e1;
+  box-shadow: 0 0 0 1px #e1e1e1;
 }
 </style>

@@ -11,6 +11,9 @@
           :key="type"
           :container-group="containerGroup"
           :parent-id="activity.id"
+          :revisions="revisions"
+          :is-published-preview="isPublishedPreview"
+          :disabled="isPublishedPreview"
           v-bind="getContainerConfig(type)" />
       </template>
     </div>
@@ -19,15 +22,18 @@
 
 <script>
 import { getElementId, isQuestion } from 'tce-core/utils';
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import ContentContainers from '../structure/ContentContainers';
 import ContentLoader from './Loader';
 import debounce from 'lodash/debounce';
+import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import { getSupportedContainers } from 'shared/activities';
 import loader from '@/components/common/loader';
+import map from 'lodash/map';
 import { mapChannels } from '@/plugins/radio';
+import revisionApi from '@/api/revision';
 import throttle from 'lodash/throttle';
 
 const CE_FOCUS_EVENT = 'element:focus';
@@ -43,17 +49,22 @@ export default {
     activity: { type: Object, required: true },
     // grouped by type
     rootContainerGroups: { type: Object, required: true },
-    contentContainers: { type: Array, required: true }
+    contentContainers: { type: Array, required: true },
+    isPublishedPreview: { type: Boolean, default: false }
   },
   data: () => ({
     isLoading: true,
     mousedownCaptured: null,
-    focusedElement: null
+    focusedElement: null,
+    revisions: null
   }),
   computed: {
     ...mapGetters('repository', ['activities']),
+    ...mapState('repository/contentElements', { elements: 'items' }),
     ...mapChannels({ editorChannel: 'editor' }),
-    containerConfigs: vm => getSupportedContainers(vm.activity.type)
+    containerConfigs: vm => getSupportedContainers(vm.activity.type),
+    containerIds: vm => vm.contentContainers.map(it => it.id),
+    activityElements: vm => filter(vm.elements, vm.isActivityElement)
   },
   methods: {
     ...mapActions('repository/contentElements', { getContentElements: 'fetch' }),
@@ -71,9 +82,8 @@ export default {
       }
     },
     loadContents: loader(function () {
-      const ids = this.contentContainers.map(it => it.id);
-      if (ids.length <= 0) return;
-      return this.getContentElements({ ids });
+      if (this.containerIds.length <= 0) return;
+      return this.getContentElements({ ids: this.containerIds });
     }, 'isLoading', 800),
     initElementChangeWatcher() {
       this.storeUnsubscribe = this.$store.subscribe(debounce((mutation, state) => {
@@ -102,6 +112,18 @@ export default {
         this.focusedElement = { ...element, parent: composite };
       }, 50);
       this.editorChannel.on(CE_FOCUS_EVENT, this.focusHandler);
+    },
+    isActivityElement(element) {
+      return this.containerIds.some(id => id === element.activityId);
+    },
+    fetchRevisions() {
+      const entityIds = map(this.activityElements, 'id');
+      return revisionApi.fetch(this.repository.id, {
+        entityIds,
+        entity: 'CONTENT_ELEMENT',
+        createdBefore: this.activity.publishedAt
+      })
+        .then(revisions => { this.revisions = revisions; });
     }
   },
   watch: {
@@ -110,6 +132,11 @@ export default {
       handler(val) {
         this.$emit('selected', val);
       }
+    },
+    isPublishedPreview(isOn) {
+      if (!isOn) return;
+      this.editorChannel.emit(CE_FOCUS_EVENT);
+      this.fetchRevisions();
     }
   },
   async created() {

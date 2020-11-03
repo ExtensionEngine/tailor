@@ -25,8 +25,8 @@
       :name="name"
       :position="index"
       :activities="activities"
-      :elements="elements"
-      :tes="elements"
+      :elements="elementsOrRevisions"
+      :tes="elementsOrRevisions"
       v-bind="$attrs" />
     <div v-if="addBtnEnabled">
       <v-btn @click="addContainer" color="blue-grey darken-3" text class="mt-4">
@@ -41,11 +41,14 @@
 import { mapActions, mapState } from 'vuex';
 import capitalize from 'lodash/capitalize';
 import ContentContainer from './Container';
+import find from 'lodash/find';
 import get from 'lodash/get';
 import { getContainerTemplateId as getContainerId } from 'shared/activities';
 import { getContainerName } from 'tce-core/utils';
+import { isElementModified } from '@/utils/revision';
 import isEmpty from 'lodash/isEmpty';
 import { mapRequests } from '@/plugins/radio';
+import mapValues from 'lodash/mapValues';
 import maxBy from 'lodash/maxBy';
 import throttle from 'lodash/throttle';
 
@@ -63,7 +66,9 @@ export default {
     label: { type: String, required: true },
     required: { type: Boolean, default: true },
     multiple: { type: Boolean, default: false },
-    displayHeading: { type: Boolean, default: false }
+    displayHeading: { type: Boolean, default: false },
+    isPublishedPreview: { type: Boolean, default: false },
+    revisions: { type: Array, default: null }
   },
   computed: {
     ...mapState('repository/activities', { activities: 'items' }),
@@ -81,6 +86,10 @@ export default {
     nextPosition() {
       const last = get(maxBy(this.containerGroup, 'position'), 'position', 0);
       return last + 1;
+    },
+    elementsOrRevisions() {
+      if (!this.isPublishedPreview || !this.revisions) return this.elements;
+      return mapValues(this.elements, this.getRevisionOrElement);
     }
   },
   methods: {
@@ -118,6 +127,14 @@ export default {
     },
     requestElementDeletion(element) {
       this.requestDeletion(element, 'deleteElement', 'element');
+    },
+    getRevisionOrElement(element) {
+      const revision = find(this.revisions, ['state.id', element.id]);
+      if (!revision) return element;
+      return {
+        ...revision.state,
+        isModified: isElementModified(revision, element)
+      };
     },
     showNotification: throttle(function () {
       this.$snackbar.show('Element saved');

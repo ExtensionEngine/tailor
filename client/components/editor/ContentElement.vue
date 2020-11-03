@@ -8,7 +8,8 @@
       v-bind="$attrs"
       :element="element"
       :is-dragged="isDragged"
-      :is-disabled="disabled" />
+      :is-disabled="disabled"
+      :class="{ highlighted: element.isModified }" />
     <v-progress-linear
       v-if="isSaving"
       color="grey darken-2"
@@ -64,3 +65,9 @@ export default {
   components: { ContainedContent }
 };
 </script>
+
+<style lang="scss" scoped>
+.highlighted ::v-deep .content-element {
+  box-shadow: 0 0 0 2px var(--v-primary-lighten4);
+}
+</style>

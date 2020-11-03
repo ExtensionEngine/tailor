@@ -1,15 +1,27 @@
 'use strict';
 
-const { Revision, User } = require('../shared/database');
+const { Revision, Sequelize, User } = require('../shared/database');
 const { resolveStatics } = require('../shared/storage/helpers');
 
+const { Op } = Sequelize;
+
 function index({ repository, query }, res) {
-  const { limit, offset, entity, entityId } = query;
-  const where = { repositoryId: repository.id };
-  if (entity) {
-    where.entity = entity;
-    where.state = { id: entityId };
-  }
+  const {
+    limit, offset,
+    entity, entityId, entityIds, activityId, createdBefore
+  } = query;
+  const where = {
+    repositoryId: repository.id,
+    ...entity && { entity },
+    ...createdBefore && {
+      createdAt: { [Op.lt]: createdBefore }
+    },
+    state: {
+      ...activityId && { activityId },
+      ...entityId && { id: entityId },
+      ...!entityId && entityIds && { id: { [Op.in]: entityIds } }
+    }
+  };
   const include = [{
     model: User,
     paranoid: false,
