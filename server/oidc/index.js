@@ -18,19 +18,11 @@ const OIDCErrors = [
 const scope = ['openid', 'profile', 'email'].join(' ');
 
 const isString = arg => typeof arg === 'string';
-const isLogoutRequest = req => req.query.action === 'logout';
 const isOIDCError = err => OIDCErrors.some(Ctor => err instanceof Ctor);
 
 router
-  .get('/', (req, res, next) => {
-    const strategy = req.passport.strategy('oidc');
-    if (isLogoutRequest(req)) return strategy.logout()(req, res, next);
-    authenticate('oidc', { scope })(req, res, next);
-  })
-  .get('/callback', (req, res, next) => {
-    if (isLogoutRequest(req)) return logout(req, res);
-    return login(req, res, next);
-  })
+  .get('/', authenticate('oidc', { scope }))
+  .get('/callback', login)
   .use((err, _req, res, next) => {
     if (!isOIDCError(err)) return res.redirect(ACCESS_DENIED_ROUTE);
     const template = path.resolve(__dirname, './error.mustache');
@@ -44,11 +36,6 @@ module.exports = {
   path: '/oidc',
   router
 };
-
-function logout(_req, res) {
-  const template = path.resolve(__dirname, './logout.mustache');
-  res.render(template, { storageKey });
-}
 
 function login(req, res, next) {
   authenticate('oidc')(req, res, err => {
