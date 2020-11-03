@@ -6,7 +6,6 @@ const yn = require('yn');
 
 const {
   AUTH_JWT_SCHEME,
-  API_PATH,
   ENABLE_DEFAULT_SCHEMA,
   NODE_ENV,
   STORAGE_PATH,
@@ -38,7 +37,7 @@ const devServer = {
     'X-Powered-By': 'Webpack DevSever'
   },
   proxy: {
-    [API_PATH]: { target: serverUrl },
+    '/api': { target: serverUrl },
     ...(STORAGE_PATH ? { '/repository': serverUrl } : {})
   },
   // Override using: `npm run dev:server -- --port <number>`
@@ -93,8 +92,8 @@ module.exports = {
     sourceMap: !isProduction
   },
   envs: {
+    API_PATH: '/api/v1/',
     AUTH_JWT_SCHEME,
-    API_PATH,
     ENABLE_DEFAULT_SCHEMA: yn(ENABLE_DEFAULT_SCHEMA),
     STORAGE_STATE_KEY,
     OIDC_ENABLED,

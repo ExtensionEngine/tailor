@@ -34,7 +34,7 @@ app.use(express.static(path.join(__dirname, '../dist/')));
 if (STORAGE_PATH) app.use(express.static(STORAGE_PATH));
 
 // Mount main router.
-app.use(config.apiPath, requestLogger, router);
+app.use('/api/v1', requestLogger, router);
 
 // Global error handler.
 app.use(errorHandler);
