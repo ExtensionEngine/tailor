@@ -1,8 +1,8 @@
 <template>
   <div class="group-introduction">
     <element-list
-      @add="$emit('saveElements', $event)"
-      @update="$emit('reorderElement', $event)"
+      @add="$emit('save:element', $event)"
+      @update="$emit('reorder:element', $event)"
       :elements="introductionElements"
       :activity="group"
       :supported-types="['JODIT_HTML', 'IMAGE', 'VIDEO', 'EMBED', 'HTML']"
@@ -10,7 +10,7 @@
       <template v-slot:list-item="{ element, dragged }">
         <contained-content
           @save="save(element, $event)"
-          @delete="$emit('deleteElement', element)"
+          @delete="$emit('delete:element', element)"
           :element="element"
           :set-width="false"
           :is-dragged="dragged" />
@@ -43,7 +43,7 @@ export default {
     save(element, data) {
       element = cloneDeep(element);
       Object.assign(element.data, data);
-      this.$emit('saveElements', element);
+      this.$emit('save:element', element);
     }
   },
   components: {

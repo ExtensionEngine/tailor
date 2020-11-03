@@ -51,7 +51,7 @@
     "bootswatch": "^3.3.7",
     "boxen": "^4.1.0",
     "bunyan": "^1.8.13",
-    "change-case": "^3.1.0",
+    "change-case": "^4.1.1",
     "cheerio": "^1.0.0-rc.3",
     "core-js": "^3.3.2",
     "cors": "^2.8.5",

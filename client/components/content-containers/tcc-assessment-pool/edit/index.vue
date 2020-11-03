@@ -15,7 +15,7 @@
         :key="it.uid"
         @selected="toggleSelect(it)"
         @save="saveAssessment"
-        @delete="$emit('deleteElement', it)"
+        @delete="$emit('delete:element', it)"
         :assessment="it"
         :expanded="isSelected(it)" />
     </ul>
@@ -60,19 +60,19 @@ export default {
     addAssessments(assessments) {
       assessments.forEach(it => {
         const uid = uuid();
-        this.$emit('addElement', { ...it, uid });
+        this.$emit('add:element', { ...it, uid });
         this.selected.push(uid);
       });
     },
     saveAssessment(assessment) {
-      const event = assessment.id ? 'updateElement' : 'saveElements';
+      const event = assessment.id ? 'update:element' : 'save:element';
       return this.$emit(event, assessment);
     },
     toggleSelect(assessment) {
       const { question } = assessment.data;
       const hasQuestion = question && question.length;
       if (this.isSelected(assessment) && !hasQuestion) {
-        this.$emit('deleteElement', assessment);
+        this.$emit('delete:element', assessment);
       } else if (this.isSelected(assessment)) {
         this.selected.splice(this.selected.indexOf(assessment.uid), 1);
       } else {

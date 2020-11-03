@@ -28,9 +28,9 @@
     <h3>Question group {{ position | toLetter }}</h3>
     <h4>Introduction</h4>
     <group-introduction
-      @saveElements="$emit('saveElements', $event)"
-      @reorderElement="$emit('reorderElement', $event)"
-      @deleteElement="$emit('deleteElement', $event)"
+      @save:element="$emit('save:element', $event)"
+      @reorder:element="$emit('reorder:element', $event)"
+      @delete:element="$emit('delete:element', $event)"
       :group="group"
       :elements="elements" />
     <h4>Questions</h4>
@@ -39,7 +39,7 @@
     </div>
     <element-list
       @add="addAssessments"
-      @update="$emit('reorderElement', $event)"
+      @update="$emit('reorder:element', $event)"
       :elements="assessments"
       :activity="group"
       :supported-types="['ASSESSMENT']">
@@ -113,12 +113,12 @@ export default {
       });
     },
     saveAssessment(assessment) {
-      if (assessment.id) return this.$emit('updateElement', assessment);
-      this.$emit('saveElements', assessment);
+      if (assessment.id) return this.$emit('update:element', assessment);
+      this.$emit('save:element', assessment);
     },
     deleteAssessment(assessment) {
       if (!assessment.id) return this.clearUnsavedAssessments([assessment]);
-      this.$emit('deleteElement', assessment);
+      this.$emit('delete:element', assessment);
     },
     clearUnsavedAssessments(assessments) {
       const ids = assessments.map(it => it.uid);

@@ -26,12 +26,12 @@
       <assessment-group
         v-for="(group, index) in groups"
         :key="group.uid"
-        @saveElements="$emit('saveElements', $event)"
-        @updateElement="$emit('updateElement', $event)"
-        @reorderElement="$emit('reorderElement', $event)"
-        @deleteElement="$emit('deleteElement', $event)"
-        @update="$emit('updateSubcontainer', $event)"
-        @delete="$emit('deleteSubcontainer', group, 'group')"
+        @save:element="$emit('save:element', $event)"
+        @update:element="$emit('update:element', $event)"
+        @reorder:element="$emit('reorder:element', $event)"
+        @delete:element="$emit('delete:element', $event)"
+        @update="$emit('update:subcontainer', $event)"
+        @delete="$emit('delete:subcontainer', group, 'group')"
         :group="group"
         :elements="elements"
         :objectives="examObjectives"
@@ -92,7 +92,7 @@ export default {
   },
   methods: {
     createGroup() {
-      this.$emit('addSubcontainer', {
+      this.$emit('add:subcontainer', {
         type: 'ASSESSMENT_GROUP',
         parentId: this.container.id,
         position: this.groups.length + 1

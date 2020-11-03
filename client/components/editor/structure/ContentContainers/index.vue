@@ -12,15 +12,15 @@
       :is="containerName"
       v-for="(container, index) in containerGroup"
       :key="container.uid || container.id"
-      @addSubcontainer="save"
-      @updateSubcontainer="update"
-      @deleteSubcontainer="requestContainerDeletion"
-      @addElement="addElement"
-      @saveElements="saveContentElements"
-      @saveElement="saveElementDeprecated"
-      @updateElement="updateElement"
-      @reorderElement="reorderContentElements"
-      @deleteElement="requestElementDeletion"
+      v-on="deprecatedListeners"
+      @add:subcontainer="save"
+      @update:subcontainer="update"
+      @delete:subcontainer="requestContainerDeletion"
+      @add:element="addElement"
+      @save:element="saveContentElements"
+      @update:element="updateElement"
+      @reorder:element="reorderContentElements"
+      @delete:element="requestElementDeletion"
       @delete="requestContainerDeletion(container)"
       :container="container"
       :name="name"
@@ -43,21 +43,32 @@ import { mapActions, mapState } from 'vuex';
 import capitalize from 'lodash/capitalize';
 import castArray from 'lodash/castArray';
 import ContentContainer from './Container';
+import deprecation from '@/components/common/mixins/deprecation';
 import get from 'lodash/get';
 import { getContainerTemplateId as getContainerId } from 'shared/activities';
 import { getContainerName } from 'tce-core/utils';
 import isEmpty from 'lodash/isEmpty';
 import { mapRequests } from '@/plugins/radio';
+import mapValues from 'lodash/mapValues';
 import maxBy from 'lodash/maxBy';
 import throttle from 'lodash/throttle';
 
 const DEFAULT_CONTAINER = 'content-container';
-const DEPRECATED_EVENT_MESSAGE = `Deprecation notice:
-  'saveElement' listener is deprecated and will no longer be used!
-  Please emit 'saveElements' instead on your content containers`;
+
+const DEPRECATED_LISTENERS = {
+  addSubcontainer: { action: 'save' },
+  updateSubcontainer: { action: 'update' },
+  deleteSubcontainer: { action: 'requestContainerDeletion' },
+  addElement: { action: 'addElement' },
+  saveElement: { action: 'saveContentElements' },
+  updateElement: { action: 'updateElement' },
+  reorderElement: { action: 'reorderContentElements' },
+  deleteElement: { action: 'requestElementDeletion' }
+};
 
 export default {
   name: 'content-containers',
+  mixins: [deprecation],
   inheritAttrs: false,
   inject: ['$ccRegistry'],
   props: {
@@ -73,6 +84,11 @@ export default {
   computed: {
     ...mapState('repository/activities', { activities: 'items' }),
     ...mapState('repository/contentElements', { elements: 'items' }),
+    deprecatedListeners() {
+      return mapValues(DEPRECATED_LISTENERS, ({ action }, listener) => {
+        return this.deprecateEvent(action, { oldEvent: listener });
+      });
+    },
     containerName() {
       const id = getContainerId(this);
       return this.$ccRegistry.get(id) ? getContainerName(id) : DEFAULT_CONTAINER;
@@ -101,10 +117,6 @@ export default {
     addContainer() {
       const { type, parentId, nextPosition: position } = this;
       this.save({ type, parentId, position });
-    },
-    saveElementDeprecated(element) {
-      console.warn(DEPRECATED_EVENT_MESSAGE);
-      return this.saveContentElements(element);
     },
     saveContentElements(elements) {
       castArray(elements).forEach(element => {
