@@ -4,10 +4,9 @@
     color="grey lighten-5"
     absolute right permanent
     class="px-4">
-    <template v-if="selectedTask && activity">
+    <template v-if="selectedTask">
       <sidebar-header
         v-bind="selectedTask"
-        :activity="activity"
         class="pt-4" />
       <task-field-group
         @update="updateTask"
@@ -35,8 +34,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('repository', ['selectedTask', 'activities']),
-    activity: vm => vm.activities.find(({ id }) => vm.selectedTask.activityId === id)
+    ...mapGetters('repository', ['selectedTask'])
   },
   methods: {
     ...mapActions('repository/tasks', ['save']),
