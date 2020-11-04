@@ -48,16 +48,7 @@ config.oidc.enabled && auth.use('oidc', new OIDCStrategy({
 auth.serializeUser((user, done) => done(null, user));
 auth.deserializeUser((user, done) => done(null, user));
 
-module.exports = {
-  initialize(options = {}) {
-    return auth.initialize(options);
-  },
-  authenticate(strategy, options = {}) {
-    // NOTE: Setup passport to forward errors down the middleware chain
-    // https://github.com/jaredhanson/passport/blob/ad5fe1df/lib/middleware/authenticate.js#L171
-    return auth.authenticate(strategy, { ...options, failWithError: true });
-  }
-};
+module.exports = auth;
 
 function verifyJWT(payload, done) {
   return User.findByPk(payload.id)
