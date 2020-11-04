@@ -1,7 +1,6 @@
 import { lower, title as toTitleCase } from 'to-case';
 import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
-import isAfter from 'date-fns/isAfter';
 import isEmpty from 'lodash/isEmpty';
 import reduce from 'lodash/reduce';
 import { typeInfo } from './assessment';
@@ -101,8 +100,4 @@ export function getRevisionColor(rev) {
     default:
       return DEFAULT_COLOR;
   }
-}
-
-export function isElementModified(rev, element) {
-  return isAfter(new Date(element.updatedAt), new Date(rev.createdAt));
 }

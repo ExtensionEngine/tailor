@@ -11,9 +11,8 @@
           :key="type"
           :container-group="containerGroup"
           :parent-id="activity.id"
+          :elements="activityElements"
           :revisions="revisions"
-          :is-published-preview="isPublishedPreview"
-          :disabled="isPublishedPreview"
           v-bind="getContainerConfig(type)" />
       </template>
     </div>
@@ -30,9 +29,12 @@ import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import { getSupportedContainers } from 'shared/activities';
+import isAfter from 'date-fns/isAfter';
 import loader from '@/components/common/loader';
 import map from 'lodash/map';
 import { mapChannels } from '@/plugins/radio';
+import mapValues from 'lodash/mapValues';
+import pickBy from 'lodash/pickBy';
 import revisionApi from '@/api/revision';
 import throttle from 'lodash/throttle';
 
@@ -49,8 +51,7 @@ export default {
     activity: { type: Object, required: true },
     // grouped by type
     rootContainerGroups: { type: Object, required: true },
-    contentContainers: { type: Array, required: true },
-    isPublishedPreview: { type: Boolean, default: false }
+    contentContainers: { type: Array, required: true }
   },
   data: () => ({
     isLoading: true,
@@ -59,12 +60,19 @@ export default {
     revisions: null
   }),
   computed: {
+    ...mapState('editor', ['isPublishedPreview']),
     ...mapGetters('repository', ['activities']),
-    ...mapState('repository/contentElements', { elements: 'items' }),
+    ...mapGetters('repository/contentElements', ['elements']),
     ...mapChannels({ editorChannel: 'editor' }),
     containerConfigs: vm => getSupportedContainers(vm.activity.type),
     containerIds: vm => vm.contentContainers.map(it => it.id),
-    activityElements: vm => filter(vm.elements, vm.isActivityElement)
+    activityElements() {
+      const elements = pickBy(this.elements, this.isActivityElement);
+      return mapValues(elements, it => ({
+        ...it,
+        isModified: this.isModifiedElement(it)
+      }));
+    }
   },
   methods: {
     ...mapActions('repository/contentElements', { getContentElements: 'fetch' }),
@@ -116,8 +124,12 @@ export default {
     isActivityElement(element) {
       return this.containerIds.some(id => id === element.activityId);
     },
+    isModifiedElement(element) {
+      return isAfter(new Date(element.updatedAt), new Date(this.activity.publishedAt));
+    },
     fetchRevisions() {
-      const entityIds = map(this.activityElements, 'id');
+      const modifiedActivityElements = filter(this.activityElements, 'isModified');
+      const entityIds = map(modifiedActivityElements, 'id');
       return revisionApi.fetch(this.repository.id, {
         entityIds,
         entity: 'CONTENT_ELEMENT',

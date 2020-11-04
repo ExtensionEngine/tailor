@@ -3,8 +3,7 @@
     <template v-if="!isLoading">
       <toolbar
         :element="selectedElement"
-        :active-users="activeUsers"
-        :is-published-preview.sync="isPublishedPreview" />
+        :active-users="activeUsers" />
       <sidebar
         :repository="repository"
         :activities="outlineActivities"
@@ -16,14 +15,13 @@
         :repository="repository"
         :activity="activity"
         :root-container-groups="rootContainerGroups"
-        :content-containers="contentContainers"
-        :is-published-preview="isPublishedPreview" />
+        :content-containers="contentContainers" />
     </template>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import ActivityContent from './ActivityContent';
 import get from 'lodash/get';
 import Sidebar from './Sidebar';
@@ -39,19 +37,22 @@ export default {
   },
   data: () => ({
     isLoading: true,
-    isPublishedPreview: false,
     selectedElement: null
   }),
   computed: {
+    ...mapState('editor', ['isPublishedPreview']),
     ...mapGetters('repository/userTracking', ['getActiveUsers']),
     ...mapGetters('repository', ['repository', 'outlineActivities']),
     ...mapGetters('editor', ['activity', 'contentContainers', 'rootContainerGroups']),
     activeUsers: vm => vm.getActiveUsers('activity', vm.activityId)
   },
-  methods: mapActions('repository', ['initialize']),
+  methods: {
+    ...mapMutations('editor', ['setIsPublishedPreview']),
+    ...mapActions('repository', ['initialize'])
+  },
   watch: {
     activityId() {
-      if (this.isPublishedPreview) this.isPublishedPreview = false;
+      if (this.isPublishedPreview) this.setIsPublishedPreview(false);
     }
   },
   async created() {

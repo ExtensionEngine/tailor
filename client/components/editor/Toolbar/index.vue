@@ -1,10 +1,7 @@
 <template>
   <div class="toolbar-wrapper">
     <div v-show="activity" class="activity-toolbar blue-grey darken-3">
-      <activity-actions
-        v-on="$listeners"
-        :is-published-preview="isPublishedPreview"
-        class="activity-actions d-flex" />
+      <activity-actions class="activity-actions d-flex" />
       <h1 class="pt-2 headline text-truncate">
         <span>{{ config.label }}</span>
         <span class="px-2 grey--text">|</span>
@@ -41,21 +38,21 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex';
 import ActiveUsers from '@/components/common/ActiveUsers';
 import ActivityActions from './ActivityActions';
 import { ElementToolbar } from 'tce-core';
 import { getElementId } from 'tce-core/utils';
 import { getLevel } from 'shared/activities';
-import { mapGetters } from 'vuex';
 
 export default {
   name: 'editor-toolbar',
   props: {
     element: { type: Object, default: null },
-    activeUsers: { type: Array, default: () => [] },
-    isPublishedPreview: { type: Boolean, default: false }
+    activeUsers: { type: Array, default: () => [] }
   },
   computed: {
+    ...mapState('editor', ['isPublishedPreview']),
     ...mapGetters('editor', ['activity']),
     config() {
       return getLevel(this.activity.type);

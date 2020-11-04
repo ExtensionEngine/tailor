@@ -8,8 +8,8 @@
       v-bind="$attrs"
       :element="element"
       :is-dragged="isDragged"
-      :is-disabled="disabled"
-      :class="{ highlighted: element.isModified }" />
+      :is-disabled="isPublishedPreview || disabled"
+      :class="{ highlighted: isPublishedPreview && element.isModified }" />
     <v-progress-linear
       v-if="isSaving"
       color="grey darken-2"
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex';
+import { mapActions, mapMutations, mapState } from 'vuex';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
 import loader from '@/components/common/loader';
@@ -35,7 +35,10 @@ export default {
     isDragged: { type: Boolean, default: false }
   },
   data: () => ({ isSaving: false }),
-  computed: mapChannels({ editorChannel: 'editor' }),
+  computed: {
+    ...mapChannels({ editorChannel: 'editor' }),
+    ...mapState('editor', ['isPublishedPreview'])
+  },
   methods: {
     ...mapActions('repository/contentElements', {
       saveElement: 'save',

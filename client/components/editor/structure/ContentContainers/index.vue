@@ -38,14 +38,13 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import capitalize from 'lodash/capitalize';
 import ContentContainer from './Container';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import { getContainerTemplateId as getContainerId } from 'shared/activities';
 import { getContainerName } from 'tce-core/utils';
-import { isElementModified } from '@/utils/revision';
 import isEmpty from 'lodash/isEmpty';
 import { mapRequests } from '@/plugins/radio';
 import mapValues from 'lodash/mapValues';
@@ -60,19 +59,19 @@ export default {
   inject: ['$ccRegistry'],
   props: {
     containerGroup: { type: Array, default() { return []; } },
+    elements: { type: Object, default: null },
+    revisions: { type: Array, default: null },
     type: { type: String, required: true },
     templateId: { type: String, default: null },
     parentId: { type: Number, required: true },
     label: { type: String, required: true },
     required: { type: Boolean, default: true },
     multiple: { type: Boolean, default: false },
-    displayHeading: { type: Boolean, default: false },
-    isPublishedPreview: { type: Boolean, default: false },
-    revisions: { type: Array, default: null }
+    displayHeading: { type: Boolean, default: false }
   },
   computed: {
-    ...mapState('repository/activities', { activities: 'items' }),
-    ...mapState('repository/contentElements', { elements: 'items' }),
+    ...mapState('editor', ['isPublishedPreview']),
+    ...mapGetters('repository/activities', ['activities']),
     containerName() {
       const id = getContainerId(this);
       return this.$ccRegistry.get(id) ? getContainerName(id) : DEFAULT_CONTAINER;
@@ -131,10 +130,7 @@ export default {
     getRevisionOrElement(element) {
       const revision = find(this.revisions, ['state.id', element.id]);
       if (!revision) return element;
-      return {
-        ...revision.state,
-        isModified: isElementModified(revision, element)
-      };
+      return { ...revision.state, isModified: element.isModified };
     },
     showNotification: throttle(function () {
       this.$snackbar.show('Element saved');

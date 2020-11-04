@@ -25,17 +25,15 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import activityApi from '@/api/activity';
 import publishMixin from 'components/common/mixins/publish';
 
 export default {
   name: 'activity-actions',
   mixins: [publishMixin],
-  props: {
-    isPublishedPreview: { type: Boolean, default: false }
-  },
   computed: {
+    ...mapState('editor', ['isPublishedPreview']),
     ...mapGetters(['isAdmin']),
     ...mapGetters('editor', ['activity']),
     ...mapGetters('repository', ['isRepositoryAdmin']),
@@ -70,6 +68,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations('editor', ['setIsPublishedPreview']),
     ...mapActions('repository/activities', { publishActivity: 'publish' }),
     preview() {
       const { repositoryId, id } = this.activity;
@@ -77,7 +76,7 @@ export default {
         .then(location => window.open(location));
     },
     previewPublished() {
-      this.$emit('update:is-published-preview', !this.isPublishedPreview);
+      this.setIsPublishedPreview(!this.isPublishedPreview);
     }
   }
 };
