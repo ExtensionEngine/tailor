@@ -21,7 +21,11 @@ const isString = arg => typeof arg === 'string';
 const isOIDCError = err => OIDCErrors.some(Ctor => err instanceof Ctor);
 
 router
-  .get('/', authenticate('oidc', { scope }))
+  .get('/', (req, res, next) => {
+    const isResign = req.query.resign === 'true';
+    const params = { scope, ...isResign && { prompt: 'login' } };
+    return authenticate('oidc', params)(req, res, next);
+  })
   .get('/callback', login)
   .use((err, _req, res, next) => {
     if (!isOIDCError(err)) return res.redirect(ACCESS_DENIED_ROUTE + err.email);

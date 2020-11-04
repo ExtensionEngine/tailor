@@ -69,7 +69,8 @@ import { mapActions } from 'vuex';
 
 const LOGIN_ERR_MESSAGE = 'The email or password you entered is incorrect.';
 const getOidcErrorMessage = (email, buttonLabel) =>
-  `Account with email ${email} does not exist.`;
+  `Account with email ${email} does not exist.
+  Click "${buttonLabel}" to try with a different account.`;
 
 export default {
   name: 'user-login',
@@ -88,7 +89,8 @@ export default {
   methods: {
     ...mapActions(['login']),
     loginOIDC() {
-      const oidcPath = 'api/oidc';
+      const resign = this.oidcError ? '?resign=true' : '';
+      const oidcPath = `api/oidc${resign}`;
       window.location.replace(oidcPath);
     },
     submit() {
