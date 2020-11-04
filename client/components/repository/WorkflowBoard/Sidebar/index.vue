@@ -42,7 +42,7 @@ export default {
     ...mapActions('repository/tasks', ['save']),
     updateTask(key, value) {
       this.save({ ...this.selectedTask, [key]: value || null })
-        .then(() => { this.$snackbar.show(`${this.name} saved`); });
+        .then(() => { this.$snackbar.show('Task saved'); });
     }
   },
   components: { TaskFieldGroup, SidebarHeader }
