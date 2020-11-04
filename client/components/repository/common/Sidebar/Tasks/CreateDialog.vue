@@ -3,7 +3,10 @@
     v-model="visible"
     header-icon="mdi-folder-plus-outline">
     <template #activator="{ on }">
-      <v-btn v-on="on" text small>+ Create task</v-btn>
+      <v-btn v-on="on" text small>
+        <v-icon small>mdi-plus</v-icon>
+        Create task
+      </v-btn>
     </template>
     <template #header>
       <h4 class="h4">Add task</h4>
