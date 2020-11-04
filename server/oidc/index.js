@@ -9,7 +9,7 @@ const router = require('express').Router();
 
 const storageKey = process.env.STORAGE_STATE_KEY;
 
-const ACCESS_DENIED_ROUTE = '/#/login?accessDenied=true';
+const ACCESS_DENIED_ROUTE = '/#/login?accessDenied=';
 
 const OIDCErrors = [
   OIDCError.OPError,
@@ -24,7 +24,7 @@ router
   .get('/', authenticate('oidc', { scope }))
   .get('/callback', login)
   .use((err, _req, res, next) => {
-    if (!isOIDCError(err)) return res.redirect(ACCESS_DENIED_ROUTE);
+    if (!isOIDCError(err)) return res.redirect(ACCESS_DENIED_ROUTE + err.email);
     const template = path.resolve(__dirname, './error.mustache');
     const status = err.status || BAD_REQUEST;
     return res.render(template, err, (_, html) => {

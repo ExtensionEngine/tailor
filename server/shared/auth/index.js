@@ -65,11 +65,10 @@ function verifyJWT(payload, done) {
     .error(err => done(err, false));
 }
 
-function verifyOIDC(_tokenSet, profile, done) {
-  const where = { email: profile.email };
-  return User.findOne({ where })
+function verifyOIDC(_tokenSet, { email }, done) {
+  return User.findOne({ where: { email }, rejectOnEmpty: true })
     .then(user => done(null, user))
-    .error(err => done(err, false));
+    .catch(err => done(Object.assign(err, { email }), false));
 }
 
 function secretOrKeyProvider(_, rawToken, done) {

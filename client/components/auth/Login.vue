@@ -68,7 +68,8 @@
 import { mapActions } from 'vuex';
 
 const LOGIN_ERR_MESSAGE = 'The email or password you entered is incorrect.';
-const OIDC_ERR_MESSAGE = 'This account does not exist.';
+const getOidcErrorMessage = (email, buttonLabel) =>
+  `Account with email ${email} does not exist.`;
 
 export default {
   name: 'user-login',
@@ -80,7 +81,8 @@ export default {
   computed: {
     oidcEnabled: () => process.env.OIDC_ENABLED,
     oidcLoginText: () => process.env.OIDC_LOGIN_TEXT || 'Login with OAuth',
-    oidcError: vm => vm.$route.query.accessDenied === 'true' && OIDC_ERR_MESSAGE,
+    accessDenied: vm => vm.$route.query.accessDenied,
+    oidcError: vm => vm.accessDenied && getOidcErrorMessage(vm.accessDenied, vm.oidcLoginText),
     errorMessage: vm => vm.oidcError || vm.localError
   },
   methods: {
