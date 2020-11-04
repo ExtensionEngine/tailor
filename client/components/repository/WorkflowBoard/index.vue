@@ -37,7 +37,7 @@ export default {
     searchableTasks() {
       return this.tasks.map(it => ({
         ...it,
-        searchableText: `${it.shortId} ${it.name}`.toLowerCase()
+        searchableText: this.getSearchableText(it)
       }));
     },
     isFilteredByAssignee() {
@@ -75,6 +75,10 @@ export default {
     },
     filterBySearchText(searchableText) {
       return searchableText.indexOf(this.filters.searchText.toLowerCase()) !== -1;
+    },
+    getSearchableText({ shortId, description, activity }) {
+      const { name } = activity.data;
+      return `${shortId} ${name} ${description}`.toLowerCase();
     }
   },
   created() {
