@@ -8,7 +8,7 @@
         <template #activator="{ on }">
           <label-chip v-on="on" class="flex-shrink-0 ml-2">{{ shortId }}</label-chip>
         </template>
-        {{ type }} ID
+        {{ typeLabel }} ID
       </v-tooltip>
     </v-sheet>
   </router-link>
@@ -23,7 +23,7 @@ export default {
     id: { type: Number, required: true },
     name: { type: String, required: true },
     shortId: { type: String, required: true },
-    type: { type: String, required: true },
+    typeLabel: { type: String, required: true },
     color: { type: String, required: true }
   },
   computed: {

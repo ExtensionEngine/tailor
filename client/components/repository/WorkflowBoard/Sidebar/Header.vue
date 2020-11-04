@@ -2,13 +2,13 @@
   <header>
     <div class="mt-5">
       <h5 class="h5">
-        Related <span class="text-lowercase">{{ config.label }}</span>
+        Related <span class="text-lowercase">{{ activityConfig.label }}</span>
       </h5>
       <activity-card
         v-bind="activity"
         :name="activityName"
-        :type="config.label"
-        :color="config.color" />
+        :type-label="activityConfig.label"
+        :color="activityConfig.color" />
     </div>
     <div class="mt-8">
       <v-tooltip open-delay="500" bottom>
@@ -75,7 +75,7 @@ export default {
   },
   computed: {
     ...mapGetters('repository', ['structure']),
-    config: vm => find(vm.structure, { type: vm.activity.type }),
+    activityConfig: vm => find(vm.structure, { type: vm.activity.type }),
     taskUrl: () => window.location.href,
     activityName: vm => vm.activity.data.name
   },
