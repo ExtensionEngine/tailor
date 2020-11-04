@@ -38,12 +38,12 @@ import xor from 'lodash/xor';
 export default {
   name: 'workflow-board-filters',
   props: {
-    assigneeOptions: { type: Object, default: () => ({}) },
-    showUnassigned: { type: Boolean, default: false },
     searchText: { type: String, default: null },
-    assigneeIds: { type: Array, default: () => ([]) },
     recentOnly: { type: Boolean, default: false },
-    unassigned: { type: Boolean, default: false }
+    assigneeIds: { type: Array, default: () => ([]) },
+    unassigned: { type: Boolean, default: false },
+    assigneeOptions: { type: Object, default: () => ({}) },
+    showUnassigned: { type: Boolean, default: false }
   },
   methods: {
     updateFilter(filter, value) {

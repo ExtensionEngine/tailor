@@ -26,9 +26,9 @@ export default {
   data: () => ({
     filters: {
       searchText: null,
+      recentOnly: false,
       assigneeIds: [],
-      unassigned: false,
-      recentOnly: false
+      unassigned: false
     }
   }),
   computed: {
