@@ -13,7 +13,7 @@
         :key="`assignee-${id}`"
         @click="toggleAssignee(id)"
         v-bind="assignee"
-        :class="[{ active: isActive }]"
+        :class="{ active: isActive }"
         class="avatar" />
       <assignee-avatar
         v-if="showUnassigned"
