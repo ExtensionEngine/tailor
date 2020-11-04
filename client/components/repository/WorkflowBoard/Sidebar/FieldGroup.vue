@@ -62,7 +62,6 @@ import SelectPriority from '@/components/repository/common/SelectPriority';
 export default {
   name: 'task-field-group',
   props: {
-    name: { type: String, default: '' },
     description: { type: String, default: null },
     status: { type: String, default: null },
     assigneeId: { type: Number, default: null },
