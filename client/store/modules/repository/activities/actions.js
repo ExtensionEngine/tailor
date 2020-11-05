@@ -4,9 +4,11 @@ import { Activity as Events } from '@/../common/sse';
 import { feed } from '../feed';
 import findIndex from 'lodash/findIndex';
 import generateActions from '@/store/helpers/actions';
+import InsertLocation from 'utils/InsertLocation';
 import request from '@/api/request';
 
 const { api, fetch, get, reset, save, setEndpoint, update } = generateActions();
+const { ADD_INTO } = InsertLocation;
 
 const plugSSE = ({ commit }) => {
   feed
@@ -46,7 +48,8 @@ const clone = ({ commit }, mapping) => {
 };
 
 const calculateInsertPosition = ({ state }, { activity, anchor, action }) => {
-  const items = getOutlineChildren(state.items, activity.parentId);
+  const id = action === ADD_INTO ? anchor.id : activity.parentId;
+  const items = getOutlineChildren(state.items, id);
   const newPosition = anchor ? findIndex(items, { id: anchor.id }) : 1;
   const isFirstChild = !anchor ||
     (activity.parentId !== anchor.parentId) ||
