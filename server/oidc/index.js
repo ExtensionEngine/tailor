@@ -7,8 +7,6 @@ const { errors: OIDCError } = require('openid-client');
 const path = require('path');
 const router = require('express').Router();
 
-const storageKey = process.env.STORAGE_STATE_KEY;
-
 const ACCESS_DENIED_ROUTE = '/#/login?accessDenied=';
 
 const OIDCErrors = [
@@ -53,6 +51,6 @@ function login(req, res, next) {
     const profile = JSON.stringify(user.profile, (_, val) => {
       return isString(val) ? encodeURIComponent(val) : val;
     });
-    return res.render(template, { token, profile, storageKey });
+    return res.render(template, { token, profile });
   });
 }

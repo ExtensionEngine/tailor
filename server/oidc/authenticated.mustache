@@ -11,7 +11,7 @@
     var token = '{{ token }}';
     var user = {{& profile }};
     var state = stringify({ auth: { token, user } });
-    localStorage.setItem('{{ storageKey }}', state);
+    localStorage.setItem('TAILOR_APP_STATE', state);
     location.replace(location.origin);
 
     function stringify(obj) {
