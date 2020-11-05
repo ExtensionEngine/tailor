@@ -1,5 +1,5 @@
 <template>
-  <div v-if="workflow" class="tasks">
+  <div class="tasks">
     <div class="column-layout mt-4 px-4">
       <h5
         v-for="status in workflow.statuses"

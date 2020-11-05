@@ -1,11 +1,14 @@
 <template>
   <div class="board d-flex flex-column grey lighten-4 py-3">
-    <board-filters
-      v-bind.sync="filters"
-      :assignee-options="assignees"
-      :show-unassigned="unassignedTaskExists" />
-    <board-columns :tasks="filteredTasks" />
-    <sidebar />
+    <v-progress-circular v-if="showLoader" color="primary" indeterminate class="align-self-center" />
+    <template v-else>
+      <board-filters
+        v-bind.sync="filters"
+        :assignee-options="assignees"
+        :show-unassigned="unassignedTaskExists" />
+      <board-columns :tasks="filteredTasks" />
+      <sidebar />
+    </template>
   </div>
 </template>
 
@@ -23,6 +26,9 @@ const SEARCH_TEXT_LENGTH_THRESHOLD = 3;
 
 export default {
   name: 'workflow-board',
+  props: {
+    showLoader: { type: Boolean, default: false }
+  },
   data: () => ({
     filters: {
       searchText: null,
@@ -93,5 +99,9 @@ export default {
 .board {
   position: relative;
   height: 100%;
+
+  .v-progress-circular {
+    margin-top: 7.5rem;
+  }
 }
 </style>
