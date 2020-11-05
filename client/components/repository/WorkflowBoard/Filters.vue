@@ -40,7 +40,7 @@ export default {
   props: {
     searchText: { type: String, default: null },
     recentOnly: { type: Boolean, default: false },
-    assigneeIds: { type: Array, default: () => ([]) },
+    selectedAssigneeIds: { type: Array, default: () => ([]) },
     unassigned: { type: Boolean, default: false },
     assigneeOptions: { type: Object, default: () => ({}) },
     showUnassigned: { type: Boolean, default: false }
@@ -50,7 +50,7 @@ export default {
       this.$emit(`update:${filter}`, value);
     },
     toggleAssignee(id) {
-      this.updateFilter('assigneeIds', xor(this.assigneeIds, [id]));
+      this.updateFilter('selectedAssigneeIds', xor(this.selectedAssigneeIds, [id]));
     }
   },
   components: { AssigneeAvatar }

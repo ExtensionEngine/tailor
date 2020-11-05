@@ -33,7 +33,7 @@ export default {
     filters: {
       searchText: null,
       recentOnly: false,
-      assigneeIds: [],
+      selectedAssigneeIds: [],
       unassigned: false
     }
   }),
@@ -47,7 +47,8 @@ export default {
       }));
     },
     isFilteredByAssignee() {
-      return this.filters.assigneeIds.length || this.filters.unassigned;
+      const { selectedAssigneeIds, unassigned } = this.filters;
+      return selectedAssigneeIds.length || unassigned;
     },
     isFilteredBySearchText() {
       return this.filters.searchText?.length > SEARCH_TEXT_LENGTH_THRESHOLD;
@@ -62,7 +63,7 @@ export default {
     assignees() {
       return this.tasks.reduce((all, { assignee }) => {
         if (!assignee) return all;
-        const isActive = this.filters.assigneeIds.includes(assignee.id);
+        const isActive = this.filters.selectedAssigneeIds.includes(assignee.id);
         return { ...all, [assignee.id]: { ...assignee, isActive } };
       }, null);
     }
@@ -72,7 +73,7 @@ export default {
     ...mapActions('repository/tasks', { getTasks: 'reset' }),
     filterByAssignee(id) {
       if (this.filters.unassigned && !id) return true;
-      return this.filters.assigneeIds.includes(id);
+      return this.filters.selectedAssigneeIds.includes(id);
     },
     filterByRecency(updatedAt) {
       const parsed = new Date(updatedAt);
