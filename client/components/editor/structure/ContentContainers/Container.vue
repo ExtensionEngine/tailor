@@ -2,6 +2,7 @@
   <v-card class="content-container mb-5">
     <div class="actions">
       <v-btn
+        v-if="!isPublishedPreview"
         @click="$emit('delete')"
         color="secondary darken-1"
         text
@@ -24,9 +25,12 @@
       :activity="container"
       :supported-types="types"
       :layout="layout"
+      :enable-add="!isPublishedPreview"
       class="element-list">
       <template v-slot:list-item="{ element, isDragged, position }">
-        <inline-activator @click.native="showElementDrawer(position - 1)" />
+        <inline-activator
+          @click="showElementDrawer(position - 1)"
+          :disabled="isPublishedPreview" />
         <content-element v-bind="{ element, isDragged, disabled, setWidth: false }" />
       </template>
       <template v-slot:list-add="{ position: lastPosition, ...slotProps }">
@@ -46,13 +50,13 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex';
 import AddElement from 'tce-core/AddElement';
 import ContentElement from '@/components/editor/ContentElement';
 import ElementList from 'tce-core/ElementList';
 import filter from 'lodash/filter';
 import InlineActivator from './InlineActivator';
 import InsertLocation from '@/utils/InsertLocation';
-import { mapActions } from 'vuex';
 import sortBy from 'lodash/sortBy';
 
 const { ADD_AFTER } = InsertLocation;
@@ -72,6 +76,7 @@ export default {
     isElementDrawerVisible: false
   }),
   computed: {
+    ...mapState('editor', ['isPublishedPreview']),
     contentElements() {
       const activityId = this.container.id;
       return sortBy(filter(this.elements, { activityId }), 'position');
