@@ -16,14 +16,34 @@
       </mj-column>
     </mj-section>
     <mj-section padding="0 10px">
-			<mj-column border-bottom="2px dashed #d2d2d2">
-        <mj-include path="./components/user-row.mjml"/>
+      <mj-column border-bottom="2px dashed #d2d2d2">
+        <mj-table padding="10px">
+          <tr class="content" style="display: flex;">
+            <td>
+              <span class="avatar">{{#getInitials}}{{author.label}}{{/getInitials}}</span>
+            </td>
+            <td style="padding: 0 0 0 20px">
+              <div class="label">{{author.label}}</div>
+              <div>{{content}}</div>
+            </td>
+          </tr>
+        </mj-table>
        </mj-column>
     </mj-section>
     {{#previousComments}}
       <mj-section padding="0 10px">
         <mj-column background-color="#f5f5f5" border-bottom="2px dashed #d2d2d2">
-          <mj-include path="./components/user-row.mjml"/>
+          <mj-table padding="10px">
+            <tr class="content" style="display: flex;">
+              <td>
+                <span class="avatar">{{#getInitials}}{{author.label}}{{/getInitials}}</span>
+              </td>
+              <td style="padding: 0 0 0 20px">
+                <div class="label">{{author.label}}</div>
+                <div>{{content}}</div>
+              </td>
+            </tr>
+          </mj-table>
         </mj-column>
       </mj-section>
     {{/previousComments}}
