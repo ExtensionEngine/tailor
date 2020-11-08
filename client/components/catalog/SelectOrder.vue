@@ -1,10 +1,19 @@
 <template>
   <span>
     <v-menu offset-y>
-      <template v-slot:activator="{ on }">
-        <v-btn v-on="on" icon text class="my-1">
-          <v-icon color="primary lighten-4">mdi-sort</v-icon>
-        </v-btn>
+      <template v-slot:activator="{ on: menu }">
+        <v-tooltip open-delay="800" right>
+          <template v-slot:activator="{ on: tooltip }">
+            <v-btn
+              v-on="{ ...menu, ...tooltip }"
+              icon
+              text
+              class="my-1">
+              <v-icon color="primary lighten-4">mdi-sort</v-icon>
+            </v-btn>
+          </template>
+          <span>Order by</span>
+        </v-tooltip>
       </template>
       <v-list class="py-0">
         <v-list-item
