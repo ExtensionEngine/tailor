@@ -25,11 +25,21 @@
         </v-list-item>
       </v-list>
     </v-menu>
-    <v-btn @click="toggleOrder" icon text class="my-1">
-      <v-icon color="primary lighten-4">
-        mdi-sort-{{ sortBy.order === 'ASC' ? 'ascending' : 'descending' }}
-      </v-icon>
-    </v-btn>
+    <v-tooltip open-delay="800" right>
+      <template v-slot:activator="{ on }">
+        <v-btn
+          v-on="on"
+          @click="toggleOrder"
+          icon
+          text
+          class="my-1">
+          <v-icon color="primary lighten-4">
+            mdi-sort-{{ sortBy.order === 'ASC' ? 'ascending' : 'descending' }}
+          </v-icon>
+        </v-btn>
+      </template>
+      <span>Order direction</span>
+    </v-tooltip>
   </span>
 </template>
 
