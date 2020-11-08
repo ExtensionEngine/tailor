@@ -21,7 +21,7 @@
                 </v-icon>
               </v-btn>
             </template>
-            <span>Toggle pinned</span>
+            <span>{{ showPinned ? 'Show all' : 'Show pinned' }}</span>
           </v-tooltip>
           <select-order
             @update="onFilterChange(setOrder, $event)"
