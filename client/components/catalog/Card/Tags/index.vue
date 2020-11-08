@@ -2,17 +2,20 @@
   <div class="tags-container">
     <div class="tag-list">
       <v-chip
-        v-for="tag in repository.tags"
-        :key="tag.id"
-        @click:close="showDeleteConfirmation(tag)"
+        v-for="{ id, name, truncatedName } in tags"
+        :key="id"
+        @click:close="showDeleteConfirmation(id, name)"
         color="blue-grey lighten-4"
         label light small close
         class="mr-2">
-        <v-tooltip open-delay="100" bottom>
+        <v-tooltip
+          :disabled="name == truncatedName"
+          open-delay="100"
+          bottom>
           <template v-slot:activator="{ on }">
-            <span v-on="on">{{ truncateTagName(tag.name) }}</span>
+            <span v-on="on">{{ truncatedName }}</span>
           </template>
-          {{ tag.name }}
+          <span>{{ name }}</span>
         </v-tooltip>
       </v-chip>
     </div>
@@ -35,6 +38,7 @@
 import AddTag from './AddTag';
 import clamp from 'lodash/clamp';
 import get from 'lodash/get';
+import map from 'lodash/map';
 import { mapActions } from 'vuex';
 import { mapRequests } from '@/plugins/radio';
 import truncate from 'lodash/truncate';
@@ -48,23 +52,27 @@ export default {
   },
   data: () => ({ showTagDialog: false }),
   computed: {
-    exceededTagLimit: ({ repository }) => repository.tags.length >= TAG_LIMIT
+    tagCount: vm => get(vm.repository, 'tags.length', TAG_LIMIT) - 1,
+    exceededTagLimit: vm => vm.repository.tags.length >= TAG_LIMIT,
+    maxTagNameLength: vm => [15, 6, 5][clamp(vm.tagCount, 0, 2)],
+    tags() {
+      const { repository, maxTagNameLength: length } = this;
+      return map(repository.tags, tag => {
+        const truncatedName = truncate(tag.name, { length });
+        return { ...tag, truncatedName };
+      });
+    }
   },
   methods: {
     ...mapActions('repositories', ['removeTag']),
     ...mapRequests('app', ['showConfirmationModal']),
-    showDeleteConfirmation(tag) {
-      const data = { repositoryId: this.repository.id, tagId: tag.id };
+    showDeleteConfirmation(tagId, tagName) {
+      const data = { repositoryId: this.repository.id, tagId };
       this.showConfirmationModal({
         title: 'Delete tag',
-        message: `Are you sure you want to delete tag ${tag.name}?`,
+        message: `Are you sure you want to delete tag ${tagName}?`,
         action: () => this.removeTag(data)
       });
-    },
-    truncateTagName(tag) {
-      const tagCount = get(this.repository, 'tags.length', TAG_LIMIT) - 1;
-      const length = [15, 6, 5][clamp(tagCount, 0, 2)];
-      return truncate(tag, { length });
     }
   },
   components: { AddTag }
