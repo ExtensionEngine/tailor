@@ -4,10 +4,15 @@
     @update:return-value="search = ''"
     :close-on-content-click="false"
     offset-y>
-    <template v-slot:activator="{ on }">
-      <v-btn v-on="on" icon text>
-        <v-icon color="primary lighten-4">mdi-tag-outline</v-icon>
-      </v-btn>
+    <template v-slot:activator="{ on: menu }">
+      <v-tooltip open-delay="800" right>
+        <template v-slot:activator="{ on: tooltip }">
+          <v-btn v-on="{ ...menu, ...tooltip }" icon text>
+            <v-icon color="primary lighten-4">mdi-tag-outline</v-icon>
+          </v-btn>
+        </template>
+        <span>Tags</span>
+      </v-tooltip>
     </template>
     <v-sheet
       tile
