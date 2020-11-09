@@ -80,10 +80,11 @@ function sendCommentNotification(users, comment) {
   const html = renderHtml(path.join(templatesDir, 'comment.mjml'), data);
   const text = renderText(path.join(templatesDir, 'comment.txt'), data);
   logger.info({ recipients, sender: from }, '📧  Sending notification email to:', recipients);
+  const { author, repositoryName, topic } = comment;
   return send({
     from,
     to: recipients,
-    subject: `${comment.author.label} left a comment on ${comment.repositoryName}`,
+    subject: `${author.label} left a comment on ${repositoryName} - ${topic}`,
     text,
     attachment: [{ data: html, alternative: true }]
   });
