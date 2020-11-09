@@ -45,6 +45,7 @@ export default {
 .element-preview-container {
   display: flex;
   position: relative;
+  margin: 0.5rem 0;
 
   .v-input {
     margin: 0;
@@ -60,6 +61,8 @@ export default {
 }
 
 .element-preview-container ::v-deep .contained-content {
+  margin: 0;
+
   .message span:not(.heading) {
     display: none;
   }
