@@ -1,13 +1,11 @@
 'use strict';
 
 const bodyParser = require('body-parser');
-const consolidate = require('consolidate');
 const cors = require('cors');
 const express = require('express');
 const helmet = require('helmet');
 const origin = require('./shared/origin');
 const path = require('path');
-const session = require('express-session');
 // eslint-disable-next-line require-sort/require-sort
 require('express-async-errors');
 
@@ -21,9 +19,15 @@ const router = require('./router');
 const { STORAGE_PATH } = process.env;
 
 const app = express();
-app.engine('mustache', consolidate.mustache);
-app.set('view engine', 'mustache');
-app.use(session(config.auth.session));
+
+config.auth.oidc.enabled && (() => {
+  const consolidate = require('consolidate');
+  const session = require('express-session');
+  app.engine('mustache', consolidate.mustache);
+  app.set('view engine', 'mustache');
+  app.use(session(config.auth.session));
+})();
+
 app.use(helmet());
 app.use(cors({ origin: config.auth.corsAllowedOrigins, credentials: true }));
 app.use(bodyParser.json({ limit: '50mb' }));
