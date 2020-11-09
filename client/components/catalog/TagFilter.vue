@@ -8,7 +8,7 @@
       <v-tooltip
         :disabled="value"
         open-delay="800"
-        right>
+        top>
         <template v-slot:activator="{ on: tooltip }">
           <v-btn v-on="{ ...menu, ...tooltip }" icon text>
             <v-icon color="primary lighten-4">mdi-tag-outline</v-icon>

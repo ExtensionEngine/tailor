@@ -2,12 +2,11 @@
   <span>
     <v-menu offset-y>
       <template v-slot:activator="{ on: menu }">
-        <v-tooltip open-delay="800" right>
+        <v-tooltip open-delay="800" top>
           <template v-slot:activator="{ on: tooltip }">
             <v-btn
               v-on="{ ...menu, ...tooltip }"
-              icon
-              text
+              icon text
               class="my-1">
               <v-icon color="primary lighten-4">mdi-sort</v-icon>
             </v-btn>
@@ -25,13 +24,12 @@
         </v-list-item>
       </v-list>
     </v-menu>
-    <v-tooltip open-delay="800" right>
+    <v-tooltip open-delay="800" top>
       <template v-slot:activator="{ on }">
         <v-btn
           v-on="on"
           @click="toggleOrder"
-          icon
-          text
+          icon text
           class="my-1">
           <v-icon color="primary lighten-4">
             mdi-sort-{{ sortBy.order === 'ASC' ? 'ascending' : 'descending' }}

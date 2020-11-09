@@ -9,7 +9,7 @@
         label light small close
         class="mr-2">
         <v-tooltip
-          :disabled="name == truncatedName"
+          :disabled="name.length === truncatedName.length"
           open-delay="100"
           bottom>
           <template v-slot:activator="{ on }">
