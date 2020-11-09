@@ -5,10 +5,12 @@
     </v-avatar>
     <div class="comment-body pl-3">
       <div class="header">
-        <span class="author">{{ author.fullName || author.email }}</span>
-        <v-icon v-if="isEdited" size="16" class="ml-1">
-          mdi-pencil-outline
-        </v-icon>
+        <span class="author">
+          {{ author.fullName || author.email }}
+          <v-icon v-if="isEdited" size="16" class="ml-1 pb-1">
+            mdi-pencil-outline
+          </v-icon>
+        </span>
       </div>
       <text-editor
         v-model="content"
