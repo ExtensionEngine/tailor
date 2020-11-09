@@ -4,8 +4,11 @@
     @update:return-value="search = ''"
     :close-on-content-click="false"
     offset-y>
-    <template v-slot:activator="{ on: menu }">
-      <v-tooltip open-delay="800" right>
+    <template v-slot:activator="{ on: menu, value }">
+      <v-tooltip
+        :disabled="value"
+        open-delay="800"
+        right>
         <template v-slot:activator="{ on: tooltip }">
           <v-btn v-on="{ ...menu, ...tooltip }" icon text>
             <v-icon color="primary lighten-4">mdi-tag-outline</v-icon>
