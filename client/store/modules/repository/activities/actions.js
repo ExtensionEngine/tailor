@@ -48,8 +48,7 @@ const clone = ({ commit }, mapping) => {
 };
 
 const calculateInsertPosition = ({ state }, { activity, anchor, action }) => {
-  const id = action === ADD_INTO ? anchor.id : activity.parentId;
-  const items = getOutlineChildren(state.items, id);
+  const items = getOutlineChildren(state.items, activity.parentId);
   const newPosition = anchor ? findIndex(items, { id: anchor.id }) : 1;
   const isFirstChild = !anchor ||
     (activity.parentId !== anchor.parentId) ||
@@ -58,7 +57,19 @@ const calculateInsertPosition = ({ state }, { activity, anchor, action }) => {
   return calculatePosition(context);
 };
 
+const calculateCopyInsertPosition = ({ state }, { anchor, action }) => {
+  let items = getOutlineChildren(state.items, anchor.parentId);
+  if (action === ADD_INTO) {
+    items = getOutlineChildren(state.items, anchor.id);
+    return calculatePosition({ items, action });
+  }
+  const newPosition = findIndex(items, { id: anchor.id });
+  const context = { items, newPosition, isFirstChild: newPosition === -1, action };
+  return calculatePosition(context);
+};
+
 export {
+  calculateCopyInsertPosition,
   calculateInsertPosition,
   clone,
   get,
