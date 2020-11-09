@@ -43,13 +43,13 @@ exports.add = (Comment, Hooks, db) => {
       ]
     });
     const { author, repository, activity } = comment;
-    const params = {
+    const options = {
       offset: 1,
       limit: 3,
       order: [['createdAt', 'DESC']],
       include: [{ model: User, as: 'author' }]
     };
-    const previousComments = isCreate ? await activity.getComments(params) : [];
+    const previousComments = isCreate ? await activity.getComments(options) : [];
     const data = {
       repositoryId: repository.id,
       repositoryName: repository.name,

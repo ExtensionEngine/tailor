@@ -21,11 +21,17 @@
           <v-icon class="pr-1">mdi-check</v-icon> Save changes
         </v-btn>
       </span>
-      <timeago
-        v-else
-        :datetime="comment.createdAt"
-        :auto-update="60"
-        class="time" />
+      <v-tooltip v-else right>
+        <template v-slot:activator="{ on }">
+          <span v-on="on">
+            <timeago
+              :datetime="comment.createdAt"
+              :auto-update="60"
+              class="time" />
+          </span>
+        </template>
+        <span>{{ comment.createdAt | formatDate('MMM D, YYYY HH:mm') }}</span>
+      </v-tooltip>
     </div>
     <v-menu v-if="showOptions" bottom left offset-y>
       <template v-slot:activator="{ on }">
