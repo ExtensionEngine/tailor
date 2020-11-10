@@ -52,9 +52,9 @@ export default {
   },
   data: () => ({ showTagDialog: false }),
   computed: {
-    tagCount: vm => get(vm.repository, 'tags.length', TAG_LIMIT) - 1,
+    tagCount: vm => get(vm.repository, 'tags.length', 0),
     exceededTagLimit: vm => vm.repository.tags.length >= TAG_LIMIT,
-    maxTagNameLength: vm => [15, 6, 5][clamp(vm.tagCount, 0, 2)],
+    maxTagNameLength: vm => [15, 6, 5][clamp(vm.tagCount - 1, 0, 2)],
     tags() {
       const { repository, maxTagNameLength: length } = this;
       return map(repository.tags, tag => {
