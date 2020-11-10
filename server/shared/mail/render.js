@@ -2,6 +2,7 @@
 
 const cheerio = require('cheerio');
 const fs = require('fs');
+const { html } = require('./formatters');
 const map = require('lodash/map');
 const mapKeys = require('lodash/mapKeys');
 const mjml2html = require('mjml');
@@ -31,7 +32,7 @@ function renderHtml(templatePath, data, style) {
 
 function renderText(templatePath, data) {
   const template = fs.readFileSync(templatePath, 'utf8');
-  return mustache.render(template, data);
+  return mustache.render(template, { ...data, html });
 }
 
 function getAttributes($, style = {}) {

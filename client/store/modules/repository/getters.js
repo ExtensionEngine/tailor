@@ -2,6 +2,7 @@ import { getOutlineLevels, getSchema } from 'shared/activities';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
+import { getWorkflow } from 'shared/workflow';
 import Hashids from 'hashids';
 import map from 'lodash/map';
 import { role } from 'shared';
@@ -47,6 +48,35 @@ export const selectedActivity = (_state, getters, rootState) => {
   const { route: { query: { activityId } } } = rootState;
   if (!activityId) return;
   return find(getters.activities, { id: parseInt(activityId, 10) });
+};
+
+export const workflow = (_state, { repository }) => {
+  if (!repository) return null;
+  const schema = getSchema(repository.schema);
+  return getWorkflow(schema.workflowId);
+};
+
+export const hasWorkflow = (_state, { workflow }) => Boolean(workflow);
+
+export const workflowActivities = (_state, { structure = [] }) =>
+  structure.filter(activity => activity.isTrackedInWorkflow);
+
+export const tasks = (state, getters, rootState) => {
+  if (!getters.repository) return [];
+  const { repository: { tasks: { items } } } = rootState;
+  return map(items, it => ({
+    ...it,
+    activity: find(getters.activities, { id: it.activityId }),
+    assignee: get(state.users, it.assigneeId),
+    author: get(state.users, it.authorId),
+    shortId: `T-${hashids.encode(it.id)}`
+  }));
+};
+
+export const selectedTask = (_state, getters, rootState) => {
+  const { route: { query: { taskId } } } = rootState;
+  if (!taskId) return;
+  return find(getters.tasks, { id: parseInt(taskId, 10) });
 };
 
 export const isCollapsed = state => {
