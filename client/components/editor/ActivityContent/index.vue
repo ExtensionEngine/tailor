@@ -129,6 +129,7 @@ export default {
     },
     fetchRevisions() {
       const modifiedActivityElements = filter(this.activityElements, 'isModified');
+      if (!modifiedActivityElements.length) return;
       const entityIds = map(modifiedActivityElements, 'id');
       return revisionApi.fetch(this.repository.id, {
         entityIds,
