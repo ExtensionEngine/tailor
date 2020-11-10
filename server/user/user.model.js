@@ -185,7 +185,7 @@ class User extends Model {
   createToken(options = {}) {
     const payload = { id: this.id, email: this.email };
     Object.assign(options, {
-      issuer: config.auth.issuer,
+      issuer: config.auth.jwt.issuer,
       audience: options.audience || Audience.Scope.Access
     });
     return jwt.sign(payload, this.getTokenSecret(options.audience), options);
@@ -200,7 +200,7 @@ class User extends Model {
   }
 
   getTokenSecret(audience) {
-    const { secret } = config.auth;
+    const { secret } = config.auth.jwt;
     if (audience === Audience.Scope.Access) return secret;
     return [secret, this.password, this.createdAt.getTime()].join('');
   }

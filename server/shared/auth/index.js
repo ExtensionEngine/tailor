@@ -1,11 +1,13 @@
 'use strict';
 
+const { auth: config, origin } = require('../../../config/server');
 const { ExtractJwt, Strategy: JwtStrategy } = require('passport-jwt');
 const Audience = require('./audience');
-const config = require('../../../config/server').auth;
+const auth = require('./authenticator');
 const jwt = require('jsonwebtoken');
 const LocalStrategy = require('passport-local');
-const passport = require('passport');
+const OIDCStrategy = require('./oidc');
+const path = require('path');
 const { User } = require('../database');
 
 const options = {
@@ -13,49 +15,51 @@ const options = {
   session: false
 };
 
-passport.use(new LocalStrategy(options, (email, password, done) => {
+auth.use(new LocalStrategy(options, (email, password, done) => {
   return User.findOne({ where: { email } })
     .then(user => user && user.authenticate(password))
     .then(user => done(null, user || false))
     .error(err => done(err, false));
 }));
 
-passport.use(new JwtStrategy({
-  ...config,
+auth.use(new JwtStrategy({
+  ...config.jwt,
   audience: Audience.Scope.Access,
   jwtFromRequest: ExtractJwt.fromExtractors([
-    ExtractJwt.fromAuthHeaderWithScheme(config.scheme),
+    ExtractJwt.fromAuthHeaderWithScheme(config.jwt.scheme),
     ExtractJwt.fromUrlQueryParameter('token'),
     ExtractJwt.fromBodyField('token')
   ]),
-  secretOrKey: config.secret
-}, verify));
+  secretOrKey: config.jwt.secret
+}, verifyJWT));
 
-passport.use('token', new JwtStrategy({
-  ...config,
+auth.use('token', new JwtStrategy({
+  ...config.jwt,
   audience: Audience.Scope.Setup,
   jwtFromRequest: ExtractJwt.fromBodyField('token'),
   secretOrKeyProvider
-}, verify));
+}, verifyJWT));
 
-passport.serializeUser((user, done) => done(null, user));
-passport.deserializeUser((user, done) => done(null, user));
+config.oidc.enabled && auth.use('oidc', new OIDCStrategy({
+  ...config.oidc,
+  callbackURL: apiUrl('/oidc/callback')
+}, verifyOIDC));
 
-module.exports = {
-  initialize(options = {}) {
-    return passport.initialize(options);
-  },
-  authenticate(strategy, options = {}) {
-    // NOTE: Setup passport to forward errors down the middleware chain
-    // https://github.com/jaredhanson/passport/blob/ad5fe1df/lib/middleware/authenticate.js#L171
-    return passport.authenticate(strategy, { ...options, failWithError: true });
-  }
-};
+auth.serializeUser((user, done) => done(null, user));
+auth.deserializeUser((user, done) => done(null, user));
 
-function verify(payload, done) {
+module.exports = auth;
+
+function verifyJWT(payload, done) {
   return User.findByPk(payload.id)
     .then(user => done(null, user || false))
     .error(err => done(err, false));
+}
+
+function verifyOIDC(_tokenSet, { email }, done) {
+  return User.findOne({ where: { email }, rejectOnEmpty: true })
+    .then(user => done(null, user))
+    .catch(err => done(Object.assign(err, { email }), false));
 }
 
 function secretOrKeyProvider(_, rawToken, done) {
@@ -64,4 +68,8 @@ function secretOrKeyProvider(_, rawToken, done) {
     .then(user => user.getTokenSecret())
     .then(secret => done(null, secret))
     .catch(err => done(err));
+}
+
+function apiUrl(pathname) {
+  return new URL(path.join('/api', pathname), origin).href;
 }
