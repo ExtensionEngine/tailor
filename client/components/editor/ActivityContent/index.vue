@@ -134,7 +134,8 @@ export default {
       return revisionApi.fetch(this.repository.id, {
         entityIds,
         entity: 'CONTENT_ELEMENT',
-        createdBefore: this.activity.publishedAt
+        createdBefore: this.activity.publishedAt,
+        last: true
       })
         .then(revisions => { this.revisions = revisions; });
     }

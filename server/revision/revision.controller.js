@@ -7,7 +7,7 @@ const { Op } = Sequelize;
 
 function index({ repository, query }, res) {
   const {
-    limit, offset,
+    limit, offset, last,
     entity, entityId, entityIds, activityId, createdBefore
   } = query;
   const where = {
@@ -27,8 +27,17 @@ function index({ repository, query }, res) {
     paranoid: false,
     attributes: ['id', 'email', 'firstName', 'lastName', 'fullName', 'label']
   }];
-  const opts = { where, include, order: [['createdAt', 'DESC']], limit, offset };
-  return Revision.findAll(opts).then(data => res.json({ data }));
+  const opts = {
+    where,
+    include,
+    order: [['createdAt', 'DESC']],
+    limit,
+    offset
+  };
+  return Revision
+    .scope(last && 'lastByEntity')
+    .findAll(opts)
+    .then(data => res.json({ data }));
 }
 
 function resolve({ revision }, res) {

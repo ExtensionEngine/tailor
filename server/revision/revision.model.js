@@ -1,7 +1,9 @@
 'use strict';
 
+const { Model, Sequelize } = require('sequelize');
 const hooks = require('./hooks');
-const { Model } = require('sequelize');
+
+const { literal } = Sequelize;
 
 class Revision extends Model {
   static fields(DataTypes) {
@@ -46,6 +48,25 @@ class Revision extends Model {
     this.belongsTo(User, {
       foreignKey: { name: 'userId', field: 'user_id' }
     });
+  }
+
+  static scopes() {
+    const tableName = this.getTableName();
+    const { field: stateField } = this.rawAttributes.state;
+    const rawEntityIdField = `${tableName}.${stateField}->'id'`;
+    return {
+      lastByEntity: {
+        attributes: [
+          // Constant "1" prevents syntax error
+          // caused by "," at the end of the DISTINCT ON expression.
+          // Explicit raw attributes are concated to enforce
+          // order within SELECT, DISTINCT ON being first.
+          literal(`DISTINCT ON (${rawEntityIdField}) 1`),
+          ...Object.keys(this.rawAttributes)
+        ],
+        order: [[literal(rawEntityIdField)]]
+      }
+    };
   }
 
   static options() {
