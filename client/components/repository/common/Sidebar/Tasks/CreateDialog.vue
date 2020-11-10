@@ -57,7 +57,7 @@ export default {
     },
     create() {
       const data = { ...this.task, activityId: this.activity.id };
-      this.save(data).then(this.close);
+      return this.save(data).then(this.close);
     }
   },
   watch: {
