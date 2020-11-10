@@ -59,13 +59,18 @@ import EditorField from '@/components/common/EditorField';
 import { priorities } from 'shared/workflow';
 import SelectPriority from '@/components/repository/common/SelectPriority';
 
+const defaultPriority = priorities.find(it => it.default);
+
 export default {
   name: 'task-field-group',
   props: {
     description: { type: String, default: null },
     status: { type: String, default: null },
     assigneeId: { type: Number, default: null },
-    priority: { type: String, default: priorities[2].id },
+    priority: {
+      type: String,
+      default: defaultPriority ? defaultPriority.id : null
+    },
     dueDate: { type: String, default: null }
   },
   data: () => ({ showDatePicker: false }),

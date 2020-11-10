@@ -7,7 +7,7 @@ const { WORKFLOWS } = require('./activities-rc.load')();
 const priorities = [
   { id: 'CRITICAL', label: 'Critical', icon: 'priorityCritical' },
   { id: 'HIGH', label: 'High', icon: 'priorityHigh' },
-  { id: 'MEDIUM', label: 'Medium', icon: 'priorityMedium' },
+  { id: 'MEDIUM', label: 'Medium', icon: 'priorityMedium', default: true },
   { id: 'LOW', label: 'Low', icon: 'priorityLow' },
   { id: 'TRIVIAL', label: 'Trivial', icon: 'priorityTrivial' }
 ];
