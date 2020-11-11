@@ -48,13 +48,12 @@ export default {
   },
   methods: {
     ...mapMutations('editor', ['setIsPublishedPreview']),
-    ...mapActions('repository', ['initialize'])
-  },
-  watch: {
-    activityId() {
+    ...mapActions('repository', ['initialize']),
+    resetPublishedPreview() {
       if (this.isPublishedPreview) this.setIsPublishedPreview(false);
     }
   },
+  watch: { activityId: 'resetPublishedPreview' },
   async created() {
     const { repositoryId: currentRepositoryId, repository: storeRepository } = this;
     const repositoryLoaded = !!storeRepository;
@@ -63,6 +62,9 @@ export default {
       await this.initialize(currentRepositoryId);
     }
     this.isLoading = false;
+  },
+  beforeDestroy() {
+    this.resetPublishedPreview();
   },
   components: {
     ActivityContent,
