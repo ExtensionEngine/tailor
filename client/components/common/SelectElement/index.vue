@@ -5,14 +5,17 @@
     :header-icon="headerIcon"
     width="650"
     scrollable>
-    <template v-slot:header>
-      {{ heading }}
-      <v-btn v-if="toggleButton" @click="toggleSelectAll" text dark>
+    <template v-slot:header>{{ heading }}</template>
+    <template v-slot:body>
+      <v-btn
+        v-if="toggleButton"
+        @click="toggleSelectAll"
+        color="pink"
+        outlined
+        class="float-right mr-4 mb-2">
         <v-icon class="mr-2">mdi-{{ toggleButton.icon }}</v-icon>
         {{ toggleButton.label }}
       </v-btn>
-    </template>
-    <template v-slot:body>
       <select-activity
         v-if="!selectedActivity"
         @selected="activity => showActivityElements(activity)"
