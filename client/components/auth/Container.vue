@@ -1,16 +1,18 @@
 <template>
   <div class="auth-container">
-    <v-sheet elevation="0" rounded class="auth-panel">
-      <div class="auth-header py-8">
-        <v-avatar size="80" color="blue-grey darken-4" class="pa-2">
-          <img :src="logo" alt="Logo" class="logo">
-        </v-avatar>
-        <h1 class="ma-2 headline">{{ title }}</h1>
-      </div>
-      <div class="auth-body">
-        <router-view />
-      </div>
-    </v-sheet>
+    <div class="auth-panel-container">
+      <v-sheet elevation="0" rounded class="auth-panel">
+        <div class="auth-header py-8">
+          <v-avatar size="80" color="blue-grey darken-4" class="pa-2">
+            <img :src="logo" alt="Logo" class="logo">
+          </v-avatar>
+          <h1 class="ma-2 headline">{{ title }}</h1>
+        </div>
+        <div class="auth-body">
+          <router-view />
+        </div>
+      </v-sheet>
+    </div>
     <div class="waves-container">
       <waves height="15rem" color="31,58,84" slow />
     </div>
@@ -30,20 +32,19 @@ export default {
 </script>
 
 <style lang="scss">
-.auth-container {
-  padding-top: 5%;
+.auth-container .auth-panel-container {
+  position: relative;
+  width: 26rem;
+  min-height: 41rem;
+  margin: 4% auto;
 }
 
 .auth-container .auth-panel.v-sheet {
-  width: 26rem;
-  margin: auto;
-  background: #eee;
+  position: absolute;
+  width: 100%;
+  background: rgba($color: #e1e1e1, $alpha: 0.3);
   border: 1px dashed #777;
-  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
-
-  &:hover {
-    background: #f4f4f4;
-  }
+  z-index: 1;
 
   .auth-header {
     padding-bottom: 0;

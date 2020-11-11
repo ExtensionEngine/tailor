@@ -9,7 +9,10 @@
       {{ errorMessage }}
     </v-alert>
     <template v-if="oidcEnabled">
-      <v-btn @click="loginOIDC" color="secondary" block>
+      <v-btn
+        @click="loginOIDC"
+        color="pink accent-4"
+        block dark rounded depressed>
         {{ oidcLoginText }}
       </v-btn>
       <v-divider class="auth-divider" />
@@ -51,9 +54,14 @@
           outlined
           class="required" />
       </validation-provider>
-      <div class="d-flex">
+      <div class="d-flex mt-1">
         <v-spacer />
-        <v-btn type="submit" color="primary darken-1">Log in</v-btn>
+        <v-btn
+          type="submit"
+          color="blue-grey darken-4"
+          block dark rounded depressed>
+          Log in
+        </v-btn>
       </div>
       <div class="options">
         <router-link :to="{ name: 'forgot-password' }">
@@ -114,7 +122,7 @@ export default {
     top: -0.7rem;
     left: calc(50% - 1rem);
     width: 2rem;
-    background: #fff;
+    background: #ececec;
   }
 }
 
