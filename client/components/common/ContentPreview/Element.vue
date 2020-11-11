@@ -54,9 +54,10 @@ export default {
 
 .content-element {
   flex: 1 0;
+  border: 1px solid transparent;
 
   &.selected {
-    border: 1px solid #444;
+    border-color: #444;
   }
 }
 
