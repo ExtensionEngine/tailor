@@ -32,8 +32,7 @@
           :disabled="showMessage"
           type="submit"
           color="blue-grey darken-4"
-          depressed rounded block dark
-          class="px-5">
+          block depressed rounded dark>
           Send reset email
         </v-btn>
         <v-btn @click="$router.go(-1)" tag="a" text class="mt-7">

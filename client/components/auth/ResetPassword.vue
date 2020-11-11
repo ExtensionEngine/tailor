@@ -47,8 +47,8 @@
       <v-btn
         type="submit"
         color="blue-grey darken-4"
-        class="my-1"
-        rounded block dark>
+        rounded block dark
+        class="my-1">
         Change password
       </v-btn>
     </validation-observer>
