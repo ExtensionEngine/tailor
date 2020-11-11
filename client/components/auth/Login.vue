@@ -2,7 +2,7 @@
   <div>
     <v-alert
       :value="!!errorMessage"
-      color="grey darken-3"
+      color="pink lighten-1"
       transition="fade-transition"
       dismissible text dense
       class="mb-7 text-left">

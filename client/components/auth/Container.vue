@@ -32,6 +32,10 @@ export default {
 </script>
 
 <style lang="scss">
+.auth-container {
+  background: #f1f1f1;
+}
+
 .auth-container .auth-panel-container {
   position: relative;
   width: 26rem;
@@ -69,5 +73,6 @@ export default {
   bottom: 0;
   left: 0;
   width: 100%;
+  height: 15rem;
 }
 </style>
