@@ -1,6 +1,9 @@
 <template>
   <v-sheet
     @click="$emit('select')"
+    @mouseover="isHovered = true"
+    @mouseout="isHovered = false"
+    :class="{ 'lighten-4': isSelected || isHovered }"
     class="my-5 py-1 blue-grey lighten-5 text-left">
     <v-card-subtitle class="pb-1 d-flex align-center">
       <v-chip
@@ -35,8 +38,10 @@ import { mapGetters } from 'vuex';
 export default {
   name: 'activity-search-result',
   props: {
-    activity: { type: Object, required: true }
+    activity: { type: Object, required: true },
+    isSelected: { type: Boolean, default: false }
   },
+  data: () => ({ isHovered: false }),
   computed: {
     ...mapGetters('repository', ['structure']),
     config: vm => find(vm.structure, { type: vm.activity.type }),
@@ -53,5 +58,10 @@ export default {
   &::before {
     display: none;
   }
+}
+
+.v-sheet {
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 </style>
