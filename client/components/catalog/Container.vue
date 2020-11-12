@@ -14,7 +14,7 @@
               <v-btn
                 v-on="on"
                 @click="onFilterChange(togglePinned)"
-                icon text
+                icon
                 class="my-1">
                 <v-icon :color="showPinned ? 'lime accent-3' : 'primary lighten-4'">
                   mdi-pin
@@ -192,5 +192,9 @@ export default {
     top: 10px;
     right: 12px;
   }
+}
+
+.v-btn:not(.v-btn--text):not(.v-btn--outlined):hover::before {
+  opacity: 0.2;
 }
 </style>

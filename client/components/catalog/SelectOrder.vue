@@ -6,7 +6,7 @@
           <template v-slot:activator="{ on: tooltip }">
             <v-btn
               v-on="{ ...menu, ...tooltip }"
-              icon text
+              icon
               class="my-1">
               <v-icon color="primary lighten-4">mdi-sort</v-icon>
             </v-btn>
@@ -29,7 +29,7 @@
         <v-btn
           v-on="on"
           @click="toggleOrder"
-          icon text
+          icon
           class="my-1">
           <v-icon color="primary lighten-4">
             mdi-sort-{{ sortBy.order === 'ASC' ? 'ascending' : 'descending' }}
@@ -66,5 +66,9 @@ export default {
 <style lang="scss" scoped>
 .v-menu, .v-btn {
   display: inline-block;
+}
+
+.v-btn:not(.v-btn--text):not(.v-btn--outlined):hover::before {
+  opacity: 0.2;
 }
 </style>

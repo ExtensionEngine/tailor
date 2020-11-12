@@ -10,7 +10,7 @@
         open-delay="800"
         top>
         <template v-slot:activator="{ on: tooltip }">
-          <v-btn v-on="{ ...menu, ...tooltip }" icon text>
+          <v-btn v-on="{ ...menu, ...tooltip }" icon>
             <v-icon color="primary lighten-4">mdi-tag-outline</v-icon>
           </v-btn>
         </template>
@@ -79,4 +79,7 @@ export default {
   overflow-y: auto;
 }
 
+.v-btn:not(.v-btn--text):not(.v-btn--outlined):hover::before {
+  opacity: 0.2;
+}
 </style>
