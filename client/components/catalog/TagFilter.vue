@@ -50,6 +50,7 @@ import find from 'lodash/find';
 import get from 'lodash/get';
 import map from 'lodash/map';
 import { mapState } from 'vuex';
+import orderBy from 'lodash/orderBy';
 
 export default {
   data: () => ({ search: '' }),
@@ -57,10 +58,10 @@ export default {
     ...mapState('repositories', ['tags', 'tagFilter']),
     isVisible: vm => get(vm.$refs.filter, 'isActive', false),
     options() {
-      return map(this.tags, it => {
+      return orderBy(map(this.tags, it => {
         const isSelected = !!find(this.tagFilter, { id: it.id });
         return { ...it, isSelected };
-      });
+      }), [tag => tag.name.toLowerCase()], ['asc']);
     },
     filteredTags() {
       const { options, search } = this;
