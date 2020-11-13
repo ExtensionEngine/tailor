@@ -57,14 +57,14 @@ export default {
   computed: {
     ...mapState('repositories', ['tags', 'tagFilter']),
     isVisible: vm => get(vm.$refs.filter, 'isActive', false),
-    options() {
-      return orderBy(map(this.tags, it => {
-        const isSelected = !!find(this.tagFilter, { id: it.id });
+    options: ({ tags, tagFilter }) => {
+      const options = map(tags, it => {
+        const isSelected = !!find(tagFilter, { id: it.id });
         return { ...it, isSelected };
-      }), [tag => tag.name.toLowerCase()], ['asc']);
+      });
+      return orderBy(options, [tag => tag.name.toLowerCase()], ['asc']);
     },
-    filteredTags() {
-      const { options, search } = this;
+    filteredTags: ({ options, search }) => {
       if (!search) return options;
       const reqex = new RegExp(search.trim(), 'i');
       return filter(options, ({ name }) => reqex.test(name));
