@@ -36,15 +36,9 @@ export default {
   data: () => ({ isFocused: false }),
   computed: {
     ...mapChannels({ editorChannel: 'editor' }),
-    id() {
-      return getElementId(this.element);
-    },
-    componentName() {
-      return getComponentName(this.element.type);
-    },
-    elementBus() {
-      return this.$radio.channel(`element:${this.id}`);
-    }
+    id: vm => getElementId(vm.element),
+    componentName: vm => getComponentName(vm.element.type),
+    elementBus: vm => vm.$radio.channel(`element:${vm.id}`)
   },
   methods: {
     focus(e, element = this.element, parent = this.parent) {

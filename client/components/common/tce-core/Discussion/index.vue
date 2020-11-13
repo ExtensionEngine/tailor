@@ -47,6 +47,8 @@ import DiscussionThread from './Thread';
 import orderBy from 'lodash/orderBy';
 import TextEditor from './TextEditor';
 
+const SHOWN_COMMENTS_LIMIT = 5;
+
 const initCommentInput = () => ({ content: '' });
 
 export default {
@@ -62,12 +64,12 @@ export default {
   computed: {
     thread: vm => orderBy(vm.comments, ['createdAt'], ['asc']),
     commentsCount: vm => vm.thread.length,
-    commentsShownLimit: vm => 5,
+    commentsShownLimit: () => SHOWN_COMMENTS_LIMIT,
     showAllToggle: vm => vm.commentsShownLimit < vm.thread.length,
     editor: vm => vm.$refs.editor.$el
   },
   methods: {
-    async post() {
+    post() {
       if (!this.comment.content) return;
       const payload = {
         content: this.comment.content,
@@ -86,7 +88,7 @@ export default {
       this.$emit('change', this.thread);
     }
   },
-  async created() {
+  created() {
     this.comment = initCommentInput();
   },
   components: {

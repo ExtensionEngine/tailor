@@ -87,9 +87,7 @@ export default {
   watch: {
     comment: {
       deep: true,
-      handler() {
-        this.reset();
-      }
+      handler: 'reset'
     }
   },
   directives: { focus },
