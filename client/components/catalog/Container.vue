@@ -14,11 +14,10 @@
               <v-btn
                 v-on="on"
                 @click="onFilterChange(togglePinned)"
+                :color="showPinned ? 'lime accent-3' : 'primary lighten-4'"
                 icon
                 class="my-1">
-                <v-icon :color="showPinned ? 'lime accent-3' : 'primary lighten-4'">
-                  mdi-pin
-                </v-icon>
+                <v-icon>mdi-pin</v-icon>
               </v-btn>
             </template>
             <span>{{ showPinned ? 'Show all' : 'Show pinned' }}</span>
@@ -192,9 +191,5 @@ export default {
     top: 10px;
     right: 12px;
   }
-}
-
-.v-btn:not(.v-btn--text):not(.v-btn--outlined):hover::before {
-  opacity: 0.2;
 }
 </style>
