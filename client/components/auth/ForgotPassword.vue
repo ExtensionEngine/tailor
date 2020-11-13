@@ -2,7 +2,7 @@
   <div>
     <v-alert
       :value="showMessage"
-      :color="error ? 'primary darken-2' : 'grey darken-3'"
+      :color="error ? 'pink lighten-1' : 'grey darken-3'"
       text
       class="mb-5">
       {{ error || 'Sending reset email...' }}
@@ -27,17 +27,16 @@
           outlined
           class="required" />
       </validation-provider>
-      <div class="d-flex">
-        <v-btn @click="$router.go(-1)" tag="a" text class="px-1">
-          <v-icon>mdi-chevron-left</v-icon>
-          Back
-        </v-btn>
-        <v-spacer />
+      <div>
         <v-btn
           :disabled="showMessage"
           type="submit"
-          color="primary darken-1">
+          color="blue-grey darken-4"
+          block depressed rounded dark>
           Send reset email
+        </v-btn>
+        <v-btn @click="$router.go(-1)" tag="a" text class="mt-7">
+          <v-icon class="pr-2">mdi-arrow-left</v-icon>Back
         </v-btn>
       </div>
     </validation-observer>

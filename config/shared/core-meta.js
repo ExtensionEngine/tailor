@@ -3,6 +3,7 @@
 module.exports = [
   'meta-checkbox',
   'meta-color',
+  'meta-combobox',
   'meta-datetime',
   'meta-file',
   'meta-html',

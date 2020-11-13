@@ -55,14 +55,24 @@
       class="action">
       Edit
     </v-btn>
-    <v-btn
-      v-else
-      @click.stop="save"
-      :disabled="uploading || !hasAsset"
-      text
-      class="action">
-      {{ hasChanges ? 'Save' : 'Cancel' }}
-    </v-btn>
+    <template v-else>
+      <v-btn
+        v-if="hasChanges"
+        @click.stop="save"
+        :disabled="uploading"
+        text
+        class="action">
+        Save
+      </v-btn>
+      <v-btn
+        v-if="hasChanges || url"
+        @click.stop="cancel"
+        :disabled="uploading"
+        text
+        class="action">
+        Cancel
+      </v-btn>
+    </template>
   </v-toolbar-items>
 </template>
 
@@ -101,7 +111,7 @@ export default {
   computed: {
     hasAsset: vm => vm.file || vm.urlInput,
     isLinked: vm => !!vm.urlInput,
-    hasChanges: vm => vm.url !== (vm.isLinked ? vm.urlInput : get(vm, 'file.url')),
+    hasChanges: vm => vm.url !== (vm.isLinked ? vm.urlInput : get(vm, 'file.url', null)),
     fileName() {
       if (!this.file) return null;
       return last(this.file.url.split('___'));
@@ -116,6 +126,12 @@ export default {
       this.isEditing = false;
       const payload = this.file || { url: this.urlInput, publicUrl: this.urlInput };
       this.$emit('input', payload);
+    },
+    cancel() {
+      const isLinked = !isUploaded(this.url);
+      this.urlInput = isLinked ? this.url : null;
+      this.file = isLinked ? null : pick(this, ['url', 'publicUrl']);
+      this.isEditing = !this.url;
     }
   },
   components: { UploadBtn }

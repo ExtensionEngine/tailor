@@ -19,6 +19,15 @@ const router = require('./router');
 const { STORAGE_PATH } = process.env;
 
 const app = express();
+
+config.auth.oidc.enabled && (() => {
+  const consolidate = require('consolidate');
+  const session = require('express-session');
+  app.engine('mustache', consolidate.mustache);
+  app.set('view engine', 'mustache');
+  app.use(session(config.auth.session));
+})();
+
 app.use(helmet());
 app.use(cors({ origin: config.auth.corsAllowedOrigins, credentials: true }));
 app.use(bodyParser.json({ limit: '50mb' }));
@@ -29,7 +38,7 @@ app.use(express.static(path.join(__dirname, '../dist/')));
 if (STORAGE_PATH) app.use(express.static(STORAGE_PATH));
 
 // Mount main router.
-app.use('/api/v1', requestLogger, router);
+app.use('/api', requestLogger, router);
 
 // Global error handler.
 app.use(errorHandler);

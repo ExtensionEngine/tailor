@@ -26,6 +26,7 @@
       :position="index"
       :activities="activities"
       :elements="elements"
+      :tes="elements"
       v-bind="$attrs" />
     <div v-if="addBtnEnabled">
       <v-btn @click="addContainer" color="blue-grey darken-3" text class="mt-4">

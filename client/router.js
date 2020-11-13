@@ -23,6 +23,7 @@ import SystemSettings from './components/system-settings';
 import SystemUserManagement from './components/system-settings/UserManagement';
 import TreeView from './components/repository/TreeView';
 import UserSettings from './components/user-settings';
+import WorkflowBoard from './components/repository/WorkflowBoard';
 
 Vue.use(Router);
 
@@ -59,6 +60,10 @@ const router = new Router({
         props: numericParser,
         component: RepoUserManagement
       }]
+    }, {
+      path: 'board',
+      name: 'board',
+      component: WorkflowBoard
     }, {
       path: 'revisions',
       name: 'revisions',

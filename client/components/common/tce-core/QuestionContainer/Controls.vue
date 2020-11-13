@@ -24,8 +24,7 @@
 <script>
 export default {
   props: {
-    isEditing: { type: Boolean, default: false },
-    hasErrors: { type: Boolean, default: false }
+    isEditing: { type: Boolean, default: false }
   },
   methods: {
     save() {
