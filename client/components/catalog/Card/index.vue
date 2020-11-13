@@ -25,7 +25,7 @@
               <v-btn
                 v-on="on"
                 @click.stop="navigateTo('repository-info')"
-                color="blue-grey darken-2"
+                color="blue-grey darken-1"
                 icon
                 class="repo-info mr-2">
                 <v-icon>mdi-settings</v-icon>
