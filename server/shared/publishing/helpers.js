@@ -162,9 +162,10 @@ function fetchDefaultContainers(parent, config) {
     .filter(it => !containerRegistry.getPublishStructureBuilder(it))
     .map(it => it.type);
   const where = { type: types };
+  const order = [[ContentElement.scope('publish'), 'position', 'ASC']];
 
   return parent
-    .getChildren({ attributes: CC_ATTRS, where, include })
+    .getChildren({ attributes: CC_ATTRS, where, include, order })
     .map(container => {
       const { ContentElements: ces, ...data } = container.toJSON();
       const elements = map(ces, (it, pos) => ({ ...it, position: pos + 1 }));
