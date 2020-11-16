@@ -36,7 +36,7 @@ export default {
     saveComment(comment) {
       const action = comment.id ? 'update' : 'save';
       const { activityId, contentElementId, user: author } = this;
-      return this[action]({ ...comment, contentElementId, activityId, author });
+      return this[action]({ ...comment, activityId, contentElementId, author });
     }
   },
   async created() {

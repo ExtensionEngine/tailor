@@ -1,9 +1,8 @@
 import filter from 'lodash/filter';
 import orderBy from 'lodash/orderBy';
 
-export const getComments = state => ({ activityId, contentElementId }) => {
-  const params = contentElementId ? { activityId, contentElementId } : { activityId };
-  const comments = filter(state.items, { ...params });
+export const getComments = state => params => {
+  const comments = filter(state.items, params);
   return orderBy(comments, 'createdAt', 'desc');
 };
 
