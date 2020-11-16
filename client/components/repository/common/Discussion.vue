@@ -4,8 +4,7 @@
       @save="saveComment"
       @update="saveComment"
       @remove="remove"
-      v-bind="{ comments, user }"
-      show-heading />
+      v-bind="{ comments, user, showHeading }" />
   </div>
 </template>
 
@@ -18,7 +17,8 @@ export default {
   inject: ['$getCurrentUser'],
   props: {
     activity: { type: Object, default: null },
-    contentElement: { type: Object, default: null }
+    contentElement: { type: Object, default: null },
+    showHeading: { type: Boolean, default: true }
   },
   computed: {
     ...mapGetters('repository/comments', ['getComments']),

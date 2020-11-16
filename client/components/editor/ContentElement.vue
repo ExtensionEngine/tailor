@@ -1,15 +1,27 @@
 <template>
   <div>
-    <discussion :content-element="element" />
-    <contained-content
-      @add="add"
-      @save="save"
-      @save:meta="meta => updateElement({ uid: element.uid, meta })"
-      @delete="remove"
-      v-bind="$attrs"
-      :element="element"
-      :is-dragged="isDragged"
-      :is-disabled="disabled" />
+    <v-row no-gutters>
+      <v-col :md="!isFullWidth || !showDiscussion ? 12 : 8" sm="10">
+        <v-btn @click.prevent="showDiscussion = !showDiscussion" color="primary" small fab>
+          <v-icon class="pr-1">mdi-forum-outline</v-icon>
+        </v-btn>
+        <contained-content
+          @add="add"
+          @save="save"
+          @save:meta="meta => updateElement({ uid: element.uid, meta })"
+          @delete="remove"
+          v-bind="$attrs"
+          :element="element"
+          :is-dragged="isDragged"
+          :is-disabled="disabled" />
+      </v-col>
+      <v-col v-if="showDiscussion" :md="!isFullWidth ? 12 : 4" sm="10">
+        <discussion
+          :content-element="element"
+          :show-heading="false"
+          :class="{ 'adjust-margin': isFullWidth }" />
+      </v-col>
+    </v-row>
     <v-progress-linear
       v-if="isSaving"
       color="grey darken-2"
@@ -35,8 +47,14 @@ export default {
     disabled: { type: Boolean, default: false },
     isDragged: { type: Boolean, default: false }
   },
-  data: () => ({ isSaving: false }),
-  computed: mapChannels({ editorChannel: 'editor' }),
+  data: () => ({
+    isSaving: false,
+    showDiscussion: false
+  }),
+  computed: {
+    ...mapChannels({ editorChannel: 'editor' }),
+    isFullWidth: vm => vm.element.data.width === 12
+  },
   methods: {
     ...mapActions('repository/contentElements', {
       saveElement: 'save',
@@ -66,3 +84,16 @@ export default {
   components: { ContainedContent, Discussion }
 };
 </script>
+
+<style lang="scss" scoped>
+::v-deep .adjust-margin.discussion-container {
+  margin: 0 0 1.75rem 2rem;
+}
+
+.v-btn {
+  position: absolute;
+  top: -1rem;
+  right: -1rem;
+  z-index: 2;
+}
+</style>
