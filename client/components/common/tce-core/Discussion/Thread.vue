@@ -5,8 +5,7 @@
       :key="comment.uid"
       @update="onUpdate"
       @remove="$emit('remove', comment)"
-      :comment="comment"
-      :user="user" />
+      v-bind="{ comment, user }" />
   </ul>
 </template>
 

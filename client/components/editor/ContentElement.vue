@@ -1,27 +1,31 @@
 <template>
   <div>
-    <v-row no-gutters>
-      <v-col :md="!isFullWidth || !showDiscussion ? 12 : 8" sm="10">
-        <v-btn @click.prevent="showDiscussion = !showDiscussion" color="primary" small fab>
-          <v-icon class="pr-1">mdi-forum-outline</v-icon>
-        </v-btn>
-        <contained-content
-          @add="add"
-          @save="save"
-          @save:meta="meta => updateElement({ uid: element.uid, meta })"
-          @delete="remove"
-          v-bind="$attrs"
-          :element="element"
-          :is-dragged="isDragged"
-          :is-disabled="disabled" />
-      </v-col>
-      <v-col v-if="showDiscussion" :md="!isFullWidth ? 12 : 4" sm="10">
-        <discussion
-          :content-element="element"
-          :show-heading="false"
-          :class="{ 'adjust-margin': isFullWidth }" />
-      </v-col>
-    </v-row>
+    <v-menu
+      v-model="showDiscussion"
+      :close-on-content-click="false"
+      :min-width="300"
+      offset-y left>
+      <template v-slot:activator="{ on: menu }">
+        <v-tooltip open-delay="800" left>
+          <template v-slot:activator="{ on: tooltip }">
+            <v-btn v-on="{ ...menu, ...tooltip }" color="primary" small fab>
+              <v-icon class="pr-1">mdi-forum-outline</v-icon>
+            </v-btn>
+          </template>
+          <span>Discussion</span>
+        </v-tooltip>
+      </template>
+      <discussion :content-element="element" />
+    </v-menu>
+    <contained-content
+      @add="add"
+      @save="save"
+      @save:meta="meta => updateElement({ uid: element.uid, meta })"
+      @delete="remove"
+      v-bind="$attrs"
+      :element="element"
+      :is-dragged="isDragged"
+      :is-disabled="disabled" />
     <v-progress-linear
       v-if="isSaving"
       color="grey darken-2"
@@ -51,10 +55,7 @@ export default {
     isSaving: false,
     showDiscussion: false
   }),
-  computed: {
-    ...mapChannels({ editorChannel: 'editor' }),
-    isFullWidth: vm => vm.element.data.width === 12
-  },
+  computed: mapChannels({ editorChannel: 'editor' }),
   methods: {
     ...mapActions('repository/contentElements', {
       saveElement: 'save',
@@ -86,14 +87,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep .adjust-margin.discussion-container {
-  margin: 0 0 1.75rem 2rem;
+::v-deep .discussion-container {
+  margin: 0;
+  border: none;
+}
+
+.v-menu__content {
+  background: #fff;
 }
 
 .v-btn {
   position: absolute;
-  top: -1rem;
-  right: -1rem;
+  top: 0;
+  right: 0;
   z-index: 2;
 }
 </style>
