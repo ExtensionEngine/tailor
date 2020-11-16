@@ -162,7 +162,7 @@ function fetchDefaultContainers(parent, config) {
     .filter(it => !containerRegistry.getPublishStructureBuilder(it))
     .map(it => it.type);
   const where = { type: types };
-  const order = [[ContentElement.scope('publish'), 'position', 'ASC']];
+  const order = [[ContentElement, 'position', 'ASC']];
 
   return parent
     .getChildren({ attributes: CC_ATTRS, where, include, order })
