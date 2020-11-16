@@ -4,8 +4,7 @@
       @save="saveComment"
       @update="saveComment"
       @remove="remove"
-      :comments="comments"
-      :user="user"
+      v-bind="{ comments, user }"
       show-heading />
   </div>
 </template>
