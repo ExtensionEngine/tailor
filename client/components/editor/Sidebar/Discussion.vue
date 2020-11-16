@@ -1,14 +1,12 @@
 <template>
   <div class="my-4 pa-4">
-    <discussion
-      :activity="activity"
-      show-notifications />
+    <discussion :activity="activity" />
   </div>
 </template>
 
 <script>
 import { mapGetters, mapMutations } from 'vuex';
-import Discussion from '@/components/repository/common/Sidebar/Discussion';
+import Discussion from '@/components/repository/common/Discussion';
 import get from 'lodash/get';
 
 export default {
@@ -18,8 +16,8 @@ export default {
     isVisible: { type: Boolean, default: false }
   },
   computed: {
-    ...mapGetters('repository/comments', ['getActivityComments']),
-    comments: vm => vm.getActivityComments(vm.activity.id),
+    ...mapGetters('repository/comments', ['getComments']),
+    comments: vm => vm.getComments({ activityId: vm.activity.id }),
     lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime()
   },
   methods: {

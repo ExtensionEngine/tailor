@@ -1,5 +1,6 @@
 <template>
   <div>
+    <discussion :content-element="element" />
     <contained-content
       @add="add"
       @save="save"
@@ -21,6 +22,7 @@
 import { mapActions, mapMutations } from 'vuex';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
+import Discussion from '@/components/repository/common/Discussion';
 import loader from '@/components/common/loader';
 import { mapChannels } from '@/plugins/radio';
 import throttle from 'lodash/throttle';
@@ -61,6 +63,6 @@ export default {
       });
     }
   },
-  components: { ContainedContent }
+  components: { ContainedContent, Discussion }
 };
 </script>

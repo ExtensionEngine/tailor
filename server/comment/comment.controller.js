@@ -9,14 +9,17 @@ const author = {
 };
 
 function list({ repository, opts, query }, res) {
-  if (query.activityId) opts.where.activityId = query.activityId;
+  const { activityId, contentElementId } = query;
+  if (activityId) opts.where.activityId = activityId;
+  if (contentElementId) opts.where.contentElementId = contentElementId;
   return repository.getComments({ ...opts, include: [author] })
     .then(data => res.json({ data }));
 }
 
 function create({ user, repository: { id: repositoryId }, body }, res) {
-  const { uid, activityId, content } = body;
+  const { uid, activityId, contentElementId, content } = body;
   const payload = { uid, repositoryId, activityId, authorId: user.id, content };
+  if (contentElementId) payload.contentElementId = contentElementId;
   return Comment.create(payload, { include: [author] })
     .then(data => res.json({ data }));
 }
