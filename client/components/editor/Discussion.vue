@@ -1,6 +1,6 @@
 <template>
   <div class="my-4 pa-4">
-    <discussion :activity="activity" />
+    <discussion v-bind="{ activity, contentElement }" />
   </div>
 </template>
 
@@ -13,37 +13,36 @@ export default {
   name: 'editor-discussion',
   props: {
     activity: { type: Object, required: true },
+    contentElement: { type: Object, default: null },
     isVisible: { type: Boolean, default: false }
   },
   computed: {
     ...mapGetters('repository/comments', ['getComments']),
-    comments: vm => vm.getComments({ activityId: vm.activity.id }),
+    comments() {
+      const { id: activityId } = this.activity;
+      const { id: contentElementId } = this.contentElement;
+      return this.getComments({ activityId, contentElementId });
+    },
     lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime()
   },
   methods: {
     ...mapMutations('repository/comments', ['markSeenComments']),
     setLastSeenComment(timeout) {
-      const payload = {
-        activityUid: this.activity.uid,
-        lastCommentAt: this.lastCommentAt
-      };
+      const { activity, lastCommentAt } = this;
+      const payload = { activityUid: activity.uid, lastCommentAt };
       setTimeout(() => this.markSeenComments(payload), timeout);
     }
   },
   watch: {
     isVisible(val) {
-      if (!val) return;
-      if (!this.lastCommentAt) return;
+      if (!val || !this.lastCommentAt) return;
       this.setLastSeenComment(1000);
     },
     comments(val, oldVal) {
-      if (!this.isVisible) return;
-      if (val === oldVal) return;
+      if (!this.isVisible || val === oldVal) return;
       this.setLastSeenComment(2000);
     }
   },
-  components: {
-    Discussion
-  }
+  components: { Discussion }
 };
 </script>

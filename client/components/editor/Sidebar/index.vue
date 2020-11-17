@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import ActivityDiscussion from './Discussion';
+import ActivityDiscussion from '../Discussion';
 import ActivityNavigation from './Navigation';
 import debounce from 'lodash/debounce';
 import ElementSidebar from './ElementSidebar';
