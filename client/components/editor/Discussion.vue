@@ -20,7 +20,7 @@ export default {
     ...mapGetters('repository/comments', ['getComments']),
     comments() {
       const { id: activityId } = this.activity;
-      const { id: contentElementId } = this.contentElement;
+      const contentElementId = this.contentElement ? this.contentElement.id : null;
       return this.getComments({ activityId, contentElementId });
     },
     lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime()
