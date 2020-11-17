@@ -29,15 +29,15 @@
         drag-mode="none" />
       <v-img
         v-show="!showCropper"
+        :src="currentImage"
         :aspect-ratio="aspectRatio"
         :max-width="maxWidth"
-        :src="currentImage"
         class="mx-auto">
         <template v-slot:placeholder>
           <v-row
-            class="fill-height ma-0"
             align="center"
-            justify="center">
+            justify="center"
+            class="fill-height ma-0">
             <v-icon size="50" color="grey lighten-1" class="image-icon">
               mdi-image-outline
             </v-icon>
