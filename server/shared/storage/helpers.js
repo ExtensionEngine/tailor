@@ -84,7 +84,7 @@ processor.IMAGE = asset => {
 function resolveStatics(item) {
   const customResolver = elementRegistry.getStaticsHandler(item.type);
   return customResolver
-    ? customResolver(item, defaultStaticsResolver, resolveStatics)
+    ? Promise.resolve(customResolver(item, defaultStaticsResolver, resolveStatics))
     : defaultStaticsResolver(item);
 }
 
