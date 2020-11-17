@@ -105,8 +105,6 @@ export default {
     }
   },
   mounted() {
-    // toDataUrl(this.element.data.url)
-    //   .then(dataUrl => this.load(dataUrl));
     this.load(this.element.data.url);
 
     this.$elementBus.on('upload', dataUrl => {
