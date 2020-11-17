@@ -61,8 +61,7 @@ export default {
   },
   data: () => ({
     isSaving: false,
-    showDiscussion: false,
-    unseenCommentCount: 0
+    showDiscussion: false
   }),
   computed: {
     ...mapChannels({ editorChannel: 'editor' }),
@@ -81,10 +80,8 @@ export default {
     ...mapMutations('repository/contentElements', { addElement: 'add' }),
     ...mapMutations('repository/comments', ['markSeenComments']),
     setLastSeenComment(timeout) {
-      const payload = {
-        activityUid: this.activity.uid,
-        lastCommentAt: this.lastCommentAt
-      };
+      const { activity, lastCommentAt } = this;
+      const payload = { activityUid: activity.uid, lastCommentAt };
       setTimeout(() => this.markSeenComments(payload), timeout);
     },
     add(element) {
