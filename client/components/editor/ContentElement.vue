@@ -107,14 +107,12 @@ export default {
     }
   },
   watch: {
-    showDiscussion(val) {
-      if (!val) return;
-      if (!this.lastCommentAt) return;
+    showDiscussion(value) {
+      if (!value || this.lastCommentAt) return;
       this.setLastSeenComment(1000);
     },
-    comments(val, oldVal) {
-      if (!this.showDiscussion) return;
-      if (val === oldVal) return;
+    comments(value, oldValue) {
+      if (!this.showDiscussion || value === oldValue) return;
       this.setLastSeenComment(2000);
     }
   },
