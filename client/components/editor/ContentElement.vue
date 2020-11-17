@@ -3,11 +3,17 @@
     <v-menu
       v-model="showDiscussion"
       :close-on-content-click="false"
-      :min-width="300"
-      offset-y left>
+      :min-width="350"
+      attach offset-y left>
       <template v-slot:activator="{ on: menu }">
         <v-tooltip open-delay="800" left>
           <template v-slot:activator="{ on: tooltip }">
+            <v-badge
+              v-show="unseenComments.length"
+              :content="unseenComments.length"
+              color="secondary"
+              offset-y="14"
+              offset-x="14" />
             <v-btn v-on="{ ...menu, ...tooltip }" color="primary" small fab>
               <v-icon class="pr-1">mdi-forum-outline</v-icon>
             </v-btn>
@@ -35,7 +41,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
 import Discussion from '@/components/repository/common/Discussion';
@@ -47,15 +53,22 @@ export default {
   name: 'content-element',
   inheritAttrs: false,
   props: {
+    activity: { type: Object, required: true },
     element: { type: Object, required: true },
     disabled: { type: Boolean, default: false },
     isDragged: { type: Boolean, default: false }
   },
   data: () => ({
     isSaving: false,
-    showDiscussion: false
+    showDiscussion: false,
+    unseenCommentCount: 0
   }),
-  computed: mapChannels({ editorChannel: 'editor' }),
+  computed: {
+    ...mapChannels({ editorChannel: 'editor' }),
+    ...mapGetters('repository/comments', ['getUnseenComments']),
+    unseenComments: vm => vm.getUnseenComments(vm.activity)
+      .filter(it => it.contentElementId === vm.element.id)
+  },
   methods: {
     ...mapActions('repository/contentElements', {
       saveElement: 'save',
@@ -87,19 +100,29 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep .discussion-container {
-  margin: 0;
-  border: none;
-}
-
 .v-menu__content {
   background: #fff;
 }
 
-.v-btn {
+::v-deep .v-badge, .v-btn {
   position: absolute;
-  top: 0;
+  top: 0.5rem;
   right: 0;
   z-index: 2;
+}
+
+::v-deep {
+  .discussion-container {
+    margin: 0;
+    border: none;
+
+    .header {
+      text-align: left;
+    }
+  }
+
+  .v-badge {
+    z-index: 3;
+  }
 }
 </style>

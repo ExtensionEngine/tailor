@@ -109,7 +109,6 @@ export default {
     unseenComments: debounce(function (val) {
       this.unseenCommentCount = val.length;
     }, 200)
-
   },
   components: { ActivityDiscussion, ActivityNavigation, ElementSidebar }
 };
