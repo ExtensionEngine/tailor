@@ -52,7 +52,6 @@
 <script>
 import Cropper from './Cropper';
 import { ElementPlaceholder } from 'tce-core';
-import get from 'lodash/get';
 import { imgSrcToDataURL } from 'blob-util';
 import isEmpty from 'lodash/isEmpty';
 
@@ -96,12 +95,12 @@ export default {
       if (this.$refs.cropper) this.$refs.cropper.destroy();
       return true;
     },
-    elementWidth: ({ containerWidth, element }) => get(element, 'data.meta.width'),
-    elementHeight: ({ containerWidth, element }) => get(element, 'data.meta.height'),
+    elementWidth: ({ containerWidth, element }) => element.data.meta?.width,
+    elementHeight: ({ containerWidth, element }) => element.data.meta?.height,
     maxWidth: ({ containerWidth, elementWidth }) =>
       containerWidth > elementWidth ? elementWidth : containerWidth,
     aspectRatio: ({ elementHeight, elementWidth }) =>
-      elementHeight && elementWidth && elementWidth / elementHeight
+      elementHeight && elementWidth && (elementWidth / elementHeight)
   },
   methods: {
     onReady() {
