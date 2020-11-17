@@ -9,7 +9,7 @@ Axios.prototype.submitForm = function (url, fields, options) {
 
 const authScheme = process.env.AUTH_JWT_SCHEME;
 const config = {
-  baseURL: process.env.API_PATH,
+  baseURL: '/api',
   withCredentials: true,
   headers: { 'Content-Type': 'application/json' }
 };

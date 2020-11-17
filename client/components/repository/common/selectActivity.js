@@ -6,7 +6,7 @@ export default {
   methods: {
     selectActivity(activityId) {
       if (get(this.selectedActivity, 'id') === activityId) return;
-      this.$router.replace({ query: { activityId } });
+      this.$router.replace({ query: { ...this.$route.query, activityId } });
     }
   }
 };

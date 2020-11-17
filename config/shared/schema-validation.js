@@ -28,6 +28,7 @@ const schema = yup.object().shape({
   id: yup.string().min(2).max(20).required(),
   name: yup.string().min(2).max(200).required(),
   meta,
+  workflowId: yup.string(),
   structure: yup.array().of(yup.object().shape({
     type: activityType.required(),
     rootLevel: yup.boolean(),
@@ -38,6 +39,7 @@ const schema = yup.object().shape({
     contentContainers: yup.array().of(activityType),
     hasAssessments: yup.boolean(),
     hasExams: yup.boolean(),
+    isTrackedInWorkflow: yup.boolean(),
     exams: yup.object().shape({ objectives: yup.array().of(activityType) }),
     relationships,
     meta

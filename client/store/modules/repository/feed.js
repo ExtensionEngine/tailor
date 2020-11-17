@@ -3,7 +3,7 @@ import SSEClient from '@/SSEClient';
 import urlJoin from 'url-join';
 
 const authScheme = process.env.AUTH_JWT_SCHEME;
-const baseUrl = process.env.API_PATH;
+const baseUrl = '/api';
 const feed = new SSEClient();
 let subscribedRepositoryId = null;
 

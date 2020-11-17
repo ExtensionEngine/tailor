@@ -24,12 +24,15 @@ const templatesDir = path.join(__dirname, './templates/');
 const resetUrl = token => urlJoin(origin, '/#/reset-password/', token);
 const activityUrl = (repositoryId, activityId) =>
   urlJoin(origin, '/#/repository', `${repositoryId}?activityId=${activityId}`);
+const taskUrl = (repositoryId, taskId) =>
+  urlJoin(origin, '/#/repository', `${repositoryId}/board?taskId=${taskId}`);
 
 module.exports = {
   send,
   invite,
   resetPassword,
-  sendCommentNotification
+  sendCommentNotification,
+  sendTaskAssigneeNotification
 };
 
 function invite(user, token) {
@@ -84,6 +87,22 @@ function sendCommentNotification(users, comment) {
     from,
     to: recipients,
     subject: `${comment.author.label} left a comment on ${comment.repositoryName}`,
+    text,
+    attachment: [{ data: html, alternative: true }]
+  });
+}
+
+function sendTaskAssigneeNotification(assignee, activity, task) {
+  const recipients = assignee;
+  const { name: label } = activity.data;
+  const data = { ...task, label, href: taskUrl(task.repositoryId, task.id) };
+  const html = renderHtml(path.join(templatesDir, 'task.mjml'), data);
+  const text = renderText(path.join(templatesDir, 'task.txt'), data);
+  logger.info({ recipients, sender: from }, '📧  Sending notification email to:', recipients);
+  return send({
+    from,
+    to: recipients,
+    subject: `You've been assigned task for "${label}."`,
     text,
     attachment: [{ data: html, alternative: true }]
   });

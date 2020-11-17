@@ -2,7 +2,7 @@
   <div>
     <v-alert
       :value="!!error"
-      color="grey darken-3"
+      color="pink lighten-1"
       text
       class="mb-5">
       {{ error }}
@@ -46,7 +46,8 @@
       </validation-provider>
       <v-btn
         type="submit"
-        color="primary darken-1"
+        color="blue-grey darken-4"
+        rounded block dark
         class="my-1">
         Change password
       </v-btn>
@@ -78,6 +79,6 @@ export default {
 <style lang="scss" scoped>
 .v-input ::v-deep label {
   padding-right: 0.25rem;
-  background: #fff;
+  background: #ececec;
 }
 </style>

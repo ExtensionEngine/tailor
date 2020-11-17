@@ -12,7 +12,11 @@
         :color="color"
         filled>
         <template slot="prepend-inner">
-          <v-radio v-if="isGraded" :value="idx" :color="color" />
+          <v-radio
+            v-if="isGraded"
+            :value="idx"
+            :disabled="disabled"
+            :color="color" />
           <v-avatar v-else :color="color" size="24" class="subtitle-2 mr-2">
             {{ idx + 1 }}
           </v-avatar>
