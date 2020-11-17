@@ -21,8 +21,8 @@
     </div>
     <v-tooltip v-if="!exceededTagLimit" open-delay="400" bottom>
       <template v-slot:activator="{ on }">
-        <v-btn v-on="on" @click="showTagDialog = true" icon>
-          <v-icon color="blue-grey lighten-3" dense>mdi-tag-plus</v-icon>
+        <v-btn v-on="on" @click="showTagDialog = true" color="blue-grey lighten-3" icon>
+          <v-icon dense>mdi-tag-plus</v-icon>
         </v-btn>
       </template>
       Add tag

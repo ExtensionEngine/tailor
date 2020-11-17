@@ -14,11 +14,10 @@
               <v-btn
                 v-on="on"
                 @click="onFilterChange(togglePinned)"
-                icon text
+                :color="showPinned ? 'lime accent-3' : 'primary lighten-4'"
+                icon
                 class="my-1">
-                <v-icon :color="showPinned ? 'lime accent-3' : 'primary lighten-4'">
-                  mdi-pin
-                </v-icon>
+                <v-icon>mdi-pin</v-icon>
               </v-btn>
             </template>
             <span>{{ showPinned ? 'Show all' : 'Show pinned' }}</span>
