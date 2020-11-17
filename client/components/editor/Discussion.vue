@@ -1,5 +1,5 @@
 <template>
-  <div class="my-4 pa-4">
+  <div class="editor-discussion">
     <discussion v-bind="{ activity, contentElement }" />
   </div>
 </template>
@@ -46,3 +46,10 @@ export default {
   components: { Discussion }
 };
 </script>
+
+<style lang="scss" scoped>
+.editor-discussion {
+  margin: 1rem 0;
+  padding: 1rem;
+}
+</style>

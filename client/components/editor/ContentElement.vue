@@ -21,7 +21,7 @@
           <span>Discussion</span>
         </v-tooltip>
       </template>
-      <ContentElementDiscussion
+      <content-element-discussion
         :activity="activity"
         :content-element="element"
         :is-visible="showDiscussion" />
@@ -91,10 +91,9 @@ export default {
     showNotification: throttle(function () {
       this.$snackbar.show('Element saved');
     }, 4000),
-    remove() {
-      this.removeElement(this.element).then(() => {
-        this.$nextTick(() => this.editorChannel.emit('element:focus'));
-      });
+    async remove() {
+      await this.removeElement(this.element);
+      this.$nextTick(() => this.editorChannel.emit('element:focus'));
     }
   },
   components: { ContainedContent, ContentElementDiscussion }
@@ -114,8 +113,13 @@ export default {
 }
 
 ::v-deep {
-  .discussion-container {
+  .editor-discussion {
     margin: 0;
+    padding: 0;
+  }
+
+  .discussion-container {
+    margin: 0.5rem 0;
     border: none;
 
     .header {
