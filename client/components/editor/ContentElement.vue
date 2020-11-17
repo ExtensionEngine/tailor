@@ -45,6 +45,7 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
 import Discussion from '@/components/repository/common/Discussion';
+import get from 'lodash/get';
 import loader from '@/components/common/loader';
 import { mapChannels } from '@/plugins/radio';
 import throttle from 'lodash/throttle';
@@ -65,7 +66,9 @@ export default {
   }),
   computed: {
     ...mapChannels({ editorChannel: 'editor' }),
-    ...mapGetters('repository/comments', ['getUnseenComments']),
+    ...mapGetters('repository/comments', ['getUnseenComments', 'getComments']),
+    comments: vm => vm.getComments({ activityId: vm.activity.id }),
+    lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime(),
     unseenComments: vm => vm.getUnseenComments(vm.activity)
       .filter(it => it.contentElementId === vm.element.id)
   },
@@ -76,6 +79,14 @@ export default {
       removeElement: 'remove'
     }),
     ...mapMutations('repository/contentElements', { addElement: 'add' }),
+    ...mapMutations('repository/comments', ['markSeenComments']),
+    setLastSeenComment(timeout) {
+      const payload = {
+        activityUid: this.activity.uid,
+        lastCommentAt: this.lastCommentAt
+      };
+      setTimeout(() => this.markSeenComments(payload), timeout);
+    },
     add(element) {
       this.addElement({ ...this.element, ...cloneDeep(element) });
     },
@@ -93,6 +104,18 @@ export default {
       this.removeElement(this.element).then(() => {
         this.$nextTick(() => this.editorChannel.emit('element:focus'));
       });
+    }
+  },
+  watch: {
+    showDiscussion(val) {
+      if (!val) return;
+      if (!this.lastCommentAt) return;
+      this.setLastSeenComment(1000);
+    },
+    comments(val, oldVal) {
+      if (!this.showDiscussion) return;
+      if (val === oldVal) return;
+      this.setLastSeenComment(2000);
     }
   },
   components: { ContainedContent, Discussion }
