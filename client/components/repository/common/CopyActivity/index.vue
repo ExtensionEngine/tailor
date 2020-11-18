@@ -110,7 +110,7 @@ export default {
       repository.activities = sortBy(activities, 'position');
       this.isFetchingActivities = false;
     },
-    async copyActivity(activity) {
+    async copyActivity(activity, copyIndex) {
       const { id: srcId, repositoryId: srcRepositoryId, type } = activity;
       const { anchor, action } = this;
       const payload = {
@@ -118,7 +118,7 @@ export default {
         srcRepositoryId,
         repositoryId: this.repositoryId,
         type,
-        position: await this.calculateCopyInsertPosition({ action, activity, anchor })
+        position: await this.calculateCopyInsertPosition({ action, activity, anchor, copyIndex })
       };
       if (anchor) {
         payload.parentId = action === ADD_INTO ? anchor.id : anchor.parentId;
@@ -128,7 +128,7 @@ export default {
     async copySelection() {
       this.isCopyingActivities = true;
       const items = sortBy(this.selectedActivities, ['parentId', 'position']);
-      await Promise.each(items, it => this.copyActivity(it));
+      await Promise.each(items, (it, index) => this.copyActivity(it, index));
       this.$emit('completed', items[0].parentId);
       this.isCopyingActivities = false;
       this.close();

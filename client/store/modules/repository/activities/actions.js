@@ -57,13 +57,13 @@ const calculateInsertPosition = ({ state }, { activity, anchor, action }) => {
   return calculatePosition(context);
 };
 
-const calculateCopyInsertPosition = ({ state }, { anchor, action }) => {
+const calculateCopyInsertPosition = ({ state }, { anchor, action, copyIndex }) => {
   let items = getOutlineChildren(state.items, anchor.parentId);
   if (action === ADD_INTO) {
     items = getOutlineChildren(state.items, anchor.id);
     return calculatePosition({ items, action });
   }
-  const newPosition = findIndex(items, { id: anchor.id });
+  const newPosition = findIndex(items, { id: anchor.id }) + copyIndex;
   const context = { items, newPosition, isFirstChild: newPosition === -1, action };
   return calculatePosition(context);
 };
