@@ -4,6 +4,7 @@ const { getFileUrl, saveFile } = require('.');
 const { readFile, sha256 } = require('./util');
 const { ASSET_ROOT } = require('./helpers');
 const JSZip = require('jszip');
+const mime = require('mime-types');
 const path = require('path');
 const pickBy = require('lodash/pickBy');
 const xmlParser = require('fast-xml-parser');
@@ -27,7 +28,8 @@ function uploadAssets(content, location) {
   return Promise.all(Object.keys(assets).map(async src => {
     const key = path.join(ASSET_ROOT, `${location}/${src}`);
     const file = await content.file(src).async('uint8array');
-    return saveFile(key, file);
+    const mimeType = mime.lookup(src);
+    return saveFile(key, Buffer.from(file), { ContentType: mimeType });
   }));
 }
 
