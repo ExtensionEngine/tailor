@@ -1,7 +1,7 @@
 import { getDescendants as getDeepChildren, getOutlineChildren } from 'utils/activity';
 import calculatePosition from 'utils/calculatePosition';
 import { Activity as Events } from '@/../common/sse';
-import { feed } from '../feed';
+import feed from '../feed';
 import findIndex from 'lodash/findIndex';
 import generateActions from '@/store/helpers/actions';
 import request from '@/api/request';

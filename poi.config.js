@@ -91,6 +91,7 @@ module.exports = {
     sourceMap: !isProduction
   },
   envs: {
+    API_PATH: '/api',
     AUTH_JWT_SCHEME,
     ENABLE_DEFAULT_SCHEMA: yn(ENABLE_DEFAULT_SCHEMA),
     OIDC_ENABLED,
