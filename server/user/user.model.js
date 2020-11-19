@@ -97,13 +97,21 @@ class User extends Model {
     };
   }
 
-  static associate({ Comment, Repository, RepositoryUser }) {
+  static associate({ Comment, Repository, RepositoryUser, Task }) {
     this.hasMany(Comment, {
       foreignKey: { name: 'authorId', field: 'author_id' }
     });
     this.belongsToMany(Repository, {
       through: RepositoryUser,
       foreignKey: { name: 'userId', field: 'user_id' }
+    });
+    this.hasMany(Task, {
+      as: 'createdTasks',
+      foreignKey: { name: 'authorId', field: 'author_id' }
+    });
+    this.hasMany(Task, {
+      as: 'assignedTasks',
+      foreignKey: { name: 'assigneeId', field: 'assignee_id' }
     });
   }
 
@@ -185,7 +193,7 @@ class User extends Model {
   createToken(options = {}) {
     const payload = { id: this.id, email: this.email };
     Object.assign(options, {
-      issuer: config.auth.issuer,
+      issuer: config.auth.jwt.issuer,
       audience: options.audience || Audience.Scope.Access
     });
     return jwt.sign(payload, this.getTokenSecret(options.audience), options);
@@ -200,7 +208,7 @@ class User extends Model {
   }
 
   getTokenSecret(audience) {
-    const { secret } = config.auth;
+    const { secret } = config.auth.jwt;
     if (audience === Audience.Scope.Access) return secret;
     return [secret, this.password, this.createdAt.getTime()].join('');
   }

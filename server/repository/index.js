@@ -16,6 +16,7 @@ const activity = require('../activity');
 const comment = require('../comment');
 const revision = require('../revision');
 const contentElement = require('../content-element');
+const task = require('../task');
 /* eslint-enable */
 
 // NOTE: disk storage engine expects an object to be passed as the first argument
@@ -55,6 +56,7 @@ mount(router, '/:repositoryId', activity);
 mount(router, '/:repositoryId', revision);
 mount(router, '/:repositoryId', contentElement);
 mount(router, '/:repositoryId', comment);
+mount(router, '/:repositoryId', task);
 
 function mount(router, mountPath, subrouter) {
   return router.use(path.join(mountPath, subrouter.path), subrouter.router);

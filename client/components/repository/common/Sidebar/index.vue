@@ -11,8 +11,7 @@
       <h4>Outline Sidebar</h4>
       <v-icon>mdi-chevron-left</v-icon>
       <div class="info-content">
-        Please create your first Item on the left
-        to view and edit its details here.
+        {{ emptyMessage }}
       </div>
     </div>
   </v-navigation-drawer>
@@ -24,6 +23,12 @@ import SidebarBody from './Body';
 import SidebarHeader from './Header';
 
 export default {
+  props: {
+    emptyMessage: {
+      type: String,
+      default: 'Please create your first Item on the left to view and edit its details here.'
+    }
+  },
   computed: mapGetters('repository', ['selectedActivity']),
   components: {
     SidebarBody,

@@ -9,19 +9,18 @@
             :value="queryParams.search" />
         </v-col>
         <v-col md="3" sm="1" class="text-sm-left pl-2">
-          <v-tooltip open-delay="800" right>
+          <v-tooltip open-delay="800" top>
             <template v-slot:activator="{ on }">
               <v-btn
                 v-on="on"
                 @click="onFilterChange(togglePinned)"
-                icon text
+                :color="showPinned ? 'lime accent-3' : 'primary lighten-4'"
+                icon
                 class="my-1">
-                <v-icon :color="showPinned ? 'lime accent-3' : 'primary lighten-4'">
-                  mdi-pin
-                </v-icon>
+                <v-icon>mdi-pin</v-icon>
               </v-btn>
             </template>
-            <span>Toggle pinned</span>
+            <span>{{ showPinned ? 'Show all' : 'Show pinned' }}</span>
           </v-tooltip>
           <select-order
             @update="onFilterChange(setOrder, $event)"
