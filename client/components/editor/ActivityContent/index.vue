@@ -11,7 +11,7 @@
           :key="type"
           :container-group="containerGroup"
           :parent-id="activity.id"
-          :elements="activityElements"
+          :elements="elements"
           :revisions="revisions"
           v-bind="getContainerConfig(type)" />
       </template>
@@ -21,21 +21,15 @@
 
 <script>
 import { getElementId, isQuestion } from 'tce-core/utils';
-import { mapActions, mapGetters, mapState } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import ContentContainers from '../structure/ContentContainers';
 import ContentLoader from './Loader';
 import debounce from 'lodash/debounce';
-import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import { getSupportedContainers } from 'shared/activities';
-import isAfter from 'date-fns/isAfter';
 import loader from '@/components/common/loader';
-import map from 'lodash/map';
 import { mapChannels } from '@/plugins/radio';
-import mapValues from 'lodash/mapValues';
-import pickBy from 'lodash/pickBy';
-import revisionApi from '@/api/revision';
 import throttle from 'lodash/throttle';
 
 const CE_FOCUS_EVENT = 'element:focus';
@@ -51,28 +45,19 @@ export default {
     activity: { type: Object, required: true },
     // grouped by type
     rootContainerGroups: { type: Object, required: true },
-    contentContainers: { type: Array, required: true }
+    contentContainers: { type: Array, required: true },
+    elements: { type: Object, default: () => ({}) },
+    revisions: { type: Array, default: () => [] }
   },
   data: () => ({
     isLoading: true,
     mousedownCaptured: null,
-    focusedElement: null,
-    revisions: null
+    focusedElement: null
   }),
   computed: {
     ...mapState('editor', ['isPublishedPreview']),
-    ...mapGetters('repository', ['activities']),
-    ...mapGetters('repository/contentElements', ['elements']),
     ...mapChannels({ editorChannel: 'editor' }),
-    containerConfigs: vm => getSupportedContainers(vm.activity.type),
-    containerIds: vm => vm.contentContainers.map(it => it.id),
-    activityElements() {
-      const elements = pickBy(this.elements, this.isActivityElement);
-      return mapValues(elements, it => ({
-        ...it,
-        isModified: this.isModifiedElement(it)
-      }));
-    }
+    containerConfigs: vm => getSupportedContainers(vm.activity.type)
   },
   methods: {
     ...mapActions('repository/contentElements', { getContentElements: 'fetch' }),
@@ -90,8 +75,9 @@ export default {
       }
     },
     loadContents: loader(function () {
-      if (this.containerIds.length <= 0) return;
-      return this.getContentElements({ ids: this.containerIds });
+      const ids = this.contentContainers.map(it => it.id);
+      if (ids.length <= 0) return;
+      return this.getContentElements({ ids });
     }, 'isLoading', 800),
     initElementChangeWatcher() {
       this.storeUnsubscribe = this.$store.subscribe(debounce((mutation, state) => {
@@ -120,24 +106,6 @@ export default {
         this.focusedElement = { ...element, parent: composite };
       }, 50);
       this.editorChannel.on(CE_FOCUS_EVENT, this.focusHandler);
-    },
-    isActivityElement(element) {
-      return this.containerIds.some(id => id === element.activityId);
-    },
-    isModifiedElement(element) {
-      return isAfter(new Date(element.updatedAt), new Date(this.activity.publishedAt));
-    },
-    fetchRevisions() {
-      const modifiedActivityElements = filter(this.activityElements, 'isModified');
-      if (!modifiedActivityElements.length) return;
-      const entityIds = map(modifiedActivityElements, 'id');
-      return revisionApi.fetch(this.repository.id, {
-        entityIds,
-        entity: 'CONTENT_ELEMENT',
-        createdBefore: this.activity.publishedAt,
-        last: true
-      })
-        .then(revisions => { this.revisions = revisions; });
     }
   },
   watch: {
@@ -146,11 +114,6 @@ export default {
       handler(val) {
         this.$emit('selected', val);
       }
-    },
-    isPublishedPreview(isOn) {
-      if (!isOn) return;
-      this.editorChannel.emit(CE_FOCUS_EVENT);
-      this.fetchRevisions();
     }
   },
   async created() {
