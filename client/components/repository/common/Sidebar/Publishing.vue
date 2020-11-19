@@ -50,7 +50,7 @@ export default {
     publishedAtMessage() {
       const { publishedAt } = this.activity;
       return publishedAt
-        ? `Published on ${fecha.format(new Date(publishedAt), 'M/D/YY HH:mm')}`
+        ? `Published on ${fecha.format(new Date(publishedAt), 'M/D/YY h:mm A')}`
         : 'Not published';
     },
     activityWithDescendants({ outlineActivities, activity } = this) {
