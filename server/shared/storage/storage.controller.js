@@ -4,6 +4,7 @@ const { getFileUrl, saveFile } = require('./');
 const { readFile, sha256 } = require('./util');
 const { ASSET_ROOT } = require('./helpers');
 const path = require('path');
+const scorm = require('./scorm');
 
 function getUrl(req, res) {
   const { query: { key } } = req;
@@ -21,6 +22,9 @@ async function upload({ file }, res) {
   return res.json({ key, url: `storage://${key}`, publicUrl });
 }
 
-module.exports = { getUrl, upload };
+async function uploadScormPackage({ file }, res) {
+  const launchUrl = await scorm.savePackage(file);
+  return res.json({ launchUrl });
+}
 
-
+module.exports = { getUrl, upload, uploadScormPackage };

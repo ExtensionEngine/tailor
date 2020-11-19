@@ -8,7 +8,8 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 router
   .get('/', ctrl.getUrl)
-  .post('/', upload.single('file'), ctrl.upload);
+  .post('/', upload.single('file'), ctrl.upload)
+  .post('/scorm', upload.single('file'), ctrl.uploadScormPackage);
 
 module.exports = {
   path: '/assets',
