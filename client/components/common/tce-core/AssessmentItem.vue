@@ -29,11 +29,11 @@
       </template>
     </tce-question-container>
     <div v-else @click="$emit('selected')" class="minimized">
-      <v-chip
+      <custom-chip
         color="blue-grey darken-3"
         label dark small>
         {{ elementConfig.subtype }}
-      </v-chip>
+      </custom-chip>
       <span class="question">{{ question | truncate(50) }}</span>
       <v-btn
         @click.stop="$emit('delete')"
@@ -48,6 +48,7 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
+import CustomChip from '@/components/common/Chip';
 import filter from 'lodash/filter';
 import map from 'lodash/map';
 
@@ -84,7 +85,8 @@ export default {
       Object.assign(assessment.data, data);
       this.$emit('save', assessment);
     }
-  }
+  },
+  components: { CustomChip }
 };
 </script>
 

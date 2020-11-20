@@ -1,20 +1,19 @@
 <template functional>
-  <v-chip
+  <custom-chip
     v-on="listeners"
     :class="[data.staticClass, data.class]"
     color="blue-grey lighten-5"
     label small
-    class="chip flex-shrink-0 caption text-uppercase">
+    class="flex-shrink-0 caption text-uppercase">
     <slot></slot>
-  </v-chip>
+  </custom-chip>
 </template>
 
 <script>
-export default { name: 'repository-label-chip' };
-</script>
+import CustomChip from '@/components/common/Chip';
 
-<style lang="scss" scoped>
-.chip::before {
-  display: none;
-}
-</style>
+export default {
+  name: 'repository-label-chip',
+  components: { CustomChip }
+};
+</script>

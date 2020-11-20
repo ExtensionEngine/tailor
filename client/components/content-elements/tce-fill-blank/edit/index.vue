@@ -15,7 +15,7 @@
           <span v-if="isEditing" class="drag-handle">
             <v-icon>mdi-drag-vertical</v-icon>
           </span>
-          <v-chip :color="color" dark label small>{{ i + 1 }}</v-chip>
+          <custom-chip :color="color" dark label small>{{ i + 1 }}</custom-chip>
           <v-btn
             v-if="isEditing && !isSynced"
             @click="removeAnswerGroup(i)"
@@ -62,6 +62,7 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
+import CustomChip from '@/components/common/Chip';
 import { defaults } from 'utils/assessment';
 import Draggable from 'vuedraggable';
 import get from 'lodash/get';
@@ -164,7 +165,7 @@ export default {
   created() {
     if (this.isGraded) this.validate();
   },
-  components: { Draggable }
+  components: { CustomChip, Draggable }
 };
 </script>
 

@@ -5,12 +5,12 @@
       color="blue-grey darken-3"
       absolute
       class="heading elevation-2">
-      <v-chip
+      <custom-chip
         color="blue-grey lighten-3"
         small
         class="ml-1 px-7 body-2">
         Profile
-      </v-chip>
+      </custom-chip>
     </v-toolbar>
     <v-container class="user-panel">
       <v-row no-gutters>
@@ -29,6 +29,7 @@
 
 <script>
 import ChangePasswordDialog from './ChangePasswordDialog';
+import CustomChip from '@/components/common/Chip';
 import UserAvatar from './Avatar';
 import UserInfo from './Info';
 
@@ -36,6 +37,7 @@ export default {
   name: 'user-settings',
   components: {
     ChangePasswordDialog,
+    CustomChip,
     UserAvatar,
     UserInfo
   }

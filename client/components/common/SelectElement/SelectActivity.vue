@@ -15,12 +15,12 @@
       class="py-3 px-1 treeview">
       <template v-slot:label="{ item: { id, data } }">
         {{ data.name }}
-        <v-chip
+        <custom-chip
           v-if="groupedSelection[id]"
           rounded small
           class="custom-chip">
           {{ getChipLabel(groupedSelection[id]) }}
-        </v-chip>
+        </custom-chip>
       </template>
       <template v-slot:append="{ item }">
         <v-btn
@@ -39,6 +39,7 @@
 </template>
 
 <script>
+import CustomChip from '@/components/common/Chip';
 import groupBy from 'lodash/groupBy';
 import { isEditable } from 'shared/activities';
 import { mapGetters } from 'vuex';
@@ -66,7 +67,8 @@ export default {
     getChipLabel({ length }) {
       return `${length} ${pluralize('element', length)} selected`;
     }
-  }
+  },
+  components: { CustomChip }
 };
 </script>
 
@@ -80,10 +82,6 @@ export default {
 
   .v-chip.custom-chip {
     border-radius: 12px !important;
-
-    &::before {
-      display: none;
-    }
   }
 }
 </style>

@@ -1,15 +1,23 @@
 <template>
   <div class="inline-activator">
     <hr>
-    <v-chip
+    <custom-chip
       color="blue-grey darken-4"
       label dark small
       class="pa-1">
       <v-icon>mdi-plus</v-icon>
-    </v-chip>
+    </custom-chip>
     <hr>
   </div>
 </template>
+
+<script>
+import CustomChip from '@/components/common/Chip';
+
+export default {
+  components: { CustomChip }
+};
+</script>
 
 <style lang="scss" scoped>
 .inline-activator {

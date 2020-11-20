@@ -1,11 +1,11 @@
 <template>
   <div class="body">
-    <v-chip
+    <custom-chip
       :color="config.color"
       label dark small
       class="body-label">
       {{ config.label.toUpperCase() }}
-    </v-chip>
+    </custom-chip>
     <v-tooltip open-delay="500" bottom>
       <template v-slot:activator="{ on }">
         <label-chip v-on="on" class="body-label">
@@ -66,6 +66,7 @@
 import { getActivityMetadata, getLevel } from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex';
 import ActivityTasks from './Tasks';
+import CustomChip from '@/components/common/Chip';
 import Discussion from './Discussion';
 import LabelChip from '@/components/repository/common/LabelChip';
 import MetaInput from 'tce-core/MetaInput';
@@ -93,6 +94,7 @@ export default {
   },
   components: {
     ActivityTasks,
+    CustomChip,
     Discussion,
     Relationship,
     MetaInput,

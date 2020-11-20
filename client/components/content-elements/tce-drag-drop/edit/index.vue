@@ -5,7 +5,7 @@
       v-for="(groupName, groupKey, i) in groups" :key="groupKey"
       class="pt-4 transparent elevation-0">
       <div class="mb-4">
-        <v-chip :color="color" label dark small>{{ i + 1 }}</v-chip>
+        <custom-chip :color="color" label dark small>{{ i + 1 }}</custom-chip>
         <v-btn
           v-if="isEditing && groupCount > 2"
           @click="removeGroup(groupKey)"
@@ -70,6 +70,7 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
+import CustomChip from '@/components/common/Chip';
 import { defaults } from 'utils/assessment';
 import forEach from 'lodash/forEach';
 import { mapRequests } from '@/plugins/radio';
@@ -157,6 +158,7 @@ export default {
     hasError(key) {
       return this.errors.includes(key);
     }
-  }
+  },
+  components: { CustomChip }
 };
 </script>

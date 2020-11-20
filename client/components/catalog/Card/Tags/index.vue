@@ -1,7 +1,7 @@
 <template>
   <div class="tags-container">
     <div class="tag-list">
-      <v-chip
+      <custom-chip
         v-for="tag in repository.tags"
         :key="tag.id"
         @click:close="showDeleteConfirmation(tag)"
@@ -14,7 +14,7 @@
           </template>
           {{ tag.name }}
         </v-tooltip>
-      </v-chip>
+      </custom-chip>
     </div>
     <v-tooltip v-if="!exceededTagLimit" open-delay="400" bottom>
       <template v-slot:activator="{ on }">
@@ -34,6 +34,7 @@
 <script>
 import AddTag from './AddTag';
 import clamp from 'lodash/clamp';
+import CustomChip from '@/components/common/Chip';
 import get from 'lodash/get';
 import { mapActions } from 'vuex';
 import { mapRequests } from '@/plugins/radio';
@@ -67,7 +68,7 @@ export default {
       return truncate(tag, { length });
     }
   },
-  components: { AddTag }
+  components: { AddTag, CustomChip }
 };
 </script>
 
