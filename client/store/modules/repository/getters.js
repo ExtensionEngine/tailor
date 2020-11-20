@@ -66,6 +66,7 @@ export const tasks = (state, getters, rootState) => {
   const { repository: { tasks: { items } } } = rootState;
   return map(items, it => ({
     ...it,
+    activity: find(getters.activities, { id: it.activityId }),
     assignee: get(state.users, it.assigneeId),
     author: get(state.users, it.authorId),
     shortId: `T-${hashids.encode(it.id)}`

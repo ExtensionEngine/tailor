@@ -1,8 +1,10 @@
 import * as yup from 'yup';
 import Edit from './edit';
 
+const MESSAGE = 'Please choose the correct answer';
+
 const schema = {
-  correct: yup.boolean().required()
+  correct: yup.boolean().required(MESSAGE).typeError(MESSAGE)
 };
 
 const initState = () => ({

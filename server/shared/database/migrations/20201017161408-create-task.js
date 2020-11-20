@@ -35,10 +35,6 @@ exports.up = async (queryInterface, Sequelize) => {
       field: 'activity_id',
       references: { model: 'activity', key: 'id' }
     },
-    name: {
-      type: Sequelize.STRING,
-      allowNull: false
-    },
     status: {
       type: Sequelize.STRING(50),
       allowNull: false

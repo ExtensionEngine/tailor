@@ -4,10 +4,18 @@
     @update:return-value="search = ''"
     :close-on-content-click="false"
     offset-y>
-    <template v-slot:activator="{ on }">
-      <v-btn v-on="on" icon text>
-        <v-icon color="primary lighten-4">mdi-tag-outline</v-icon>
-      </v-btn>
+    <template v-slot:activator="{ on: menu, value }">
+      <v-tooltip
+        :disabled="value"
+        open-delay="800"
+        top>
+        <template v-slot:activator="{ on: tooltip }">
+          <v-btn v-on="{ ...menu, ...tooltip }" color="primary lighten-4" icon>
+            <v-icon>mdi-tag-outline</v-icon>
+          </v-btn>
+        </template>
+        <span>Tags</span>
+      </v-tooltip>
     </template>
     <v-sheet
       tile
@@ -42,20 +50,21 @@ import find from 'lodash/find';
 import get from 'lodash/get';
 import map from 'lodash/map';
 import { mapState } from 'vuex';
+import orderBy from 'lodash/orderBy';
 
 export default {
   data: () => ({ search: '' }),
   computed: {
     ...mapState('repositories', ['tags', 'tagFilter']),
     isVisible: vm => get(vm.$refs.filter, 'isActive', false),
-    options() {
-      return map(this.tags, it => {
-        const isSelected = !!find(this.tagFilter, { id: it.id });
+    options: ({ tags, tagFilter }) => {
+      const options = map(tags, it => {
+        const isSelected = !!find(tagFilter, { id: it.id });
         return { ...it, isSelected };
       });
+      return orderBy(options, [tag => tag.name.toLowerCase()], ['asc']);
     },
-    filteredTags() {
-      const { options, search } = this;
+    filteredTags: ({ options, search }) => {
       if (!search) return options;
       const reqex = new RegExp(search.trim(), 'i');
       return filter(options, ({ name }) => reqex.test(name));
@@ -70,5 +79,4 @@ export default {
   border-radius: 0;
   overflow-y: auto;
 }
-
 </style>

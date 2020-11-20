@@ -30,19 +30,16 @@ function add(ContentElement, Hooks, Models) {
   const isRepository = it => it instanceof Models.Repository;
 
   function sseCreate(_, element) {
-    const channel = sse.channel(element.repositoryId);
-    if (channel) channel.send(Events.Create, element);
+    sse.channel(element.repositoryId).send(Events.Create, element);
   }
 
   function sseUpdate(_, element) {
-    const channel = sse.channel(element.repositoryId);
-    if (channel) channel.send(Events.Update, element);
+    sse.channel(element.repositoryId).send(Events.Update, element);
   }
 
   async function sseDelete(_, element) {
     await element.reload({ paranoid: false });
-    const channel = sse.channel(element.repositoryId);
-    if (channel) channel.send(Events.Delete, element);
+    sse.channel(element.repositoryId).send(Events.Delete, element);
   }
 
   function processAssets(hookType, element) {

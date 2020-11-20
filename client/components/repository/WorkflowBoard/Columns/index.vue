@@ -1,6 +1,6 @@
 <template>
   <div class="tasks">
-    <div v-if="workflow" class="column-layout mt-4 px-4">
+    <div class="column-layout mt-4 px-4">
       <h5
         v-for="status in workflow.statuses"
         :key="status.id"
@@ -8,7 +8,7 @@
         {{ status.label }}
       </h5>
     </div>
-    <div v-if="workflow" class="column-layout px-4">
+    <div class="column-layout px-4">
       <board-column
         v-for="status in workflow.statuses"
         :key="status.id"

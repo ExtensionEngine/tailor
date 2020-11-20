@@ -12,10 +12,6 @@ const Comment = {
   Delete: 'comment:delete'
 };
 
-const Connection = {
-  Initialized: 'connection_initialized'
-};
-
 const ContentElement = {
   Create: 'content_element:create',
   Update: 'content_element:update',
@@ -37,7 +33,6 @@ const UserActivity = {
 module.exports = {
   Activity,
   Comment,
-  Connection,
   ContentElement,
   Task,
   UserActivity

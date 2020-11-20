@@ -57,6 +57,11 @@ export default {
       return !some(tooltips, it => it.classList.contains('ql-hidden'));
     }
   },
+  watch: {
+    value(newValue) {
+      this.internalValue = this.value;
+    }
+  },
   components: { QuillEditor }
 };
 </script>

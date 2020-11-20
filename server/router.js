@@ -1,5 +1,6 @@
 'use strict';
 
+const { auth: authConfig } = require('../config/server');
 const { authenticate } = require('./shared/auth');
 const express = require('express');
 const repository = require('./repository');
@@ -12,6 +13,12 @@ router.use(processBody);
 
 // Public routes:
 router.use(user.path, user.router);
+
+// SSO routes:
+authConfig.oidc.enabled && (() => {
+  const oidc = require('./oidc');
+  router.use(oidc.path, oidc.router);
+})();
 
 // Protected routes:
 router.use(authenticate('jwt'));

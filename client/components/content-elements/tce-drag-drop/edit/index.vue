@@ -18,7 +18,7 @@
       <v-text-field
         @change="updateGroupName(groupKey, $event)"
         :value="groupName"
-        :error="hasError(`groups${groupKey}`)"
+        :error-messages="errorMessages(groupKey)"
         :disabled="disabled"
         :color="color"
         label="Group name"
@@ -28,7 +28,7 @@
         :key="answerKey"
         @change="updateAnswer(answerKey, $event)"
         :value="answer"
-        :error="hasError(`answers${answerKey}`)"
+        :error-messages="errorMessages(answerKey)"
         :disabled="disabled"
         :color="color"
         placeholder="Answer..."
@@ -68,10 +68,10 @@
 </template>
 
 <script>
+import { defaults, getErrorMessages } from 'utils/assessment';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
 import CustomChip from '@/components/common/Chip';
-import { defaults } from 'utils/assessment';
 import forEach from 'lodash/forEach';
 import { mapRequests } from '@/plugins/radio';
 import pick from 'lodash/pick';
@@ -153,10 +153,10 @@ export default {
       });
     },
     update(data) {
-      this.$emit('update', data, true);
+      this.$emit('update', data);
     },
-    hasError(key) {
-      return this.errors.includes(key);
+    errorMessages(key) {
+      return getErrorMessages(this.errors, key);
     }
   },
   components: { CustomChip }

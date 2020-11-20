@@ -1,6 +1,15 @@
 <template>
   <header>
-    <h3>{{ name }}</h3>
+    <div class="mt-5">
+      <h5 class="h5">
+        Related <span class="text-lowercase">{{ activityConfig.label }}</span>
+      </h5>
+      <activity-card
+        v-bind="activity"
+        :name="activityName"
+        :type-label="activityConfig.label"
+        :color="activityConfig.color" />
+    </div>
     <div class="mt-8">
       <v-tooltip open-delay="500" bottom>
         <template #activator="{ on }">
@@ -49,21 +58,26 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+import ActivityCard from './ActivityCard';
+import find from 'lodash/find';
 import LabelChip from '@/components/repository/common/LabelChip';
-import { mapActions } from 'vuex';
 import { mapRequests } from '@/plugins/radio';
 
 export default {
   props: {
     uid: { type: String, required: true },
     id: { type: Number, required: true },
-    name: { type: String, required: true },
     shortId: { type: String, required: true },
+    activity: { type: Object, required: true },
     createdAt: { type: String, required: true },
     updatedAt: { type: String, required: true }
   },
   computed: {
-    taskUrl: () => window.location.href
+    ...mapGetters('repository', ['structure']),
+    activityConfig: vm => find(vm.structure, { type: vm.activity.type }),
+    taskUrl: () => window.location.href,
+    activityName: vm => vm.activity.data.name
   },
   methods: {
     ...mapActions('repository/tasks', ['archive']),
@@ -77,6 +91,6 @@ export default {
       });
     }
   },
-  components: { LabelChip }
+  components: { ActivityCard, LabelChip }
 };
 </script>

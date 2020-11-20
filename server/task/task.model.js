@@ -16,10 +16,6 @@ class Task extends Model {
         allowNull: false,
         defaultValue: UUIDV4
       },
-      name: {
-        type: STRING,
-        allowNull: false
-      },
       status: {
         type: STRING,
         allowNull: false

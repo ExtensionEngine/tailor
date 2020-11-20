@@ -1,11 +1,14 @@
 <template>
   <div class="board d-flex flex-column grey lighten-4 py-3">
-    <board-filters
-      v-bind.sync="filters"
-      :assignee-options="assignees"
-      :show-unassigned="unassignedTaskExists" />
-    <board-columns :tasks="filteredTasks" />
-    <sidebar />
+    <v-progress-circular v-if="showLoader" color="primary" indeterminate class="align-self-center" />
+    <template v-else>
+      <board-filters
+        v-bind.sync="filters"
+        :assignee-options="assignees"
+        :show-unassigned="unassignedTaskExists" />
+      <board-columns :tasks="filteredTasks" />
+      <sidebar />
+    </template>
   </div>
 </template>
 
@@ -23,12 +26,15 @@ const SEARCH_TEXT_LENGTH_THRESHOLD = 3;
 
 export default {
   name: 'workflow-board',
+  props: {
+    showLoader: { type: Boolean, default: false }
+  },
   data: () => ({
     filters: {
       searchText: null,
-      assigneeIds: [],
-      unassigned: false,
-      recentOnly: false
+      recentOnly: false,
+      selectedAssigneeIds: [],
+      unassigned: false
     }
   }),
   computed: {
@@ -37,11 +43,12 @@ export default {
     searchableTasks() {
       return this.tasks.map(it => ({
         ...it,
-        searchableText: `${it.shortId} ${it.name}`.toLowerCase()
+        searchableText: this.getSearchableText(it)
       }));
     },
     isFilteredByAssignee() {
-      return this.filters.assigneeIds.length || this.filters.unassigned;
+      const { selectedAssigneeIds, unassigned } = this.filters;
+      return selectedAssigneeIds.length || unassigned;
     },
     isFilteredBySearchText() {
       return this.filters.searchText?.length > SEARCH_TEXT_LENGTH_THRESHOLD;
@@ -56,7 +63,7 @@ export default {
     assignees() {
       return this.tasks.reduce((all, { assignee }) => {
         if (!assignee) return all;
-        const isActive = this.filters.assigneeIds.includes(assignee.id);
+        const isActive = this.filters.selectedAssigneeIds.includes(assignee.id);
         return { ...all, [assignee.id]: { ...assignee, isActive } };
       }, null);
     }
@@ -66,7 +73,7 @@ export default {
     ...mapActions('repository/tasks', { getTasks: 'reset' }),
     filterByAssignee(id) {
       if (this.filters.unassigned && !id) return true;
-      return this.filters.assigneeIds.includes(id);
+      return this.filters.selectedAssigneeIds.includes(id);
     },
     filterByRecency(updatedAt) {
       const parsed = new Date(updatedAt);
@@ -75,6 +82,10 @@ export default {
     },
     filterBySearchText(searchableText) {
       return searchableText.indexOf(this.filters.searchText.toLowerCase()) !== -1;
+    },
+    getSearchableText({ shortId, description, activity }) {
+      const { name } = activity.data;
+      return `${shortId} ${name} ${description}`.toLowerCase();
     }
   },
   created() {
@@ -89,5 +100,9 @@ export default {
 .board {
   position: relative;
   height: 100%;
+
+  .v-progress-circular {
+    margin-top: 7.5rem;
+  }
 }
 </style>

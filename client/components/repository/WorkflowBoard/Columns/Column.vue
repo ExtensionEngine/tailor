@@ -6,11 +6,11 @@
     group="tasks"
     class="d-flex flex-column align-center grey lighten-3">
     <task-card
-      v-for="task in tasksByStatus"
+      v-for="{ activity, ...task } in tasksByStatus"
       :key="task.id"
       @click="selectTask"
       v-bind="task"
-      :assignee="task.assignee"
+      :label="activity.data.name"
       :is-selected="selectedTask && selectedTask.id === task.id"
       class="align-self-stretch my-2 mx-3" />
   </draggable>

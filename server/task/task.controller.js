@@ -6,7 +6,7 @@ const { createError } = require('../shared/error/helpers');
 const pick = require('lodash/pick');
 
 const ATTRIBUTES = [
-  'assigneeId', 'name', 'description', 'priority',
+  'assigneeId', 'description', 'priority',
   'status', 'dueDate', 'columnPosition'
 ];
 

@@ -13,7 +13,7 @@
         :key="`assignee-${id}`"
         @click="toggleAssignee(id)"
         v-bind="assignee"
-        :class="[{ active: isActive }]"
+        :class="{ active: isActive }"
         class="avatar" />
       <assignee-avatar
         v-if="showUnassigned"
@@ -38,19 +38,19 @@ import xor from 'lodash/xor';
 export default {
   name: 'workflow-board-filters',
   props: {
-    assigneeOptions: { type: Object, default: () => ({}) },
-    showUnassigned: { type: Boolean, default: false },
     searchText: { type: String, default: null },
-    assigneeIds: { type: Array, default: () => ([]) },
     recentOnly: { type: Boolean, default: false },
-    unassigned: { type: Boolean, default: false }
+    selectedAssigneeIds: { type: Array, default: () => ([]) },
+    unassigned: { type: Boolean, default: false },
+    assigneeOptions: { type: Object, default: () => ({}) },
+    showUnassigned: { type: Boolean, default: false }
   },
   methods: {
     updateFilter(filter, value) {
       this.$emit(`update:${filter}`, value);
     },
     toggleAssignee(id) {
-      this.updateFilter('assigneeIds', xor(this.assigneeIds, [id]));
+      this.updateFilter('selectedAssigneeIds', xor(this.selectedAssigneeIds, [id]));
     }
   },
   components: { AssigneeAvatar }

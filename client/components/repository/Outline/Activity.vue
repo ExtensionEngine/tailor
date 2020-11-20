@@ -25,14 +25,20 @@
           <options-toolbar
             :activity="{ id, uid, repositoryId, parentId, type, position, data }"
             class="options-toolbar my-auto" />
-          <v-btn
-            v-show="hasSubtypes"
-            @click="toggle()"
-            color="blue-grey darken-4"
-            icon
-            class="my-auto mx-0">
-            <v-icon>mdi-chevron-{{ isExpanded ? 'up' : 'down' }}</v-icon>
-          </v-btn>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on }">
+              <v-btn
+                v-show="hasSubtypes"
+                v-on="on"
+                @click="toggle()"
+                color="blue-grey darken-4"
+                icon
+                class="my-auto mx-0">
+                <v-icon>mdi-chevron-{{ isExpanded ? 'up' : 'down' }}</v-icon>
+              </v-btn>
+            </template>
+            <span>{{ isExpanded ? 'Collapse' : 'Expand' }}</span>
+          </v-tooltip>
           <options-menu
             :activity="{ id, uid, repositoryId, parentId, type, position, data }"
             class="options-menu" />

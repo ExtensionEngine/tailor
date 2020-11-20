@@ -1,18 +1,5 @@
 <template>
   <section>
-    <validation-provider
-      v-slot="{ errors }"
-      ref="name"
-      :rules="{ required: true }"
-      name="name">
-      <v-text-field
-        @change="update('name', $event)"
-        :value="name"
-        :error-messages="errors"
-        label="Name"
-        outlined
-        class="my-2" />
-    </validation-provider>
     <editor-field
       @change="update('description', $event)"
       :value="description"
@@ -72,14 +59,18 @@ import EditorField from '@/components/common/EditorField';
 import { priorities } from 'shared/workflow';
 import SelectPriority from '@/components/repository/common/SelectPriority';
 
+const defaultPriority = priorities.find(it => it.default);
+
 export default {
   name: 'task-field-group',
   props: {
-    name: { type: String, default: '' },
     description: { type: String, default: null },
     status: { type: String, default: null },
     assigneeId: { type: Number, default: null },
-    priority: { type: String, default: priorities[2].id },
+    priority: {
+      type: String,
+      default: defaultPriority ? defaultPriority.id : null
+    },
     dueDate: { type: String, default: null }
   },
   data: () => ({ showDatePicker: false }),

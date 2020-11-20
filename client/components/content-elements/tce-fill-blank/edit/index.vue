@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ 'pb-4': !hasAnswers }">
+  <div class="mt-2 mb-4">
     <div class="d-flex justify-space-between subtitle-2">
       <span v-if="isGraded">Answers</span>
       <span v-else-if="isEditing">{{ blankCountInfo }}</span>
@@ -30,7 +30,7 @@
           v-for="(answer, j) in group" :key="`${i}.${j}`"
           @change="updateAnswer(i, j, $event)"
           :value="answer"
-          :error="answerError(i, j)"
+          :error-messages="answerErrors(i, j)"
           :disabled="disabled"
           :color="color"
           placeholder="Answer..."
@@ -57,15 +57,17 @@
         </div>
       </v-card>
     </draggable>
+    <input-error v-if="isEditing" :error="syncError" />
   </div>
 </template>
 
 <script>
+import { defaults, getErrorMessages } from 'utils/assessment';
 import cloneDeep from 'lodash/cloneDeep';
 import CustomChip from '@/components/common/Chip';
-import { defaults } from 'utils/assessment';
 import Draggable from 'vuedraggable';
 import get from 'lodash/get';
+import { InputError } from 'tce-core';
 import { mapRequests } from '@/plugins/radio';
 import pluralize from 'pluralize';
 import pullAt from 'lodash/pullAt';
@@ -76,12 +78,10 @@ import times from 'lodash/times';
 const TEXT_TYPES = ['JODIT_HTML', 'HTML'];
 const BLANK = /(@blank)/g;
 
-const OUT_OF_SYNC_ERR = {
-  type: 'error',
-  text: `
-    Question and blanks are out of sync!
-    Please delete unnecessary answers or add blanks in the question!`
-};
+const SYNC_ERROR = `
+  Question and blanks are out of sync! Please delete unnecessary answer groups
+  or add blanks in the question!
+`;
 
 const getBlankCount = question => {
   return reduce(question, (count, element) => {
@@ -107,11 +107,11 @@ export default {
     },
     question: vm => vm.assessment.question,
     disabled: vm => !vm.isEditing,
-    hasAnswers: vm => !!size(vm.correct),
     blankCount: vm => getBlankCount(vm.question),
     blankCountInfo: vm => getCountInfo(vm.blankCount),
     isSynced: vm => vm.blankCount === size(vm.correct),
-    color: vm => vm.disabled ? 'grey' : 'grey darken-3'
+    color: vm => vm.disabled ? 'grey' : 'grey darken-3',
+    syncError: vm => (vm.isGraded && !vm.isSynced) ? SYNC_ERROR : ''
   },
   methods: {
     ...mapRequests('app', ['showConfirmationModal']),
@@ -148,24 +148,22 @@ export default {
       correct.push(...times(count, () => ['']));
       this.update({ correct });
     },
-    validate() {
-      this.$emit('alert', this.isSynced ? {} : OUT_OF_SYNC_ERR);
-    },
     update(value) {
       this.$emit('update', value);
     },
-    answerError(groupIndex, answerIndex) {
-      return this.errors.includes(`correct[${groupIndex}][${answerIndex}]`);
+    answerErrors(groupIndex, answerIndex) {
+      const path = `correct[${groupIndex}][${answerIndex}]`;
+      return getErrorMessages(this.errors, path);
     }
   },
   watch: {
-    question() { if (this.isGraded) this.attemptToSync(); },
-    isSynced() { if (this.isGraded) this.validate(); }
+    question() { if (this.isGraded) this.attemptToSync(); }
   },
-  created() {
-    if (this.isGraded) this.validate();
-  },
-  components: { CustomChip, Draggable }
+  components: {
+    CustomChip,
+    Draggable,
+    InputError
+  }
 };
 </script>
 

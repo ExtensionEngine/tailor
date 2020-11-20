@@ -27,7 +27,7 @@
                 @click.stop="navigateTo('repository-info')"
                 color="blue-grey darken-1"
                 icon
-                class="mr-2">
+                class="repo-info mr-2">
                 <v-icon>mdi-settings</v-icon>
               </v-btn>
             </template>
@@ -59,13 +59,10 @@
             <v-btn
               v-on="on"
               @click.stop="pin({ id: repository.id, pin: !isPinned })"
+              :color="isPinned ? 'lime accent-4': 'blue-grey lighten-3'"
               icon
               class="mr-1">
-              <v-icon
-                :color="isPinned ? 'lime accent-4': 'blue-grey lighten-2'"
-                :class="{ 'mdi-rotate-45': isPinned }">
-                mdi-pin
-              </v-icon>
+              <v-icon :class="{ 'mdi-rotate-45': isPinned }">mdi-pin</v-icon>
             </v-btn>
           </template>
           {{ isPinned ? 'Unpin' : 'Pin' }} {{ schema }}
@@ -156,5 +153,9 @@ export default {
   .v-avatar {
     margin-top: 0.125rem;
   }
+}
+
+.repo-info.v-btn:not(.v-btn--text):not(.v-btn--outlined):hover::before {
+  opacity: 0.2;
 }
 </style>

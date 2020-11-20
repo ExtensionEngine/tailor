@@ -2,21 +2,17 @@
   <v-navigation-drawer
     width="450"
     color="grey lighten-5"
-    absolute right permanent>
-    <section
-      v-if="selectedTask && activity"
-      :key="selectedTask.uid"
-      class="px-4 pt-4 pb-10">
-      <sidebar-header v-bind="selectedTask" />
-      <section class="mt-5">
-        <h5 class="h5">Related content</h5>
-        <activity-card v-bind="activity" :name="activity.data.name" />
-      </section>
+    absolute right permanent
+    class="px-4">
+    <template v-if="selectedTask">
+      <sidebar-header
+        v-bind="selectedTask"
+        class="pt-4" />
       <task-field-group
         @update="updateTask"
         v-bind="selectedTask"
-        class="mt-9 mb-4" />
-    </section>
+        class="mt-9 mb-12" />
+    </template>
     <section v-else class="placeholder grey--text text--darken-3">
       <h4>Task Sidebar</h4>
       <v-icon>mdi-chevron-left</v-icon>
@@ -27,7 +23,6 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import ActivityCard from './ActivityCard';
 import SidebarHeader from './Header';
 import TaskFieldGroup from './FieldGroup';
 
@@ -39,17 +34,16 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('repository', ['selectedTask', 'activities']),
-    activity: vm => vm.activities.find(({ id }) => vm.selectedTask.activityId === id)
+    ...mapGetters('repository', ['selectedTask'])
   },
   methods: {
     ...mapActions('repository/tasks', ['save']),
     updateTask(key, value) {
       this.save({ ...this.selectedTask, [key]: value || null })
-        .then(() => { this.$snackbar.show(`${this.selectedTask.name} saved`); });
+        .then(() => { this.$snackbar.show('Task saved'); });
     }
   },
-  components: { ActivityCard, TaskFieldGroup, SidebarHeader }
+  components: { TaskFieldGroup, SidebarHeader }
 };
 </script>
 
