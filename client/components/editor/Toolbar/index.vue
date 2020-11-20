@@ -1,18 +1,25 @@
 <template>
   <div class="toolbar-wrapper">
-    <div v-show="activity" class="activity-toolbar blue-grey darken-3">
+    <div
+      v-show="activity"
+      :class="[isPublishedPreview ? 'blue-grey darken-4' : 'blue-grey darken-3']"
+      class="activity-toolbar">
       <activity-actions class="activity-actions d-flex" />
       <h1 class="pt-2 headline text-truncate">
         <span>{{ config.label }}</span>
         <span class="px-2 grey--text">|</span>
         <span class="secondary--text text--lighten-2">
+          <span v-if="isPublishedPreview" class="pr-1">Preview of published</span>
           {{ activity.data.name }}
+          <template v-if="isPublishedPreview">
+            <span class="px-2 grey--text">@</span>
+            <v-chip color="blue-grey lighten-4" small label>
+              {{ activity.publishedAt | formatDate }}
+            </v-chip>
+          </template>
         </span>
-        <v-chip v-if="isPublishedPreview" color="primary" small class="ml-4">
-          Published on {{ activity.publishedAt | formatDate }}
-        </v-chip>
       </h1>
-      <active-users :users="activeUsers" class="mx-6" />
+      <active-users v-if="!isPublishedPreview" :users="activeUsers" class="mx-6" />
     </div>
     <element-toolbar
       v-if="element && element.parent"
@@ -92,8 +99,8 @@ export default {
 
 .activity-toolbar {
   display: flex;
-  height: 3.125rem;
-  padding: 0;
+  height: 3.5rem;
+  padding: 0.25rem 0 0;
   z-index: 999;
 
   h1 {

@@ -12,9 +12,9 @@
             @click.stop="action"
             :input-value="active"
             :disabled="disabled"
-            color="grey lighten-3"
-            icon
-            class="mr-1">
+            active-class="pink darken-2"
+            icon dark
+            class="mr-2">
             <v-icon>mdi-{{ icon }}</v-icon>
           </v-btn>
         </template>
@@ -54,7 +54,7 @@ export default {
         action: () => this.preview()
       }, {
         title: 'Preview published',
-        icon: 'history',
+        icon: 'file-eye-outline',
         active: this.isPublishedPreview,
         disabled: !this.activity.publishedAt,
         action: () => this.previewPublished()
