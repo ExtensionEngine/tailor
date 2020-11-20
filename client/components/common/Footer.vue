@@ -9,7 +9,7 @@
           color="grey lighten-4"
           label
           small
-          class="chip mr-3 grey--text text--darken-4">
+          class="mr-3 grey--text text--darken-4">
           v{{ version }} {{ codename }}
         </custom-chip>
         Built with <v-icon color="pink">mdi-heart</v-icon>
