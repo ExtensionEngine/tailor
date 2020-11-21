@@ -9,8 +9,8 @@
         <v-tooltip open-delay="800" left>
           <template v-slot:activator="{ on: tooltip }">
             <v-badge
-              v-show="unseenComments.length"
-              :content="unseenComments.length"
+              v-show="unseenCommentCount"
+              :content="unseenCommentCount"
               color="secondary"
               offset-y="14"
               offset-x="14" />
@@ -48,6 +48,7 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
 import ContentElementDiscussion from './Discussion';
+import debounce from 'lodash/debounce';
 import loader from '@/components/common/loader';
 import { mapChannels } from '@/plugins/radio';
 import throttle from 'lodash/throttle';
@@ -63,13 +64,13 @@ export default {
   },
   data: () => ({
     isSaving: false,
-    showDiscussion: false
+    showDiscussion: false,
+    unseenCommentCount: 0
   }),
   computed: {
     ...mapChannels({ editorChannel: 'editor' }),
-    ...mapGetters('repository/comments', ['getUnseenComments']),
-    unseenComments: vm => vm.getUnseenComments(vm.activity)
-      .filter(it => it.contentElementId === vm.element.id)
+    ...mapGetters('repository/comments', ['getUnseenCeComments']),
+    unseenComments: vm => vm.getUnseenCeComments(vm.element)
   },
   methods: {
     ...mapActions('repository/contentElements', {
@@ -95,6 +96,11 @@ export default {
       await this.removeElement(this.element);
       this.$nextTick(() => this.editorChannel.emit('element:focus'));
     }
+  },
+  watch: {
+    unseenComments: debounce(function (val) {
+      this.unseenCommentCount = val.length;
+    }, 200)
   },
   components: { ContainedContent, ContentElementDiscussion }
 };

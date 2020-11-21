@@ -8,10 +8,10 @@ import {
   update
 } from '@/store/helpers/mutations';
 
-const markSeenComments = (state, { activityUid, lastCommentAt }) => {
+const markSeenComments = (state, { activityUid, ceUid, lastCommentAt }) => {
   state.seenByActivity = {
     ...state.seenByActivity,
-    [activityUid]: lastCommentAt
+    [ceUid || activityUid]: lastCommentAt
   };
 };
 
