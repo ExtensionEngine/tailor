@@ -88,12 +88,9 @@ export default {
       return this.containerIds.some(id => id === element.activityId);
     },
     isModifiedElement(element) {
-      const createdAt = new Date(element.createdAt);
       const updatedAt = new Date(element.updatedAt);
       const publishedAt = new Date(this.activity.publishedAt);
-      const isCreatedBeforePublish = isAfter(publishedAt, createdAt);
-      const isUpdatedAfterPublish = isAfter(updatedAt, publishedAt);
-      return isCreatedBeforePublish && isUpdatedAfterPublish;
+      return isAfter(updatedAt, publishedAt);
     }
   },
   watch: {
