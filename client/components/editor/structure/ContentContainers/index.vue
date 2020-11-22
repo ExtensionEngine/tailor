@@ -60,7 +60,7 @@ export default {
   props: {
     containerGroup: { type: Array, default() { return []; } },
     elements: { type: Object, default: null },
-    revisions: { type: Array, default: null },
+    revisions: { type: Array, default: () => [] },
     type: { type: String, required: true },
     templateId: { type: String, default: null },
     parentId: { type: Number, required: true },
@@ -87,7 +87,7 @@ export default {
       return last + 1;
     },
     elementsOrRevisions() {
-      if (!this.isPublishedPreview || !this.revisions) return this.elements;
+      if (!this.isPublishedPreview) return this.elements;
       return mapValues(this.elements, this.getRevisionOrElement);
     }
   },
