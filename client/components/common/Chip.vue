@@ -1,5 +1,5 @@
 <template>
-  <v-chip v-on="$listeners" v-bind="$attrs" class="chip">
+  <v-chip v-on="$listeners" v-bind="$attrs" :input-value="true">
     <slot></slot>
   </v-chip>
 </template>
@@ -10,9 +10,3 @@ export default {
   inheritAttrs: false
 };
 </script>
-
-<style lang="scss" scoped>
-.chip::before {
-  display: none;
-}
-</style>
