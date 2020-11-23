@@ -26,7 +26,7 @@ async function getPublished(query, options) {
     }
   });
   const removedEntityIds = removes.map(it => it.state.id);
-  const ids = [...entityIds, ...removedEntityIds];
+  const ids = [...entityIds, ...removedEntityIds].map(Number);
   if (!ids.length) return [];
   const where = {
     repositoryId,
