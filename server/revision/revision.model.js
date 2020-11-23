@@ -53,7 +53,7 @@ class Revision extends Model {
   static scopes() {
     const tableName = this.getTableName();
     const { field: stateField } = this.rawAttributes.state;
-    const rawEntityIdField = `${tableName}.${stateField}->'id'`;
+    const entityIdRawField = `${tableName}.${stateField}->'id'`;
     return {
       lastByEntity: {
         attributes: [
@@ -61,10 +61,10 @@ class Revision extends Model {
           // caused by "," at the end of the DISTINCT ON expression.
           // Explicit raw attributes are concated to enforce
           // order within SELECT, DISTINCT ON being first.
-          literal(`DISTINCT ON (${rawEntityIdField}) 1`),
+          literal(`DISTINCT ON (${entityIdRawField}) 1`),
           ...Object.keys(this.rawAttributes)
         ],
-        order: [[literal(rawEntityIdField)]]
+        order: [[literal(entityIdRawField)]]
       }
     };
   }
