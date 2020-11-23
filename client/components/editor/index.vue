@@ -93,8 +93,7 @@ export default {
         activityIds: this.containerIds,
         entityIds: map(modifiedActivityElements, 'id'),
         entity: 'CONTENT_ELEMENT',
-        publishedOn: this.activity.publishedAt,
-        last: true
+        publishedOn: this.activity.publishedAt
       };
       return revisionApi.fetch(this.repository.id, query)
         .then(this.setRevisions);
