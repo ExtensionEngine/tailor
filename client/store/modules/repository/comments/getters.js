@@ -7,8 +7,8 @@ export const getComments = state => params => {
 };
 
 export const getUnseenComments = (state, _, { auth }) => data => {
-  const { id, name, content } = processData(data);
-  const lastSeen = state.seenBy[name][content.uid] || 0;
+  const { id, entity, content } = processData(data);
+  const lastSeen = state.seenBy[entity][content.uid] || 0;
   return filter(state.items, it =>
     it.authorId !== auth.user.id &&
     it[id] === content.id &&
@@ -17,6 +17,6 @@ export const getUnseenComments = (state, _, { auth }) => data => {
 
 function processData({ activity, contentElement }) {
   return activity
-    ? { id: 'activityId', name: 'activity', content: activity }
-    : { id: 'contentElementId', name: 'contentElement', content: contentElement };
+    ? { id: 'activityId', entity: 'activity', content: activity }
+    : { id: 'contentElementId', entity: 'contentElement', content: contentElement };
 }
