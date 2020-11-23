@@ -17,7 +17,7 @@ export default {
   name: 'discussion-wrapper',
   inject: ['$getCurrentUser'],
   props: {
-    activity: { type: Object, default: null },
+    activity: { type: Object, required: true },
     contentElement: { type: Object, default: null },
     isVisible: { type: Boolean, default: false },
     showHeading: { type: Boolean, default: true }
@@ -25,12 +25,11 @@ export default {
   computed: {
     ...mapGetters('repository/comments', ['getComments']),
     user: vm => vm.$getCurrentUser(),
-    contentElementId: vm => vm.contentElement ? vm.contentElement.id : null,
-    activityId: vm => vm.contentElement ? vm.contentElement.activityId : vm.activity.id,
-    comments() {
-      const { contentElementId, activityId } = this;
-      return this.getComments({ contentElementId, activityId });
-    },
+    params: vm => ({
+      activityId: vm.activity.id,
+      contentElementId: vm.contentElement ? vm.contentElement.id : null
+    }),
+    comments: vm => vm.getComments(vm.params),
     lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime()
   },
   methods: {
@@ -38,12 +37,12 @@ export default {
     ...mapMutations('repository/comments', ['markSeenComments']),
     saveComment(comment) {
       const action = comment.id ? 'update' : 'save';
-      const { activityId, contentElementId, user: author } = this;
-      return this[action]({ ...comment, activityId, contentElementId, author });
+      const { user: author, params } = this;
+      return this[action]({ ...comment, ...params, author });
     },
     setLastSeenComment(timeout) {
       const { activity, contentElement, lastCommentAt } = this;
-      const uids = { activityUid: activity.uid, ceUid: contentElement?.uid };
+      const uids = { activityUid: activity.uid, elementUid: contentElement?.uid };
       setTimeout(() => this.markSeenComments({ ...uids, lastCommentAt }), timeout);
     }
   },
@@ -57,9 +56,8 @@ export default {
       this.setLastSeenComment(2000);
     }
   },
-  async created() {
-    const { activityId, contentElementId } = this;
-    await this.fetch({ activityId, contentElementId });
+  created() {
+    this.fetch(this.params);
   },
   components: { Discussion }
 };
