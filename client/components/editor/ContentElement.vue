@@ -76,6 +76,6 @@ export default {
 
 <style lang="scss" scoped>
 .highlighted ::v-deep .content-element {
-  box-shadow: 0 0 0 2px var(--v-primary-lighten4);
+  box-shadow: 0 0 0 2px var(--v-secondary-lighten4);
 }
 </style>
