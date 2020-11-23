@@ -17,7 +17,8 @@
       <activity-discussion
         v-show="discussionTabVisible"
         :activity="selectedActivity"
-        :is-visible="discussionTabVisible" />
+        :is-visible="discussionTabVisible"
+        class="my-8 mx-4" />
       <element-sidebar
         v-if="selectedTab === 'element'"
         :key="getElementId(selectedElement)"
@@ -50,7 +51,7 @@
 </template>
 
 <script>
-import ActivityDiscussion from '../Discussion';
+import ActivityDiscussion from '@/components/repository/common/Discussion';
 import ActivityNavigation from './Navigation';
 import debounce from 'lodash/debounce';
 import ElementSidebar from './ElementSidebar';

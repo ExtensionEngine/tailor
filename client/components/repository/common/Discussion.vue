@@ -9,8 +9,9 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import Discussion from 'tce-core/Discussion';
+import get from 'lodash/get';
 
 export default {
   name: 'discussion-wrapper',
@@ -18,6 +19,7 @@ export default {
   props: {
     activity: { type: Object, default: null },
     contentElement: { type: Object, default: null },
+    isVisible: { type: Boolean, default: false },
     showHeading: { type: Boolean, default: true }
   },
   computed: {
@@ -28,14 +30,31 @@ export default {
     comments() {
       const { contentElementId, activityId } = this;
       return this.getComments({ contentElementId, activityId });
-    }
+    },
+    lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime()
   },
   methods: {
     ...mapActions('repository/comments', ['fetch', 'save', 'update', 'remove']),
+    ...mapMutations('repository/comments', ['markSeenComments']),
     saveComment(comment) {
       const action = comment.id ? 'update' : 'save';
       const { activityId, contentElementId, user: author } = this;
       return this[action]({ ...comment, activityId, contentElementId, author });
+    },
+    setLastSeenComment(timeout) {
+      const { activity, contentElement, lastCommentAt } = this;
+      const uids = { activityUid: activity.uid, ceUid: contentElement?.uid };
+      setTimeout(() => this.markSeenComments({ ...uids, lastCommentAt }), timeout);
+    }
+  },
+  watch: {
+    isVisible(val) {
+      if (!val || !this.lastCommentAt) return;
+      this.setLastSeenComment(1000);
+    },
+    comments(val, oldVal) {
+      if (!this.isVisible || val === oldVal) return;
+      this.setLastSeenComment(2000);
     }
   },
   async created() {

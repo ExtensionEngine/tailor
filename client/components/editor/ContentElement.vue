@@ -47,7 +47,7 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
-import ContentElementDiscussion from './Discussion';
+import ContentElementDiscussion from '@/components/repository/common/Discussion';
 import loader from '@/components/common/loader';
 import { mapChannels } from '@/plugins/radio';
 import throttle from 'lodash/throttle';
@@ -118,11 +118,6 @@ export default {
 }
 
 ::v-deep {
-  .editor-discussion {
-    margin: 0;
-    padding: 0;
-  }
-
   .discussion-container {
     margin: 0.5rem 0;
     border: none;
