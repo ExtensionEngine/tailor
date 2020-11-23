@@ -1,6 +1,7 @@
 'use strict';
 
 const { Comment, User } = require('../shared/database');
+const pick = require('lodash/pick');
 
 const author = {
   model: User,
@@ -17,10 +18,8 @@ function list({ repository, opts, query }, res) {
 }
 
 function create({ user, repository: { id: repositoryId }, body }, res) {
-  const { uid, activityId, contentElementId, content } = body;
-  const payload = {
-    uid, repositoryId, activityId, contentElementId, authorId: user.id, content
-  };
+  const attrs = ['uid', 'activityId', 'contentElementId', 'content'];
+  const payload = { repositoryId, authorId: user.id, ...pick(body, attrs) };
   return Comment.create(payload, { include: [author] })
     .then(data => res.json({ data }));
 }

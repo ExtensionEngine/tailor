@@ -7,9 +7,10 @@ export const getComments = state => params => {
 };
 
 export const getUnseenComments = (state, _, { auth }) => data => {
+  const { seenBy, items } = state;
   const { fk, entityName, item } = adjustData(data);
-  const lastSeen = state.seenBy[entityName][item.uid] || 0;
-  return filter(state.items, it =>
+  const lastSeen = seenBy[entityName][item.uid] || 0;
+  return filter(items, it =>
     it.authorId !== auth.user.id &&
     it[fk] === item.id &&
     new Date(it.createdAt).getTime() > lastSeen);
