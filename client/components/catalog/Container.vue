@@ -164,7 +164,6 @@ export default {
     width: 100%;
     height: 230px;
     background: #37474f;
-    border-bottom: 2px solid #b0bec5;
     box-shadow:
       0 3px 1px -2px rgba(0,0,0,0.2),
       0 2px 2px 0 rgba(0,0,0,0.14),
