@@ -12,7 +12,7 @@
         @selected="selectedElement = $event"
         :repository="repository"
         :activity="activity"
-        :elements="activityElements"
+        :elements="elementsOrRevisions"
         :revisions="revisions"
         :root-container-groups="rootContainerGroups"
         :content-containers="contentContainers" />
@@ -23,6 +23,8 @@
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import ActivityContent from './ActivityContent';
+import assignWith from 'lodash/assignWith';
+import cloneDeep from 'lodash/cloneDeep';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
 import isAfter from 'date-fns/isAfter';
@@ -47,7 +49,7 @@ export default {
   data: () => ({
     isLoading: true,
     selectedElement: null,
-    revisions: null
+    revisions: {}
   }),
   computed: {
     ...mapState('editor', ['isPublishedPreview']),
@@ -62,13 +64,26 @@ export default {
       const elements = pickBy(this.elements, this.isActivityElement);
       return mapValues(elements, it => ({
         ...it,
-        isModified: this.isModifiedElement(it)
+        isModified: this.isElementModified(it)
       }));
+    },
+    elementsOrRevisions() {
+      if (!this.isPublishedPreview) return this.activityElements;
+      const elements = cloneDeep(this.activityElements);
+      return assignWith(elements, this.revisions, this.mergeElementWithRevision);
     }
   },
   methods: {
     ...mapMutations('editor', ['setIsPublishedPreview']),
     ...mapActions('repository', ['initialize']),
+    mergeElementWithRevision(element, revision) {
+      if (!revision) return element;
+      return {
+        ...element,
+        ...revision.state,
+        isRemoved: !element
+      };
+    },
     resetPublishedPreview() {
       if (this.isPublishedPreview) this.setIsPublishedPreview(false);
     },
@@ -82,12 +97,18 @@ export default {
         last: true
       };
       return revisionApi.fetch(this.repository.id, query)
-        .then(revisions => { this.revisions = revisions; });
+        .then(this.setRevisions);
+    },
+    setRevisions(revisions) {
+      this.revisions = revisions.reduce((all, it) => ({
+        ...all,
+        [it.state.uid]: it
+      }), {});
     },
     isActivityElement(element) {
       return this.containerIds.some(id => id === element.activityId);
     },
-    isModifiedElement(element) {
+    isElementModified(element) {
       const updatedAt = new Date(element.updatedAt);
       const publishedAt = new Date(this.activity.publishedAt);
       return isAfter(updatedAt, publishedAt);

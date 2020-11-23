@@ -25,8 +25,8 @@
       :name="name"
       :position="index"
       :activities="activities"
-      :elements="elementsOrRevisions"
-      :tes="elementsOrRevisions"
+      :elements="elements"
+      :tes="elements"
       v-bind="$attrs" />
     <div v-if="addBtnEnabled">
       <v-btn @click="addContainer" color="blue-grey darken-3" text class="mt-4">
@@ -41,13 +41,11 @@
 import { mapActions, mapGetters, mapState } from 'vuex';
 import capitalize from 'lodash/capitalize';
 import ContentContainer from './Container';
-import find from 'lodash/find';
 import get from 'lodash/get';
 import { getContainerTemplateId as getContainerId } from 'shared/activities';
 import { getContainerName } from 'tce-core/utils';
 import isEmpty from 'lodash/isEmpty';
 import { mapRequests } from '@/plugins/radio';
-import mapValues from 'lodash/mapValues';
 import maxBy from 'lodash/maxBy';
 import throttle from 'lodash/throttle';
 
@@ -60,7 +58,6 @@ export default {
   props: {
     containerGroup: { type: Array, default() { return []; } },
     elements: { type: Object, default: null },
-    revisions: { type: Array, default: () => [] },
     type: { type: String, required: true },
     templateId: { type: String, default: null },
     parentId: { type: Number, required: true },
@@ -85,10 +82,6 @@ export default {
     nextPosition() {
       const last = get(maxBy(this.containerGroup, 'position'), 'position', 0);
       return last + 1;
-    },
-    elementsOrRevisions() {
-      if (!this.isPublishedPreview) return this.elements;
-      return mapValues(this.elements, this.getRevisionOrElement);
     }
   },
   methods: {
@@ -126,11 +119,6 @@ export default {
     },
     requestElementDeletion(element) {
       this.requestDeletion(element, 'deleteElement', 'element');
-    },
-    getRevisionOrElement(element) {
-      const revision = find(this.revisions, ['state.id', element.id]);
-      if (!revision) return element;
-      return { ...revision.state, isModified: element.isModified };
     },
     showNotification: throttle(function () {
       this.$snackbar.show('Element saved');

@@ -12,7 +12,6 @@
           :container-group="containerGroup"
           :parent-id="activity.id"
           :elements="elements"
-          :revisions="revisions"
           v-bind="getContainerConfig(type)" />
       </template>
     </div>
@@ -46,8 +45,7 @@ export default {
     // grouped by type
     rootContainerGroups: { type: Object, required: true },
     contentContainers: { type: Array, required: true },
-    elements: { type: Object, default: () => ({}) },
-    revisions: { type: Array, default: () => [] }
+    elements: { type: Object, default: () => ({}) }
   },
   data: () => ({
     isLoading: true,
