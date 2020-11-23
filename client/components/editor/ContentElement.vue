@@ -68,8 +68,8 @@ export default {
   }),
   computed: {
     ...mapChannels({ editorChannel: 'editor' }),
-    ...mapGetters('repository/comments', ['getUnseenCeComments']),
-    unseenComments: vm => vm.getUnseenCeComments(vm.element)
+    ...mapGetters('repository/comments', ['getUnseenComments']),
+    unseenComments: vm => vm.getUnseenComments({ contentElement: vm.element })
   },
   methods: {
     ...mapActions('repository/contentElements', {
