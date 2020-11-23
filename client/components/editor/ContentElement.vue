@@ -48,7 +48,6 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
 import ContentElementDiscussion from './Discussion';
-import debounce from 'lodash/debounce';
 import loader from '@/components/common/loader';
 import { mapChannels } from '@/plugins/radio';
 import throttle from 'lodash/throttle';
@@ -98,9 +97,9 @@ export default {
     }
   },
   watch: {
-    unseenComments: debounce(function (val) {
-      this.unseenCommentCount = val.length;
-    }, 200)
+    unseenComments(comments) {
+      setTimeout(() => (this.unseenCommentCount = comments.length), 200);
+    }
   },
   components: { ContainedContent, ContentElementDiscussion }
 };

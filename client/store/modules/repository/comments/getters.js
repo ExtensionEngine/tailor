@@ -7,9 +7,9 @@ export const getComments = state => params => {
 };
 
 export const getUnseenComments = (state, _, rootState) => activity => {
-  const { items, seenByActivity } = state;
+  const { items, seenBy } = state;
   const { user } = rootState.auth;
-  const lastSeen = seenByActivity[activity.uid] || 0;
+  const lastSeen = seenBy.activity[activity.uid] || 0;
   return filter(items, it =>
     it.authorId !== user.id &&
     it.activityId === activity.id &&
@@ -17,9 +17,9 @@ export const getUnseenComments = (state, _, rootState) => activity => {
 };
 
 export const getUnseenCeComments = (state, _, rootState) => contentElement => {
-  const { items, seenByActivity } = state;
+  const { items, seenBy } = state;
   const { user } = rootState.auth;
-  const lastSeen = seenByActivity[contentElement.uid] || 0;
+  const lastSeen = seenBy.contentElement[contentElement.uid] || 0;
   return filter(items, it =>
     it.authorId !== user.id &&
     it.contentElementId === contentElement.id &&

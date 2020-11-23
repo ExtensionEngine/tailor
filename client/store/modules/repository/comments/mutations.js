@@ -9,8 +9,9 @@ import {
 } from '@/store/helpers/mutations';
 
 const markSeenComments = (state, { activityUid, ceUid, lastCommentAt }) => {
-  state.seenByActivity = {
-    ...state.seenByActivity,
+  const key = ceUid ? 'contentElement' : 'activity';
+  state.seenBy[key] = {
+    ...state.seenBy[key],
     [ceUid || activityUid]: lastCommentAt
   };
 };
