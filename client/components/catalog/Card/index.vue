@@ -6,7 +6,7 @@
       dark
       class="repository-card">
       <div @click="navigateTo()" class="card-body">
-        <custom-chip :color="repository.data.color" x-small class="ml-4 px-1" />
+        <tailor-chip :color="repository.data.color" x-small class="ml-4 px-1" />
         <span class="schema-name">{{ schema }}</span>
         <div class="controls float-right">
           <v-tooltip open-delay="100" top>
@@ -74,12 +74,12 @@
 </template>
 
 <script>
-import CustomChip from '@/components/common/Chip';
 import first from 'lodash/first';
 import get from 'lodash/get';
 import { getSchema } from 'shared/activities';
 import { mapActions } from 'vuex';
 import Tags from './Tags';
+import TailorChip from '@/components/common/TailorChip';
 
 const getPublishingInfo = hasChanges => hasChanges
   ? 'Has unpublished changes.'
@@ -108,7 +108,7 @@ export default {
       });
     }
   },
-  components: { CustomChip, Tags }
+  components: { Tags, TailorChip }
 };
 </script>
 

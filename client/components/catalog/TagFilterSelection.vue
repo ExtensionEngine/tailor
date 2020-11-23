@@ -1,6 +1,6 @@
 <template>
   <v-row class="selected-tags align-center">
-    <custom-chip
+    <tailor-chip
       v-for="tag in tagFilter"
       :key="tag.id"
       @click:close="$emit('close', tag)"
@@ -8,7 +8,7 @@
       color="grey lighten-4"
       class="mx-2">
       {{ tag.name }}
-    </custom-chip>
+    </tailor-chip>
     <v-btn
       v-if="tagFilter.length"
       @click="$emit('clear:all')" small rounded>
@@ -18,12 +18,12 @@
 </template>
 
 <script>
-import CustomChip from '@/components/common/Chip';
 import { mapState } from 'vuex';
+import TailorChip from '@/components/common/TailorChip';
 
 export default {
   computed: mapState('repositories', ['tagFilter']),
-  components: { CustomChip }
+  components: { TailorChip }
 };
 </script>
 

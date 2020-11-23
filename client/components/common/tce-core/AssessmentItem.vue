@@ -29,11 +29,11 @@
       </template>
     </tce-question-container>
     <div v-else @click="$emit('selected')" class="minimized">
-      <custom-chip
+      <tailor-chip
         color="blue-grey darken-3"
         label dark small>
         {{ elementConfig.subtype }}
-      </custom-chip>
+      </tailor-chip>
       <span class="question">{{ question | truncate(50) }}</span>
       <v-btn
         @click.stop="$emit('delete')"
@@ -48,9 +48,9 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
-import CustomChip from '@/components/common/Chip';
 import filter from 'lodash/filter';
 import map from 'lodash/map';
+import TailorChip from '@/components/common/TailorChip';
 
 const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
 const blankRegex = /(@blank)/g;
@@ -86,7 +86,7 @@ export default {
       this.$emit('save', assessment);
     }
   },
-  components: { CustomChip }
+  components: { TailorChip }
 };
 </script>
 

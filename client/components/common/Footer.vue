@@ -5,13 +5,13 @@
       <v-col
         cols="12"
         class="body-2 grey--text text--lighten-4">
-        <custom-chip
+        <tailor-chip
           color="grey lighten-4"
           label
           small
           class="mr-3 grey--text text--darken-4">
           v{{ version }} {{ codename }}
-        </custom-chip>
+        </tailor-chip>
         Built with <v-icon color="pink">mdi-heart</v-icon>
         Extension Engine
       </v-col>
@@ -21,7 +21,7 @@
 
 <script>
 import { codename, version } from '@/../package.json';
-import CustomChip from '@/components/common/Chip';
+import TailorChip from '@/components/common/TailorChip';
 import Waves from '@/components/common/Waves';
 
 const capitalize = str => str.charAt(0).toUpperCase() + str.substr(1);
@@ -32,7 +32,7 @@ export default {
     version: () => version,
     codename: () => capitalize(codename)
   },
-  components: { Waves, CustomChip }
+  components: { Waves, TailorChip }
 };
 </script>
 

@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: 'custom-chip',
+  name: 'tailor-chip',
   inheritAttrs: false
 };
 </script>

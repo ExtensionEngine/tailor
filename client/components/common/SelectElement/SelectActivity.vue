@@ -15,12 +15,12 @@
       class="py-3 px-1 treeview">
       <template v-slot:label="{ item: { id, data } }">
         {{ data.name }}
-        <custom-chip
+        <tailor-chip
           v-if="groupedSelection[id]"
           rounded small
           class="custom-chip">
           {{ getChipLabel(groupedSelection[id]) }}
-        </custom-chip>
+        </tailor-chip>
       </template>
       <template v-slot:append="{ item }">
         <v-btn
@@ -39,11 +39,11 @@
 </template>
 
 <script>
-import CustomChip from '@/components/common/Chip';
 import groupBy from 'lodash/groupBy';
 import { isEditable } from 'shared/activities';
 import { mapGetters } from 'vuex';
 import pluralize from 'pluralize';
+import TailorChip from '@/components/common/TailorChip';
 import { toTreeFormat } from 'utils/activity';
 
 export default {
@@ -68,7 +68,7 @@ export default {
       return `${length} ${pluralize('element', length)} selected`;
     }
   },
-  components: { CustomChip }
+  components: { TailorChip }
 };
 </script>
 

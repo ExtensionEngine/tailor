@@ -5,12 +5,12 @@
       absolute
       color="blue-grey darken-3"
       class="heading elevation-2">
-      <custom-chip
+      <tailor-chip
         color="blue-grey lighten-3"
         small
         class="ml-1 px-8 body-2">
         Admin
-      </custom-chip>
+      </tailor-chip>
     </v-toolbar>
     <v-container>
       <v-row align="start">
@@ -29,13 +29,13 @@
 <script>
 import AdminSidebar from './Sidebar';
 import AppFooter from '@/components/common/Footer';
-import CustomChip from '@/components/common/Chip';
+import TailorChip from '@/components/common/TailorChip';
 
 export default {
   components: {
     AdminSidebar,
     AppFooter,
-    CustomChip
+    TailorChip
   }
 };
 </script>

@@ -1,21 +1,21 @@
 <template>
   <div class="inline-activator">
     <hr>
-    <custom-chip
+    <tailor-chip
       color="blue-grey darken-4"
       label dark small
       class="pa-1">
       <v-icon>mdi-plus</v-icon>
-    </custom-chip>
+    </tailor-chip>
     <hr>
   </div>
 </template>
 
 <script>
-import CustomChip from '@/components/common/Chip';
+import TailorChip from '@/components/common/TailorChip';
 
 export default {
-  components: { CustomChip }
+  components: { TailorChip }
 };
 </script>
 

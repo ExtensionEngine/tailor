@@ -1,11 +1,11 @@
 <template>
   <div class="body">
-    <custom-chip
+    <tailor-chip
       :color="config.color"
       label dark small
       class="body-label">
       {{ config.label.toUpperCase() }}
-    </custom-chip>
+    </tailor-chip>
     <v-tooltip open-delay="500" bottom>
       <template v-slot:activator="{ on }">
         <label-chip v-on="on" class="body-label">
@@ -66,11 +66,11 @@
 import { getActivityMetadata, getLevel } from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex';
 import ActivityTasks from './Tasks';
-import CustomChip from '@/components/common/Chip';
 import Discussion from './Discussion';
 import LabelChip from '@/components/repository/common/LabelChip';
 import MetaInput from 'tce-core/MetaInput';
 import Relationship from './Relationship';
+import TailorChip from '@/components/common/TailorChip';
 
 export default {
   name: 'activity-sidebar-body',
@@ -94,11 +94,11 @@ export default {
   },
   components: {
     ActivityTasks,
-    CustomChip,
     Discussion,
     Relationship,
     MetaInput,
-    LabelChip
+    LabelChip,
+    TailorChip
   }
 };
 </script>

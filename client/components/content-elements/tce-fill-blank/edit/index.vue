@@ -15,7 +15,7 @@
           <span v-if="isEditing" class="drag-handle">
             <v-icon>mdi-drag-vertical</v-icon>
           </span>
-          <custom-chip :color="color" dark label small>{{ i + 1 }}</custom-chip>
+          <tailor-chip :color="color" dark label small>{{ i + 1 }}</tailor-chip>
           <v-btn
             v-if="isEditing && !isSynced"
             @click="removeAnswerGroup(i)"
@@ -64,7 +64,6 @@
 <script>
 import { defaults, getErrorMessages } from 'utils/assessment';
 import cloneDeep from 'lodash/cloneDeep';
-import CustomChip from '@/components/common/Chip';
 import Draggable from 'vuedraggable';
 import get from 'lodash/get';
 import { InputError } from 'tce-core';
@@ -73,6 +72,7 @@ import pluralize from 'pluralize';
 import pullAt from 'lodash/pullAt';
 import reduce from 'lodash/reduce';
 import size from 'lodash/size';
+import TailorChip from '@/components/common/TailorChip';
 import times from 'lodash/times';
 
 const TEXT_TYPES = ['JODIT_HTML', 'HTML'];
@@ -160,9 +160,9 @@ export default {
     question() { if (this.isGraded) this.attemptToSync(); }
   },
   components: {
-    CustomChip,
     Draggable,
-    InputError
+    InputError,
+    TailorChip
   }
 };
 </script>
