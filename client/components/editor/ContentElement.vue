@@ -98,7 +98,7 @@ export default {
   },
   watch: {
     unseenComments(comments) {
-      if (this.showDiscussion) return;
+      if (this.showDiscussion && comments.length) return;
       setTimeout(() => (this.unseenCommentCount = comments.length), 200);
     }
   },
