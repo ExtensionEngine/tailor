@@ -74,11 +74,11 @@ export default {
     },
     fetchRevisions() {
       const modifiedActivityElements = filter(this.activityElements, 'isModified');
-      if (!modifiedActivityElements.length) return;
       const query = {
+        activityIds: this.containerIds,
         entityIds: map(modifiedActivityElements, 'id'),
         entity: 'CONTENT_ELEMENT',
-        createdBefore: this.activity.publishedAt,
+        publishedOn: this.activity.publishedAt,
         last: true
       };
       return revisionApi.fetch(this.repository.id, query)
