@@ -9,7 +9,7 @@
       :element="element"
       :is-dragged="isDragged"
       :is-disabled="isPublishedPreview || disabled"
-      :class="{ highlighted: isPublishedPreview && element.isModified }" />
+      :class="{ highlighted }" />
     <v-progress-linear
       v-if="isSaving"
       color="grey darken-2"
@@ -37,7 +37,12 @@ export default {
   data: () => ({ isSaving: false }),
   computed: {
     ...mapChannels({ editorChannel: 'editor' }),
-    ...mapState('editor', ['isPublishedPreview'])
+    ...mapState('editor', ['isPublishedPreview']),
+    highlighted() {
+      if (!this.isPublishedPreview) return false;
+      const { isModified, isRemoved } = this.element;
+      return isModified || isRemoved;
+    }
   },
   methods: {
     ...mapActions('repository/contentElements', {
