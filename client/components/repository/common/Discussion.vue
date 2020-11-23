@@ -13,6 +13,11 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 import Discussion from 'tce-core/Discussion';
 import get from 'lodash/get';
 
+const extractParams = ({ activity, contentElement }) => ({
+  activityId: activity.id,
+  contentElementId: contentElement ? contentElement.id : null
+});
+
 export default {
   name: 'discussion-wrapper',
   inject: ['$getCurrentUser'],
@@ -25,10 +30,7 @@ export default {
   computed: {
     ...mapGetters('repository/comments', ['getComments']),
     user: vm => vm.$getCurrentUser(),
-    params: vm => ({
-      activityId: vm.activity.id,
-      contentElementId: vm.contentElement ? vm.contentElement.id : null
-    }),
+    params: vm => extractParams(vm),
     comments: vm => vm.getComments(vm.params),
     lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime()
   },
