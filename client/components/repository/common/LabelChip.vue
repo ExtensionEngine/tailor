@@ -4,7 +4,7 @@
     :class="[data.staticClass, data.class]"
     color="blue-grey lighten-5"
     label small
-    class="flex-shrink-0 caption text-uppercase">
+    class="readonly flex-shrink-0 caption text-uppercase">
     <slot></slot>
   </v-chip>
 </template>

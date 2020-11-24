@@ -30,7 +30,7 @@
     </tce-question-container>
     <div v-else @click="$emit('selected')" class="minimized">
       <v-chip
-        color="blue-grey darken-3"
+        color="readonly blue-grey darken-3"
         label dark small>
         {{ elementConfig.subtype }}
       </v-chip>

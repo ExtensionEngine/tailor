@@ -7,7 +7,7 @@
         @click:close="showDeleteConfirmation(id, name)"
         color="blue-grey lighten-4"
         label light small close
-        class="mr-2">
+        class="readonly mr-2">
         <v-tooltip
           :disabled="name.length === truncatedName.length"
           open-delay="100"

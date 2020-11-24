@@ -7,9 +7,8 @@
         class="body-2 grey--text text--lighten-4">
         <v-chip
           color="grey lighten-4"
-          label
-          small
-          class="mr-3 grey--text text--darken-4">
+          label small
+          class="readonly mr-3 grey--text text--darken-4">
           v{{ version }} {{ codename }}
         </v-chip>
         Built with <v-icon color="pink">mdi-heart</v-icon>
