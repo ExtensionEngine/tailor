@@ -53,7 +53,7 @@ export default {
         icon: 'eye',
         action: () => this.preview()
       }, {
-        title: 'Preview published',
+        title: 'View changes since publish',
         icon: 'file-eye-outline',
         active: this.isPublishedPreview,
         disabled: !this.activity.publishedAt,
