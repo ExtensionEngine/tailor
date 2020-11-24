@@ -32,6 +32,7 @@
 
   .v-chip {
     margin: 0;
+    cursor: pointer;
   }
 
   &:hover {
