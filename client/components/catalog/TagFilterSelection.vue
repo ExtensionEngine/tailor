@@ -5,7 +5,6 @@
       :key="tag.id"
       @click:close="$emit('close', tag)"
       close
-      color="grey lighten-4"
       class="mx-2 readonly">
       {{ tag.name }}
     </v-chip>
