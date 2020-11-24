@@ -13,7 +13,6 @@
         :repository="repository"
         :activity="activity"
         :elements="elementsOrRevisions"
-        :revisions="revisions"
         :root-container-groups="rootContainerGroups"
         :content-containers="contentContainers" />
     </template>
