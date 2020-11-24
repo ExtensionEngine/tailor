@@ -15,7 +15,7 @@
               color="secondary"
               offset-y="14"
               offset-x="14" />
-            <v-btn v-on="{ ...menu, ...tooltip }" color="primary" small fab>
+            <v-btn v-on="{ ...menu, ...tooltip }" color="primary" x-small fab>
               <v-icon class="pr-1">mdi-forum-outline</v-icon>
             </v-btn>
           </template>
