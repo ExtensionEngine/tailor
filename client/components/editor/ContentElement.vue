@@ -3,7 +3,8 @@
     <v-menu
       v-model="showDiscussion"
       :close-on-content-click="false"
-      :min-width="350"
+      transition="slide-y-transition"
+      min-width="300"
       attach offset-y left>
       <template v-slot:activator="{ on: menu }">
         <v-tooltip open-delay="800" left>
