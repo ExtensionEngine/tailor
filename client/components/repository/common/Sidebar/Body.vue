@@ -1,11 +1,11 @@
 <template>
   <div class="body">
-    <tailor-chip
+    <v-chip
       :color="config.color"
       label dark small
       class="body-label">
       {{ config.label.toUpperCase() }}
-    </tailor-chip>
+    </v-chip>
     <v-tooltip open-delay="500" bottom>
       <template v-slot:activator="{ on }">
         <label-chip v-on="on" class="body-label">
@@ -70,7 +70,6 @@ import Discussion from './Discussion';
 import LabelChip from '@/components/repository/common/LabelChip';
 import MetaInput from 'tce-core/MetaInput';
 import Relationship from './Relationship';
-import TailorChip from '@/components/common/TailorChip';
 
 export default {
   name: 'activity-sidebar-body',
@@ -97,8 +96,7 @@ export default {
     Discussion,
     Relationship,
     MetaInput,
-    LabelChip,
-    TailorChip
+    LabelChip
   }
 };
 </script>

@@ -8,18 +8,18 @@
       rounded="0"
       class="my-5 py-1 blue-grey lighten-5 text-left">
       <v-card-subtitle class="pb-1 d-flex align-center">
-        <tailor-chip
+        <v-chip
           :color="color"
           label small dark
           class="mr-2 body-2">
           {{ typeLabel }}
-        </tailor-chip>
-        <tailor-chip
+        </v-chip>
+        <v-chip
           color="blue-grey darken-2"
           label small dark
           class="px-4 subtitle-2">
           {{ activity.shortId }}
-        </tailor-chip>
+        </v-chip>
       </v-card-subtitle>
       <v-card-title class="py-1 headline text-truncate">
         {{ activity.data.name }}
@@ -37,7 +37,6 @@
 <script>
 import find from 'lodash/find';
 import { mapGetters } from 'vuex';
-import TailorChip from '@/components/common/TailorChip';
 
 export default {
   name: 'activity-search-result',
@@ -50,8 +49,7 @@ export default {
     config: vm => find(vm.structure, { type: vm.activity.type }),
     color: vm => vm.config.color,
     typeLabel: vm => vm.config.label
-  },
-  components: { TailorChip }
+  }
 };
 </script>
 

@@ -5,7 +5,7 @@
       v-for="(groupName, groupKey, i) in groups" :key="groupKey"
       class="pt-4 transparent elevation-0">
       <div class="mb-4">
-        <tailor-chip :color="color" label dark small>{{ i + 1 }}</tailor-chip>
+        <v-chip :color="color" label dark small>{{ i + 1 }}</v-chip>
         <v-btn
           v-if="isEditing && groupCount > 2"
           @click="removeGroup(groupKey)"
@@ -76,7 +76,6 @@ import { mapRequests } from '@/plugins/radio';
 import pick from 'lodash/pick';
 import pull from 'lodash/pull';
 import size from 'lodash/size';
-import TailorChip from '@/components/common/TailorChip';
 
 export default {
   props: {
@@ -158,7 +157,6 @@ export default {
     errorMessages(key) {
       return getErrorMessages(this.errors, key);
     }
-  },
-  components: { TailorChip }
+  }
 };
 </script>

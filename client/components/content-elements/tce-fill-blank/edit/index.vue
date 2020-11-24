@@ -15,7 +15,7 @@
           <span v-if="isEditing" class="drag-handle">
             <v-icon>mdi-drag-vertical</v-icon>
           </span>
-          <tailor-chip :color="color" dark label small>{{ i + 1 }}</tailor-chip>
+          <v-chip :color="color" dark label small>{{ i + 1 }}</v-chip>
           <v-btn
             v-if="isEditing && !isSynced"
             @click="removeAnswerGroup(i)"
@@ -72,7 +72,6 @@ import pluralize from 'pluralize';
 import pullAt from 'lodash/pullAt';
 import reduce from 'lodash/reduce';
 import size from 'lodash/size';
-import TailorChip from '@/components/common/TailorChip';
 import times from 'lodash/times';
 
 const TEXT_TYPES = ['JODIT_HTML', 'HTML'];
@@ -159,11 +158,7 @@ export default {
   watch: {
     question() { if (this.isGraded) this.attemptToSync(); }
   },
-  components: {
-    Draggable,
-    InputError,
-    TailorChip
-  }
+  components: { Draggable, InputError }
 };
 </script>
 

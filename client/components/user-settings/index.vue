@@ -5,12 +5,12 @@
       color="blue-grey darken-3"
       absolute
       class="heading elevation-2">
-      <tailor-chip
+      <v-chip
         color="blue-grey lighten-3"
         small
         class="ml-1 px-7 body-2">
         Profile
-      </tailor-chip>
+      </v-chip>
     </v-toolbar>
     <v-container class="user-panel">
       <v-row no-gutters>
@@ -29,7 +29,6 @@
 
 <script>
 import ChangePasswordDialog from './ChangePasswordDialog';
-import TailorChip from '@/components/common/TailorChip';
 import UserAvatar from './Avatar';
 import UserInfo from './Info';
 
@@ -37,7 +36,6 @@ export default {
   name: 'user-settings',
   components: {
     ChangePasswordDialog,
-    TailorChip,
     UserAvatar,
     UserInfo
   }
