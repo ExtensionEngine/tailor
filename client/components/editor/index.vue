@@ -12,7 +12,7 @@
         @selected="selectedElement = $event"
         :repository="repository"
         :activity="activity"
-        :elements="elementsOrRevisions"
+        :elements="isPublishedPreview ? changesSincePublish : activityElements"
         :root-container-groups="rootContainerGroups"
         :content-containers="contentContainers" />
     </template>
@@ -48,7 +48,7 @@ export default {
   data: () => ({
     isLoading: true,
     selectedElement: null,
-    revisions: {}
+    publishedRevisions: {}
   }),
   computed: {
     ...mapState('editor', ['isPublishedPreview']),
@@ -61,27 +61,23 @@ export default {
     containerIds: vm => vm.contentContainers.map(it => it.id),
     activityElements() {
       const elements = pickBy(this.elements, this.isActivityElement);
-      return mapValues(elements, it => ({
-        ...it,
-        isModified: this.isElementModified(it)
-      }));
+      return mapValues(elements, this.addPublishFlags);
     },
-    elementsOrRevisions() {
-      if (!this.isPublishedPreview) return this.activityElements;
+    changesSincePublish() {
       const elements = cloneDeep(this.activityElements);
-      return assignWith(elements, this.revisions, this.mergeElementWithRevision);
+      return this.unionElementsAndRevisions(elements, this.publishedRevisions);
     }
   },
   methods: {
     ...mapMutations('editor', ['setIsPublishedPreview']),
     ...mapActions('repository', ['initialize']),
-    mergeElementWithRevision(element, revision) {
-      if (!revision) return element;
-      return {
+    unionElementsAndRevisions(elements, revisions) {
+      return assignWith(elements, revisions, (element, revision) => ({
         ...element,
-        ...revision.state,
-        isRemoved: !element
-      };
+        ...revision,
+        isRemoved: !element,
+        isPublished: !element || element.isPublished
+      }));
     },
     resetPublishedPreview() {
       if (this.isPublishedPreview) this.setIsPublishedPreview(false);
@@ -95,16 +91,28 @@ export default {
         publishedOn: this.activity.publishedAt
       };
       return revisionApi.fetch(this.repository.id, query)
-        .then(this.setRevisions);
+        .then(revisions => {
+          this.publishedRevisions = this.normalizeRevisions(revisions);
+        });
     },
-    setRevisions(revisions) {
-      this.revisions = revisions.reduce((all, it) => ({
+    normalizeRevisions(revisions) {
+      return revisions.reduce((all, { state }) => ({
         ...all,
-        [it.state.uid]: it
+        [state.uid]: state
       }), {});
+    },
+    addPublishFlags(element) {
+      const isPublished = this.isElementPublished(element);
+      const isModified = isPublished && this.isElementModified(element);
+      return { ...element, isPublished, isModified };
     },
     isActivityElement(element) {
       return this.containerIds.some(id => id === element.activityId);
+    },
+    isElementPublished(element) {
+      const createdAt = new Date(element.createdAt);
+      const publishedAt = new Date(this.activity.publishedAt);
+      return isAfter(publishedAt, createdAt);
     },
     isElementModified(element) {
       const updatedAt = new Date(element.updatedAt);

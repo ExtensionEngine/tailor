@@ -1,5 +1,13 @@
 <template>
-  <div>
+  <div :class="{ 'published-preview': isPublishedPreview }">
+    <v-chip
+      v-if="isPublishedPreview && publishState"
+      :text-color="element.isPublished ? 'secondary' : 'success'"
+      color="blue-grey lighten-5"
+      small round
+      class="published-preview-label font-weight-medium text-capitalize">
+      {{ publishState }}
+    </v-chip>
     <contained-content
       @add="add"
       @save="save"
@@ -9,7 +17,7 @@
       :element="element"
       :is-dragged="isDragged"
       :is-disabled="isPublishedPreview || disabled"
-      :class="{ highlighted }" />
+      :class="publishState" />
     <v-progress-linear
       v-if="isSaving"
       color="grey darken-2"
@@ -38,10 +46,11 @@ export default {
   computed: {
     ...mapChannels({ editorChannel: 'editor' }),
     ...mapState('editor', ['isPublishedPreview']),
-    highlighted() {
-      if (!this.isPublishedPreview) return false;
-      const { isModified, isRemoved } = this.element;
-      return isModified || isRemoved;
+    publishState() {
+      if (!this.element.isPublished) return 'added';
+      if (this.element.isModified) return 'changed';
+      if (this.element.isRemoved) return 'removed';
+      return null;
     }
   },
   methods: {
@@ -75,7 +84,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.highlighted ::v-deep .content-element {
-  box-shadow: 0 0 0 2px var(--v-secondary-lighten4);
+@mixin highlight($color) {
+  ::v-deep .content-element {
+    box-shadow: 0 0 0 2px $color;
+  }
+}
+
+.published-preview {
+  &-label {
+    position: absolute;
+    top: 2rem;
+    right: 1.5rem;
+  }
+
+  .changed, .removed {
+    @include highlight(var(--v-secondary-lighten4));
+  }
+
+  .added {
+    @include highlight(var(--v-success-lighten2));
+  }
 }
 </style>
