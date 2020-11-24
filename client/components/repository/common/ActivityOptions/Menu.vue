@@ -13,7 +13,7 @@
           @click="it.action()"
           dense>
           <v-list-item-title>
-            <v-icon size="20" class="pr-1">mdi-{{ it.icon }}</v-icon>
+            <v-icon size="20" class="pr-1">{{ it.icon }}</v-icon>
             {{ it.name }}
           </v-list-item-title>
         </v-list-item>
@@ -70,30 +70,30 @@ export default {
     addMenuOptions() {
       const items = [{
         name: 'Add item above',
-        icon: 'arrow-up',
+        icon: '$addAbove',
         action: () => this.setCreateContext(this.sameLevel, ADD_BEFORE)
       }, {
         name: 'Add item below',
-        icon: 'arrow-down',
+        icon: '$addBelow',
         action: () => this.setCreateContext(this.sameLevel, ADD_AFTER)
       }];
       if (!this.subLevels.length) return items;
       return items.concat({
         name: 'Add item into',
-        icon: 'subdirectory-arrow-right',
+        icon: '$addInto',
         action: () => this.setCreateContext(this.subLevels, ADD_INTO)
       });
     },
     copyMenuOptions() {
       const items = [{
         name: 'Copy existing below',
-        icon: 'content-copy',
+        icon: 'mdi-content-copy',
         action: () => this.setCopyContext(this.sameLevel, ADD_AFTER)
       }];
       if (!this.subLevels.length) return items;
       return items.concat({
         name: 'Copy existing into',
-        icon: 'content-copy',
+        icon: 'mdi-content-copy',
         action: () => this.setCopyContext(this.subLevels, ADD_INTO)
       });
     },
@@ -102,7 +102,7 @@ export default {
         ...this.addMenuOptions,
         ...this.copyMenuOptions, {
           name: 'Remove',
-          icon: 'delete',
+          icon: 'mdi-delete',
           action: () => this.delete(this.activity)
         }
       ];

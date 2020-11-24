@@ -6,9 +6,10 @@
           <template v-slot:activator="{ on: tooltip }">
             <v-btn
               v-on="{ ...menu, ...tooltip }"
-              icon text
+              color="primary lighten-4"
+              icon
               class="my-1">
-              <v-icon color="primary lighten-4">mdi-sort</v-icon>
+              <v-icon>mdi-sort</v-icon>
             </v-btn>
           </template>
           <span>Order by</span>
@@ -29,9 +30,10 @@
         <v-btn
           v-on="on"
           @click="toggleOrder"
-          icon text
+          color="primary lighten-4"
+          icon
           class="my-1">
-          <v-icon color="primary lighten-4">
+          <v-icon>
             mdi-sort-{{ sortBy.order === 'ASC' ? 'ascending' : 'descending' }}
           </v-icon>
         </v-btn>

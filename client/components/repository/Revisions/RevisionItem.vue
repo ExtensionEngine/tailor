@@ -54,7 +54,7 @@ export default {
       return getRevisionAcronym(this.revision);
     },
     date() {
-      return fecha.format(this.revision.createdAt, 'M/D/YY HH:mm');
+      return fecha.format(this.revision.createdAt, 'M/D/YY h:mm A');
     },
     description() {
       return getFormatDescription(this.revision, this.activity);

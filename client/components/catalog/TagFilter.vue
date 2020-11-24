@@ -10,8 +10,8 @@
         open-delay="800"
         top>
         <template v-slot:activator="{ on: tooltip }">
-          <v-btn v-on="{ ...menu, ...tooltip }" icon text>
-            <v-icon color="primary lighten-4">mdi-tag-outline</v-icon>
+          <v-btn v-on="{ ...menu, ...tooltip }" color="primary lighten-4" icon>
+            <v-icon>mdi-tag-outline</v-icon>
           </v-btn>
         </template>
         <span>Tags</span>
@@ -79,5 +79,4 @@ export default {
   border-radius: 0;
   overflow-y: auto;
 }
-
 </style>
