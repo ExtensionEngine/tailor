@@ -5,7 +5,7 @@
       :key="tag.id"
       @click:close="$emit('close', tag)"
       close
-      class="readonly mx-2">
+      class="mx-2">
       {{ tag.name }}
     </v-chip>
     <v-btn
