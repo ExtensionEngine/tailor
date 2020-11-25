@@ -5,11 +5,10 @@
     class="content-element">
     <component
       :is="componentName"
-      ref="contentElement"
       @add="$emit('add', $event)"
       @save="$emit('save', $event)"
       @delete="$emit('delete')"
-      @focus="focus"
+      @focus="onFocus"
       :id="`element_${id}`"
       v-bind="$attrs"
       :element="element"
@@ -49,10 +48,13 @@ export default {
     }
   },
   methods: {
-    focus(e, element = this.element, parent = this.parent) {
+    onFocus(e) {
       if (this.isDisabled || e.component) return;
-      this.editorChannel.emit('element:focus', element, parent);
-      e.component = { name: 'content-element', data: element };
+      this.focus();
+      e.component = { name: 'content-element', data: this.element };
+    },
+    focus() {
+      this.editorChannel.emit('element:focus', this.element, this.parent);
     }
   },
   created() {
@@ -62,7 +64,7 @@ export default {
     // Editor listeners
     this.editorChannel.on('element:select', elementId => {
       if (this.id !== elementId) return;
-      this.$refs.contentElement.$el.click();
+      this.focus();
     });
     this.editorChannel.on('element:focus', element => {
       this.isFocused = !!element && (getElementId(element) === this.id);
