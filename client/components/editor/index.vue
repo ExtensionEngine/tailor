@@ -48,9 +48,11 @@ export default {
     ...mapActions('repository', ['initialize']),
     selectElement(element) {
       this.selectedElement = element;
-      const elementId = getElementId(element);
-      if (this.$route.query.elementId === elementId) return;
-      this.$router.push({ query: { ...this.$route.query, elementId } });
+      const selectedElementId = getElementId(element);
+      const { elementId: queryElementId, ...query } = this.$route.query;
+      if (selectedElementId === queryElementId) return;
+      if (selectedElementId) query.elementId = selectedElementId;
+      this.$router.replace({ query });
     }
   },
   async created() {
