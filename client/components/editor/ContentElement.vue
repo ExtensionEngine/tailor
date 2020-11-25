@@ -9,12 +9,12 @@
       <template v-slot:activator="{ on: menu }">
         <v-tooltip open-delay="800" left>
           <template v-slot:activator="{ on: tooltip }">
-            <v-badge
-              v-show="unseenCommentCount"
-              :content="unseenCommentCount"
-              color="secondary" />
             <v-btn v-on="{ ...menu, ...tooltip }" small icon fab>
-              <v-icon color="primary" class="pr-1">mdi-forum-outline</v-icon>
+              <v-badge
+                v-if="unseenCommentCount"
+                :content="unseenCommentCount"
+                color="secondary" />
+              <v-icon v-else color="primary" class="pr-1">mdi-forum-outline</v-icon>
             </v-btn>
           </template>
           <span>Discussion</span>
@@ -118,10 +118,14 @@ $white: #fff;
 
 .v-btn {
   position: absolute;
-  top: -0.875rem;
-  right: -0.875rem;
+  top: 2rem;
+  right: -1.25rem;
   z-index: 2;
   background: $white;
+
+  .v-btn__content {
+    position: relative;
+  }
 }
 
 ::v-deep {
@@ -136,15 +140,8 @@ $white: #fff;
 
   .v-badge {
     position: absolute;
-    top: 0;
-    right: 0.25rem;
-    z-index: 3;
-
-    .v-badge__badge {
-      min-width: 1.125rem;
-      height: 1.125rem;
-      font-size: 0.625rem;
-    }
+    top: 0.375rem;
+    right: 1.625rem;
   }
 }
 </style>
