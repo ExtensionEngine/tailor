@@ -136,9 +136,15 @@ $white: #fff;
 
   .v-badge {
     position: absolute;
-    top: -0.25rem;
-    right: -0.375rem;
+    top: 0;
+    right: 0.25rem;
     z-index: 3;
+
+    .v-badge__badge {
+      min-width: 1.125rem;
+      height: 1.125rem;
+      font-size: 0.625rem;
+    }
   }
 }
 </style>
