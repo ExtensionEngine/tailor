@@ -5,6 +5,7 @@
     class="content-element">
     <component
       :is="componentName"
+      ref="contentElement"
       @add="$emit('add', $event)"
       @save="$emit('save', $event)"
       @delete="$emit('delete')"
@@ -61,7 +62,7 @@ export default {
     // Editor listeners
     this.editorChannel.on('element:select', elementId => {
       if (this.id !== elementId) return;
-      this.editorChannel.emit('element:focus', this.element, this.parent);
+      this.$refs.contentElement.$el.click();
     });
     this.editorChannel.on('element:focus', element => {
       this.isFocused = !!element && (getElementId(element) === this.id);
