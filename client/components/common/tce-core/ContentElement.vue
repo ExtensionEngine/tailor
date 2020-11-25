@@ -78,9 +78,22 @@ export default {
 <style lang="scss" scoped>
 .content-element {
   position: relative;
+  $accent: #1de9b6;
 
   &.focused {
-    border: 1px solid #bbb;
+    border: 1px dashed $accent;
+
+    &::after {
+      $width: 0.125rem;
+
+      content: '';
+      position: absolute;
+      top: 0;
+      right: -$width;
+      width: $width;
+      height: 100%;
+      background: $accent;
+    }
   }
 }
 
