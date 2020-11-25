@@ -10,6 +10,7 @@
           v-for="(containerGroup, type) in rootContainerGroups"
           :key="type"
           :container-group="containerGroup"
+          :selected-activity="activity"
           :parent-id="activity.id"
           v-bind="getContainerConfig(type)" />
       </template>

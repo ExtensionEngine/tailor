@@ -72,7 +72,7 @@ export default {
   computed: {
     selectedTabIndex: vm => vm.tabs.map(it => it.name).indexOf(vm.selectedTab),
     ...mapGetters('repository/comments', ['getUnseenComments']),
-    unseenComments: vm => vm.getUnseenComments({ activity: vm.selectedActivity }),
+    unseenComments: vm => vm.getUnseenComments(vm.selectedActivity),
     discussionTabVisible: vm => vm.selectedTab === 'comments',
     tabs: vm => ([{
       name: 'browser',

@@ -27,11 +27,7 @@
       class="element-list">
       <template v-slot:list-item="{ element, isDragged, position }">
         <inline-activator @click.native="showElementDrawer(position - 1)" />
-        <content-element
-          :activity="container"
-          :element="element"
-          :is-dragged="isDragged"
-          :set-width="false" />
+        <content-element v-bind="{ selectedActivity, element, isDragged, setWidth: false }" />
       </template>
       <template v-slot:list-add="{ position: lastPosition, ...slotProps }">
         <div class="add-element-container mt-5">
@@ -64,6 +60,7 @@ const { ADD_AFTER } = InsertLocation;
 export default {
   name: 'content-container',
   props: {
+    selectedActivity: { type: Object, required: true },
     container: { type: Object, required: true },
     elements: { type: Object, required: true },
     types: { type: Array, default: null },

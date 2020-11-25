@@ -21,7 +21,7 @@
         </v-tooltip>
       </template>
       <content-element-discussion
-        :activity="activity"
+        :activity="selectedActivity"
         :content-element="element"
         :is-visible="showDiscussion" />
     </v-menu>
@@ -55,7 +55,7 @@ export default {
   name: 'content-element',
   inheritAttrs: false,
   props: {
-    activity: { type: Object, required: true },
+    selectedActivity: { type: Object, required: true },
     element: { type: Object, required: true },
     disabled: { type: Boolean, default: false },
     isDragged: { type: Boolean, default: false }
@@ -68,7 +68,7 @@ export default {
   computed: {
     ...mapChannels({ editorChannel: 'editor' }),
     ...mapGetters('repository/comments', ['getUnseenComments']),
-    unseenComments: vm => vm.getUnseenComments({ contentElement: vm.element })
+    unseenComments: vm => vm.getUnseenComments(vm.selectedActivity, vm.element)
   },
   methods: {
     ...mapActions('repository/contentElements', {

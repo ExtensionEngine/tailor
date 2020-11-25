@@ -21,6 +21,7 @@
       @reorderElement="reorderContentElements"
       @deleteElement="requestElementDeletion"
       @delete="requestContainerDeletion(container)"
+      :selected-activity="selectedActivity"
       :container="container"
       :name="name"
       :position="index"
@@ -56,7 +57,8 @@ export default {
   inheritAttrs: false,
   inject: ['$ccRegistry'],
   props: {
-    containerGroup: { type: Array, default() { return []; } },
+    containerGroup: { type: Array, default: () => [] },
+    selectedActivity: { type: Object, required: true },
     type: { type: String, required: true },
     templateId: { type: String, default: null },
     parentId: { type: Number, required: true },
@@ -72,12 +74,8 @@ export default {
       const id = getContainerId(this);
       return this.$ccRegistry.get(id) ? getContainerName(id) : DEFAULT_CONTAINER;
     },
-    name() {
-      return this.label.toLowerCase();
-    },
-    addBtnEnabled() {
-      return !(!this.multiple && this.containerGroup.length);
-    },
+    name: vm => vm.label.toLowerCase(),
+    addBtnEnabled: vm => !(!vm.multiple && vm.containerGroup.length),
     nextPosition() {
       const last = get(maxBy(this.containerGroup, 'position'), 'position', 0);
       return last + 1;
