@@ -1,6 +1,6 @@
 <template>
   <div
-    @click="focus"
+    @click="onFocus"
     :class="{ focused: isFocused, frame }"
     class="content-element">
     <component
