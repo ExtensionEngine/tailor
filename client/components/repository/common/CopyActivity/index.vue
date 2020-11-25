@@ -61,6 +61,7 @@
 import { mapActions, mapGetters } from 'vuex';
 import activityApi from 'client/api/activity';
 import InsertLocation from '@/utils/InsertLocation';
+import last from 'lodash/last';
 import pluralize from 'pluralize';
 import Promise from 'bluebird';
 import repositoryApi from 'client/api/repository';
@@ -69,7 +70,7 @@ import { SCHEMAS } from 'shared/activities';
 import sortBy from 'lodash/sortBy';
 import TailorDialog from '@/components/common/TailorDialog';
 
-const { ADD_INTO } = InsertLocation;
+const { ADD_INTO, ADD_AFTER } = InsertLocation;
 
 export default {
   name: 'copy-activity',
@@ -85,6 +86,7 @@ export default {
     repositories: [],
     selectedRepository: null,
     selectedActivities: [],
+    copiedActivities: [],
     isFetchingRepositories: true,
     isFetchingActivities: false,
     isCopyingActivities: false
@@ -110,27 +112,31 @@ export default {
       repository.activities = sortBy(activities, 'position');
       this.isFetchingActivities = false;
     },
-    async copyActivity(activity, copyIndex) {
+    async copyActivity(activity) {
       const { id: srcId, repositoryId: srcRepositoryId, type } = activity;
-      const { anchor, action } = this;
+      const { action } = this;
+      const anchor = (action === ADD_AFTER && last(this.copiedActivities)) || this.anchor;
       const payload = {
         srcId,
         srcRepositoryId,
         repositoryId: this.repositoryId,
         type,
-        position: await this.calculateCopyInsertPosition({ action, activity, anchor, copyIndex })
+        position: await this.calculateCopyInsertPosition({ action, activity, anchor })
       };
       if (anchor) {
         payload.parentId = action === ADD_INTO ? anchor.id : anchor.parentId;
       }
-      return this.clone(payload);
+      const activities = await this.clone(payload);
+      this.copiedActivities.push(...activities);
+      return activities;
     },
     async copySelection() {
       this.isCopyingActivities = true;
       const items = sortBy(this.selectedActivities, ['parentId', 'position']);
-      await Promise.each(items, (it, index) => this.copyActivity(it, index));
+      await Promise.each(items, it => this.copyActivity(it));
       this.$emit('completed', items[0].parentId);
       this.isCopyingActivities = false;
+      this.copiedActivities = [];
       this.close();
     },
     close() {

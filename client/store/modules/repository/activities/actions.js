@@ -44,7 +44,10 @@ const clone = ({ commit }, mapping) => {
   const { srcId, srcRepositoryId } = mapping;
   const url = `/repositories/${srcRepositoryId}/activities/${srcId}/clone`;
   return request.post(url, mapping)
-    .then(({ data: { data } }) => commit('fetch', api.processEntries(data)));
+    .then(({ data: { data } }) => {
+      commit('fetch', api.processEntries(data));
+      return data;
+    });
 };
 
 const calculateInsertPosition = ({ state }, { activity, anchor, action }) => {
@@ -57,13 +60,13 @@ const calculateInsertPosition = ({ state }, { activity, anchor, action }) => {
   return calculatePosition(context);
 };
 
-const calculateCopyInsertPosition = ({ state }, { anchor, action, copyIndex }) => {
+const calculateCopyInsertPosition = ({ state }, { anchor, action }) => {
   let items = getOutlineChildren(state.items, anchor.parentId);
   if (action === ADD_INTO) {
     items = getOutlineChildren(state.items, anchor.id);
     return calculatePosition({ items, action });
   }
-  const newPosition = findIndex(items, { id: anchor.id }) + copyIndex;
+  const newPosition = findIndex(items, { id: anchor.id });
   const context = { items, newPosition, isFirstChild: newPosition === -1, action };
   return calculatePosition(context);
 };
