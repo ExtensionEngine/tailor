@@ -13,7 +13,7 @@ export default new VuexPersistence({
     auth: state.auth,
     repository: {
       comments: {
-        seenByActivity: state.repository.comments.seenByActivity
+        seenBy: state.repository.comments.seenBy
       }
     }
   }),
