@@ -13,8 +13,8 @@
               v-show="unseenCommentCount"
               :content="unseenCommentCount"
               color="secondary" />
-            <v-btn v-on="{ ...menu, ...tooltip }" color="primary" x-small fab>
-              <v-icon class="pr-1">mdi-forum-outline</v-icon>
+            <v-btn v-on="{ ...menu, ...tooltip }" small icon fab>
+              <v-icon color="primary" class="pr-1">mdi-forum-outline</v-icon>
             </v-btn>
           </template>
           <span>Discussion</span>
@@ -106,12 +106,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$white: #fff;
+
 .content-element-container {
   position: relative;
 }
 
 .v-menu__content {
-  background: #fff;
+  background: $white;
 }
 
 .v-btn {
@@ -119,6 +121,7 @@ export default {
   top: -0.875rem;
   right: -0.875rem;
   z-index: 2;
+  background: $white;
 }
 
 ::v-deep {
