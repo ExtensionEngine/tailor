@@ -12,9 +12,7 @@
             <v-badge
               v-show="unseenCommentCount"
               :content="unseenCommentCount"
-              color="secondary"
-              offset-y="14"
-              offset-x="14" />
+              color="secondary" />
             <v-btn v-on="{ ...menu, ...tooltip }" color="primary" x-small fab>
               <v-icon class="pr-1">mdi-forum-outline</v-icon>
             </v-btn>
@@ -112,7 +110,7 @@ export default {
   background: #fff;
 }
 
-::v-deep .v-badge, .v-btn {
+.v-btn {
   position: absolute;
   top: 0.5rem;
   right: 0;
@@ -130,6 +128,9 @@ export default {
   }
 
   .v-badge {
+    position: absolute;
+    top: 1.125rem;
+    right: 0.5rem;
     z-index: 3;
   }
 }
