@@ -18,6 +18,7 @@
         v-show="discussionTabVisible"
         :activity="selectedActivity"
         :is-visible="discussionTabVisible"
+        :has-all-comments="true"
         class="my-8 mx-4" />
       <element-sidebar
         v-if="selectedTab === 'element'"

@@ -28,6 +28,7 @@
       :user="user"
       :min-displayed="commentsShownLimit"
       :show-all="showAll"
+      :has-all-comments="hasAllComments"
       class="mt-2" />
     <div class="text-right">
       <text-editor
@@ -58,7 +59,8 @@ export default {
     comments: { type: Array, default: () => [] },
     user: { type: Object, required: true },
     showHeading: { type: Boolean, default: false },
-    showNotifications: { type: Boolean, default: false }
+    showNotifications: { type: Boolean, default: false },
+    hasAllComments: { type: Boolean, default: false }
   },
   data: () => ({ showAll: false, comment: initCommentInput() }),
   computed: {

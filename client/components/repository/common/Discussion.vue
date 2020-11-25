@@ -4,7 +4,7 @@
       @save="saveComment"
       @update="saveComment"
       @remove="remove"
-      v-bind="{ comments, user, showHeading }" />
+      v-bind="{ comments, user, hasAllComments, showHeading }" />
   </div>
 </template>
 
@@ -25,6 +25,7 @@ export default {
     activity: { type: Object, required: true },
     contentElement: { type: Object, default: null },
     isVisible: { type: Boolean, default: false },
+    hasAllComments: { type: Boolean, default: false },
     showHeading: { type: Boolean, default: true }
   },
   computed: {

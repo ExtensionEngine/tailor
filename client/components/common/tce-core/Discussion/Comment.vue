@@ -2,6 +2,7 @@
   <li class="comment">
     <v-avatar size="34" class="comment-avatar">
       <img :src="author.imgUrl">
+      <v-badge v-if="contentElementLabel" color="primary" content="C" />
     </v-avatar>
     <div class="comment-body pl-3">
       <div class="header">
@@ -54,7 +55,8 @@ export default {
   name: 'thread-comment',
   props: {
     comment: { type: Object, required: true },
-    user: { type: Object, required: true }
+    user: { type: Object, required: true },
+    hasAllComments: { type: Boolean, default: false }
   },
   data: vm => ({ isEditing: false, content: vm.comment.content }),
   computed: {
@@ -63,6 +65,7 @@ export default {
     isDeleted: vm => !!vm.comment.deletedAt,
     isAuthor: vm => vm.author.id === vm.user.id,
     showOptions: vm => vm.isAuthor && !vm.isDeleted,
+    contentElementLabel: vm => vm.hasAllComments && vm.comment.contentElementId,
     options: vm => [
       { name: 'Edit', action: vm.toggleEdit, icon: 'mdi-pencil' },
       { name: 'Remove', action: vm.remove, icon: 'mdi-delete' }]
@@ -104,6 +107,13 @@ export default {
   &-avatar {
     width: 2.5rem;
     margin-top: 0.375rem;
+    overflow: visible;
+
+    ::v-deep .v-badge {
+      position: absolute;
+      top: 0.5rem;
+      left: 1.5rem;
+    }
   }
 
   &-body {
