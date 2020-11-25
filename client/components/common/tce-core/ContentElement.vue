@@ -9,6 +9,7 @@
       @save="$emit('save', $event)"
       @delete="$emit('delete')"
       @focus="focus"
+      :id="`element_${id}`"
       v-bind="$attrs"
       :element="element"
       :is-focused="isFocused"
@@ -54,8 +55,14 @@ export default {
     }
   },
   created() {
+    // Element listeners
     this.elementBus.on('save:meta', meta => this.$emit('save:meta', meta));
     this.elementBus.on('delete', () => this.$emit('delete'));
+    // Editor listeners
+    this.editorChannel.on('element:select', elementId => {
+      if (this.id !== elementId) return;
+      this.editorChannel.emit('element:focus', this.element, this.parent);
+    });
     this.editorChannel.on('element:focus', element => {
       this.isFocused = !!element && (getElementId(element) === this.id);
     });

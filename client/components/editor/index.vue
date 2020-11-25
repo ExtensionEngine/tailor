@@ -9,7 +9,7 @@
         :selected-element="selectedElement" />
       <activity-content
         :key="activity.id"
-        @selected="selectedElement = $event"
+        @selected="selectElement"
         :repository="repository"
         :activity="activity"
         :root-container-groups="rootContainerGroups"
@@ -22,6 +22,7 @@
 import { mapActions, mapGetters } from 'vuex';
 import ActivityContent from './ActivityContent';
 import get from 'lodash/get';
+import { getElementId } from 'tce-core/utils';
 import Sidebar from './Sidebar';
 import Toolbar from './Toolbar';
 import withUserTracking from 'components/common/mixins/userTracking';
@@ -43,7 +44,15 @@ export default {
     ...mapGetters('editor', ['activity', 'contentContainers', 'rootContainerGroups']),
     activeUsers: vm => vm.getActiveUsers('activity', vm.activityId)
   },
-  methods: mapActions('repository', ['initialize']),
+  methods: {
+    ...mapActions('repository', ['initialize']),
+    selectElement(element) {
+      this.selectedElement = element;
+      const elementId = getElementId(element);
+      if (this.$route.query.elementId === elementId) return;
+      this.$router.push({ query: { ...this.$route.query, elementId } });
+    }
+  },
   async created() {
     const { repositoryId: currentRepositoryId, repository: storeRepository } = this;
     const repositoryLoaded = !!storeRepository;
