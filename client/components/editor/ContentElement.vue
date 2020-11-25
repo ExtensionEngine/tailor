@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="content-element-container">
     <v-menu
       v-model="showDiscussion"
       :close-on-content-click="false"
@@ -106,14 +106,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.content-element-container {
+  position: relative;
+}
+
 .v-menu__content {
   background: #fff;
 }
 
 .v-btn {
   position: absolute;
-  top: 0.5rem;
-  right: 0;
+  top: -0.875rem;
+  right: -0.875rem;
   z-index: 2;
 }
 
@@ -129,8 +133,8 @@ export default {
 
   .v-badge {
     position: absolute;
-    top: 1.125rem;
-    right: 0.5rem;
+    top: -0.375rem;
+    right: -0.375rem;
     z-index: 3;
   }
 }
