@@ -133,7 +133,7 @@ export default {
 
   .v-badge {
     position: absolute;
-    top: -0.375rem;
+    top: -0.25rem;
     right: -0.375rem;
     z-index: 3;
   }
