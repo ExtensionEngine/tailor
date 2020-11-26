@@ -91,6 +91,7 @@ export default {
     &::before {
       content: '';
       position: absolute;
+      // Cover the same block as box-shadow
       top: -1px;
       left: -1px;
       width: calc(100% + 2px);
