@@ -112,7 +112,7 @@ export default {
     ::v-deep .v-badge {
       position: absolute;
       top: 0.5rem;
-      left: 1.5rem;
+      left: 0;
     }
   }
 
