@@ -94,7 +94,7 @@ module.exports = {
     API_PATH: '/api',
     AUTH_JWT_SCHEME,
     ENABLE_DEFAULT_SCHEMA: yn(ENABLE_DEFAULT_SCHEMA),
-    OIDC_ENABLED,
+    OIDC_ENABLED: yn(OIDC_ENABLED),
     OIDC_LOGIN_TEXT
   },
   babel: {
