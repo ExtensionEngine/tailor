@@ -1,8 +1,9 @@
+import activityIcons from '@/components/repository/Outline/icons';
 import colors from 'vuetify/es5/util/colors';
-import icons from '@/components/repository/WorkflowBoard/icons';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
 import VuetifySnackbar from '@/plugins/vuetify-snackbar';
+import workflowIcons from '@/components/repository/WorkflowBoard/icons';
 
 Vue.use(Vuetify);
 Vue.use(VuetifySnackbar);
@@ -11,20 +12,29 @@ export default new Vuetify({
   icons: {
     iconfont: 'mdi',
     values: {
+      addAbove: {
+        component: activityIcons.AddAbove
+      },
+      addBelow: {
+        component: activityIcons.AddBelow
+      },
+      addInto: {
+        component: activityIcons.AddInto
+      },
       priorityTrivial: {
-        component: icons.PriorityTrivial
+        component: workflowIcons.PriorityTrivial
       },
       priorityLow: {
-        component: icons.PriorityLow
+        component: workflowIcons.PriorityLow
       },
       priorityMedium: {
-        component: icons.PriorityMedium
+        component: workflowIcons.PriorityMedium
       },
       priorityHigh: {
-        component: icons.PriorityHigh
+        component: workflowIcons.PriorityHigh
       },
       priorityCritical: {
-        component: icons.PriorityCritical
+        component: workflowIcons.PriorityCritical
       }
     }
   },

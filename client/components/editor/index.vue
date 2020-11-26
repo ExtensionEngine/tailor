@@ -9,7 +9,7 @@
         :selected-element="selectedElement" />
       <activity-content
         :key="activity.id"
-        @selected="selectedElement = $event"
+        @selected="selectElement"
         :repository="repository"
         :activity="activity"
         :elements="isPublishedPreview ? changesSincePublish : activityElements"
@@ -26,6 +26,7 @@ import assignWith from 'lodash/assignWith';
 import cloneDeep from 'lodash/cloneDeep';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
+import { getElementId } from 'tce-core/utils';
 import isAfter from 'date-fns/isAfter';
 import map from 'lodash/map';
 import { mapChannels } from '@/plugins/radio';
@@ -118,6 +119,14 @@ export default {
       const updatedAt = new Date(element.updatedAt);
       const publishedAt = new Date(this.activity.publishedAt);
       return isAfter(updatedAt, publishedAt);
+    },
+    selectElement(element) {
+      this.selectedElement = element;
+      const selectedElementId = getElementId(element);
+      const { elementId: queryElementId, ...query } = this.$route.query;
+      if (selectedElementId === queryElementId) return;
+      if (selectedElementId) query.elementId = selectedElementId;
+      this.$router.replace({ query });
     }
   },
   watch: {

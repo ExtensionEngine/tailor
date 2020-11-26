@@ -9,20 +9,9 @@
       color="primary darken-1"
       text
       class="px-1 btn-open">
-      <v-icon class="pr-1">mdi-open-in-app</v-icon>
+      <v-icon class="pr-1">mdi-page-next-outline</v-icon>
       Open
     </v-btn>
-    <create-dialog
-      v-if="subLevels.length"
-      :repository-id="activity.repositoryId"
-      :levels="subLevels"
-      :anchor="activity"
-      :action="insertLocation"
-      :heading="`Add into ${activity.data.name}`"
-      activator-label="Add into"
-      activator-color="blue-grey darken-3"
-      activator-icon="mdi-subdirectory-arrow-right"
-      show-activator />
     <publishing
       v-if="isAdmin || isRepositoryAdmin"
       :activity="activity"
@@ -32,9 +21,7 @@
 
 <script>
 import ActivityOptions from '@/components/repository/common/ActivityOptions/Menu';
-import CreateDialog from '@/components/repository/common/CreateDialog';
 import get from 'lodash/get';
-import InsertLocation from '@/utils/InsertLocation';
 import { isEditable } from 'shared/activities';
 import { mapGetters } from 'vuex';
 import Publishing from './Publishing';
@@ -46,20 +33,11 @@ export default {
   },
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters('repository',
-      ['structure', 'outlineActivities', 'isRepositoryAdmin']),
+    ...mapGetters('repository', ['outlineActivities', 'isRepositoryAdmin']),
     isEditable() {
       const type = get(this.activity, 'type');
       return type && isEditable(type);
-    },
-    subLevels() {
-      const { activity, structure = [] } = this;
-      if (!activity) return [];
-      const config = structure.find(it => it.type === activity.type);
-      const subLevels = get(config, 'subLevels', []);
-      return structure.filter(it => subLevels.includes(it.type));
-    },
-    insertLocation: vm => InsertLocation.ADD_INTO
+    }
   },
   methods: {
     edit() {
@@ -70,7 +48,7 @@ export default {
       });
     }
   },
-  components: { ActivityOptions, CreateDialog, Publishing }
+  components: { ActivityOptions, Publishing }
 };
 </script>
 

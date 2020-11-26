@@ -1,6 +1,6 @@
 <template>
   <div
-    @click="focus"
+    @click="onSelect"
     :class="{ focused: isFocused, frame }"
     class="content-element">
     <component
@@ -8,7 +8,8 @@
       @add="$emit('add', $event)"
       @save="$emit('save', $event)"
       @delete="$emit('delete')"
-      @focus="focus"
+      @focus="onSelect"
+      :id="`element_${id}`"
       v-bind="$attrs"
       :element="element"
       :is-focused="isFocused"
@@ -47,15 +48,24 @@ export default {
     }
   },
   methods: {
-    focus(e, element = this.element, parent = this.parent) {
+    onSelect(e) {
       if (this.isDisabled || e.component) return;
-      this.editorChannel.emit('element:focus', element, parent);
-      e.component = { name: 'content-element', data: element };
+      this.focus();
+      e.component = { name: 'content-element', data: this.element };
+    },
+    focus() {
+      this.editorChannel.emit('element:focus', this.element, this.parent);
     }
   },
   created() {
+    // Element listeners
     this.elementBus.on('save:meta', meta => this.$emit('save:meta', meta));
     this.elementBus.on('delete', () => this.$emit('delete'));
+    // Editor listeners
+    this.editorChannel.on('element:select', elementId => {
+      if (this.id !== elementId) return;
+      this.focus();
+    });
     this.editorChannel.on('element:focus', element => {
       this.isFocused = !!element && (getElementId(element) === this.id);
     });
@@ -71,9 +81,35 @@ export default {
 <style lang="scss" scoped>
 .content-element {
   position: relative;
+  $accent: #1de9b6;
 
   &.focused {
-    box-shadow: 0 0 0 1px #bbb;
+    &.frame {
+      box-shadow: none;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: -1px;
+      width: calc(100% + 2px);
+      height: calc(100% + 2px);
+      border: 1px dashed $accent;
+      border-right: none;
+    }
+
+    &::after {
+      $width: 0.125rem;
+
+      content: '';
+      position: absolute;
+      top: 0;
+      right: -$width;
+      width: $width;
+      height: 100%;
+      background: $accent;
+    }
   }
 }
 
