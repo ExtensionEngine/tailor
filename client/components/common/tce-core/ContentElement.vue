@@ -3,6 +3,7 @@
     @click="onSelect"
     :class="{ focused: isFocused, frame }"
     class="content-element">
+    <discussion v-if="hasComments" :content-element="element" />
     <component
       :is="componentName"
       @add="$emit('add', $event)"
@@ -10,17 +11,13 @@
       @delete="$emit('delete')"
       @focus="onSelect"
       :id="`element_${id}`"
-      v-bind="$attrs"
-      :element="element"
-      :is-focused="isFocused"
-      :is-dragged="isDragged"
-      :is-disabled="isDisabled"
-      :dense="dense" />
+      v-bind="{ ...$attrs, element, isFocused, isDragged, isDisabled, dense }" />
   </div>
 </template>
 
 <script>
 import { getComponentName, getElementId } from './utils';
+import Discussion from '@/components/repository/common/ContentElementDiscussion';
 import { mapChannels } from '@/plugins/radio';
 
 export default {
@@ -32,7 +29,8 @@ export default {
     isDragged: { type: Boolean, default: false },
     isDisabled: { type: Boolean, default: false },
     frame: { type: Boolean, default: true },
-    dense: { type: Boolean, default: false }
+    dense: { type: Boolean, default: false },
+    hasComments: { type: Boolean, default: true }
   },
   data: () => ({ isFocused: false }),
   computed: {
@@ -65,10 +63,9 @@ export default {
     });
   },
   provide() {
-    return {
-      $elementBus: this.elementBus
-    };
-  }
+    return { $elementBus: this.elementBus };
+  },
+  components: { Discussion }
 };
 </script>
 
