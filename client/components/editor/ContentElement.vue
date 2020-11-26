@@ -29,7 +29,6 @@ export default {
   name: 'content-element',
   inheritAttrs: false,
   props: {
-    activity: { type: Object, required: true },
     element: { type: Object, required: true },
     disabled: { type: Boolean, default: false },
     isDragged: { type: Boolean, default: false }
