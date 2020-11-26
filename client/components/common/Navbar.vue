@@ -62,7 +62,7 @@ export default {
     ...mapGetters(['isAdmin']),
     ...mapGetters('repository', ['repository']),
     title: () => BRAND_CONFIG.TITLE,
-    logo: () => BRAND_CONFIG.LOGO_COMPACT,
+    logo: () => BRAND_CONFIG.LOGO_FULL,
     routes() {
       const items = [
         { name: 'Catalog', to: { name: 'catalog' } },
