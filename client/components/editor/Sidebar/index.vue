@@ -14,7 +14,7 @@
         :repository="repository"
         :activities="activities"
         :selected="selectedActivity" />
-      <activity-discussion
+      <editor-discussion
         v-show="discussionTabVisible"
         :activity="selectedActivity"
         :is-visible="discussionTabVisible"
@@ -51,9 +51,9 @@
 </template>
 
 <script>
-import ActivityDiscussion from '@/components/repository/common/ActivityDiscussion';
 import ActivityNavigation from './Navigation';
 import debounce from 'lodash/debounce';
+import EditorDiscussion from '@/components/repository/common/EditorDiscussion';
 import ElementSidebar from './ElementSidebar';
 import get from 'lodash/get';
 import { getElementId } from 'tce-core/utils';
@@ -111,7 +111,7 @@ export default {
       this.unseenCommentCount = val.length;
     }, 200)
   },
-  components: { ActivityDiscussion, ActivityNavigation, ElementSidebar }
+  components: { ActivityNavigation, EditorDiscussion, ElementSidebar }
 };
 </script>
 
