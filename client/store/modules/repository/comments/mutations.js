@@ -10,8 +10,8 @@ import {
 
 const markSeenComments = (state, { activityUid, elementUid, lastCommentAt }) => {
   const key = elementUid ? 'contentElement' : 'activity';
-  state.seenBy[key] = {
-    ...state.seenBy[key],
+  state.seen[key] = {
+    ...state.seen[key],
     [elementUid || activityUid]: lastCommentAt
   };
 };
