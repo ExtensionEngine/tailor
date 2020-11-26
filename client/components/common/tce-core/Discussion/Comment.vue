@@ -2,7 +2,7 @@
   <li class="comment">
     <v-avatar size="34" class="comment-avatar">
       <img :src="author.imgUrl">
-      <v-badge v-if="contentElementLabel" color="primary" content="C" />
+      <v-badge v-if="contentElementLabel" color="blue-grey darken-4" content="CE" />
     </v-avatar>
     <div class="comment-body pl-3">
       <div class="header">
@@ -108,16 +108,20 @@ export default {
     width: 2.5rem;
     margin-top: 0.375rem;
     overflow: visible;
-
-    ::v-deep .v-badge {
-      position: absolute;
-      top: 0.5rem;
-      left: 0;
-    }
   }
 
   &-body {
     flex: 1;
+  }
+
+  ::v-deep .v-badge {
+    position: absolute;
+    top: 0.5rem;
+    left: 0;
+
+    .v-badge__badge {
+      color: rgb(255, 87, 34);
+    }
   }
 
   .author {
