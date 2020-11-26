@@ -5,7 +5,7 @@
       :text-color="element.isPublished ? 'secondary' : 'success'"
       color="blue-grey lighten-5"
       small round
-      class="published-preview-label font-weight-medium text-capitalize">
+      class="published-preview-label elevation-2 font-weight-medium text-capitalize">
       {{ publishState }}
     </v-chip>
     <contained-content
@@ -85,7 +85,7 @@ export default {
 
 <style lang="scss" scoped>
 @mixin highlight($color) {
-  ::v-deep .content-element {
+  ::v-deep > .content-element {
     box-shadow: 0 0 0 2px $color;
   }
 }
@@ -95,14 +95,15 @@ export default {
     position: absolute;
     top: 2rem;
     right: 1.5rem;
-  }
-
-  .changed, .removed {
-    @include highlight(var(--v-secondary-lighten4));
+    z-index: 2;
   }
 
   .added {
     @include highlight(var(--v-success-lighten2));
+  }
+
+  .changed, .removed {
+    @include highlight(var(--v-secondary-lighten4));
   }
 }
 </style>
