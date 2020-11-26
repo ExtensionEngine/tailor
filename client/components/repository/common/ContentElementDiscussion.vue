@@ -41,7 +41,7 @@ const extractParams = ({ activity, contentElement }) => ({
 });
 
 export default {
-  name: 'ce-discussion-wrapper',
+  name: 'content-element-discussion',
   inject: ['$getCurrentUser'],
   props: {
     activity: { type: Object, required: true },
