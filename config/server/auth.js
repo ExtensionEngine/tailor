@@ -11,7 +11,7 @@ module.exports = {
   saltRounds: parseInt(process.env.AUTH_SALT_ROUNDS, 10) || 10,
   corsAllowedOrigins,
   jwt: {
-    scheme: process.env.AUTH_JWT_SCHEME || 'JWT',
+    cookieName: 'access_token',
     secret: process.env.AUTH_JWT_SECRET,
     issuer: process.env.AUTH_JWT_ISSUER
   },

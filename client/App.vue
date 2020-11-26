@@ -9,9 +9,9 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex';
 import ConfirmationModal from 'components/common/ConfirmationModal';
 import isIexplorer from 'is-iexplorer';
-import { mapState } from 'vuex';
 import Navbar from 'components/common/Navbar';
 
 if (isIexplorer) document.body.classList.add('ie');
@@ -21,6 +21,10 @@ export default {
   computed: mapState({
     user: state => state.auth.user
   }),
+  methods: mapActions(['fetchUserInfo']),
+  created() {
+    this.fetchUserInfo();
+  },
   components: {
     ConfirmationModal,
     Navbar

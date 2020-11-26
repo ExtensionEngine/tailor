@@ -1,6 +1,7 @@
 'use strict';
 
 const Audience = require('../shared/auth/audience');
+const { auth } = require('../../config/server');
 const { authenticate } = require('../shared/auth');
 const { BAD_REQUEST } = require('http-status-codes');
 const { errors: OIDCError } = require('openid-client');
@@ -15,7 +16,6 @@ const OIDCErrors = [
 ];
 const scope = ['openid', 'profile', 'email'].join(' ');
 
-const isString = arg => typeof arg === 'string';
 const isOIDCError = err => OIDCErrors.some(Ctor => err instanceof Ctor);
 
 router
@@ -43,14 +43,12 @@ function login(req, res, next) {
   authenticate('oidc')(req, res, err => {
     if (err) return next(err);
     const { user } = req;
-    const template = path.resolve(__dirname, './authenticated.mustache');
     const token = user.createToken({
       audience: Audience.Scope.Access,
       expiresIn: '5 days'
     });
-    const profile = JSON.stringify(user.profile, (_, val) => {
-      return isString(val) ? encodeURIComponent(val) : val;
-    });
-    return res.render(template, { token, profile });
+    return res
+      .cookie(auth.jwt.cookieName, token)
+      .redirect('/');
   });
 }

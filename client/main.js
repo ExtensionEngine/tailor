@@ -6,6 +6,7 @@ import '@/utils/validation';
 import assetsApi from '@/api/asset';
 import ContentPluginRegistry from './content-plugins';
 
+import { FORBIDDEN, UNAUTHORIZED } from 'http-status-codes';
 import { formatDate, truncate } from '@/filters';
 import {
   setInteractionMode,
@@ -48,9 +49,12 @@ Vue.use(Timeago, {
   }
 });
 
-Object.defineProperty(request, 'token', {
-  get: () => store.state.auth.token,
-  set: value => !value && store.dispatch('logout')
+request.interceptors.response.use(res => res, err => {
+  if (err.response && [FORBIDDEN, UNAUTHORIZED].includes(err.response.status)) {
+    store.commit('setUser', null);
+    router.replace({ name: 'login' });
+  }
+  throw err;
 });
 
 const contentPluginRegistry = new ContentPluginRegistry(Vue);

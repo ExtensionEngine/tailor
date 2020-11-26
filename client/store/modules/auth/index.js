@@ -3,8 +3,8 @@ import * as getters from './getters';
 import * as mutations from './mutations';
 
 const state = {
-  user: null,
-  token: null
+  loading: new Deferred(),
+  user: null
 };
 
 export default {
@@ -14,3 +14,7 @@ export default {
   actions,
   mutations
 };
+
+function Deferred() {
+  this.promise = new Promise(resolve => (this.resolve = resolve));
+}

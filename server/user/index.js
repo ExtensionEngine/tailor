@@ -16,8 +16,10 @@ router
   .use(authenticate('jwt'))
   .get('/', authorize(), processPagination(User), ctrl.list)
   .post('/', authorize(), ctrl.upsert)
-  .post('/me/change-password', ctrl.changePassword)
+  .get('/logout', ctrl.logout)
+  .get('/me', ctrl.getProfile)
   .patch('/me', ctrl.updateProfile)
+  .post('/me/change-password', ctrl.changePassword)
   .delete('/:id', authorize(), ctrl.remove)
   .post('/:id/reinvite', authorize(), ctrl.reinvite);
 

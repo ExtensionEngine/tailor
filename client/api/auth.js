@@ -2,6 +2,7 @@ import request from './request';
 
 const urls = {
   login: '/users/login',
+  logout: '/users/logout',
   forgotPassword: '/users/forgot-password',
   resetPassword: '/users/reset-password',
   profile: '/users/me',
@@ -12,6 +13,10 @@ function login(credentials) {
   return request.base
     .post(urls.login, credentials)
     .then(res => res.data.data);
+}
+
+function logout() {
+  return request.get(urls.logout);
 }
 
 function forgotPassword(email) {
@@ -26,14 +31,20 @@ function changePassword(currentPassword, newPassword) {
   return request.post(urls.changePassword, { currentPassword, newPassword });
 }
 
+function getUserInfo() {
+  return request.get(urls.profile);
+}
+
 function updateUserInfo(userData) {
   return request.patch(urls.profile, userData);
 }
 
 export default {
   login,
+  logout,
   forgotPassword,
   resetPassword,
+  getUserInfo,
   updateUserInfo,
   changePassword
 };

@@ -123,13 +123,15 @@ const router = new Router({
   }]
 });
 
-router.beforeEach((to, from, next) => {
-  if (to.matched.some(it => it.meta.auth) && !store.state.auth.user) {
-    next({ path: '/login', query: { redirect: to.fullPath } });
+router.beforeEach(async (to, from, next) => {
+  const auth = store.state.auth;
+  await auth.loading.promise;
+  if (to.matched.some(it => it.meta.auth) && !auth.user) {
+    return next({ path: '/login', query: { redirect: to.fullPath } });
   } else if (!isAllowed(to)) {
-    next({ path: from.fullPath });
+    return next({ path: from.fullPath });
   } else {
-    next();
+    return next();
   }
 });
 

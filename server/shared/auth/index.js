@@ -4,6 +4,7 @@ const { auth: config, origin } = require('../../../config/server');
 const { ExtractJwt, Strategy: JwtStrategy } = require('passport-jwt');
 const Audience = require('./audience');
 const auth = require('./authenticator');
+const get = require('lodash/get');
 const jwt = require('jsonwebtoken');
 const LocalStrategy = require('passport-local');
 const OIDCStrategy = require('./oidc');
@@ -26,8 +27,7 @@ auth.use(new JwtStrategy({
   ...config.jwt,
   audience: Audience.Scope.Access,
   jwtFromRequest: ExtractJwt.fromExtractors([
-    ExtractJwt.fromAuthHeaderWithScheme(config.jwt.scheme),
-    ExtractJwt.fromUrlQueryParameter('token'),
+    extractJwtFromCookie,
     ExtractJwt.fromBodyField('token')
   ]),
   secretOrKey: config.jwt.secret
@@ -60,6 +60,10 @@ function verifyOIDC(_tokenSet, { email }, done) {
   return User.findOne({ where: { email }, rejectOnEmpty: true })
     .then(user => done(null, user))
     .catch(err => done(Object.assign(err, { email }), false));
+}
+
+function extractJwtFromCookie(req) {
+  return get(req.cookies, config.jwt.cookieName, null);
 }
 
 function secretOrKeyProvider(_, rawToken, done) {
