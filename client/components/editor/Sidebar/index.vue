@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import ActivityDiscussion from '@/components/repository/common/Discussion';
+import ActivityDiscussion from '@/components/repository/common/ActivityDiscussion';
 import ActivityNavigation from './Navigation';
 import debounce from 'lodash/debounce';
 import ElementSidebar from './ElementSidebar';

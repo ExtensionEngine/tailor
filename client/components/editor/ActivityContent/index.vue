@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="activityContent"
     @mousedown="mousedownCaptured = true"
     @click="onClick"
     class="activity-content blue-grey lighten-5">
@@ -32,6 +33,8 @@ import { mapChannels } from '@/plugins/radio';
 import throttle from 'lodash/throttle';
 
 const CE_FOCUS_EVENT = 'element:focus';
+const CE_SELECT_EVENT = 'element:select';
+const CE_SELECTION_DELAY = 1000;
 const CE_MODULE = 'repository/contentElements';
 const ELEMENT_MUTATIONS = [
   `${CE_MODULE}/save`, `${CE_MODULE}/add`, `${CE_MODULE}/update`
@@ -103,9 +106,25 @@ export default {
         this.focusedElement = { ...element, parent: composite };
       }, 50);
       this.editorChannel.on(CE_FOCUS_EVENT, this.focusHandler);
+    },
+    scrollToElement(id, timeout = 500) {
+      setTimeout(() => {
+        const elementId = `#element_${id}`;
+        const element = this.$refs.activityContent.querySelector(elementId);
+        element.scrollIntoView();
+      }, timeout);
     }
   },
   watch: {
+    isLoading(val) {
+      const { elementId } = this.$route.query;
+      if (val || !elementId) return;
+      // Select and scroll to element if elementId is set
+      setTimeout(() => {
+        this.editorChannel.emit(CE_SELECT_EVENT, elementId);
+        this.scrollToElement(elementId);
+      }, CE_SELECTION_DELAY);
+    },
     focusedElement: {
       deep: true,
       handler(val) {
@@ -114,8 +133,6 @@ export default {
     }
   },
   async created() {
-    // Reset element focus
-    this.$emit('selected', null);
     await this.loadContents();
     this.initElementFocusListener();
     this.initElementChangeWatcher();

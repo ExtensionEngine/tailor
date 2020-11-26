@@ -1,30 +1,5 @@
 <template>
-  <div class="content-element-container">
-    <v-menu
-      v-model="showDiscussion"
-      :close-on-content-click="false"
-      transition="slide-y-transition"
-      min-width="300"
-      attach offset-y left>
-      <template v-slot:activator="{ on: menu }">
-        <v-tooltip open-delay="800" left>
-          <template v-slot:activator="{ on: tooltip }">
-            <v-btn v-on="{ ...menu, ...tooltip }" small icon fab>
-              <v-badge
-                v-if="unseenCommentCount"
-                :content="unseenCommentCount"
-                color="secondary" />
-              <v-icon v-else color="primary" class="pr-1">mdi-forum-outline</v-icon>
-            </v-btn>
-          </template>
-          <span>Discussion</span>
-        </v-tooltip>
-      </template>
-      <content-element-discussion
-        :activity="selectedActivity"
-        :content-element="element"
-        :is-visible="showDiscussion" />
-    </v-menu>
+  <div>
     <contained-content
       @add="add"
       @save="save"
@@ -43,10 +18,9 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
-import ContentElementDiscussion from '@/components/repository/common/Discussion';
 import loader from '@/components/common/loader';
 import { mapChannels } from '@/plugins/radio';
 import throttle from 'lodash/throttle';
@@ -60,16 +34,8 @@ export default {
     disabled: { type: Boolean, default: false },
     isDragged: { type: Boolean, default: false }
   },
-  data: () => ({
-    isSaving: false,
-    showDiscussion: false,
-    unseenCommentCount: 0
-  }),
-  computed: {
-    ...mapChannels({ editorChannel: 'editor' }),
-    ...mapGetters('repository/comments', ['getUnseenComments']),
-    unseenComments: vm => vm.getUnseenComments(vm.selectedActivity, vm.element)
-  },
+  data: () => ({ isSaving: false }),
+  computed: mapChannels({ editorChannel: 'editor' }),
   methods: {
     ...mapActions('repository/contentElements', {
       saveElement: 'save',
@@ -95,53 +61,6 @@ export default {
       this.$nextTick(() => this.editorChannel.emit('element:focus'));
     }
   },
-  watch: {
-    unseenComments(comments) {
-      if (this.showDiscussion && comments.length) return;
-      setTimeout(() => (this.unseenCommentCount = comments.length), 200);
-    }
-  },
-  components: { ContainedContent, ContentElementDiscussion }
+  components: { ContainedContent }
 };
 </script>
-
-<style lang="scss" scoped>
-$white: #fff;
-
-.content-element-container {
-  position: relative;
-}
-
-.v-menu__content {
-  background: $white;
-}
-
-.v-btn {
-  position: absolute;
-  top: 2rem;
-  right: -1.25rem;
-  z-index: 2;
-  background: $white;
-
-  .v-btn__content {
-    position: relative;
-  }
-}
-
-::v-deep {
-  .discussion-container {
-    margin: 0.5rem 0;
-    border: none;
-
-    .header {
-      text-align: left;
-    }
-  }
-
-  .v-badge {
-    position: absolute;
-    top: 0.375rem;
-    right: 1.625rem;
-  }
-}
-</style>

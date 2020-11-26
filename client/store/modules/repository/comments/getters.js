@@ -8,10 +8,10 @@ export const getComments = state => params => {
 };
 
 export const getUnseenComments = (state, _, { auth }) => (activity, ce = null) => {
-  const { seenBy, items } = state;
+  const { seen, items } = state;
   const lastSeen = {
-    ce: seenBy.contentElement[ce?.uid] || 0,
-    activity: seenBy.activity[activity.uid] || 0
+    ce: seen.contentElement[ce?.uid] || 0,
+    activity: seen.activity[activity.uid] || 0
   };
   const options = { activity, ce, lastSeen, user: auth.user };
   return filter(items, it => setConditions(it, options));
