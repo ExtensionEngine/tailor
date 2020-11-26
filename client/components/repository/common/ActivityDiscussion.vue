@@ -1,5 +1,5 @@
 <template>
-  <div class="discussion-container">
+  <div class="activity-discussion">
     <discussion
       @save="saveComment"
       @update="saveComment"
@@ -59,7 +59,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.discussion-container {
+.activity-discussion {
   margin: 1rem 0 1.75rem;
   padding: 0.375rem 1rem;
   border: 1px solid #bbb;
