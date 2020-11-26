@@ -3,7 +3,10 @@
     @click="onSelect"
     :class="{ focused: isFocused, frame }"
     class="content-element">
-    <discussion v-if="hasComments" :content-element="element" />
+    <discussion
+      v-if="hasComments"
+      :content-element="element"
+      :selected-activity="selectedActivity" />
     <component
       :is="componentName"
       @add="$emit('add', $event)"
@@ -30,7 +33,8 @@ export default {
     isDisabled: { type: Boolean, default: false },
     frame: { type: Boolean, default: true },
     dense: { type: Boolean, default: false },
-    hasComments: { type: Boolean, default: true }
+    hasComments: { type: Boolean, default: true },
+    selectedActivity: { type: Object, required: true }
   },
   data: () => ({ isFocused: false }),
   computed: {

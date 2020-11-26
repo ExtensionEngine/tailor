@@ -15,7 +15,7 @@
       @save="$emit('save', $event)"
       @save:meta="$emit('save:meta', $event)"
       @delete="$emit('delete')"
-      v-bind="bindings" />
+      v-bind="{ ...bindings, selectedActivity }" />
   </div>
 </template>
 
@@ -32,7 +32,8 @@ export default {
     isDisabled: { type: Boolean, default: false },
     isDragged: { type: Boolean, default: false },
     setWidth: { type: Boolean, default: true },
-    dense: { type: Boolean, default: false }
+    dense: { type: Boolean, default: false },
+    selectedActivity: { type: Object, required: true }
   },
   data: () => ({ isHovered: false }),
   computed: {
