@@ -77,6 +77,7 @@ export default {
       return this.label.toLowerCase();
     },
     addBtnEnabled() {
+      if (this.isPublishedPreview) return false;
       return !(!this.multiple && this.containerGroup.length);
     },
     nextPosition() {
