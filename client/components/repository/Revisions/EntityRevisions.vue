@@ -6,7 +6,8 @@
           v-if="selectedRevision.resolved"
           :element="selectedRevision.state"
           :activity="activity"
-          is-disabled />
+          is-disabled
+          class="mr-2" />
       </div>
       <entity-sidebar
         v-show="expanded"
@@ -112,6 +113,10 @@ export default {
     margin-right: 16px;
     text-align: center;
   }
+}
+
+::v-deep .content-element .content-element-discussion .v-btn {
+  background: #f5f5f5;
 }
 
 .slide-fade-enter-active, .slide-fade-leave-active {
