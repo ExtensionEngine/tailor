@@ -1,6 +1,6 @@
 <template>
   <div
-    @click="onFocus"
+    @click="onSelect"
     :class="{ focused: isFocused, frame }"
     class="content-element">
     <component
@@ -8,7 +8,7 @@
       @add="$emit('add', $event)"
       @save="$emit('save', $event)"
       @delete="$emit('delete')"
-      @focus="onFocus"
+      @focus="onSelect"
       :id="`element_${id}`"
       v-bind="$attrs"
       :element="element"
@@ -48,7 +48,7 @@ export default {
     }
   },
   methods: {
-    onFocus(e) {
+    onSelect(e) {
       if (this.isDisabled || e.component) return;
       this.focus();
       e.component = { name: 'content-element', data: this.element };
