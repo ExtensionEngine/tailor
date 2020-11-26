@@ -31,6 +31,7 @@ import loader from '@/components/common/loader';
 import { mapChannels } from '@/plugins/radio';
 import throttle from 'lodash/throttle';
 
+const SET_ACTIVITY = 'activity:set';
 const CE_FOCUS_EVENT = 'element:focus';
 const CE_SELECT_EVENT = 'element:select';
 const CE_SELECTION_DELAY = 1000;
@@ -135,6 +136,7 @@ export default {
     await this.loadContents();
     this.initElementFocusListener();
     this.initElementChangeWatcher();
+    this.editorChannel.emit(SET_ACTIVITY, this.activity);
   },
   beforeDestroy() {
     this.storeUnsubscribe && this.storeUnsubscribe();

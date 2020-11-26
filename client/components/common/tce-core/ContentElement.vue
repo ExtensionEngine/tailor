@@ -3,7 +3,10 @@
     @click="onSelect"
     :class="{ focused: isFocused, frame }"
     class="content-element">
-    <discussion v-if="hasComments" :content-element="element" />
+    <discussion
+      v-if="hasComments"
+      :activity="selectedActivity"
+      :content-element="element" />
     <component
       :is="componentName"
       @add="$emit('add', $event)"
@@ -24,6 +27,7 @@ export default {
   name: 'content-element',
   inheritAttrs: false,
   props: {
+    activity: { type: Object, default: () => ({}) },
     element: { type: Object, required: true },
     parent: { type: Object, default: null },
     isDragged: { type: Boolean, default: false },
@@ -32,7 +36,10 @@ export default {
     dense: { type: Boolean, default: false },
     hasComments: { type: Boolean, default: true }
   },
-  data: () => ({ isFocused: false }),
+  data: vm => ({
+    selectedActivity: vm.activity,
+    isFocused: false
+  }),
   computed: {
     ...mapChannels({ editorChannel: 'editor' }),
     id: vm => getElementId(vm.element),
@@ -54,6 +61,9 @@ export default {
     this.elementBus.on('save:meta', meta => this.$emit('save:meta', meta));
     this.elementBus.on('delete', () => this.$emit('delete'));
     // Editor listeners
+    this.editorChannel.on('activity:set', activity => {
+      this.selectedActivity = activity;
+    });
     this.editorChannel.on('element:select', elementId => {
       if (this.id !== elementId) return;
       this.focus();

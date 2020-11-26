@@ -35,10 +35,16 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 import Discussion from 'tce-core/Discussion';
 import get from 'lodash/get';
 
+const extractParams = ({ activity, contentElement }) => ({
+  activityId: activity.id,
+  contentElementId: contentElement.id
+});
+
 export default {
   name: 'ce-discussion-wrapper',
   inject: ['$getCurrentUser'],
   props: {
+    activity: { type: Object, required: true },
     contentElement: { type: Object, required: true },
     showHeading: { type: Boolean, default: true }
   },
@@ -50,8 +56,8 @@ export default {
     ...mapGetters('repository/comments', ['getUnseenComments']),
     ...mapGetters('repository/comments', ['getComments']),
     user: vm => vm.$getCurrentUser(),
-    contentElementId: vm => vm.contentElement.id,
-    comments: vm => vm.getComments({ contentElementId: vm.contentElementId }),
+    params: vm => extractParams(vm),
+    comments: vm => vm.getComments(vm.params),
     lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime(),
     unseenComments: vm => vm.getUnseenComments({ contentElement: vm.contentElement })
   },
@@ -60,8 +66,8 @@ export default {
     ...mapMutations('repository/comments', ['markSeenComments']),
     saveComment(comment) {
       const action = comment.id ? 'update' : 'save';
-      const { user: author, contentElementId } = this;
-      return this[action]({ ...comment, contentElementId, author });
+      const { user: author, params } = this;
+      return this[action]({ ...comment, ...params, author });
     },
     setLastSeenComment(timeout) {
       const { contentElement, lastCommentAt } = this;
@@ -84,7 +90,7 @@ export default {
     }
   },
   created() {
-    this.fetch({ contentElementId: this.contentElementId });
+    this.fetch(this.params);
   },
   components: { Discussion }
 };
