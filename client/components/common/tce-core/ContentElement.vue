@@ -88,7 +88,9 @@ export default {
       box-shadow: none;
     }
 
-    &::before {
+    &::after {
+      $width: 0.125rem;
+
       content: '';
       position: absolute;
       // Cover the same block as box-shadow
@@ -97,19 +99,7 @@ export default {
       width: calc(100% + 2px);
       height: calc(100% + 2px);
       border: 1px dashed $accent;
-      border-right: none;
-    }
-
-    &::after {
-      $width: 0.125rem;
-
-      content: '';
-      position: absolute;
-      top: 0;
-      right: -$width;
-      width: $width;
-      height: 100%;
-      background: $accent;
+      border-right: $width solid $accent;
     }
   }
 }
