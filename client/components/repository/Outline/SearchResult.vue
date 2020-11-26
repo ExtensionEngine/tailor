@@ -11,13 +11,13 @@
         <v-chip
           :color="color"
           label small dark
-          class="mr-2 body-2">
+          class="readonly mr-2 body-2">
           {{ typeLabel }}
         </v-chip>
         <v-chip
           color="blue-grey darken-2"
           label small dark
-          class="px-4 subtitle-2">
+          class="readonly px-4 subtitle-2">
           {{ activity.shortId }}
         </v-chip>
       </v-card-subtitle>

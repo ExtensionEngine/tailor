@@ -18,7 +18,7 @@
         <v-chip
           v-if="groupedSelection[id]"
           rounded small
-          class="custom-chip">
+          class="readonly custom-chip">
           {{ getChipLabel(groupedSelection[id]) }}
         </v-chip>
       </template>
