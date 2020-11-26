@@ -44,7 +44,7 @@ export default {
   name: 'ce-discussion-wrapper',
   inject: ['$getCurrentUser'],
   props: {
-    activity: { type: Object, default: () => ({}) },
+    activity: { type: Object, required: true },
     contentElement: { type: Object, required: true },
     showHeading: { type: Boolean, default: true }
   },

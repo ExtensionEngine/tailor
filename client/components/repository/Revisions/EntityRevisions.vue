@@ -5,7 +5,7 @@
         <content-element
           v-if="selectedRevision.resolved"
           :element="selectedRevision.state"
-          :selected-activity="activity"
+          :activity="activity"
           is-disabled />
       </div>
       <entity-sidebar
