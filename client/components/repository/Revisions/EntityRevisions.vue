@@ -5,6 +5,7 @@
         <content-element
           v-if="selectedRevision.resolved"
           :element="selectedRevision.state"
+          :selected-activity="activity"
           is-disabled />
       </div>
       <entity-sidebar
@@ -38,15 +39,14 @@ export default {
   name: 'entity-revisions',
   props: {
     revision: { type: Object, required: true },
+    activity: { type: Object, default: null },
     isDetached: { type: Boolean, default: false }
   },
-  data() {
-    return {
-      expanded: false,
-      revisions: [],
-      selectedRevision: {}
-    };
-  },
+  data: () => ({
+    expanded: false,
+    revisions: [],
+    selectedRevision: {}
+  }),
   computed: {
     repositoryId: vm => vm.revision.repositoryId,
     baseUrl: vm => `/repositories/${vm.repositoryId}/revisions/`

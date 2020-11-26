@@ -24,6 +24,7 @@ export default {
   name: 'content-element',
   inheritAttrs: false,
   props: {
+    selectedActivity: { type: Object, default: () => ({}) },
     element: { type: Object, required: true },
     parent: { type: Object, default: null },
     isDragged: { type: Boolean, default: false },
@@ -32,7 +33,7 @@ export default {
     dense: { type: Boolean, default: false },
     hasComments: { type: Boolean, default: true }
   },
-  data: () => ({ isFocused: false, activity: {} }),
+  data: vm => ({ isFocused: false, activity: vm.selectedActivity }),
   computed: {
     ...mapChannels({ editorChannel: 'editor' }),
     id: vm => getElementId(vm.element),

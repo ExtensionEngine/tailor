@@ -15,8 +15,7 @@
     </div>
     <entity-revisions
       v-if="expanded"
-      :revision="revision"
-      :is-detached="!activity" />
+      v-bind="{ revision, activity, isDetached: !activity }" />
   </li>
 </template>
 
@@ -29,7 +28,6 @@ import {
 import EntityRevisions from './EntityRevisions';
 import fecha from 'fecha';
 import find from 'lodash/find';
-import { mapChannels } from '@/plugins/radio';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -39,7 +37,6 @@ export default {
   },
   data: () => ({ expanded: false }),
   computed: {
-    ...mapChannels({ editorChannel: 'editor' }),
     ...mapGetters('repository', ['structure']),
     ...mapGetters('repository/activities', ['getParent']),
     activity() {
@@ -63,9 +60,6 @@ export default {
     toggle() {
       if (this.isContentElement) this.expanded = !this.expanded;
     }
-  },
-  created() {
-    this.editorChannel.emit('activity', this.activity);
   },
   components: { EntityRevisions }
 };
