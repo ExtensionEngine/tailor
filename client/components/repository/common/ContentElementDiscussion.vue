@@ -35,8 +35,8 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 import Discussion from 'tce-core/Discussion';
 import get from 'lodash/get';
 
-const extractParams = ({ selectedActivity, contentElement }) => ({
-  activityId: selectedActivity.id,
+const extractParams = ({ activity, contentElement }) => ({
+  activityId: activity.id,
   contentElementId: contentElement.id
 });
 
@@ -44,7 +44,7 @@ export default {
   name: 'ce-discussion-wrapper',
   inject: ['$getCurrentUser'],
   props: {
-    selectedActivity: { type: Object, required: true },
+    activity: { type: Object, default: () => ({}) },
     contentElement: { type: Object, required: true },
     showHeading: { type: Boolean, default: true }
   },
@@ -57,9 +57,9 @@ export default {
     ...mapGetters('repository/comments', ['getComments']),
     user: vm => vm.$getCurrentUser(),
     params: vm => extractParams(vm),
-    comments: vm => vm.getComments({ contentElementId: vm.contentElement.id }),
+    comments: vm => vm.getComments(vm.params),
     lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime(),
-    unseenComments: vm => vm.getUnseenComments(vm.selectedActivity, vm.contentElement)
+    unseenComments: vm => vm.getUnseenComments(vm.activity, vm.contentElement)
   },
   methods: {
     ...mapActions('repository/comments', ['fetch', 'save', 'update', 'remove']),

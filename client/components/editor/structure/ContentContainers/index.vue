@@ -21,7 +21,6 @@
       @reorderElement="reorderContentElements"
       @deleteElement="requestElementDeletion"
       @delete="requestContainerDeletion(container)"
-      :selected-activity="selectedActivity"
       :container="container"
       :name="name"
       :position="index"
@@ -58,7 +57,6 @@ export default {
   inject: ['$ccRegistry'],
   props: {
     containerGroup: { type: Array, default: () => [] },
-    selectedActivity: { type: Object, required: true },
     type: { type: String, required: true },
     templateId: { type: String, default: null },
     parentId: { type: Number, required: true },

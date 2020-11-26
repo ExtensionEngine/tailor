@@ -136,6 +136,7 @@ export default {
     await this.loadContents();
     this.initElementFocusListener();
     this.initElementChangeWatcher();
+    this.editorChannel.emit('activity', this.activity);
   },
   beforeDestroy() {
     this.storeUnsubscribe && this.storeUnsubscribe();

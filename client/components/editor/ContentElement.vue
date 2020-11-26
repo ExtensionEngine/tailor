@@ -8,8 +8,7 @@
       v-bind="$attrs"
       :element="element"
       :is-dragged="isDragged"
-      :is-disabled="disabled"
-      :selected-activity="selectedActivity" />
+      :is-disabled="disabled" />
     <v-progress-linear
       v-if="isSaving"
       color="grey darken-2"
@@ -30,7 +29,6 @@ export default {
   name: 'content-element',
   inheritAttrs: false,
   props: {
-    selectedActivity: { type: Object, required: true },
     element: { type: Object, required: true },
     disabled: { type: Boolean, default: false },
     isDragged: { type: Boolean, default: false }
