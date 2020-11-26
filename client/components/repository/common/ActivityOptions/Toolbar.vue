@@ -10,8 +10,8 @@
           @click.stop="it.action()"
           color="blue-grey darken-4"
           icon
-          class="mr-1">
-          <v-icon>mdi-{{ it.icon }}</v-icon>
+          class="mr-2">
+          <v-icon :size="it.iconSize || 21">{{ it.icon }}</v-icon>
         </v-btn>
       </template>
       <span>{{ it.name }}</span>
@@ -39,17 +39,17 @@ const { ADD_AFTER, ADD_BEFORE, ADD_INTO } = InsertLocation;
 const getOptions = vm => {
   const items = [{
     name: 'Add item above',
-    icon: 'arrow-up',
+    icon: '$addAbove',
     action: () => vm.setCreateContext(vm.sameLevel, ADD_BEFORE)
   }, {
     name: 'Add item below',
-    icon: 'arrow-down',
+    icon: '$addBelow',
     action: () => vm.setCreateContext(vm.sameLevel, ADD_AFTER)
   }];
   if (vm.subLevels.length) {
     items.push({
       name: 'Add item into',
-      icon: 'subdirectory-arrow-right',
+      icon: '$addInto',
       action: () => vm.setCreateContext(vm.subLevels, ADD_INTO)
     });
   }
@@ -57,7 +57,8 @@ const getOptions = vm => {
     const { id: activityId } = vm.activity;
     items.push({
       name: 'Open',
-      icon: 'open-in-app',
+      icon: 'mdi-page-next-outline',
+      iconSize: 24,
       action: () => vm.$router.push({ name: 'editor', params: { activityId } })
     });
   }
