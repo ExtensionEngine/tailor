@@ -12,7 +12,7 @@ const urls = {
 function login(credentials) {
   return request.base
     .post(urls.login, credentials)
-    .then(res => res.data.data);
+    .then(res => res.data);
 }
 
 function logout() {
