@@ -4,9 +4,7 @@
     app fixed dense
     class="elevation-0">
     <router-link :to="{ name: 'catalog' }" tag="a" class="app-brand">
-      <v-avatar color="primary lighten-1" size="34" class="mt-1 pa-2">
-        <img :src="logo" alt="Logo">
-      </v-avatar>
+      <img :src="logo" width="36px" height="36px" alt="Logo" class="pt-2">
       <v-toolbar-title class="app-name">
         {{ title }}
         <span class="caption">author</span>
@@ -64,7 +62,7 @@ export default {
     ...mapGetters(['isAdmin']),
     ...mapGetters('repository', ['repository']),
     title: () => BRAND_CONFIG.TITLE,
-    logo: () => BRAND_CONFIG.LOGO_COMPACT,
+    logo: () => BRAND_CONFIG.LOGO_FULL,
     routes() {
       const items = [
         { name: 'Catalog', to: { name: 'catalog' } },
@@ -107,7 +105,7 @@ $font-color: #333;
   cursor: pointer;
 
   .app-name {
-    margin: 0.125rem 0 0 0.625rem;
+    margin: 0.125rem 0 0 0.375rem;
     color: #fafafa;
     font-size: 1.25rem;
     font-weight: 400;

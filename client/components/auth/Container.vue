@@ -2,9 +2,11 @@
   <div class="auth-container">
     <div class="auth-panel-container">
       <v-sheet elevation="0" rounded class="auth-panel">
-        <div class="auth-header py-8">
-          <v-avatar size="80" color="blue-grey darken-4" class="pa-2">
-            <img :src="logo" alt="Logo" class="logo">
+        <div class="auth-header py-9">
+          <v-avatar size="88" color="blue-grey darken-4" class="elevation-4">
+            <div class="pt-1">
+              <img :src="logo" alt="Logo" class="logo">
+            </div>
           </v-avatar>
           <h1 class="ma-2 headline">{{ title }}</h1>
         </div>
