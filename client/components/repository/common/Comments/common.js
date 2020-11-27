@@ -23,10 +23,14 @@ export default {
       const { user: author, params } = this;
       return this[action]({ ...comment, ...params, author });
     },
-    setLastSeenComment(timeout) {
+    setLastSeenComment(timeout, unseenElementComments) {
       const { activity, contentElement, lastCommentAt } = this;
-      const uids = { activityUid: activity.uid, elementUid: contentElement?.uid };
-      const payload = { ...uids, lastCommentAt };
+      const payload = {
+        activityUid: activity.uid,
+        ceUid: contentElement?.uid,
+        unseenElementComments,
+        lastCommentAt
+      };
       setTimeout(() => this.markSeenComments(payload), timeout);
     }
   },

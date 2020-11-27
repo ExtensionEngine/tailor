@@ -54,11 +54,11 @@ export default {
   watch: {
     showDiscussion(val) {
       if (!val || !this.lastCommentAt) return;
-      this.setLastSeenComment(1000);
+      this.setLastSeenComment(1000, this.unseenComments);
     },
     comments(val, oldVal) {
       if (!this.showDiscussion || val === oldVal) return;
-      this.setLastSeenComment(2000);
+      this.setLastSeenComment(2000, this.unseenComments);
     },
     unseenComments(comments) {
       if (this.showDiscussion && comments.length) return;
