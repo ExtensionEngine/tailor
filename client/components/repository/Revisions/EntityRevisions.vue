@@ -5,9 +5,8 @@
         <content-element
           v-if="selectedRevision.resolved"
           :element="selectedRevision.state"
-          :activity="activity"
-          is-disabled
-          class="mr-2" />
+          :display-discussion="false"
+          is-disabled />
       </div>
       <entity-sidebar
         v-show="expanded"
@@ -40,7 +39,6 @@ export default {
   name: 'entity-revisions',
   props: {
     revision: { type: Object, required: true },
-    activity: { type: Object, default: null },
     isDetached: { type: Boolean, default: false }
   },
   data: () => ({

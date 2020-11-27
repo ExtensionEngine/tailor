@@ -54,7 +54,7 @@
 <script>
 import ActivityNavigation from './Navigation';
 import debounce from 'lodash/debounce';
-import EditorDiscussion from '@/components/repository/common/EditorDiscussion';
+import EditorDiscussion from '@/components/repository/common/Comments/EditorDiscussion';
 import ElementSidebar from './ElementSidebar';
 import get from 'lodash/get';
 import { getElementId } from 'tce-core/utils';

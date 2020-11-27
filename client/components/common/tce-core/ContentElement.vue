@@ -4,8 +4,8 @@
     :class="{ focused: isFocused, frame }"
     class="content-element">
     <discussion
-      v-if="hasComments"
-      :activity="selectedActivity"
+      v-if="displayDiscussion"
+      :activity="activity"
       :content-element="element" />
     <component
       :is="componentName"
@@ -20,24 +20,23 @@
 
 <script>
 import { getComponentName, getElementId } from './utils';
-import Discussion from '@/components/repository/common/ContentElementDiscussion';
+import Discussion from '@/components/repository/common/Comments/ContentElementDiscussion';
 import { mapChannels } from '@/plugins/radio';
 
 export default {
   name: 'content-element',
   inheritAttrs: false,
   props: {
-    activity: { type: Object, default: () => ({}) },
     element: { type: Object, required: true },
     parent: { type: Object, default: null },
     isDragged: { type: Boolean, default: false },
     isDisabled: { type: Boolean, default: false },
     frame: { type: Boolean, default: true },
     dense: { type: Boolean, default: false },
-    hasComments: { type: Boolean, default: true }
+    displayDiscussion: { type: Boolean, default: true }
   },
-  data: vm => ({
-    selectedActivity: vm.activity,
+  data: () => ({
+    activity: {},
     isFocused: false
   }),
   computed: {
@@ -61,9 +60,7 @@ export default {
     this.elementBus.on('save:meta', meta => this.$emit('save:meta', meta));
     this.elementBus.on('delete', () => this.$emit('delete'));
     // Editor listeners
-    this.editorChannel.on('activity:set', activity => {
-      this.selectedActivity = activity;
-    });
+    this.editorChannel.on('activity:set', activity => (this.activity = activity));
     this.editorChannel.on('element:select', elementId => {
       if (this.id !== elementId) return;
       this.focus();

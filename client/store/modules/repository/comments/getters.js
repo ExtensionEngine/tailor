@@ -2,24 +2,24 @@ import filter from 'lodash/filter';
 import orderBy from 'lodash/orderBy';
 
 export const getComments = state => params => {
+  if (!params.contentElement) delete params.contentElement;
   const comments = filter(state.items, params);
   return orderBy(comments, 'createdAt', 'desc');
 };
 
-export const getUnseenComments = (state, _, { auth }) => (...entities) => {
+export const getUnseenComments = (state, _, { auth }) => (activity, ce = null) => {
   const { seen, items } = state;
-  const [activity, contentElement = null] = entities;
   const lastSeen = {
-    ce: seen.contentElement[contentElement?.uid] || 0,
+    ce: seen.contentElement[ce?.uid] || 0,
     activity: seen.activity[activity.uid] || 0
   };
-  const options = { activity, contentElement, lastSeen, user: auth.user };
+  const options = { activity, ce, lastSeen, user: auth.user };
   return filter(items, it => setConditions(it, options));
 };
 
-function setConditions(it, { user, lastSeen, activity, contentElement }) {
+function setConditions(it, { user, lastSeen, activity, ce }) {
   const { authorId, activityId, contentElementId } = it;
-  const hasCE = contentElement ? contentElementId === contentElement.id : true;
+  const hasCE = ce ? contentElementId === ce.id : true;
   const createdAt = new Date(it.createdAt).getTime();
   return hasCE &&
     activityId === activity.id &&
