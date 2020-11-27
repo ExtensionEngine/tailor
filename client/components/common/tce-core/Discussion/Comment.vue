@@ -2,7 +2,7 @@
   <li class="comment">
     <v-avatar size="34" class="comment-avatar">
       <img :src="author.imgUrl">
-      <v-badge v-if="contentElementLabel" color="blue-grey darken-4" content="CE" />
+      <v-badge v-if="contentElementLabel" content="CE" color="blue-grey darken-4" />
     </v-avatar>
     <div class="comment-body pl-3">
       <div class="header">
