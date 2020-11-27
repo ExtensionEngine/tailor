@@ -4,7 +4,7 @@
     :class="{ focused: isFocused, frame }"
     class="content-element">
     <discussion
-      v-if="hasComments"
+      v-if="displayDiscussion"
       :activity="selectedActivity"
       :content-element="element" />
     <component
@@ -34,7 +34,7 @@ export default {
     isDisabled: { type: Boolean, default: false },
     frame: { type: Boolean, default: true },
     dense: { type: Boolean, default: false },
-    hasComments: { type: Boolean, default: true }
+    displayDiscussion: { type: Boolean, default: true }
   },
   data: vm => ({
     selectedActivity: vm.activity,
