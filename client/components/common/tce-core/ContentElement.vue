@@ -5,7 +5,7 @@
     class="content-element">
     <discussion
       v-if="displayDiscussion"
-      :activity="selectedActivity"
+      :activity="activity"
       :content-element="element" />
     <component
       :is="componentName"
