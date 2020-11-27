@@ -15,7 +15,7 @@
     </div>
     <entity-revisions
       v-if="expanded"
-      v-bind="{ revision, activity, isDetached: !activity }" />
+      v-bind="{ revision, isDetached: !activity }" />
   </li>
 </template>
 
