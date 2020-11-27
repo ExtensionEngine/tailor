@@ -15,10 +15,7 @@ export default new VuexPersistence({
     repository: {
       comments: {
         seenByActivity: state.repository.comments.seen.activity,
-        seen: {
-          ...state.repository.comments.seen,
-          activity: migrateActivitySeen(state)
-        }
+        seen: migrateSeenState(state)
       }
     }
   }),
@@ -26,7 +23,8 @@ export default new VuexPersistence({
   filter: mutation => OBSERVED_MUTATIONS.includes(mutation.type)
 }).plugin;
 
-function migrateActivitySeen(state) {
+function migrateSeenState(state) {
   const { seen, seenByActivity } = state.repository.comments;
-  return { ...seenByActivity, ...seen.activity };
+  const activity = { ...seenByActivity, ...seen.activity };
+  return { activity, contentElement: seen.contentElement };
 }
