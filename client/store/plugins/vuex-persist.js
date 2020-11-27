@@ -26,6 +26,6 @@ export default new VuexPersistence({
 }).plugin;
 
 function migrateActivitySeen(state) {
-  const { seen, seenByActivity } = state.repository.comments;
-  return { ...seenByActivity || {}, ...seen.activity };
+  const { seen, seenByActivity = {} } = state.repository.comments;
+  return { ...seenByActivity, ...seen.activity };
 }
