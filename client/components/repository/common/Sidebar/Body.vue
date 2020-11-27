@@ -3,7 +3,7 @@
     <v-chip
       :color="config.color"
       label dark small
-      class="body-label">
+      class="readonly body-label">
       {{ config.label.toUpperCase() }}
     </v-chip>
     <v-tooltip open-delay="500" bottom>
