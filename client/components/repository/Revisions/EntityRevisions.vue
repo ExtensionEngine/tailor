@@ -6,6 +6,7 @@
           v-if="selectedRevision.resolved"
           :element="selectedRevision.state"
           :activity="activity"
+          :display-discussion="false"
           is-disabled />
       </div>
       <entity-sidebar
