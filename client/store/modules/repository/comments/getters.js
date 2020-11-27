@@ -6,19 +6,19 @@ export const getComments = state => params => {
   return orderBy(comments, 'createdAt', 'desc');
 };
 
-export const getUnseenComments = (state, _, { auth }) => data => {
+export const getUnseenComments = (state, _, { auth }) => (activity, ce = null) => {
   const { seen, items } = state;
-  const { fk, entityName, item } = adjustData(data);
-  const lastSeen = seen[entityName][item.uid] || 0;
-  return filter(items, it =>
-    it.authorId !== auth.user.id &&
-    it[fk] === item.id &&
-    (!data.contentElement ? it.contentElementId === null : true) &&
-    new Date(it.createdAt).getTime() > lastSeen);
+  const lastSeen = seen.contentElement[ce?.uid] || seen.activity[activity.uid] || 0;
+  const options = { activity, ce, lastSeen, user: auth.user };
+  return filter(items, it => setConditions(it, options));
 };
 
-function adjustData({ activity, contentElement }) {
-  return activity
-    ? { fk: 'activityId', entityName: 'activity', item: activity }
-    : { fk: 'contentElementId', entityName: 'contentElement', item: contentElement };
+function setConditions(it, { user, lastSeen, activity, ce }) {
+  const { authorId, activityId, contentElementId } = it;
+  const hasCE = ce ? contentElementId === ce.id : contentElementId === null;
+  const createdAt = new Date(it.createdAt).getTime();
+  return hasCE &&
+    activityId === activity.id &&
+    authorId !== user.id &&
+    createdAt > lastSeen;
 }

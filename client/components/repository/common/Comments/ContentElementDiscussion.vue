@@ -49,7 +49,7 @@ export default {
   }),
   computed: {
     ...mapGetters('repository/comments', ['getUnseenComments']),
-    unseenComments: vm => vm.getUnseenComments({ contentElement: vm.contentElement })
+    unseenComments: vm => vm.getUnseenComments(vm.activity, vm.contentElement)
   },
   watch: {
     showDiscussion(val) {
