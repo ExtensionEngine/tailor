@@ -13,10 +13,19 @@ export default new VuexPersistence({
     auth: state.auth,
     repository: {
       comments: {
-        seen: state.repository.comments.seen
+        seenByActivity: state.repository.comments.seenByActivity,
+        seen: {
+          ...state.repository.comments.seen,
+          activity: migrateActivitySeen(state)
+        }
       }
     }
   }),
   storage: window.localStorage,
   filter: mutation => OBSERVED_MUTATIONS.includes(mutation.type)
 }).plugin;
+
+function migrateActivitySeen(state) {
+  const { seen, seenByActivity } = state.repository.comments;
+  return { ...seenByActivity || {}, ...seen.activity };
+}

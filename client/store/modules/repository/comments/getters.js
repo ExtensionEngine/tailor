@@ -13,6 +13,7 @@ export const getUnseenComments = (state, _, { auth }) => data => {
   return filter(items, it =>
     it.authorId !== auth.user.id &&
     it[fk] === item.id &&
+    (!data.contentElement ? it.contentElementId === null : true) &&
     new Date(it.createdAt).getTime() > lastSeen);
 };
 
