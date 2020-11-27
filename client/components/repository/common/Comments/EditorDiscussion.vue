@@ -4,7 +4,8 @@
       @save="saveComment"
       @update="saveComment"
       @remove="remove"
-      v-bind="{ comments, user, showHeading }" />
+      v-bind="{ comments, user, showHeading }"
+      show-notifications />
   </div>
 </template>
 
@@ -18,7 +19,7 @@ export default {
   props: {
     activity: { type: Object, required: true },
     isVisible: { type: Boolean, default: false },
-    showHeading: { type: Boolean, default: true }
+    showHeading: { type: Boolean, default: false }
   },
   watch: {
     isVisible(val) {
