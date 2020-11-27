@@ -18,8 +18,7 @@
         v-show="discussionTabVisible"
         :activity="selectedActivity"
         :is-visible="discussionTabVisible"
-        :has-all-comments="true"
-        class="my-8 mx-4" />
+        :has-all-comments="true" />
       <element-sidebar
         v-if="selectedTab === 'element'"
         :key="getElementId(selectedElement)"
@@ -132,5 +131,11 @@ export default {
       padding-top: 8.75rem;
     }
   }
+}
+
+::v-deep .editor-discussion {
+  margin: 1rem 0;
+  padding: 1rem;
+  border: none;
 }
 </style>
