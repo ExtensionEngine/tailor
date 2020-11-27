@@ -2,7 +2,7 @@ import filter from 'lodash/filter';
 import orderBy from 'lodash/orderBy';
 
 export const getComments = state => params => {
-  if (!params.contentElement) delete params.contentElement;
+  if (!params.contentElementId) delete params.contentElementId;
   const comments = filter(state.items, params);
   return orderBy(comments, 'createdAt', 'desc');
 };

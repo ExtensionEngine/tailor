@@ -4,7 +4,7 @@
       @save="saveComment"
       @update="saveComment"
       @remove="remove"
-      v-bind="{ comments, user, showHeading }" />
+      v-bind="{ comments, user, showHeading, hasAllComments: true }" />
   </div>
 </template>
 
