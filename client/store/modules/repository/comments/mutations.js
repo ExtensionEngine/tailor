@@ -15,12 +15,11 @@ const markSeenComments = (state, payload) => {
     ...state.seen[key],
     [elementUid || activityUid]: lastCommentAt
   };
-  if (elementUid && unseenElementComments?.length) {
-    state.seenElementComments = [
-      ...state.seenElementComments,
-      ...unseenElementComments
-    ];
-  }
+  if (!elementUid && !unseenElementComments?.length) return;
+  state.seenElementComments = [
+    ...state.seenElementComments,
+    ...unseenElementComments
+  ];
 };
 
 export {
