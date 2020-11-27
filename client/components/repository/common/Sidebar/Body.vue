@@ -66,7 +66,7 @@
 import { getActivityMetadata, getLevel } from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex';
 import ActivityTasks from './Tasks';
-import Discussion from '../EditorDiscussion';
+import Discussion from '../Comments/EditorDiscussion';
 import LabelChip from '@/components/repository/common/LabelChip';
 import MetaInput from 'tce-core/MetaInput';
 import Relationship from './Relationship';

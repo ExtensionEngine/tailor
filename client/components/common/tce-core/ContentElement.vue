@@ -20,7 +20,7 @@
 
 <script>
 import { getComponentName, getElementId } from './utils';
-import Discussion from '@/components/repository/common/ContentElementDiscussion';
+import Discussion from '@/components/repository/common/Comments/ContentElementDiscussion';
 import { mapChannels } from '@/plugins/radio';
 
 export default {

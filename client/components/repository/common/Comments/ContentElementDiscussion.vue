@@ -31,18 +31,13 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
 import Discussion from 'tce-core/Discussion';
-import get from 'lodash/get';
-
-const extractParams = ({ activity, contentElement }) => ({
-  activityId: activity.id,
-  contentElementId: contentElement.id
-});
+import { mapGetters } from 'vuex';
+import utilsMixin from './common';
 
 export default {
   name: 'content-element-discussion',
-  inject: ['$getCurrentUser'],
+  mixins: [utilsMixin],
   props: {
     activity: { type: Object, required: true },
     contentElement: { type: Object, required: true },
@@ -54,26 +49,7 @@ export default {
   }),
   computed: {
     ...mapGetters('repository/comments', ['getUnseenComments']),
-    ...mapGetters('repository/comments', ['getComments']),
-    user: vm => vm.$getCurrentUser(),
-    params: vm => extractParams(vm),
-    comments: vm => vm.getComments(vm.params),
-    lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime(),
     unseenComments: vm => vm.getUnseenComments({ contentElement: vm.contentElement })
-  },
-  methods: {
-    ...mapActions('repository/comments', ['fetch', 'save', 'update', 'remove']),
-    ...mapMutations('repository/comments', ['markSeenComments']),
-    saveComment(comment) {
-      const action = comment.id ? 'update' : 'save';
-      const { user: author, params } = this;
-      return this[action]({ ...comment, ...params, author });
-    },
-    setLastSeenComment(timeout) {
-      const { contentElement, lastCommentAt } = this;
-      const payload = { elementUid: contentElement.uid, lastCommentAt };
-      setTimeout(() => this.markSeenComments(payload), timeout);
-    }
   },
   watch: {
     showDiscussion(val) {
@@ -88,9 +64,6 @@ export default {
       if (this.showDiscussion && comments.length) return;
       setTimeout(() => (this.unseenCommentCount = comments.length), 200);
     }
-  },
-  created() {
-    this.fetch(this.params);
   },
   components: { Discussion }
 };
