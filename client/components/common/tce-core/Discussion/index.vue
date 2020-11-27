@@ -26,8 +26,8 @@
       @remove="$emit('remove', $event)"
       :items="thread"
       :user="user"
-      :min-displayed="commentsShownLimit"
       :show-all="showAll"
+      :min-displayed="commentsShownLimit"
       :has-all-comments="hasAllComments"
       class="mt-2" />
     <div class="text-right">

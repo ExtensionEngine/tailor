@@ -2,7 +2,7 @@
   <li class="comment">
     <v-avatar size="34" class="comment-avatar">
       <img :src="author.imgUrl">
-      <v-badge v-if="contentElementLabel" content="CE" color="blue-grey darken-4" />
+      <v-badge v-if="contentElementTag" content="CE" color="blue-grey darken-4" />
     </v-avatar>
     <div class="comment-body pl-3">
       <div class="header">
@@ -65,7 +65,7 @@ export default {
     isDeleted: vm => !!vm.comment.deletedAt,
     isAuthor: vm => vm.author.id === vm.user.id,
     showOptions: vm => vm.isAuthor && !vm.isDeleted,
-    contentElementLabel: vm => vm.hasAllComments && vm.comment.contentElementId,
+    contentElementTag: vm => vm.hasAllComments && vm.comment.contentElementId,
     options: vm => [
       { name: 'Edit', action: vm.toggleEdit, icon: 'mdi-pencil' },
       { name: 'Remove', action: vm.remove, icon: 'mdi-delete' }]
