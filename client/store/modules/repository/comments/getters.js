@@ -8,20 +8,21 @@ export const getComments = state => params => {
   return orderBy(comments, 'createdAt', 'desc');
 };
 
-export const getUnseenComments = (state, _, { auth }) => (activity, ce = null) => {
+export const getUnseenComments = (state, _, { auth }) => (...entities) => {
+  const [activity, ce = null] = entities;
   const lastSeen = {
     ce: state.seen.contentElement[ce?.uid] || 0,
     activity: state.seen.activity[activity.uid] || 0
   };
-  const items = processComments(state, ce);
+  const items = processUnseenComments(state, ce);
   const options = { activity, ce, lastSeen, user: auth.user };
   return filter(items, it => setConditions(it, options));
 };
 
-function processComments({ items, seenElementComments }, ce) {
-  if (ce || !seenElementComments.length) return items;
+function processUnseenComments({ items, seenCEComments }, ce) {
+  if (ce || !seenCEComments.length) return items;
   return transform(items, (acc, comment, key) => {
-    const found = seenElementComments.find(it => it.id === comment.id);
+    const found = seenCEComments.find(it => it.id === comment.id);
     if (!found) return (acc[key] = comment);
   }, {});
 }

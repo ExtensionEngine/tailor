@@ -74,7 +74,7 @@ export default {
     ...mapGetters('repository/comments', ['getUnseenComments']),
     unseenComments: vm => vm.getUnseenComments(vm.selectedActivity),
     discussionTabVisible: vm => vm.selectedTab === 'comments',
-    tabs: vm => ([{
+    tabs: vm => [{
       name: 'browser',
       label: 'Browse',
       icon: 'file-tree'
@@ -88,16 +88,14 @@ export default {
       label: 'Element',
       icon: 'toy-brick-outline',
       disabled: !vm.elementSidebarEnabled
-    }]),
+    }],
     elementSidebarEnabled: vm => vm.selectedElement && !vm.metadata.isEmpty,
     metadata() {
       const { repository, selectedElement } = this;
       return getElementMetadata(get(repository, 'schema'), selectedElement);
     }
   },
-  methods: {
-    getElementId
-  },
+  methods: { getElementId },
   watch: {
     selectedElement() {
       if (this.elementSidebarEnabled) {

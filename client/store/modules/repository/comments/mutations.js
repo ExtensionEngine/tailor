@@ -9,17 +9,14 @@ import {
 } from '@/store/helpers/mutations';
 
 const markSeenComments = (state, payload) => {
-  const { activityUid, elementUid, unseenElementComments, lastCommentAt } = payload;
-  const key = elementUid ? 'contentElement' : 'activity';
+  const { activityUid, ceUid, lastCommentAt, unseenCEComments = [] } = payload;
+  const key = ceUid ? 'contentElement' : 'activity';
   state.seen[key] = {
     ...state.seen[key],
-    [elementUid || activityUid]: lastCommentAt
+    [ceUid || activityUid]: lastCommentAt
   };
-  if (!elementUid && !unseenElementComments?.length) return;
-  state.seenElementComments = [
-    ...state.seenElementComments,
-    ...unseenElementComments
-  ];
+  if (!ceUid && !unseenCEComments.length) return;
+  state.seenCEComments = [...state.seenCEComments, ...unseenCEComments];
 };
 
 export {

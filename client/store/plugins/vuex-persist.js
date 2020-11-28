@@ -15,7 +15,7 @@ export default new VuexPersistence({
     repository: {
       comments: {
         seen: migrateSeenState(state),
-        seenElementComments: state.repository.comments.seenElementComments,
+        seenCEComments: state.repository.comments.seenCEComments,
         seenByActivity: state.repository.comments.seen.activity
       }
     }
