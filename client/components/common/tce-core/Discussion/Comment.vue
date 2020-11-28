@@ -2,7 +2,11 @@
   <li class="comment">
     <v-avatar size="34" class="comment-avatar">
       <img :src="author.imgUrl">
-      <v-badge v-if="contentElementTag" content="CE" color="blue-grey darken-4" />
+      <v-badge
+        v-if="contentElementTag"
+        @click.native="toggleElementDiscussion"
+        content="CE"
+        color="blue-grey darken-4" />
     </v-avatar>
     <div class="comment-body pl-3">
       <div class="header">
@@ -49,6 +53,7 @@
 
 <script>
 import { focus } from 'vue-focus';
+import { mapChannels } from '@/plugins/radio';
 import TextEditor from './TextEditor';
 
 export default {
@@ -60,6 +65,7 @@ export default {
   },
   data: vm => ({ isEditing: false, content: vm.comment.content }),
   computed: {
+    ...mapChannels({ editorChannel: 'editor' }),
     author: vm => vm.comment.author,
     isEdited: vm => vm.comment.createdAt !== vm.comment.updatedAt,
     isDeleted: vm => !!vm.comment.deletedAt,
@@ -85,6 +91,10 @@ export default {
     reset() {
       this.content = this.comment.content;
       this.isEditing = false;
+    },
+    toggleElementDiscussion() {
+      const { editorChannel, comment } = this;
+      editorChannel.emit('element:toggle-discussion', comment.contentElementId);
     }
   },
   watch: {
@@ -118,6 +128,7 @@ export default {
     position: absolute;
     top: 0.5rem;
     left: 0;
+    cursor: pointer;
 
     .v-badge__badge {
       color: rgb(255, 87, 34);

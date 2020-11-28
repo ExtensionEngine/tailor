@@ -1,5 +1,5 @@
 <template>
-  <div class="content-element-discussion">
+  <div :ref="`ce:${contentElement.id}`" class="content-element-discussion">
     <v-menu
       v-model="showDiscussion"
       :close-on-content-click="false"
@@ -33,6 +33,7 @@
 <script>
 import Discussion from 'tce-core/Discussion';
 import discussionMixin from './common';
+import { mapChannels } from '@/plugins/radio';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -48,6 +49,7 @@ export default {
     unseenCommentCount: 0
   }),
   computed: {
+    ...mapChannels({ editorChannel: 'editor' }),
     ...mapGetters('repository/comments', ['getUnseenComments']),
     unseenComments: vm => vm.getUnseenComments(vm.activity, vm.contentElement)
   },
@@ -64,6 +66,14 @@ export default {
       if (this.showDiscussion && comments.length) return;
       setTimeout(() => (this.unseenCommentCount = comments.length), 200);
     }
+  },
+  created() {
+    this.editorChannel.on('element:toggle-discussion', contentElementId => {
+      if (contentElementId !== this.contentElement.id) return;
+      const contentElement = this.$refs[`ce:${contentElementId}`];
+      contentElement.scrollIntoView();
+      this.showDiscussion = true;
+    });
   },
   components: { Discussion }
 };
