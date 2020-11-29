@@ -5,7 +5,7 @@
       :text-color="element.isPublished ? 'secondary' : 'success'"
       color="blue-grey lighten-5"
       small round
-      class="published-preview-label elevation-2 font-weight-medium text-capitalize">
+      class="published-preview-label font-weight-medium text-capitalize">
       {{ publishState }}
     </v-chip>
     <contained-content
@@ -96,6 +96,10 @@ export default {
     top: 2rem;
     right: 1.5rem;
     z-index: 2;
+  }
+
+  ::v-deep .content-element {
+    padding: 40px 20px 10px;
   }
 
   .added {
