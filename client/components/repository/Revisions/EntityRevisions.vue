@@ -113,10 +113,6 @@ export default {
   }
 }
 
-::v-deep .content-element .content-element-discussion .v-btn {
-  background: #f5f5f5;
-}
-
 .slide-fade-enter-active, .slide-fade-leave-active {
   overflow: hidden;
   margin-top: 0;
