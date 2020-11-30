@@ -10,6 +10,9 @@
     <span class="drag-handle">
       <span class="mdi mdi-drag-vertical"></span>
     </span>
+    <div :class="{ visible: hasActions }" class="actions d-flex">
+      <slot name="actions"></slot>
+    </div>
     <content-element
       @add="$emit('add', $event)"
       @save="$emit('save', $event)"
@@ -45,6 +48,9 @@ export default {
     widthClass() {
       const { element, setWidth } = this;
       return setWidth ? `col-xs-${get(element, 'data.width', 12)}` : '';
+    },
+    hasActions() {
+      return Boolean(this.$slots.actions);
     }
   },
   methods: {
@@ -86,5 +92,22 @@ export default {
   position: relative;
   margin: 7px 0;
   padding: 0;
+}
+
+.actions {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  max-height: 0;
+
+  &.visible {
+    max-height: 2.5rem;
+    padding: 0.5rem;
+
+    & + .content-element {
+      padding-top: 2.5rem;
+    }
+  }
 }
 </style>

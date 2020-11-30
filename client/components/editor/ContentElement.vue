@@ -1,13 +1,5 @@
 <template>
   <div :class="{ 'published-preview': isPublishedPreview }">
-    <v-chip
-      v-if="isPublishedPreview && publishState"
-      :text-color="element.isPublished ? 'secondary' : 'success'"
-      color="blue-grey lighten-5"
-      small round
-      class="published-preview-label font-weight-medium text-capitalize">
-      {{ publishState }}
-    </v-chip>
     <contained-content
       @add="add"
       @save="save"
@@ -17,7 +9,18 @@
       :element="element"
       :is-dragged="isDragged"
       :is-disabled="isPublishedPreview || disabled"
-      :class="publishState" />
+      :class="changeSincePublish">
+      <template #actions>
+        <v-chip
+          v-if="isPublishedPreview && changeSincePublish"
+          :text-color="element.isPublished ? 'secondary' : 'success'"
+          color="blue-grey lighten-5"
+          small round
+          class="ml-auto font-weight-medium text-capitalize">
+          {{ changeSincePublish }}
+        </v-chip>
+      </template>
+    </contained-content>
     <v-progress-linear
       v-if="isSaving"
       color="grey darken-2"
@@ -46,7 +49,7 @@ export default {
   computed: {
     ...mapChannels({ editorChannel: 'editor' }),
     ...mapState('editor', ['isPublishedPreview']),
-    publishState() {
+    changeSincePublish() {
       if (!this.element.isPublished) return 'added';
       if (this.element.isModified) return 'changed';
       if (this.element.isRemoved) return 'removed';
@@ -85,28 +88,18 @@ export default {
 
 <style lang="scss" scoped>
 @mixin highlight($color) {
-  ::v-deep > .content-element {
-    box-shadow: 0 0 0 2px $color;
-  }
+  box-shadow: 0 0 0 2px $color;
 }
 
 .published-preview {
-  &-label {
-    position: absolute;
-    top: 2rem;
-    right: 1.5rem;
-  }
-
-  ::v-deep .content-element {
-    padding: 40px 20px 10px;
-  }
-
-  .added {
+  .added ::v-deep > .content-element {
     @include highlight(var(--v-success-lighten2));
   }
 
   .changed, .removed {
-    @include highlight(var(--v-secondary-lighten4));
+    ::v-deep > .content-element {
+      @include highlight(var(--v-secondary-lighten4));
+    }
   }
 }
 </style>
