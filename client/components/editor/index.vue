@@ -12,7 +12,7 @@
         @selected="selectElement"
         :repository="repository"
         :activity="activity"
-        :elements="isPublishedPreview ? changesSincePublish : activityElements"
+        :elements="isPublishedPreview ? changesSincePublish : elements"
         :root-container-groups="rootContainerGroups"
         :content-containers="contentContainers" />
     </template>
@@ -56,23 +56,24 @@ export default {
     ...mapGetters('repository/userTracking', ['getActiveUsers']),
     ...mapGetters('repository', ['repository', 'outlineActivities']),
     ...mapGetters('editor', ['activity', 'contentContainers', 'rootContainerGroups']),
-    ...mapGetters('repository/contentElements', ['elements']),
+    ...mapGetters('repository/contentElements', { allElements: 'elements' }),
     ...mapChannels({ editorChannel: 'editor' }),
     activeUsers: vm => vm.getActiveUsers('activity', vm.activityId),
     containerIds: vm => vm.contentContainers.map(it => it.id),
-    activityElements() {
-      const elements = pickBy(this.elements, this.isActivityElement);
+    elements() {
+      const elements = pickBy(this.allElements, this.isActivityElement);
       return mapValues(elements, this.addPublishFlags);
     },
     changesSincePublish() {
-      const elements = cloneDeep(this.activityElements);
-      return this.unionElementsAndRevisions(elements, this.publishedRevisions);
+      const { elements, publishedRevisions } = this;
+      return this.unionElementsAndRevisions(elements, publishedRevisions);
     }
   },
   methods: {
     ...mapMutations('editor', ['setIsPublishedPreview']),
     ...mapActions('repository', ['initialize']),
     unionElementsAndRevisions(elements, revisions) {
+      elements = cloneDeep(elements);
       return assignWith(elements, revisions, (element, revision) => ({
         ...element,
         ...revision,
@@ -84,10 +85,10 @@ export default {
       if (this.isPublishedPreview) this.setIsPublishedPreview(false);
     },
     fetchRevisions() {
-      const modifiedActivityElements = filter(this.activityElements, 'isModified');
+      const modifiedElements = filter(this.elements, 'isModified');
       const query = {
         activityIds: this.containerIds,
-        entityIds: map(modifiedActivityElements, 'id'),
+        entityIds: map(modifiedElements, 'id'),
         entity: 'CONTENT_ELEMENT',
         publishedOn: this.activity.publishedAt
       };

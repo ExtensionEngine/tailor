@@ -59,8 +59,8 @@ class Revision extends Model {
         attributes: [
           // Constant "1" prevents syntax error
           // caused by "," at the end of the DISTINCT ON expression.
-          // Explicit raw attributes are concated to enforce
-          // order within SELECT, DISTINCT ON being first.
+          // Explicit raw attributes are added to enforce
+          // order within SELECT (DISTINCT ON must be first).
           literal(`DISTINCT ON (${entityIdRawField}) 1`),
           ...Object.keys(this.rawAttributes)
         ],

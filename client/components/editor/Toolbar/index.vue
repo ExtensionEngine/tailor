@@ -2,9 +2,9 @@
   <div class="toolbar-wrapper">
     <div
       v-show="activity"
-      :class="[isPublishedPreview ? 'blue-grey darken-4' : 'blue-grey darken-3']"
-      class="activity-toolbar">
-      <activity-actions class="activity-actions d-flex" />
+      :class="[isPublishedPreview ? 'darken-4' : 'darken-3']"
+      class="activity-toolbar blue-grey">
+      <activity-actions class="d-flex flex-grow-0" />
       <h1 class="pt-2 headline text-truncate">
         <span>{{ config.label }}</span>
         <span class="px-2 grey--text">|</span>
@@ -110,9 +110,5 @@ export default {
     font-size: 1.375rem;
     text-align: left;
   }
-}
-
-.activity-actions {
-  flex: 0;
 }
 </style>

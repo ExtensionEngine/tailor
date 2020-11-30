@@ -10,7 +10,7 @@
     <span class="drag-handle">
       <span class="mdi mdi-drag-vertical"></span>
     </span>
-    <div :class="{ visible: hasActions }" class="actions d-flex">
+    <div :class="{ visible: $slots.actions }" class="actions d-flex">
       <slot name="actions"></slot>
     </div>
     <content-element
@@ -48,9 +48,6 @@ export default {
     widthClass() {
       const { element, setWidth } = this;
       return setWidth ? `col-xs-${get(element, 'data.width', 12)}` : '';
-    },
-    hasActions() {
-      return Boolean(this.$slots.actions);
     }
   },
   methods: {
