@@ -25,8 +25,11 @@ export default {
     },
     setLastSeenComment(timeout) {
       const { activity, contentElement, lastCommentAt } = this;
-      const uids = { activityUid: activity.uid, elementUid: contentElement?.uid };
-      const payload = { ...uids, lastCommentAt };
+      const payload = {
+        activityUid: activity.uid,
+        ceUid: contentElement?.uid,
+        lastCommentAt
+      };
       setTimeout(() => this.markSeenComments(payload), timeout);
     }
   },

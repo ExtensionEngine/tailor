@@ -32,12 +32,12 @@
 
 <script>
 import Discussion from 'tce-core/Discussion';
+import discussionMixin from './common';
 import { mapGetters } from 'vuex';
-import utilsMixin from './common';
 
 export default {
   name: 'content-element-discussion',
-  mixins: [utilsMixin],
+  mixins: [discussionMixin],
   props: {
     activity: { type: Object, required: true },
     contentElement: { type: Object, required: true },

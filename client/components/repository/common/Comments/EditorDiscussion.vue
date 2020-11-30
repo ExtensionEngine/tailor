@@ -11,11 +11,11 @@
 
 <script>
 import Discussion from 'tce-core/Discussion';
-import utilsMixin from './common';
+import discussionMixin from './common';
 
 export default {
   name: 'editor-discussion',
-  mixins: [utilsMixin],
+  mixins: [discussionMixin],
   props: {
     activity: { type: Object, required: true },
     isVisible: { type: Boolean, default: false },
