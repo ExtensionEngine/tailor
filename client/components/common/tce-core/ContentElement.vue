@@ -90,14 +90,15 @@ export default {
 
     &::before {
       $width: 0.125rem;
+      $offset: -1px;
 
       content: '';
       position: absolute;
       // Cover the same block as box-shadow
-      top: -1px;
-      left: -1px;
-      width: calc(100% + 2px);
-      height: calc(100% + 2px);
+      top: $offset;
+      right: $offset;
+      bottom: $offset;
+      left: $offset;
       border: 1px dashed $accent;
       border-right: $width solid $accent;
     }
