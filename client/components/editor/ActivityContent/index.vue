@@ -21,7 +21,6 @@
 
 <script>
 import { getElementId, isQuestion } from 'tce-core/utils';
-import { mapActions, mapState } from 'vuex';
 import ContentContainers from '../structure/ContentContainers';
 import ContentLoader from './Loader';
 import debounce from 'lodash/debounce';
@@ -29,6 +28,7 @@ import find from 'lodash/find';
 import get from 'lodash/get';
 import { getSupportedContainers } from 'shared/activities';
 import loader from '@/components/common/loader';
+import { mapActions } from 'vuex';
 import { mapChannels } from '@/plugins/radio';
 import throttle from 'lodash/throttle';
 
@@ -56,7 +56,6 @@ export default {
     focusedElement: null
   }),
   computed: {
-    ...mapState('editor', ['isPublishedPreview']),
     ...mapChannels({ editorChannel: 'editor' }),
     containerConfigs: vm => getSupportedContainers(vm.activity.type)
   },
