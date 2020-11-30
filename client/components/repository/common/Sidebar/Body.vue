@@ -94,9 +94,11 @@ export default {
     }
   },
   created() {
-    this.editorChannel.on('element:toggle-discussion', contentElementId => {
-      const params = { activityId: this.activity.id, contentElementId };
-      this.$router.push({ name: 'editor', params });
+    const { editorChannel, $router, activity } = this;
+    editorChannel.on('element:toggle-discussion', contentElementUid => {
+      const params = { activityId: activity.id };
+      const query = { elementId: contentElementUid };
+      $router.push({ name: 'editor', params, query });
     });
   },
   components: {

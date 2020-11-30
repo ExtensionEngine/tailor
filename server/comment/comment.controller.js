@@ -1,6 +1,6 @@
 'use strict';
 
-const { Comment, User } = require('../shared/database');
+const { Comment, ContentElement, User } = require('../shared/database');
 const pick = require('lodash/pick');
 
 const author = {
@@ -9,11 +9,13 @@ const author = {
   attributes: ['id', 'email', 'firstName', 'lastName', 'fullName', 'imgUrl']
 };
 
+const CE = { model: ContentElement, as: 'contentElement', attributes: ['uid'] };
+
 function list({ repository, opts, query }, res) {
   const { activityId, contentElementId } = query;
   if (activityId) opts.where.activityId = activityId;
   if (contentElementId) opts.where.contentElementId = contentElementId;
-  return repository.getComments({ ...opts, include: [author] })
+  return repository.getComments({ ...opts, include: [author, CE] })
     .then(data => res.json({ data }));
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <div :ref="`ce:${contentElement.id}`" class="content-element-discussion">
+  <div :ref="`ce:${contentElement.uid}`" class="content-element-discussion">
     <v-menu
       v-model="showDiscussion"
       :close-on-content-click="false"
@@ -54,9 +54,9 @@ export default {
     unseenComments: vm => vm.getUnseenComments(vm.activity, vm.contentElement)
   },
   methods: {
-    toggleDiscussion(contentElementId) {
-      if (contentElementId !== this.contentElement.id) return;
-      const contentElement = this.$refs[`ce:${contentElementId}`];
+    toggleDiscussion(elementId) {
+      if (this.contentElement.uid !== elementId) return;
+      const contentElement = this.$refs[`ce:${elementId}`];
       contentElement.scrollIntoView({ behavior: 'smooth' });
       setTimeout(() => (this.showDiscussion = true), 200);
     }
@@ -76,10 +76,12 @@ export default {
     }
   },
   mounted() {
-    const { contentElementId } = this.$route.params;
-    this.toggleDiscussion(contentElementId);
-    this.editorChannel.on('element:toggle-discussion', contentElementId => {
-      this.toggleDiscussion(contentElementId);
+    this.toggleDiscussion(this.$route.query.elementId);
+    this.editorChannel.on('element:toggle-discussion', contentElementUid => {
+      const { elementId } = this.$route.query;
+      const query = { elementId: contentElementUid };
+      if (!elementId) this.$router.push({ query });
+      this.toggleDiscussion(elementId);
     });
   },
   components: { Discussion }

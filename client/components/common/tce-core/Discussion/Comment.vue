@@ -94,7 +94,7 @@ export default {
     },
     toggleElementDiscussion() {
       const { editorChannel, comment } = this;
-      editorChannel.emit('element:toggle-discussion', comment.contentElementId);
+      editorChannel.emit('element:toggle-discussion', comment.contentElement.uid);
     }
   },
   watch: {
