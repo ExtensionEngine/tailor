@@ -6,7 +6,6 @@ import '@/utils/validation';
 import assetsApi from '@/api/asset';
 import ContentPluginRegistry from './content-plugins';
 
-import { FORBIDDEN, UNAUTHORIZED } from 'http-status-codes';
 import { formatDate, truncate } from '@/filters';
 import {
   setInteractionMode,
@@ -15,7 +14,6 @@ import {
 } from 'vee-validate';
 import FileFilter from '@/directives/file-filter';
 import QuestionContainer from 'tce-core/QuestionContainer';
-import request from './api/request';
 import { sync } from 'vuex-router-sync';
 import Radio from '@/plugins/radio';
 import Timeago from 'vue-timeago';
@@ -47,14 +45,6 @@ Vue.use(Timeago, {
   locales: {
     'en-US': require('@/assets/locales/timeago-en-US-short.json')
   }
-});
-
-request.interceptors.response.use(res => res, err => {
-  if (err.response && [FORBIDDEN, UNAUTHORIZED].includes(err.response.status)) {
-    store.commit('setUser', null);
-    router.replace({ name: 'login' });
-  }
-  throw err;
 });
 
 const contentPluginRegistry = new ContentPluginRegistry(Vue);

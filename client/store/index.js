@@ -4,6 +4,7 @@ import editor from './modules/editor';
 import plugins from './plugins';
 import repositories from './modules/repositories';
 import repository from './modules/repository';
+import request from '../api/request';
 import settings from '../settings';
 import Vue from 'vue';
 import Vuex from 'vuex';
@@ -20,9 +21,13 @@ const modules = {
   editor
 };
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   middlewares,
   modules,
   plugins,
   strict: false
 });
+
+request.auth.on('error', () => store.commit('setUser', null));
+
+export default store;

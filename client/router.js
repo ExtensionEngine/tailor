@@ -1,5 +1,6 @@
 /* eslint-disable sort-imports */
 import { numeric as numericParser } from 'client/utils/paramsParser';
+import request from './api/request';
 import Router from 'vue-router';
 import { role } from '@/../config/shared';
 import store from './store';
@@ -133,6 +134,11 @@ router.beforeEach(async (to, from, next) => {
     return next({ path: from.fullPath });
   }
   return next();
+});
+
+request.auth.on('error', () => {
+  const redirect = router.currentRoute.fullPath;
+  router.push({ name: 'login', query: { redirect } });
 });
 
 export default router;
