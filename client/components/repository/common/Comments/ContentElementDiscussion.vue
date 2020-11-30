@@ -71,8 +71,8 @@ export default {
     this.editorChannel.on('element:toggle-discussion', contentElementId => {
       if (contentElementId !== this.contentElement.id) return;
       const contentElement = this.$refs[`ce:${contentElementId}`];
-      contentElement.scrollIntoView();
-      this.showDiscussion = true;
+      contentElement.scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => (this.showDiscussion = true), 200);
     });
   },
   components: { Discussion }
