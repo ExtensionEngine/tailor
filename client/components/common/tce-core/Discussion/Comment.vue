@@ -93,8 +93,8 @@ export default {
       this.isEditing = false;
     },
     toggleElementDiscussion() {
-      const { editorChannel, comment } = this;
-      editorChannel.emit('element:toggle-discussion', comment.contentElement.uid);
+      const { uid: contentElementUid } = this.comment.contentElement;
+      this.editorChannel.emit('element:toggle-discussion', contentElementUid);
     }
   },
   watch: {
