@@ -30,7 +30,7 @@
       z-index="1000">
       <template v-slot:activator="{ on }">
         <v-btn v-on="on" icon class="mr-2">
-          <v-avatar size="34" color="grey lighten-2">
+          <v-avatar size="36" color="teal accent-4">
             <img :src="user.imgUrl">
           </v-avatar>
         </v-btn>
@@ -117,5 +117,9 @@ $font-color: #333;
 
 .toolbar-route {
   max-width: 12.5rem;
+}
+
+.v-avatar img {
+  padding: 0.125rem;
 }
 </style>

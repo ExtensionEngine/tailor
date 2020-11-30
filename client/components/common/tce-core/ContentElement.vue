@@ -7,6 +7,7 @@
       frame
     }"
     class="content-element">
+    <active-users :users="activeUsers" size="22" class="active-users" />
     <component
       :is="componentName"
       @add="$emit('add', $event)"
@@ -25,6 +26,7 @@
 
 <script>
 import { getComponentName, getElementId } from './utils';
+import ActiveUsers from '@/components/common/ActiveUsers';
 import { mapChannels } from '@/plugins/radio';
 
 export default {
@@ -93,7 +95,8 @@ export default {
     return {
       $elementBus: this.elementBus
     };
-  }
+  },
+  components: { ActiveUsers }
 };
 </script>
 
@@ -138,5 +141,11 @@ export default {
 .frame {
   padding: 10px 20px;
   border: 1px solid #e1e1e1;
+}
+
+.active-users {
+  position: absolute;
+  top: 0;
+  left: -1.875rem;
 }
 </style>
