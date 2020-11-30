@@ -1,11 +1,11 @@
 <template>
-  <ul class="discussion-thread mt-2">
+  <ul class="discussion-thread">
     <thread-comment
       v-for="comment in visibleItems"
       :key="comment.uid"
       @update="onUpdate"
       @remove="$emit('remove', comment)"
-      v-bind="{ comment, user, hasAllComments }" />
+      v-bind="{ comment, user, showAllComments }" />
   </ul>
 </template>
 
@@ -20,7 +20,7 @@ export default {
     user: { type: Object, required: true },
     showAll: { type: Boolean, default: false },
     minDisplayed: { type: Number, default: 5 },
-    hasAllComments: { type: Boolean, default: false }
+    showAllComments: { type: Boolean, default: false }
   },
   computed: {
     visibleItems: vm => vm.showAll ? vm.items : takeRgt(vm.items, vm.minDisplayed)
@@ -36,7 +36,7 @@ export default {
 
 <style lang="scss" scoped>
 .discussion-thread {
-  margin: 0;
+  margin: 0.5rem 0 0;
   padding: 0;
   list-style: none;
 }

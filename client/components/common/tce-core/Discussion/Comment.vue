@@ -61,7 +61,7 @@ export default {
   props: {
     comment: { type: Object, required: true },
     user: { type: Object, required: true },
-    hasAllComments: { type: Boolean, default: false }
+    showAllComments: { type: Boolean, default: false }
   },
   data: vm => ({ isEditing: false, content: vm.comment.content }),
   computed: {
@@ -71,7 +71,7 @@ export default {
     isDeleted: vm => !!vm.comment.deletedAt,
     isAuthor: vm => vm.author.id === vm.user.id,
     showOptions: vm => vm.isAuthor && !vm.isDeleted,
-    contentElementTag: vm => vm.hasAllComments && vm.comment.contentElementId,
+    contentElementTag: vm => vm.showAllComments && vm.comment.contentElementId,
     options: vm => [
       { name: 'Edit', action: vm.toggleEdit, icon: 'mdi-pencil' },
       { name: 'Remove', action: vm.remove, icon: 'mdi-delete' }]

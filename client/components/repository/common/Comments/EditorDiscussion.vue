@@ -5,7 +5,7 @@
       @update="saveComment"
       @remove="remove"
       v-bind="{ comments, user, showHeading }"
-      has-all-comments show-notifications />
+      show-all-comments show-notifications />
   </div>
 </template>
 
