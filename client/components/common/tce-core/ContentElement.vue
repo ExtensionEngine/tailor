@@ -15,8 +15,7 @@
       :is-focused="isFocused"
       :is-dragged="isDragged"
       :is-disabled="isDisabled"
-      :dense="dense"
-      class="content" />
+      :dense="dense" />
   </div>
 </template>
 
@@ -84,16 +83,12 @@ export default {
   position: relative;
   $accent: #1de9b6;
 
-  .content {
-    z-index: 1;
-  }
-
   &.focused {
     &.frame {
       box-shadow: none;
     }
 
-    &::after {
+    &::before {
       $width: 0.125rem;
 
       content: '';
@@ -105,7 +100,6 @@ export default {
       height: calc(100% + 2px);
       border: 1px dashed $accent;
       border-right: $width solid $accent;
-      z-index: 0;
     }
   }
 }

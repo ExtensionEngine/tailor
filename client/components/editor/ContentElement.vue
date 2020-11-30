@@ -95,7 +95,6 @@ export default {
     position: absolute;
     top: 2rem;
     right: 1.5rem;
-    z-index: 2;
   }
 
   ::v-deep .content-element {
