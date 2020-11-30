@@ -63,9 +63,11 @@ export default {
 
 <style lang="scss" scoped>
 .toolbar-wrapper {
-  position: fixed;
   width: 100%;
-  z-index: 99;
+
+  ::v-deep .element-toolbar-wrapper {
+    z-index: 2;
+  }
 
   ::v-deep .v-text-field__details {
     margin: 0 !important;
