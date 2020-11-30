@@ -7,7 +7,7 @@ export const login = ({ commit }, credentials) => {
 
 export const logout = ({ commit }) => {
   return api.logout()
-    .then(() => window.location.reload());
+    .then(() => commit('setUser', null));
 };
 
 export const changePassword = (_, { currentPassword, newPassword }) => {
