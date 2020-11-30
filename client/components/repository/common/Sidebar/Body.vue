@@ -68,6 +68,7 @@ import { mapActions, mapGetters } from 'vuex';
 import ActivityTasks from './Tasks';
 import Discussion from '../Comments/EditorDiscussion';
 import LabelChip from '@/components/repository/common/LabelChip';
+import { mapChannels } from '@/plugins/radio';
 import MetaInput from 'tce-core/MetaInput';
 import Relationship from './Relationship';
 
@@ -77,6 +78,7 @@ export default {
     activity: { type: Object, required: true }
   },
   computed: {
+    ...mapChannels({ editorChannel: 'editor' }),
     ...mapGetters(['isAdmin']),
     ...mapGetters('repository', ['isRepositoryAdmin']),
     activityUrl: () => window.location.href,
@@ -90,6 +92,12 @@ export default {
       await this.update({ uid: this.activity.uid, data });
       this.$snackbar.show(`${this.config.label} saved`);
     }
+  },
+  created() {
+    this.editorChannel.on('element:toggle-discussion', contentElementId => {
+      const params = { activityId: this.activity.id, contentElementId };
+      this.$router.push({ name: 'editor', params });
+    });
   },
   components: {
     ActivityTasks,

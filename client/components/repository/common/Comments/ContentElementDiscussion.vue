@@ -53,6 +53,14 @@ export default {
     ...mapGetters('repository/comments', ['getUnseenComments']),
     unseenComments: vm => vm.getUnseenComments(vm.activity, vm.contentElement)
   },
+  methods: {
+    toggleDiscussion(contentElementId) {
+      if (contentElementId !== this.contentElement.id) return;
+      const contentElement = this.$refs[`ce:${contentElementId}`];
+      contentElement.scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => (this.showDiscussion = true), 200);
+    }
+  },
   watch: {
     showDiscussion(val) {
       if (!val || !this.lastCommentAt) return;
@@ -67,12 +75,11 @@ export default {
       setTimeout(() => (this.unseenCommentCount = comments.length), 200);
     }
   },
-  created() {
+  mounted() {
+    const { contentElementId } = this.$route.params;
+    this.toggleDiscussion(contentElementId);
     this.editorChannel.on('element:toggle-discussion', contentElementId => {
-      if (contentElementId !== this.contentElement.id) return;
-      const contentElement = this.$refs[`ce:${contentElementId}`];
-      contentElement.scrollIntoView({ behavior: 'smooth' });
-      setTimeout(() => (this.showDiscussion = true), 200);
+      this.toggleDiscussion(contentElementId);
     });
   },
   components: { Discussion }
