@@ -2,8 +2,6 @@
 
 const { ACCEPTED, BAD_REQUEST, CONFLICT, NO_CONTENT, NOT_FOUND } = require('http-status-codes');
 const { createError, validationError } = require('../shared/error/helpers');
-const Audience = require('../shared/auth/audience');
-const { auth } = require('../../config/server');
 const map = require('lodash/map');
 const { Op } = require('sequelize');
 const { User } = require('../shared/database');
@@ -45,21 +43,7 @@ function resetPassword({ body, user }, res) {
     .then(() => res.sendStatus(NO_CONTENT));
 }
 
-function login({ user }, res) {
-  const token = user.createToken({
-    audience: Audience.Scope.Access,
-    expiresIn: '5 days'
-  });
-  return res
-    .cookie(auth.jwt.cookieName, token)
-    .json({ data: { user: user.profile } });
-}
-
-function logout(_, res) {
-  return res.clearCookie(auth.jwt.cookieName).end();
-}
-
-function getProfile({ user, body }, res) {
+function getProfile({ user }, res) {
   return res.json({ user: user.profile });
 }
 
@@ -92,8 +76,6 @@ module.exports = {
   remove,
   forgotPassword,
   resetPassword,
-  login,
-  logout,
   getProfile,
   updateProfile,
   changePassword,

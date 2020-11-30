@@ -10,9 +10,7 @@ const urls = {
 };
 
 function login(credentials) {
-  return request.base
-    .post(urls.login, credentials)
-    .then(res => res.data);
+  return request.base.post(urls.login, credentials);
 }
 
 function logout() {

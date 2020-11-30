@@ -40,15 +40,8 @@ module.exports = {
 };
 
 function login(req, res, next) {
-  authenticate('oidc')(req, res, err => {
+  authenticate('oidc', { setCookie: true })(req, res, err => {
     if (err) return next(err);
-    const { user } = req;
-    const token = user.createToken({
-      audience: Audience.Scope.Access,
-      expiresIn: '5 days'
-    });
-    return res
-      .cookie(auth.jwt.cookieName, token)
-      .redirect('/');
+    return res.redirect('/');
   });
 }
