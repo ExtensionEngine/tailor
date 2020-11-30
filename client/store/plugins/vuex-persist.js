@@ -4,8 +4,7 @@ const OBSERVED_MUTATIONS = [
   'login',
   'logout',
   'setUser',
-  'repository/comments/markSeenComments',
-  'repository/comments/fetch'
+  'repository/comments/markSeenComments'
 ];
 
 export default new VuexPersistence({
