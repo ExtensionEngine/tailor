@@ -82,7 +82,8 @@ export default {
     initElementChangeWatcher() {
       this.storeUnsubscribe = this.$store.subscribe(debounce((mutation, state) => {
         const { type, payload: element } = mutation;
-        const { focusedElement } = this;
+        const { editorChannel, focusedElement, activity } = this;
+        editorChannel.emit(SET_ACTIVITY, activity);
         if (!focusedElement || !ELEMENT_MUTATIONS.includes(type)) return;
         if (element.uid === focusedElement.uid) {
           this.focusedElement = { ...focusedElement, ...element };
@@ -136,7 +137,6 @@ export default {
     await this.loadContents();
     this.initElementFocusListener();
     this.initElementChangeWatcher();
-    this.editorChannel.emit(SET_ACTIVITY, this.activity);
   },
   beforeDestroy() {
     this.storeUnsubscribe && this.storeUnsubscribe();
