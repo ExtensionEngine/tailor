@@ -128,11 +128,11 @@ router.beforeEach(async (to, from, next) => {
   await auth.loading.promise;
   if (to.matched.some(it => it.meta.auth) && !auth.user) {
     return next({ path: '/login', query: { redirect: to.fullPath } });
-  } else if (!isAllowed(to)) {
-    return next({ path: from.fullPath });
-  } else {
-    return next();
   }
+  if (!isAllowed(to)) {
+    return next({ path: from.fullPath });
+  }
+  return next();
 });
 
 export default router;
