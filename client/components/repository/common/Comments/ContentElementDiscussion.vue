@@ -54,7 +54,9 @@ export default {
     unseenComments: vm => vm.getUnseenComments(vm.activity, vm.contentElement)
   },
   methods: {
-    toggleDiscussion(elementId) {
+    toggleDiscussion(query) {
+      const { elementId } = this.$route.query;
+      if (!elementId && query) this.$router.push({ query });
       if (this.contentElement.uid !== elementId) return;
       const contentElement = this.$refs[`ce:${elementId}`];
       contentElement.scrollIntoView({ behavior: 'smooth' });
@@ -76,12 +78,9 @@ export default {
     }
   },
   mounted() {
-    this.toggleDiscussion(this.$route.query.elementId);
+    this.toggleDiscussion();
     this.editorChannel.on('element:toggle-discussion', contentElementUid => {
-      const { elementId } = this.$route.query;
-      const query = { elementId: contentElementUid };
-      if (!elementId) this.$router.push({ query });
-      this.toggleDiscussion(elementId);
+      this.toggleDiscussion({ elementId: contentElementUid });
     });
   },
   components: { Discussion }
