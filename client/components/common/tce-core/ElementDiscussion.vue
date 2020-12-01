@@ -20,66 +20,54 @@
       </v-tooltip>
     </template>
     <discussion
-      @save="saveComment"
-      @update="saveComment"
-      @remove="remove"
+      @save="save"
+      @update="save"
+      @remove="elementBus.emit('comment:remove', $event);"
       v-bind="{ comments, user, showHeading }"
       class="pa-4" />
   </v-menu>
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
 import Discussion from 'tce-core/Discussion';
-import get from 'lodash/get';
+import { mapChannels } from '@/plugins/radio';
 
-const extractParams = ({ activity, contentElement }) => ({
-  activityId: activity.id,
-  contentElementId: contentElement.id
-});
+const SET_LAST_SEEN = 'comment:set-last-seen';
+const COMMENTS_SET = 'comments:set';
 
 export default {
   name: 'content-element-discussion',
   inject: ['$getCurrentUser'],
   props: {
-    contentElement: { type: Object, required: true },
+    element: { type: Object, required: true },
     showHeading: { type: Boolean, default: true }
   },
   data: () => ({
+    comments: {},
+    unseenComments: [],
     showDiscussion: false,
+    lastCommentAt: 0,
     unseenCommentCount: 0
   }),
   computed: {
-    ...mapGetters('repository/comments', ['getUnseenComments', 'getComments']),
-    ...mapGetters('editor', ['activity']),
-    user: vm => vm.$getCurrentUser(),
-    params: vm => extractParams(vm),
-    comments: vm => vm.getComments(vm.params),
-    lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime(),
-    unseenComments: vm => vm.getUnseenComments(vm.activity, vm.contentElement)
+    ...mapChannels({ editorChannel: 'editor' }),
+    elementBus: vm => vm.$radio.channel(`element:${vm.element.id}`),
+    user: vm => vm.$getCurrentUser()
   },
   methods: {
-    ...mapActions('repository/comments', ['fetch', 'save', 'update', 'remove']),
-    ...mapMutations('repository/comments', ['markSeenComments']),
-    saveComment(comment) {
-      const action = comment.id ? 'update' : 'save';
-      const { user: author, params } = this;
-      return this[action]({ ...comment, ...params, author });
-    },
-    setLastSeenComment(timeout) {
-      const { contentElement, lastCommentAt } = this;
-      const payload = { elementUid: contentElement.uid, lastCommentAt };
-      setTimeout(() => this.markSeenComments(payload), timeout);
+    save(data) {
+      const { elementBus, user: author } = this;
+      return elementBus.emit('comment:save', { ...data, author });
     }
   },
   watch: {
     showDiscussion(val) {
       if (!val || !this.lastCommentAt) return;
-      this.setLastSeenComment(1000);
+      this.elementBus.emit(SET_LAST_SEEN, 1000);
     },
     comments(val, oldVal) {
       if (!this.showDiscussion || val === oldVal) return;
-      this.setLastSeenComment(2000);
+      this.elementBus.emit(SET_LAST_SEEN, 2000);
     },
     unseenComments(comments) {
       if (this.showDiscussion && comments.length) return;
@@ -87,7 +75,10 @@ export default {
     }
   },
   created() {
-    this.fetch(this.params);
+    this.elementBus.on(COMMENTS_SET, data => Object.assign(this, data));
+  },
+  provide() {
+    return { $elementBus: this.elementBus };
   },
   components: { Discussion }
 };

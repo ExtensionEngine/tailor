@@ -19,12 +19,18 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
+import get from 'lodash/get';
 import loader from '@/components/common/loader';
 import { mapChannels } from '@/plugins/radio';
 import throttle from 'lodash/throttle';
+
+const extractParams = ({ activity, element }) => ({
+  activityId: activity.id,
+  contentElementId: element.id
+});
 
 export default {
   name: 'content-element',
@@ -35,13 +41,29 @@ export default {
     isDragged: { type: Boolean, default: false }
   },
   data: () => ({ isSaving: false }),
-  computed: mapChannels({ editorChannel: 'editor' }),
+  computed: {
+    ...mapChannels({ editorChannel: 'editor' }),
+    ...mapGetters('editor', ['activity']),
+    ...mapGetters('repository/comments', ['getUnseenComments', 'getComments']),
+    params: vm => extractParams(vm),
+    comments: vm => vm.getComments(vm.params),
+    lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime(),
+    unseenComments: vm => vm.getUnseenComments(vm.activity, vm.element),
+    elementBus: vm => vm.$radio.channel(`element:${vm.element.id}`)
+  },
   methods: {
     ...mapActions('repository/contentElements', {
       saveElement: 'save',
       updateElement: 'update',
       removeElement: 'remove'
     }),
+    ...mapActions('repository/comments', {
+      fetchComments: 'fetch',
+      saveComment: 'save',
+      updateComment: 'update',
+      removeComment: 'remove'
+    }),
+    ...mapMutations('repository/comments', ['markSeenComments']),
     ...mapMutations('repository/contentElements', { addElement: 'add' }),
     add(element) {
       this.addElement({ ...this.element, ...cloneDeep(element) });
@@ -59,7 +81,41 @@ export default {
     async remove() {
       await this.removeElement(this.element);
       this.$nextTick(() => this.editorChannel.emit('element:focus'));
+    },
+    async upsertComment(comment) {
+      const action = comment.id ? 'updateComment' : 'saveComment';
+      await this[action]({ ...comment, ...this.params });
+      return this.emitCommentsData();
+    },
+    async deleteComment(comment) {
+      await this.removeComment(comment);
+      return this.emitCommentsData();
+    },
+    emitCommentsData() {
+      const { comments, unseenComments, lastCommentAt } = this;
+      const data = { comments, unseenComments, lastCommentAt };
+      this.elementBus.emit('comments:set', data);
+    },
+    setLastSeenComment(timeout) {
+      const { element, lastCommentAt } = this;
+      const payload = { elementUid: element.uid, lastCommentAt };
+      setTimeout(() => {
+        this.markSeenComments(payload);
+        this.emitCommentsData();
+      }, timeout);
     }
+  },
+  async created() {
+    await this.fetchComments(this.params);
+    this.emitCommentsData();
+    this.elementBus.on('comment:save', comment => this.upsertComment(comment));
+    this.elementBus.on('comment:remove', comment => this.deleteComment(comment));
+    this.elementBus.on('comment:set-last-seen', timeout => {
+      this.setLastSeenComment(timeout);
+    });
+  },
+  provide() {
+    return { $elementBus: this.elementBus };
   },
   components: { ContainedContent }
 };

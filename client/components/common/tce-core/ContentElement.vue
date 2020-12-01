@@ -3,7 +3,7 @@
     @click="onSelect"
     :class="{ focused: isFocused, frame }"
     class="content-element">
-    <discussion v-if="displayDiscussion" :content-element="element" />
+    <discussion v-if="displayDiscussion" :element="element" />
     <component
       :is="componentName"
       @add="$emit('add', $event)"
