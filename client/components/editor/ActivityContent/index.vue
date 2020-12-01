@@ -110,6 +110,9 @@ export default {
       }, 50);
       this.editorChannel.on(CE_FOCUS_EVENT, this.focusHandler);
     },
+    selectElement(elementId, user = this.user, isSelected = true) {
+      this.editorChannel.emit(CE_SELECT_EVENT, { elementId, user, isSelected });
+    },
     scrollToElement(id, timeout = 500) {
       setTimeout(() => {
         const elementId = `#element_${id}`;
@@ -121,12 +124,13 @@ export default {
   watch: {
     isLoading(val) {
       const { elementId } = this.$route.query;
-      const { user } = this;
       if (val || !elementId) return;
       // Select and scroll to element if elementId is set
       setTimeout(() => {
-        this.editorChannel.emit(CE_SELECT_EVENT, { elementId, isSelected: true, user });
+        this.selectElement(elementId);
         this.scrollToElement(elementId);
+        this.selectedElements
+          .forEach(({ elementId, ...user }) => this.selectElement(elementId, user));
       }, CE_SELECTION_DELAY);
     },
     focusedElement: {
@@ -138,15 +142,12 @@ export default {
     selectedElements: {
       deep: true,
       handler(val, prevVal) {
-        if (isEqual(val, prevVal)) return;
+        if (this.isLoading || isEqual(val, prevVal)) return;
         const selectionComparator = it => `${it.elementId}-${it.id}`;
         const removeSelection = differenceBy(prevVal, val, selectionComparator);
         const isSelected = differenceBy(val, prevVal, selectionComparator);
-        const selectionGroups = [[removeSelection, false], [isSelected, true]];
-        selectionGroups.forEach(([group, isSelected]) => {
-          group.forEach(({ elementId, ...user }) => {
-            this.editorChannel.emit(CE_SELECT_EVENT, { elementId, isSelected, user });
-          });
+        [[removeSelection, false], [isSelected, true]].forEach(([items, isSelected]) => {
+          items.forEach(({ elementId, ...user }) => this.selectElement(elementId, user, isSelected));
         });
       }
     }
