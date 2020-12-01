@@ -150,7 +150,7 @@ export default {
 .activity-content {
   width: 100%;
   min-height: 100%;
-  padding-top: 4.375rem;
+  padding-top: 1.25rem;
   overflow-y: scroll;
   overflow-y: overlay;
   overflow-x: hidden;
@@ -162,6 +162,6 @@ export default {
 }
 
 .loader {
-  margin-top: 4.375rem;
+  margin-top: 1.25rem;
 }
 </style>
