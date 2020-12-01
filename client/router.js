@@ -124,9 +124,9 @@ const router = new Router({
   }]
 });
 
-router.beforeEach(async (to, from, next) => {
-  const auth = store.state.auth;
-  await auth.loading.promise;
+router.beforeEach((to, from, next) => {
+  const auth = router.app?.$store.state.auth;
+  if (!auth) return next(false);
   if (to.matched.some(it => it.meta.auth) && !auth.user) {
     return next({ path: '/login', query: { redirect: to.fullPath } });
   }

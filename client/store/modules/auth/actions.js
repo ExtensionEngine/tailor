@@ -23,8 +23,7 @@ export const resetPassword = (_, { token, password }) => {
 export const fetchUserInfo = ({ commit }) => {
   return api.getUserInfo()
     .then(({ data: { user } }) => commit('setUser', user))
-    .catch(() => commit('setUser', null))
-    .finally(() => commit('resolveLoading'));
+    .catch(() => commit('setUser', null));
 };
 
 export const updateInfo = ({ commit }, userData) => {

@@ -48,21 +48,23 @@ Vue.use(Timeago, {
 });
 
 const contentPluginRegistry = new ContentPluginRegistry(Vue);
-contentPluginRegistry.initialize().then(() => {
-  sync(store, router);
-  /* eslint-disable no-new */
-  new Vue({
-    router,
-    store,
-    vuetify,
-    el: '#app',
-    render: h => h(App),
-    provide() {
-      return {
-        $teRegistry: contentPluginRegistry.elementRegistry,
-        $ccRegistry: contentPluginRegistry.containerRegistry,
-        $storageService: assetsApi
-      };
-    }
+
+Promise.all([store.initialize(), contentPluginRegistry.initialize()])
+  .then(([store]) => {
+    sync(store, router);
+    /* eslint-disable no-new */
+    new Vue({
+      router,
+      store,
+      vuetify,
+      el: '#app',
+      render: h => h(App),
+      provide() {
+        return {
+          $teRegistry: contentPluginRegistry.elementRegistry,
+          $ccRegistry: contentPluginRegistry.containerRegistry,
+          $storageService: assetsApi
+        };
+      }
+    });
   });
-});
