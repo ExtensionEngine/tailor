@@ -26,7 +26,7 @@
 
 <script>
 import { getComponentName, getElementId } from './utils';
-import ActiveUsers from '@/components/common/ActiveUsers';
+import ActiveUsers from 'tce-core/ActiveUsers';
 import { mapChannels } from '@/plugins/radio';
 
 export default {
