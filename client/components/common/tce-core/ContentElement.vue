@@ -20,7 +20,7 @@
 
 <script>
 import { getComponentName, getElementId } from './utils';
-import Discussion from '@/components/repository/common/Comments/ContentElementDiscussion';
+import Discussion from './ElementDiscussion';
 import { mapChannels } from '@/plugins/radio';
 
 export default {
@@ -33,7 +33,7 @@ export default {
     isDisabled: { type: Boolean, default: false },
     frame: { type: Boolean, default: true },
     dense: { type: Boolean, default: false },
-    displayDiscussion: { type: Boolean, default: true }
+    displayDiscussion: { type: Boolean, default: false }
   },
   data: () => ({
     activity: {},

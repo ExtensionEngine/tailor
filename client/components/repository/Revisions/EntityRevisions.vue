@@ -5,7 +5,6 @@
         <content-element
           v-if="selectedRevision.resolved"
           :element="selectedRevision.state"
-          :display-discussion="false"
           is-disabled />
       </div>
       <entity-sidebar

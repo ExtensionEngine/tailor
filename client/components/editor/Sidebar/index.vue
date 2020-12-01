@@ -14,7 +14,7 @@
         :repository="repository"
         :activities="activities"
         :selected="selectedActivity" />
-      <editor-discussion
+      <activity-discussion
         v-show="discussionTabVisible"
         :activity="selectedActivity"
         :is-visible="discussionTabVisible" />
@@ -50,9 +50,9 @@
 </template>
 
 <script>
+import ActivityDiscussion from '@/components/repository/common/ActivityDiscussion';
 import ActivityNavigation from './Navigation';
 import debounce from 'lodash/debounce';
-import EditorDiscussion from '@/components/repository/common/Comments/EditorDiscussion';
 import ElementSidebar from './ElementSidebar';
 import get from 'lodash/get';
 import { getElementId } from 'tce-core/utils';
@@ -73,7 +73,7 @@ export default {
     ...mapGetters('repository/comments', ['getUnseenComments']),
     unseenComments: vm => vm.getUnseenComments(vm.selectedActivity),
     discussionTabVisible: vm => vm.selectedTab === 'comments',
-    tabs: vm => ([{
+    tabs: vm => [{
       name: 'browser',
       label: 'Browse',
       icon: 'file-tree'
@@ -87,16 +87,14 @@ export default {
       label: 'Element',
       icon: 'toy-brick-outline',
       disabled: !vm.elementSidebarEnabled
-    }]),
+    }],
     elementSidebarEnabled: vm => vm.selectedElement && !vm.metadata.isEmpty,
     metadata() {
       const { repository, selectedElement } = this;
       return getElementMetadata(get(repository, 'schema'), selectedElement);
     }
   },
-  methods: {
-    getElementId
-  },
+  methods: { getElementId },
   watch: {
     selectedElement() {
       if (this.elementSidebarEnabled) {
@@ -110,7 +108,7 @@ export default {
       this.unseenCommentCount = val.length;
     }, 200)
   },
-  components: { ActivityNavigation, EditorDiscussion, ElementSidebar }
+  components: { ActivityDiscussion, ActivityNavigation, ElementSidebar }
 };
 </script>
 
@@ -132,7 +130,7 @@ export default {
   }
 }
 
-::v-deep .editor-discussion {
+::v-deep .activity-discussion {
   margin: 1rem 0;
   padding: 1rem;
   border: none;

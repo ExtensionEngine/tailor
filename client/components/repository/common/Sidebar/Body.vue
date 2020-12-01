@@ -58,15 +58,15 @@
         :activity="activity"
         v-bind="relationship" />
     </div>
-    <discussion :activity="activity" show-heading />
+    <activity-discussion :activity="activity" show-heading />
   </div>
 </template>
 
 <script>
 import { getActivityMetadata, getLevel } from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex';
+import ActivityDiscussion from '../ActivityDiscussion';
 import ActivityTasks from './Tasks';
-import Discussion from '../Comments/EditorDiscussion';
 import LabelChip from '@/components/repository/common/LabelChip';
 import MetaInput from 'tce-core/MetaInput';
 import Relationship from './Relationship';
@@ -93,7 +93,7 @@ export default {
   },
   components: {
     ActivityTasks,
-    Discussion,
+    ActivityDiscussion,
     Relationship,
     MetaInput,
     LabelChip

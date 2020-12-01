@@ -8,7 +8,8 @@
       v-bind="$attrs"
       :element="element"
       :is-dragged="isDragged"
-      :is-disabled="disabled" />
+      :is-disabled="disabled"
+      display-discussion />
     <v-progress-linear
       v-if="isSaving"
       color="grey darken-2"
