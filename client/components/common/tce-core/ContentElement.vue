@@ -78,7 +78,8 @@ export default {
       // If current user; focus element
       if (!user || (user.id === this.currentUser.id)) {
         this.isFocused = isSelected;
-        return this.focus();
+        if (isSelected) this.focus();
+        return;
       }
       // If other user, toggle within active users list
       if (isSelected && !this.activeUsers.find(it => it.id === user.id)) {
