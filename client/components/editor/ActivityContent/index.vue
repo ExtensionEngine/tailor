@@ -57,7 +57,7 @@ export default {
   }),
   computed: {
     ...mapGetters('repository', ['activities']),
-    ...mapGetters('editor', ['selectedElements']),
+    ...mapGetters('editor', { collaboratorSelections: 'selectedElements' }),
     ...mapChannels({ editorChannel: 'editor' }),
     ...mapState({ user: state => state.auth.user }),
     containerConfigs: vm => getSupportedContainers(vm.activity.type)
@@ -129,7 +129,7 @@ export default {
       setTimeout(() => {
         this.selectElement(elementId);
         this.scrollToElement(elementId);
-        this.selectedElements
+        this.collaboratorSelections
           .forEach(({ elementId, ...user }) => this.selectElement(elementId, user));
       }, CE_SELECTION_DELAY);
     },
@@ -139,17 +139,14 @@ export default {
         this.$emit('selected', val);
       }
     },
-    selectedElements: {
-      deep: true,
-      handler(val, prevVal) {
-        if (this.isLoading || isEqual(val, prevVal)) return;
-        const selectionComparator = it => `${it.elementId}-${it.id}`;
-        const removeSelection = differenceBy(prevVal, val, selectionComparator);
-        const isSelected = differenceBy(val, prevVal, selectionComparator);
-        [[removeSelection, false], [isSelected, true]].forEach(([items, isSelected]) => {
-          items.forEach(({ elementId, ...user }) => this.selectElement(elementId, user, isSelected));
-        });
-      }
+    collaboratorSelections(val, prevVal) {
+      if (this.isLoading || isEqual(val, prevVal)) return;
+      const selectionComparator = it => `${it.elementId}-${it.id}`;
+      const removeSelection = differenceBy(prevVal, val, selectionComparator);
+      const isSelected = differenceBy(val, prevVal, selectionComparator);
+      [[removeSelection, false], [isSelected, true]].forEach(([items, isSelected]) => {
+        items.forEach(({ elementId, ...user }) => this.selectElement(elementId, user, isSelected));
+      });
     }
   },
   async created() {
