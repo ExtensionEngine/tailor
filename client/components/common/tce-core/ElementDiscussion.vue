@@ -31,12 +31,11 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import Discussion from 'tce-core/Discussion';
-import find from 'lodash/find';
 import get from 'lodash/get';
 
 const extractParams = ({ activity, contentElement }) => ({
   activityId: activity.id,
-  contentElementId: contentElement ? contentElement.id : null
+  contentElementId: contentElement.id
 });
 
 export default {
@@ -52,12 +51,8 @@ export default {
   }),
   computed: {
     ...mapGetters('repository/comments', ['getUnseenComments', 'getComments']),
-    ...mapGetters('repository/activities', ['activities']),
+    ...mapGetters('editor', ['activity']),
     user: vm => vm.$getCurrentUser(),
-    activity() {
-      const { activityId } = this.$route.params;
-      return find(this.activities, { id: parseInt(activityId, 10) });
-    },
     params: vm => extractParams(vm),
     comments: vm => vm.getComments(vm.params),
     lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime(),
