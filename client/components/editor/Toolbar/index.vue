@@ -66,7 +66,7 @@ export default {
   width: 100%;
 
   ::v-deep .element-toolbar-wrapper {
-    z-index: 2;
+    z-index: 99;
   }
 
   ::v-deep .v-text-field__details {
