@@ -3,9 +3,9 @@
 const Audience = require('./audience');
 const { Authenticator } = require('passport');
 const autobind = require('auto-bind');
-const isUndefined = require('lodash/isUndefined')
 const { auth: config } = require('../../../config/server');
 const { IncomingMessage } = require('http');
+const isUndefined = require('lodash/isUndefined');
 
 class Auth extends Authenticator {
   constructor() {
@@ -34,7 +34,11 @@ class Auth extends Authenticator {
           audience: Audience.Scope.Access,
           expiresIn: '5 days'
         });
-        res.cookie(config.jwt.cookieName, token);
+        const { name, ...options } = config.jwt.cookie;
+        res.cookie(config.jwt.cookie.name, token, {
+          ...options,
+          maxAge: 5 * 1000 * 60 * 60 * 24 // 5 days
+        });
         return next();
       };
       return super.authenticate(strategy, { ...options, failWithError })(req, res, wrappedNext);
@@ -43,7 +47,7 @@ class Auth extends Authenticator {
 
   logout({ middleware = false } = {}) {
     return (_, res, next) => {
-      res.clearCookie(config.jwt.cookieName);
+      res.clearCookie(config.jwt.cookie.name);
       return middleware ? next() : res.end();
     };
   }

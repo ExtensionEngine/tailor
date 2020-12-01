@@ -63,7 +63,8 @@ function verifyOIDC(_tokenSet, { email }, done) {
 }
 
 function extractJwtFromCookie(req) {
-  return get(req.cookies, config.jwt.cookieName, null);
+  const path = config.jwt.cookie.signed ? 'signedCookies' : 'cookies';
+  return get(req[path], config.jwt.cookie.name, null);
 }
 
 function secretOrKeyProvider(_, rawToken, done) {

@@ -31,7 +31,7 @@ config.auth.oidc.enabled && (() => {
 
 app.use(helmet());
 app.use(cors({ origin: config.auth.corsAllowedOrigins, credentials: true }));
-app.use(cookieParser());
+app.use(cookieParser(config.auth.jwt.cookie.secret));
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(auth.initialize());
