@@ -1,14 +1,20 @@
 'use strict';
 
-const { getFileUrl, saveFile } = require('./');
+const { readFile, sha256 } = require('./util');
 const { ASSET_ROOT } = require('./helpers');
-const crypto = require('crypto');
-const fs = require('fs');
+const mime = require('mime');
 const path = require('path');
+const storage = require('./');
 
-function getUrl(req, res) {
-  const { query: { key } } = req;
-  return getFileUrl(key).then(url => res.json({ url }));
+function get(req, res) {
+  const { returnType } = req.query;
+  const key = req.params[0];
+  if (returnType === 'url') {
+    return storage.getFileUrl(key).then(url => res.json({ url }));
+  }
+  const readStream = storage.createReadStream(key);
+  res.setHeader('Content-Type', mime.lookup(key));
+  readStream.pipe(res);
 }
 
 async function upload({ file }, res) {
@@ -17,20 +23,13 @@ async function upload({ file }, res) {
   const extension = path.extname(file.originalname);
   const name = path.basename(file.originalname, extension).substring(0, 180).trim();
   const key = path.join(ASSET_ROOT, `${hash}___${name}${extension}`);
-  await saveFile(key, buffer, { ContentType: file.mimetype });
-  const publicUrl = await getFileUrl(key);
+  const headers = {
+    ContentType: file.mimetype,
+    ContentLength: Buffer.byteLength(buffer)
+  };
+  await storage.saveFile(key, buffer, headers);
+  const publicUrl = await storage.getFileUrl(key);
   return res.json({ key, url: `storage://${key}`, publicUrl });
 }
 
-module.exports = { getUrl, upload };
-
-function readFile(file) {
-  if (file.buffer) return Promise.resolve(file.buffer);
-  return fs.readFile(file.path);
-}
-
-function sha256(...args) {
-  const hash = crypto.createHash('sha256');
-  args.forEach(arg => hash.update(arg));
-  return hash.digest('hex');
-}
+module.exports = { get, upload };

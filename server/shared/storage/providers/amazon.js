@@ -1,8 +1,10 @@
 'use strict';
 
+const { origin, staticsPath } = require('../../../../config/server');
 const miss = require('mississippi');
 const path = require('path');
 const S3 = require('aws-sdk/clients/s3');
+const urlJoin = require('url-join');
 const { validateConfig } = require('../validation');
 const yup = require('yup');
 
@@ -14,7 +16,8 @@ const schema = yup.object().shape({
   region: yup.string().required(),
   bucket: yup.string().required(),
   key: yup.string().required(),
-  secret: yup.string().required()
+  secret: yup.string().required(),
+  deliveryStrategy: yup.string().oneOf(['proxy', 'cloudfront'])
 });
 
 class Amazon {
@@ -32,6 +35,7 @@ class Amazon {
 
     this.bucket = config.bucket;
     this.region = config.region;
+    this.deliveryStrategy = config.deliveryStrategy;
     this.client = new S3(s3Config);
   }
 
@@ -109,6 +113,10 @@ class Amazon {
 
   // API docs: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#getSignedUrl-property
   getFileUrl(key, options = {}) {
+    if (this.deliveryStrategy === 'proxy') {
+      const url = urlJoin(origin, '/api', staticsPath, key);
+      return Promise.resolve(url);
+    }
     const expires = options.expires || DEFAULT_EXPIRATION_TIME;
     const params = Object.assign(options, { Bucket: this.bucket, Key: key, Expires: expires });
     return this.client.getSignedUrlPromise('getObject', params);

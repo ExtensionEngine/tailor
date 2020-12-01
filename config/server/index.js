@@ -11,12 +11,14 @@ const protocol = resolveProtocol(hostname);
 const port = resolvePort();
 const origin = resolveOrigin(hostname, protocol, port);
 const previewUrl = process.env.PREVIEW_URL;
+const staticsPath = process.env.STATICS_PATH;
 
 module.exports = {
   protocol,
   hostname,
   port,
   origin,
+  staticsPath,
   auth,
   mail,
   storage,
