@@ -31,7 +31,6 @@ import loader from '@/components/common/loader';
 import { mapChannels } from '@/plugins/radio';
 import throttle from 'lodash/throttle';
 
-const SET_ACTIVITY = 'activity:set';
 const CE_FOCUS_EVENT = 'element:focus';
 const CE_SELECT_EVENT = 'element:select';
 const CE_SELECTION_DELAY = 1000;
@@ -82,8 +81,7 @@ export default {
     initElementChangeWatcher() {
       this.storeUnsubscribe = this.$store.subscribe(debounce((mutation, state) => {
         const { type, payload: element } = mutation;
-        const { editorChannel, focusedElement, activity } = this;
-        editorChannel.emit(SET_ACTIVITY, activity);
+        const { focusedElement } = this;
         if (!focusedElement || !ELEMENT_MUTATIONS.includes(type)) return;
         if (element.uid === focusedElement.uid) {
           this.focusedElement = { ...focusedElement, ...element };
