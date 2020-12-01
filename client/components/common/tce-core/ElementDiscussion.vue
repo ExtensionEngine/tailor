@@ -33,7 +33,7 @@ import Discussion from 'tce-core/Discussion';
 import { mapChannels } from '@/plugins/radio';
 
 const SET_LAST_SEEN = 'comment:set-last-seen';
-const COMMENTS_SET = 'comments:set';
+const COMMENTS_INIT = 'comments:init';
 
 export default {
   name: 'content-element-discussion',
@@ -75,7 +75,7 @@ export default {
     }
   },
   created() {
-    this.elementBus.on(COMMENTS_SET, data => Object.assign(this, data));
+    this.elementBus.on(COMMENTS_INIT, data => Object.assign(this, data));
   },
   provide() {
     return { $elementBus: this.elementBus };

@@ -27,6 +27,12 @@ import loader from '@/components/common/loader';
 import { mapChannels } from '@/plugins/radio';
 import throttle from 'lodash/throttle';
 
+const COMMENT_EVENTS = [
+  { event: 'comment:save', action: 'upsertComment' },
+  { event: 'comment:remove', action: 'deleteComment' },
+  { event: 'comment:set-last-seen', action: 'setLastSeenComment' }
+];
+
 const extractParams = ({ activity, element }) => ({
   activityId: activity.id,
   contentElementId: element.id
@@ -94,7 +100,7 @@ export default {
     emitCommentsData() {
       const { comments, unseenComments, lastCommentAt } = this;
       const data = { comments, unseenComments, lastCommentAt };
-      this.elementBus.emit('comments:set', data);
+      this.elementBus.emit('comments:init', data);
     },
     setLastSeenComment(timeout) {
       const { element, lastCommentAt } = this;
@@ -105,13 +111,14 @@ export default {
       }, timeout);
     }
   },
+  watch: {
+    unseenComments: 'emitCommentsData'
+  },
   async created() {
     await this.fetchComments(this.params);
     this.emitCommentsData();
-    this.elementBus.on('comment:save', comment => this.upsertComment(comment));
-    this.elementBus.on('comment:remove', comment => this.deleteComment(comment));
-    this.elementBus.on('comment:set-last-seen', timeout => {
-      this.setLastSeenComment(timeout);
+    COMMENT_EVENTS.forEach(({ event, action }) => {
+      this.elementBus.on(event, data => this[action](data));
     });
   },
   provide() {
