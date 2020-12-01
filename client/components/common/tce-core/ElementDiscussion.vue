@@ -30,7 +30,6 @@
 
 <script>
 import Discussion from 'tce-core/Discussion';
-import { mapChannels } from '@/plugins/radio';
 
 const SET_LAST_SEEN = 'comment:set-last-seen';
 const COMMENTS_INIT = 'comments:init';
@@ -50,7 +49,6 @@ export default {
     unseenCommentCount: 0
   }),
   computed: {
-    ...mapChannels({ editorChannel: 'editor' }),
     elementBus: vm => vm.$radio.channel(`element:${vm.element.id}`),
     user: vm => vm.$getCurrentUser()
   },
