@@ -35,13 +35,13 @@ export const contentContainers = (_state, getters, { repository }) => {
   }, []);
 };
 
-export const selectedElements = (_state, { activity }, rootState, rootGetters) => {
+export const collaboratorSelections = (_state, { activity }, rState, rGetters) => {
   if (!activity) return [];
   const {
     auth: { user },
     repository: { userTracking: { users: userTracking } }
-  } = rootState;
-  const entityState = rootGetters['repository/userTracking/activityByEntity'].activity;
+  } = rState;
+  const entityState = rGetters['repository/userTracking/activityByEntity'].activity;
   const activeUserIds = without(map(entityState[activity.id], 'id'), user.id);
   if (!activeUserIds.length) return [];
   const selections = Object.values(userTracking)

@@ -7,7 +7,7 @@
       frame
     }"
     class="content-element">
-    <active-users :users="activeUsers" size="22" class="active-users" />
+    <active-users :users="activeUsers" size="20" class="active-users" />
     <component
       :is="componentName"
       @add="$emit('add', $event)"
@@ -146,6 +146,6 @@ export default {
 .active-users {
   position: absolute;
   top: 0;
-  left: -1.875rem;
+  left: -1.625rem;
 }
 </style>

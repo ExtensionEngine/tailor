@@ -57,7 +57,7 @@ export default {
   }),
   computed: {
     ...mapGetters('repository', ['activities']),
-    ...mapGetters('editor', { collaboratorSelections: 'selectedElements' }),
+    ...mapGetters('editor', ['collaboratorSelections']),
     ...mapChannels({ editorChannel: 'editor' }),
     ...mapState({ user: state => state.auth.user }),
     containerConfigs: vm => getSupportedContainers(vm.activity.type)
