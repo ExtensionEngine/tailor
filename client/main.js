@@ -23,8 +23,8 @@ import VueCroppa from 'vue-croppa';
 import VueHotkey from 'v-hotkey';
 import vuetify from '@/plugins/vuetify';
 
-import store from './store';
-import router from './router';
+import getStore from './store';
+import getRouter from './router';
 import App from './App';
 
 Vue.component('tce-question-container', QuestionContainer);
@@ -49,8 +49,9 @@ Vue.use(Timeago, {
 
 const contentPluginRegistry = new ContentPluginRegistry(Vue);
 
-Promise.all([store.initialize(), contentPluginRegistry.initialize()])
+Promise.all([getStore(), contentPluginRegistry.initialize()])
   .then(([store]) => {
+    const router = getRouter();
     sync(store, router);
     /* eslint-disable no-new */
     new Vue({

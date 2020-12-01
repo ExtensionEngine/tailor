@@ -30,8 +30,6 @@ const store = new Vuex.Store({
 
 request.auth.on('error', () => store.commit('setUser', null));
 
-export default {
-  initialize() {
-    return store.dispatch('fetchUserInfo').then(() => store);
-  }
-};
+export default function getStore() {
+  return store.dispatch('fetchUserInfo').then(() => store);
+}

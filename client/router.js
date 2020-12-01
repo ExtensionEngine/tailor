@@ -28,7 +28,7 @@ import WorkflowBoard from './components/repository/WorkflowBoard';
 
 Vue.use(Router);
 
-const router = new Router({
+const options = {
   routes: [{
     path: '/',
     name: 'catalog',
@@ -122,26 +122,27 @@ const router = new Router({
       component: ResetPassword
     }]
   }]
-});
+};
 
-router.beforeEach((to, from, next) => {
-  const auth = router.app?.$store.state.auth;
-  if (!auth) return next(false);
-  if (to.matched.some(it => it.meta.auth) && !auth.user) {
-    return next({ path: '/login', query: { redirect: to.fullPath } });
-  }
-  if (!isAllowed(to)) {
-    return next({ path: from.fullPath });
-  }
-  return next();
-});
+export default function getRouter() {
+  const router = new Router(options);
+  router.beforeEach((to, from, next) => {
+    const auth = router.app?.$store.state.auth;
+    if (to.matched.some(it => it.meta.auth) && !auth.user) {
+      return next({ path: '/login', query: { redirect: to.fullPath } });
+    }
+    if (!isAllowed(to)) {
+      return next({ path: from.fullPath });
+    }
+    return next();
+  });
 
-request.auth.on('error', () => {
-  const redirect = router.currentRoute.fullPath;
-  router.push({ name: 'login', query: { redirect } });
-});
-
-export default router;
+  request.auth.on('error', () => {
+    const redirect = router.currentRoute.fullPath;
+    router.replace({ name: 'login', query: { redirect } }).catch(() => {});
+  });
+  return router;
+}
 
 function isAllowed(route) {
   const { meta = {} } = route.matched.find(({ meta = {} }) => meta.allowed) || {};
