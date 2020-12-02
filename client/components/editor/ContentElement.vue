@@ -54,8 +54,11 @@ export default {
     params: vm => extractParams(vm),
     comments: vm => vm.getComments(vm.params),
     lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime(),
-    unseenComments: vm => vm.getUnseenComments(vm.activity, vm.element),
-    elementBus: vm => vm.$radio.channel(`element:${vm.element.id}`)
+    elementBus: vm => vm.$radio.channel(`element:${vm.element.id}`),
+    unseenComments() {
+      const { id: activityId, uid: activityUid } = this.activity;
+      return this.getUnseenComments({ ...this.element, activityUid, activityId });
+    }
   },
   methods: {
     ...mapActions('repository/contentElements', {
