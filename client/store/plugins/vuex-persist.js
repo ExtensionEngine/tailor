@@ -9,12 +9,12 @@ const OBSERVED_MUTATIONS = [
 
 export default new VuexPersistence({
   key: 'TAILOR_APP_STATE',
-  reducer: state => ({
-    auth: state.auth,
+  reducer: ({ auth, repository }) => ({
+    auth,
     repository: {
       comments: {
-        seenByActivity: state.repository.comments.seen.activity,
-        seen: migrateSeenState(state)
+        seenByActivity: repository.comments.seen.activity,
+        seen: migrateSeenState(repository)
       }
     }
   }),
@@ -22,8 +22,10 @@ export default new VuexPersistence({
   filter: mutation => OBSERVED_MUTATIONS.includes(mutation.type)
 }).plugin;
 
-function migrateSeenState(state) {
-  const { seen, seenByActivity } = state.repository.comments;
+function migrateSeenState(repository) {
+  const storage = window.localStorage.getItem('TAILOR_APP_STATE');
+  const { seenByActivity } = JSON.parse(storage).repository.comments;
+  const { seen } = repository.comments;
   const activity = { ...seenByActivity, ...seen.activity };
   return { activity, contentElement: seen.contentElement };
 }

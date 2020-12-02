@@ -31,8 +31,10 @@
 <script>
 import Discussion from 'tce-core/Discussion';
 
-const SET_LAST_SEEN = 'comment:set-last-seen';
-const COMMENTS_INIT = 'comments:init';
+const EVENTS = {
+  INIT: 'comments:init',
+  SET_LAST_SEEN: 'comment:set-last-seen'
+};
 
 export default {
   name: 'content-element-discussion',
@@ -44,9 +46,9 @@ export default {
   data: () => ({
     comments: {},
     unseenComments: [],
-    showDiscussion: false,
     lastCommentAt: 0,
-    unseenCommentCount: 0
+    unseenCommentCount: 0,
+    showDiscussion: false
   }),
   computed: {
     elementBus: vm => vm.$radio.channel(`element:${vm.element.id}`),
@@ -61,11 +63,11 @@ export default {
   watch: {
     showDiscussion(val) {
       if (!val || !this.lastCommentAt) return;
-      this.elementBus.emit(SET_LAST_SEEN, 1000);
+      this.elementBus.emit(EVENTS.SET_LAST_SEEN, 1000);
     },
     comments(val, oldVal) {
       if (!this.showDiscussion || val === oldVal) return;
-      this.elementBus.emit(SET_LAST_SEEN, 2000);
+      this.elementBus.emit(EVENTS.SET_LAST_SEEN, 2000);
     },
     unseenComments(comments) {
       if (this.showDiscussion && comments.length) return;
@@ -73,7 +75,7 @@ export default {
     }
   },
   created() {
-    this.elementBus.on(COMMENTS_INIT, data => Object.assign(this, data));
+    this.elementBus.on(EVENTS.INIT, data => Object.assign(this, data));
   },
   provide() {
     return { $elementBus: this.elementBus };
