@@ -2,13 +2,13 @@
   <div :class="{ preview: showPreview }" class="comment-editor">
     <v-textarea
       @change="$emit('input', $event)"
-      :value="value"
+      :value="content"
       :autofocus="isFocused"
       :placeholder="placeholder"
       rows="3"
       outlined auto-grow clearable counter />
     <div class="content">
-      <pre><span>{{ value }}</span><br></pre>
+      <pre><span>{{ content }}</span><br></pre>
     </div>
   </div>
 </template>
@@ -21,6 +21,9 @@ export default {
     isFocused: { type: Boolean, default: false },
     showPreview: { type: Boolean, default: false },
     placeholder: { type: String, default: 'Add a comment...' }
+  },
+  computed: {
+    content: vm => vm.value.trim()
   }
 };
 </script>

@@ -75,7 +75,7 @@ function resetPassword(user, token) {
 }
 
 function sendCommentNotification(users, comment) {
-  const { elementUid, author, repositoryName } = comment;
+  const { elementUid, author, repositoryName, topic, action } = comment;
   const href = elementUid ? elementUrl(comment) : activityUrl(comment);
   const recipients = users.concat(',');
   const data = {
@@ -90,7 +90,7 @@ function sendCommentNotification(users, comment) {
   return send({
     from,
     to: recipients,
-    subject: `${author.label} left a comment on ${repositoryName}`,
+    subject: `${author.label} ${action} a comment on ${repositoryName} - ${topic}`,
     text,
     attachment: [{ data: html, alternative: true }]
   });
