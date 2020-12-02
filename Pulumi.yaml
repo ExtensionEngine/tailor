@@ -1,0 +1,4 @@
+name: tailor
+runtime: nodejs
+description: Tailor production deployment with pulumi
+main: pulumi/

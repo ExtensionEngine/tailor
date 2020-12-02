@@ -49,3 +49,7 @@ stats.json
 
 # General
 .DS_Store
+
+# Ignore pulumi stack configuration
+Pulumi.*.yaml
+!Pulumi.yaml
