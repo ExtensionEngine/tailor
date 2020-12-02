@@ -34,7 +34,21 @@ new aws.iam.UserPolicyAttachment('user-policy-attachment', {
   policyArn: policy.arn
 });
 
+// Create postgres db instance
+const db = new aws.rds.Instance('postgresdb', {
+  engine: 'postgres',
+  instanceClass: 'db.t2.micro',
+  allocatedStorage: 20,
+  name: 'tailor',
+  username: 'tailor',
+  password: 'tailor123',
+  skipFinalSnapshot: true
+});
+
 // Export the name of the bucket
 exports.bucketName = bucket.id;
 exports.accessKey = userCredentials.id;
 exports.secretKey = userCredentials.secret;
+exports.dbHost = db.endpoint;
+exports.dbPort = db.port;
+exports.dbVersion = db.engineVersion;
