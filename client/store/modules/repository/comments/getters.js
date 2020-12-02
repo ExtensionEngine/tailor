@@ -6,28 +6,23 @@ export const getComments = state => params => {
   return orderBy(comments, 'createdAt', 'desc');
 };
 
-export const getUnseenComments = ({ seen, items }, _, { auth }) => entity => {
-  const options = { seen, items, user: auth.user };
-  return entity.activityId
-    ? getUnseenElementComments(entity, options)
-    : getUnseenActivityComments(entity, options);
-};
-
-function getUnseenActivityComments(activity, { seen, items, user }) {
+export const getUnseenActivityComments = (state, _, { auth }) => activity => {
+  const { seen, items } = state;
   const lastSeen = seen.activity[activity.uid] || 0;
   return filter(items, it =>
     it.contentElementId === null &&
     it.activityId === activity.id &&
-    it.authorId !== user.id &&
+    it.authorId !== auth.user.id &&
     new Date(it.createdAt).getTime() > lastSeen
   );
-}
+};
 
-function getUnseenElementComments(element, { seen, items, user }) {
+export const getUnseenElementComments = (state, _, { auth }) => element => {
+  const { seen, items } = state;
   const lastSeen = seen.contentElement[element.uid] || 0;
   return filter(items, it =>
     it.contentElementId === element.id &&
-    it.authorId !== user.id &&
+    it.authorId !== auth.user.id &&
     new Date(it.createdAt).getTime() > lastSeen
   );
-}
+};

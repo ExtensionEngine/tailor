@@ -50,14 +50,15 @@ export default {
   computed: {
     ...mapChannels({ editorChannel: 'editor' }),
     ...mapGetters('editor', ['activity']),
-    ...mapGetters('repository/comments', ['getUnseenComments', 'getComments']),
+    ...mapGetters('repository/comments', ['getUnseenElementComments', 'getComments']),
     params: vm => extractParams(vm),
     comments: vm => vm.getComments(vm.params),
     lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime(),
     elementBus: vm => vm.$radio.channel(`element:${vm.element.id}`),
     unseenComments() {
       const { id: activityId, uid: activityUid } = this.activity;
-      return this.getUnseenComments({ ...this.element, activityUid, activityId });
+      const element = { ...this.element, activityUid, activityId };
+      return this.getUnseenElementComments(element);
     }
   },
   methods: {
