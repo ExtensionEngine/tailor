@@ -11,7 +11,8 @@
           padding-left="0"
           color="#444"
           font-size="16px">
-          <b>{{author.label}}</b> left a comment on <b>{{repositoryName}}</b>, <b>{{topic}}</b>.
+          <b>{{author.label}}</b> {{ action }} a comment on
+          <b>{{repositoryName}}</b>, <b>{{topic}}</b>.
         </mj-text>
       </mj-column>
     </mj-section>
