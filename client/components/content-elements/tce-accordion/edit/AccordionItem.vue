@@ -37,7 +37,7 @@
         </div>
       </template>
     </v-expansion-panel-header>
-    <v-expansion-panel-content color="blue-grey lighten-5">
+    <v-expansion-panel-content color="blue-grey lighten-5" eager>
       <v-alert
         v-if="!hasElements && !isDisabled"
         color="blue-grey darken-2"
