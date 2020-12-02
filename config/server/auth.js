@@ -17,7 +17,7 @@ module.exports = {
       name: env.AUTH_JWT_COOKIE_NAME || 'access_token',
       secret: env.AUTH_JWT_COOKIE_SECRET,
       signed: !!env.AUTH_JWT_COOKIE_SECRET,
-      secure: env.PROTOCOL === 'https' || env.HOSTNAME === 'localhost'
+      secure: env.PROTOCOL === 'https' && env.HOSTNAME !== 'localhost'
     },
     secret: env.AUTH_JWT_SECRET,
     issuer: env.AUTH_JWT_ISSUER
