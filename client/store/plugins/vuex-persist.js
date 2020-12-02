@@ -1,3 +1,4 @@
+import isEmpty from 'lodash/isEmpty';
 import VuexPersistence from 'vuex-persist';
 
 const OBSERVED_MUTATIONS = [
@@ -16,7 +17,6 @@ export default new VuexPersistence({
     auth,
     repository: {
       comments: {
-        seenByActivity: repository.comments.seen.activity,
         seen: repository.comments.seen
       }
     }
@@ -28,8 +28,11 @@ export default new VuexPersistence({
 function migrateSeenState() {
   const storage = window.localStorage;
   const state = JSON.parse(storage.getItem(STORAGE_KEY));
-  const { seenByActivity, seen } = state.repository.comments;
-  if (seenByActivity) state.repository.comments = { seen: seenByActivity };
-  if (seen) state.repository.comments = { seenByActivity: seen };
+  if (!state) return;
+  const { seenByActivity } = state.repository.comments;
+  if (!isEmpty(seenByActivity)) {
+    state.repository.comments.seen = { activity: seenByActivity };
+  }
+  if (seenByActivity) delete state.repository.comments.seenByActivity;
   storage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
