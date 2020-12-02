@@ -16,9 +16,7 @@ export default new VuexPersistence({
   reducer: ({ auth, repository }) => ({
     auth,
     repository: {
-      comments: {
-        seen: repository.comments.seen
-      }
+      comments: { seen: repository.comments.seen }
     }
   }),
   storage: window.localStorage,
