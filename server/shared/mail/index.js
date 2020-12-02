@@ -22,10 +22,14 @@ const send = promisify(server.send.bind(server));
 const templatesDir = path.join(__dirname, './templates/');
 
 const resetUrl = token => urlJoin(origin, '/#/reset-password/', token);
-const activityUrl = (repositoryId, activityId) =>
-  urlJoin(origin, '/#/repository', `${repositoryId}?activityId=${activityId}`);
 const taskUrl = (repositoryId, taskId) =>
   urlJoin(origin, '/#/repository', `${repositoryId}/board?taskId=${taskId}`);
+const activityUrl = ({ repositoryId, activityId }) =>
+  urlJoin(origin, '/#/repository', `${repositoryId}?activityId=${activityId}`);
+const elementUrl = ({ repositoryId, activityId, elementUid }) => {
+  const query = `${activityId}?elementId=${elementUid}`;
+  return urlJoin(origin, '/#/repository', String(repositoryId), 'editor', query);
+};
 
 module.exports = {
   send,
@@ -71,8 +75,8 @@ function resetPassword(user, token) {
 }
 
 function sendCommentNotification(users, comment) {
-  const { repositoryId, activityId } = comment;
-  const href = activityUrl(repositoryId, activityId);
+  const { elementUid, author, repositoryName } = comment;
+  const href = elementUid ? elementUrl(comment) : activityUrl(comment);
   const recipients = users.concat(',');
   const data = {
     href,
@@ -86,7 +90,7 @@ function sendCommentNotification(users, comment) {
   return send({
     from,
     to: recipients,
-    subject: `${comment.author.label} left a comment on ${comment.repositoryName}`,
+    subject: `${author.label} left a comment on ${repositoryName}`,
     text,
     attachment: [{ data: html, alternative: true }]
   });

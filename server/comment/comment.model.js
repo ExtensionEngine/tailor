@@ -48,6 +48,7 @@ class Comment extends Model {
       foreignKey: { name: 'activityId', field: 'activity_id' }
     });
     this.belongsTo(ContentElement, {
+      as: 'contentElement',
       foreignKey: { name: 'contentElementId', field: 'content_element_id' }
     });
     this.belongsTo(Repository, {

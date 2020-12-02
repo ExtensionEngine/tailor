@@ -31,18 +31,19 @@ exports.add = (Comment, Hooks, db) => {
 };
 
 async function sendEmailNotification(comment, db) {
-  const { Repository, RepositoryUser, Activity, User } = db;
+  const { Repository, RepositoryUser, Activity, ContentElement, User } = db;
   await comment.reload({
     include: [
       {
         model: Repository,
         include: [{ model: RepositoryUser, include: { model: User } }]
       },
-      { model: Activity },
+      { model: Activity, attributes: ['id', 'type', 'data'] },
+      { model: ContentElement, as: 'contentElement', attributes: ['uid', 'type'] },
       { model: User, as: 'author' }
     ]
   });
-  const { author, repository, activity } = comment;
+  const { author, repository, activity, contentElement } = comment;
   const previousComments = await activity.getComments({
     offset: 1,
     limit: 3,
@@ -53,6 +54,8 @@ async function sendEmailNotification(comment, db) {
     repositoryId: repository.id,
     repositoryName: repository.name,
     activityId: activity.id,
+    elementUid: contentElement && contentElement.uid,
+    elementType: contentElement && contentElement.type,
     activityLabel: getLevel(activity.type).label,
     topic: activity.data.name,
     author: author.profile,
