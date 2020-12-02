@@ -1,8 +1,8 @@
 <template>
   <div class="list-group">
     <draggable
-      @start="dragElementIndex = $event.oldIndex"
-      @end="dragElementIndex = -1"
+      @start="onDragStart"
+      @end="onDragEnd"
       @update="reorder"
       :list="elements"
       v-bind="options"
@@ -76,6 +76,14 @@ export default {
   methods: {
     get,
     getElementId,
+    onDragStart({ oldIndex }) {
+      this.dragElementIndex = oldIndex;
+      this.$emit('drag', true);
+    },
+    onDragEnd() {
+      this.dragElementIndex = -1;
+      this.$emit('drag', false);
+    },
     reorder({ newIndex: newPosition }) {
       const items = this.elements;
       this.$emit('update', { newPosition, items });
