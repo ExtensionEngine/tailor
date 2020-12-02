@@ -1,7 +1,5 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import { ContainedContent } from 'tce-core';
 import get from 'lodash/get';
-import { mapChannels } from '@/plugins/radio';
 
 const COMMENT_EVENTS = [
   { event: 'comment:save', action: 'upsertComment' },
@@ -16,7 +14,6 @@ const extractParams = ({ activity, element }) => ({
 
 export default {
   computed: {
-    ...mapChannels({ editorChannel: 'editor' }),
     ...mapGetters('editor', ['activity']),
     ...mapGetters('repository/comments', ['getUnseenElementComments', 'getComments']),
     params: vm => extractParams(vm),
@@ -72,6 +69,5 @@ export default {
   },
   provide() {
     return { $elementBus: this.elementBus };
-  },
-  components: { ContainedContent }
+  }
 };
