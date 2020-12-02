@@ -1,7 +1,5 @@
 'use strict';
 
-const Audience = require('../shared/auth/audience');
-const { auth } = require('../../config/server');
 const { authenticate } = require('../shared/auth');
 const { BAD_REQUEST } = require('http-status-codes');
 const { errors: OIDCError } = require('openid-client');
