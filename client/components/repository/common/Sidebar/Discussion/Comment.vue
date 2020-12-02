@@ -32,7 +32,7 @@
               class="time" />
           </span>
         </template>
-        <span>{{ comment.createdAt | formatDate('MMM D, YYYY HH:mm') }}</span>
+        <span>{{ comment.createdAt | formatDate('M/D/YY h:mm A') }}</span>
       </v-tooltip>
     </div>
     <v-menu v-if="showOptions" bottom left offset-y>
