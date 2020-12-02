@@ -31,6 +31,7 @@ const getDescendantsInfo = (descendants, count, label) => {
 };
 
 export default {
+  name: 'sidebar-badge',
   props: {
     activity: { type: Object, default: () => ({}) }
   },

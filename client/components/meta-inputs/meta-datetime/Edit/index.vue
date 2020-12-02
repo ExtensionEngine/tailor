@@ -1,10 +1,11 @@
 <template>
   <div class="d-flex">
     <date-picker
-      @change="setDate"
+      @input="setDate"
       :value="date"
       :label="meta.label"
-      :placeholder="meta.placeholder" />
+      :placeholder="meta.placeholder"
+      :clearable="false" />
     <template v-if="!meta.hideTime">
       <time-picker
         v-if="date"
@@ -23,7 +24,7 @@
 </template>
 
 <script>
-import DatePicker from './DatePicker';
+import DatePicker from '@/components/common/DatePicker';
 import set from 'date-fns/set';
 import TimePicker from './TimePicker';
 
