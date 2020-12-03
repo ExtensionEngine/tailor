@@ -44,7 +44,8 @@ export default {
     activeUsers: []
   }),
   computed: {
-    ...mapChannels({ editorChannel: 'editor' }),
+    ...mapChannels({ editorBus: 'editor' }),
+    user: vm => vm.$getCurrentUser(),
     id: vm => getElementId(vm.element),
     componentName: vm => getComponentName(vm.element.type),
     elementBus: vm => vm.$radio.channel(`element:${vm.id}`)

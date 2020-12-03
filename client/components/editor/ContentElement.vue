@@ -37,7 +37,7 @@ export default {
     isDragged: { type: Boolean, default: false }
   },
   data: () => ({ isSaving: false }),
-  computed: mapChannels({ editorChannel: 'editor' }),
+  computed: mapChannels({ editorBus: 'editor' }),
   methods: {
     ...mapActions('repository/contentElements', {
       saveElement: 'save',
@@ -60,7 +60,7 @@ export default {
     }, 4000),
     async remove() {
       await this.removeElement(this.element);
-      this.$nextTick(() => this.editorChannel.emit('element:focus'));
+      this.$nextTick(() => this.editorBus.emit('element:focus'));
     }
   },
   components: { ContainedContent }
