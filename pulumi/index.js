@@ -1,6 +1,9 @@
 'use strict';
 
 const aws = require('@pulumi/aws');
+const pulumi = require('@pulumi/pulumi');
+
+const config = new pulumi.Config();
 
 // Create an AWS resource (S3 Bucket)
 const bucket = new aws.s3.Bucket('tailor');
@@ -39,16 +42,33 @@ const db = new aws.rds.Instance('postgresdb', {
   engine: 'postgres',
   instanceClass: 'db.t2.micro',
   allocatedStorage: 20,
-  name: 'tailor',
+  name: 'tailor', // db name
   username: 'tailor',
   password: 'tailor123',
   skipFinalSnapshot: true
 });
 
-// Export the name of the bucket
+const publicKey = config.get('publicKey');
+const myKey = new aws.ec2.KeyPair('mykey', { publicKey });
+
+const secgrp = new aws.ec2.SecurityGroup('server-sec-grp', {
+  ingress: [
+    { protocol: 'tcp', fromPort: 22, toPort: 22, cidrBlocks: ['0.0.0.0/0'] },
+    { protocol: 'tcp', fromPort: 80, toPort: 80, cidrBlocks: ['0.0.0.0/0'] }
+  ]
+});
+
+const server = new aws.ec2.Instance('server', {
+  ami: 'ami-0885b1f6bd170450c',
+  instanceType: 't2.micro',
+  keyName: myKey.keyName,
+  vpcSecurityGroupIds: [secgrp.id]
+});
+
 exports.bucketName = bucket.id;
 exports.accessKey = userCredentials.id;
 exports.secretKey = userCredentials.secret;
-exports.dbHost = db.endpoint;
+exports.dbHost = db.address;
 exports.dbPort = db.port;
-exports.dbVersion = db.engineVersion;
+exports.serverPublicDns = server.publicDns;
+exports.serverPublicIp = server.publicIp;
