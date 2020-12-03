@@ -39,10 +39,10 @@
 </template>
 
 <script>
+import { getContainerName, getElementId } from 'tce-core/utils';
 import { mapActions, mapState } from 'vuex';
 import capitalize from 'lodash/capitalize';
 import get from 'lodash/get';
-import { getContainerName } from 'tce-core/utils';
 import { getContainerTemplateId } from 'shared/activities';
 import isEmpty from 'lodash/isEmpty';
 import { mapRequests } from '@/plugins/radio';
@@ -97,7 +97,10 @@ export default {
       this.save({ type, parentId, position });
     },
     saveContentElement(element) {
-      return this.saveElement(element).then(() => this.showNotification());
+      return this.saveElement(element).then(() => {
+        this.$radio.channel(`element:${getElementId(element)}`).emit('saved');
+        this.showNotification();
+      });
     },
     reorderContentElements({ newPosition, items }) {
       const element = items[newPosition];
