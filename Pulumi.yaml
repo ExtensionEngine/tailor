@@ -2,3 +2,8 @@ name: tailor
 runtime: nodejs
 description: Tailor production deployment with pulumi
 main: pulumi/
+template:
+  config:
+    aws:region:
+      description: The AWS region to deploy into.
+      default: us-east-1
