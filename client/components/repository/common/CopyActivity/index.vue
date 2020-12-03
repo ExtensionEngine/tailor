@@ -60,6 +60,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import activityApi from 'client/api/activity';
+import head from 'lodash/head';
 import InsertLocation from '@/utils/InsertLocation';
 import last from 'lodash/last';
 import pluralize from 'pluralize';
@@ -127,7 +128,7 @@ export default {
         payload.parentId = action === ADD_INTO ? anchor.id : anchor.parentId;
       }
       const activities = await this.clone(payload);
-      this.copiedActivities.push(...activities);
+      this.copiedActivities.push(head(activities));
       return activities;
     },
     async copySelection() {
