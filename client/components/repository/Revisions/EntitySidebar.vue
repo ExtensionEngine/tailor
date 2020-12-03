@@ -44,7 +44,7 @@ export default {
       return revision.id === this.selected.id;
     },
     formatDate(rev) {
-      return fecha.format(new Date(rev.createdAt), 'M/D/YY HH:mm');
+      return fecha.format(new Date(rev.createdAt), 'M/D/YY h:mm A');
     },
     scrollTop() {
       this.$refs.revisions.scrollTop = 0;

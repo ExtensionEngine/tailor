@@ -30,7 +30,7 @@
             v-if="selectable"
             color="blue-grey darken-4"
             class="ml-2 mr-3 open-icon">
-            mdi-open-in-app
+            mdi-page-next-outline
           </v-icon>
         </div>
       </template>

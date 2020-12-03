@@ -6,7 +6,7 @@
       dark
       class="repository-card">
       <div @click="navigateTo()" class="card-body">
-        <v-chip :color="repository.data.color" x-small class="ml-4 px-1" />
+        <v-chip :color="repository.data.color" x-small class="readonly ml-4 px-1" />
         <span class="schema-name">{{ schema }}</span>
         <div class="controls float-right">
           <v-tooltip open-delay="100" top>
