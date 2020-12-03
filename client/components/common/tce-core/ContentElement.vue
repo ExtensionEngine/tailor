@@ -7,7 +7,7 @@
       frame
     }"
     class="content-element">
-    <active-users :users="activeUsers" size="20" class="active-users" />
+    <active-users :users="activeUsers" :size="20" class="active-users" />
     <component
       :is="componentName"
       @add="$emit('add', $event)"
