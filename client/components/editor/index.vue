@@ -21,9 +21,9 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import ActivityContent from './ActivityContent';
+import forEach from 'lodash/forEach';
 import get from 'lodash/get';
 import { getElementId } from 'tce-core/utils';
-import map from 'lodash/map';
 import { mapChannels } from '@/plugins/radio';
 import Sidebar from './Sidebar';
 import Toolbar from './Toolbar';
@@ -49,9 +49,9 @@ export default {
   }),
   computed: {
     ...mapChannels({ editorBus: 'editor' }),
-    ...mapGetters('repository/userTracking', ['getActiveUsers']),
-    ...mapGetters('repository', ['repository', 'outlineActivities']),
     ...mapGetters('editor', ['activity', 'contentContainers', 'rootContainerGroups']),
+    ...mapGetters('repository', ['repository', 'outlineActivities']),
+    ...mapGetters('repository/userTracking', ['getActiveUsers']),
     ...mapGetters('repository/comments', ['getUnseenElementComments', 'getComments']),
     ...mapGetters('repository/contentElements', ['elements']),
     activeUsers: vm => vm.getActiveUsers('activity', vm.activityId),
@@ -109,9 +109,10 @@ export default {
     },
     async initializeComments() {
       await this.fetchComments({ activityId: this.activityId });
-      setTimeout(() => map(this.elements, it => this.emitCommentsData(it.id)), 1000);
-      COMMENT_EVENTS.forEach(({ event, action }) => {
-        this.editorBus.on(event, data => this[action](data));
+      const { elements, editorBus } = this;
+      setTimeout(() => forEach(elements, it => this.emitCommentsData(it.id)), 1000);
+      forEach(COMMENT_EVENTS, ({ event, action }) => {
+        editorBus.on(event, data => this[action](data));
       });
     }
   },
