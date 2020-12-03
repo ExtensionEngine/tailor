@@ -3,8 +3,7 @@
     <template v-if="!isLoading">
       <toolbar
         :element="selectedElement"
-        :active-users="activeUsers"
-        :element-toolbar-hidden="isElementDragging" />
+        :active-users="activeUsers" />
       <div class="editor-content-container">
         <sidebar
           :repository="repository"
@@ -14,7 +13,6 @@
         <activity-content
           :key="activity.id"
           @selected="selectElement"
-          @elementDrag="isElementDragging = $event"
           :repository="repository"
           :activity="activity"
           :root-container-groups="rootContainerGroups"
@@ -42,8 +40,7 @@ export default {
   },
   data: () => ({
     isLoading: true,
-    selectedElement: null,
-    isElementDragging: false
+    selectedElement: null
   }),
   computed: {
     ...mapGetters('repository/userTracking', ['getActiveUsers']),

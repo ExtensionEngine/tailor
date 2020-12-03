@@ -19,7 +19,6 @@
       Click the button below to create content.
     </v-alert>
     <element-list
-      @drag="$emit('elementDrag', $event)"
       @update="reorder"
       :elements="contentElements"
       :activity="container"

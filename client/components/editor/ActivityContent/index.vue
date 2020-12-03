@@ -10,7 +10,6 @@
         <content-containers
           v-for="(containerGroup, type) in rootContainerGroups"
           :key="type"
-          @elementDrag="$emit('elementDrag', $event)"
           :container-group="containerGroup"
           :parent-id="activity.id"
           v-bind="getContainerConfig(type)" />

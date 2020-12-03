@@ -21,7 +21,6 @@
       @reorderElement="reorderContentElements"
       @deleteElement="requestElementDeletion"
       @delete="requestContainerDeletion(container)"
-      @elementDrag="$emit('elementDrag', $event)"
       :container="container"
       :name="name"
       :position="index"

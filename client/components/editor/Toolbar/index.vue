@@ -13,7 +13,6 @@
     </div>
     <element-toolbar
       v-if="element && element.parent"
-      v-show="!elementToolbarHidden"
       :key="`${element.parent.uid}-${element.id}`"
       :element="element.parent"
       :embed="element">
@@ -26,7 +25,6 @@
     </element-toolbar>
     <element-toolbar
       v-else-if="element"
-      v-show="!elementToolbarHidden"
       :key="getElementId(element)"
       :element="element">
       <template slot="actions">
@@ -48,8 +46,7 @@ export default {
   name: 'editor-toolbar',
   props: {
     element: { type: Object, default: null },
-    activeUsers: { type: Array, default: () => [] },
-    elementToolbarHidden: { type: Boolean, default: false }
+    activeUsers: { type: Array, default: () => [] }
   },
   computed: {
     ...mapGetters('editor', ['activity']),
