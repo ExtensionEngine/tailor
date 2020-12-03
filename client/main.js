@@ -62,9 +62,10 @@ Promise.all([getStore(), contentPluginRegistry.initialize()])
       render: h => h(App),
       provide() {
         return {
+          $storageService: assetsApi,
           $teRegistry: contentPluginRegistry.elementRegistry,
           $ccRegistry: contentPluginRegistry.containerRegistry,
-          $storageService: assetsApi
+          $getCurrentUser: () => store.state.auth.user
         };
       }
     });

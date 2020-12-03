@@ -8,7 +8,7 @@
       <v-chip
         color="blue-grey lighten-3"
         small
-        class="ml-1 px-7 body-2">
+        class="readonly ml-1 px-7 body-2">
         Profile
       </v-chip>
     </v-toolbar>
