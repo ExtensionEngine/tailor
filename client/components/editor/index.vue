@@ -27,6 +27,7 @@ import map from 'lodash/map';
 import { mapChannels } from '@/plugins/radio';
 import Sidebar from './Sidebar';
 import Toolbar from './Toolbar';
+import transform from 'lodash/transform';
 import withUserTracking from 'components/common/mixins/userTracking';
 
 const COMMENT_EVENTS = [
@@ -56,13 +57,13 @@ export default {
     activeUsers: vm => vm.getActiveUsers('activity', vm.activityId),
     commentsWithinElements() {
       const { id: activityId, uid: activityUid } = this.activity;
-      return map(this.elements, it => {
+      return transform(this.elements, (acc, it) => {
         const element = { ...it, activityUid, activityId };
         const comments = this.getComments({ activityId, contentElementId: it.id });
         const lastCommentAt = new Date(get(comments[0], 'createdAt', 0)).getTime();
         const unseenComments = this.getUnseenElementComments(element);
-        return { ...it, comments, lastCommentAt, unseenComments };
-      });
+        acc[it.id] = { ...it, comments, lastCommentAt, unseenComments };
+      }, {});
     }
   },
   methods: {
@@ -92,13 +93,13 @@ export default {
       return this.emitCommentsData(comment.contentElementId);
     },
     emitCommentsData(elementId) {
-      const element = this.commentsWithinElements.find(it => it.id === elementId);
+      const element = this.commentsWithinElements[elementId];
       const { comments, unseenComments, lastCommentAt } = element;
       const elementBus = this.$radio.channel(`element:${elementId}`);
       elementBus.emit('comments:init', { comments, unseenComments, lastCommentAt });
     },
     setLastSeenComment({ timeout, elementId }) {
-      const element = this.commentsWithinElements.find(it => it.id === elementId);
+      const element = this.commentsWithinElements[elementId];
       const { uid: elementUid, lastCommentAt } = element;
       const payload = { elementUid, lastCommentAt };
       setTimeout(() => {
