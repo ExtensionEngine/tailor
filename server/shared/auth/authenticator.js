@@ -21,28 +21,24 @@ class Auth extends Authenticator {
     return super.initialize(options);
   }
 
-  authenticate(strategy, options, callback) {
-    if (isFunction(options)) {
-      callback = options;
-      options = {};
-    }
-    options = options || {};
+  authenticate(strategy, args) {
+    const [options, callback] = parseAuthenticateOptions(args);
     // NOTE: Setup passport to forward errors down the middleware chain
     // https://github.com/jaredhanson/passport/blob/ad5fe1df/lib/middleware/authenticate.js#L171
     if (options.failWithError !== false) options.failWithError = true;
     const authenticateUser = super.authenticate(strategy, options, callback);
-    const onUserAuthenticated = this._afterAuthenticate(options.setCookie);
-    return function (req, res, next) {
-      authenticateUser(req, res, function (err) {
-        if (arguments.length > 0) return next(err);
-        onUserAuthenticated(req, res, next);
-      });
+    return (req, res, next) => {
+      const authenticateCallback = options.setCookie
+        ? this._wrapAuthenticateCallback(req, res, next)
+        : next;
+      return authenticateUser(req, res, authenticateCallback);
     };
   }
 
-  _afterAuthenticate(setCookie) {
-    return function ({ user }, res, next) {
-      if (!setCookie) return next();
+  _wrapAuthenticateCallback(req, res, next) {
+    return err => {
+      if (arguments.length > 0) return next(err);
+      const { user } = req;
       const token = user.createToken({
         audience: Audience.Scope.Access,
         expiresIn: '5 days'
@@ -50,7 +46,7 @@ class Auth extends Authenticator {
       const { name, ...options } = config.jwt.cookie;
       res.cookie(config.jwt.cookie.name, token, {
         ...options,
-        maxAge: 5 * 1000 * 60 * 60 * 24 // 5 days
+        maxAge: 5 * 24 * 60 * 60 * 1000 // 5 days
       });
       return next();
     };
@@ -73,3 +69,8 @@ class Auth extends Authenticator {
 }
 
 module.exports = new Auth();
+
+function parseAuthenticateOptions(...args) {
+  if (isFunction(args[0])) return [{}, args[0]];
+  return [args[0] || {}, args[1]];
+}
