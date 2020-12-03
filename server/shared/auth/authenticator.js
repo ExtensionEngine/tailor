@@ -1,5 +1,6 @@
 'use strict';
 
+const addDays = require('date-fns/addDays');
 const Audience = require('./audience');
 const { Authenticator } = require('passport');
 const autobind = require('auto-bind');
@@ -46,7 +47,7 @@ class Auth extends Authenticator {
       const { name, ...options } = config.jwt.cookie;
       res.cookie(config.jwt.cookie.name, token, {
         ...options,
-        maxAge: 5 * 24 * 60 * 60 * 1000 // 5 days
+        expires: addDays(new Date(), 5)
       });
       return next();
     };
