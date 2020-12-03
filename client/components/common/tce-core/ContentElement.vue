@@ -12,7 +12,7 @@
     <component
       :is="componentName"
       @add="$emit('add', $event)"
-      @save="$emit('save', $event)"
+      @save="onSave"
       @delete="$emit('delete')"
       @focus="onSelect"
       :id="`element_${id}`"
@@ -41,14 +41,16 @@ export default {
   },
   data: () => ({
     isFocused: false,
+    isSaving: false,
     activeUsers: []
   }),
   computed: {
     ...mapChannels({ editorBus: 'editor' }),
-    user: vm => vm.$getCurrentUser(),
     id: vm => getElementId(vm.element),
     componentName: vm => getComponentName(vm.element.type),
-    elementBus: vm => vm.$radio.channel(`element:${vm.id}`)
+    isEmbed: vm => !!vm.parent || !vm.element.uid,
+    elementBus: vm => vm.$radio.channel(`element:${vm.id}`),
+    currentUser: vm => vm.$getCurrentUser()
   },
   methods: {
     onSelect(e) {
@@ -56,14 +58,20 @@ export default {
       this.focus();
       e.component = { name: 'content-element', data: this.element };
     },
+    onSave(data) {
+      if (!this.isEmbed) this.isSaving = true;
+      this.$emit('save', data);
+    },
     focus() {
       this.editorBus.emit('element:focus', this.element, this.parent);
     }
   },
   created() {
+    const deferSaveFlag = () => setTimeout(() => (this.isSaving = false), 1000);
     // Element listeners
-    this.elementBus.on('save:meta', meta => this.$emit('save:meta', meta));
     this.elementBus.on('delete', () => this.$emit('delete'));
+    this.elementBus.on('save:meta', meta => this.$emit('save:meta', meta));
+    this.elementBus.on('saved', deferSaveFlag);
     // Editor listeners
     this.editorBus.on('element:select', ({ elementId, isSelected = true, user }) => {
       if (this.id !== elementId) return;
@@ -138,5 +146,11 @@ export default {
   position: absolute;
   top: 0;
   left: -1.625rem;
+}
+
+.save-indicator {
+  position: absolute;
+  bottom: -0.125rem;
+  left: 0;
 }
 </style>

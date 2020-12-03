@@ -21,7 +21,7 @@
 <script>
 import { getElementId, isQuestion } from 'tce-core/utils';
 import { mapActions, mapGetters, mapState } from 'vuex';
-import ContentContainers from '../structure/ContentContainers';
+import ContentContainers from './ContainerList';
 import ContentLoader from './Loader';
 import debounce from 'lodash/debounce';
 import differenceBy from 'lodash/differenceBy';
