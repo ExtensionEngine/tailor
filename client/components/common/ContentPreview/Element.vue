@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import ContentElement from 'tce-core/ContentElement';
+import ContentElement from 'tce-core/ContainedContent';
 
 export default {
   name: 'content-element-preview',
