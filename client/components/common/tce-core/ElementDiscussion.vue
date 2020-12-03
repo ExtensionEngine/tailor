@@ -30,6 +30,7 @@
 
 <script>
 import Discussion from 'tce-core/Discussion';
+import { mapChannels } from '@/plugins/radio';
 
 const EVENTS = {
   INIT: 'comments:init',
@@ -37,37 +38,47 @@ const EVENTS = {
 };
 
 export default {
-  name: 'content-element-discussion',
+  name: 'element-discussion',
   inject: ['$getCurrentUser'],
   props: {
     element: { type: Object, required: true },
     showHeading: { type: Boolean, default: true }
   },
   data: () => ({
-    comments: {},
+    comments: [],
     unseenComments: [],
     lastCommentAt: 0,
     unseenCommentCount: 0,
     showDiscussion: false
   }),
   computed: {
-    elementBus: vm => vm.$radio.channel(`element:${vm.element.id}`),
+    ...mapChannels({ editorBus: 'editor' }),
+    elementId: vm => vm.element.id,
+    elementBus: vm => vm.$radio.channel(`element:${vm.elementId}`),
     user: vm => vm.$getCurrentUser()
   },
   methods: {
     save(data) {
-      const { elementBus, user: author } = this;
-      return elementBus.emit('comment:save', { ...data, author });
+      const { editorBus, user: author, element } = this;
+      return editorBus.emit('comment:save', {
+        ...data,
+        author,
+        contentElementId: element.id
+      });
+    },
+    setLastSeen(timeout) {
+      const options = { timeout, elementId: this.elementId };
+      this.editorBus.emit(EVENTS.SET_LAST_SEEN, options);
     }
   },
   watch: {
     showDiscussion(val) {
       if (!val || !this.lastCommentAt) return;
-      this.elementBus.emit(EVENTS.SET_LAST_SEEN, 1000);
+      this.setLastSeen(1000);
     },
     comments(val, oldVal) {
       if (!this.showDiscussion || val === oldVal) return;
-      this.elementBus.emit(EVENTS.SET_LAST_SEEN, 2000);
+      this.setLastSeen(2000);
     },
     unseenComments(comments) {
       if (this.showDiscussion && comments.length) return;
@@ -76,9 +87,6 @@ export default {
   },
   created() {
     this.elementBus.on(EVENTS.INIT, data => Object.assign(this, data));
-  },
-  provide() {
-    return { $elementBus: this.elementBus };
   },
   components: { Discussion }
 };

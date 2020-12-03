@@ -23,7 +23,8 @@
         <contained-content
           @save="saveElement(element, 'data', $event)"
           @save:meta="saveElement(element, 'meta', $event)"
-          v-bind="{ element, isDragged, setWidth: false }" />
+          v-bind="{ element, isDragged, setWidth: false }"
+          display-discussion />
       </template>
       <template v-slot:list-add="{ position: lastPosition, ...slotProps }">
         <div class="add-element-container mt-5">
