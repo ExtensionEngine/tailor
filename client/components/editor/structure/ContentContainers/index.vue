@@ -12,21 +12,22 @@
       :is="containerName"
       v-for="(container, index) in containerGroup"
       :key="container.uid || container.id"
+      @addElement="addElement"
+      @updateElement="updateElement"
+      @saveElement="saveContentElement"
+      @deleteElement="requestElementDeletion"
+      @insertElement="insertElement"
+      @reorderElement="reorderContentElements"
       @addSubcontainer="save"
       @updateSubcontainer="update"
       @deleteSubcontainer="requestContainerDeletion"
-      @addElement="addElement"
-      @saveElement="saveContentElement"
-      @updateElement="updateElement"
-      @reorderElement="reorderContentElements"
-      @deleteElement="requestElementDeletion"
       @delete="requestContainerDeletion(container)"
-      :container="container"
       :name="name"
-      :position="index"
+      :container="container"
       :activities="activities"
       :elements="elements"
       :tes="elements"
+      :position="index"
       v-bind="$attrs" />
     <div v-if="addBtnEnabled">
       <v-btn @click="addContainer" color="blue-grey darken-3" text class="mt-4">
@@ -40,16 +41,13 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import capitalize from 'lodash/capitalize';
-import ContentContainer from './Container';
 import get from 'lodash/get';
-import { getContainerTemplateId as getContainerId } from 'shared/activities';
 import { getContainerName } from 'tce-core/utils';
+import { getContainerTemplateId } from 'shared/activities';
 import isEmpty from 'lodash/isEmpty';
 import { mapRequests } from '@/plugins/radio';
 import maxBy from 'lodash/maxBy';
 import throttle from 'lodash/throttle';
-
-const DEFAULT_CONTAINER = 'content-container';
 
 export default {
   name: 'content-containers',
@@ -69,8 +67,8 @@ export default {
     ...mapState('repository/activities', { activities: 'items' }),
     ...mapState('repository/contentElements', { elements: 'items' }),
     containerName() {
-      const id = getContainerId(this);
-      return this.$ccRegistry.get(id) ? getContainerName(id) : DEFAULT_CONTAINER;
+      const id = getContainerTemplateId(this);
+      return getContainerName(this.$ccRegistry.get(id) ? id : 'DEFAULT');
     },
     name() {
       return this.label.toLowerCase();
@@ -90,8 +88,9 @@ export default {
       addElement: 'add',
       saveElement: 'save',
       updateElement: 'update',
-      reorderElements: 'reorder',
-      deleteElement: 'remove'
+      deleteElement: 'remove',
+      insertElement: 'insert',
+      reorderElements: 'reorder'
     }),
     addContainer() {
       const { type, parentId, nextPosition: position } = this;
@@ -128,8 +127,7 @@ export default {
   },
   filters: {
     capitalize
-  },
-  components: { ContentContainer }
+  }
 };
 </script>
 
