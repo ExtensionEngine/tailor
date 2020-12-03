@@ -22,6 +22,7 @@
         <inline-activator @click.native="showElementDrawer(position - 1)" />
         <contained-content
           @save="saveElement(element, 'data', $event)"
+          @save:meta="saveElement(element, 'meta', $event)"
           v-bind="{ element, isDragged, setWidth: false }" />
       </template>
       <template v-slot:list-add="{ position: lastPosition, ...slotProps }">
@@ -93,11 +94,10 @@ export default {
       this.$emit('insertElement', { element, context });
     },
     saveElement(element, key, data) {
-      element = {
+      this.$emit('saveElement', {
         ...(element),
         [key]: data
-      };
-      this.$emit('saveElement', element);
+      });
     }
   },
   components: { AddElement, ContainedContent, ElementList, InlineActivator }
