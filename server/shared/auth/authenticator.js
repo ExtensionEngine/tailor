@@ -21,7 +21,7 @@ class Auth extends Authenticator {
     return super.initialize(options);
   }
 
-  authenticate(strategy, args) {
+  authenticate(strategy, ...args) {
     const [options, callback] = parseAuthenticateOptions(args);
     // NOTE: Setup passport to forward errors down the middleware chain
     // https://github.com/jaredhanson/passport/blob/ad5fe1df/lib/middleware/authenticate.js#L171
@@ -36,8 +36,8 @@ class Auth extends Authenticator {
   }
 
   _wrapAuthenticateCallback(req, res, next) {
-    return err => {
-      if (arguments.length > 0) return next(err);
+    return (...args) => {
+      if (args.length > 0) return next(args[0]);
       const { user } = req;
       const token = user.createToken({
         audience: Audience.Scope.Access,
@@ -70,7 +70,7 @@ class Auth extends Authenticator {
 
 module.exports = new Auth();
 
-function parseAuthenticateOptions(...args) {
+function parseAuthenticateOptions(args) {
   if (isFunction(args[0])) return [{}, args[0]];
   return [args[0] || {}, args[1]];
 }
