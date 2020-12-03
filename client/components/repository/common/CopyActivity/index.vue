@@ -102,7 +102,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('repository/activities', ['clone', 'calculateCopyInsertPosition']),
+    ...mapActions('repository/activities', ['clone', 'calculateCopyPosition']),
     async selectRepository(repository) {
       this.selectedRepository = repository;
       this.selectedActivities = [];
@@ -121,7 +121,7 @@ export default {
         srcRepositoryId,
         repositoryId: this.repositoryId,
         type,
-        position: await this.calculateCopyInsertPosition({ action, activity, anchor })
+        position: await this.calculateCopyPosition({ action, activity, anchor })
       };
       if (anchor) {
         payload.parentId = action === ADD_INTO ? anchor.id : anchor.parentId;

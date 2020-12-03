@@ -60,7 +60,7 @@ const calculateInsertPosition = ({ state }, { activity, anchor, action }) => {
   return calculatePosition(context);
 };
 
-const calculateCopyInsertPosition = ({ state }, { anchor, action }) => {
+const calculateCopyPosition = ({ state }, { anchor, action }) => {
   let items = getOutlineChildren(state.items, anchor.parentId);
   if (action === ADD_INTO) {
     items = getOutlineChildren(state.items, anchor.id);
@@ -72,7 +72,7 @@ const calculateCopyInsertPosition = ({ state }, { anchor, action }) => {
 };
 
 export {
-  calculateCopyInsertPosition,
+  calculateCopyPosition,
   calculateInsertPosition,
   clone,
   get,
