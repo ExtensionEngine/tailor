@@ -148,7 +148,7 @@ export default {
 
 <style lang="scss" scoped>
 .activity-content {
-  width: 100%;
+  flex-grow: 1;
   min-height: 100%;
   padding-top: 1.25rem;
   overflow-y: scroll;
