@@ -54,7 +54,8 @@ const myKey = new aws.ec2.KeyPair('mykey', { publicKey });
 const secgrp = new aws.ec2.SecurityGroup('server-sec-grp', {
   ingress: [
     { protocol: 'tcp', fromPort: 22, toPort: 22, cidrBlocks: ['0.0.0.0/0'] },
-    { protocol: 'tcp', fromPort: 80, toPort: 80, cidrBlocks: ['0.0.0.0/0'] }
+    { protocol: 'tcp', fromPort: 80, toPort: 80, cidrBlocks: ['0.0.0.0/0'] },
+    { protocol: 'tcp', fromPort: 443, toPort: 443, cidrBlocks: ['0.0.0.0/0'] }
   ]
 });
 
