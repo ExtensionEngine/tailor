@@ -8,7 +8,7 @@
     <content-element
       :element="element"
       :class="{ selected: isSelected }"
-      disabled />
+      is-disabled />
   </div>
 </template>
 
