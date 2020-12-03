@@ -4,7 +4,6 @@ const { auth: authConfig } = require('../config/server');
 const { authenticate } = require('./shared/auth');
 const express = require('express');
 const repository = require('./repository');
-const { staticsPath } = require('../config/server');
 const storage = require('./shared/storage/storage.router');
 const tag = require('./tag');
 const user = require('./user');
@@ -14,7 +13,7 @@ router.use(processBody);
 
 // Public routes:
 router.use(user.path, user.router);
-router.use(staticsPath, storage.staticRouter);
+router.use(storage.path, storage.staticRouter);
 
 // SSO routes:
 authConfig.oidc.enabled && (() => {

@@ -1,5 +1,6 @@
 'use strict';
 
+const config = require('../../../config/server');
 const crypto = require('crypto');
 const { elementRegistry } = require('../content-plugins');
 const get = require('lodash/get');
@@ -10,6 +11,7 @@ const Promise = require('bluebird');
 const set = require('lodash/set');
 const storage = require('./');
 const toPairs = require('lodash/toPairs');
+const urlJoin = require('url-join');
 const values = require('lodash/values');
 
 const STORAGE_PROTOCOL = 'storage://';
@@ -100,7 +102,7 @@ async function resolveAssetsMap(element) {
     if (!url) return set(element.data, key, url);
     const isStorageResource = url.startsWith(STORAGE_PROTOCOL);
     const resolvedUrl = isStorageResource
-      ? (await storage.getFileUrl(url.substr(STORAGE_PROTOCOL.length, url.length)))
+      ? urlJoin(storage.host, url.substr(STORAGE_PROTOCOL.length, url.length))
       : url;
     set(element.data, key, resolvedUrl);
   });
@@ -138,9 +140,8 @@ resolver.IMAGE = asset => {
   if (!asset.data || !asset.data.url) return Promise.resolve(asset);
 
   function getUrl(key) {
-    return storage.getFileUrl(key, { Expires: 3600 })
-      .then(url => (asset.data.url = url))
-      .then(() => asset);
+    asset.data.url = urlJoin(storage.host, key);
+    return asset;
   }
 
   return storage.fileExists(asset.data.url)

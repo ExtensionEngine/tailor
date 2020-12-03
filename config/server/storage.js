@@ -5,8 +5,7 @@ module.exports = {
     key: process.env.STORAGE_KEY,
     secret: process.env.STORAGE_SECRET,
     region: process.env.STORAGE_REGION,
-    bucket: process.env.STORAGE_BUCKET,
-    deliveryStrategy: process.env.STORAGE_DELIVERY_STRATEGY
+    bucket: process.env.STORAGE_BUCKET
   },
   filesystem: {
     path: process.env.STORAGE_PATH
