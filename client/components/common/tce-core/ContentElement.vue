@@ -1,8 +1,13 @@
 <template>
   <div
     @click="onSelect"
-    :class="{ focused: isFocused, frame }"
+    :class="{
+      selected: activeUsers.length,
+      focused: isFocused,
+      frame
+    }"
     class="content-element">
+    <active-users :users="activeUsers" :size="20" class="active-users" />
     <component
       :is="componentName"
       @add="$emit('add', $event)"
@@ -21,10 +26,12 @@
 
 <script>
 import { getComponentName, getElementId } from './utils';
+import ActiveUsers from 'tce-core/ActiveUsers';
 import { mapChannels } from '@/plugins/radio';
 
 export default {
   name: 'content-element',
+  inject: ['$getCurrentUser'],
   inheritAttrs: false,
   props: {
     element: { type: Object, required: true },
@@ -34,9 +41,13 @@ export default {
     frame: { type: Boolean, default: true },
     dense: { type: Boolean, default: false }
   },
-  data: () => ({ isFocused: false }),
+  data: () => ({
+    isFocused: false,
+    activeUsers: []
+  }),
   computed: {
-    ...mapChannels({ editorChannel: 'editor' }),
+    ...mapChannels({ editorBus: 'editor' }),
+    currentUser: vm => vm.$getCurrentUser(),
     id() {
       return getElementId(this.element);
     },
@@ -54,7 +65,7 @@ export default {
       e.component = { name: 'content-element', data: this.element };
     },
     focus() {
-      this.editorChannel.emit('element:focus', this.element, this.parent);
+      this.editorBus.emit('element:focus', this.element, this.parent);
     }
   },
   created() {
@@ -62,11 +73,22 @@ export default {
     this.elementBus.on('save:meta', meta => this.$emit('save:meta', meta));
     this.elementBus.on('delete', () => this.$emit('delete'));
     // Editor listeners
-    this.editorChannel.on('element:select', elementId => {
+    this.editorBus.on('element:select', ({ elementId, isSelected = true, user }) => {
       if (this.id !== elementId) return;
-      this.focus();
+      // If current user; focus element
+      if (!user || (user.id === this.currentUser.id)) {
+        this.isFocused = isSelected;
+        if (isSelected) this.focus();
+        return;
+      }
+      // If other user, toggle within active users list
+      if (isSelected && !this.activeUsers.find(it => it.id === user.id)) {
+        this.activeUsers.push(user);
+      } else if (!isSelected && this.activeUsers.find(it => it.id === user.id)) {
+        this.activeUsers = this.activeUsers.filter(it => it.id !== user.id);
+      }
     });
-    this.editorChannel.on('element:focus', element => {
+    this.editorBus.on('element:focus', element => {
       this.isFocused = !!element && (getElementId(element) === this.id);
     });
   },
@@ -74,28 +96,45 @@ export default {
     return {
       $elementBus: this.elementBus
     };
-  }
+  },
+  components: { ActiveUsers }
 };
 </script>
 
 <style lang="scss" scoped>
 .content-element {
+  $accent-1: #1de9b6;
+  $accent-2: #ff4081;
+
   position: relative;
-  $accent: #1de9b6;
+
+  &::after {
+    $width: 0.125rem;
+
+    content: '';
+    display: none;
+    position: absolute;
+    top: 0;
+    right: -$width;
+    width: $width;
+    height: 100%;
+  }
 
   &.focused {
-    border: 1px dashed $accent;
+    border: 1px dashed $accent-1;
 
     &::after {
-      $width: 0.125rem;
+      display: block;
+      background: $accent-1;
+    }
+  }
 
-      content: '';
-      position: absolute;
-      top: 0;
-      right: -$width;
-      width: $width;
-      height: 100%;
-      background: $accent;
+  &.selected {
+    border: 1px dashed $accent-2;
+
+    &::after {
+      display: block;
+      background: $accent-2;
     }
   }
 }
@@ -103,5 +142,11 @@ export default {
 .frame {
   padding: 10px 20px;
   border: 1px solid #e1e1e1;
+}
+
+.active-users {
+  position: absolute;
+  top: 0;
+  left: -1.625rem;
 }
 </style>

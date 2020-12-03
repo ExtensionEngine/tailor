@@ -4,6 +4,7 @@
       v-for="{ id, label, imgUrl } in users"
       :key="id"
       :size="size"
+      color="pink accent-2"
       class="avatar">
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
@@ -28,7 +29,7 @@ export default {
   name: 'active-users',
   props: {
     users: { type: Array, default: () => [] },
-    size: { type: Number, default: 32 }
+    size: { type: Number, default: 36 }
   },
   filters: {
     capitalize
@@ -38,8 +39,11 @@ export default {
 
 <style lang="scss" scoped>
 .avatar {
-  box-shadow: 0 0 0 2px #b0bec5;
   transition: all 0.2s;
+
+  img {
+    padding: 0.125rem;
+  }
 
   &:hover, &:focus-within {
     transform: scale(1.1);
