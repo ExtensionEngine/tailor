@@ -23,7 +23,6 @@ export default {
   },
   computed: {
     ...mapGetters('repository/comments', ['getComments']),
-    ...mapGetters('repository/comments', ['getComments']),
     ...mapState({ user: state => state.auth.user }),
     comments: vm => vm.getComments({ activityId: vm.activity.id, contentElementId: null }),
     lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime()
