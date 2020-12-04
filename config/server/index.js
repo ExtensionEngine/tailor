@@ -7,6 +7,7 @@ const parse = require('url-parse');
 const storage = require('./storage');
 
 const hostname = resolveHostname();
+const localhost = isLocalhost(hostname);
 const protocol = resolveProtocol(hostname);
 const port = resolvePort();
 const origin = resolveOrigin(hostname, protocol, port);
@@ -15,6 +16,7 @@ const previewUrl = process.env.PREVIEW_URL;
 module.exports = {
   protocol,
   hostname,
+  localhost,
   port,
   origin,
   auth,
@@ -34,7 +36,7 @@ function resolveHostname() {
 function resolveProtocol(hostname) {
   const { PROTOCOL } = process.env;
   if (PROTOCOL) return PROTOCOL;
-  return isLocalhost(hostname) ? 'http' : 'https';
+  return localhost ? 'http' : 'https';
 }
 
 function resolvePort() {
