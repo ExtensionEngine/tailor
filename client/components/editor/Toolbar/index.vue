@@ -66,6 +66,7 @@ export default {
   width: 100%;
 
   ::v-deep .element-toolbar-wrapper {
+    position: absolute;
     z-index: 99;
   }
 

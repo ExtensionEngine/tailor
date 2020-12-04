@@ -163,6 +163,6 @@ export default {
 }
 
 .loader {
-  margin-top: 1.25rem;
+  margin-top: 4.375rem;
 }
 </style>
