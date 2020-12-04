@@ -1,14 +1,16 @@
 
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
-import { getCommentEvents as events } from 'tce-core/utils';
 import get from 'lodash/get';
+import { getCommentEvents } from 'tce-core/utils';
 import { mapChannels } from '@/plugins/radio';
 import transform from 'lodash/transform';
 
+const { SAVE, REMOVE, SET_LAST_SEEN } = getCommentEvents();
+
 const COMMENT_EVENTS = [
-  { event: events().SAVE, action: 'upsertComment' },
-  { event: events().REMOVE, action: 'deleteComment' },
-  { event: events().SET_LAST_SEEN, action: 'setLastSeenComment' }
+  { event: SAVE, action: 'upsertComment' },
+  { event: REMOVE, action: 'deleteComment' },
+  { event: SET_LAST_SEEN, action: 'setLastSeenComment' }
 ];
 
 export default {
