@@ -1,5 +1,6 @@
 'use strict';
 
+const { role: { user: role } } = require('../shared');
 const yn = require('yn');
 
 const { env } = process;
@@ -31,7 +32,10 @@ module.exports = {
     authorizationEndpoint: env.OIDC_AUTHORIZATION_ENDPOINT,
     tokenEndpoint: env.OIDC_TOKEN_ENDPOINT,
     userInfoEndpoint: env.OIDC_USERINFO_ENDPOINT,
-    logoutEndpoint: env.OIDC_LOGOUT_ENDPOINT
+    logoutEndpoint: env.OIDC_LOGOUT_ENDPOINT,
+    enableSignup: yn(env.OIDC_ALLOW_SIGNUP),
+    defaultRole: Object.values(role)
+      .find(it => it === env.OIDC_DEFAULT_ROLE) || role.USER
   },
   session: {
     resave: false,
