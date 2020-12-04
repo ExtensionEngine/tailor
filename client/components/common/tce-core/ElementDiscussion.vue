@@ -23,7 +23,8 @@
       @save="save"
       @update="save"
       @remove="editorBus.emit(events.REMOVE, $event)"
-      v-bind="{ comments, user, showHeading }"
+      v-bind="{ comments, user }"
+      show-heading
       class="pa-4" />
   </v-menu>
 </template>
@@ -41,8 +42,7 @@ export default {
     comments: { type: Array, required: true },
     unseenComments: { type: Array, required: true },
     lastCommentAt: { type: Number, required: true },
-    user: { type: Object, required: true },
-    showHeading: { type: Boolean, default: true }
+    user: { type: Object, required: true }
   },
   data: () => ({
     isVisible: false,
