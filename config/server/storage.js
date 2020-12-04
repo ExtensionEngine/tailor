@@ -15,7 +15,7 @@ module.exports = {
     provider: process.env.STORAGE_PROXY,
     cloudfront: {
       host: process.env.STORAGE_PROXY_HOST,
-      keyPairId: process.env.STORAGE_KEY_PAIR_ID,
+      keyPairId: process.env.STORAGE_PROXY_KEY_PAIR_ID,
       key: process.env.STORAGE_PROXY_PRIVATE_KEY
     },
     local: {
