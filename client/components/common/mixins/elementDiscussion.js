@@ -9,7 +9,7 @@ const { SAVE, REMOVE, SET_LAST_SEEN } = getCommentEvents();
 
 const COMMENT_EVENTS = [
   { event: SAVE, action: 'upsertComment' },
-  { event: REMOVE, action: 'deleteComment' },
+  { event: REMOVE, action: 'removeComment' },
   { event: SET_LAST_SEEN, action: 'setLastSeenComment' }
 ];
 
@@ -40,9 +40,6 @@ export default {
     upsertComment(comment) {
       const action = comment.id ? 'updateComment' : 'saveComment';
       this[action]({ ...comment, activityId: this.activity.id });
-    },
-    deleteComment(comment) {
-      this.removeComment(comment);
     },
     setLastSeenComment({ timeout, elementUid, lastCommentAt }) {
       const payload = { elementUid, lastCommentAt };
