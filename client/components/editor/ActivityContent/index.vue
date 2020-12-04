@@ -150,6 +150,7 @@ export default {
 .activity-content {
   flex-grow: 1;
   min-height: 100%;
+  padding: 4.375rem 2.5rem 0 1.5625rem;
   padding-top: 1.25rem;
   overflow-y: scroll;
   overflow-y: overlay;
