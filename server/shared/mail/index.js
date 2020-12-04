@@ -28,7 +28,7 @@ const activityUrl = ({ repositoryId, activityId }) =>
   urlJoin(origin, '/#/repository', `${repositoryId}?activityId=${activityId}`);
 const elementUrl = ({ repositoryId, activityId, elementUid }) => {
   const query = `${activityId}?elementId=${elementUid}`;
-  return urlJoin(origin, '/#/repository', String(repositoryId), 'editor', query);
+  return urlJoin(origin, '/#/repository', `${repositoryId}/editor`, query);
 };
 
 module.exports = {

@@ -128,11 +128,11 @@ export default {
       padding-top: 8.75rem;
     }
   }
-}
 
-::v-deep .activity-discussion {
-  margin: 1rem 0;
-  padding: 1rem;
-  border: none;
+  ::v-deep .activity-discussion {
+    margin: 1rem 0;
+    padding: 1rem;
+    border: none;
+  }
 }
 </style>

@@ -25,7 +25,7 @@
       :name="name"
       :container="container"
       :activities="activities"
-      :elements="elements"
+      :elements="commentsWithinElements"
       :tes="elements"
       :position="index"
       v-bind="$attrs" />
@@ -54,7 +54,8 @@ export default {
   inheritAttrs: false,
   inject: ['$ccRegistry'],
   props: {
-    containerGroup: { type: Array, default() { return []; } },
+    containerGroup: { type: Array, default: () => ({}) },
+    commentsWithinElements: { type: Object, required: true },
     type: { type: String, required: true },
     templateId: { type: String, default: null },
     parentId: { type: Number, required: true },
@@ -70,12 +71,8 @@ export default {
       const id = getContainerTemplateId(this);
       return getContainerName(this.$ccRegistry.get(id) ? id : 'DEFAULT');
     },
-    name() {
-      return this.label.toLowerCase();
-    },
-    addBtnEnabled() {
-      return !(!this.multiple && this.containerGroup.length);
-    },
+    name: vm => vm.label.toLowerCase(),
+    addBtnEnabled: vm => !(!vm.multiple && vm.containerGroup.length),
     nextPosition() {
       const last = get(maxBy(this.containerGroup, 'position'), 'position', 0);
       return last + 1;

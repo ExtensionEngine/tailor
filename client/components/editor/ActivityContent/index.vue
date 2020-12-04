@@ -11,7 +11,9 @@
           v-for="(containerGroup, type) in rootContainerGroups"
           :key="type"
           :container-group="containerGroup"
+          :comments-within-elements="commentsWithinElements"
           :parent-id="activity.id"
+          :activity="activity"
           v-bind="getContainerConfig(type)" />
       </template>
     </div>
@@ -25,6 +27,7 @@ import ContentContainers from './ContainerList';
 import ContentLoader from './Loader';
 import debounce from 'lodash/debounce';
 import differenceBy from 'lodash/differenceBy';
+import elementDiscussion from 'components/common/mixins/elementDiscussion';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import { getSupportedContainers } from 'shared/activities';
@@ -43,6 +46,7 @@ const ELEMENT_MUTATIONS = [
 
 export default {
   name: 'activity-content',
+  mixins: [elementDiscussion],
   props: {
     repository: { type: Object, required: true },
     activity: { type: Object, required: true },

@@ -10,13 +10,12 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import Discussion from 'tce-core/Discussion';
 import get from 'lodash/get';
 
 export default {
   name: 'activity-discussion',
-  inject: ['$getCurrentUser'],
   props: {
     activity: { type: Object, required: true },
     isVisible: { type: Boolean, default: false },
@@ -24,7 +23,8 @@ export default {
   },
   computed: {
     ...mapGetters('repository/comments', ['getComments']),
-    user: vm => vm.$getCurrentUser(),
+    ...mapGetters('repository/comments', ['getComments']),
+    ...mapState({ user: state => state.auth.user }),
     comments: vm => vm.getComments({ activityId: vm.activity.id, contentElementId: null }),
     lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime()
   },

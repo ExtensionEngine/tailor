@@ -7,7 +7,7 @@
       frame
     }"
     class="content-element">
-    <discussion v-if="displayDiscussion" :element="element" />
+    <discussion v-if="showDiscussion" v-bind="element" :user="currentUser" />
     <active-users :users="activeUsers" :size="20" class="active-users" />
     <component
       :is="componentName"
@@ -17,6 +17,12 @@
       @focus="onSelect"
       :id="`element_${id}`"
       v-bind="{ ...$attrs, element, isFocused, isDragged, isDisabled, dense }" />
+    <v-progress-linear
+      v-if="isSaving"
+      height="2"
+      color="teal accent-2"
+      indeterminate
+      class="save-indicator" />
   </div>
 </template>
 
@@ -37,7 +43,7 @@ export default {
     isDisabled: { type: Boolean, default: false },
     frame: { type: Boolean, default: true },
     dense: { type: Boolean, default: false },
-    displayDiscussion: { type: Boolean, default: false }
+    showDiscussion: { type: Boolean, default: false }
   },
   data: () => ({
     isFocused: false,

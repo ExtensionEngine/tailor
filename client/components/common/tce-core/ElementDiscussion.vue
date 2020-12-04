@@ -1,6 +1,6 @@
 <template>
   <v-menu
-    v-model="showDiscussion"
+    v-model="isVisible"
     :close-on-content-click="false"
     transition="slide-y-transition"
     min-width="300"
@@ -22,7 +22,7 @@
     <discussion
       @save="save"
       @update="save"
-      @remove="elementBus.emit('comment:remove', $event);"
+      @remove="editorBus.emit(events.REMOVE, $event)"
       v-bind="{ comments, user, showHeading }"
       class="pa-4" />
   </v-menu>
@@ -30,63 +30,56 @@
 
 <script>
 import Discussion from 'tce-core/Discussion';
+import { getCommentEvents } from './utils';
 import { mapChannels } from '@/plugins/radio';
-
-const EVENTS = {
-  INIT: 'comments:init',
-  SET_LAST_SEEN: 'comment:set-last-seen'
-};
 
 export default {
   name: 'element-discussion',
-  inject: ['$getCurrentUser'],
   props: {
-    element: { type: Object, required: true },
+    id: { type: Number, required: true },
+    uid: { type: String, required: true },
+    comments: { type: Array, required: true },
+    unseenComments: { type: Array, required: true },
+    lastCommentAt: { type: Number, required: true },
+    user: { type: Object, required: true },
     showHeading: { type: Boolean, default: true }
   },
   data: () => ({
-    comments: [],
-    unseenComments: [],
-    lastCommentAt: 0,
-    unseenCommentCount: 0,
-    showDiscussion: false
+    isVisible: false,
+    unseenCommentCount: 0
   }),
   computed: {
     ...mapChannels({ editorBus: 'editor' }),
-    elementId: vm => vm.element.id,
-    elementBus: vm => vm.$radio.channel(`element:${vm.elementId}`),
-    user: vm => vm.$getCurrentUser()
+    events: () => getCommentEvents()
   },
   methods: {
     save(data) {
-      const { editorBus, user: author, element } = this;
-      return editorBus.emit('comment:save', {
+      const { editorBus, user: author, id: elementId, events } = this;
+      return editorBus.emit(events.SAVE, {
         ...data,
         author,
-        contentElementId: element.id
+        contentElementId: elementId
       });
     },
     setLastSeen(timeout) {
-      const options = { timeout, elementId: this.elementId };
-      this.editorBus.emit(EVENTS.SET_LAST_SEEN, options);
+      const { uid: elementUid, lastCommentAt, events } = this;
+      const options = { timeout, elementUid, lastCommentAt };
+      this.editorBus.emit(events.SET_LAST_SEEN, options);
     }
   },
   watch: {
-    showDiscussion(val) {
+    isVisible(val) {
       if (!val || !this.lastCommentAt) return;
       this.setLastSeen(1000);
     },
     comments(val, oldVal) {
-      if (!this.showDiscussion || val === oldVal) return;
+      if (!this.isVisible || val === oldVal) return;
       this.setLastSeen(2000);
     },
     unseenComments(comments) {
-      if (this.showDiscussion && comments.length) return;
+      if (this.isVisible && comments.length) return;
       setTimeout(() => (this.unseenCommentCount = comments.length), 200);
     }
-  },
-  created() {
-    this.elementBus.on(EVENTS.INIT, data => Object.assign(this, data));
   },
   components: { Discussion }
 };
