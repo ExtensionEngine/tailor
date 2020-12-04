@@ -2,20 +2,8 @@
 
 const { readFile, sha256 } = require('./util');
 const { ASSET_ROOT } = require('./helpers');
-const mime = require('mime');
 const path = require('path');
 const storage = require('./');
-
-function get(req, res) {
-  const { returnType } = req.query;
-  const key = req.params[0];
-  if (returnType === 'url') {
-    return storage.getFileUrl(key).then(url => res.json({ url }));
-  }
-  const readStream = storage.createReadStream(key);
-  res.setHeader('Content-Type', mime.lookup(key));
-  readStream.pipe(res);
-}
 
 async function upload({ file }, res) {
   const buffer = await readFile(file);
@@ -32,4 +20,4 @@ async function upload({ file }, res) {
   return res.json({ key, url: `storage://${key}`, publicUrl });
 }
 
-module.exports = { get, upload };
+module.exports = { upload };

@@ -3,6 +3,8 @@
 const { auth: authConfig } = require('../config/server');
 const { authenticate } = require('./shared/auth');
 const express = require('express');
+const { getFile } = require('./shared/storage/proxy/mw');
+const proxy = require('./shared/storage/proxy');
 const repository = require('./repository');
 const storage = require('./shared/storage/storage.router');
 const tag = require('./tag');
@@ -12,8 +14,10 @@ const router = express.Router();
 router.use(processBody);
 
 // Public routes:
+if (proxy.isSelfHosted) {
+  router.use(proxy.provider.path, getFile);
+}
 router.use(user.path, user.router);
-router.use(storage.path, storage.staticRouter);
 
 // SSO routes:
 authConfig.oidc.enabled && (() => {
