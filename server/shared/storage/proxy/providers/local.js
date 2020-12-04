@@ -35,7 +35,7 @@ class Local {
 
   verifyCookies(cookies) {
     const signature = cookies[storageCookies.SIGNATURE];
-    return this.signer.verify(this.host, signature, 'utf8', 'base64');
+    return signature && this.signer.verify(this.host, signature, 'utf8', 'base64');
   }
 
   hasCookies(cookies) {
