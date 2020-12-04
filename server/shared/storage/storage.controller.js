@@ -2,7 +2,9 @@
 
 const { readFile, sha256 } = require('./util');
 const { ASSET_ROOT } = require('./helpers');
+const { localhost } = require('../../../config/server');
 const path = require('path');
+const proxy = require('./proxy');
 const storage = require('./');
 
 async function upload({ file }, res) {
@@ -20,4 +22,13 @@ async function upload({ file }, res) {
   return res.json({ key, url: `storage://${key}`, publicUrl });
 }
 
-module.exports = { upload };
+function setSignedCookies(req, res, next) {
+  if (proxy.hasCookies(req.cookies)) next();
+  const cookies = proxy.getSignedCookies();
+  Object.entries(cookies).forEach(([cookie, value]) => {
+    res.cookie(cookie, value, { httpOnly: !localhost });
+  });
+  return res.status(200).end();
+}
+
+module.exports = { upload, setSignedCookies };

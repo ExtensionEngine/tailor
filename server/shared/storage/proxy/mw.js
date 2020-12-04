@@ -1,6 +1,5 @@
 'use strict';
 
-const { localhost } = require('../../../../config/server');
 const mime = require('mime');
 const proxy = require('./');
 const storage = require('../');
@@ -19,16 +18,4 @@ function getFile(req, res) {
   readStream.pipe(res);
 }
 
-function setSignedCookies(req, res, next) {
-  if (proxy.hasCookies(req.cookies)) next();
-  const cookies = proxy.getSignedCookies();
-  Object.entries(cookies).forEach(([cookie, value]) => {
-    res.cookie(cookie, value, { httpOnly: !localhost });
-  });
-  next();
-}
-
-module.exports = {
-  getFile: router.get('/*', getFile),
-  setSignedCookies
-};
+module.exports = router.get('/*', getFile);

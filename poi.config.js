@@ -9,6 +9,7 @@ const {
   ENABLE_DEFAULT_SCHEMA,
   NODE_ENV,
   STORAGE_PATH,
+  STORAGE_PROXY,
   OIDC_ENABLED,
   OIDC_LOGIN_TEXT
 } = process.env;
@@ -37,6 +38,7 @@ const devServer = {
   },
   proxy: {
     '/api': { target: serverUrl },
+    ...(STORAGE_PROXY === 'local' ? { '/proxy': serverUrl } : {}),
     ...(STORAGE_PATH ? { '/repository': serverUrl } : {})
   },
   // Override using: `npm run dev:server -- --port <number>`

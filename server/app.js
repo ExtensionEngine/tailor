@@ -7,6 +7,7 @@ const express = require('express');
 const helmet = require('helmet');
 const origin = require('./shared/origin');
 const path = require('path');
+const proxy = require('./shared/storage/proxy');
 // eslint-disable-next-line require-sort/require-sort
 require('express-async-errors');
 
@@ -38,6 +39,10 @@ app.use(auth.initialize());
 app.use(origin());
 app.use(express.static(path.join(__dirname, '../dist/')));
 if (STORAGE_PATH) app.use(express.static(STORAGE_PATH));
+if (proxy.isSelfHosted) {
+  const proxyMw = require('./shared/storage/proxy/mw');
+  app.use(proxy.provider.path, proxyMw);
+}
 
 // Mount main router.
 app.use('/api', requestLogger, router);

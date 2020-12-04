@@ -12,7 +12,7 @@ const storageCookies = {
 class Local {
   constructor(config) {
     this.signer = new NodeRSA(config.key);
-    this.path = config.path;
+    this.path = '/proxy';
     this.isSelfHosted = true;
   }
 
@@ -21,7 +21,7 @@ class Local {
   }
 
   get host() {
-    return urlJoin(origin, '/api', this.path);
+    return urlJoin(origin, this.path);
   }
 
   getSignedCookies() {
