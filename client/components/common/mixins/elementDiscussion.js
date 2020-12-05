@@ -1,11 +1,9 @@
 
-import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
-import get from 'lodash/get';
-import { getCommentEvents } from 'tce-core/utils';
+import { mapActions, mapMutations } from 'vuex';
+import discussionEvent from 'tce-core/Events/discussionEvent';
 import { mapChannels } from '@/plugins/radio';
-import transform from 'lodash/transform';
 
-const { SAVE, REMOVE, SET_LAST_SEEN } = getCommentEvents();
+const { SAVE, REMOVE, SET_LAST_SEEN } = discussionEvent;
 
 const COMMENT_EVENTS = [
   { event: SAVE, action: 'upsertComment' },
@@ -14,21 +12,7 @@ const COMMENT_EVENTS = [
 ];
 
 export default {
-  computed: {
-    ...mapChannels({ editorBus: 'editor' }),
-    ...mapState('repository/contentElements', { elements: 'items' }),
-    ...mapGetters('repository/comments', ['getUnseenElementComments', 'getComments']),
-    commentsWithinElements() {
-      const { id: activityId, uid: activityUid } = this.activity;
-      return transform(this.elements, (acc, it) => {
-        const element = { ...it, activityUid, activityId };
-        const comments = this.getComments({ activityId, contentElementId: it.id });
-        const lastCommentAt = new Date(get(comments[0], 'createdAt', 0)).getTime();
-        const unseenComments = this.getUnseenElementComments(element);
-        acc[it.uid] = { ...it, comments, lastCommentAt, unseenComments };
-      }, {});
-    }
-  },
+  computed: mapChannels({ editorBus: 'editor' }),
   methods: {
     ...mapActions('repository/comments', {
       fetchComments: 'fetch',

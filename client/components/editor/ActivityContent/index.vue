@@ -10,11 +10,10 @@
         <content-containers
           v-for="(containerGroup, type) in rootContainerGroups"
           :key="type"
+          v-bind="getContainerConfig(type)"
           :container-group="containerGroup"
-          :comments-within-elements="commentsWithinElements"
-          :parent-id="activity.id"
-          :activity="activity"
-          v-bind="getContainerConfig(type)" />
+          :processed-elements="processedElements"
+          :parent-id="activity.id" />
       </template>
     </div>
   </div>
@@ -60,9 +59,10 @@ export default {
     focusedElement: null
   }),
   computed: {
+    ...mapChannels({ editorChannel: 'editor' }),
     ...mapGetters('repository', ['activities']),
     ...mapGetters('editor', ['collaboratorSelections']),
-    ...mapChannels({ editorChannel: 'editor' }),
+    ...mapGetters('repository/contentElements', ['processedElements']),
     ...mapState({ user: state => state.auth.user }),
     containerConfigs: vm => getSupportedContainers(vm.activity.type)
   },

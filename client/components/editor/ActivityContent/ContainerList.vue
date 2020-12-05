@@ -25,7 +25,7 @@
       :name="name"
       :container="container"
       :activities="activities"
-      :elements="commentsWithinElements"
+      :elements="processedElements"
       :tes="elements"
       :position="index"
       v-bind="$attrs" />
@@ -55,7 +55,7 @@ export default {
   inject: ['$ccRegistry'],
   props: {
     containerGroup: { type: Array, default: () => ({}) },
-    commentsWithinElements: { type: Object, required: true },
+    processedElements: { type: Object, required: true },
     type: { type: String, required: true },
     templateId: { type: String, default: null },
     parentId: { type: Number, required: true },

@@ -13,6 +13,7 @@
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import Discussion from 'tce-core/Discussion';
 import get from 'lodash/get';
+import orderBy from 'lodash/orderBy';
 
 export default {
   name: 'activity-discussion',
@@ -24,7 +25,10 @@ export default {
   computed: {
     ...mapGetters('repository/comments', ['getComments']),
     ...mapState({ user: state => state.auth.user }),
-    comments: vm => vm.getComments({ activityId: vm.activity.id, contentElementId: null }),
+    comments() {
+      const params = { activityId: this.activity.id, contentElementId: null };
+      return orderBy(this.getComments(params), 'createdAt', 'desc');
+    },
     lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime()
   },
   methods: {

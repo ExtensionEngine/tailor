@@ -32,12 +32,6 @@ export function getElementId(element) {
   return element && (element.uid || element.id);
 }
 
-export const getCommentEvents = () => ({
-  SAVE: 'comment:save',
-  REMOVE: 'comment:remove',
-  SET_LAST_SEEN: 'comment:set-last-seen'
-});
-
 export function resolveElementPosition(context) {
   const { items, newPosition, isFirstChild, insert = false } = context;
   const next = items[newPosition + 1];

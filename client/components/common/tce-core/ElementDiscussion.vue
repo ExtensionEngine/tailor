@@ -31,7 +31,7 @@
 
 <script>
 import Discussion from 'tce-core/Discussion';
-import { getCommentEvents } from './utils';
+import discussionEvent from './Events/discussionEvent';
 import { mapChannels } from '@/plugins/radio';
 
 export default {
@@ -50,7 +50,7 @@ export default {
   }),
   computed: {
     ...mapChannels({ editorBus: 'editor' }),
-    events: () => getCommentEvents()
+    events: () => discussionEvent
   },
   methods: {
     save(data) {
