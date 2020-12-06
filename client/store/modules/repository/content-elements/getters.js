@@ -3,19 +3,13 @@ import transform from 'lodash/transform';
 
 export const elements = state => state.items;
 
-export const processedElements = (_, { elements }, __, rootGetters) => {
-  const { getUnseenComments, getComments } = resolveCommentGetters(rootGetters);
-  const { id: activityId, uid: activityUid } = rootGetters['editor/activity'];
+export const processedElements = (_, { elements }, rootState, rootGetters) => {
+  const { id: activityId } = rootGetters['editor/activity'];
+  const getComments = rootGetters['repository/comments/getComments'];
+  const { seen } = rootState.repository.comments;
   return transform(elements, (acc, it) => {
-    const element = { ...it, activityUid, activityId };
     const comments = getComments({ activityId, contentElementId: it.id });
     const lastCommentAt = new Date(get(comments[0], 'createdAt', 0)).getTime();
-    const unseenComments = getUnseenComments(element);
-    acc[it.uid] = { ...it, comments, lastCommentAt, unseenComments };
+    acc[it.uid] = { ...it, comments, lastCommentAt, seen };
   }, {});
 };
-
-const resolveCommentGetters = getters => ({
-  getUnseenComments: getters['repository/comments/getUnseenElementComments'],
-  getComments: getters['repository/comments/getComments']
-});

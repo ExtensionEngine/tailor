@@ -16,13 +16,3 @@ export const getUnseenActivityComments = (state, _, { auth }) => activity => {
     new Date(it.createdAt).getTime() > lastSeen
   );
 };
-
-export const getUnseenElementComments = (state, _, { auth }) => element => {
-  const { seen, items } = state;
-  const lastSeen = seen.contentElement[element.uid] || 0;
-  return filter(items, it =>
-    it.contentElementId === element.id &&
-    it.authorId !== auth.user.id &&
-    new Date(it.createdAt).getTime() > lastSeen
-  );
-};
