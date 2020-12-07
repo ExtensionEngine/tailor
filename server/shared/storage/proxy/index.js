@@ -23,12 +23,16 @@ class Proxy {
     return this.provider.isSelfHosted;
   }
 
-  getSignedCookies() {
-    return this.provider.getSignedCookies();
+  get path() {
+    return this.isSelfHosted && this.provider.path;
   }
 
-  verifyCookies(cookies) {
-    return this.provider.verifyCookies(cookies);
+  getSignedCookies(resource, maxAge) {
+    return this.provider.getSignedCookies(resource, maxAge);
+  }
+
+  verifyCookies(cookies, resource) {
+    return this.provider.verifyCookies(cookies, resource);
   }
 
   hasCookies(cookies) {
