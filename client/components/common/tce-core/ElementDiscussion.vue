@@ -31,7 +31,8 @@
 
 <script>
 import Discussion from 'tce-core/Discussion';
-import discussionEvent from './Events/discussionEvent';
+import DiscussionEvent from './Events/DiscussionEvent';
+import get from 'lodash/get';
 import { mapChannels } from '@/plugins/radio';
 
 export default {
@@ -41,16 +42,13 @@ export default {
     uid: { type: String, required: true },
     comments: { type: Array, required: true },
     lastSeen: { type: Number, required: true },
-    lastCommentAt: { type: Number, required: true },
     user: { type: Object, required: true }
   },
-  data: () => ({
-    isVisible: false,
-    unseenCommentCount: 0
-  }),
+  data: () => ({ isVisible: false, unseenCommentCount: 0 }),
   computed: {
     ...mapChannels({ editorBus: 'editor' }),
-    events: () => discussionEvent,
+    events: () => DiscussionEvent,
+    lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime(),
     unseenComments() {
       const { comments, user, lastSeen } = this;
       return comments.filter(it =>
@@ -70,7 +68,7 @@ export default {
     },
     setLastSeen(timeout) {
       const { uid: elementUid, lastCommentAt, events } = this;
-      const options = { timeout, elementUid, lastCommentAt };
+      const options = { elementUid, lastCommentAt, timeout };
       this.editorBus.emit(events.SET_LAST_SEEN, options);
     }
   },

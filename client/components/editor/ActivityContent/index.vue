@@ -13,7 +13,7 @@
           v-bind="getContainerConfig(type)"
           :container-group="containerGroup"
           :processed-elements="processedElements"
-          :parent-id="activity.id" />
+          :parent-id="activityId" />
       </template>
     </div>
   </div>
@@ -22,11 +22,11 @@
 <script>
 import { getElementId, isQuestion } from 'tce-core/utils';
 import { mapActions, mapGetters, mapState } from 'vuex';
+import commentEventListeners from 'components/common/mixins/commentEventListeners';
 import ContentContainers from './ContainerList';
 import ContentLoader from './Loader';
 import debounce from 'lodash/debounce';
 import differenceBy from 'lodash/differenceBy';
-import elementDiscussion from 'components/common/mixins/elementDiscussion';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import { getSupportedContainers } from 'shared/activities';
@@ -34,6 +34,7 @@ import isEqual from 'lodash/isEqual';
 import loader from '@/components/common/loader';
 import { mapChannels } from '@/plugins/radio';
 import throttle from 'lodash/throttle';
+import transform from 'lodash/transform';
 
 const CE_FOCUS_EVENT = 'element:focus';
 const CE_SELECT_EVENT = 'element:select';
@@ -45,7 +46,7 @@ const ELEMENT_MUTATIONS = [
 
 export default {
   name: 'activity-content',
-  mixins: [elementDiscussion],
+  mixins: [commentEventListeners],
   props: {
     repository: { type: Object, required: true },
     activity: { type: Object, required: true },
@@ -62,12 +63,24 @@ export default {
     ...mapChannels({ editorChannel: 'editor' }),
     ...mapGetters('repository', ['activities']),
     ...mapGetters('editor', ['collaboratorSelections']),
-    ...mapGetters('repository/contentElements', ['processedElements']),
+    ...mapGetters('repository/contentElements', ['elements']),
+    ...mapGetters('repository/comments', ['getComments']),
+    ...mapState('repository/comments', ['seen']),
     ...mapState({ user: state => state.auth.user }),
+    activityId: vm => vm.activity.id,
+    processedElements() {
+      const { elements, seen, activityId } = this;
+      return transform(elements, (acc, it) => {
+        const comments = this.getComments({ activityId, contentElementId: it.id });
+        const lastSeen = seen.contentElement[it.uid] || 0;
+        acc[it.uid] = { ...it, comments, lastSeen };
+      }, {});
+    },
     containerConfigs: vm => getSupportedContainers(vm.activity.type)
   },
   methods: {
     ...mapActions('repository/contentElements', { getContentElements: 'fetch' }),
+    ...mapActions('repository/comments', { fetchComments: 'fetch' }),
     getContainerConfig(type) {
       return find(this.containerConfigs, { type });
     },
@@ -82,9 +95,13 @@ export default {
       }
     },
     loadContents: loader(function () {
-      const ids = this.contentContainers.map(it => it.id);
+      const { contentContainers, activityId } = this;
+      const ids = contentContainers.map(it => it.id);
       if (ids.length <= 0) return;
-      return this.getContentElements({ ids });
+      return Promise.all([
+        this.getContentElements({ ids }),
+        this.fetchComments({ activityId })
+      ]);
     }, 'isLoading', 800),
     initElementChangeWatcher() {
       this.storeUnsubscribe = this.$store.subscribe(debounce((mutation, state) => {
