@@ -8,7 +8,10 @@ const { validateConfig } = require('../../validation');
 const yup = require('yup');
 
 const PROXY_PATH = '/proxy';
-const storageCookies = { SIGNATURE: 'Storage-Signature' };
+const storageCookies = {
+  SIGNATURE: 'Storage-Signature',
+  EXPIRES: 'Storage-Expires'
+};
 
 const schema = yup.object().shape({
   key: yup.string().required()
@@ -27,16 +30,22 @@ class Local {
     return new this(config);
   }
 
-  getSignedCookies(resource) {
-    const signature = this.signer.encrypt(resource, 'base64');
-    return { [storageCookies.SIGNATURE]: signature };
+  getSignedCookies(resource, maxAge) {
+    const expires = getExpirationTime(maxAge);
+    const signature = this.signer.encrypt({ resource, expires }, 'base64');
+    return {
+      [storageCookies.SIGNATURE]: signature,
+      [storageCookies.EXPIRES]: expires
+    };
   }
 
-  verifyCookies(cookies, resource) {
-    const signature = cookies[storageCookies.SIGNATURE];
-    if (!signature) return false;
-    const allowedResource = this.signer.decrypt(signature, 'utf8');
-    return resource.startsWith(allowedResource);
+  verifyCookies(cookies, key) {
+    const signatureCookie = cookies[storageCookies.SIGNATURE];
+    const expiresCookie = Number(cookies[storageCookies.EXPIRES]);
+    if (!signatureCookie || !expiresCookie) return false;
+    const { resource, expires } = this.signer.decrypt(signatureCookie, 'json');
+    const isExpired = expiresCookie !== expires || expires < new Date().getTime();
+    return !isExpired && key.startsWith(resource);
   }
 
   hasCookies(cookies) {
@@ -49,3 +58,8 @@ class Local {
 }
 
 module.exports = { create: Local.create.bind(Local) };
+
+function getExpirationTime(maxAge) {
+  // Expiration unix timestamp in ms
+  return new Date().getTime() + maxAge;
+}
