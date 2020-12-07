@@ -7,7 +7,6 @@ const yup = require('yup');
 
 const storageCookies = {
   SIGNATURE: 'CloudFront-Signature',
-  EXPIRE: 'CloudFront-Expire',
   KEY_PAIR_ID: 'CloudFront-Key-Pair-Id'
 };
 
