@@ -43,7 +43,10 @@ export default {
     lastSeen: { type: Number, required: true },
     user: { type: Object, required: true }
   },
-  data: () => ({ isVisible: false, unseenCommentCount: 0 }),
+  data: () => ({
+    isVisible: false,
+    unseenCommentCount: 0
+  }),
   computed: {
     ...mapChannels({ editorBus: 'editor' }),
     events: () => DiscussionEvent,
@@ -80,9 +83,12 @@ export default {
       if (!this.isVisible || val === oldVal) return;
       this.setLastSeen(2000);
     },
-    unseenComments(comments) {
-      if (this.isVisible && comments.length) return;
-      setTimeout(() => (this.unseenCommentCount = comments.length), 200);
+    unseenComments: {
+      immediate: true,
+      handler(comments) {
+        if (this.isVisible && comments.length) return;
+        setTimeout(() => (this.unseenCommentCount = comments.length), 200);
+      }
     }
   },
   components: { Discussion }
