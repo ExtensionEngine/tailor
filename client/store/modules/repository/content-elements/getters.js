@@ -10,6 +10,7 @@ export const processedElements = (_, { elements }, rootState, rootGetters) => {
   return transform(elements, (acc, it) => {
     const comments = getComments({ activityId, contentElementId: it.id });
     const lastCommentAt = new Date(get(comments[0], 'createdAt', 0)).getTime();
-    acc[it.uid] = { ...it, comments, lastCommentAt, seen };
+    const lastSeen = seen.contentElement[it.uid] || 0;
+    acc[it.uid] = { ...it, comments, lastCommentAt, lastSeen };
   }, {});
 };

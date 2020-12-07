@@ -40,7 +40,7 @@ export default {
     id: { type: Number, required: true },
     uid: { type: String, required: true },
     comments: { type: Array, required: true },
-    seen: { type: Object, required: true },
+    lastSeen: { type: Number, required: true },
     lastCommentAt: { type: Number, required: true },
     user: { type: Object, required: true }
   },
@@ -52,8 +52,7 @@ export default {
     ...mapChannels({ editorBus: 'editor' }),
     events: () => discussionEvent,
     unseenComments() {
-      const { uid, comments, user, seen } = this;
-      const lastSeen = seen.contentElement[uid] || 0;
+      const { comments, user, lastSeen } = this;
       return comments.filter(it =>
         it.authorId !== user.id &&
         new Date(it.createdAt).getTime() > lastSeen
