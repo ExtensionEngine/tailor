@@ -5,14 +5,15 @@ const { origin } = require('../../../../../config/server');
 const urlJoin = require('url-join');
 
 const storageCookies = {
-  SIGNATURE: 'Storage-Signature',
-  EXPIRES: 'Storage-Expires'
+  SIGNATURE: 'Storage-Signature'
 };
+const PROXY_PATH = '/proxy';
 
 class Local {
   constructor(config) {
     this.signer = new NodeRSA(config.key);
-    this.path = '/proxy';
+    this.path = PROXY_PATH;
+    this.origin = urlJoin(origin, PROXY_PATH);
     this.isSelfHosted = true;
   }
 
@@ -20,22 +21,16 @@ class Local {
     return new this(config);
   }
 
-  get host() {
-    return urlJoin(origin, this.path);
+  getSignedCookies(resource) {
+    const signature = this.signer.encrypt(resource, 'base64');
+    return { [storageCookies.SIGNATURE]: signature };
   }
 
-  getSignedCookies() {
-    const expires = getExpirationTime();
-    const signature = this.signer.sign(this.host, 'base64');
-    return {
-      [storageCookies.SIGNATURE]: signature,
-      [storageCookies.EXPIRES]: expires
-    };
-  }
-
-  verifyCookies(cookies) {
+  verifyCookies(cookies, resource) {
     const signature = cookies[storageCookies.SIGNATURE];
-    return signature && this.signer.verify(this.host, signature, 'utf8', 'base64');
+    if (!signature) return false;
+    const allowedResource = this.signer.decrypt(signature, 'utf8');
+    return resource.startsWith(allowedResource);
   }
 
   hasCookies(cookies) {
@@ -44,12 +39,13 @@ class Local {
   }
 
   getFileUrl(key) {
-    return urlJoin(this.host, key);
+    return urlJoin(this.origin, key);
   }
 }
 
 module.exports = { create: Local.create.bind(Local) };
 
-function getExpirationTime() {
-  return Math.floor(new Date().getTime() / 1000) + 60 * 60 * 1;
+function getExpirationTime(maxAge) {
+  // Expiration unix timestamp in ms
+  return new Date().getTime() + maxAge;
 }

@@ -7,9 +7,9 @@ const config = require('../../../../config/server').storage;
 const router = require('express').Router();
 
 function getFile(req, res) {
-  const hasValidCookies = proxy.verifyCookies(req.cookies);
-  if (!hasValidCookies) return res.status(403).end();
   const key = req.params[0];
+  const hasValidCookies = proxy.verifyCookies(req.cookies, key);
+  if (!hasValidCookies) return res.status(403).end();
   const readStream = storage.createReadStream(key);
   res.setHeader('Content-Type', mime.lookup(key));
   readStream.pipe(res);
