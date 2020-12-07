@@ -3,14 +3,22 @@
 const NodeRSA = require('node-rsa');
 const { origin } = require('../../../../../config/server');
 const urlJoin = require('url-join');
+const { validateConfig } = require('../../validation');
+const yup = require('yup');
 
 const storageCookies = {
   SIGNATURE: 'Storage-Signature'
 };
 const PROXY_PATH = '/proxy';
 
+const schema = yup.object().shape({
+  key: yup.string().required()
+});
+
 class Local {
   constructor(config) {
+    config = validateConfig(config, schema);
+
     this.signer = new NodeRSA(config.key);
     this.path = PROXY_PATH;
     this.origin = urlJoin(origin, PROXY_PATH);

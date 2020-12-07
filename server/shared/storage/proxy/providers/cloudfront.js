@@ -2,6 +2,8 @@
 
 const { Signer } = require('aws-sdk/clients/cloudfront');
 const urlJoin = require('url-join');
+const { validateConfig } = require('../../validation');
+const yup = require('yup');
 
 const storageCookies = {
   SIGNATURE: 'CloudFront-Signature',
@@ -9,8 +11,16 @@ const storageCookies = {
   KEY_PAIR_ID: 'CloudFront-Key-Pair-Id'
 };
 
+const schema = yup.object().shape({
+  key: yup.string().required(),
+  keyPairId: yup.string().required(),
+  host: yup.string().required()
+});
+
 class CloudFront {
   constructor(config) {
+    config = validateConfig(config, schema);
+
     this.signer = new Signer(config.keyPairId, config.key);
     this.host = config.host;
   }
