@@ -1,18 +1,22 @@
 'use strict';
 
-const mime = require('mime');
+const { FORBIDDEN } = require('http-status-codes');
+const miss = require('mississippi');
+const path = require('path');
 const proxy = require('./');
 const storage = require('../');
 const config = require('../../../../config/server').storage;
 const router = require('express').Router();
 
-function getFile(req, res) {
+function getFile(req, res, next) {
   const key = req.params[0];
   const hasValidCookies = proxy.verifyCookies(req.cookies, key);
-  if (!hasValidCookies) return res.status(403).end();
-  const readStream = storage.createReadStream(key);
-  res.setHeader('Content-Type', mime.lookup(key));
-  readStream.pipe(res);
+  if (!hasValidCookies) return res.status(FORBIDDEN).end();
+  res.type(path.parse(key).ext);
+  miss.pipe(storage.createReadStream(key), res, err => {
+    if (err) return next(err);
+    res.end();
+  });
 }
 
 function setSignedCookies(req, res, next) {
