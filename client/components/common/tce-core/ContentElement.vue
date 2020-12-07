@@ -1,39 +1,50 @@
 <template>
-  <div
-    @click="onSelect"
-    :class="{
-      selected: activeUsers.length,
-      focused: isFocused,
-      frame
-    }"
-    class="content-element">
-    <active-users :users="activeUsers" :size="20" class="active-users" />
-    <component
-      :is="componentName"
-      @add="$emit('add', $event)"
-      @save="onSave"
-      @delete="$emit('delete')"
-      @focus="onSelect"
-      :id="`element_${id}`"
-      v-bind="$attrs"
-      :element="element"
-      :is-focused="isFocused"
-      :is-dragged="isDragged"
-      :is-disabled="isDisabled"
-      :dense="dense" />
-    <v-progress-linear
-      v-if="isSaving"
-      height="2"
-      color="teal accent-2"
-      indeterminate
-      class="save-indicator" />
-  </div>
+  <v-hover v-slot:default="{ hover }">
+    <div
+      @click="onSelect"
+      :class="{
+        selected: activeUsers.length,
+        focused: isFocused,
+        frame
+      }"
+      class="content-element">
+      <active-users :users="activeUsers" :size="20" class="active-users" />
+      <component
+        :is="componentName"
+        @add="$emit('add', $event)"
+        @save="onSave"
+        @delete="$emit('delete')"
+        @focus="onSelect"
+        :id="`element_${id}`"
+        v-bind="$attrs"
+        :element="element"
+        :is-focused="isFocused"
+        :is-dragged="isDragged"
+        :is-disabled="isDisabled"
+        :dense="dense" />
+      <v-progress-linear
+        v-if="isSaving"
+        height="2"
+        color="teal accent-2"
+        indeterminate
+        class="save-indicator" />
+      <v-btn
+        v-if="!element.parent && hover"
+        @click="requestDeleteConfirmation"
+        color="secondary darken-1"
+        dark fab x-small
+        class="delete-element">
+        <v-icon color="grey lighten-3" small>mdi-delete</v-icon>
+      </v-btn>
+    </div>
+  </v-hover>
 </template>
 
 <script>
 import { getComponentName, getElementId } from './utils';
+import { mapChannels, mapRequests } from '@/plugins/radio';
 import ActiveUsers from 'tce-core/ActiveUsers';
-import { mapChannels } from '@/plugins/radio';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'content-element',
@@ -61,6 +72,8 @@ export default {
     currentUser: vm => vm.$getCurrentUser()
   },
   methods: {
+    ...mapRequests('app', ['showConfirmationModal']),
+    ...mapActions('repository/contentElements', { removeElement: 'remove' }),
     onSelect(e) {
       if (this.isDisabled || e.component) return;
       this.focus();
@@ -72,6 +85,21 @@ export default {
     },
     focus() {
       this.editorBus.emit('element:focus', this.element, this.parent);
+    },
+    focusoutElement() {
+      this.editorBus.emit('element:focus');
+    },
+    remove(element) {
+      this.focusoutElement();
+      if (element.embedded) return this.$emit('delete');
+      this.removeElement(element);
+    },
+    requestDeleteConfirmation() {
+      this.showConfirmationModal({
+        title: 'Delete element?',
+        message: 'Are you sure you want to delete element?',
+        action: () => this.remove(this.element.parent || this.element)
+      });
     }
   },
   created() {
@@ -162,5 +190,12 @@ export default {
   position: absolute;
   bottom: -0.125rem;
   left: 0;
+}
+
+.delete-element {
+  position: absolute;
+  top: -16px;
+  right: -16px;
+  z-index: 2;
 }
 </style>
