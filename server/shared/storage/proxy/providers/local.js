@@ -1,5 +1,6 @@
 'use strict';
 
+const every = require('lodash/every');
 const NodeRSA = require('node-rsa');
 const { origin } = require('../../../../../config/server');
 const urlJoin = require('url-join');
@@ -39,8 +40,7 @@ class Local {
   }
 
   hasCookies(cookies) {
-    return Object.keys(storageCookies)
-      .reduce((hasCookies, cookie) => cookies[cookie] || hasCookies, false);
+    return every(storageCookies, cookie => cookies[cookie]);
   }
 
   getFileUrl(key) {

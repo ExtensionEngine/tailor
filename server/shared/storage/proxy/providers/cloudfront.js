@@ -1,5 +1,6 @@
 'use strict';
 
+const every = require('lodash/every');
 const { Signer } = require('aws-sdk/clients/cloudfront');
 const urlJoin = require('url-join');
 const { validateConfig } = require('../../validation');
@@ -41,8 +42,7 @@ class CloudFront {
   }
 
   hasCookies(cookies) {
-    return Object.keys(storageCookies)
-      .reduce((hasCookies, cookie) => cookies[cookie] || hasCookies, false);
+    return every(storageCookies, cookie => cookies[cookie]);
   }
 
   getFileUrl(key) {
