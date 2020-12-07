@@ -29,6 +29,7 @@ class CloudFront {
     return new this(config);
   }
 
+  // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/CloudFront/Signer.html#getSignedCookie-property
   getSignedCookies(path, maxAge) {
     const expires = getExpirationTime(maxAge);
     const resource = urlJoin(this.host, path, '*');
