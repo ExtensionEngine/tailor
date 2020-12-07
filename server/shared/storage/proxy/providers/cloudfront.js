@@ -19,9 +19,11 @@ class CloudFront {
     return new this(config);
   }
 
-  getSignedCookies() {
-    const expires = getExpirationTime();
-    return this.signer.getSignedCookie({ url: this.host, expires });
+  getSignedCookies(path, maxAge) {
+    const expires = getExpirationTime(maxAge);
+    const resource = urlJoin(this.host, path, '*');
+    const policy = createPolicy(resource, expires);
+    return this.signer.getSignedCookie({ policy });
   }
 
   verifyCookies() {
@@ -40,6 +42,18 @@ class CloudFront {
 
 module.exports = { create: CloudFront.create.bind(CloudFront) };
 
-function getExpirationTime() {
-  return Math.floor(new Date().getTime() / 1000) + 60 * 60 * 1;
+function createPolicy(resource, expires) {
+  return JSON.stringify({
+    Statement: [{
+      Resource: resource,
+      Condition: {
+        DateLessThan: { 'AWS:EpochTime': expires }
+      }
+    }]
+  });
+}
+
+function getExpirationTime(maxAge) {
+  // Expiration unix timestamp in seconds
+  return Math.floor(new Date().getTime() + maxAge / 1000);
 }
