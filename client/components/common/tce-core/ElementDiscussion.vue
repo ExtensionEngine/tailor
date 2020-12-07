@@ -9,8 +9,8 @@
       <v-tooltip open-delay="800" left>
         <template v-slot:activator="{ on: tooltip }">
           <v-btn v-on="{ ...menu, ...tooltip }" icon>
-            <v-avatar v-if="unseenCommentCount" size="18" color="secondary">
-              {{ unseenCommentCount }}
+            <v-avatar v-if="unseenComments.length" size="18" color="secondary">
+              {{ unseenComments.length }}
             </v-avatar>
             <v-icon v-else color="primary" class="pr-1">mdi-forum-outline</v-icon>
           </v-btn>
@@ -53,10 +53,10 @@ export default {
     lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime(),
     unseenComments() {
       const { comments, user, lastSeen } = this;
-      return comments.filter(it =>
-        it.authorId !== user.id &&
+      return comments.filter(it => (
+        it.author.id !== user.id &&
         new Date(it.createdAt).getTime() > lastSeen
-      );
+      ));
     }
   },
   methods: {
@@ -82,13 +82,6 @@ export default {
     comments(val, oldVal) {
       if (!this.isVisible || val === oldVal) return;
       this.setLastSeen(2000);
-    },
-    unseenComments: {
-      immediate: true,
-      handler(comments) {
-        if (this.isVisible && comments.length) return;
-        setTimeout(() => (this.unseenCommentCount = comments.length), 200);
-      }
     }
   },
   components: { Discussion }
