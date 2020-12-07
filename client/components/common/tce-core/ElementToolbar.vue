@@ -91,9 +91,11 @@ export default {
 
 <style lang="scss" scoped>
 .element-toolbar-wrapper {
+  position: absolute;
   width: 100%;
   min-height: 3.5rem;
   padding-right: 2.75rem;
+  z-index: 99;
 
   .delete-element {
     position: absolute;
