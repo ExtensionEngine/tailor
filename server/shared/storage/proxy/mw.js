@@ -12,7 +12,7 @@ function getFile(req, res, next) {
   const key = req.params[0];
   const hasValidCookies = proxy.verifyCookies(req.cookies, key);
   if (!hasValidCookies) return res.status(FORBIDDEN).end();
-  res.type(path.parse(key).ext);
+  res.type(path.extname(key));
   miss.pipe(storage.createReadStream(key), res, err => {
     if (err) return next(err);
     res.end();
