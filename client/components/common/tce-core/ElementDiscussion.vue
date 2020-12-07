@@ -15,7 +15,7 @@
             <v-icon v-else color="primary" class="pr-1">mdi-forum-outline</v-icon>
           </v-btn>
         </template>
-        <span>Discussion</span>
+        <span>{{ tooltipLabel }}</span>
       </v-tooltip>
     </template>
     <discussion
@@ -43,13 +43,11 @@ export default {
     lastSeen: { type: Number, required: true },
     user: { type: Object, required: true }
   },
-  data: () => ({
-    isVisible: false,
-    unseenCommentCount: 0
-  }),
+  data: () => ({ isVisible: false }),
   computed: {
     ...mapChannels({ editorBus: 'editor' }),
     events: () => DiscussionEvent,
+    tooltipLabel: vm => vm.comments.length ? 'View comments' : 'Post a comment',
     lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime(),
     unseenComments() {
       const { comments, user, lastSeen } = this;
