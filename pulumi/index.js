@@ -3,10 +3,19 @@
 
 // const { CopyFile, RemoteExec } = require('./provisioners');
 const aws = require('@pulumi/aws');
+const awsx = require('@pulumi/awsx');
 // const { getFileHash } = require('./util');
 const pulumi = require('@pulumi/pulumi');
 
 const config = new pulumi.Config();
+const eipStack = new pulumi.StackReference(config.get('eipStack'));
+const elasticId = eipStack.getOutput('eipId');
+const elasticIp = eipStack.getOutput('elasticIp');
+
+const vpc = new awsx.ec2.Vpc('tailor-vpc', {
+  cidrBlock: '10.0.0.0/16',
+  numberOfAvailabilityZones: 1
+});
 
 // Create an AWS resource (S3 Bucket)
 // const bucket = new aws.s3.Bucket('tailor');
@@ -64,14 +73,25 @@ const secgrp = new aws.ec2.SecurityGroup('server-sec-grp', {
   ],
   egress: [
     { protocol: '-1', fromPort: 0, toPort: 0, cidrBlocks: ['0.0.0.0/0'] }
-  ]
-});
+  ],
+  vpcId: vpc.id
+}, { dependsOn: vpc });
 
 const server = new aws.ec2.Instance('server', {
   ami: 'ami-0885b1f6bd170450c',
   instanceType: 't2.micro',
   keyName: myKey.keyName,
-  vpcSecurityGroupIds: [secgrp.id]
+  subnetId: vpc.publicSubnetIds.then(ids => ids[0]),
+  vpcSecurityGroupIds: [secgrp.id],
+  tags: {
+    name: 'pulumi-test-ec2'
+  }
+}, { dependsOn: secgrp });
+
+// eslint-disable-next-line no-new
+new aws.ec2.EipAssociation('tailor-eip-assoc', {
+  instanceId: server.id,
+  allocationId: elasticId
 });
 
 // const conn = {
@@ -102,9 +122,6 @@ const server = new aws.ec2.Instance('server', {
 //   command: './node_install.sh'
 // }, { dependsOn: chmodInstall });
 
-// const eipStack = config.get('eipStack');
-// const eipIp = new pulumi.StackReference(eipStack).getOutput('elasticIp');
-
 // exports.bucketName = bucket.id;
 // exports.accessKey = userCredentials.id;
 // exports.secretKey = userCredentials.secret;
@@ -112,3 +129,4 @@ const server = new aws.ec2.Instance('server', {
 // exports.dbPort = db.port;
 exports.serverPublicDns = server.publicDns;
 exports.serverPublicIp = server.publicIp;
+exports.elasticIp = elasticIp;
