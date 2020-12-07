@@ -2,12 +2,12 @@
 
 const { readFile, sha256 } = require('./util');
 const { getFileUrl } = require('./proxy');
-const { saveFile } = require('.');
-const config = require('../../../config/server').storage;
 const JSZip = require('jszip');
 const mime = require('mime-types');
 const path = require('path');
 const pickBy = require('lodash/pickBy');
+const { saveFile } = require('.');
+const config = require('../../../config/server').storage;
 const xmlParser = require('fast-xml-parser');
 
 // PIF (package interchange file) is a ZIP file with SCORM compliant content
