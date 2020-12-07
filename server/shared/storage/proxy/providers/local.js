@@ -6,10 +6,8 @@ const urlJoin = require('url-join');
 const { validateConfig } = require('../../validation');
 const yup = require('yup');
 
-const storageCookies = {
-  SIGNATURE: 'Storage-Signature'
-};
 const PROXY_PATH = '/proxy';
+const storageCookies = { SIGNATURE: 'Storage-Signature' };
 
 const schema = yup.object().shape({
   key: yup.string().required()
@@ -20,9 +18,8 @@ class Local {
     config = validateConfig(config, schema);
 
     this.signer = new NodeRSA(config.key);
-    this.path = PROXY_PATH;
-    this.origin = urlJoin(origin, PROXY_PATH);
     this.isSelfHosted = true;
+    this.path = PROXY_PATH;
   }
 
   static create(config) {
@@ -47,13 +44,8 @@ class Local {
   }
 
   getFileUrl(key) {
-    return urlJoin(this.origin, key);
+    return urlJoin(origin, this.path, key);
   }
 }
 
 module.exports = { create: Local.create.bind(Local) };
-
-function getExpirationTime(maxAge) {
-  // Expiration unix timestamp in ms
-  return new Date().getTime() + maxAge;
-}
