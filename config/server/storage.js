@@ -20,7 +20,6 @@ module.exports = {
       key: process.env.STORAGE_PROXY_PRIVATE_KEY
     },
     local: {
-      path: process.env.STORAGE_PROXY_PATH,
       key: process.env.STORAGE_PROXY_PRIVATE_KEY
     }
   }
