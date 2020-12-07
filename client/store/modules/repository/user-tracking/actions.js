@@ -1,5 +1,5 @@
 import api from '@/api/feed';
-import { feed } from '../feed';
+import feed from '../feed';
 import { UserActivity } from '@/../common/sse';
 
 const plugSSE = ({ commit }) => {

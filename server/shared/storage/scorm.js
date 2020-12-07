@@ -1,8 +1,9 @@
 'use strict';
 
-const { getFileUrl, saveFile } = require('.');
 const { readFile, sha256 } = require('./util');
-const { ASSET_ROOT } = require('./helpers');
+const { getFileUrl } = require('./proxy');
+const { saveFile } = require('.');
+const config = require('../../../config/server').storage;
 const JSZip = require('jszip');
 const mime = require('mime-types');
 const path = require('path');
@@ -26,7 +27,7 @@ module.exports = { savePackage };
 function uploadAssets(content, location) {
   const assets = pickBy(content.files, isDir);
   return Promise.all(Object.keys(assets).map(async src => {
-    const key = path.join(ASSET_ROOT, `${location}/${src}`);
+    const key = path.join(config.path, `${location}/${src}`);
     const file = await content.file(src).async('uint8array');
     const mimeType = mime.lookup(src);
     return saveFile(key, Buffer.from(file), { ContentType: mimeType });
@@ -36,7 +37,7 @@ function uploadAssets(content, location) {
 function getLaunchUrl(manifest, location) {
   const { $_href: resourcePath } = manifest.resources.resource;
   const key = `${location}/${resourcePath}`;
-  return getFileUrl(path.join(ASSET_ROOT, key));
+  return getFileUrl(path.join(config.path, key));
 }
 
 async function getManifest(content) {

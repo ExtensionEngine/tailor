@@ -24,7 +24,9 @@ class ElementsRegistry extends BaseRegistry {
   }
 
   getStaticsHandler(type) {
-    return this._staticsHandler[type];
+    const handler = this._staticsHandler[type];
+    if (!handler) return;
+    return (...args) => Promise.resolve(handler(...args));
   }
 }
 
