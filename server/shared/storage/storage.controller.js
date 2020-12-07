@@ -16,8 +16,7 @@ async function upload({ file }, res) {
   const extension = path.extname(file.originalname);
   const name = path.basename(file.originalname, extension).substring(0, 180).trim();
   const key = path.join(config.path, `${hash}___${name}${extension}`);
-  const headers = { ContentType: file.mimetype };
-  await saveFile(key, buffer, headers);
+  await saveFile(key, buffer, { ContentType: file.mimetype });
   const publicUrl = await getFileUrl(key);
   return res.json({ key, url: `storage://${key}`, publicUrl });
 }
