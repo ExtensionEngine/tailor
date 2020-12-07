@@ -100,6 +100,7 @@ An array of Schema objects.
 
 - **id** `String` - Schema identifier.
 - **name** `String` - Schema display name.
+- **workflowId** `String` - [Workflow](#workflow) identifier.
 - **meta** `Array<Metadata>` - An array of objects defining repository metadata.
 - **structure** `Array<ActivityConfig>` - An array of objects which define
   schema structure.
@@ -118,6 +119,7 @@ properties:
 - **subLevels** `Array<String>` - An array of sub-types.
 - **label** `String` - Display label.
 - **color** `String` - Display color in hexadecimal notation.
+- **isTrackedInWorkflow** `Boolean` - Defines whether workflow tasks can be created for this activity type.
 - **contentContainers** `Array<String>` - Array of content container types that
   define which content containers can be added.
 - **hasExams** `Boolean` - Activity allows adding exam activities to it.
@@ -249,6 +251,28 @@ A string template that will be interpolated on the client using two route
 params, `repositoryId` and `activityId`, into a preview URL for each activity.
 Example:
 `https://my.url.com/#/repository/{repositoryId}/activity/{activityId}/preview`
+
+## Workflows
+
+For each schema, workflow can be defined to enable users to track and assign tasks related to activities. Each workflow is defined by a set of statuses that the task can have.
+Workflows are assigned to schemas through schema's `workflowId` option in [tailor configuration file](#content-repository-structure).
+
+Workflows are configured with the following options in the [tailor configuration file](#content-repository-structure):
+
+### `WORKFLOWS`
+
+An array of Workflow objects.
+
+#### Workflow
+
+Defines activity task statuses for repository workflow. Workflow can be reused across multiple [schemas](#schema) by assigning same workflow ID to schema's `workflowId` option.
+
+- **id** `String` - Workflow identifier.
+- **statuses** `Array<TaskStatus>` - An array of possible task statuses.
+
+#### TaskStatus
+- **id** `String` - Task status identifier.
+- **label** `String` - Display label.
 
 ## EXTENSIONS
 

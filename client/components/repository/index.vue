@@ -27,7 +27,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import ActiveUsers from 'components/common/ActiveUsers';
+import ActiveUsers from 'tce-core/ActiveUsers';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
 import selectActivity from '@/components/repository/common/selectActivity';
@@ -43,21 +43,40 @@ export default {
   computed: {
     ...mapGetters('repository/userTracking', ['getActiveUsers']),
     ...mapGetters(['isAdmin']),
-    ...mapGetters('repository', ['repository', 'activities', 'isRepositoryAdmin']),
+    ...mapGetters('repository', [
+      'repository',
+      'activities',
+      'isRepositoryAdmin',
+      'hasWorkflow'
+    ]),
     activeUsers() {
       return this.getActiveUsers('repository', this.repositoryId);
     },
     tabs() {
-      const query = { activityId: get(this.lastSelectedActivity, 'id') };
-      const items = [
+      const hasActivities = get(this.activities, 'length');
+      const activityId = get(this.lastSelectedActivity, 'id');
+      const query = { ...this.$route.query, activityId };
+      return [
         { name: 'Structure', route: 'repository', icon: 'file-tree', query },
-        { name: 'Graph View', route: 'tree-view', icon: 'graph-outline', query },
-        { name: 'History', route: 'revisions', icon: 'history' },
-        { name: 'Settings', route: 'repository-info', icon: 'settings-outline' }
-      ];
-      if (!this.isAdmin && !this.isRepositoryAdmin) items.pop();
-      if (!get(this.activities, 'length')) items.splice(1, 2);
-      return items;
+        hasActivities && this.hasWorkflow && {
+          name: 'Board',
+          route: 'board',
+          icon: 'view-dashboard-variant',
+          query
+        },
+        hasActivities && {
+          name: 'Graph View',
+          route: 'tree-view',
+          icon: 'graph-outline',
+          query
+        },
+        hasActivities && { name: 'History', route: 'revisions', icon: 'history' },
+        (this.isAdmin || this.isRepositoryAdmin) && {
+          name: 'Settings',
+          route: 'repository-info',
+          icon: 'settings-outline'
+        }
+      ].filter(Boolean);
     }
   },
   methods: mapActions('repository', ['initialize', 'expandParents']),

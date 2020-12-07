@@ -22,12 +22,12 @@
       @reorder:element="reorderContentElements"
       @delete:element="requestElementDeletion"
       @delete="requestContainerDeletion(container)"
-      :container="container"
       :name="name"
-      :position="index"
+      :container="container"
       :activities="activities"
       :elements="elements"
       :tes="elements"
+      :position="index"
       v-bind="$attrs" />
     <div v-if="addBtnEnabled">
       <v-btn @click="addContainer" color="blue-grey darken-3" text class="mt-4">
@@ -39,31 +39,35 @@
 </template>
 
 <script>
+import { getContainerName, getElementId } from 'tce-core/utils';
 import { mapActions, mapState } from 'vuex';
 import capitalize from 'lodash/capitalize';
 import castArray from 'lodash/castArray';
-import ContentContainer from './Container';
 import deprecation from '@/components/common/mixins/deprecation';
 import get from 'lodash/get';
-import { getContainerTemplateId as getContainerId } from 'shared/activities';
-import { getContainerName } from 'tce-core/utils';
+import { getContainerTemplateId } from 'shared/activities';
 import isEmpty from 'lodash/isEmpty';
 import { mapRequests } from '@/plugins/radio';
 import mapValues from 'lodash/mapValues';
 import maxBy from 'lodash/maxBy';
 import throttle from 'lodash/throttle';
 
-const DEFAULT_CONTAINER = 'content-container';
-
 const DEPRECATED_LISTENERS = {
   addSubcontainer: { action: 'save' },
   updateSubcontainer: { action: 'update' },
   deleteSubcontainer: { action: 'requestContainerDeletion' },
   addElement: { action: 'addElement' },
-  saveElement: { action: 'saveContentElements' },
+  saveElement: { action: 'saveElement' },
+  insertElement: {
+    action: 'addElement',
+    newEvent: 'add:element',
+    adaptArgs: ({ element, context }) => [{
+      ...element, position: context.newPosition
+    }]
+  },
   updateElement: { action: 'updateElement' },
-  reorderElement: { action: 'reorderContentElements' },
-  deleteElement: { action: 'requestElementDeletion' }
+  reorderElement: { action: 'reorderElements' },
+  deleteElement: { action: 'deleteElement' }
 };
 
 export default {
@@ -85,13 +89,13 @@ export default {
     ...mapState('repository/activities', { activities: 'items' }),
     ...mapState('repository/contentElements', { elements: 'items' }),
     deprecatedListeners() {
-      return mapValues(DEPRECATED_LISTENERS, ({ action }, listener) => {
-        return this.deprecateEvent(action, { oldEvent: listener });
+      return mapValues(DEPRECATED_LISTENERS, ({ action, ...config }, listener) => {
+        return this.deprecateEvent(action, { oldEvent: listener, ...config });
       });
     },
     containerName() {
-      const id = getContainerId(this);
-      return this.$ccRegistry.get(id) ? getContainerName(id) : DEFAULT_CONTAINER;
+      const id = getContainerTemplateId(this);
+      return getContainerName(this.$ccRegistry.get(id) ? id : 'DEFAULT');
     },
     name() {
       return this.label.toLowerCase();
@@ -111,8 +115,8 @@ export default {
       addElement: 'add',
       saveElement: 'save',
       updateElement: 'update',
-      reorderElements: 'reorder',
-      deleteElement: 'remove'
+      deleteElement: 'remove',
+      reorderElements: 'reorder'
     }),
     addContainer() {
       const { type, parentId, nextPosition: position } = this;
@@ -120,7 +124,10 @@ export default {
     },
     saveContentElements(elements) {
       castArray(elements).forEach(element => {
-        return this.saveElement(element).then(() => this.showNotification());
+        return this.saveElement(element).then(() => {
+          this.$radio.channel(`element:${getElementId(element)}`).emit('saved');
+          this.showNotification();
+        });
       });
     },
     reorderContentElements({ newPosition, items }) {
@@ -150,8 +157,7 @@ export default {
   },
   filters: {
     capitalize
-  },
-  components: { ContentContainer }
+  }
 };
 </script>
 

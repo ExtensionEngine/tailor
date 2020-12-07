@@ -8,7 +8,7 @@
       <v-chip
         color="blue-grey lighten-3"
         small
-        class="ml-1 px-8 body-2">
+        class="readonly ml-1 px-8 body-2">
         Admin
       </v-chip>
     </v-toolbar>
@@ -31,10 +31,7 @@ import AdminSidebar from './Sidebar';
 import AppFooter from '@/components/common/Footer';
 
 export default {
-  components: {
-    AdminSidebar,
-    AppFooter
-  }
+  components: { AdminSidebar, AppFooter }
 };
 </script>
 

@@ -1,67 +1,65 @@
 <template>
-  <v-card class="content-container mb-5">
-    <div class="actions">
-      <v-btn
-        @click="$emit('delete')"
-        color="secondary darken-1"
-        text
-        class="pull-right">
-        Delete {{ name }}
-      </v-btn>
+  <v-sheet class="content-container mb-5 elevation-1">
+    <div class="d-flex justify-end">
+      <v-btn @click="$emit('delete')" color="pink" text>Delete {{ name }}</v-btn>
     </div>
     <v-alert
-      :value="!contentElements.length"
+      :value="!containerElements.length"
       color="blue-grey darken-3"
       icon="mdi-information-variant"
-      text
-      prominent
+      text prominent
       class="my-5 mx-3">
       Click the button below to create content.
     </v-alert>
     <element-list
       @update="reorder"
-      :elements="contentElements"
+      :elements="containerElements"
       :activity="container"
       :supported-types="types"
       :layout="layout"
       class="element-list">
       <template v-slot:list-item="{ element, isDragged, position }">
         <inline-activator @click.native="showElementDrawer(position)" />
-        <content-element v-bind="{ element, isDragged, setWidth: false }" />
+        <contained-content
+          @save="saveElement(element, 'data', $event)"
+          @save:meta="saveElement(element, 'meta', $event)"
+          v-bind="{ element, isDragged, setWidth: false }" />
       </template>
       <template v-slot:list-add="{ position: lastPosition, ...slotProps }">
         <div class="add-element-container mt-5">
           <add-element
-            @add="onAddElements"
+            @add="addElements($event, lastPosition)"
             @hidden="onHiddenElementDrawer"
             v-bind="slotProps"
-            :items="contentElements"
+            :items="containerElements"
             :position="Math.min(insertPosition, lastPosition)"
             :show="isElementDrawerVisible"
-            :large="true"
-            icon="mdi-toy-brick-plus" />
+            icon="mdi-toy-brick-plus"
+            large />
         </div>
       </template>
     </element-list>
-  </v-card>
+  </v-sheet>
 </template>
 
 <script>
 import AddElement from 'tce-core/AddElement';
-import ContentElement from '@/components/editor/ContentElement';
+import ContainedContent from 'tce-core/ContainedContent';
 import ElementList from 'tce-core/ElementList';
 import filter from 'lodash/filter';
-import InlineActivator from './InlineActivator';
-import { mapActions } from 'vuex';
+import InlineActivator from 'tce-core/AddElement/InlineActivator';
+import InsertLocation from '@/utils/InsertLocation';
 import sortBy from 'lodash/sortBy';
 
+const { ADD_AFTER } = InsertLocation;
+
 export default {
-  name: 'content-container',
+  name: 'tcc-default',
   props: {
+    name: { type: String, required: true },
     container: { type: Object, required: true },
     elements: { type: Object, required: true },
     types: { type: Array, default: null },
-    name: { type: String, required: true },
     layout: { type: Boolean, default: true }
   },
   data: () => ({
@@ -69,21 +67,14 @@ export default {
     isElementDrawerVisible: false
   }),
   computed: {
-    contentElements() {
-      const activityId = this.container.id;
-      return sortBy(filter(this.elements, { activityId }), 'position');
+    id: vm => vm.container.id,
+    containerElements() {
+      return sortBy(filter(this.elements, { activityId: this.id }), 'position');
     }
   },
   methods: {
-    ...mapActions('repository/contentElements', {
-      reorderElements: 'reorder',
-      addElement: 'save'
-    }),
     reorder({ newPosition }) {
-      const items = this.contentElements;
-      const element = items[newPosition];
-      const context = { items, newPosition };
-      this.reorderElements({ element, context });
+      this.$emit('reorder:element', { items: this.containerElements, newPosition });
     },
     showElementDrawer(position) {
       this.insertPosition = position;
@@ -93,22 +84,30 @@ export default {
       this.isElementDrawerVisible = false;
       this.insertPosition = Infinity;
     },
-    onAddElements(elements) {
-      // TODO: add route for creating elements in batch
-      elements.forEach(element => this.addElement(element));
+    addElements(elements, lastPosition) {
+      elements.forEach(element => this.addElement(element, lastPosition));
+    },
+    addElement(element, lastPosition) {
+      if (element.position === lastPosition) {
+        return this.$emit('save:lement', element);
+      }
+      const items = this.containerElements;
+      const { position: newPosition } = element;
+      const context = { items, newPosition, action: ADD_AFTER };
+      this.$emit('insert:element', { element, context });
+    },
+    saveElement(element, key, data) {
+      this.$emit('save:lement', {
+        ...(element),
+        [key]: data
+      });
     }
   },
-  components: { AddElement, ContentElement, ElementList, InlineActivator }
+  components: { AddElement, ContainedContent, ElementList, InlineActivator }
 };
 </script>
 
 <style lang="scss" scoped>
-.actions {
-  width: 100%;
-  min-height: 2.25rem;
-  margin-bottom: 0.5rem;
-}
-
 .element-list ::v-deep .contained-content {
   margin: 0;
 }

@@ -31,7 +31,8 @@
             :key="activity.uid"
             @select="selectActivity(activity.id)"
             @show="goTo(activity)"
-            :activity="activity" />
+            :activity="activity"
+            :is-selected="selectedActivity.id === activity.id" />
           <v-alert
             :value="!filteredActivities.length"
             color="blue-grey darken-2"

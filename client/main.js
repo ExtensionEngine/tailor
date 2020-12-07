@@ -65,9 +65,10 @@ contentPluginRegistry.initialize().then(() => {
     render: h => h(App),
     provide() {
       return {
+        $storageService: assetsApi,
         $teRegistry: contentPluginRegistry.elementRegistry,
         $ccRegistry: contentPluginRegistry.containerRegistry,
-        $storageService: assetsApi
+        $getCurrentUser: () => store.state.auth.user
       };
     }
   });

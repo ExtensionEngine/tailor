@@ -11,12 +11,12 @@
       :element="element"
       :class="['content-element', { selected: isSelected }]"
       :set-width="false"
-      disabled />
+      id-disabled />
   </div>
 </template>
 
 <script>
-import ContentElement from '@/components/editor/ContentElement';
+import ContentElement from '@/components/common/tce-core/ContentElement';
 import get from 'lodash/get';
 
 export default {

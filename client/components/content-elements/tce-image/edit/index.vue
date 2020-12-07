@@ -27,7 +27,24 @@
         :modal="false"
         :src="currentImage"
         drag-mode="none" />
-      <img v-show="!showCropper" :src="currentImage" class="preview-image">
+      <v-img
+        v-show="!showCropper"
+        :src="currentImage"
+        :aspect-ratio="aspectRatio"
+        :max-width="maxWidth"
+        class="mx-auto">
+        <template v-slot:placeholder>
+          <v-row
+            align="center"
+            justify="center"
+            class="fill-height ma-0">
+            <v-icon size="50" color="grey lighten-1" class="image-icon">
+              mdi-image-outline
+            </v-icon>
+            <v-progress-circular size="80" color="grey lighten-1" indeterminate />
+          </v-row>
+        </template>
+      </v-img>
     </div>
   </div>
 </template>
@@ -66,6 +83,7 @@ export default {
     dense: { type: Boolean, default: false }
   },
   data: () => ({
+    containerWidth: 0,
     currentImage: null,
     persistedImage: null,
     showCropper: false
@@ -76,7 +94,13 @@ export default {
       if (imageAvailable) return false;
       if (this.$refs.cropper) this.$refs.cropper.destroy();
       return true;
-    }
+    },
+    elementWidth: ({ containerWidth, element }) => element.data.meta?.width,
+    elementHeight: ({ containerWidth, element }) => element.data.meta?.height,
+    maxWidth: ({ containerWidth, elementWidth }) =>
+      containerWidth > elementWidth ? elementWidth : containerWidth,
+    aspectRatio: ({ elementHeight, elementWidth }) =>
+      elementHeight && elementWidth && (elementWidth / elementHeight)
   },
   methods: {
     onReady() {
@@ -105,6 +129,8 @@ export default {
     }
   },
   mounted() {
+    this.containerWidth = this.$el.parentElement.offsetWidth;
+
     toDataUrl(this.element.data.url)
       .then(dataUrl => this.load(dataUrl));
 
@@ -147,7 +173,7 @@ export default {
   display: none;
 }
 
-img {
-  max-width: 100%;
+.image-icon {
+  position: absolute;
 }
 </style>

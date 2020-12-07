@@ -1,41 +1,54 @@
 'use strict';
 
-exports.SCHEMAS = [{
-  id: 'COURSE',
-  name: 'Example Course',
-  structure: [{
-    type: 'GOAL',
-    label: 'Goal',
-    color: '#ff6590',
-    rootLevel: true,
-    meta: [{
-      key: 'description',
-      type: 'INPUT',
-      label: 'Description',
-      placeholder: 'Click to add...',
-      validate: { required: false, max: 23 }
+module.exports = {
+  SCHEMAS: [{
+    id: 'COURSE',
+    name: 'Example Course',
+    workflowId: 'EXAMPLE_WORKFLOW',
+    structure: [{
+      type: 'GOAL',
+      label: 'Goal',
+      color: '#ff6590',
+      rootLevel: true,
+      isTrackedInWorkflow: true,
+      meta: [{
+        key: 'description',
+        type: 'INPUT',
+        label: 'Description',
+        placeholder: 'Click to add...',
+        validate: { required: false, max: 23 }
+      }],
+      contentContainers: ['PAGE'],
+      relationships: [{
+        type: 'prerequisites',
+        label: 'Prerequisites',
+        multiple: true,
+        searchable: true,
+        allowEmpty: true,
+        placeholder: 'Click to select',
+        allowCircularLinks: false,
+        allowInsideLineage: false,
+        allowedTypes: ['GOAL']
+      }, {
+        type: 'replacements',
+        label: 'replacements'
+      }]
     }],
-    contentContainers: ['PAGE'],
-    relationships: [{
-      type: 'prerequisites',
-      label: 'Prerequisites',
-      multiple: true,
-      searchable: true,
-      allowEmpty: true,
-      placeholder: 'Click to select',
-      allowCircularLinks: false,
-      allowInsideLineage: false,
-      allowedTypes: ['GOAL']
-    }, {
-      type: 'replacements',
-      label: 'replacements'
+    contentContainers: [{
+      type: 'PAGE',
+      label: 'Page',
+      multiple: false,
+      publishedAs: 'Page',
+      required: false
     }]
   }],
-  contentContainers: [{
-    type: 'PAGE',
-    label: 'Page',
-    multiple: false,
-    publishedAs: 'Page',
-    required: false
+  WORKFLOWS: [{
+    id: 'EXAMPLE_WORKFLOW',
+    statuses: [
+      { id: 'TODO', label: 'Todo' },
+      { id: 'IN_PROGRESS', label: 'In progress' },
+      { id: 'REVIEW', label: 'Review' },
+      { id: 'DONE', label: 'Done' }
+    ]
   }]
-}];
+};

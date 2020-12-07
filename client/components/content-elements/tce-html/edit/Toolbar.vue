@@ -116,6 +116,10 @@ $icon-size: 1.125rem;
     .ql-stroke {
       stroke: currentColor;
     }
+
+    .ql-fill {
+      fill: currentColor;
+    }
   }
 
   button:hover, button:focus {

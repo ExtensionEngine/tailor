@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="activityContent"
     @mousedown="mousedownCaptured = true"
     @click="onClick"
     class="activity-content blue-grey lighten-5">
@@ -19,18 +20,22 @@
 
 <script>
 import { getElementId, isQuestion } from 'tce-core/utils';
-import { mapActions, mapGetters } from 'vuex';
-import ContentContainers from '../structure/ContentContainers';
+import { mapActions, mapGetters, mapState } from 'vuex';
+import ContentContainers from './ContainerList';
 import ContentLoader from './Loader';
 import debounce from 'lodash/debounce';
+import differenceBy from 'lodash/differenceBy';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import { getSupportedContainers } from 'shared/activities';
+import isEqual from 'lodash/isEqual';
 import loader from '@/components/common/loader';
 import { mapChannels } from '@/plugins/radio';
 import throttle from 'lodash/throttle';
 
 const CE_FOCUS_EVENT = 'element:focus';
+const CE_SELECT_EVENT = 'element:select';
+const CE_SELECTION_DELAY = 1000;
 const CE_MODULE = 'repository/contentElements';
 const ELEMENT_MUTATIONS = [
   `${CE_MODULE}/save`, `${CE_MODULE}/add`, `${CE_MODULE}/update`
@@ -52,7 +57,9 @@ export default {
   }),
   computed: {
     ...mapGetters('repository', ['activities']),
+    ...mapGetters('editor', ['collaboratorSelections']),
     ...mapChannels({ editorChannel: 'editor' }),
+    ...mapState({ user: state => state.auth.user }),
     containerConfigs: vm => getSupportedContainers(vm.activity.type)
   },
   methods: {
@@ -102,19 +109,47 @@ export default {
         this.focusedElement = { ...element, parent: composite };
       }, 50);
       this.editorChannel.on(CE_FOCUS_EVENT, this.focusHandler);
+    },
+    selectElement(elementId, user = this.user, isSelected = true) {
+      this.editorChannel.emit(CE_SELECT_EVENT, { elementId, user, isSelected });
+    },
+    scrollToElement(id, timeout = 500) {
+      setTimeout(() => {
+        const elementId = `#element_${id}`;
+        const element = this.$refs.activityContent.querySelector(elementId);
+        element.scrollIntoView();
+      }, timeout);
     }
   },
   watch: {
+    isLoading(val) {
+      const { elementId } = this.$route.query;
+      if (val || !elementId) return;
+      // Select and scroll to element if elementId is set
+      setTimeout(() => {
+        this.selectElement(elementId);
+        this.scrollToElement(elementId);
+        this.collaboratorSelections
+          .forEach(({ elementId, ...user }) => this.selectElement(elementId, user));
+      }, CE_SELECTION_DELAY);
+    },
     focusedElement: {
       deep: true,
       handler(val) {
         this.$emit('selected', val);
       }
+    },
+    collaboratorSelections(val, prevVal) {
+      if (this.isLoading || isEqual(val, prevVal)) return;
+      const selectionComparator = it => `${it.elementId}-${it.id}`;
+      const removeSelection = differenceBy(prevVal, val, selectionComparator);
+      const isSelected = differenceBy(val, prevVal, selectionComparator);
+      [[removeSelection, false], [isSelected, true]].forEach(([items, isSelected]) => {
+        items.forEach(({ elementId, ...user }) => this.selectElement(elementId, user, isSelected));
+      });
     }
   },
   async created() {
-    // Reset element focus
-    this.$emit('selected', null);
     await this.loadContents();
     this.initElementFocusListener();
     this.initElementChangeWatcher();

@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import ActiveUsers from '@/components/common/ActiveUsers';
+import ActiveUsers from 'tce-core/ActiveUsers';
 import ActivityActions from './ActivityActions';
 import { ElementToolbar } from 'tce-core';
 import { getElementId } from 'tce-core/utils';

@@ -1,10 +1,19 @@
 <template>
   <span>
     <v-menu offset-y>
-      <template v-slot:activator="{ on }">
-        <v-btn v-on="on" icon text class="my-1">
-          <v-icon color="primary lighten-4">mdi-sort</v-icon>
-        </v-btn>
+      <template v-slot:activator="{ on: menu }">
+        <v-tooltip open-delay="800" top>
+          <template v-slot:activator="{ on: tooltip }">
+            <v-btn
+              v-on="{ ...menu, ...tooltip }"
+              color="primary lighten-4"
+              icon
+              class="my-1">
+              <v-icon>mdi-sort</v-icon>
+            </v-btn>
+          </template>
+          <span>Order by</span>
+        </v-tooltip>
       </template>
       <v-list class="py-0">
         <v-list-item
@@ -16,11 +25,21 @@
         </v-list-item>
       </v-list>
     </v-menu>
-    <v-btn @click="toggleOrder" icon text class="my-1">
-      <v-icon color="primary lighten-4">
-        mdi-sort-{{ sortBy.order === 'ASC' ? 'ascending' : 'descending' }}
-      </v-icon>
-    </v-btn>
+    <v-tooltip open-delay="800" top>
+      <template v-slot:activator="{ on }">
+        <v-btn
+          v-on="on"
+          @click="toggleOrder"
+          color="primary lighten-4"
+          icon
+          class="my-1">
+          <v-icon>
+            mdi-sort-{{ sortBy.order === 'ASC' ? 'ascending' : 'descending' }}
+          </v-icon>
+        </v-btn>
+      </template>
+      <span>Order direction</span>
+    </v-tooltip>
   </span>
 </template>
 

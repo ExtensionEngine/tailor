@@ -162,15 +162,19 @@ $swing: cubic-bezier(0.25, 0.8, 0.5, 1);
   transform: scaleX(1);
 }
 
-.disabled::before {
-  border-image:
-    repeating-linear-gradient(
-      to right,
-      $disabled-color 0,
-      $disabled-color 0.125rem,
-      transparent 0.125rem,
-      transparent 0.25rem
-    ) 1 repeat;
+.disabled {
+  color: $disabled-color;
+
+  &::before {
+    border-image:
+      repeating-linear-gradient(
+        to right,
+        $disabled-color 0,
+        $disabled-color 0.125rem,
+        transparent 0.125rem,
+        transparent 0.25rem
+      ) 1 repeat;
+  }
 }
 
 .incorrect::before, .incorrect::after {

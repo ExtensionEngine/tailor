@@ -8,12 +8,13 @@ const printDeprecationWarning = (oldEvent, newEvent) => {
 
 export default {
   methods: {
-    deprecateEvent(handler, { oldEvent, newEvent }) {
+    deprecateEvent(handler, { oldEvent, newEvent, adaptArgs }) {
       newEvent = newEvent || noCase(oldEvent, { delimiter: ':' });
       const context = this;
-      return () => {
+      return function () {
         printDeprecationWarning(oldEvent, newEvent);
-        return context[handler](...arguments);
+        const args = adaptArgs ? adaptArgs(...arguments) : arguments;
+        return context[handler](...args);
       };
     }
   }

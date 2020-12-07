@@ -1,6 +1,6 @@
 import calculatePosition from 'utils/calculatePosition.js';
 import { ContentElement as Events } from '@/../common/sse';
-import { feed } from '../feed';
+import feed from '../feed';
 import generateActions from '@/store/helpers/actions';
 
 const {

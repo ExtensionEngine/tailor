@@ -1,7 +1,6 @@
-import { feed, connect as initSSEConnection } from './feed';
 import api from '@/api/repository';
 import each from 'lodash/each';
-import { Connection as Events } from '@/../common/sse';
+import feed from './feed';
 import filter from 'lodash/filter';
 import Promise from 'bluebird';
 
@@ -19,20 +18,21 @@ export const initialize = async (store, id) => {
 
 function initializeSSE(id, store) {
   const { rootState, dispatch, commit } = store;
-  const feed = initSSEConnection(id, rootState.auth.token);
-  feed.subscribe(Events.Initialized, e => commit('setSseId', e.sseId));
-  const modules = ['activities', 'contentElements', 'comments', 'userTracking'];
+  feed.connect(id, rootState.auth.token, conn => commit('setSseId', conn.id));
+  const modules = [
+    'activities', 'contentElements', 'comments', 'userTracking', 'tasks'];
   each(modules, module => dispatch(`${module}/plugSSE`));
 }
 
 export const reset = ({ commit, dispatch }, id) => {
-  if (feed.isConnected) feed.disconnect();
+  if (feed.connected) feed.disconnect();
   const getRoute = entity => `repositories/${id}/${entity}`;
   const modules = {
     activities: 'activities',
     contentElements: 'content-elements',
     revisions: 'revisions',
-    comments: 'comments'
+    comments: 'comments',
+    tasks: 'tasks'
   };
   commit('setSseId', null);
   commit('setRepositoryId', id);
