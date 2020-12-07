@@ -9,10 +9,9 @@
       <v-tooltip open-delay="800" left>
         <template v-slot:activator="{ on: tooltip }">
           <v-btn v-on="{ ...menu, ...tooltip }" icon>
-            <v-badge
-              v-if="unseenCommentCount"
-              :content="unseenCommentCount"
-              color="secondary" />
+            <v-avatar v-if="unseenCommentCount" size="18" color="secondary">
+              {{ unseenCommentCount }}
+            </v-avatar>
             <v-icon v-else color="primary" class="pr-1">mdi-forum-outline</v-icon>
           </v-btn>
         </template>
@@ -101,21 +100,16 @@ $background-color: #fff;
   }
 }
 
-.v-btn {
+.v-btn.v-btn--icon {
   position: absolute;
   top: 2rem;
   right: -1.125rem;
   z-index: 2;
   background: $background-color;
 
-  .v-btn__content {
-    position: relative;
-  }
-
-  ::v-deep .v-badge {
-    position: absolute;
-    top: 0.375rem;
-    right: 1.5rem;
+  ::v-deep .v-avatar {
+    color: $background-color;
+    font-size: 0.75rem;
   }
 }
 </style>
