@@ -5,6 +5,7 @@ const { elementRegistry } = require('../content-plugins');
 const get = require('lodash/get');
 const isString = require('lodash/isString');
 const isUrl = require('is-url');
+const config = require('../../../config/server').storage;
 const mime = require('mime-types');
 const Promise = require('bluebird');
 const proxy = require('./proxy');
@@ -15,7 +16,6 @@ const values = require('lodash/values');
 
 const STORAGE_PROTOCOL = 'storage://';
 const DEFAULT_IMAGE_EXTENSION = 'png';
-const ASSET_ROOT = 'repository/assets';
 
 const isPrimitive = element => !get(element, 'data.embeds');
 const isQuestion = element => get(element, 'data.question');
@@ -76,7 +76,7 @@ processor.IMAGE = asset => {
   const extension = image.match(base64Pattern)[1] || DEFAULT_IMAGE_EXTENSION;
   const hashString = `${asset.id}${file}`;
   const hash = crypto.createHash('md5').update(hashString).digest('hex');
-  const key = `${ASSET_ROOT}/${asset.id}/${hash}.${extension}`;
+  const key = `${config.path}/${asset.id}/${hash}.${extension}`;
   asset.data.url = key;
   return saveFile(key, file).then(() => asset);
 };
@@ -154,7 +154,6 @@ function saveFile(key, file) {
 }
 
 module.exports = {
-  ASSET_ROOT,
   STORAGE_PROTOCOL,
   processStatics,
   resolveStatics
