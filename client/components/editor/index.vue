@@ -9,14 +9,16 @@
           :repository="repository"
           :activities="outlineActivities"
           :selected-activity="activity"
-          :selected-element="selectedElement" />
+          :selected-element="selectedElement"
+          class="sidebar" />
         <activity-content
           :key="activity.id"
           @selected="selectElement"
           :repository="repository"
           :activity="activity"
           :root-container-groups="rootContainerGroups"
-          :content-containers="contentContainers" />
+          :content-containers="contentContainers"
+          class="activity-content" />
       </div>
     </template>
   </div>
@@ -77,8 +79,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$sidebar-width: 400px;
+
 .editor-content-container {
   display: flex;
   height: calc(100% - 50px);
+
+  .sidebar {
+    flex-basis: $sidebar-width;
+  }
+
+  .activity-content {
+    flex-grow: 1;
+    flex-basis: calc(100% - #{$sidebar-width});
+  }
 }
 </style>
