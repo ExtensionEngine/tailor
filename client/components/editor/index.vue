@@ -30,7 +30,6 @@ import withUserTracking from 'components/common/mixins/userTracking';
 export default {
   name: 'content-editor',
   mixins: [withUserTracking],
-  inject: ['$storageService'],
   props: {
     repositoryId: { type: Number, required: true },
     activityId: { type: Number, required: true }

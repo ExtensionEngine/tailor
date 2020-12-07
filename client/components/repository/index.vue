@@ -39,7 +39,6 @@ export default {
   props: {
     repositoryId: { type: Number, required: true }
   },
-  inject: ['$storageService'],
   data: () => ({ showLoader: true, lastSelectedActivity: null }),
   computed: {
     ...mapGetters('repository/userTracking', ['getActiveUsers']),
