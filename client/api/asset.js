@@ -1,13 +1,8 @@
 import request from './request';
 
 const urls = {
-  base: '/assets',
-  setCookies: '/assets/set-cookies'
+  base: '/assets'
 };
-
-function setCookies() {
-  return request.get(urls.setCookies);
-}
 
 function getUrl(key) {
   const params = { key };
@@ -19,7 +14,6 @@ function upload(data) {
 }
 
 export default {
-  setCookies,
   getUrl,
   upload
 };

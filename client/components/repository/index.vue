@@ -89,7 +89,6 @@ export default {
   async created() {
     const { repositoryId } = this;
     await this.initialize(repositoryId);
-    await this.$storageService.setCookies();
     this.showLoader = false;
     if (!this.activities.length) return;
     if (!this.selectedActivity) {

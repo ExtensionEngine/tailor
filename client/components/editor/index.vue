@@ -62,7 +62,6 @@ export default {
     const repositoryChanged = get(storeRepository, 'id') !== currentRepositoryId;
     if (!repositoryLoaded || repositoryChanged) {
       await this.initialize(currentRepositoryId);
-      await this.$storageService.setCookies();
     }
     this.isLoading = false;
   },
