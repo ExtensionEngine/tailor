@@ -14,7 +14,7 @@ class Proxy {
     const providerName = options.provider;
     const config = options[providerName];
     if (!config) {
-      throw new Error(`Unable to find config for "${config.provider}" proxy.`);
+      throw new Error(`Unable to find config for "${providerName}" proxy.`);
     }
     return loadProvider(options.provider).create(config);
   }
