@@ -8,14 +8,14 @@
     <template v-slot:activator="{ on: menu }">
       <v-tooltip open-delay="800" left>
         <template v-slot:activator="{ on: tooltip }">
-          <v-btn v-on="{ ...menu, ...tooltip }" icon>
-            <v-avatar v-if="unseenComments.length" size="18" color="secondary">
+          <v-btn v-on="{ ...menu, ...tooltip }" :ripple="false" x-small icon>
+            <v-avatar v-if="unseenComments.length" size="16" color="secondary">
               {{ unseenComments.length }}
             </v-avatar>
-            <v-icon v-else color="primary" class="pr-1">mdi-forum-outline</v-icon>
+            <v-icon v-else :color="options.color">{{ options.icon }}</v-icon>
           </v-btn>
         </template>
-        <span>{{ tooltipLabel }}</span>
+        <span>{{ options.tooltip }}</span>
       </v-tooltip>
     </template>
     <discussion
@@ -34,10 +34,23 @@ import DiscussionEvent from './Events/DiscussionEvent';
 import get from 'lodash/get';
 import { mapChannels } from '@/plugins/radio';
 
+const options = {
+  preview: {
+    icon: 'mdi-comment-text-multiple',
+    color: 'primary',
+    tooltip: 'View comments'
+  },
+  post: {
+    icon: 'mdi-message-plus-outline',
+    color: 'teal',
+    tooltip: 'Post a comment'
+  }
+};
+
 export default {
   name: 'element-discussion',
   props: {
-    id: { type: Number, required: true },
+    id: { type: Number, default: null },
     uid: { type: String, required: true },
     comments: { type: Array, required: true },
     lastSeen: { type: Number, required: true },
@@ -47,7 +60,7 @@ export default {
   computed: {
     ...mapChannels({ editorBus: 'editor' }),
     events: () => DiscussionEvent,
-    tooltipLabel: vm => vm.comments.length ? 'View comments' : 'Post a comment',
+    options: vm => vm.comments.length ? options.preview : options.post,
     lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime(),
     unseenComments() {
       const { comments, user, lastSeen } = this;
@@ -99,14 +112,18 @@ $background-color: #fff;
 
 .v-btn.v-btn--icon {
   position: absolute;
-  top: 2rem;
-  right: -1.125rem;
+  top: 0.125rem;
+  right: -1.5rem;
   z-index: 2;
   background: $background-color;
 
+  &::before {
+    display: none;
+  }
+
   ::v-deep .v-avatar {
     color: $background-color;
-    font-size: 0.75rem;
+    font-size: 0.625rem;
   }
 }
 </style>
