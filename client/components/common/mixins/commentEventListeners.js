@@ -2,12 +2,12 @@ import { mapActions, mapMutations } from 'vuex';
 import DiscussionEvent from 'tce-core/Events/DiscussionEvent';
 import { mapChannels } from '@/plugins/radio';
 
-const { save, remove, setLastSeen } = DiscussionEvent;
+const { SAVE, REMOVE, SET_LAST_SEEN } = DiscussionEvent;
 
 const COMMENT_EVENTS = [
-  { event: save, action: 'upsertComment' },
-  { event: remove, action: 'removeComment' },
-  { event: setLastSeen, action: 'setLastSeenComment' }
+  { event: SAVE, action: 'upsertComment' },
+  { event: REMOVE, action: 'removeComment' },
+  { event: SET_LAST_SEEN, action: 'setLastSeenComment' }
 ];
 
 export default {

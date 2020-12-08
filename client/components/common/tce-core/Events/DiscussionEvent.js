@@ -1,5 +1,5 @@
 export default {
-  save: 'comment:save',
-  remove: 'comment:remove',
-  setLastSeen: 'comment:set-last-seen'
+  SAVE: 'comment:save',
+  REMOVE: 'comment:remove',
+  SET_LAST_SEEN: 'comment:setLastSeen'
 };

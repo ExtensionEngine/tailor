@@ -25,7 +25,7 @@
     <discussion
       @save="save"
       @update="save"
-      @remove="editorBus.emit(events.remove, $event)"
+      @remove="editorBus.emit(events.REMOVE, $event)"
       v-bind="{ comments, user }"
       class="px-3 py-2" />
   </v-menu>
@@ -81,7 +81,7 @@ export default {
   methods: {
     save(data) {
       const { editorBus, user: author, id: elementId, events } = this;
-      return editorBus.emit(events.save, {
+      return editorBus.emit(events.SAVE, {
         ...data,
         author,
         contentElementId: elementId
@@ -90,7 +90,7 @@ export default {
     setLastSeen(timeout) {
       const { uid: elementUid, lastCommentAt, events } = this;
       const options = { elementUid, lastCommentAt, timeout };
-      this.editorBus.emit(events.setLastSeen, options);
+      this.editorBus.emit(events.SET_LAST_SEEN, options);
     }
   },
   watch: {
