@@ -79,11 +79,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$sidebar-width: 400px;
+$sidebar-width: 25rem;
 
 .editor-content-container {
   display: flex;
-  height: calc(100% - 50px);
+  height: calc(100% - 3.125rem);
 
   .sidebar {
     flex-basis: $sidebar-width;
