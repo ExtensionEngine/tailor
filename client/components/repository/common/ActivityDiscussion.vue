@@ -1,5 +1,5 @@
 <template>
-  <div class="activity-discussion">
+  <div v-intersect="onIntersect" class="activity-discussion">
     <discussion
       @save="saveComment"
       @update="saveComment"
@@ -19,9 +19,9 @@ export default {
   name: 'activity-discussion',
   props: {
     activity: { type: Object, required: true },
-    isVisible: { type: Boolean, default: false },
     showHeading: { type: Boolean, default: false }
   },
+  data: () => ({ isVisible: false }),
   computed: {
     ...mapGetters('repository/comments', ['getComments']),
     ...mapState({ user: state => state.auth.user }),
@@ -43,6 +43,9 @@ export default {
       const { activity, lastCommentAt } = this;
       const payload = { activityUid: activity.uid, lastCommentAt };
       setTimeout(() => this.markSeenComments(payload), timeout);
+    },
+    onIntersect(_, __, isIntersected) {
+      this.isVisible = isIntersected;
     }
   },
   watch: {
