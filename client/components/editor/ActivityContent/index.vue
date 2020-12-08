@@ -167,7 +167,7 @@ export default {
 <style lang="scss" scoped>
 .activity-content {
   min-height: 100%;
-  padding: 4.375rem 1.5625rem 0 26.25rem;
+  padding: 1.25rem 2.5rem 0 1.5625rem;
   overflow-y: scroll;
   overflow-y: overlay;
   overflow-x: hidden;
