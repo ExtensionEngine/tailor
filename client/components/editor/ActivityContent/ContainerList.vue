@@ -57,7 +57,7 @@ const DEPRECATED_LISTENERS = {
   updateSubcontainer: { action: 'update' },
   deleteSubcontainer: { action: 'requestContainerDeletion' },
   addElement: { action: 'addElement' },
-  saveElement: { action: 'saveElement' },
+  saveElement: { action: 'saveContentElements' },
   insertElement: {
     action: 'addElement',
     newEvent: 'add:element',
