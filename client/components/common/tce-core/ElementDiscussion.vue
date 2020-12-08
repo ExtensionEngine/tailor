@@ -8,14 +8,18 @@
     <template v-slot:activator="{ on: menu }">
       <v-tooltip open-delay="800" left>
         <template v-slot:activator="{ on: tooltip }">
-          <v-btn v-on="{ ...menu, ...tooltip }" :ripple="false" x-small icon>
-            <v-avatar v-if="unseenComments.length" size="16" color="secondary">
-              {{ unseenComments.length }}
-            </v-avatar>
-            <v-icon v-else :color="options.color">{{ options.icon }}</v-icon>
+          <v-btn
+            v-on="{ ...menu, ...tooltip }"
+            :class="{ unseen: commentActivator.text }"
+            :ripple="false"
+            x-small icon>
+            <span v-if="commentActivator.text">{{ commentActivator.text }}</span>
+            <v-icon v-else :color="commentActivator.color">
+              {{ commentActivator.icon }}
+            </v-icon>
           </v-btn>
         </template>
-        <span>{{ options.tooltip }}</span>
+        <span>{{ commentActivator.tooltip }}</span>
       </v-tooltip>
     </template>
     <discussion
@@ -23,7 +27,6 @@
       @update="save"
       @remove="editorBus.emit(events.remove, $event)"
       v-bind="{ comments, user }"
-      show-heading
       class="pa-4" />
   </v-menu>
 </template>
@@ -34,18 +37,19 @@ import DiscussionEvent from './Events/DiscussionEvent';
 import get from 'lodash/get';
 import { mapChannels } from '@/plugins/radio';
 
-const options = {
+const getActivatorOptions = unseenComments => ({
   preview: {
     icon: 'mdi-comment-text-multiple',
     color: 'primary',
-    tooltip: 'View comments'
+    tooltip: 'View comments',
+    text: unseenComments.length
   },
   post: {
     icon: 'mdi-message-plus-outline',
     color: 'teal',
     tooltip: 'Post a comment'
   }
-};
+});
 
 export default {
   name: 'element-discussion',
@@ -60,7 +64,6 @@ export default {
   computed: {
     ...mapChannels({ editorBus: 'editor' }),
     events: () => DiscussionEvent,
-    options: vm => vm.comments.length ? options.preview : options.post,
     lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime(),
     unseenComments() {
       const { comments, user, lastSeen } = this;
@@ -68,6 +71,11 @@ export default {
         it.author.id !== user.id &&
         new Date(it.createdAt).getTime() > lastSeen
       ));
+    },
+    commentActivator() {
+      const { comments, unseenComments } = this;
+      const type = comments.length ? 'preview' : 'post';
+      return getActivatorOptions(unseenComments)[type];
     }
   },
   methods: {
@@ -118,8 +126,11 @@ export default {
     display: none;
   }
 
-  ::v-deep .v-avatar {
-    font-size: 0.625rem;
+  &.unseen {
+    width: 1rem;
+    height: 1rem;
+    color: #fff;
+    background: var(--v-secondary-base);
   }
 }
 </style>
