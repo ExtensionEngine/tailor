@@ -1,43 +1,42 @@
 <template>
-  <v-hover v-slot:default="{ hover }" close-delay="200">
-    <div
-      @click="onSelect"
-      :class="{
-        selected: activeUsers.length,
-        focused: isFocused,
-        frame
-      }"
-      class="content-element">
-      <active-users :users="activeUsers" :size="20" class="active-users" />
-      <component
-        :is="componentName"
-        @add="$emit('add', $event)"
-        @save="onSave"
-        @delete="$emit('delete')"
-        @focus="onSelect"
-        :id="`element_${id}`"
-        v-bind="$attrs"
-        :element="element"
-        :is-focused="isFocused"
-        :is-dragged="isDragged"
-        :is-disabled="isDisabled"
-        :dense="dense" />
-      <v-progress-linear
-        v-if="isSaving"
-        height="2"
-        color="teal accent-2"
-        indeterminate
-        class="save-indicator" />
+  <div
+    @click="onSelect"
+    :class="{
+      selected: activeUsers.length,
+      focused: isFocused,
+      frame
+    }"
+    class="content-element">
+    <active-users :users="activeUsers" :size="20" class="active-users" />
+    <component
+      :is="componentName"
+      @add="$emit('add', $event)"
+      @save="onSave"
+      @delete="$emit('delete')"
+      @focus="onSelect"
+      :id="`element_${id}`"
+      v-bind="$attrs"
+      :element="element"
+      :is-focused="isFocused"
+      :is-dragged="isDragged"
+      :is-disabled="isDisabled"
+      :dense="dense" />
+    <v-progress-linear
+      v-if="isSaving"
+      height="2"
+      color="teal accent-2"
+      indeterminate
+      class="save-indicator" />
+    <div class="actions-sidebar">
       <v-btn
-        v-if="!element.parent && hover"
+        v-if="!element.parent && isHovered"
         @click="requestDeleteConfirmation"
         color="red accent-3"
-        dark icon x-small
-        class="delete-element">
+        dark icon x-small>
         <v-icon>mdi-delete-outline</v-icon>
       </v-btn>
     </div>
-  </v-hover>
+  </div>
 </template>
 
 <script>
@@ -55,6 +54,7 @@ export default {
     parent: { type: Object, default: null },
     isDragged: { type: Boolean, default: false },
     isDisabled: { type: Boolean, default: false },
+    isHovered: { type: Boolean, default: false },
     frame: { type: Boolean, default: true },
     dense: { type: Boolean, default: false }
   },
@@ -192,10 +192,15 @@ export default {
   left: 0;
 }
 
-.delete-element {
+.actions-sidebar {
+  $sidebar-width: 1.5rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   position: absolute;
   top: 0;
-  right: -24px;
-  z-index: 2;
+  right: -$sidebar-width;
+  width: $sidebar-width;
 }
 </style>
