@@ -34,15 +34,7 @@
         :library="library"
         :allowed-types="allowedTypes">
         <template v-slot:header>
-          <v-btn
-            @click="showElementBrowser = !showElementBrowser"
-            dark text
-            class="ml-2">
-            <v-icon class="mr-2">mdi-content-copy</v-icon>
-            Copy existing
-          </v-btn>
           <template v-if="layout">
-            <v-spacer />
             <v-btn-toggle
               v-model="elementWidth"
               active-class="blue-grey darken-2"
@@ -58,9 +50,17 @@
             <v-divider class="mr-3" vertical />
             <div class="width-label px-1 subtitle-1 grey--text text--lighten-4">
               Element width
-              <span class="px-1">{{ elementWidth }}</span>%
+              <span class="pl-1">{{ elementWidth }}</span>%
             </div>
           </template>
+          <v-spacer />
+          <v-btn
+            @click="showElementBrowser = !showElementBrowser"
+            dark text
+            class="">
+            <v-icon class="mr-2">mdi-content-copy</v-icon>
+            Copy existing
+          </v-btn>
         </template>
       </add-new-element>
     </template>
