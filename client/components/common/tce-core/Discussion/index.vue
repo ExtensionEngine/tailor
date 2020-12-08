@@ -1,5 +1,5 @@
 <template>
-  <div class="embedded-discussion">
+  <div ref="discussion" class="embedded-discussion">
     <div :class="{ 'pb-7': !showHeading && showAllToggle }">
       <v-btn
         v-if="showAllToggle"
@@ -31,7 +31,6 @@
       class="mt-2" />
     <div class="text-right">
       <text-editor
-        ref="editor"
         v-model="comment.content"
         @change="post"
         :placeholder="commentsCount ? 'Add a comment...' : 'Start the discussion...'" />
@@ -64,7 +63,7 @@ export default {
     thread: vm => orderBy(vm.comments, ['createdAt'], ['asc']),
     commentsCount: vm => vm.thread.length,
     showAllToggle: vm => vm.commentsShownLimit < vm.thread.length,
-    editor: vm => vm.$refs.editor.$el
+    discussion: vm => vm.$refs.discussion
   },
   methods: {
     post() {
@@ -77,8 +76,8 @@ export default {
       };
       this.comment = initCommentInput();
       this.$emit('save', payload);
-      // Keep editor inside viewport.
-      this.$nextTick(() => this.editor.scrollIntoView());
+      // Keep discussion container inside viewport.
+      this.$nextTick(() => this.discussion.scrollIntoView({ behavior: 'smooth' }));
     }
   },
   watch: {
