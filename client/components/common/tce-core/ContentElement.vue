@@ -1,5 +1,5 @@
 <template>
-  <v-hover v-slot:default="{ hover }">
+  <v-hover v-slot:default="{ hover }" close-delay="200">
     <div
       @click="onSelect"
       :class="{
@@ -31,10 +31,10 @@
       <v-btn
         v-if="!element.parent && hover"
         @click="requestDeleteConfirmation"
-        color="secondary darken-1"
-        dark fab x-small
+        color="red accent-3"
+        dark icon x-small
         class="delete-element">
-        <v-icon color="grey lighten-3" small>mdi-delete</v-icon>
+        <v-icon>mdi-delete-outline</v-icon>
       </v-btn>
     </div>
   </v-hover>
@@ -194,8 +194,8 @@ export default {
 
 .delete-element {
   position: absolute;
-  top: -16px;
-  right: -16px;
+  top: 0;
+  right: -24px;
   z-index: 2;
 }
 </style>
