@@ -88,6 +88,6 @@ export default {
 <style lang="scss" scoped>
 /* Do not remove! Makes sure vuedraggable detects correct scrollable parent */
 .list-group {
-  padding: 0.625rem 1.25rem;
+  padding: 0.625rem 0 0.625rem 1.25rem;
 }
 </style>

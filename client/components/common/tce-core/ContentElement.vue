@@ -1,32 +1,34 @@
 <template>
-  <div
-    @click="onSelect"
-    :class="{
-      selected: activeUsers.length,
-      focused: isFocused,
-      frame
-    }"
-    class="content-element">
-    <active-users :users="activeUsers" :size="20" class="active-users" />
-    <component
-      :is="componentName"
-      @add="$emit('add', $event)"
-      @save="onSave"
-      @delete="$emit('delete')"
-      @focus="onSelect"
-      :id="`element_${id}`"
-      v-bind="$attrs"
-      :element="element"
-      :is-focused="isFocused"
-      :is-dragged="isDragged"
-      :is-disabled="isDisabled"
-      :dense="dense" />
-    <v-progress-linear
-      v-if="isSaving"
-      height="2"
-      color="teal accent-2"
-      indeterminate
-      class="save-indicator" />
+  <div class="content-element-container">
+    <div
+      @click="onSelect"
+      :class="{
+        selected: activeUsers.length,
+        focused: isFocused,
+        frame
+      }"
+      class="content-element">
+      <active-users :users="activeUsers" :size="20" class="active-users" />
+      <component
+        :is="componentName"
+        @add="$emit('add', $event)"
+        @save="onSave"
+        @delete="$emit('delete')"
+        @focus="onSelect"
+        :id="`element_${id}`"
+        v-bind="$attrs"
+        :element="element"
+        :is-focused="isFocused"
+        :is-dragged="isDragged"
+        :is-disabled="isDisabled"
+        :dense="dense" />
+      <v-progress-linear
+        v-if="isSaving"
+        height="2"
+        color="teal accent-2"
+        indeterminate
+        class="save-indicator" />
+    </div>
     <div class="actions-sidebar">
       <v-btn
         v-if="!element.parent && isHovered"
@@ -138,11 +140,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.content-element-container {
+  display: flex;
+  justify-content: space-between;
+}
+
 .content-element {
   $accent-1: #1de9b6;
   $accent-2: #ff4081;
 
   position: relative;
+  flex-basis: 100%;
 
   &::after {
     $width: 0.125rem;
@@ -193,14 +201,10 @@ export default {
 }
 
 .actions-sidebar {
-  $sidebar-width: 1.5rem;
-
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: absolute;
-  top: 0;
-  right: -$sidebar-width;
-  width: $sidebar-width;
+  width: 1.25rem;
+  min-height: 100%;
 }
 </style>
