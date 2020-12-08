@@ -1,3 +1,4 @@
+import isEmpty from 'lodash/isEmpty';
 import VuexPersistence from 'vuex-persist';
 
 const OBSERVED_MUTATIONS = [
@@ -7,15 +8,17 @@ const OBSERVED_MUTATIONS = [
   'repository/comments/markSeenComments'
 ];
 
+const STORAGE_KEY = 'TAILOR_APP_STATE';
+migrateSeenState();
+
 export default new VuexPersistence({
-  key: 'TAILOR_APP_STATE',
-  reducer: state => ({
-    auth: state.auth,
+  key: STORAGE_KEY,
+  reducer: ({ auth, repository }) => ({
+    auth,
     repository: {
       comments: {
-        seen: migrateSeenState(state),
-        seenCEComments: state.repository.comments.seenCEComments,
-        seenByActivity: state.repository.comments.seen.activity
+        seen: repository.comments.seen,
+        seenElementComments: repository.comments.seenElementComments
       }
     }
   }),
@@ -23,8 +26,14 @@ export default new VuexPersistence({
   filter: mutation => OBSERVED_MUTATIONS.includes(mutation.type)
 }).plugin;
 
-function migrateSeenState(state) {
-  const { seen, seenByActivity } = state.repository.comments;
-  const activity = { ...seenByActivity, ...seen.activity };
-  return { activity, contentElement: seen.contentElement };
+function migrateSeenState() {
+  const storage = window.localStorage;
+  const state = JSON.parse(storage.getItem(STORAGE_KEY));
+  if (!state) return;
+  const { seenByActivity } = state.repository.comments;
+  if (!isEmpty(seenByActivity)) {
+    state.repository.comments.seen = { activity: seenByActivity };
+  }
+  if (seenByActivity) delete state.repository.comments.seenByActivity;
+  storage.setItem(STORAGE_KEY, JSON.stringify(state));
 }

@@ -1,7 +1,7 @@
 <template>
   <v-navigation-drawer
     width="400"
-    absolute permanent
+    permanent
     class="sidebar grey lighten-5 elevation-3">
     <div
       :class="{
@@ -14,11 +14,9 @@
         :repository="repository"
         :activities="activities"
         :selected="selectedActivity" />
-      <editor-discussion
+      <activity-discussion
         v-show="discussionTabVisible"
-        :activity="selectedActivity"
-        :is-visible="discussionTabVisible"
-        has-all-comments />
+        :activity="selectedActivity" />
       <element-sidebar
         v-if="selectedTab === 'element'"
         :key="getElementId(selectedElement)"
@@ -51,9 +49,9 @@
 </template>
 
 <script>
+import ActivityDiscussion from '@/components/repository/common/ActivityDiscussion';
 import ActivityNavigation from './Navigation';
 import debounce from 'lodash/debounce';
-import EditorDiscussion from '@/components/repository/common/Comments/EditorDiscussion';
 import ElementSidebar from './ElementSidebar';
 import get from 'lodash/get';
 import { getElementId } from 'tce-core/utils';
@@ -71,8 +69,8 @@ export default {
   data: () => ({ selectedTab: 'browser', unseenCommentCount: 0 }),
   computed: {
     selectedTabIndex: vm => vm.tabs.map(it => it.name).indexOf(vm.selectedTab),
-    ...mapGetters('repository/comments', ['getUnseenComments']),
-    unseenComments: vm => vm.getUnseenComments(vm.selectedActivity),
+    ...mapGetters('repository/comments', ['getUnseenActivityComments']),
+    unseenComments: vm => vm.getUnseenActivityComments(vm.selectedActivity),
     discussionTabVisible: vm => vm.selectedTab === 'comments',
     tabs: vm => [{
       name: 'browser',
@@ -109,13 +107,12 @@ export default {
       this.unseenCommentCount = val.length;
     }, 200)
   },
-  components: { ActivityNavigation, EditorDiscussion, ElementSidebar }
+  components: { ActivityDiscussion, ActivityNavigation, ElementSidebar }
 };
 </script>
 
 <style lang="scss" scoped>
 .sidebar {
-  padding: 3.125rem 0 0;
   text-align: left;
 }
 
@@ -129,11 +126,11 @@ export default {
       padding-top: 8.75rem;
     }
   }
-}
 
-::v-deep .editor-discussion {
-  margin: 1rem 0;
-  padding: 1rem;
-  border: none;
+  ::v-deep .activity-discussion {
+    margin: 1rem 0;
+    padding: 1rem;
+    border: none;
+  }
 }
 </style>

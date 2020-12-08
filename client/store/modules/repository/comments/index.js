@@ -8,7 +8,7 @@ const state = {
     activity: {},
     contentElement: {}
   },
-  seenCEComments: [],
+  seenElementComments: [],
   $apiUrl: null
 };
 

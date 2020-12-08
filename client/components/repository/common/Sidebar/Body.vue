@@ -58,15 +58,15 @@
         :activity="activity"
         v-bind="relationship" />
     </div>
-    <discussion :activity="activity" show-heading />
+    <activity-discussion :activity="activity" show-heading />
   </div>
 </template>
 
 <script>
 import { getActivityMetadata, getLevel } from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex';
+import ActivityDiscussion from '../ActivityDiscussion';
 import ActivityTasks from './Tasks';
-import Discussion from '../Comments/EditorDiscussion';
 import LabelChip from '@/components/repository/common/LabelChip';
 import { mapChannels } from '@/plugins/radio';
 import MetaInput from 'tce-core/MetaInput';
@@ -78,7 +78,7 @@ export default {
     activity: { type: Object, required: true }
   },
   computed: {
-    ...mapChannels({ editorChannel: 'editor' }),
+    ...mapChannels({ editorBus: 'editor' }),
     ...mapGetters(['isAdmin']),
     ...mapGetters('repository', ['isRepositoryAdmin']),
     activityUrl: () => window.location.href,
@@ -94,16 +94,16 @@ export default {
     }
   },
   created() {
-    const { editorChannel, $router, activity } = this;
-    editorChannel.on('element:toggle-discussion', contentElementUid => {
+    const { editorBus, $router, activity } = this;
+    editorBus.on('element:toggleDiscussion', elementUid => {
       const params = { activityId: activity.id };
-      const query = { elementId: contentElementUid };
+      const query = { elementId: elementUid };
       $router.push({ name: 'editor', params, query });
     });
   },
   components: {
     ActivityTasks,
-    Discussion,
+    ActivityDiscussion,
     Relationship,
     MetaInput,
     LabelChip

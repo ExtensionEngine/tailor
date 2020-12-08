@@ -1,5 +1,5 @@
 <template>
-  <div class="embedded-discussion">
+  <div ref="discussion" class="embedded-discussion">
     <div :class="{ 'pb-7': !showHeading && showAllToggle }">
       <v-btn
         v-if="showAllToggle"
@@ -59,28 +59,31 @@ export default {
     showHeading: { type: Boolean, default: false },
     showNotifications: { type: Boolean, default: false },
     showAllComments: { type: Boolean, default: false },
-    commentsShownLimit: { type: Number, default: 5 }
+    commentsShownLimit: { type: Number, default: 5 },
+    scrollTarget: { type: String, default: 'discussion' }
   },
   data: () => ({ showAll: false, comment: initCommentInput() }),
   computed: {
     thread: vm => orderBy(vm.comments, ['createdAt'], ['asc']),
     commentsCount: vm => vm.thread.length,
     showAllToggle: vm => vm.commentsShownLimit < vm.thread.length,
+    discussion: vm => vm.$refs.discussion,
     editor: vm => vm.$refs.editor.$el
   },
   methods: {
     post() {
-      if (!this.comment.content) return;
+      const { scrollTarget, comment, user: author } = this;
+      if (!comment.content) return;
       const payload = {
-        content: this.comment.content,
-        author: this.user,
+        content: comment.content,
+        author,
         createdAt: Date.now(),
         updatedAt: Date.now()
       };
       this.comment = initCommentInput();
       this.$emit('save', payload);
-      // Keep editor inside viewport.
-      this.$nextTick(() => this.editor.scrollIntoView());
+      // Keep editor/discussion container inside viewport.
+      this.$nextTick(() => this[scrollTarget].scrollIntoView({ behavior: 'smooth' }));
     }
   },
   watch: {

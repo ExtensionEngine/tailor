@@ -8,12 +8,12 @@
     <content-element
       :element="element"
       :class="{ selected: isSelected }"
-      disabled />
+      is-disabled />
   </div>
 </template>
 
 <script>
-import ContentElement from '@/components/editor/ContentElement';
+import ContentElement from 'tce-core/ContainedContent';
 
 export default {
   name: 'content-element-preview',
