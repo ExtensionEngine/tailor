@@ -75,7 +75,7 @@ export default {
   },
   data: vm => ({ isEditing: false, content: vm.comment.content }),
   computed: {
-    ...mapChannels({ editorChannel: 'editor' }),
+    ...mapChannels({ editorBus: 'editor' }),
     author: vm => vm.comment.author,
     isEdited: vm => vm.comment.createdAt !== vm.comment.updatedAt,
     isDeleted: vm => !!vm.comment.deletedAt,
@@ -103,8 +103,8 @@ export default {
       this.isEditing = false;
     },
     toggleElementDiscussion() {
-      const { uid: contentElementUid } = this.comment.contentElement;
-      this.editorChannel.emit('element:toggleDiscussion', contentElementUid);
+      const { uid: elementUid } = this.comment.contentElement;
+      this.editorBus.emit('element:toggleDiscussion', elementUid);
     }
   },
   watch: {
