@@ -4,7 +4,7 @@
       @save="saveComment"
       @update="saveComment"
       @remove="remove"
-      v-bind="{ comments, user, showHeading }"
+      v-bind="{ comments, user, showHeading, scrollTarget: 'editor' }"
       show-notifications />
   </div>
 </template>
@@ -44,7 +44,7 @@ export default {
       const payload = { activityUid: activity.uid, lastCommentAt };
       setTimeout(() => this.markSeenComments(payload), timeout);
     },
-    onIntersect(_, __, isIntersected) {
+    onIntersect(_entries, _observer, isIntersected) {
       this.isVisible = isIntersected;
     }
   },

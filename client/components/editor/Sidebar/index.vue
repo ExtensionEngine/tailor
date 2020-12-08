@@ -14,7 +14,9 @@
         :repository="repository"
         :activities="activities"
         :selected="selectedActivity" />
-      <activity-discussion :activity="selectedActivity" />
+      <activity-discussion
+        v-show="discussionTabVisible"
+        :activity="selectedActivity" />
       <element-sidebar
         v-if="selectedTab === 'element'"
         :key="getElementId(selectedElement)"
@@ -69,6 +71,7 @@ export default {
     selectedTabIndex: vm => vm.tabs.map(it => it.name).indexOf(vm.selectedTab),
     ...mapGetters('repository/comments', ['getUnseenActivityComments']),
     unseenComments: vm => vm.getUnseenActivityComments(vm.selectedActivity),
+    discussionTabVisible: vm => vm.selectedTab === 'comments',
     tabs: vm => [{
       name: 'browser',
       label: 'Browse',

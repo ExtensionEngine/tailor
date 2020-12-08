@@ -21,7 +21,7 @@
     <discussion
       @save="save"
       @update="save"
-      @remove="editorBus.emit(events.REMOVE, $event)"
+      @remove="editorBus.emit(events.remove, $event)"
       v-bind="{ comments, user }"
       show-heading
       class="pa-4" />
@@ -73,7 +73,7 @@ export default {
   methods: {
     save(data) {
       const { editorBus, user: author, id: elementId, events } = this;
-      return editorBus.emit(events.SAVE, {
+      return editorBus.emit(events.save, {
         ...data,
         author,
         contentElementId: elementId
@@ -82,7 +82,7 @@ export default {
     setLastSeen(timeout) {
       const { uid: elementUid, lastCommentAt, events } = this;
       const options = { elementUid, lastCommentAt, timeout };
-      this.editorBus.emit(events.SET_LAST_SEEN, options);
+      this.editorBus.emit(events.setLastSeen, options);
     }
   },
   watch: {
@@ -100,10 +100,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$background-color: #fff;
-
 .v-menu__content {
-  background: $background-color;
+  background: #fff;
 
   ::v-deep .embedded-discussion {
     text-align: left;
@@ -115,14 +113,12 @@ $background-color: #fff;
   top: 0.125rem;
   right: -1.5rem;
   z-index: 2;
-  background: $background-color;
 
   &::before {
     display: none;
   }
 
   ::v-deep .v-avatar {
-    color: $background-color;
     font-size: 0.625rem;
   }
 }
