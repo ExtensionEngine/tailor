@@ -1,7 +1,7 @@
 <template>
   <v-navigation-drawer
     width="400"
-    absolute permanent
+    permanent
     class="sidebar grey lighten-5 elevation-3">
     <div
       :class="{
@@ -113,7 +113,6 @@ export default {
 
 <style lang="scss" scoped>
 .sidebar {
-  padding: 3.125rem 0 0;
   text-align: left;
 }
 
