@@ -97,7 +97,7 @@ function defaultStaticsResolver(item) {
 
 async function resolveAssetsMap(element) {
   if (!get(element, 'data.assets')) return element;
-  await Promise.map(toPairs(element.data.assets), async ([key, url]) => {
+  await Promise.map(toPairs(element.data.assets), ([key, url]) => {
     if (!url) return set(element.data, key, url);
     const isStorageResource = url.startsWith(STORAGE_PROTOCOL);
     const resolvedUrl = isStorageResource
