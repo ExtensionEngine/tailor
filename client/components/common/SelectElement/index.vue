@@ -86,9 +86,9 @@ export default {
     },
     toggleButton() {
       const {
-        allElementsSelected, loadingContent, multiple, selectedActivity
+        allElementsSelected, elements, loadingContent, multiple, selectedActivity
       } = this;
-      if (!multiple || !selectedActivity || loadingContent) return;
+      if (!multiple || !selectedActivity || !elements.length || loadingContent) return;
       const { SELECT, DESELECT } = TOGGLE_BUTTON;
       return allElementsSelected ? DESELECT : SELECT;
     }
