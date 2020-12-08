@@ -64,8 +64,8 @@ export default {
   props: {
     selected: { type: Array, default: () => [] },
     heading: { type: String, required: true },
+    allowedTypes: { type: Array, required: true },
     multiple: { type: Boolean, default: true },
-    allowedTypes: { type: Array, default: null },
     submitLabel: { type: String, default: 'Save' },
     headerIcon: { type: String, default: 'mdi-toy-brick-plus-outline' }
   },
@@ -80,7 +80,7 @@ export default {
     allElementsSelected: vm => vm.selectedElements.length === vm.elements.length,
     elements() {
       const elements = flatMap(this.contentContainers, 'elements');
-      if (!this.allowedTypes || !this.allowedTypes.length) return elements;
+      if (!this.allowedTypes.length) return elements;
       return elements.filter(it => this.allowedTypes.includes(it.type));
     },
     toggleButton() {

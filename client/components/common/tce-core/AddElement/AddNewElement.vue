@@ -15,7 +15,7 @@
             v-for="element in group.elements"
             :key="element.position"
             @click.stop="$emit('add', [element])"
-            :disabled="!allowedTypes.includes(element.type)"
+            :disabled="!isAllowed(element.type)"
             class="element">
             <v-icon v-if="element.ui.icon">{{ element.ui.icon }}</v-icon>
             <h5 class="body-2">{{ element.name }}</h5>
@@ -32,6 +32,12 @@ export default {
   props: {
     library: { type: Array, required: true },
     allowedTypes: { type: Array, required: true }
+  },
+  methods: {
+    isAllowed(type) {
+      if (!this.allowedTypes.length) return true;
+      return this.allowedTypes.includes(type);
+    }
   }
 };
 </script>
