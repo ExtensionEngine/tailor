@@ -156,7 +156,7 @@ export default {
     allowedTypes() {
       const { elementWidth, include, layout, library } = this;
       const elements = flatMap(library, 'elements');
-      if (!layout) return include;
+      if (!layout) return include || [];
       const allowedElements = elementWidth === DEFAULT_ELEMENT_WIDTH
         ? elements
         : reject(elements, 'ui.forceFullWidth');
