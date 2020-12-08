@@ -31,7 +31,7 @@
     </div>
     <div class="actions-sidebar">
       <v-btn
-        v-if="!element.parent && isHovered"
+        v-if="!element.parent && isHovered || isFocused"
         @click="requestDeleteConfirmation"
         color="red accent-3"
         dark icon x-small>
