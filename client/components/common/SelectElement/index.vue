@@ -10,7 +10,6 @@
       <v-btn
         v-if="toggleButton"
         @click="toggleSelectAll"
-        color="pink"
         outlined
         class="float-right mr-4 mb-2">
         <v-icon class="mr-2">mdi-{{ toggleButton.icon }}</v-icon>
