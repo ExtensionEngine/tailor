@@ -27,7 +27,7 @@
       @update="save"
       @remove="editorBus.emit(events.remove, $event)"
       v-bind="{ comments, user }"
-      class="pa-4" />
+      class="px-3 py-2" />
   </v-menu>
 </template>
 
