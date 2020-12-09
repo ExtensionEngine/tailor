@@ -13,20 +13,10 @@
 </template>
 
 <script>
-import assetsApi from '@/api/asset';
 import cloneDeep from 'lodash/cloneDeep';
 import UploadBtn from 'tce-core/UploadBtn';
 
 export default {
-  inject: ['$storageService'],
-  provide() {
-    return {
-      $storageService: {
-        ...this.$storageService,
-        upload: assetsApi.uploadScormPackage
-      }
-    };
-  },
   props: {
     element: { type: Object, required: true }
   },

@@ -1,6 +1,7 @@
 import downloadMixin from 'utils/downloadMixin';
 import loader from '@/components/common/loader';
 import { mapRequests } from '@/plugins/radio';
+import mime from 'mime-types';
 
 export default {
   inject: ['$storageService'],
@@ -13,6 +14,8 @@ export default {
       const [file] = e.target.files;
       if (!file) return;
       this.form.append('file', file, file.name);
+      const mimeType = mime.lookup(file.name);
+      if (mimeType === 'application/zip') this.form.append('archive', true);
     },
     upload: loader(function (e) {
       this.createFileForm(e);

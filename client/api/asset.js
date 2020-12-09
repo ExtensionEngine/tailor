@@ -1,8 +1,7 @@
 import request from './request';
 
 const urls = {
-  base: '/assets',
-  uploadScorm: () => `${urls.base}/scorm`
+  base: '/assets'
 };
 
 function getUrl(key) {
@@ -14,12 +13,4 @@ function upload(data) {
   return request.post(urls.base, data).then(res => res.data);
 }
 
-function uploadScormPackage(data) {
-  return request.post(urls.uploadScorm(), data).then(res => res.data);
-}
-
-export default {
-  getUrl,
-  upload,
-  uploadScormPackage
-};
+export default { getUrl, upload };
