@@ -67,9 +67,7 @@ import { getActivityMetadata, getLevel } from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex';
 import ActivityDiscussion from '../ActivityDiscussion';
 import ActivityTasks from './Tasks';
-import discussionEvents from 'tce-core/Events/DiscussionEvent';
 import LabelChip from '@/components/repository/common/LabelChip';
-import { mapChannels } from '@/plugins/radio';
 import MetaInput from 'tce-core/MetaInput';
 import Relationship from './Relationship';
 
@@ -79,7 +77,6 @@ export default {
     activity: { type: Object, required: true }
   },
   computed: {
-    ...mapChannels({ editorBus: 'editor' }),
     ...mapGetters(['isAdmin']),
     ...mapGetters('repository', ['isRepositoryAdmin']),
     activityUrl: () => window.location.href,
@@ -93,14 +90,6 @@ export default {
       await this.update({ uid: this.activity.uid, data });
       this.$snackbar.show(`${this.config.label} saved`);
     }
-  },
-  created() {
-    const { editorBus, $router, activity } = this;
-    editorBus.on(discussionEvents.TOGGLE, elementUid => {
-      const params = { activityId: activity.id };
-      const query = { elementId: elementUid };
-      $router.push({ name: 'editor', params, query });
-    });
   },
   components: {
     ActivityTasks,

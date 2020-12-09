@@ -107,10 +107,9 @@ export default {
       this.editorBus.emit(events.SET_LAST_SEEN, options);
     },
     toggleDiscussion(query) {
-      if (!this.comments.length) return;
-      const { $router, uid } = this;
-      if (query && this.routeElementId !== query.elementId) $router.push({ query });
-      if (uid !== this.routeElementId) return;
+      const { uid, comments, $router } = this;
+      if (this.routeElementId !== query.elementId) $router.push({ query });
+      if (uid !== this.routeElementId || !comments.length) return;
       const element = this.$refs[`element:${uid}`].$el;
       element.scrollIntoView({ behavior: 'smooth' });
       setTimeout(() => (this.isVisible = true), 200);

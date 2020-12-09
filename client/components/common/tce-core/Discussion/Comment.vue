@@ -78,10 +78,15 @@ export default {
     isDeleted: vm => !!vm.comment.deletedAt,
     isAuthor: vm => vm.author.id === vm.user.id,
     showOptions: vm => vm.isAuthor && !vm.isDeleted,
-    elementTag: vm => vm.showAllComments && vm.comment.contentElementId,
     options: vm => [
       { name: 'Edit', action: vm.toggleEdit, icon: 'mdi-pencil' },
-      { name: 'Remove', action: vm.remove, icon: 'mdi-delete' }]
+      { name: 'Remove', action: vm.remove, icon: 'mdi-delete' }],
+    elementRoute: ({ comment }) => ({
+      name: 'editor',
+      params: { activityId: comment.activityId },
+      query: { elementId: comment.contentElement.uid }
+    }),
+    elementTag: vm => vm.showAllComments && vm.comment.contentElementId
   },
   methods: {
     toggleEdit() {
@@ -101,7 +106,10 @@ export default {
     },
     toggleElementDiscussion() {
       const { uid: elementUid } = this.comment.contentElement;
-      this.editorBus.emit(events.TOGGLE, elementUid);
+      const isRepository = this.$route.name === 'repository';
+      const timeout = isRepository ? 2000 : 0;
+      if (isRepository) this.$router.push(this.elementRoute);
+      setTimeout(() => this.editorBus.emit(events.TOGGLE, elementUid), timeout);
     }
   },
   watch: {
