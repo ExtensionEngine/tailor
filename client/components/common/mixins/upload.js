@@ -15,7 +15,7 @@ export default {
       if (!file) return;
       this.form.append('file', file, file.name);
       const mimeType = mime.lookup(file.name);
-      if (mimeType === 'application/zip') this.form.append('archive', true);
+      if (mimeType === 'application/zip') this.form.append('unpack', true);
     },
     upload: loader(function (e) {
       this.createFileForm(e);
