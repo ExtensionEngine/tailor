@@ -1,7 +1,7 @@
 <template functional>
-  <div class="overlay d-flex justify-center align-center">
+  <button class="overlay d-flex justify-center align-center">
     <div class="message grey--text text--lighten-2">Click to preview</div>
-  </div>
+  </button>
 </template>
 
 <script>

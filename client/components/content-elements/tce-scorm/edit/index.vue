@@ -12,7 +12,11 @@
     <div v-else>
       <preview-overlay v-if="!isDisabled && !isFocused" />
       <div class="container">
-        <iframe :src="launchUrl" frameborder="0" class="element"></iframe>
+        <iframe
+          :src="launchUrl"
+          :tabindex="isDisabled || isFocused ? 0 : -1"
+          frameborder="0"
+          class="element"></iframe>
       </div>
     </div>
   </div>
