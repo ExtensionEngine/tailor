@@ -101,10 +101,10 @@ export default {
       if (!this.showCropper || !this.$refs.cropper) return;
       this.$refs.cropper.show();
     },
-    load(dataUrl) {
-      this.currentImage = dataUrl;
-      this.persistedImage = dataUrl;
-      if (dataUrl && this.$refs.cropper) this.$refs.cropper.replace(dataUrl);
+    load(imageUrl) {
+      this.currentImage = imageUrl;
+      this.persistedImage = imageUrl;
+      if (imageUrl && this.$refs.cropper) this.$refs.cropper.replace(imageUrl);
     },
     save(image) {
       return getImageDimensions(image).then(({ width, height }) => {
