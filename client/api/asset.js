@@ -13,4 +13,7 @@ function upload(data) {
   return request.post(urls.base, data).then(res => res.data);
 }
 
-export default { getUrl, upload };
+export default {
+  getUrl,
+  upload
+};
