@@ -1,26 +1,24 @@
 <template>
   <v-menu
+    v-if="isElementSelected || comments.length"
     :ref="`element:${uid}`"
     v-model="isVisible"
     :close-on-content-click="false"
     transition="slide-y-transition"
     min-width="300"
-    attach offset-y left>
+    left offset-y attach>
     <template v-slot:activator="{ on: menu }">
       <v-tooltip open-delay="800" left>
         <template v-slot:activator="{ on: tooltip }">
           <v-btn
             v-on="{ ...menu, ...tooltip }"
-            :class="{ unseen: commentActivator.text }"
-            :ripple="false"
+            :class="activator.class"
             x-small icon>
-            <span v-if="commentActivator.text">{{ commentActivator.text }}</span>
-            <v-icon v-else :color="commentActivator.color">
-              {{ commentActivator.icon }}
-            </v-icon>
+            <div v-if="activator.text" class="unseen">{{ activator.text }}</div>
+            <v-icon v-else :color="activator.color">{{ activator.icon }}</v-icon>
           </v-btn>
         </template>
-        <span>{{ commentActivator.tooltip }}</span>
+        <span>{{ activator.tooltip }}</span>
       </v-tooltip>
     </template>
     <discussion
@@ -28,7 +26,7 @@
       @update="save"
       @remove="editorBus.emit(events.REMOVE, $event)"
       v-bind="{ comments, user }"
-      class="px-3 py-2" />
+      class="pa-2" />
   </v-menu>
 </template>
 
@@ -39,15 +37,19 @@ import get from 'lodash/get';
 import { mapChannels } from '@/plugins/radio';
 
 const getActivatorOptions = unseenComments => ({
-  preview: {
-    icon: 'mdi-comment-text-multiple',
-    color: 'primary',
-    tooltip: 'View comments',
+  unseen: {
+    class: 'pink white--text',
+    tooltip: 'View new comments',
     text: unseenComments.length
+  },
+  preview: {
+    icon: 'mdi-comment-text-multiple-outline',
+    color: 'blue-grey darken-4',
+    tooltip: 'View comments'
   },
   post: {
     icon: 'mdi-message-plus-outline',
-    color: 'teal',
+    color: 'teal accent-4',
     tooltip: 'Post a comment'
   }
 });
@@ -57,6 +59,7 @@ export default {
   props: {
     id: { type: Number, default: null },
     uid: { type: String, required: true },
+    isElementSelected: { type: Boolean, default: false },
     comments: { type: Array, required: true },
     lastSeen: { type: Object, required: true },
     user: { type: Object, required: true }
@@ -75,17 +78,19 @@ export default {
           createdAt > lastSeen.activity;
       });
     },
-    commentActivator() {
+    activator() {
       const { comments, unseenComments } = this;
-      const type = comments.length ? 'preview' : 'post';
+      const type = unseenComments.length
+        ? 'unseen'
+        : (comments.length ? 'preview' : 'post');
       return getActivatorOptions(unseenComments)[type];
     },
     routeElementId: vm => vm.$route.query?.elementId
   },
   methods: {
     save(data) {
-      const { editorBus, user: author, id: elementId, events } = this;
-      return editorBus.emit(events.SAVE, {
+      const { editorBus, user: author, id: elementId } = this;
+      return editorBus.emit(DiscussionEvent.SAVE, {
         ...data,
         author,
         contentElementId: elementId
@@ -140,21 +145,7 @@ export default {
   }
 }
 
-.v-btn.v-btn--icon {
-  position: absolute;
-  top: 0.125rem;
-  right: -1.5rem;
-  z-index: 2;
-
-  &::before {
-    display: none;
-  }
-
-  &.unseen {
-    width: 1rem;
-    height: 1rem;
-    color: #fff;
-    background: var(--v-secondary-base);
-  }
+.unseen {
+  font-size: 0.75rem;
 }
 </style>

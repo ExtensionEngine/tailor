@@ -7,7 +7,6 @@
       frame
     }"
     class="content-element">
-    <discussion v-if="showDiscussion" v-bind="element" :user="currentUser" />
     <active-users :users="activeUsers" :size="20" class="active-users" />
     <component
       :is="componentName"
@@ -17,6 +16,13 @@
       @focus="onSelect"
       :id="`element_${id}`"
       v-bind="{ ...$attrs, element, isFocused, isDragged, isDisabled, dense }" />
+    <div class="element-actions">
+      <discussion
+        v-if="showDiscussion"
+        v-bind="element"
+        :is-element-selected="isFocused || isHovered"
+        :user="currentUser" />
+    </div>
     <v-progress-linear
       v-if="isSaving"
       height="2"
@@ -39,6 +45,7 @@ export default {
   props: {
     element: { type: Object, required: true },
     parent: { type: Object, default: null },
+    isHovered: { type: Boolean, default: false },
     isDragged: { type: Boolean, default: false },
     isDisabled: { type: Boolean, default: false },
     frame: { type: Boolean, default: true },
@@ -146,6 +153,15 @@ export default {
 .frame {
   padding: 10px 20px;
   border: 1px solid #e1e1e1;
+}
+
+.element-actions {
+  position: absolute;
+  top: -0.0625rem;
+  right: -1.25rem;
+  width: 1.5rem;
+  height: 100%;
+  padding-left: 0.5rem;
 }
 
 .active-users {
