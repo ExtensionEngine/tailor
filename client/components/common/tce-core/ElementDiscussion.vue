@@ -79,7 +79,8 @@ export default {
       const { comments, unseenComments } = this;
       const type = comments.length ? 'preview' : 'post';
       return getActivatorOptions(unseenComments)[type];
-    }
+    },
+    routeElementId: vm => vm.$route.query?.elementId
   },
   methods: {
     save(data) {
@@ -101,10 +102,10 @@ export default {
       this.editorBus.emit(events.SET_LAST_SEEN, options);
     },
     toggleDiscussion(query) {
-      const { elementId } = this.$route.query;
-      if (!elementId && query) this.$router.push({ query });
-      if (this.uid !== elementId) return;
-      const element = this.$refs[`element:${elementId}`].$el;
+      const { $router, uid } = this;
+      if (query && this.routeElementId !== query.elementId) $router.push({ query });
+      if (uid !== this.routeElementId) return;
+      const element = this.$refs[`element:${uid}`].$el;
       element.scrollIntoView({ behavior: 'smooth' });
       setTimeout(() => (this.isVisible = true), 200);
     }
