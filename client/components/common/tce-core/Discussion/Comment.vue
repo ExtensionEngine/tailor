@@ -20,7 +20,7 @@
       <span v-if="isEditing" class="float-right">
         <v-btn @click="reset" text small>Cancel</v-btn>
         <v-btn @click="save" :disabled="!content.trim()" color="green" text small>
-          <v-icon class="pr-1">mdi-check</v-icon> Save changes
+          <v-icon class="pr-1">mdi-check</v-icon> Save
         </v-btn>
       </span>
       <v-tooltip v-else right>

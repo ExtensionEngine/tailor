@@ -1,15 +1,16 @@
 <template>
   <div :class="{ preview: showPreview }" class="comment-editor">
+    <div v-if="showPreview" class="content">
+      <pre><span>{{ content }}</span><br></pre>
+    </div>
     <v-textarea
+      v-else
       @change="$emit('input', $event)"
       :value="content"
       :autofocus="isFocused"
       :placeholder="placeholder"
       rows="3"
       outlined auto-grow clearable counter />
-    <div class="content">
-      <pre><span>{{ content }}</span><br></pre>
-    </div>
   </div>
 </template>
 
