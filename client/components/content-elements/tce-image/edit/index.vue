@@ -52,7 +52,13 @@
 <script>
 import Cropper from './Cropper';
 import { ElementPlaceholder } from 'tce-core';
+import { imgSrcToDataURL } from 'blob-util';
 import isEmpty from 'lodash/isEmpty';
+
+function toDataUrl(imageUrl) {
+  if (!imageUrl) return Promise.resolve(imageUrl);
+  return imgSrcToDataURL(imageUrl, 'image/png', 'Anonymous');
+}
 
 function getImageDimensions(url) {
   return new Promise((resolve, reject) => {
@@ -119,7 +125,7 @@ export default {
       if (this.currentImage) this.$refs.cropper.clear();
     },
     'element.data.url'(imageUrl) {
-      this.load(imageUrl);
+      toDataUrl(imageUrl).then(dataUrl => this.load(dataUrl));
     }
   },
   mounted() {
