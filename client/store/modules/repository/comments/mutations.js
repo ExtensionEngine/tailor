@@ -15,9 +15,9 @@ const markSeenComments = ({ seen }, payload) => {
     ...seen[key],
     [elementUid || activityUid]: lastCommentAt
   };
-  if (activityUid) return (seen.allElementComments = []);
+  if (activityUid) return (seen.elementComments = []);
   if (!unseenElementComments) return;
-  seen.allElementComments = [...seen.allElementComments, ...unseenElementComments];
+  seen.elementComments = [...seen.elementComments, ...unseenElementComments];
 };
 
 export {

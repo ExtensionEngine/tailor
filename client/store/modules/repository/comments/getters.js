@@ -20,9 +20,9 @@ export const getUnseenActivityComments = (state, _, { auth }) => activity => {
 };
 
 function processUnseenComments(items, seen) {
-  if (!seen.allElementComments.length) return items;
+  if (!seen.elementComments.length) return items;
   return transform(items, (acc, comment, key) => {
-    const found = find(seen.allElementComments, { id: comment.id });
+    const found = find(seen.elementComments, { id: comment.id });
     if (!found) return (acc[key] = comment);
   }, {});
 }
