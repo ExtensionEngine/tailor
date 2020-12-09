@@ -36,7 +36,7 @@ export default {
 
 <style lang="scss" scoped>
 .discussion-thread {
-  margin: 0.5rem 0 0;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
