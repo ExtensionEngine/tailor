@@ -1,11 +1,11 @@
 'use strict';
 
+const config = require('../../../../config/server').storage;
 const { FORBIDDEN } = require('http-status-codes');
 const miss = require('mississippi');
 const path = require('path');
 const proxy = require('./');
 const storage = require('../');
-const config = require('../../../../config/server').storage;
 const router = require('express').Router();
 
 function getFile(req, res, next) {

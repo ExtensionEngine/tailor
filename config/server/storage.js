@@ -13,7 +13,7 @@ module.exports = {
     path: process.env.STORAGE_PATH
   },
   proxy: {
-    provider: process.env.STORAGE_PROXY,
+    provider: process.env.STORAGE_PROXY || 'local',
     cloudfront: {
       host: process.env.STORAGE_PROXY_HOST,
       keyPairId: process.env.STORAGE_PROXY_KEY_PAIR_ID,
