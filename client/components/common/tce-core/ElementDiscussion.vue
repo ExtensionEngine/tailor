@@ -107,6 +107,7 @@ export default {
       this.editorBus.emit(events.SET_LAST_SEEN, options);
     },
     toggleDiscussion(query) {
+      if (!this.comments.length) return;
       const { $router, uid } = this;
       if (query && this.routeElementId !== query.elementId) $router.push({ query });
       if (uid !== this.routeElementId) return;
