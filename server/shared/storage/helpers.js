@@ -84,13 +84,14 @@ processor.IMAGE = asset => {
 };
 
 processor.SCORM = async element => {
-  const manifestKey = find(element.data.assets, it => it.endsWith('imsmanifest.xml'));
+  const { root, assets } = element.data;
+  const manifestKey = find(assets, it => it.endsWith('imsmanifest.xml'));
   const manifest = await storage.getFile(manifestKey.substr(STORAGE_PROTOCOL.length, manifestKey.length));
   const options = { ignoreAttributes: false, attributeNamePrefix: '$_' };
   const { manifest: parsedManifest } = xmlParser.parse(manifest.toString(), options);
   const { $_href: resourcePath } = parsedManifest.resources.resource;
-  const key = `${config.path}/${element.data.root}/${resourcePath}`;
-  element.data.launchUrl = key;
+  const launchKey = `${config.path}/${root}/${resourcePath}`;
+  element.data.launchUrl = proxy.getFileUrl(launchKey);
   return element;
 };
 
@@ -160,12 +161,6 @@ resolver.IMAGE = asset => {
     .then(exists => exists ? getUrl(asset.data.url) : asset);
 };
 
-resolver.SCORM = element => {
-  const { launchUrl } = element.data || {};
-  if (!launchUrl) return element;
-  element.data.launchUrl = proxy.getFileUrl(launchUrl);
-  return element;
-};
 
 function saveFile(key, file) {
   // TODO: Investigate and properly set 'ACL' grant in options
