@@ -11,11 +11,18 @@ exports.add = (Comment, Hooks, db) => {
   const { Events } = Comment;
   const { Repository, RepositoryUser, Activity, ContentElement, User } = db;
 
+  const includeElement = {
+    model: ContentElement, as: 'contentElement', attributes: ['uid']
+  };
+
   Comment.addHook(Hooks.afterCreate, async comment => {
-    const author = await comment.getAuthor({
+    const includeAuthor = {
+      model: User,
+      as: 'author',
       attributes: ['id', 'email', 'firstName', 'lastName', 'fullName', 'imgUrl']
-    });
-    const contentElement = await comment.getContentElement({ attributes: ['uid'] });
+    };
+    const include = [includeAuthor, includeElement];
+    const { author, contentElement } = await comment.reload({ include });
     sse.channel(comment.repositoryId)
       .send(Events.Create, { ...comment.toJSON(), author, contentElement });
     sendEmailNotification(comment);
@@ -40,8 +47,8 @@ exports.add = (Comment, Hooks, db) => {
           include: [{ model: RepositoryUser, include: { model: User } }]
         },
         { model: Activity, attributes: ['id', 'type', 'data'] },
-        { model: ContentElement, as: 'contentElement', attributes: ['uid'] },
-        { model: User, as: 'author' }
+        { model: User, as: 'author' },
+        includeElement
       ]
     });
     const { author, repository, activity, contentElement } = comment;
