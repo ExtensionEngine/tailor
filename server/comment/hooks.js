@@ -9,7 +9,7 @@ const without = require('lodash/without');
 
 exports.add = (Comment, Hooks, db) => {
   const { Events } = Comment;
-  const { Repository, RepositoryUser, Activity, User } = db;
+  const { Repository, RepositoryUser, Activity, ContentElement, User } = db;
 
   Comment.addHook(Hooks.afterCreate, async comment => {
     const author = await comment.getAuthor({
@@ -38,11 +38,12 @@ exports.add = (Comment, Hooks, db) => {
           model: Repository,
           include: [{ model: RepositoryUser, include: { model: User } }]
         },
-        { model: Activity },
+        { model: Activity, attributes: ['id', 'type', 'data'] },
+        { model: ContentElement, as: 'contentElement', attributes: ['uid'] },
         { model: User, as: 'author' }
       ]
     });
-    const { author, repository, activity } = comment;
+    const { author, repository, activity, contentElement } = comment;
     const options = {
       offset: 1,
       limit: 3,
@@ -54,6 +55,7 @@ exports.add = (Comment, Hooks, db) => {
       repositoryId: repository.id,
       repositoryName: repository.name,
       activityId: activity.id,
+      elementUid: contentElement && contentElement.uid,
       activityLabel: getLevel(activity.type).label,
       topic: activity.data.name,
       author: author.profile,

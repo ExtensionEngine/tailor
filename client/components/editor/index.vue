@@ -45,9 +45,9 @@ export default {
     selectedElement: null
   }),
   computed: {
-    ...mapGetters('repository/userTracking', ['getActiveUsers']),
-    ...mapGetters('repository', ['repository', 'outlineActivities']),
     ...mapGetters('editor', ['activity', 'contentContainers', 'rootContainerGroups']),
+    ...mapGetters('repository', ['repository', 'outlineActivities']),
+    ...mapGetters('repository/userTracking', ['getActiveUsers']),
     activeUsers: vm => vm.getActiveUsers('activity', vm.activityId)
   },
   methods: {

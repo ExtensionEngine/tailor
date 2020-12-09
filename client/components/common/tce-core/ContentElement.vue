@@ -15,12 +15,14 @@
       @delete="$emit('delete')"
       @focus="onSelect"
       :id="`element_${id}`"
-      v-bind="$attrs"
-      :element="element"
-      :is-focused="isFocused"
-      :is-dragged="isDragged"
-      :is-disabled="isDisabled"
-      :dense="dense" />
+      v-bind="{ ...$attrs, element, isFocused, isDragged, isDisabled, dense }" />
+    <div class="element-actions">
+      <discussion
+        v-if="showDiscussion"
+        v-bind="element"
+        :is-element-selected="isFocused || isHovered"
+        :user="currentUser" />
+    </div>
     <v-progress-linear
       v-if="isSaving"
       height="2"
@@ -33,6 +35,7 @@
 <script>
 import { getComponentName, getElementId } from './utils';
 import ActiveUsers from 'tce-core/ActiveUsers';
+import Discussion from './ElementDiscussion';
 import { mapChannels } from '@/plugins/radio';
 
 export default {
@@ -42,10 +45,12 @@ export default {
   props: {
     element: { type: Object, required: true },
     parent: { type: Object, default: null },
+    isHovered: { type: Boolean, default: false },
     isDragged: { type: Boolean, default: false },
     isDisabled: { type: Boolean, default: false },
     frame: { type: Boolean, default: true },
-    dense: { type: Boolean, default: false }
+    dense: { type: Boolean, default: false },
+    showDiscussion: { type: Boolean, default: false }
   },
   data: () => ({
     isFocused: false,
@@ -101,11 +106,9 @@ export default {
     });
   },
   provide() {
-    return {
-      $elementBus: this.elementBus
-    };
+    return { $elementBus: this.elementBus };
   },
-  components: { ActiveUsers }
+  components: { ActiveUsers, Discussion }
 };
 </script>
 
@@ -150,6 +153,15 @@ export default {
 .frame {
   padding: 10px 20px;
   border: 1px solid #e1e1e1;
+}
+
+.element-actions {
+  position: absolute;
+  top: -0.0625rem;
+  right: -1.25rem;
+  width: 1.5rem;
+  height: 100%;
+  padding-left: 0.5rem;
 }
 
 .active-users {

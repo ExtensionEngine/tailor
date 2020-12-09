@@ -16,8 +16,7 @@
         :selected="selectedActivity" />
       <activity-discussion
         v-show="discussionTabVisible"
-        :activity="selectedActivity"
-        :is-visible="discussionTabVisible" />
+        :activity="selectedActivity" />
       <element-sidebar
         v-if="selectedTab === 'element'"
         :key="getElementId(selectedElement)"
@@ -50,7 +49,7 @@
 </template>
 
 <script>
-import ActivityDiscussion from './Discussion';
+import ActivityDiscussion from '@/components/repository/common/ActivityDiscussion';
 import ActivityNavigation from './Navigation';
 import debounce from 'lodash/debounce';
 import ElementSidebar from './ElementSidebar';
@@ -70,10 +69,10 @@ export default {
   data: () => ({ selectedTab: 'browser', unseenCommentCount: 0 }),
   computed: {
     selectedTabIndex: vm => vm.tabs.map(it => it.name).indexOf(vm.selectedTab),
-    ...mapGetters('repository/comments', ['getUnseenComments']),
-    unseenComments: vm => vm.getUnseenComments(vm.selectedActivity),
+    ...mapGetters('repository/comments', ['getUnseenActivityComments']),
+    unseenComments: vm => vm.getUnseenActivityComments(vm.selectedActivity),
     discussionTabVisible: vm => vm.selectedTab === 'comments',
-    tabs: vm => ([{
+    tabs: vm => [{
       name: 'browser',
       label: 'Browse',
       icon: 'file-tree'
@@ -87,16 +86,14 @@ export default {
       label: 'Element',
       icon: 'toy-brick-outline',
       disabled: !vm.elementSidebarEnabled
-    }]),
+    }],
     elementSidebarEnabled: vm => vm.selectedElement && !vm.metadata.isEmpty,
     metadata() {
       const { repository, selectedElement } = this;
       return getElementMetadata(get(repository, 'schema'), selectedElement);
     }
   },
-  methods: {
-    getElementId
-  },
+  methods: { getElementId },
   watch: {
     selectedElement() {
       if (this.elementSidebarEnabled) {
@@ -109,7 +106,6 @@ export default {
     unseenComments: debounce(function (val) {
       this.unseenCommentCount = val.length;
     }, 200)
-
   },
   components: { ActivityDiscussion, ActivityNavigation, ElementSidebar }
 };
@@ -129,6 +125,12 @@ export default {
     &.toolbar-composite {
       padding-top: 8.75rem;
     }
+  }
+
+  ::v-deep .activity-discussion {
+    margin: 1rem 0;
+    padding: 1rem;
+    border: none;
   }
 }
 </style>
