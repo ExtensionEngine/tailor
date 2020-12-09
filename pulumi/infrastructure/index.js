@@ -118,7 +118,7 @@ const server = new aws.ec2.Instance('server', {
 
 // Get the elastic IP address from the eip stack
 const eipStack = new pulumi.StackReference(config.get('eipStackName'));
-const eipId = eipStack.getOutput('eipId');
+const eipId = eipStack.getOutput('id');
 
 // Associate elastic IP address to the newly created ec2 instance.
 // The elastic IP address is created separately (../eip folder)
@@ -131,7 +131,7 @@ new aws.ec2.EipAssociation('tailor-eip-assoc', {
 // Install required software
 const privateKey = config.getSecret('privateKey');
 const privateKeyPassphrase = config.getSecret('privateKeyPassphrase');
-const elasticIp = eipStack.getOutput('elasticIp');
+const elasticIp = eipStack.getOutput('ip');
 // ssh connection options
 const conn = {
   host: elasticIp,

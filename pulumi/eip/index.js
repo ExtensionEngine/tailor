@@ -2,7 +2,8 @@
 
 const aws = require('@pulumi/aws');
 
+// Create elastic IP address
 const eip = new aws.ec2.Eip('eip', { vpc: true });
 
-exports.eipId = eip.id;
-exports.elasticIp = eip.publicIp;
+exports.id = eip.id;
+exports.ip = eip.publicIp;
