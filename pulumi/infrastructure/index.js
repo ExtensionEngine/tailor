@@ -16,6 +16,26 @@ const vpc = new awsx.ec2.Vpc('tailor-test-vpc', {
   subnets: [{ type: 'public' }, { type: 'private' }]
 });
 
+// Create a security group to restrict access to the ec2 instance
+const serverSecgrp = new aws.ec2.SecurityGroup('server-sec-grp', {
+  ingress: [
+    { protocol: 'tcp', fromPort: 22, toPort: 22, cidrBlocks: ['0.0.0.0/0'] },
+    { protocol: 'tcp', fromPort: 80, toPort: 80, cidrBlocks: ['0.0.0.0/0'] },
+    { protocol: 'tcp', fromPort: 443, toPort: 443, cidrBlocks: ['0.0.0.0/0'] }
+  ],
+  egress: [
+    { protocol: '-1', fromPort: 0, toPort: 0, cidrBlocks: ['0.0.0.0/0'] }
+  ],
+  vpcId: vpc.id
+});
+// Create a security group to restrict access to the postgres instance
+const dbSecgrp = new aws.ec2.SecurityGroup('db-sec-grp', {
+  ingress: [
+    { protocol: 'tcp', fromPort: 5432, toPort: 5432, securityGroups: [serverSecgrp.id] }
+  ],
+  vpcId: vpc.id
+}, { dependsOn: serverSecgrp });
+
 // Create S3 Bucket
 const bucket = new aws.s3.Bucket('tailor-test');
 
@@ -56,25 +76,13 @@ const db = new aws.rds.Instance('tailor-test-postgres', {
   name: config.get('dbName'), // db name
   username: config.get('dbUser'),
   password: config.getSecret('dbPassword'),
-  skipFinalSnapshot: true
+  skipFinalSnapshot: true,
+  vpcSecurityGroupIds: [dbSecgrp.id]
 });
 
 const publicKey = config.get('publicKey');
 // Create an ssh keypair used for ssh connection to the ec2 instance
 const sshKeyPair = new aws.ec2.KeyPair('tailor-test-key', { publicKey });
-
-// Create a security group to restrict access to the ec2 instance
-const secgrp = new aws.ec2.SecurityGroup('server-sec-grp', {
-  ingress: [
-    { protocol: 'tcp', fromPort: 22, toPort: 22, cidrBlocks: ['0.0.0.0/0'] },
-    { protocol: 'tcp', fromPort: 80, toPort: 80, cidrBlocks: ['0.0.0.0/0'] },
-    { protocol: 'tcp', fromPort: 443, toPort: 443, cidrBlocks: ['0.0.0.0/0'] }
-  ],
-  egress: [
-    { protocol: '-1', fromPort: 0, toPort: 0, cidrBlocks: ['0.0.0.0/0'] }
-  ],
-  vpcId: vpc.id
-});
 
 // const userData =
 // `#!/bin/bash
@@ -101,7 +109,7 @@ const server = new aws.ec2.Instance('server', {
   // To create instances in all public subnets (if there are multiple availability zones)
   // use for loop to iterate over the public subnets.
   subnetId: vpc.publicSubnetIds.then(ids => ids[0]),
-  vpcSecurityGroupIds: [secgrp.id],
+  vpcSecurityGroupIds: [serverSecgrp.id],
   // userData,
   tags: {
     name: 'pulumi-tailor-test'
