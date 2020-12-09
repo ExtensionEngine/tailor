@@ -161,7 +161,6 @@ resolver.IMAGE = asset => {
     .then(exists => exists ? getUrl(asset.data.url) : asset);
 };
 
-
 function saveFile(key, file) {
   // TODO: Investigate and properly set 'ACL' grant in options
   const options = { ContentType: mime.lookup(key) };
