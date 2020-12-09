@@ -23,8 +23,8 @@ export default {
       const action = comment.id ? 'updateComment' : 'saveComment';
       this[action]({ ...comment, activityId: this.activityId });
     },
-    setLastSeenComment(options) {
-      setTimeout(() => this.markSeenComments(options), options.timeout);
+    setLastSeenComment({ timeout, ...payload }) {
+      setTimeout(() => this.markSeenComments(payload), timeout);
     }
   },
   mounted() {
