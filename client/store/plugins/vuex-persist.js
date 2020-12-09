@@ -17,8 +17,7 @@ export default new VuexPersistence({
     auth,
     repository: {
       comments: {
-        seen: repository.comments.seen,
-        seenElementComments: repository.comments.seenElementComments
+        seen: repository.comments.seen
       }
     }
   }),

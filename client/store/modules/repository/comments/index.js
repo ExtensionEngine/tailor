@@ -6,9 +6,9 @@ const state = {
   items: {},
   seen: {
     activity: {},
-    contentElement: {}
+    contentElement: {},
+    allElementComments: []
   },
-  seenElementComments: [],
   $apiUrl: null
 };
 

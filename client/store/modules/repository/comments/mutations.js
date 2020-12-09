@@ -16,8 +16,8 @@ const markSeenComments = (state, payload) => {
     [elementUid || activityUid]: lastCommentAt
   };
   if (!elementUid && !unseenElementComments.length) return;
-  state.seenElementComments = [
-    ...state.seenElementComments,
+  state.seen.allElementComments = [
+    ...state.seen.allElementComments,
     ...unseenElementComments
   ];
 };
