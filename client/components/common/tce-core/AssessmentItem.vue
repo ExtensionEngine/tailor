@@ -31,7 +31,8 @@
     <div v-else @click="$emit('selected')" class="minimized">
       <v-chip
         color="blue-grey darken-3"
-        label dark small>
+        label dark small
+        class="readonly">
         {{ elementConfig.subtype }}
       </v-chip>
       <span class="question">{{ question | truncate(50) }}</span>

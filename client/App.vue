@@ -2,7 +2,7 @@
   <v-app id="app">
     <navbar v-if="user" :user="user" />
     <v-main>
-      <router-view class="view grey lighten-4" />
+      <router-view class="view" />
     </v-main>
     <confirmation-modal />
   </v-app>
@@ -53,6 +53,10 @@ html {
 .application, .v-application--wrap, .v-main, .view {
   width: 100%;
   height: 100%;
+}
+
+.v-main {
+  background-color: #f5f5f5;
 }
 
 .v-main .view {

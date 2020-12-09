@@ -1,5 +1,5 @@
 import { Comment as Events } from '@/../common/sse';
-import { feed } from '../feed';
+import feed from '../feed';
 import generateActions from '@/store/helpers/actions';
 
 const { api, get, save, setEndpoint, update } = generateActions();
@@ -11,8 +11,8 @@ const plugSSE = ({ commit }) => {
     .subscribe(Events.Delete, item => commit('update', item));
 };
 
-const fetch = ({ commit }, activityId) => {
-  return api.fetch({ activityId })
+const fetch = ({ commit }, payload) => {
+  return api.fetch(payload)
     .then(items => commit('fetch', items));
 };
 

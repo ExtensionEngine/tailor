@@ -15,8 +15,7 @@
     </div>
     <entity-revisions
       v-if="expanded"
-      :revision="revision"
-      :is-detached="!activity" />
+      v-bind="{ revision, isDetached: !activity }" />
   </li>
 </template>
 
@@ -36,9 +35,7 @@ export default {
   props: {
     revision: { type: Object, required: true }
   },
-  data() {
-    return { expanded: false };
-  },
+  data: () => ({ expanded: false }),
   computed: {
     ...mapGetters('repository', ['structure']),
     ...mapGetters('repository/activities', ['getParent']),
@@ -47,21 +44,11 @@ export default {
       const activityId = state.activityId || state.id;
       return this.getOutlineLocation(this.getParent(activityId));
     },
-    color() {
-      return getRevisionColor(this.revision);
-    },
-    acronym() {
-      return getRevisionAcronym(this.revision);
-    },
-    date() {
-      return fecha.format(this.revision.createdAt, 'M/D/YY HH:mm');
-    },
-    description() {
-      return getFormatDescription(this.revision, this.activity);
-    },
-    isContentElement() {
-      return this.revision.entity === 'CONTENT_ELEMENT';
-    }
+    color: vm => getRevisionColor(vm.revision),
+    acronym: vm => getRevisionAcronym(vm.revision),
+    date: vm => fecha.format(vm.revision.createdAt, 'M/D/YY h:mm A'),
+    description: vm => getFormatDescription(vm.revision, vm.activity),
+    isContentElement: vm => vm.revision.entity === 'CONTENT_ELEMENT'
   },
   methods: {
     getOutlineLocation(current) {

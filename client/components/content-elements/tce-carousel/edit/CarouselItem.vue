@@ -1,5 +1,5 @@
 <template>
-  <v-carousel-item light class="carousel-item blue-grey lighten-5">
+  <v-carousel-item light eager class="carousel-item blue-grey lighten-5">
     <v-alert
       v-if="!hasElements && !isDisabled"
       color="blue-grey darken-2"
@@ -12,7 +12,8 @@
       @save="({ embeds }) => save(item, embeds)"
       @delete="deleteEmbed($event)"
       :container="{ embeds }"
-      :is-disabled="isDisabled" />
+      :is-disabled="isDisabled"
+      class="mx-2" />
   </v-carousel-item>
 </template>
 

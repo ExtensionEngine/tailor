@@ -3,7 +3,7 @@
     <v-chip
       :color="config.color"
       label dark small
-      class="body-label">
+      class="readonly body-label">
       {{ config.label.toUpperCase() }}
     </v-chip>
     <v-tooltip open-delay="500" bottom>
@@ -58,15 +58,15 @@
         :activity="activity"
         v-bind="relationship" />
     </div>
-    <discussion :activity="activity" />
+    <activity-discussion :activity="activity" show-heading />
   </div>
 </template>
 
 <script>
 import { getActivityMetadata, getLevel } from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex';
+import ActivityDiscussion from '../ActivityDiscussion';
 import ActivityTasks from './Tasks';
-import Discussion from './Discussion';
 import LabelChip from '@/components/repository/common/LabelChip';
 import MetaInput from 'tce-core/MetaInput';
 import Relationship from './Relationship';
@@ -93,7 +93,7 @@ export default {
   },
   components: {
     ActivityTasks,
-    Discussion,
+    ActivityDiscussion,
     Relationship,
     MetaInput,
     LabelChip

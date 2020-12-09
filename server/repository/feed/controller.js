@@ -10,16 +10,15 @@ const USER_ATTRS = [
   'id', 'email', 'firstName', 'lastName', 'fullName', 'label', 'imgUrl'
 ];
 
-function subscribe({ repository }, { sse: connection }) {
-  connection.once('close', () => onUnsubscribe(connection));
+function subscribe({ repository, user }, { sse: connection }) {
+  connection.once('close', () => onUnsubscribe(connection, { repository, user }));
   connection.join(repository.id);
 }
 
-function onUnsubscribe({ id: sseId, request }) {
-  const { repository, user } = request;
-  activeUsers.removeContext(user, it => it.sseId === sseId);
+function onUnsubscribe(connection, { repository, user }) {
+  activeUsers.removeContext(user, it => it.sseId === connection.id);
   sse.channel(repository.id)
-    .send(UserActivity.EndSession, { sseId, userId: user.id });
+    .send(UserActivity.EndSession, { sseId: connection.id, userId: user.id });
 }
 
 function fetchUserActivities(_req, res) {

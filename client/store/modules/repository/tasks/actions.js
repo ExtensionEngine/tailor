@@ -1,5 +1,5 @@
 import { Task as Events } from '@/../common/sse';
-import { feed } from '../feed';
+import feed from '../feed';
 import generateActions from '@/store/helpers/actions';
 
 const { api, fetch, reset, save, setEndpoint, update, remove } = generateActions();

@@ -1,19 +1,25 @@
 <template>
-  <div class="editor-container">
+  <div>
     <template v-if="!isLoading">
-      <toolbar :element="selectedElement" :active-users="activeUsers" />
-      <sidebar
-        :repository="repository"
-        :activities="outlineActivities"
-        :selected-activity="activity"
-        :selected-element="selectedElement" />
-      <activity-content
-        :key="activity.id"
-        @selected="selectedElement = $event"
-        :repository="repository"
-        :activity="activity"
-        :root-container-groups="rootContainerGroups"
-        :content-containers="contentContainers" />
+      <toolbar
+        :element="selectedElement"
+        :active-users="activeUsers" />
+      <div class="editor-content-container">
+        <sidebar
+          :repository="repository"
+          :activities="outlineActivities"
+          :selected-activity="activity"
+          :selected-element="selectedElement"
+          class="sidebar" />
+        <activity-content
+          :key="activity.id"
+          @selected="selectElement"
+          :repository="repository"
+          :activity="activity"
+          :root-container-groups="rootContainerGroups"
+          :content-containers="contentContainers"
+          class="activity-content" />
+      </div>
     </template>
   </div>
 </template>
@@ -22,6 +28,7 @@
 import { mapActions, mapGetters } from 'vuex';
 import ActivityContent from './ActivityContent';
 import get from 'lodash/get';
+import { getElementId } from 'tce-core/utils';
 import Sidebar from './Sidebar';
 import Toolbar from './Toolbar';
 import withUserTracking from 'components/common/mixins/userTracking';
@@ -38,12 +45,22 @@ export default {
     selectedElement: null
   }),
   computed: {
-    ...mapGetters('repository/userTracking', ['getActiveUsers']),
-    ...mapGetters('repository', ['repository', 'outlineActivities']),
     ...mapGetters('editor', ['activity', 'contentContainers', 'rootContainerGroups']),
+    ...mapGetters('repository', ['repository', 'outlineActivities']),
+    ...mapGetters('repository/userTracking', ['getActiveUsers']),
     activeUsers: vm => vm.getActiveUsers('activity', vm.activityId)
   },
-  methods: mapActions('repository', ['initialize']),
+  methods: {
+    ...mapActions('repository', ['initialize']),
+    selectElement(element) {
+      this.selectedElement = element;
+      const selectedElementId = getElementId(element);
+      const { elementId: queryElementId, ...query } = this.$route.query;
+      if (selectedElementId === queryElementId) return;
+      if (selectedElementId) query.elementId = selectedElementId;
+      this.$router.replace({ query });
+    }
+  },
   async created() {
     const { repositoryId: currentRepositoryId, repository: storeRepository } = this;
     const repositoryLoaded = !!storeRepository;
@@ -62,8 +79,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.editor-container {
+$sidebar-width: 25rem;
+
+.editor-content-container {
   display: flex;
-  flex-direction: column;
+  height: calc(100% - 3.125rem);
+
+  .sidebar {
+    flex-basis: $sidebar-width;
+  }
+
+  .activity-content {
+    flex-grow: 1;
+    flex-basis: calc(100% - #{$sidebar-width});
+  }
 }
 </style>
