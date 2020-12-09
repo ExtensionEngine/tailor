@@ -10,8 +10,8 @@
       <div
         v-for="(element, index) in elements"
         :key="getElementId(element)"
-        @dragstart="dragElementIndex = index"
-        @dragend="dragElementIndex = -1"
+        @dragstart="onDragStart(index)"
+        @dragend="onDragEnd(element)"
         :class="`col-xs-${get(element, 'data.width', 12)}`">
         <slot
           :element="element"
@@ -48,6 +48,9 @@ import AddElement from './AddElement';
 import Draggable from 'vuedraggable';
 import get from 'lodash/get';
 import { getElementId } from 'tce-core/utils';
+import { mapChannels } from '@/plugins/radio';
+
+const CE_FOCUS_EVENT = 'element:focus';
 
 export default {
   name: 'element-list',
@@ -62,6 +65,7 @@ export default {
   },
   data: () => ({ dragElementIndex: null }),
   computed: {
+    ...mapChannels({ editorChannel: 'editor' }),
     options: vm => ({
       ...vm.dragOptions,
       handle: '.drag-handle',
@@ -72,6 +76,14 @@ export default {
   methods: {
     get,
     getElementId,
+    onDragStart(index) {
+      this.dragElementIndex = index;
+      this.editorChannel.emit(CE_FOCUS_EVENT);
+    },
+    onDragEnd(element) {
+      this.dragElementIndex = -1;
+      this.editorChannel.emit(CE_FOCUS_EVENT, element);
+    },
     reorder({ newIndex: newPosition }) {
       const items = this.elements;
       this.$emit('update', { newPosition, items });

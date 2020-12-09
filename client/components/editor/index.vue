@@ -1,19 +1,25 @@
 <template>
-  <div class="editor-container">
+  <div>
     <template v-if="!isLoading">
-      <toolbar :element="selectedElement" :active-users="activeUsers" />
-      <sidebar
-        :repository="repository"
-        :activities="outlineActivities"
-        :selected-activity="activity"
-        :selected-element="selectedElement" />
-      <activity-content
-        :key="activity.id"
-        @selected="selectElement"
-        :repository="repository"
-        :activity="activity"
-        :root-container-groups="rootContainerGroups"
-        :content-containers="contentContainers" />
+      <toolbar
+        :element="selectedElement"
+        :active-users="activeUsers" />
+      <div class="editor-content-container">
+        <sidebar
+          :repository="repository"
+          :activities="outlineActivities"
+          :selected-activity="activity"
+          :selected-element="selectedElement"
+          class="sidebar" />
+        <activity-content
+          :key="activity.id"
+          @selected="selectElement"
+          :repository="repository"
+          :activity="activity"
+          :root-container-groups="rootContainerGroups"
+          :content-containers="contentContainers"
+          class="activity-content" />
+      </div>
     </template>
   </div>
 </template>
@@ -73,8 +79,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.editor-container {
+$sidebar-width: 25rem;
+
+.editor-content-container {
   display: flex;
-  flex-direction: column;
+  height: calc(100% - 3.125rem);
+
+  .sidebar {
+    flex-basis: $sidebar-width;
+  }
+
+  .activity-content {
+    flex-grow: 1;
+    flex-basis: calc(100% - #{$sidebar-width});
+  }
 }
 </style>
