@@ -5,7 +5,7 @@
     class="tce-scorm-toolbar elevation-0">
     <v-toolbar-title class="pl-1">SCORM toolbar</v-toolbar-title>
     <v-toolbar-items class="mx-auto">
-      <upload-btn @upload="saveElement" label="Upload SCORM package" />
+      <upload-btn @upload="saveElement" label="Upload SCORM package" unpack />
     </v-toolbar-items>
   </v-toolbar>
 </template>
