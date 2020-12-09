@@ -8,18 +8,15 @@ import {
   update
 } from '@/store/helpers/mutations';
 
-const markSeenComments = (state, payload) => {
-  const { activityUid, elementUid, lastCommentAt, unseenElementComments = [] } = payload;
+const markSeenComments = ({ seen }, payload) => {
+  const { activityUid, elementUid, lastCommentAt, unseenElementComments } = payload;
   const key = elementUid ? 'contentElement' : 'activity';
-  state.seen[key] = {
-    ...state.seen[key],
+  seen[key] = {
+    ...seen[key],
     [elementUid || activityUid]: lastCommentAt
   };
-  if (!elementUid && !unseenElementComments.length) return;
-  state.seen.allElementComments = [
-    ...state.seen.allElementComments,
-    ...unseenElementComments
-  ];
+  if (!unseenElementComments) return;
+  seen.allElementComments = [...seen.allElementComments, ...unseenElementComments];
 };
 
 export {
