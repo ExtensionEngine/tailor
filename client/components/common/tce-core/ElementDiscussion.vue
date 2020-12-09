@@ -104,8 +104,8 @@ export default {
       const { elementId } = this.$route.query;
       if (!elementId && query) this.$router.push({ query });
       if (this.uid !== elementId) return;
-      const contentElement = this.$refs[`element:${elementId}`].$el;
-      contentElement.scrollIntoView({ behavior: 'smooth' });
+      const element = this.$refs[`element:${elementId}`].$el;
+      element.scrollIntoView({ behavior: 'smooth' });
       setTimeout(() => (this.isVisible = true), 200);
     }
   },
@@ -121,7 +121,8 @@ export default {
   },
   mounted() {
     this.toggleDiscussion();
-    this.editorBus.on('element:toggleDiscussion', elementUid => {
+    const { editorBus, events } = this;
+    editorBus.on(events.TOGGLE, elementUid => {
       this.toggleDiscussion({ elementId: elementUid });
     });
   },

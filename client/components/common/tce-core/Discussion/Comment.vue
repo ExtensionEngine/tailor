@@ -58,6 +58,7 @@
 </template>
 
 <script>
+import events from '../Events/DiscussionEvent';
 import { focus } from 'vue-focus';
 import { mapChannels } from '@/plugins/radio';
 import TextEditor from './TextEditor';
@@ -100,7 +101,7 @@ export default {
     },
     toggleElementDiscussion() {
       const { uid: elementUid } = this.comment.contentElement;
-      this.editorBus.emit('element:toggleDiscussion', elementUid);
+      this.editorBus.emit(events.TOGGLE, elementUid);
     }
   },
   watch: {

@@ -67,6 +67,7 @@ import { getActivityMetadata, getLevel } from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex';
 import ActivityDiscussion from '../ActivityDiscussion';
 import ActivityTasks from './Tasks';
+import discussionEvents from 'tce-core/Events/DiscussionEvent';
 import LabelChip from '@/components/repository/common/LabelChip';
 import { mapChannels } from '@/plugins/radio';
 import MetaInput from 'tce-core/MetaInput';
@@ -95,7 +96,7 @@ export default {
   },
   created() {
     const { editorBus, $router, activity } = this;
-    editorBus.on('element:toggleDiscussion', elementUid => {
+    editorBus.on(discussionEvents.TOGGLE, elementUid => {
       const params = { activityId: activity.id };
       const query = { elementId: elementUid };
       $router.push({ name: 'editor', params, query });
