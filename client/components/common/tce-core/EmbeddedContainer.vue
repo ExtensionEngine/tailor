@@ -10,7 +10,7 @@
       <contained-content
         @save="save(element, 'data', $event)"
         @save:meta="save(element, 'meta', $event)"
-        @delete="$emit('delete', element)"
+        @delete="requestDeleteConfirmation"
         :element="element"
         :is-dragged="isDragged"
         :is-disabled="isDisabled"
@@ -25,6 +25,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import ContainedContent from './ContainedContent';
 import ElementList from './ElementList';
 import last from 'lodash/last';
+import { mapRequests } from '@/plugins/radio';
 import { resolveElementPosition } from './utils';
 import values from 'lodash/values';
 
@@ -48,6 +49,7 @@ export default {
     }
   },
   methods: {
+    ...mapRequests('app', ['showConfirmationModal']),
     addItem(item) {
       const container = cloneDeep(this.container);
       if (!item.position) item.position = this.nextPosition;
@@ -67,6 +69,13 @@ export default {
       const container = cloneDeep(this.container);
       container.embeds[item.id] = { ...item, [key]: value };
       this.$emit('save', container);
+    },
+    requestDeleteConfirmation(element) {
+      this.showConfirmationModal({
+        title: 'Delete element?',
+        message: 'Are you sure you want to delete element?',
+        action: () => this.$emit('delete', element)
+      });
     }
   },
   components: { ContainedContent, ElementList }

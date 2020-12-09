@@ -32,7 +32,7 @@
     <div class="actions-sidebar">
       <v-btn
         v-if="!element.parent && isHovered || isFocused"
-        @click="requestDeleteConfirmation"
+        @click="remove"
         color="red accent-3"
         dark icon x-small>
         <v-icon>mdi-delete-outline</v-icon>
@@ -43,9 +43,8 @@
 
 <script>
 import { getComponentName, getElementId } from './utils';
-import { mapChannels, mapRequests } from '@/plugins/radio';
 import ActiveUsers from 'tce-core/ActiveUsers';
-import { mapActions } from 'vuex';
+import { mapChannels } from '@/plugins/radio';
 
 export default {
   name: 'content-element',
@@ -74,8 +73,6 @@ export default {
     currentUser: vm => vm.$getCurrentUser()
   },
   methods: {
-    ...mapRequests('app', ['showConfirmationModal']),
-    ...mapActions('repository/contentElements', { removeElement: 'remove' }),
     onSelect(e) {
       if (this.isDisabled || e.component) return;
       this.focus();
@@ -88,20 +85,9 @@ export default {
     focus() {
       this.editorBus.emit('element:focus', this.element, this.parent);
     },
-    focusoutElement() {
+    remove() {
       this.editorBus.emit('element:focus');
-    },
-    remove(element) {
-      this.focusoutElement();
-      if (element.embedded) return this.$emit('delete');
-      this.removeElement(element);
-    },
-    requestDeleteConfirmation() {
-      this.showConfirmationModal({
-        title: 'Delete element?',
-        message: 'Are you sure you want to delete element?',
-        action: () => this.remove(this.element.parent || this.element)
-      });
+      this.$emit('delete', this.element.parent || this.element);
     }
   },
   created() {
