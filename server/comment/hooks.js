@@ -15,8 +15,9 @@ exports.add = (Comment, Hooks, db) => {
     const author = await comment.getAuthor({
       attributes: ['id', 'email', 'firstName', 'lastName', 'fullName', 'imgUrl']
     });
+    const contentElement = await comment.getContentElement({ attributes: ['uid'] });
     sse.channel(comment.repositoryId)
-      .send(Events.Create, { ...comment.toJSON(), author });
+      .send(Events.Create, { ...comment.toJSON(), author, contentElement });
     sendEmailNotification(comment);
   });
 

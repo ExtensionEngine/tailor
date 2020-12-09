@@ -9,19 +9,20 @@ const author = {
   attributes: ['id', 'email', 'firstName', 'lastName', 'fullName', 'imgUrl']
 };
 
+const element = { model: ContentElement, as: 'contentElement', attributes: ['uid'] };
+
 function list({ repository, opts, query }, res) {
   const { activityId, contentElementId } = query;
   if (activityId) opts.where.activityId = activityId;
   if (contentElementId) opts.where.contentElementId = contentElementId;
-  const CE = { model: ContentElement, as: 'contentElement', attributes: ['uid'] };
-  return repository.getComments({ ...opts, include: [author, CE] })
+  return repository.getComments({ ...opts, include: [author, element] })
     .then(data => res.json({ data }));
 }
 
 function create({ user, repository: { id: repositoryId }, body }, res) {
   const attrs = ['uid', 'activityId', 'contentElementId', 'content'];
   const payload = { repositoryId, authorId: user.id, ...pick(body, attrs) };
-  return Comment.create(payload, { include: [author] })
+  return Comment.create(payload, { include: [author, element] })
     .then(data => res.json({ data }));
 }
 
