@@ -27,8 +27,11 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import ActivityContent from './ActivityContent';
+import debounce from 'lodash/debounce';
+import discussionEvents from 'tce-core/Events/DiscussionEvent';
 import get from 'lodash/get';
 import { getElementId } from 'tce-core/utils';
+import { mapChannels } from '@/plugins/radio';
 import Sidebar from './Sidebar';
 import Toolbar from './Toolbar';
 import withUserTracking from 'components/common/mixins/userTracking';
@@ -45,6 +48,7 @@ export default {
     selectedElement: null
   }),
   computed: {
+    ...mapChannels({ editorBus: 'editor' }),
     ...mapGetters('editor', ['activity', 'contentContainers', 'rootContainerGroups']),
     ...mapGetters('repository', ['repository', 'outlineActivities']),
     ...mapGetters('repository/userTracking', ['getActiveUsers']),
@@ -59,7 +63,14 @@ export default {
       if (selectedElementId === queryElementId) return;
       if (selectedElementId) query.elementId = selectedElementId;
       this.$router.replace({ query });
-    }
+    },
+    toggleElementDiscussion: debounce(function ({ elementId }) {
+      this.editorBus.emit(discussionEvents.TOGGLE, elementId);
+    }, 2000)
+  },
+  beforeRouteEnter(to, from, next) {
+    if (!from.name) return next();
+    next(vm => vm.toggleElementDiscussion(to.query));
   },
   async created() {
     const { repositoryId: currentRepositoryId, repository: storeRepository } = this;

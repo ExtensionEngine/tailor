@@ -127,7 +127,6 @@ export default {
     }
   },
   mounted() {
-    this.toggleDiscussion();
     const { editorBus, events } = this;
     editorBus.on(events.TOGGLE, elementUid => {
       this.toggleDiscussion({ elementId: elementUid });
