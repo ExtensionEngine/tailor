@@ -2,34 +2,31 @@
   <ul class="discussion-thread mt-2">
     <thread-comment
       v-for="comment in visibleItems"
-      :key="comment.uid || comment.id"
+      :key="comment.uid"
       @update="onUpdate"
-      @remove="item => remove(item)"
-      :comment="comment" />
+      @remove="$emit('remove', comment)"
+      v-bind="{ comment, user }" />
   </ul>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-import takeRight from 'lodash/takeRight';
+import takeRgt from 'lodash/takeRight';
 import ThreadComment from './Comment';
 
 export default {
   name: 'discussion-thread',
   props: {
     items: { type: Array, required: true },
+    user: { type: Object, required: true },
     showAll: { type: Boolean, default: false },
     minDisplayed: { type: Number, default: 5 }
   },
   computed: {
-    visibleItems() {
-      return this.showAll ? this.items : takeRight(this.items, this.minDisplayed);
-    }
+    visibleItems: vm => vm.showAll ? vm.items : takeRgt(vm.items, vm.minDisplayed)
   },
   methods: {
-    ...mapActions('repository/comments', ['update', 'remove']),
     onUpdate(comment, content) {
-      this.update({ ...comment, content, updatedAt: Date.now() });
+      this.$emit('update', { ...comment, content, updatedAt: Date.now() });
     }
   },
   components: { ThreadComment }

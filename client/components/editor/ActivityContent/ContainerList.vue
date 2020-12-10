@@ -12,21 +12,22 @@
       :is="containerName"
       v-for="(container, index) in containerGroup"
       :key="container.uid || container.id"
+      @addElement="addElement"
+      @updateElement="updateElement"
+      @saveElement="saveContentElement"
+      @deleteElement="requestElementDeletion"
+      @insertElement="insertElement"
+      @reorderElement="reorderContentElements"
       @addSubcontainer="save"
       @updateSubcontainer="update"
       @deleteSubcontainer="requestContainerDeletion"
-      @addElement="addElement"
-      @saveElement="saveContentElement"
-      @updateElement="updateElement"
-      @reorderElement="reorderContentElements"
-      @deleteElement="requestElementDeletion"
       @delete="requestContainerDeletion(container)"
-      :container="container"
       :name="name"
-      :position="index"
+      :container="container"
       :activities="activities"
-      :elements="elements"
+      :elements="processedElements"
       :tes="elements"
+      :position="index"
       v-bind="$attrs" />
     <div v-if="addBtnEnabled">
       <v-btn @click="addContainer" color="blue-grey darken-3" text class="mt-4">
@@ -38,25 +39,23 @@
 </template>
 
 <script>
+import { getContainerName, getElementId } from 'tce-core/utils';
 import { mapActions, mapState } from 'vuex';
 import capitalize from 'lodash/capitalize';
-import ContentContainer from './Container';
 import get from 'lodash/get';
-import { getContainerTemplateId as getContainerId } from 'shared/activities';
-import { getContainerName } from 'tce-core/utils';
+import { getContainerTemplateId } from 'shared/activities';
 import isEmpty from 'lodash/isEmpty';
 import { mapRequests } from '@/plugins/radio';
 import maxBy from 'lodash/maxBy';
 import throttle from 'lodash/throttle';
-
-const DEFAULT_CONTAINER = 'content-container';
 
 export default {
   name: 'content-containers',
   inheritAttrs: false,
   inject: ['$ccRegistry'],
   props: {
-    containerGroup: { type: Array, default() { return []; } },
+    containerGroup: { type: Array, default: () => ({}) },
+    processedElements: { type: Object, required: true },
     type: { type: String, required: true },
     templateId: { type: String, default: null },
     parentId: { type: Number, required: true },
@@ -69,15 +68,11 @@ export default {
     ...mapState('repository/activities', { activities: 'items' }),
     ...mapState('repository/contentElements', { elements: 'items' }),
     containerName() {
-      const id = getContainerId(this);
-      return this.$ccRegistry.get(id) ? getContainerName(id) : DEFAULT_CONTAINER;
+      const id = getContainerTemplateId(this);
+      return getContainerName(this.$ccRegistry.get(id) ? id : 'DEFAULT');
     },
-    name() {
-      return this.label.toLowerCase();
-    },
-    addBtnEnabled() {
-      return !(!this.multiple && this.containerGroup.length);
-    },
+    name: vm => vm.label.toLowerCase(),
+    addBtnEnabled: vm => !(!vm.multiple && vm.containerGroup.length),
     nextPosition() {
       const last = get(maxBy(this.containerGroup, 'position'), 'position', 0);
       return last + 1;
@@ -90,15 +85,19 @@ export default {
       addElement: 'add',
       saveElement: 'save',
       updateElement: 'update',
-      reorderElements: 'reorder',
-      deleteElement: 'remove'
+      deleteElement: 'remove',
+      insertElement: 'insert',
+      reorderElements: 'reorder'
     }),
     addContainer() {
       const { type, parentId, nextPosition: position } = this;
       this.save({ type, parentId, position });
     },
     saveContentElement(element) {
-      return this.saveElement(element).then(() => this.showNotification());
+      return this.saveElement(element).then(() => {
+        this.$radio.channel(`element:${getElementId(element)}`).emit('saved');
+        this.showNotification();
+      });
     },
     reorderContentElements({ newPosition, items }) {
       const element = items[newPosition];
@@ -128,8 +127,7 @@ export default {
   },
   filters: {
     capitalize
-  },
-  components: { ContentContainer }
+  }
 };
 </script>
 

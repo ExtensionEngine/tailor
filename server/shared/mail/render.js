@@ -20,13 +20,11 @@ function renderHtml(templatePath, data, style) {
   const $style = $('mj-attributes');
   $style.append(getAttributes($, style));
   const opts = { filePath: templatePath, minify: true };
-  /*
-   * Mustache render needs to happen before `mjml2html` since it messes
-   * up mustache list rendering. Additional `mustache.render` is needed to
-   * account for imported .mjml files.
-   */
   const mustacheOutput = mustache.render($.html(), data);
   const output = mjml2html(mustacheOutput, opts).html;
+  // NOTE: Additional `mustache.render` call handles mustache syntax within mjml
+  // subcomponents. Subcomponents' mustache syntax is removed by `mjml2html` if
+  // placed outside of tag attribute or mj-text tag.
   return mustache.render(output, data);
 }
 

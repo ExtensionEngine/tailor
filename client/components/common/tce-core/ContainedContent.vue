@@ -34,13 +34,13 @@ export default {
     setWidth: { type: Boolean, default: true },
     dense: { type: Boolean, default: false }
   },
-  data() {
-    return { isHovered: false };
-  },
+  data: () => ({ isHovered: false }),
   computed: {
     bindings() {
-      const { element, isDisabled, isDragged, dense, $attrs: attrs } = this;
-      return { element, isDisabled, isDragged, dense, ...attrs };
+      const {
+        element, isDisabled, isDragged, isHovered, dense, $attrs: attrs
+      } = this;
+      return { element, isDisabled, isDragged, isHovered, dense, ...attrs };
     },
     widthClass() {
       const { element, setWidth } = this;
