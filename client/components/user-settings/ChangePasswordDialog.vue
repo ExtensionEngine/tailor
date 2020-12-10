@@ -104,6 +104,7 @@ export default {
       return this.changePassword({ currentPassword, newPassword })
         .then(() => this.$snackbar.show('Password changed!'))
         .then(() => this.logout())
+        .then(() => this.$router.push({ name: 'login' }))
         .catch(() => this.$snackbar.error('Current password isn\'t valid!'));
     }
   },
