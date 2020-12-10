@@ -16,6 +16,10 @@ function save(repository) {
   return request.post(urls.root, repository).then(extractData);
 }
 
+function get(repositoryId, params) {
+  return request.get(urls.resource(repositoryId), { params }).then(extractData);
+}
+
 function getRepositories(params) {
   return request.get(urls.root, { params }).then(extractData);
 }
@@ -66,6 +70,7 @@ function importRepository(data, options) {
 }
 
 export default {
+  get,
   getRepositories,
   save,
   getUsers,

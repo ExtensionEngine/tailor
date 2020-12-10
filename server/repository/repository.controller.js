@@ -1,7 +1,7 @@
 'use strict';
 
-const { NO_CONTENT, NOT_FOUND } = require('http-status-codes');
 const {
+  Activity,
   Repository,
   RepositoryTag,
   RepositoryUser,
@@ -10,6 +10,7 @@ const {
   Tag,
   User
 } = require('../shared/database');
+const { NO_CONTENT, NOT_FOUND } = require('http-status-codes');
 const { createError } = require('../shared/error/helpers');
 const { getSchema } = require('../../config/shared/activities');
 const getVal = require('lodash/get');
@@ -90,8 +91,9 @@ async function create({ user, body }, res) {
   return res.json({ data: repository });
 }
 
-async function get({ repository, user }, res) {
+async function get({ query, repository, user }, res) {
   const include = [includeLastRevision(), includeRepositoryUser(user), { model: Tag }];
+  if (query.withActivities) include.push({ model: Activity });
   await repository.reload({ include });
   return res.json({ data: repository });
 }

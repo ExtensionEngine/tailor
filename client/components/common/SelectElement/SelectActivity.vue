@@ -41,18 +41,17 @@
 <script>
 import groupBy from 'lodash/groupBy';
 import { isEditable } from 'shared/activities';
-import { mapGetters } from 'vuex';
 import pluralize from 'pluralize';
 import { toTreeFormat } from 'utils/activity';
 
 export default {
   name: 'select-activity',
   props: {
-    selectedElements: { type: Array, default: () => [] }
+    selectedElements: { type: Array, default: () => [] },
+    activities: { type: Array, default: () => [] }
   },
   data: () => ({ search: '' }),
   computed: {
-    ...mapGetters('repository', ['activities']),
     groupedSelection: vm => groupBy(vm.selectedElements, 'outlineId'),
     activityTree: vm => toTreeFormat(vm.activities, []),
     hasSearchResults() {

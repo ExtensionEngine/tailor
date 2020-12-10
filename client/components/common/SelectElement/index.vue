@@ -15,9 +15,11 @@
         <v-icon class="mr-2">mdi-{{ toggleButton.icon }}</v-icon>
         {{ toggleButton.label }}
       </v-btn>
+      <select-repository v-if="!activities.length" @selected="selectRepository" />
       <select-activity
-        v-if="!selectedActivity"
+        v-else-if="!selectedActivity"
         @selected="activity => showActivityElements(activity)"
+        :activities="activities"
         :selected-elements="selectedElements" />
       <v-progress-circular v-else-if="loadingContent" indeterminate class="mt-5" />
       <content-preview
@@ -31,8 +33,8 @@
     </template>
     <template v-slot:actions>
       <v-btn
-        v-if="selectedActivity"
-        @click="deselectActivity"
+        v-if="showBackButton"
+        @click="goBack"
         text outlined
         class="mr-2">
         <v-icon>mdi-arrow-left</v-icon> Back
@@ -50,7 +52,9 @@ import flatMap from 'lodash/flatMap';
 import { getDescendants as getContainers } from '@/utils/activity';
 import loader from '@/components/common/loader';
 import { mapGetters } from 'vuex';
+import repositoryApi from '@/api/repository';
 import SelectActivity from './SelectActivity';
+import SelectRepository from './SelectRepository';
 import sortBy from 'lodash/sortBy';
 import TailorDialog from '@/components/common/TailorDialog';
 
@@ -67,17 +71,26 @@ export default {
     allowedTypes: { type: Array, required: true },
     multiple: { type: Boolean, default: true },
     submitLabel: { type: String, default: 'Save' },
-    headerIcon: { type: String, default: 'mdi-toy-brick-plus-outline' }
+    headerIcon: { type: String, default: 'mdi-toy-brick-plus-outline' },
+    useCurrentRepo: { type: Boolean, default: false }
   },
-  data: () => ({
-    selectedActivity: null,
-    contentContainers: [],
-    selectedElements: [],
-    loadingContent: false
-  }),
+  data: vm => {
+    return {
+      repository: null,
+      selectedActivity: null,
+      contentContainers: [],
+      selectedElements: [],
+      loadingContent: false,
+      activities: []
+    };
+  },
   computed: {
-    ...mapGetters('repository', ['repository', 'activities']),
+    ...mapGetters('repository', {
+      currentRepository: 'repository',
+      currentActivities: 'activities'
+    }),
     allElementsSelected: vm => vm.selectedElements.length === vm.elements.length,
+    showBackButton: vm => vm.useCurrentRepo ? !!vm.selectedActivity : !!vm.repository,
     elements() {
       const elements = flatMap(this.contentContainers, 'elements');
       if (!this.allowedTypes.length) return elements;
@@ -118,12 +131,27 @@ export default {
         ? []
         : this.elements.map(this.assignActivity);
     },
+    goBack() {
+      if (this.selectedActivity) return this.deselectActivity();
+      this.repository = null;
+      this.activities = [];
+    },
     deselectActivity() {
       this.selectedActivity = null;
       this.selectedElements = [];
     },
+    selectRepository(repository) {
+      const { currentActivities, currentRepository } = this;
+      this.repository = repository;
+      if (currentRepository.id === repository.id) {
+        this.activities = currentActivities;
+      } else {
+        repositoryApi.get(repository.id, { withActivities: true })
+          .then(({ activities }) => (this.activities = activities));
+      }
+    },
     fetchElements: loader(function (containers) {
-      const { repository: { id: repositoryId } } = this;
+      const { id: repositoryId } = this.repository;
       const queryOpts = { repositoryId, ids: containers.map(it => it.id) };
       return contentElementApi.fetch(queryOpts);
     }, 'loadingContent', 500),
@@ -138,6 +166,12 @@ export default {
   created() {
     this.selectedElements = [...this.selected];
   },
-  components: { ContentPreview, SelectActivity, TailorDialog }
+  mounted() {
+    if (this.useCurrentRepo) {
+      this.repository = this.currentRepository;
+      this.activities = this.currentActivities;
+    }
+  },
+  components: { ContentPreview, SelectActivity, SelectRepository, TailorDialog }
 };
 </script>
