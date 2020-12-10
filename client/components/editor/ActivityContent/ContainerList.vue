@@ -59,8 +59,8 @@ const DEPRECATED_LISTENERS = {
   addElement: { action: 'addElement' },
   saveElement: { action: 'saveContentElements' },
   insertElement: {
-    action: 'addElement',
-    newEvent: 'add:element',
+    action: 'saveContentElements',
+    newEvent: 'save:element',
     adaptArgs: ({ element, context }) => [{
       ...element, position: context.newPosition
     }]
