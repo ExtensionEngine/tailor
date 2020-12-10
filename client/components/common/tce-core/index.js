@@ -1,6 +1,7 @@
 import AddElement from './AddElement';
 import ContainedContent from './ContainedContent';
 import ContentElement from './ContentElement';
+import Discussion from './Discussion';
 import ElementList from './ElementList';
 import ElementPlaceholder from './ElementPlaceholder';
 import ElementToolbar from './ElementToolbar';
@@ -11,6 +12,7 @@ export {
   AddElement,
   ContainedContent,
   ContentElement,
+  Discussion,
   ElementList,
   ElementPlaceholder,
   ElementToolbar,

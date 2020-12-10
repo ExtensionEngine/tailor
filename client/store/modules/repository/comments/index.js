@@ -4,7 +4,10 @@ import * as mutations from './mutations';
 
 const state = {
   items: {},
-  seenByActivity: {},
+  seen: {
+    activity: {},
+    contentElement: {}
+  },
   $apiUrl: null
 };
 

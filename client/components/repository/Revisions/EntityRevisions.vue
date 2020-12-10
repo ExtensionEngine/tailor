@@ -40,13 +40,11 @@ export default {
     revision: { type: Object, required: true },
     isDetached: { type: Boolean, default: false }
   },
-  data() {
-    return {
-      expanded: false,
-      revisions: [],
-      selectedRevision: {}
-    };
-  },
+  data: () => ({
+    expanded: false,
+    revisions: [],
+    selectedRevision: {}
+  }),
   computed: {
     repositoryId: vm => vm.revision.repositoryId,
     baseUrl: vm => `/repositories/${vm.repositoryId}/revisions/`
