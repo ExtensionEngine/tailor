@@ -70,7 +70,10 @@ export default {
     user: { type: Object, required: true },
     showAllComments: { type: Boolean, default: false }
   },
-  data: vm => ({ isEditing: false, content: vm.comment.content }),
+  data: vm => ({
+    isEditing: false,
+    content: vm.comment.content
+  }),
   computed: {
     ...mapChannels({ editorBus: 'editor' }),
     author: vm => vm.comment.author,
@@ -81,11 +84,6 @@ export default {
     options: vm => [
       { name: 'Edit', action: vm.toggleEdit, icon: 'mdi-pencil' },
       { name: 'Remove', action: vm.remove, icon: 'mdi-delete' }],
-    elementRoute: ({ comment }) => ({
-      name: 'editor',
-      params: { activityId: comment.activityId },
-      query: { elementId: comment.contentElement.uid }
-    }),
     elementTag: vm => vm.showAllComments && vm.comment.contentElementId
   },
   methods: {
@@ -106,10 +104,10 @@ export default {
     },
     toggleElementDiscussion() {
       const { uid: elementUid } = this.comment.contentElement;
-      const isRepository = this.$route.name === 'repository';
-      const timeout = isRepository ? 2000 : 0;
-      if (isRepository) this.$router.push(this.elementRoute);
-      setTimeout(() => this.editorBus.emit(events.TOGGLE, elementUid), timeout);
+      const isEditor = this.$route.name === 'editor';
+      const params = { activityId: this.comment.activityId, elementUid };
+      if (!isEditor) this.$router.push({ name: 'editor', params });
+      this.editorBus.emit(events.TOGGLE, elementUid);
     }
   },
   watch: {

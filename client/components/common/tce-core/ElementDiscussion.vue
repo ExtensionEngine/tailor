@@ -125,8 +125,10 @@ export default {
       this.setLastSeen(2000);
     }
   },
-  mounted() {
+  created() {
     const { editorBus, events } = this;
+    const query = { elementId: this.$route.params.elementUid };
+    if (query.elementId) this.$nextTick(() => this.toggleDiscussion(query));
     editorBus.on(events.TOGGLE, elementUid => {
       this.toggleDiscussion({ elementId: elementUid });
     });
