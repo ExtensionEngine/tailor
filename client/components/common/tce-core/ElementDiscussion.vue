@@ -111,7 +111,7 @@ export default {
       if (this.routeElementId !== query.elementId) $router.push({ query });
       if (uid !== this.routeElementId || !comments.length) return;
       const element = this.$refs[`element:${uid}`].$el;
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({ block: 'center', behavior: 'smooth' });
       setTimeout(() => (this.isVisible = true), 200);
     }
   },

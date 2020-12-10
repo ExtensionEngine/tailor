@@ -83,7 +83,8 @@ export default {
       this.comment = initCommentInput();
       this.$emit('save', payload);
       // Keep editor/discussion container inside viewport.
-      this.$nextTick(() => this[scrollTarget].scrollIntoView({ behavior: 'smooth' }));
+      const scrollOptions = { block: 'center', behavior: 'smooth' };
+      this.$nextTick(() => this[scrollTarget].scrollIntoView(scrollOptions));
     }
   },
   watch: {
