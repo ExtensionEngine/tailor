@@ -1,5 +1,5 @@
 <template>
-  <div class="embedded-discussion">
+  <div ref="discussion" class="embedded-discussion">
     <div :class="{ 'pb-7': !showHeading && showAllToggle }">
       <v-btn
         v-if="showAllToggle"
@@ -22,6 +22,8 @@
     </v-alert>
     <discussion-thread
       v-if="thread.length"
+      @update="$emit('update', $event)"
+      @remove="$emit('remove', $event)"
       :items="thread"
       :user="user"
       :min-displayed="commentsShownLimit"
@@ -41,7 +43,6 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex';
 import DiscussionThread from './Thread';
 import orderBy from 'lodash/orderBy';
 import TextEditor from './TextEditor';
@@ -52,36 +53,35 @@ export default {
   name: 'embedded-discussion',
   inheritAttrs: true,
   props: {
-    activity: { type: Object, required: true },
+    comments: { type: Array, default: () => [] },
+    user: { type: Object, required: true },
     showHeading: { type: Boolean, default: false },
-    showNotifications: { type: Boolean, default: false }
+    showNotifications: { type: Boolean, default: false },
+    commentsShownLimit: { type: Number, default: 5 },
+    scrollTarget: { type: String, default: 'discussion' }
   },
   data: () => ({ showAll: false, comment: initCommentInput() }),
   computed: {
-    ...mapState({ user: state => state.auth.user }),
-    ...mapGetters('repository/comments', ['getActivityComments']),
-    comments: vm => vm.getActivityComments(vm.activity.id),
     thread: vm => orderBy(vm.comments, ['createdAt'], ['asc']),
     commentsCount: vm => vm.thread.length,
-    commentsShownLimit: vm => 5,
     showAllToggle: vm => vm.commentsShownLimit < vm.thread.length,
+    discussion: vm => vm.$refs.discussion,
     editor: vm => vm.$refs.editor.$el
   },
   methods: {
-    ...mapActions('repository/comments', ['fetch', 'save']),
-    async post() {
-      if (!this.comment.content) return;
+    post() {
+      const { scrollTarget, comment, user: author } = this;
+      if (!comment.content) return;
       const payload = {
-        content: this.comment.content,
-        author: this.user,
-        activityId: this.activity.id,
+        content: comment.content,
+        author,
         createdAt: Date.now(),
         updatedAt: Date.now()
       };
       this.comment = initCommentInput();
-      await this.save(payload);
-      // Keep editor inside viewport.
-      this.$nextTick(() => this.editor.scrollIntoView());
+      this.$emit('save', payload);
+      // Keep editor/discussion container inside viewport.
+      this.$nextTick(() => this[scrollTarget].scrollIntoView({ behavior: 'smooth' }));
     }
   },
   watch: {
@@ -89,8 +89,7 @@ export default {
       this.$emit('change', this.thread);
     }
   },
-  async created() {
-    await this.fetch(this.activity.id);
+  created() {
     this.comment = initCommentInput();
   },
   components: {

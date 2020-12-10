@@ -1,5 +1,6 @@
 /* eslint-disable sort-imports */
 import { numeric as numericParser } from 'client/utils/paramsParser';
+import request from './api/request';
 import Router from 'vue-router';
 import { role } from '@/../config/shared';
 import store from './store';
@@ -27,7 +28,7 @@ import WorkflowBoard from './components/repository/WorkflowBoard';
 
 Vue.use(Router);
 
-const router = new Router({
+const options = {
   routes: [{
     path: '/',
     name: 'catalog',
@@ -121,19 +122,27 @@ const router = new Router({
       component: ResetPassword
     }]
   }]
-});
+};
 
-router.beforeEach((to, from, next) => {
-  if (to.matched.some(it => it.meta.auth) && !store.state.auth.user) {
-    next({ path: '/login', query: { redirect: to.fullPath } });
-  } else if (!isAllowed(to)) {
-    next({ path: from.fullPath });
-  } else {
-    next();
-  }
-});
+export default function getRouter() {
+  const router = new Router(options);
+  router.beforeEach((to, from, next) => {
+    const auth = router.app?.$store.state.auth;
+    if (to.matched.some(it => it.meta.auth) && !auth.user) {
+      return next({ path: '/login', query: { redirect: to.fullPath } });
+    }
+    if (!isAllowed(to)) {
+      return next({ path: from.fullPath });
+    }
+    return next();
+  });
 
-export default router;
+  request.auth.on('error', () => {
+    const redirect = router.currentRoute.fullPath;
+    router.replace({ name: 'login', query: { redirect } }).catch(() => {});
+  });
+  return router;
+}
 
 function isAllowed(route) {
   const { meta = {} } = route.matched.find(({ meta = {} }) => meta.allowed) || {};
