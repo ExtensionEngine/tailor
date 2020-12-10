@@ -1,17 +1,18 @@
 import filter from 'lodash/filter';
 import orderBy from 'lodash/orderBy';
 
-export const getActivityComments = state => activityId => {
-  const activityComments = filter(state.items, { activityId });
-  return orderBy(activityComments, 'createdAt', 'desc');
+export const getComments = state => params => {
+  const comments = filter(state.items, params);
+  return orderBy(comments, 'createdAt', 'desc');
 };
 
-export const getUnseenComments = (state, _, rootState) => activity => {
-  const { items, seenByActivity } = state;
-  const { user } = rootState.auth;
-  const lastSeen = seenByActivity[activity.uid] || 0;
+export const getUnseenActivityComments = (state, _, { auth }) => activity => {
+  const { seen, items } = state;
+  const lastSeen = seen.activity[activity.uid] || 0;
   return filter(items, it =>
-    it.authorId !== user.id &&
+    it.contentElementId === null &&
     it.activityId === activity.id &&
-    new Date(it.createdAt).getTime() > lastSeen);
+    it.authorId !== auth.user.id &&
+    new Date(it.createdAt).getTime() > lastSeen
+  );
 };

@@ -11,22 +11,31 @@
     <component
       :is="componentName"
       @add="$emit('add', $event)"
-      @save="$emit('save', $event)"
+      @save="onSave"
       @delete="$emit('delete')"
       @focus="onSelect"
       :id="`element_${id}`"
-      v-bind="$attrs"
-      :element="element"
-      :is-focused="isFocused"
-      :is-dragged="isDragged"
-      :is-disabled="isDisabled"
-      :dense="dense" />
+      v-bind="{ ...$attrs, element, isFocused, isDragged, isDisabled, dense }" />
+    <div class="element-actions">
+      <discussion
+        v-if="showDiscussion"
+        v-bind="element"
+        :is-element-selected="isFocused || isHovered"
+        :user="currentUser" />
+    </div>
+    <v-progress-linear
+      v-if="isSaving"
+      height="2"
+      color="teal accent-2"
+      indeterminate
+      class="save-indicator" />
   </div>
 </template>
 
 <script>
 import { getComponentName, getElementId } from './utils';
 import ActiveUsers from 'tce-core/ActiveUsers';
+import Discussion from './ElementDiscussion';
 import { mapChannels } from '@/plugins/radio';
 
 export default {
@@ -36,27 +45,25 @@ export default {
   props: {
     element: { type: Object, required: true },
     parent: { type: Object, default: null },
+    isHovered: { type: Boolean, default: false },
     isDragged: { type: Boolean, default: false },
     isDisabled: { type: Boolean, default: false },
     frame: { type: Boolean, default: true },
-    dense: { type: Boolean, default: false }
+    dense: { type: Boolean, default: false },
+    showDiscussion: { type: Boolean, default: false }
   },
   data: () => ({
     isFocused: false,
+    isSaving: false,
     activeUsers: []
   }),
   computed: {
     ...mapChannels({ editorBus: 'editor' }),
-    currentUser: vm => vm.$getCurrentUser(),
-    id() {
-      return getElementId(this.element);
-    },
-    componentName() {
-      return getComponentName(this.element.type);
-    },
-    elementBus() {
-      return this.$radio.channel(`element:${this.id}`);
-    }
+    id: vm => getElementId(vm.element),
+    componentName: vm => getComponentName(vm.element.type),
+    isEmbed: vm => !!vm.parent || !vm.element.uid,
+    elementBus: vm => vm.$radio.channel(`element:${vm.id}`),
+    currentUser: vm => vm.$getCurrentUser()
   },
   methods: {
     onSelect(e) {
@@ -64,14 +71,20 @@ export default {
       this.focus();
       e.component = { name: 'content-element', data: this.element };
     },
+    onSave(data) {
+      if (!this.isEmbed) this.isSaving = true;
+      this.$emit('save', data);
+    },
     focus() {
       this.editorBus.emit('element:focus', this.element, this.parent);
     }
   },
   created() {
+    const deferSaveFlag = () => setTimeout(() => (this.isSaving = false), 1000);
     // Element listeners
-    this.elementBus.on('save:meta', meta => this.$emit('save:meta', meta));
     this.elementBus.on('delete', () => this.$emit('delete'));
+    this.elementBus.on('save:meta', meta => this.$emit('save:meta', meta));
+    this.elementBus.on('saved', deferSaveFlag);
     // Editor listeners
     this.editorBus.on('element:select', ({ elementId, isSelected = true, user }) => {
       if (this.id !== elementId) return;
@@ -93,11 +106,9 @@ export default {
     });
   },
   provide() {
-    return {
-      $elementBus: this.elementBus
-    };
+    return { $elementBus: this.elementBus };
   },
-  components: { ActiveUsers }
+  components: { ActiveUsers, Discussion }
 };
 </script>
 
@@ -144,9 +155,24 @@ export default {
   border: 1px solid #e1e1e1;
 }
 
+.element-actions {
+  position: absolute;
+  top: -0.0625rem;
+  right: -1.25rem;
+  width: 1.5rem;
+  height: 100%;
+  padding-left: 0.5rem;
+}
+
 .active-users {
   position: absolute;
   top: 0;
   left: -1.625rem;
+}
+
+.save-indicator {
+  position: absolute;
+  bottom: -0.125rem;
+  left: 0;
 }
 </style>
