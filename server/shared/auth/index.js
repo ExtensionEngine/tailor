@@ -56,10 +56,10 @@ function verifyJWT(payload, done) {
     .error(err => done(err, false));
 }
 
-function verifyOIDC(_tokenSet, { email }, done) {
-  return User.findOne({ where: { email }, rejectOnEmpty: true })
+function verifyOIDC(_tokenSet, profile, done) {
+  return findOrCreateOIDCUser(profile)
     .then(user => done(null, user))
-    .catch(err => done(Object.assign(err, { email }), false));
+    .catch(err => done(Object.assign(err, { email: profile.email }), false));
 }
 
 function extractJwtFromCookie(req) {
@@ -77,4 +77,13 @@ function secretOrKeyProvider(_, rawToken, done) {
 
 function apiUrl(pathname) {
   return new URL(path.join('/api', pathname), origin).href;
+}
+
+function findOrCreateOIDCUser({ email, firstName, lastName }) {
+  if (!config.oidc.enableSignup) {
+    return User.findOne({ where: { email }, rejectOnEmpty: true });
+  }
+  const defaults = { firstName, lastName, role: config.oidc.defaultRole };
+  return User.findOrCreate({ where: { email }, defaults })
+    .then(([user]) => user);
 }
