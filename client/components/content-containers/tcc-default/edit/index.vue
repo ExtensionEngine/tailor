@@ -21,14 +21,14 @@
       <template v-slot:list-item="{ element, isDragged, position }">
         <inline-activator @click.native="showElementDrawer(position)" />
         <contained-content
-          @save="saveElement(element, 'data', $event)"
-          @save:meta="saveElement(element, 'meta', $event)"
+          @save="updateElement(element, 'data', $event)"
+          @save:meta="updateElement(element, 'meta', $event)"
           v-bind="{ element, isDragged, setWidth: false }" />
       </template>
       <template v-slot:list-add="{ position: lastPosition, ...slotProps }">
         <div class="add-element-container mt-5">
           <add-element
-            @add="addElements($event, lastPosition)"
+            @add="$emit('save:element', $event)"
             @hidden="onHiddenElementDrawer"
             v-bind="slotProps"
             :items="containerElements"
@@ -48,10 +48,7 @@ import ContainedContent from 'tce-core/ContainedContent';
 import ElementList from 'tce-core/ElementList';
 import filter from 'lodash/filter';
 import InlineActivator from 'tce-core/AddElement/InlineActivator';
-import InsertLocation from '@/utils/InsertLocation';
 import sortBy from 'lodash/sortBy';
-
-const { ADD_AFTER } = InsertLocation;
 
 export default {
   name: 'tcc-default',
@@ -84,20 +81,8 @@ export default {
       this.isElementDrawerVisible = false;
       this.insertPosition = Infinity;
     },
-    addElements(elements, lastPosition) {
-      elements.forEach(element => this.addElement(element, lastPosition));
-    },
-    addElement(element, lastPosition) {
-      if (element.position === lastPosition) {
-        return this.$emit('save:lement', element);
-      }
-      const items = this.containerElements;
-      const { position: newPosition } = element;
-      const context = { items, newPosition, action: ADD_AFTER };
-      this.$emit('insert:element', { element, context });
-    },
-    saveElement(element, key, data) {
-      this.$emit('save:lement', {
+    updateElement(element, key, data) {
+      this.$emit('save:element', {
         ...(element),
         [key]: data
       });
