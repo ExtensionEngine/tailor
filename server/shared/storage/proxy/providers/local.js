@@ -14,14 +14,14 @@ const storageCookies = {
 };
 
 const schema = yup.object().shape({
-  key: yup.string().required()
+  privateKey: yup.string().pkcs1().required()
 });
 
 class Local {
   constructor(config) {
     config = validateConfig(config, schema);
 
-    this.signer = new NodeRSA(config.key);
+    this.signer = new NodeRSA(config.privateKey, 'private');
     this.isSelfHosted = true;
     this.path = PROXY_PATH;
   }
