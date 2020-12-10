@@ -5,6 +5,7 @@ const { BAD_REQUEST } = require('http-status-codes');
 const { errors: OIDCError } = require('openid-client');
 const path = require('path');
 const router = require('express').Router();
+const { URL } = require('url');
 
 const ACCESS_DENIED_ROUTE = '/#/login?accessDenied=';
 
@@ -14,17 +15,34 @@ const OIDCErrors = [
 ];
 const scope = ['openid', 'profile', 'email'].join(' ');
 
+const isSilentAuth = req => req.query.silent === 'true';
+const isResign = req => req.query.resign === 'true';
+
+const getPrompt = req => {
+  if (isResign(req)) return 'login';
+  if (isSilentAuth(req)) return 'none';
+  return '';
+};
+
 const isOIDCError = err => OIDCErrors.some(Ctor => err instanceof Ctor);
 
 router
   .get('/', (req, res, next) => {
-    const isResign = req.query.resign === 'true';
-    const params = { scope, ...isResign && { prompt: 'login' } };
+    const prompt = getPrompt(req);
+    const params = { scope, ...prompt && { prompt } };
+    if (req.query.silent === 'true') {
+      const strategy = req.passport.strategy('oidc');
+      const callbackUri = new URL(strategy.options.callbackURL);
+      callbackUri.searchParams.set('silent', 'true');
+      params.redirect_uri = callbackUri.href;
+    }
     return authenticate('oidc', params)(req, res, next);
   })
   .get('/callback', login)
-  .use((err, _req, res, next) => {
-    if (!isOIDCError(err)) return res.redirect(ACCESS_DENIED_ROUTE + err.email);
+  .use((err, req, res, next) => {
+    if (!isOIDCError(err) && !isSilentAuth(req)) {
+      return res.redirect(ACCESS_DENIED_ROUTE + err.email);
+    }
     const template = path.resolve(__dirname, './error.mustache');
     const status = err.status || BAD_REQUEST;
     return res.render(template, err, (_, html) => {
@@ -40,6 +58,8 @@ module.exports = {
 function login(req, res, next) {
   authenticate('oidc', { setCookie: true })(req, res, err => {
     if (err) return next(err);
-    return res.redirect('/');
+    if (!isSilentAuth(req)) return res.redirect('/');
+    const template = path.resolve(__dirname, './authenticated.mustache');
+    return res.render(template);
   });
 }
