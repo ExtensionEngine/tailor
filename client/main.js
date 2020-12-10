@@ -13,6 +13,7 @@ import {
   ValidationProvider
 } from 'vee-validate';
 import FileFilter from '@/directives/file-filter';
+import OidcClient from './OidcCLient';
 import QuestionContainer from 'tce-core/QuestionContainer';
 import { sync } from 'vuex-router-sync';
 import Radio from '@/plugins/radio';
@@ -46,6 +47,8 @@ Vue.use(Timeago, {
     'en-US': require('@/assets/locales/timeago-en-US-short.json')
   }
 });
+
+Vue.use(OidcClient);
 
 const contentPluginRegistry = new ContentPluginRegistry(Vue);
 

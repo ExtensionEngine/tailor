@@ -29,7 +29,7 @@ client.auth = new EventEmitter();
 
 client.interceptors.response.use(res => res, err => {
   if (err.response && [FORBIDDEN, UNAUTHORIZED].includes(err.response.status)) {
-    client.auth.emit('error');
+    return window.location.reload();
   }
   throw err;
 });
