@@ -78,7 +78,13 @@ export default {
       return items;
     }
   },
-  methods: mapActions(['logout'])
+  methods: {
+    ...mapActions({ apiLogout: 'logout' }),
+    logout() {
+      return this.apiLogout()
+        .then(() => this.$router.push({ name: 'login' }));
+    }
+  }
 };
 </script>
 

@@ -2,9 +2,6 @@ import isEmpty from 'lodash/isEmpty';
 import VuexPersistence from 'vuex-persist';
 
 const OBSERVED_MUTATIONS = [
-  'login',
-  'logout',
-  'setUser',
   'repository/comments/markSeenComments'
 ];
 
@@ -13,8 +10,7 @@ migrateSeenState();
 
 export default new VuexPersistence({
   key: STORAGE_KEY,
-  reducer: ({ auth, repository }) => ({
-    auth,
+  reducer: ({ repository }) => ({
     repository: {
       comments: { seen: repository.comments.seen }
     }
