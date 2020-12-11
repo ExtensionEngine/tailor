@@ -10,6 +10,7 @@ const path = require('path');
 const processQuery = require('../shared/util/processListQuery')();
 const { Repository } = require('../shared/database');
 const router = require('express').Router();
+const { setSignedCookies } = require('../shared/storage/proxy/mw');
 
 /* eslint-disable require-sort/require-sort */
 const activity = require('../activity');
@@ -28,7 +29,7 @@ router
 
 router
   .param('repositoryId', getRepository)
-  .use('/:repositoryId', hasAccess);
+  .use('/:repositoryId', hasAccess, setSignedCookies);
 
 router.route('/')
   .get(processQuery, ctrl.index)
