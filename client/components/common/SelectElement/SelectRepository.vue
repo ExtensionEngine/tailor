@@ -2,6 +2,7 @@
   <div>
     <v-text-field
       v-model="search"
+      @input="searchRepositories"
       placeholder="Search repositories..."
       prepend-inner-icon="mdi-filter-outline"
       clear-icon="mdi-close-circle-outline"
@@ -49,7 +50,7 @@
           color="blue-grey lighten-4"
           icon="mdi-cloud-search-outline"
           outlined>
-          Neces naci sto ti treba
+          {{ noResultsMessage }}
         </v-alert>
       </div>
       <span slot="no-more"></span>
@@ -58,34 +59,57 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
 import get from 'lodash/get';
 import { getSchema } from 'shared/activities';
 import InfiniteLoading from 'vue-infinite-loading';
 import loader from '@/components/common/loader';
+import repositoryApi from '@/api/repository';
+import throttle from 'lodash/throttle';
+
+const PAGINATION_DEFAULTS = { offset: 0, limit: 15 };
 
 export default {
-  name: 'select-repo',
+  name: 'select-repository',
   data: () => ({
+    repositories: [],
     search: null,
-    loading: true
+    loading: true,
+    pagination: { ...PAGINATION_DEFAULTS },
+    allRepositoriesFetched: false
   }),
   computed: {
-    ...mapGetters('repositories', ['repositories', 'queryParams', 'hasMoreResults']),
-    loader() {
-      return get(this.$refs, 'loader.stateChanger', {});
+    loader: vm => get(vm.$refs, 'loader.stateChanger', {}),
+    noResultsMessage() {
+      return this.search ? 'No matches found' : 'No available repositories';
     }
   },
   methods: {
-    ...mapActions('repositories', ['fetch', 'fetchTags']),
     getSchema({ schema }) {
       return getSchema(schema).name;
     },
-    load: loader(async function () {
-      await this.fetch();
+    load: throttle(loader(async function () {
+      await this.fetchRepositories();
       if (this.repositories.length) this.loader.loaded();
-      if (!this.hasMoreResults) this.loader.complete();
-    }, 'loading')
+      if (this.allRepositoriesFetched) this.loader.complete();
+    }, 'loading'), 500),
+    fetchRepositories() {
+      const { search, pagination } = this;
+      return repositoryApi.getRepositories({ search, ...pagination })
+        .then(this.addRepositories);
+    },
+    addRepositories(repositories) {
+      const { limit, offset } = this.pagination;
+      this.repositories = offset === 0
+        ? repositories
+        : this.repositories.concat(repositories);
+      this.allRepositoriesFetched = repositories.length < limit;
+      this.pagination.offset += limit;
+    },
+    async searchRepositories(value) {
+      this.pagination = { ...PAGINATION_DEFAULTS };
+      await this.loader.reset();
+      return this.load();
+    }
   },
   components: { InfiniteLoading }
 };
