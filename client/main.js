@@ -14,7 +14,6 @@ import {
 } from 'vee-validate';
 import FileFilter from '@/directives/file-filter';
 import QuestionContainer from 'tce-core/QuestionContainer';
-import request from './api/request';
 import { sync } from 'vuex-router-sync';
 import Radio from '@/plugins/radio';
 import Timeago from 'vue-timeago';
@@ -24,8 +23,8 @@ import VueCroppa from 'vue-croppa';
 import VueHotkey from 'v-hotkey';
 import vuetify from '@/plugins/vuetify';
 
-import store from './store';
-import router from './router';
+import getStore from './store';
+import getRouter from './router';
 import App from './App';
 
 Vue.component('tce-question-container', QuestionContainer);
@@ -48,27 +47,26 @@ Vue.use(Timeago, {
   }
 });
 
-Object.defineProperty(request, 'token', {
-  get: () => store.state.auth.token,
-  set: value => !value && store.dispatch('logout')
-});
-
 const contentPluginRegistry = new ContentPluginRegistry(Vue);
-contentPluginRegistry.initialize().then(() => {
-  sync(store, router);
-  /* eslint-disable no-new */
-  new Vue({
-    router,
-    store,
-    vuetify,
-    el: '#app',
-    render: h => h(App),
-    provide() {
-      return {
-        $teRegistry: contentPluginRegistry.elementRegistry,
-        $ccRegistry: contentPluginRegistry.containerRegistry,
-        $storageService: assetsApi
-      };
-    }
+
+Promise.all([getStore(), contentPluginRegistry.initialize()])
+  .then(([store]) => {
+    const router = getRouter();
+    sync(store, router);
+    /* eslint-disable no-new */
+    new Vue({
+      router,
+      store,
+      vuetify,
+      el: '#app',
+      render: h => h(App),
+      provide() {
+        return {
+          $storageService: assetsApi,
+          $teRegistry: contentPluginRegistry.elementRegistry,
+          $ccRegistry: contentPluginRegistry.containerRegistry,
+          $getCurrentUser: () => store.state.auth.user
+        };
+      }
+    });
   });
-});

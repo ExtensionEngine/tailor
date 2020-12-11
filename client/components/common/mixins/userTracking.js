@@ -14,7 +14,8 @@ export default {
     trackingParams: vm => pickBy({
       sseId: vm.sseId,
       repositoryId: Number(vm.$route.params.repositoryId),
-      activityId: Number(vm.$route.params.activityId)
+      activityId: Number(vm.$route.params.activityId),
+      elementId: vm.$route.query.elementId
     })
   },
   methods: {

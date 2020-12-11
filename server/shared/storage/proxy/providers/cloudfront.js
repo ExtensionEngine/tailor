@@ -12,7 +12,7 @@ const storageCookies = {
 };
 
 const schema = yup.object().shape({
-  key: yup.string().required(),
+  privateKey: yup.string().pkcs1().required(),
   keyPairId: yup.string().required(),
   host: yup.string().required()
 });
@@ -21,7 +21,7 @@ class CloudFront {
   constructor(config) {
     config = validateConfig(config, schema);
 
-    this.signer = new Signer(config.keyPairId, config.key);
+    this.signer = new Signer(config.keyPairId, config.privateKey);
     this.host = config.host;
   }
 

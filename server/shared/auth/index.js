@@ -4,6 +4,7 @@ const { auth: config, origin } = require('../../../config/server');
 const { ExtractJwt, Strategy: JwtStrategy } = require('passport-jwt');
 const Audience = require('./audience');
 const auth = require('./authenticator');
+const get = require('lodash/get');
 const jwt = require('jsonwebtoken');
 const LocalStrategy = require('passport-local');
 const OIDCStrategy = require('./oidc');
@@ -26,8 +27,7 @@ auth.use(new JwtStrategy({
   ...config.jwt,
   audience: Audience.Scope.Access,
   jwtFromRequest: ExtractJwt.fromExtractors([
-    ExtractJwt.fromAuthHeaderWithScheme(config.jwt.scheme),
-    ExtractJwt.fromUrlQueryParameter('token'),
+    extractJwtFromCookie,
     ExtractJwt.fromBodyField('token')
   ]),
   secretOrKey: config.jwt.secret
@@ -56,10 +56,15 @@ function verifyJWT(payload, done) {
     .error(err => done(err, false));
 }
 
-function verifyOIDC(_tokenSet, { email }, done) {
-  return User.findOne({ where: { email }, rejectOnEmpty: true })
+function verifyOIDC(_tokenSet, profile, done) {
+  return findOrCreateOIDCUser(profile)
     .then(user => done(null, user))
-    .catch(err => done(Object.assign(err, { email }), false));
+    .catch(err => done(Object.assign(err, { email: profile.email }), false));
+}
+
+function extractJwtFromCookie(req) {
+  const path = config.jwt.cookie.signed ? 'signedCookies' : 'cookies';
+  return get(req[path], config.jwt.cookie.name, null);
 }
 
 function secretOrKeyProvider(_, rawToken, done) {
@@ -72,4 +77,13 @@ function secretOrKeyProvider(_, rawToken, done) {
 
 function apiUrl(pathname) {
   return new URL(path.join('/api', pathname), origin).href;
+}
+
+function findOrCreateOIDCUser({ email, firstName, lastName }) {
+  if (!config.oidc.enableSignup) {
+    return User.findOne({ where: { email }, rejectOnEmpty: true });
+  }
+  const defaults = { firstName, lastName, role: config.oidc.defaultRole };
+  return User.findOrCreate({ where: { email }, defaults })
+    .then(([user]) => user);
 }

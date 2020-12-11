@@ -1,6 +1,7 @@
 import InsertLocation from './InsertLocation';
+import last from 'lodash/last';
 
-const { ADD_AFTER, ADD_BEFORE, REORDER } = InsertLocation;
+const { ADD_AFTER, ADD_BEFORE, ADD_INTO, REORDER } = InsertLocation;
 
 /**
  * Calculates item position based on the options provided.
@@ -21,6 +22,9 @@ export default function ({ newPosition, items, isFirstChild, action = REORDER })
   if (action === ADD_BEFORE) {
     const current = items[newPosition];
     return ((prev ? prev.position : 0) + current.position) * 0.5;
+  } else if (action === ADD_INTO) {
+    const lastItem = last(items);
+    return lastItem ? lastItem.position + 1 : 1;
   }
 
   const next = items[newPosition + 1];
