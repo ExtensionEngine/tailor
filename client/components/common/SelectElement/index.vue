@@ -140,16 +140,17 @@ export default {
       this.selectedActivity = null;
       this.selectedElements = [];
     },
-    selectRepository(repository) {
+    async selectRepository(repository) {
       const { currentActivities, currentRepository } = this;
       this.repository = repository;
-      if (currentRepository.id === repository.id) {
-        this.activities = currentActivities;
-      } else {
-        repositoryApi.get(repository.id, { withActivities: true })
-          .then(({ activities }) => (this.activities = activities));
-      }
+      this.activities = currentRepository.id === repository.id
+        ? currentActivities
+        : await this.fetchActivities(repository);
     },
+    fetchActivities: loader(function (repository) {
+      return repositoryApi.get(repository.id, { withActivities: true })
+        .then(({ activities }) => activities);
+    }, 'loadingContent'),
     fetchElements: loader(function (containers) {
       const { id: repositoryId } = this.repository;
       const queryOpts = { repositoryId, ids: containers.map(it => it.id) };
