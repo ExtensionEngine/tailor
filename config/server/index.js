@@ -4,6 +4,7 @@ const auth = require('./auth');
 const isLocalhost = require('is-localhost');
 const mail = require('./mail');
 const parse = require('url-parse');
+const publish = require('./publish');
 const storage = require('./storage');
 
 const hostname = resolveHostname();
@@ -20,7 +21,8 @@ module.exports = {
   auth,
   mail,
   storage,
-  previewUrl
+  previewUrl,
+  publish
 };
 
 // Legacy config support
