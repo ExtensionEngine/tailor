@@ -141,7 +141,7 @@ export default {
       setTimeout(() => {
         const elementId = `#element_${id}`;
         const element = this.$refs.activityContent.querySelector(elementId);
-        element.scrollIntoView();
+        element.scrollIntoView({ block: 'center', behavior: 'smooth' });
       }, timeout);
     }
   },
@@ -171,6 +171,10 @@ export default {
       [[removeSelection, false], [isSelected, true]].forEach(([items, isSelected]) => {
         items.forEach(({ elementId, ...user }) => this.selectElement(elementId, user, isSelected));
       });
+    },
+    $route(route) {
+      const { elementId } = route.query;
+      if (elementId) this.scrollToElement(elementId);
     }
   },
   async created() {

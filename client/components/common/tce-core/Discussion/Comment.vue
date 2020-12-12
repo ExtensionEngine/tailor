@@ -2,7 +2,6 @@
   <li class="comment">
     <v-avatar size="34" class="comment-avatar">
       <img :src="author.imgUrl">
-      <v-btn v-if="elementTag" @click="toggleElementDiscussion" icon>CE</v-btn>
     </v-avatar>
     <div class="comment-body pl-3">
       <div class="header">
@@ -24,17 +23,33 @@
           <v-icon class="pr-1">mdi-check</v-icon> Save
         </v-btn>
       </span>
-      <v-tooltip v-else right>
-        <template v-slot:activator="{ on }">
-          <span v-on="on">
-            <timeago
-              :datetime="comment.createdAt"
-              :auto-update="60"
-              class="time" />
-          </span>
-        </template>
-        <span>{{ comment.createdAt | formatDate('M/D/YY h:mm A') }}</span>
-      </v-tooltip>
+      <div v-else class="footer">
+        <v-tooltip right>
+          <template v-slot:activator="{ on }">
+            <span v-on="on">
+              <timeago
+                :datetime="comment.createdAt"
+                :auto-update="60"
+                class="time" />
+            </span>
+          </template>
+          <span>{{ comment.createdAt | formatDate('M/D/YY h:mm A') }}</span>
+        </v-tooltip>
+        <v-tooltip left>
+          <template v-slot:activator="{ on }">
+            <v-btn
+              v-if="elementTag"
+              v-on="on"
+              @click="toggleElementDiscussion"
+              color="teal"
+              text x-small>
+              CE
+              <v-icon x-small class="ml-1">mdi-arrow-top-right-thick</v-icon>
+            </v-btn>
+          </template>
+          <span>Toggle discussion</span>
+        </v-tooltip>
+      </div>
     </div>
     <v-menu v-if="showOptions" bottom left offset-y>
       <template v-slot:activator="{ on }">
@@ -103,11 +118,14 @@ export default {
       this.isEditing = false;
     },
     toggleElementDiscussion() {
-      const { uid: elementUid } = this.comment.contentElement;
+      const { id: commentId, activityId, contentElement } = this.comment;
+      const currentRouteCommentId = Number(this.$route.query.commentId);
+      if (currentRouteCommentId === commentId) return;
       const isEditor = this.$route.name === 'editor';
-      const params = { activityId: this.comment.activityId, elementUid };
-      if (!isEditor) this.$router.push({ name: 'editor', params });
-      this.editorBus.emit(events.TOGGLE, elementUid);
+      const params = { activityId };
+      const query = { elementId: contentElement.uid, commentId };
+      if (!isEditor) this.$router.push({ name: 'editor', params, query });
+      this.editorBus.emit(events.TOGGLE, query);
     }
   },
   watch: {
@@ -130,21 +148,7 @@ export default {
   &-avatar {
     width: 2.5rem;
     margin-top: 0.375rem;
-    overflow: visible;
-  }
-
-  &-avatar ::v-deep .v-btn {
-    position: absolute;
-    top: -0.125rem;
-    left: -0.375rem;
-    width: 1.25rem;
-    height: 1.25rem;
-    background: var(--v-primary-darken3);
-
-    .v-btn__content {
-      color: rgb(255, 87, 34);
-      font-size: 0.625rem;
-    }
+    overflow: hidden;
   }
 
   &-body {
@@ -157,6 +161,12 @@ export default {
 
   .content {
     margin: 0.375rem 0 0 0;
+  }
+
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 
   .time {

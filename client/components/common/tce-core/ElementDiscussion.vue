@@ -1,7 +1,6 @@
 <template>
   <v-menu
     v-if="isElementSelected || comments.length"
-    :ref="`element:${uid}`"
     v-model="isVisible"
     :close-on-content-click="false"
     transition="slide-y-transition"
@@ -84,8 +83,7 @@ export default {
         ? 'unseen'
         : (comments.length ? 'preview' : 'post');
       return getActivatorOptions(unseenComments)[type];
-    },
-    routeElementId: vm => vm.$route.query?.elementId
+    }
   },
   methods: {
     save(data) {
@@ -108,15 +106,23 @@ export default {
     },
     toggleDiscussion(query) {
       const { uid, comments, $router } = this;
-      if (this.routeElementId !== query.elementId) $router.push({ query });
-      if (uid !== this.routeElementId || !comments.length) return;
-      const element = this.$refs[`element:${uid}`].$el;
-      element.scrollIntoView({ block: 'center', behavior: 'smooth' });
-      setTimeout(() => (this.isVisible = true), 200);
+      if (!comments.length) return;
+      setTimeout(() => {
+        const { elementId, commentId } = query;
+        if (!this.$route.query.elementId && elementId === uid) {
+          this.isVisible = true;
+          return $router.push({ query });
+        }
+        if (uid !== elementId) return;
+        this.isVisible = true;
+        if (commentId) $router.push({ query });
+      }, 200);
     }
   },
   watch: {
     isVisible(val) {
+      const { commentId, elementId } = this.$route.query;
+      if (!val && commentId) return this.$router.push({ query: { elementId } });
       if (!val || !this.lastCommentAt) return;
       this.setLastSeen(1000);
     },
@@ -127,11 +133,9 @@ export default {
   },
   created() {
     const { editorBus, events } = this;
-    const query = { elementId: this.$route.params.elementUid };
-    if (query.elementId) this.$nextTick(() => this.toggleDiscussion(query));
-    editorBus.on(events.TOGGLE, elementUid => {
-      this.toggleDiscussion({ elementId: elementUid });
-    });
+    const { commentId, elementId } = this.$route.query;
+    if (commentId) this.toggleDiscussion({ elementId });
+    editorBus.on(events.TOGGLE, query => this.toggleDiscussion(query));
   },
   components: { Discussion }
 };
