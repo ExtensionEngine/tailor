@@ -109,10 +109,6 @@ export default {
       if (!comments.length) return;
       setTimeout(() => {
         const { elementId, commentId } = query;
-        if (!this.$route.query.elementId && elementId === uid) {
-          this.isVisible = true;
-          return $router.push({ query });
-        }
         if (uid !== elementId) return;
         this.isVisible = true;
         if (commentId) $router.push({ query });
@@ -122,7 +118,7 @@ export default {
   watch: {
     isVisible(val) {
       const { commentId, elementId } = this.$route.query;
-      if (!val && commentId) return this.$router.push({ query: { elementId } });
+      if (!val && commentId) this.$router.replace({ query: { elementId } });
       if (!val || !this.lastCommentAt) return;
       this.setLastSeen(1000);
     },
