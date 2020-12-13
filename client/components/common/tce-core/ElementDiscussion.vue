@@ -119,7 +119,10 @@ export default {
   watch: {
     isVisible(val) {
       const { commentId, elementId } = this.$route.query;
-      if (!val && commentId) this.$router.replace({ query: { elementId } });
+      if (!val && commentId) {
+        const query = elementId ? { elementId } : {};
+        this.$router.replace({ query });
+      }
       if (!val || !this.lastCommentAt) return;
       this.setLastSeen(1000);
     },
