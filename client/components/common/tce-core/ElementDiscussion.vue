@@ -105,14 +105,15 @@ export default {
       this.editorBus.emit(events.SET_LAST_SEEN, options);
     },
     toggleDiscussion(query) {
-      const { uid, comments, $router } = this;
+      const { uid, comments, $router, $route } = this;
       if (!comments.length) return;
+      const timeout = $route.query.commentId ? 200 : 0;
       setTimeout(() => {
         const { elementId, commentId } = query;
         if (uid !== elementId) return;
         this.isVisible = true;
         if (commentId) $router.push({ query });
-      }, 200);
+      }, timeout);
     }
   },
   watch: {
