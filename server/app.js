@@ -1,6 +1,7 @@
 'use strict';
 
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const express = require('express');
 const helmet = require('helmet');
@@ -30,6 +31,7 @@ config.auth.oidc.enabled && (() => {
 
 app.use(helmet());
 app.use(cors({ origin: config.auth.corsAllowedOrigins, credentials: true }));
+app.use(cookieParser(config.auth.jwt.cookie.secret));
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(auth.initialize());

@@ -1,35 +1,27 @@
 <template>
-  <div class="content-element-container">
-    <div
-      @click="onSelect"
-      :class="{
-        selected: activeUsers.length,
-        focused: isFocused,
-        frame
-      }"
-      class="content-element">
-      <active-users :users="activeUsers" :size="20" class="active-users" />
-      <component
-        :is="componentName"
-        @add="$emit('add', $event)"
-        @save="onSave"
-        @delete="$emit('delete')"
-        @focus="onSelect"
-        :id="`element_${id}`"
-        v-bind="$attrs"
-        :element="element"
-        :is-focused="isFocused"
-        :is-dragged="isDragged"
-        :is-disabled="isDisabled"
-        :dense="dense" />
-      <v-progress-linear
-        v-if="isSaving"
-        height="2"
-        color="teal accent-2"
-        indeterminate
-        class="save-indicator" />
-    </div>
-    <div class="actions-sidebar">
+  <div
+    @click="onSelect"
+    :class="{
+      selected: activeUsers.length,
+      focused: isFocused,
+      frame
+    }"
+    class="content-element">
+    <active-users :users="activeUsers" :size="20" class="active-users" />
+    <component
+      :is="componentName"
+      @add="$emit('add', $event)"
+      @save="onSave"
+      @delete="$emit('delete')"
+      @focus="onSelect"
+      :id="`element_${id}`"
+      v-bind="{ ...$attrs, element, isFocused, isDragged, isDisabled, dense }" />
+    <div class="element-actions">
+      <discussion
+        v-if="showDiscussion"
+        v-bind="element"
+        :is-element-selected="isFocused || isHovered"
+        :user="currentUser" />
       <v-btn
         v-if="!element.parent && isHovered || isFocused"
         @click="remove"
@@ -38,12 +30,19 @@
         <v-icon>mdi-delete-outline</v-icon>
       </v-btn>
     </div>
+    <v-progress-linear
+      v-if="isSaving"
+      height="2"
+      color="teal accent-2"
+      indeterminate
+      class="save-indicator" />
   </div>
 </template>
 
 <script>
 import { getComponentName, getElementId } from './utils';
 import ActiveUsers from 'tce-core/ActiveUsers';
+import Discussion from './ElementDiscussion';
 import { mapChannels } from '@/plugins/radio';
 
 export default {
@@ -53,11 +52,12 @@ export default {
   props: {
     element: { type: Object, required: true },
     parent: { type: Object, default: null },
+    isHovered: { type: Boolean, default: false },
     isDragged: { type: Boolean, default: false },
     isDisabled: { type: Boolean, default: false },
-    isHovered: { type: Boolean, default: false },
     frame: { type: Boolean, default: true },
-    dense: { type: Boolean, default: false }
+    dense: { type: Boolean, default: false },
+    showDiscussion: { type: Boolean, default: false }
   },
   data: () => ({
     isFocused: false,
@@ -117,26 +117,18 @@ export default {
     });
   },
   provide() {
-    return {
-      $elementBus: this.elementBus
-    };
+    return { $elementBus: this.elementBus };
   },
-  components: { ActiveUsers }
+  components: { ActiveUsers, Discussion }
 };
 </script>
 
 <style lang="scss" scoped>
-.content-element-container {
-  display: flex;
-  justify-content: space-between;
-}
-
 .content-element {
   $accent-1: #1de9b6;
   $accent-2: #ff4081;
 
   position: relative;
-  flex-basis: 100%;
 
   &::after {
     $width: 0.125rem;
@@ -174,6 +166,15 @@ export default {
   border: 1px solid #e1e1e1;
 }
 
+.element-actions {
+  position: absolute;
+  top: -0.0625rem;
+  right: -1.25rem;
+  width: 1.5rem;
+  height: 100%;
+  padding-left: 0.5rem;
+}
+
 .active-users {
   position: absolute;
   top: 0;
@@ -184,13 +185,5 @@ export default {
   position: absolute;
   bottom: -0.125rem;
   left: 0;
-}
-
-.actions-sidebar {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 1.25rem;
-  min-height: 100%;
 }
 </style>

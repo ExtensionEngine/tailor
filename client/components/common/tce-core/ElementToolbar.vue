@@ -67,6 +67,7 @@ export default {
   width: 100%;
   min-height: 3.5rem;
   padding-right: 2.75rem;
+  z-index: 99;
 
   .actions-container {
     position: absolute;
