@@ -1,6 +1,8 @@
 'use strict';
 
 const { processStatics, resolveStatics } = require('../shared/storage/helpers');
+const elementHooks = require('../shared/content-plugins/elementHooks');
+const { elementRegistry } = require('../shared/content-plugins');
 const forEach = require('lodash/forEach');
 const get = require('lodash/get');
 const hash = require('hash-obj');
@@ -13,12 +15,18 @@ function add(ContentElement, Hooks, Models) {
   const { Events } = ContentElement;
 
   const mappings = {
-    [Hooks.beforeCreate]: [processAssets],
-    [Hooks.beforeUpdate]: [processAssets],
-    [Hooks.afterCreate]: [resolveAssets, sseCreate, touchRepository, touchOutline],
-    [Hooks.afterUpdate]: [resolveAssets, sseUpdate, touchRepository, touchOutline],
+    [Hooks.beforeCreate]: [customElementHook, processAssets],
+    [Hooks.beforeUpdate]: [customElementHook, processAssets],
+    [Hooks.afterCreate]: [customElementHook, resolveAssets, sseCreate, touchRepository, touchOutline],
+    [Hooks.afterUpdate]: [customElementHook, resolveAssets, sseUpdate, touchRepository, touchOutline],
     [Hooks.beforeDestroy]: [touchRepository, touchOutline],
     [Hooks.afterDestroy]: [sseDelete]
+  };
+  const elementHookMappings = {
+    [Hooks.beforeCreate]: elementHooks.BEFORE_SAVE,
+    [Hooks.beforeUpdate]: elementHooks.BEFORE_SAVE,
+    [Hooks.afterCreate]: elementHooks.AFTER_SAVE,
+    [Hooks.afterUpdate]: elementHooks.AFTER_SAVE
   };
 
   forEach(mappings, (hooks, type) => {
@@ -40,6 +48,13 @@ function add(ContentElement, Hooks, Models) {
   async function sseDelete(_, element) {
     await element.reload({ paranoid: false });
     sse.channel(element.repositoryId).send(Events.Delete, element);
+  }
+
+  function customElementHook(hookType, element) {
+    hookType = elementHookMappings[hookType];
+    if (!hookType) return;
+    const hook = elementRegistry.getHook(element.type, hookType);
+    return hook && hook(element);
   }
 
   function processAssets(hookType, element) {

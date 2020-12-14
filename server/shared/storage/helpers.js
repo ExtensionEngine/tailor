@@ -14,7 +14,6 @@ const storage = require('./');
 const toPairs = require('lodash/toPairs');
 const values = require('lodash/values');
 
-const STORAGE_PROTOCOL = 'storage://';
 const DEFAULT_IMAGE_EXTENSION = 'png';
 
 const isPrimitive = element => !get(element, 'data.embeds');
@@ -99,9 +98,9 @@ async function resolveAssetsMap(element) {
   if (!get(element, 'data.assets')) return element;
   await Promise.map(toPairs(element.data.assets), ([key, url]) => {
     if (!url) return set(element.data, key, url);
-    const isStorageResource = url.startsWith(STORAGE_PROTOCOL);
+    const isStorageResource = url.startsWith(config.protocol);
     const resolvedUrl = isStorageResource
-      ? proxy.getFileUrl(url.substr(STORAGE_PROTOCOL.length, url.length))
+      ? proxy.getFileUrl(url.substr(config.protocol.length, url.length))
       : url;
     set(element.data, key, resolvedUrl);
   });
@@ -154,7 +153,6 @@ function saveFile(key, file) {
 }
 
 module.exports = {
-  STORAGE_PROTOCOL,
   processStatics,
   resolveStatics
 };

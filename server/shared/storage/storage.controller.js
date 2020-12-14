@@ -18,7 +18,7 @@ async function upload({ file }, res) {
   const key = path.join(config.path, `${hash}___${name}${extension}`);
   await saveFile(key, buffer, { ContentType: file.mimetype });
   const publicUrl = await getFileUrl(key);
-  return res.json({ key, url: `storage://${key}`, publicUrl });
+  return res.json({ key, url: `${config.protocol}${key}`, publicUrl });
 }
 
 module.exports = { getUrl, upload };
