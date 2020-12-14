@@ -2,6 +2,8 @@
 
 const { Model, Op } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
+const elementHooks = require('../shared/content-plugins/elementHooks');
+const { elementRegistry } = require('../shared/content-plugins');
 const { ContentElement: Events } = require('../../common/sse');
 const hooks = require('./hooks');
 const isNumber = require('lodash/isNumber');
@@ -112,8 +114,8 @@ class ContentElement extends Model {
 
   static fetch(opt) {
     return isNumber(opt)
-      ? ContentElement.findByPk(opt).then(it => it && resolveStatics(it))
-      : ContentElement.findAll(opt).map(resolveStatics);
+      ? ContentElement.findByPk(opt).then(it => it && afterRetrieveHook(it))
+      : ContentElement.findAll(opt).map(afterRetrieveHook);
   }
 
   static cloneElements(src, container, options) {
@@ -171,3 +173,11 @@ class ContentElement extends Model {
 }
 
 module.exports = ContentElement;
+
+function afterRetrieveHook(element) {
+  const hook = elementRegistry.getHook(
+    element.type,
+    elementHooks.AFTER_RETRIEVE
+  );
+  return hook ? hook(element) : resolveStatics(element);
+}
