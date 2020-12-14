@@ -14,7 +14,6 @@
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import Discussion from 'tce-core/Discussion';
-import events from 'tce-core/Events/DiscussionEvent';
 import get from 'lodash/get';
 import { mapChannels } from '@/plugins/radio';
 import orderBy from 'lodash/orderBy';
@@ -69,9 +68,8 @@ export default {
       this.setLastSeenComment(2000);
     }
   },
-  async created() {
-    await this.fetch({ activityId: this.activity.id });
-    this.editorBus.on(events.SET_LAST_SEEN, () => this.setLastSeenComment());
+  created() {
+    return this.fetch({ activityId: this.activity.id });
   },
   components: { Discussion }
 };

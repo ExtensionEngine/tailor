@@ -5,6 +5,7 @@
       :key="comment.uid"
       @update="onUpdate"
       @remove="$emit('remove', comment)"
+      @markSeen="$emit('markSeen')"
       v-bind="{ comment, user, showAllComments, unseenComments, seenMarker }" />
   </ul>
 </template>

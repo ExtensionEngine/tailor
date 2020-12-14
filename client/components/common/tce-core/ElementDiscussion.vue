@@ -34,6 +34,7 @@
 import Discussion from 'tce-core/Discussion';
 import DiscussionEvent from './Events/DiscussionEvent';
 import get from 'lodash/get';
+import isEqual from 'lodash/isEqual';
 import { mapChannels } from '@/plugins/radio';
 
 const getActivatorOptions = unseenComments => ({
@@ -130,7 +131,7 @@ export default {
       this.setLastSeen(1000);
     },
     comments(val, oldVal) {
-      if (!this.isVisible || val === oldVal) return;
+      if (!this.isVisible || isEqual(val, oldVal)) return;
       this.setLastSeen(2000);
     }
   },

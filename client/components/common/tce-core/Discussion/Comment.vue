@@ -9,7 +9,7 @@
         <transition name="slide-fade">
           <v-btn
             v-if="showSeenMarker"
-            @click="markSeen"
+            @click="$emit('markSeen')"
             color="teal"
             text x-small
             class="seen-marker">
@@ -63,7 +63,7 @@
                 @click="toggleElementDiscussion"
                 color="teal"
                 text x-small>
-                {{ 'Element Discussion' | truncate(12) }}
+                Element
                 <v-icon x-small class="ml-1">mdi-arrow-top-right-thick</v-icon>
               </v-btn>
             </template>
@@ -150,9 +150,6 @@ export default {
     reset() {
       this.content = this.comment.content;
       this.isEditing = false;
-    },
-    markSeen() {
-      this.editorBus.emit(events.SET_LAST_SEEN);
     },
     toggleElementDiscussion() {
       const { commentId } = this.$route.query;
