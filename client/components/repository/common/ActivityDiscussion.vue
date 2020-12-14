@@ -1,8 +1,15 @@
 <template>
   <div v-intersect="onIntersect" class="activity-discussion">
     <transition name="slide-fade">
+      <v-badge
+        v-if="showSeenMarker && unseenComments.length"
+        :content="unseenComments.length"
+        color="secondary"
+        class="outline-unseen" />
+    </transition>
+    <transition name="slide-fade">
       <v-btn
-        v-if="showSeenMarker"
+        v-if="showSeenMarker && unseenComments.length"
         @click="setLastSeenComment"
         color="secondary"
         text x-small
@@ -31,7 +38,8 @@ export default {
   name: 'activity-discussion',
   props: {
     activity: { type: Object, required: true },
-    showHeading: { type: Boolean, default: false }
+    showHeading: { type: Boolean, default: false },
+    seenMarker: { type: Boolean, default: false }
   },
   data: () => ({ isVisible: false, showSeenMarker: false }),
   computed: {
@@ -63,7 +71,7 @@ export default {
       this.showSeenMarker = false;
     },
     onIntersect(_entries, _observer, isIntersected) {
-      if (this.showHeading) return;
+      if (this.seenMarker) return;
       this.isVisible = isIntersected;
     }
   },
@@ -79,7 +87,7 @@ export default {
     unseenComments: {
       immediate: true,
       handler(comments) {
-        if (!this.showHeading || !comments.length) return;
+        if (!this.seenMarker || !comments.length) return;
         setTimeout(() => (this.showSeenMarker = true), 2000);
       }
     }
@@ -97,6 +105,13 @@ export default {
   margin: 1rem 0 1.75rem;
   padding: 0.375rem 1rem;
   border: 1px solid #bbb;
+
+  ::v-deep .outline-unseen.v-badge {
+    position: absolute;
+    top: 1.875rem;
+    left: 0.625rem;
+    z-index: 2;
+  }
 
   .seen-marker {
     position: absolute;
