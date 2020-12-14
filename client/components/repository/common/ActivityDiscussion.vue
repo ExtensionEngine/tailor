@@ -1,29 +1,12 @@
 <template>
   <div v-intersect="onIntersect" class="activity-discussion">
-    <transition name="slide-fade">
-      <v-badge
-        v-if="showSeenMarker && unseenComments.length"
-        :content="unseenComments.length"
-        color="secondary"
-        class="outline-unseen" />
-    </transition>
-    <transition name="slide-fade">
-      <v-btn
-        v-if="showSeenMarker && unseenComments.length"
-        @click="setLastSeenComment"
-        color="secondary"
-        text x-small
-        class="seen-marker">
-        <v-icon class="mr-1" x-small>mdi-check</v-icon>
-        Mark All as Seen
-      </v-btn>
-    </transition>
     <discussion
       @save="saveComment"
       @update="saveComment"
       @remove="remove"
-      @mark-seen="setLastSeenComment"
-      v-bind="{ comments, user, showHeading, scrollTarget: 'editor' }"
+      @setLastSeen="setLastSeenComment(1000)"
+      v-bind="{ comments, user, showHeading, unseenComments, seenMarker }"
+      scroll-target="editor"
       show-notifications show-all-comments />
   </div>
 </template>
@@ -31,7 +14,9 @@
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import Discussion from 'tce-core/Discussion';
+import events from 'tce-core/Events/DiscussionEvent';
 import get from 'lodash/get';
+import { mapChannels } from '@/plugins/radio';
 import orderBy from 'lodash/orderBy';
 
 export default {
@@ -41,34 +26,33 @@ export default {
     showHeading: { type: Boolean, default: false },
     seenMarker: { type: Boolean, default: false }
   },
-  data: () => ({ isVisible: false, showSeenMarker: false }),
+  data: () => ({ isVisible: false }),
   computed: {
+    ...mapChannels({ editorBus: 'editor' }),
     ...mapGetters('repository/comments', ['getComments', 'getUnseenActivityComments']),
     ...mapState({ user: state => state.auth.user }),
     comments() {
       const comments = this.getComments({ activityId: this.activity.id });
       return orderBy(comments, 'createdAt', 'desc');
     },
-    unseenComments: vm => vm.getUnseenActivityComments(vm.activity),
+    unseenComments() {
+      const unseenComments = this.getUnseenActivityComments(this.activity);
+      return orderBy(unseenComments, 'createdAt', 'asc');
+    },
     lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime()
   },
   methods: {
     ...mapActions('repository/comments', ['fetch', 'save', 'update', 'remove']),
     ...mapMutations('repository/comments', ['markSeenComments']),
-    async saveComment(comment) {
+    saveComment(comment) {
       const action = comment.id ? 'update' : 'save';
       const { activity, user: author } = this;
-      await this[action]({ ...comment, author, activityId: activity.id });
-      setTimeout(() => Object.assign(this, {
-        isVisible: true,
-        showSeenMarker: false
-      }), 2500);
+      return this[action]({ ...comment, author, activityId: activity.id });
     },
     setLastSeenComment(timeout = 0) {
       const { activity, lastCommentAt } = this;
       const payload = { activityUid: activity.uid, lastCommentAt };
       setTimeout(() => this.markSeenComments(payload), timeout);
-      this.showSeenMarker = false;
     },
     onIntersect(_entries, _observer, isIntersected) {
       if (this.seenMarker) return;
@@ -83,17 +67,11 @@ export default {
     comments(val, oldVal) {
       if (!this.isVisible || val === oldVal) return;
       this.setLastSeenComment(2000);
-    },
-    unseenComments: {
-      immediate: true,
-      handler(comments) {
-        if (!this.seenMarker || !comments.length) return;
-        setTimeout(() => (this.showSeenMarker = true), 2000);
-      }
     }
   },
-  created() {
+  async created() {
     this.fetch({ activityId: this.activity.id });
+    this.editorBus.on(events.SET_LAST_SEEN, () => this.setLastSeenComment());
   },
   components: { Discussion }
 };
@@ -105,23 +83,5 @@ export default {
   margin: 1rem 0 1.75rem;
   padding: 0.375rem 1rem;
   border: 1px solid #bbb;
-
-  ::v-deep .outline-unseen.v-badge {
-    position: absolute;
-    top: 1.875rem;
-    left: 0.625rem;
-    z-index: 2;
-  }
-
-  .seen-marker {
-    position: absolute;
-    top: 1.5625rem;
-    right: 8.5rem;
-  }
-
-  .slide-fade-enter, .slide-fade-leave-to {
-    transform: translateX(0.625rem);
-    opacity: 0;
-  }
 }
 </style>

@@ -29,6 +29,8 @@
       :show-all="showAll"
       :min-displayed="commentsShownLimit"
       :show-all-comments="showAllComments"
+      :unseen-comments="unseenComments"
+      :seen-marker="seenMarker"
       class="mt-2" />
     <div class="text-right">
       <text-editor
@@ -60,7 +62,9 @@ export default {
     showNotifications: { type: Boolean, default: false },
     showAllComments: { type: Boolean, default: false },
     commentsShownLimit: { type: Number, default: 5 },
-    scrollTarget: { type: String, default: 'discussion' }
+    scrollTarget: { type: String, default: 'discussion' },
+    unseenComments: { type: Array, default: () => [] },
+    seenMarker: { type: Boolean, default: false }
   },
   data: () => ({ showAll: false, comment: initCommentInput() }),
   computed: {
@@ -73,7 +77,7 @@ export default {
   },
   methods: {
     post() {
-      const { scrollTarget, comment, user: author } = this;
+      const { scrollTarget, comment, seenMarker, user: author } = this;
       if (!comment.content) return;
       const payload = {
         content: comment.content,
@@ -83,6 +87,7 @@ export default {
       };
       this.comment = initCommentInput();
       this.$emit('save', payload);
+      if (seenMarker) this.$emit('setLastSeen');
       // Keep editor/discussion container inside viewport.
       const scrollOptions = { block: 'center', behavior: 'smooth' };
       this.$nextTick(() => this[scrollTarget].scrollIntoView(scrollOptions));

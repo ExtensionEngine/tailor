@@ -5,7 +5,7 @@
       :key="comment.uid"
       @update="onUpdate"
       @remove="$emit('remove', comment)"
-      v-bind="{ comment, user, showAllComments }" />
+      v-bind="{ comment, user, showAllComments, unseenComments, seenMarker }" />
   </ul>
 </template>
 
@@ -20,7 +20,9 @@ export default {
     user: { type: Object, required: true },
     showAll: { type: Boolean, default: false },
     minDisplayed: { type: Number, default: 5 },
-    showAllComments: { type: Boolean, default: false }
+    showAllComments: { type: Boolean, default: false },
+    unseenComments: { type: Array, default: () => [] },
+    seenMarker: { type: Boolean, default: false }
   },
   computed: {
     visibleItems: vm => vm.showAll ? vm.items : takeRgt(vm.items, vm.minDisplayed)
