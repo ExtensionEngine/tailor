@@ -1,10 +1,9 @@
 <template>
   <v-menu
-    v-if="isElementSelected || comments.length"
     v-model="isVisible"
     :close-on-content-click="false"
-    transition="slide-y-transition"
     min-width="300"
+    transition="slide-y-transition"
     left offset-y attach>
     <template v-slot:activator="{ on: menu }">
       <v-tooltip open-delay="800" left>
@@ -14,7 +13,9 @@
             :class="activator.class"
             x-small icon>
             <div v-if="activator.text" class="unseen">{{ activator.text }}</div>
-            <v-icon v-else :color="activator.color">{{ activator.icon }}</v-icon>
+            <v-icon v-else :color="activator.color" size="18">
+              {{ activator.icon }}
+            </v-icon>
           </v-btn>
         </template>
         <span>{{ activator.tooltip }}</span>
@@ -37,7 +38,7 @@ import { mapChannels } from '@/plugins/radio';
 
 const getActivatorOptions = unseenComments => ({
   unseen: {
-    class: 'pink white--text',
+    class: 'teal accent-4 white--text',
     tooltip: 'View new comments',
     text: unseenComments.length
   },
@@ -48,7 +49,7 @@ const getActivatorOptions = unseenComments => ({
   },
   post: {
     icon: 'mdi-message-plus-outline',
-    color: 'teal accent-4',
+    color: 'blue-grey darken-4',
     tooltip: 'Post a comment'
   }
 });
@@ -58,7 +59,6 @@ export default {
   props: {
     id: { type: Number, default: null },
     uid: { type: String, required: true },
-    isElementSelected: { type: Boolean, default: false },
     comments: { type: Array, required: true },
     lastSeen: { type: Number, required: true },
     user: { type: Object, required: true }
