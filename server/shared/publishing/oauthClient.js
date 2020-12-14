@@ -2,7 +2,7 @@
 
 const { ClientCredentials } = require('simple-oauth2');
 const config = require('../../../config/server/publish');
-const Deferred = require('../../shared/util/Deffered');
+const Deferred = require('../../shared/util/Deferred');
 const request = require('axios');
 
 const clientId = config.clientID;
