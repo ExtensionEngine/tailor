@@ -1,20 +1,13 @@
 'use strict';
 
-const crypto = require('crypto');
 const { elementRegistry } = require('../content-plugins');
 const get = require('lodash/get');
-const isString = require('lodash/isString');
-const isUrl = require('is-url');
 const config = require('../../../config/server').storage;
-const mime = require('mime-types');
 const Promise = require('bluebird');
 const proxy = require('./proxy');
 const set = require('lodash/set');
-const storage = require('./');
 const toPairs = require('lodash/toPairs');
 const values = require('lodash/values');
-
-const DEFAULT_IMAGE_EXTENSION = 'png';
 
 const isPrimitive = element => !get(element, 'data.embeds');
 const isQuestion = element => get(element, 'data.question');
@@ -46,39 +39,13 @@ function processQuestion(element) {
 
 function processPrimitive(primitive) {
   if (!isPrimitive(primitive)) throw new Error('Invalid primitive');
-  if (!processor[primitive.type]) return Promise.resolve(primitive);
-  return processor[primitive.type](primitive);
+  return Promise.resolve(primitive);
 }
 
 function processComposite(composite) {
   return Promise.each(values(composite.data.embeds), processPrimitive)
     .then(() => composite);
 }
-
-const processor = {};
-
-processor.IMAGE = asset => {
-  const image = asset.data.url;
-  const base64Pattern = /^data:image\/(\w+);base64,/;
-
-  if (!isString(image) || (!isUrl(image) && !image.match(base64Pattern))) {
-    return Promise.resolve(asset);
-  }
-
-  if (isUrl(image)) {
-    const url = new URL(image);
-    asset.data.url = url.pathname.substr(1, image.length);
-    return Promise.resolve(asset);
-  }
-
-  const file = Buffer.from(image.replace(base64Pattern, ''), 'base64');
-  const extension = image.match(base64Pattern)[1] || DEFAULT_IMAGE_EXTENSION;
-  const hashString = `${asset.id}${file}`;
-  const hash = crypto.createHash('md5').update(hashString).digest('hex');
-  const key = `${config.path}/${asset.id}/${hash}.${extension}`;
-  asset.data.url = key;
-  return saveFile(key, file).then(() => asset);
-};
 
 // TODO: Temp patch until asset embeding is unified
 function resolveStatics(item) {
@@ -122,34 +89,13 @@ function resolveAsset(element) {
 
 function resolvePrimitive(primitive) {
   if (!isPrimitive(primitive)) throw new Error('Invalid primitive');
-  const primitiveResolver = resolver[primitive.type] || resolveAssetsMap;
-  return primitiveResolver(primitive);
+  return resolveAssetsMap(primitive);
 }
 
 async function resolveComposite(composite) {
   await resolveAssetsMap(composite);
   return Promise.each(values(composite.data.embeds), resolvePrimitive)
     .then(() => composite);
-}
-
-const resolver = {};
-
-resolver.IMAGE = asset => {
-  if (!asset.data || !asset.data.url) return Promise.resolve(asset);
-
-  function getUrl(key) {
-    asset.data.url = proxy.getFileUrl(key);
-    return asset;
-  }
-
-  return storage.fileExists(asset.data.url)
-    .then(exists => exists ? getUrl(asset.data.url) : asset);
-};
-
-function saveFile(key, file) {
-  // TODO: Investigate and properly set 'ACL' grant in options
-  const options = { ContentType: mime.lookup(key) };
-  return storage.saveFile(key, file, options);
 }
 
 module.exports = {
