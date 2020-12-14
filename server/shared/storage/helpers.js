@@ -85,6 +85,7 @@ processor.IMAGE = asset => {
 
 processor.SCORM = async element => {
   const { root, assets } = element.data;
+  if (!root) return element;
   const manifestKey = find(assets, it => it.endsWith('imsmanifest.xml'));
   const manifest = await storage.getFile(manifestKey.substr(STORAGE_PROTOCOL.length, manifestKey.length));
   const options = { ignoreAttributes: false, attributeNamePrefix: '$_' };
