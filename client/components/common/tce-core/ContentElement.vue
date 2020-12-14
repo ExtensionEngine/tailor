@@ -16,7 +16,7 @@
       @focus="onSelect"
       :id="`element_${id}`"
       v-bind="{ ...$attrs, element, isFocused, isDragged, isDisabled, dense }" />
-    <div class="element-actions">
+    <div v-if="!isDisabled" class="element-actions">
       <div
         v-if="showDiscussion"
         :class="{ 'is-visible': isHighlighted || hasComments }">
