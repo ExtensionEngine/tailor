@@ -105,15 +105,14 @@ export default {
       this.editorBus.emit(events.SET_LAST_SEEN, options);
     },
     toggleDiscussion(query) {
-      const { uid, comments, $router, $route } = this;
+      const { uid, comments, $router } = this;
       if (!comments.length) return;
-      const timeout = $route.query.commentId ? 200 : 0;
       setTimeout(() => {
         const { elementId, commentId } = query;
         if (uid !== elementId) return;
         this.isVisible = true;
         if (commentId) $router.push({ query });
-      }, timeout);
+      }, 100);
     }
   },
   watch: {
@@ -121,9 +120,13 @@ export default {
       const { commentId, elementId } = this.$route.query;
       if (!val && commentId) {
         const query = elementId ? { elementId } : {};
-        this.$router.replace({ query });
+        return this.$router.replace({ query });
       }
       if (!val || !this.lastCommentAt) return;
+      if (elementId !== this.uid) {
+        const query = { elementId: this.uid };
+        this.$router.replace({ query });
+      }
       this.setLastSeen(1000);
     },
     comments(val, oldVal) {
