@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "@extensionengine/tce-jodit": "github:extensionengine/tce-jodit#eede0d3b144c29b",
+    "@extensionengine/tce-scorm": "github:ExtensionEngine/tce-scorm#465d1f00aadecda",
     "@mdi/font": "^4.8.95",
     "@ungap/global-this": "^0.4.0",
     "JSONStream": "^1.3.5",
