@@ -23,7 +23,7 @@
         <discussion v-bind="element" :user="currentUser" />
       </div>
       <div
-        v-if="!element.parent"
+        v-if="!parent"
         :class="{ 'is-visible': isHighlighted }">
         <v-btn
           @click="remove"
