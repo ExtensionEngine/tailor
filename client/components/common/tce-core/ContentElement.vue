@@ -179,7 +179,7 @@ export default {
   right: -1.25rem;
   width: 1.5rem;
   height: 100%;
-  padding-left: 0.5rem;
+  padding-left: 0.75rem;
 
   > * {
     min-height: 1.75rem;
