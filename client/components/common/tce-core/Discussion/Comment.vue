@@ -99,6 +99,12 @@ import { focus } from 'vue-focus';
 import { mapChannels } from '@/plugins/radio';
 import TextEditor from './TextEditor';
 
+const getRouteOptions = ({ id: commentId, activityId, contentElement }) => ({
+  name: 'editor',
+  params: { activityId },
+  query: { elementId: contentElement.uid, commentId }
+});
+
 export default {
   name: 'thread-comment',
   props: {
@@ -149,14 +155,12 @@ export default {
       this.editorBus.emit(events.SET_LAST_SEEN);
     },
     toggleElementDiscussion() {
-      const { id: commentId, activityId, contentElement } = this.comment;
-      const currentRouteCommentId = Number(this.$route.query.commentId);
-      if (currentRouteCommentId === commentId) return;
+      const { commentId } = this.$route.query;
+      if (parseInt(commentId, 10) === this.comment.commentId) return;
+      const routeOpts = getRouteOptions(this.comment);
       const isEditor = this.$route.name === 'editor';
-      const params = { activityId };
-      const query = { elementId: contentElement.uid, commentId };
-      if (!isEditor) this.$router.push({ name: 'editor', params, query });
-      this.editorBus.emit(events.TOGGLE, query);
+      if (!isEditor) this.$router.push(routeOpts);
+      this.editorBus.emit(events.TOGGLE, routeOpts.query);
     }
   },
   watch: {
