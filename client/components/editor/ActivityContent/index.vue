@@ -10,6 +10,7 @@
         <content-containers
           v-for="(containerGroup, type) in rootContainerGroups"
           :key="type"
+          @focusoutElement="focusoutElement"
           v-bind="getContainerConfig(type)"
           :container-group="containerGroup"
           :processed-elements="processedElements"
@@ -90,9 +91,7 @@ export default {
       if (!this.mousedownCaptured) return;
       // Reset
       this.mousedownCaptured = false;
-      if (get(e, 'component.name') !== 'content-element') {
-        this.editorChannel.emit(CE_FOCUS_EVENT);
-      }
+      if (get(e, 'component.name') !== 'content-element') this.focusoutElement();
     },
     loadContents: loader(function () {
       const { contentContainers, activityId } = this;
@@ -140,6 +139,9 @@ export default {
         const element = this.$refs.activityContent.querySelector(elementId);
         element.scrollIntoView();
       }, timeout);
+    },
+    focusoutElement() {
+      this.editorChannel.emit(CE_FOCUS_EVENT);
     }
   },
   watch: {
