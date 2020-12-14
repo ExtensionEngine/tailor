@@ -14,7 +14,7 @@
       @add="$emit('add', $event)"
       @save="$emit('save', $event)"
       @save:meta="$emit('save:meta', $event)"
-      @delete="$emit('delete', $event)"
+      @delete="$emit('delete')"
       v-bind="bindings" />
   </div>
 </template>

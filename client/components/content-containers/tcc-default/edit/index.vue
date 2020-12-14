@@ -23,7 +23,7 @@
         <contained-content
           @save="saveElement(element, 'data', $event)"
           @save:meta="saveElement(element, 'meta', $event)"
-          @delete="$emit('deleteElement', $event)"
+          @delete="$emit('deleteElement', element)"
           v-bind="{ element, isDragged, setWidth: false }"
           show-discussion />
       </template>

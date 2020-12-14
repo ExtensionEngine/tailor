@@ -10,7 +10,7 @@
       <contained-content
         @save="save(element, 'data', $event)"
         @save:meta="save(element, 'meta', $event)"
-        @delete="requestDeleteConfirmation"
+        @delete="requestDeleteConfirmation(element)"
         :element="element"
         :is-dragged="isDragged"
         :is-disabled="isDisabled"

@@ -91,8 +91,7 @@ export default {
       this.editorBus.emit('element:focus', this.element, this.parent);
     },
     remove() {
-      this.editorBus.emit('element:focus');
-      this.$emit('delete', this.element.parent || this.element);
+      this.$emit('delete');
     }
   },
   created() {
