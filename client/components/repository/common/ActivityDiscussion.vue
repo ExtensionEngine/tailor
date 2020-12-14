@@ -70,7 +70,7 @@ export default {
     }
   },
   async created() {
-    this.fetch({ activityId: this.activity.id });
+    await this.fetch({ activityId: this.activity.id });
     this.editorBus.on(events.SET_LAST_SEEN, () => this.setLastSeenComment());
   },
   components: { Discussion }
