@@ -184,6 +184,7 @@ export default {
   > * {
     min-height: 1.75rem;
     opacity: 0;
+    transition: opacity 0.1s linear;
   }
 
   > .is-visible {
