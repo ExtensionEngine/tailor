@@ -1,7 +1,7 @@
 'use strict';
 
 const { ClientCredentials } = require('simple-oauth2');
-const config = require('../../../config/server/publish');
+const config = require('../../../config/server/consumer');
 const Deferred = require('../../shared/util/Deferred');
 const request = require('axios');
 
