@@ -130,6 +130,9 @@ export default {
       }, 50);
       this.editorChannel.on(CE_FOCUS_EVENT, this.focusHandler);
     },
+    focusoutElement() {
+      this.editorChannel.emit(CE_FOCUS_EVENT);
+    },
     selectElement(elementId, user = this.user, isSelected = true) {
       this.editorChannel.emit(CE_SELECT_EVENT, { elementId, user, isSelected });
     },
@@ -139,9 +142,6 @@ export default {
         const element = this.$refs.activityContent.querySelector(elementId);
         element.scrollIntoView();
       }, timeout);
-    },
-    focusoutElement() {
-      this.editorChannel.emit(CE_FOCUS_EVENT);
     }
   },
   watch: {
