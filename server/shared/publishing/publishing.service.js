@@ -7,6 +7,7 @@ const {
   updatePublishingStatus,
   updateRepositoryCatalog
 } = require('./helpers');
+const oauthClient = require('./oauthClient');
 const PromiseQueue = require('promise-queue');
 
 class PublishingService {
@@ -15,7 +16,8 @@ class PublishingService {
   }
 
   publishActivity(activity) {
-    return this.queue.add(() => publishActivity(activity));
+    return this.queue.add(() => publishActivity(activity)
+      .then(data => oauthClient.send(data) && data));
   }
 
   publishRepoDetails(repository) {
