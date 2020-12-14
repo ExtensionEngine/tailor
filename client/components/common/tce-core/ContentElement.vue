@@ -26,7 +26,7 @@
         v-if="!parent"
         :class="{ 'is-visible': isHighlighted }">
         <v-btn
-          @click="remove"
+          @click="$emit('delete')"
           color="pink lighten-1"
           dark icon x-small>
           <v-icon size="20">mdi-delete-outline</v-icon>
@@ -89,9 +89,6 @@ export default {
     },
     focus() {
       this.editorBus.emit('element:focus', this.element, this.parent);
-    },
-    remove() {
-      this.$emit('delete');
     }
   },
   created() {
