@@ -5,7 +5,6 @@ const serverPort = require('./config/server').port;
 const yn = require('yn');
 
 const {
-  AUTH_JWT_SCHEME,
   ENABLE_DEFAULT_SCHEMA,
   NODE_ENV,
   STORAGE_PATH,
@@ -37,6 +36,7 @@ const devServer = {
   },
   proxy: {
     '/api': { target: serverUrl },
+    '/proxy': serverUrl,
     ...(STORAGE_PATH ? { '/repository': serverUrl } : {})
   },
   // Override using: `npm run dev:server -- --port <number>`
@@ -92,9 +92,8 @@ module.exports = {
   },
   envs: {
     API_PATH: '/api',
-    AUTH_JWT_SCHEME,
     ENABLE_DEFAULT_SCHEMA: yn(ENABLE_DEFAULT_SCHEMA),
-    OIDC_ENABLED,
+    OIDC_ENABLED: yn(OIDC_ENABLED),
     OIDC_LOGIN_TEXT
   },
   babel: {

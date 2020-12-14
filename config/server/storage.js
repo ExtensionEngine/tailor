@@ -1,6 +1,8 @@
 'use strict';
 
 module.exports = {
+  provider: process.env.STORAGE_PROVIDER,
+  path: 'repository/assets',
   amazon: {
     key: process.env.STORAGE_KEY,
     secret: process.env.STORAGE_SECRET,
@@ -10,5 +12,15 @@ module.exports = {
   filesystem: {
     path: process.env.STORAGE_PATH
   },
-  provider: process.env.STORAGE_PROVIDER
+  proxy: {
+    provider: process.env.STORAGE_PROXY || 'local',
+    cloudfront: {
+      host: process.env.STORAGE_PROXY_HOST,
+      keyPairId: process.env.STORAGE_PROXY_KEY_PAIR_ID,
+      privateKey: process.env.STORAGE_PROXY_PRIVATE_KEY
+    },
+    local: {
+      privateKey: process.env.STORAGE_PROXY_PRIVATE_KEY
+    }
+  }
 };
