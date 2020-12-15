@@ -4,7 +4,7 @@
       @save="saveComment"
       @update="saveComment"
       @remove="remove"
-      @markSeen="setLastSeenComment(1000)"
+      @markSeen="setLastSeenComment"
       v-bind="{ comments, user, showHeading, unseenComments, seenMarker }"
       scroll-target="editor"
       show-notifications show-all-comments />
@@ -47,7 +47,7 @@ export default {
       const { activity, user: author } = this;
       return this[action]({ ...comment, author, activityId: activity.id });
     },
-    setLastSeenComment(timeout) {
+    setLastSeenComment(timeout = 0) {
       const { activity, lastCommentAt } = this;
       const payload = { activityUid: activity.uid, lastCommentAt };
       setTimeout(() => this.markSeenComments(payload), timeout);
