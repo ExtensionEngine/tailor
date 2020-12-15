@@ -113,7 +113,7 @@ export default {
         if (uid !== elementId) return;
         this.isVisible = true;
         if (commentId) $router.push({ query });
-      }, 100);
+      }, 50);
     }
   },
   watch: {
