@@ -50,6 +50,5 @@ function saveFile(key, file, storage) {
 module.exports = {
   ...info,
   beforeSave: processImage,
-  afterSave: resolveImage,
-  afterRetrieve: resolveImage
+  afterLoaded: resolveImage
 };

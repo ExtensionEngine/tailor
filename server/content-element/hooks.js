@@ -23,10 +23,10 @@ function add(ContentElement, Hooks, Models) {
     [Hooks.afterDestroy]: [sseDelete]
   };
   const elementHookMappings = {
-    [Hooks.beforeCreate]: elementHooks.BEFORE_SAVE,
-    [Hooks.beforeUpdate]: elementHooks.BEFORE_SAVE,
-    [Hooks.afterCreate]: elementHooks.AFTER_SAVE,
-    [Hooks.afterUpdate]: elementHooks.AFTER_SAVE
+    [Hooks.beforeCreate]: [elementHooks.BEFORE_SAVE],
+    [Hooks.beforeUpdate]: [elementHooks.BEFORE_SAVE],
+    [Hooks.afterCreate]: [elementHooks.AFTER_SAVE, elementHooks.AFTER_LOADED],
+    [Hooks.afterUpdate]: [elementHooks.AFTER_SAVE, elementHooks.AFTER_LOADED]
   };
 
   forEach(mappings, (hooks, type) => {
@@ -51,10 +51,12 @@ function add(ContentElement, Hooks, Models) {
   }
 
   function customElementHook(hookType, element) {
-    hookType = elementHookMappings[hookType];
-    if (!hookType) return;
-    const hook = elementRegistry.getHook(element.type, hookType);
-    return hook && hook(element);
+    const elementHookTypes = elementHookMappings[hookType];
+    if (!elementHookTypes) return;
+    return elementHookTypes
+      .map(hook => elementRegistry.getHook(element.type, hook))
+      .filter(Boolean)
+      .reduce((result, hook) => hook(result), element);
   }
 
   function processAssets(hookType, element) {
