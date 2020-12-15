@@ -111,4 +111,8 @@ export default {
     visibility: hidden;
   }
 }
+
+::v-deep .sortable-chosen .drag-handle {
+  display: none;
+}
 </style>
