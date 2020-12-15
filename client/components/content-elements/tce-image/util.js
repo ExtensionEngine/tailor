@@ -1,8 +1,9 @@
 const crypto = require('crypto');
+const info = require('./info');
 const isString = require('lodash/isString');
 const isUrl = require('is-url');
 const mime = require('mime-types');
-const { type } = require('./info');
+
 const DEFAULT_IMAGE_EXTENSION = 'png';
 
 function processImage(asset, { config, storage, storageProxy }) {
@@ -47,7 +48,7 @@ function saveFile(key, file, storage) {
 }
 
 module.exports = {
-  type,
+  ...info,
   beforeSave: processImage,
   afterSave: resolveImage,
   afterRetrieve: resolveImage
