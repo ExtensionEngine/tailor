@@ -24,7 +24,7 @@
       v-if="thread.length"
       @update="$emit('update', $event)"
       @remove="$emit('remove', $event)"
-      @markSeen="$emit('setLastSeen')"
+      @markSeen="$emit('markSeen')"
       :items="thread"
       :user="user"
       :show-all="showAll"

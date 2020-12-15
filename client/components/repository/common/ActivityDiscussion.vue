@@ -4,7 +4,7 @@
       @save="saveComment"
       @update="saveComment"
       @remove="remove"
-      @setLastSeen="setLastSeenComment(1000)"
+      @markSeen="setLastSeenComment(1000)"
       v-bind="{ comments, user, showHeading, unseenComments, seenMarker }"
       scroll-target="editor"
       show-notifications show-all-comments />
@@ -15,6 +15,7 @@
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import Discussion from 'tce-core/Discussion';
 import get from 'lodash/get';
+import isEqual from 'lodash/isEqual';
 import { mapChannels } from '@/plugins/radio';
 import orderBy from 'lodash/orderBy';
 
@@ -64,7 +65,7 @@ export default {
       this.setLastSeenComment(1000);
     },
     comments(val, oldVal) {
-      if (!this.isVisible || val === oldVal) return;
+      if (!this.isVisible || isEqual(val, oldVal)) return;
       this.setLastSeenComment(2000);
     }
   },

@@ -154,10 +154,10 @@ export default {
     toggleElementDiscussion() {
       const { commentId } = this.$route.query;
       if (parseInt(commentId, 10) === this.comment.commentId) return;
-      const routeOpts = getRouteOptions(this.comment);
+      const routeOptions = getRouteOptions(this.comment);
       const isEditor = this.$route.name === 'editor';
-      if (!isEditor) this.$router.push(routeOpts);
-      this.editorBus.emit(events.TOGGLE, routeOpts.query);
+      if (!isEditor) this.$router.push(routeOptions);
+      this.editorBus.emit(events.TOGGLE, routeOptions.query);
     }
   },
   watch: {
