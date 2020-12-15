@@ -12,41 +12,6 @@ const values = require('lodash/values');
 const isPrimitive = element => !get(element, 'data.embeds');
 const isQuestion = element => get(element, 'data.question');
 
-function processStatics(item) {
-  const customProcessor = elementRegistry.getStaticsHandler(item.type);
-  return customProcessor
-    ? customProcessor(item, defaultStaticsProcessor, processStatics)
-    : defaultStaticsProcessor(item);
-}
-
-function defaultStaticsProcessor(item) {
-  return isQuestion(item)
-    ? processQuestion(item)
-    : processAsset(item);
-}
-
-function processAsset(asset) {
-  return isPrimitive(asset)
-    ? processPrimitive(asset)
-    : processComposite(asset);
-}
-
-function processQuestion(element) {
-  const question = element.data.question;
-  if (!question || question.length < 1) return Promise.resolve(element);
-  return Promise.each(question, it => processAsset(it));
-}
-
-function processPrimitive(primitive) {
-  if (!isPrimitive(primitive)) throw new Error('Invalid primitive');
-  return Promise.resolve(primitive);
-}
-
-function processComposite(composite) {
-  return Promise.each(values(composite.data.embeds), processPrimitive)
-    .then(() => composite);
-}
-
 // TODO: Temp patch until asset embeding is unified
 function resolveStatics(item) {
   const customResolver = elementRegistry.getStaticsHandler(item.type);
@@ -98,7 +63,4 @@ async function resolveComposite(composite) {
     .then(() => composite);
 }
 
-module.exports = {
-  processStatics,
-  resolveStatics
-};
+module.exports = { resolveStatics };

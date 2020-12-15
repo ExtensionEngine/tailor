@@ -1,12 +1,12 @@
 'use strict';
 
-const { processStatics, resolveStatics } = require('../shared/storage/helpers');
 const elementHooks = require('../shared/content-plugins/elementHooks');
 const { elementRegistry } = require('../shared/content-plugins');
 const forEach = require('lodash/forEach');
 const get = require('lodash/get');
 const hash = require('hash-obj');
 const { isOutlineActivity } = require('../../config/shared/activities');
+const { resolveStatics } = require('../shared/storage/helpers');
 const sse = require('../shared/sse');
 
 module.exports = { add };
@@ -69,7 +69,7 @@ function add(ContentElement, Hooks, Models) {
     const isUpdate = hookType === Hooks.beforeUpdate;
     if (isUpdate && !element.changed('data')) return Promise.resolve();
     element.contentSignature = hash(element.data, { algorithm: 'sha1' });
-    return processStatics(element);
+    return element;
   }
 
   function resolveAssets(_, element) {
