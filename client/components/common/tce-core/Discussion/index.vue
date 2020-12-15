@@ -37,7 +37,6 @@
       <text-editor
         ref="editor"
         v-model="comment.content"
-        @change="post"
         :placeholder="commentsCount ? 'Add a comment...' : 'Start the discussion...'" />
       <v-btn @click="post" :disabled="isPostDisabled" icon>
         <v-icon>mdi-send</v-icon>
@@ -72,7 +71,7 @@ export default {
     thread: vm => orderBy(vm.comments, ['createdAt'], ['asc']),
     commentsCount: vm => vm.thread.length,
     showAllToggle: vm => vm.commentsShownLimit < vm.thread.length,
-    isPostDisabled: vm => !vm.comment.content.trim(),
+    isPostDisabled: vm => !vm.comment.content?.trim(),
     discussion: vm => vm.$refs.discussion,
     editor: vm => vm.$refs.editor.$el
   },

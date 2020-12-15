@@ -39,7 +39,11 @@
           class="content" />
         <span v-if="isEditing" class="float-right">
           <v-btn @click="reset" text small>Cancel</v-btn>
-          <v-btn @click="save" :disabled="!content.trim()" color="green" text small>
+          <v-btn
+            @click="save"
+            :disabled="content && !content.trim()"
+            color="green"
+            text small>
             <v-icon class="pr-1">mdi-check</v-icon> Save
           </v-btn>
         </span>

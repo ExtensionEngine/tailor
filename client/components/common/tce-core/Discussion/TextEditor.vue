@@ -18,13 +18,13 @@
 export default {
   name: 'text-editor',
   props: {
-    value: { type: String, required: true },
+    value: { type: String, default: '' },
     isFocused: { type: Boolean, default: false },
     showPreview: { type: Boolean, default: false },
     placeholder: { type: String, default: 'Add a comment...' }
   },
   computed: {
-    content: vm => vm.value.trim()
+    content: vm => vm.value?.trim()
   }
 };
 </script>
