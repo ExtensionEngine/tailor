@@ -88,7 +88,7 @@ export default {
       };
       this.comment = initCommentInput();
       this.$emit('save', payload);
-      if (seenMarker) this.$emit('setLastSeen');
+      if (seenMarker) this.$emit('markSeen');
       // Keep editor/discussion container inside viewport.
       const scrollOptions = { block: 'center', behavior: 'smooth' };
       this.$nextTick(() => this[scrollTarget].scrollIntoView(scrollOptions));
