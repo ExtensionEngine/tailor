@@ -1,6 +1,8 @@
 'use strict';
 
 const BaseRegistry = require('./BaseRegistry');
+const dedent = require('dedent');
+const depd = require('depd');
 const elementsList = require('../../../config/shared/core-elements');
 const hooks = require('./elementHooks');
 const pick = require('lodash/pick');
@@ -40,7 +42,10 @@ class ElementsRegistry extends BaseRegistry {
     const { _registry: registry, _staticsHandler: handler } = this;
     registry
       .filter(it => it.handleStatics)
-      .forEach(it => Object.assign(handler, { [it.type]: it.handleStatics }));
+      .forEach(it => {
+        deprecateHandleStatics(it);
+        Object.assign(handler, { [it.type]: it.handleStatics });
+      });
   }
 
   getStaticsHandler(type) {
@@ -51,3 +56,11 @@ class ElementsRegistry extends BaseRegistry {
 }
 
 module.exports = new ElementsRegistry();
+
+function deprecateHandleStatics(element) {
+  const name = `tce-${element.name.toLowerCase()}`;
+  const hookTypes = Object.values(hooks).join(', ');
+  depd(name)(dedent`
+    Using legacy handleStatics method - please replace it with content element hooks: ${hookTypes}
+  `);
+}
