@@ -131,8 +131,8 @@ export default {
       { name: 'Remove', action: vm.remove, icon: 'mdi-delete' }],
     elementTag: vm => vm.showAllComments && vm.comment.contentElementId,
     showUnseenSeparator() {
-      const { seenMarker, unseenComments, comment } = this;
-      return seenMarker && unseenComments[0]?.id === comment.id;
+      const { seenMarker, unseenComments, comment, isAuthor } = this;
+      return seenMarker && !isAuthor && unseenComments[0]?.id === comment.id;
     }
   },
   methods: {
