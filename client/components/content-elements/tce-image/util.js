@@ -6,7 +6,7 @@ const mime = require('mime-types');
 
 const DEFAULT_IMAGE_EXTENSION = 'png';
 
-function processImage(asset, { config, storage, storageProxy }) {
+function processImage(asset, { config, storage }) {
   const image = asset.data.url;
   const base64Pattern = /^data:image\/(\w+);base64,/;
 
