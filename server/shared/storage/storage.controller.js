@@ -8,7 +8,6 @@ const JSZip = require('jszip');
 const mime = require('mime-types');
 const path = require('path');
 const pickBy = require('lodash/pickBy');
-const { STORAGE_PROTOCOL } = require('./helpers');
 
 function getUrl(req, res) {
   const { query: { key } } = req;
@@ -52,5 +51,5 @@ async function uploadArchiveContent(archive, name) {
 }
 
 function getStorageUrl(key) {
-  return `${STORAGE_PROTOCOL}${key}`;
+  return `${config.protocol}${key}`;
 }
