@@ -114,20 +114,18 @@ export default {
         this.isVisible = true;
         if (commentId) $router.push({ query });
       }, 50);
+    },
+    queryReplacements(elementId) {
+      const query = elementId ? { elementId } : {};
+      this.$router.replace({ query });
     }
   },
   watch: {
     isVisible(val) {
       const { commentId, elementId } = this.$route.query;
-      if (!val && commentId) {
-        const query = elementId ? { elementId } : {};
-        return this.$router.replace({ query });
-      }
+      if (!val && commentId) return this.queryReplacements(elementId);
       if (!val || !this.lastCommentAt) return;
-      if (elementId !== this.uid) {
-        const query = { elementId: this.uid };
-        this.$router.replace({ query });
-      }
+      if (elementId !== this.uid) this.queryReplacements(this.uid);
       this.setLastSeen(1000);
     },
     comments(val, oldVal) {
