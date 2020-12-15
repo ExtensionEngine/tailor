@@ -66,14 +66,14 @@
 <script>
 import ElementLink from './ElementLink';
 import { focus } from 'vue-focus';
-import TextEditor from './TextEditor';
+import TextEditor from '../TextEditor';
 
 export default {
   name: 'thread-comment',
   props: {
     comment: { type: Object, required: true },
     user: { type: Object, required: true },
-    showAllComments: { type: Boolean, default: false }
+    containAllComments: { type: Boolean, default: false }
   },
   data: vm => ({
     content: vm.comment.content,
@@ -88,7 +88,7 @@ export default {
     options: vm => [
       { name: 'Edit', action: vm.toggleEdit, icon: 'mdi-pencil' },
       { name: 'Remove', action: vm.remove, icon: 'mdi-delete' }],
-    elementTag: vm => vm.showAllComments && vm.comment.contentElementId
+    elementTag: vm => vm.containAllComments && vm.comment.contentElementId
   },
   methods: {
     toggleEdit() {
@@ -121,7 +121,7 @@ export default {
 <style lang="scss" scoped>
 .comment {
   display: flex;
-  margin-bottom: 1.25rem;
+  margin-bottom: 0.75rem;
   font-family: Roboto, Arial, sans-serif;
 
   &-avatar {

@@ -29,7 +29,7 @@
       :user="user"
       :show-all="showAll"
       :min-displayed="commentsShownLimit"
-      :show-all-comments="showAllComments"
+      :contain-all-comments="containAllComments"
       :unseen-comments="unseenComments"
       :seen-marker="seenMarker"
       class="mt-2" />
@@ -60,7 +60,7 @@ export default {
     user: { type: Object, required: true },
     showHeading: { type: Boolean, default: false },
     showNotifications: { type: Boolean, default: false },
-    showAllComments: { type: Boolean, default: false },
+    containAllComments: { type: Boolean, default: false },
     commentsShownLimit: { type: Number, default: 5 },
     scrollTarget: { type: String, default: 'discussion' },
     unseenComments: { type: Array, default: () => [] },

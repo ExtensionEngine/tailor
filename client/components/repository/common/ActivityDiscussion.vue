@@ -7,7 +7,7 @@
       @markSeen="setLastSeenComment"
       v-bind="{ comments, user, showHeading, unseenComments, seenMarker }"
       scroll-target="editor"
-      show-notifications show-all-comments />
+      show-notifications contain-all-comments />
   </div>
 </template>
 

@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import events from '../Events/DiscussionEvent';
+import events from '../../Events/DiscussionEvent';
 import { mapChannels } from '@/plugins/radio';
 
 export default {
