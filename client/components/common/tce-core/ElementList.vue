@@ -110,6 +110,7 @@ export default {
   }
 
   .content-element {
+    max-height: 150px;
     background: #f4f5f5;
 
     & > * {
@@ -117,4 +118,9 @@ export default {
     }
   }
 }
+
+::v-deep .sortable-drag .content-element {
+  max-height: auto;
+}
+
 </style>
