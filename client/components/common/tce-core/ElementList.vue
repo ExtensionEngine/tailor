@@ -104,15 +104,17 @@ export default {
   padding: 0.625rem 1.5rem;
 }
 
-::v-deep .sortable-ghost .content-element {
-  background: #f4f5f5;
-
-  & > * {
-    visibility: hidden;
+::v-deep .sortable-ghost {
+  .drag-handle {
+    display: none;
   }
-}
 
-::v-deep .sortable-chosen .drag-handle {
-  display: none;
+  .content-element {
+    background: #f4f5f5;
+
+    & > * {
+      visibility: hidden;
+    }
+  }
 }
 </style>
