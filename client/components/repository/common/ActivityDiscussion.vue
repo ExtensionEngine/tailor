@@ -16,7 +16,6 @@ import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import Discussion from 'tce-core/Discussion';
 import get from 'lodash/get';
 import isEqual from 'lodash/isEqual';
-import { mapChannels } from '@/plugins/radio';
 import orderBy from 'lodash/orderBy';
 
 export default {
@@ -28,7 +27,6 @@ export default {
   },
   data: () => ({ isVisible: false }),
   computed: {
-    ...mapChannels({ editorBus: 'editor' }),
     ...mapGetters('repository/comments', ['getComments', 'getUnseenActivityComments']),
     ...mapState({ user: state => state.auth.user }),
     comments() {
@@ -49,7 +47,7 @@ export default {
       const { activity, user: author } = this;
       return this[action]({ ...comment, author, activityId: activity.id });
     },
-    setLastSeenComment(timeout = 0) {
+    setLastSeenComment(timeout) {
       const { activity, lastCommentAt } = this;
       const payload = { activityUid: activity.uid, lastCommentAt };
       setTimeout(() => this.markSeenComments(payload), timeout);
