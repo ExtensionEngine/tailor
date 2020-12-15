@@ -26,9 +26,8 @@ class ElementsRegistry extends BaseRegistry {
   }
 
   registerHooks() {
-    const { _registry: registry } = this;
     const hookTypes = Object.values(hooks);
-    registry.forEach(it => Object.assign(
+    this._registry.forEach(it => Object.assign(
       this._hooks,
       { [it.type]: pick(it, hookTypes) })
     );
