@@ -103,4 +103,8 @@ export default {
 .list-group {
   padding: 0.625rem 1.5rem;
 }
+
+::v-deep .sortable-ghost .content-element {
+  background: #f4f5f5;
+}
 </style>
