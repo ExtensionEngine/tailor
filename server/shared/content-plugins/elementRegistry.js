@@ -1,12 +1,14 @@
 'use strict';
 
 const BaseRegistry = require('./BaseRegistry');
+const config = require('../../../config/server');
 const dedent = require('dedent');
 const depd = require('depd');
 const elementsList = require('../../../config/shared/core-elements');
 const hooks = require('./elementHooks');
 const pick = require('lodash/pick');
-const services = require('../../shared/services.js');
+const storage = require('../storage');
+const storageProxy = require('../storage/proxy');
 
 const EXTENSIONS_LIST = '../../../extensions/content-elements/index';
 
@@ -35,6 +37,7 @@ class ElementsRegistry extends BaseRegistry {
   getHook(type, hook) {
     const elementHooks = this._hooks[type];
     if (!elementHooks || !elementHooks[hook]) return;
+    const services = { config, storage, storageProxy };
     return element => elementHooks[hook](element, services);
   }
 
