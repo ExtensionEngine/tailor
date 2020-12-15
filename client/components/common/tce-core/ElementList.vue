@@ -106,5 +106,9 @@ export default {
 
 ::v-deep .sortable-ghost .content-element {
   background: #f4f5f5;
+
+  & > * {
+    visibility: hidden;
+  }
 }
 </style>
