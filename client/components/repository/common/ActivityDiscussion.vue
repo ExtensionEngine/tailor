@@ -70,7 +70,7 @@ export default {
     }
   },
   created() {
-    return this.fetch({ activityId: this.activity.id });
+    this.fetch({ activityId: this.activity.id });
   },
   components: { Discussion }
 };
