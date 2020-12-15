@@ -61,7 +61,7 @@ class ElementsRegistry extends BaseRegistry {
 module.exports = new ElementsRegistry();
 
 function deprecateHandleStatics(element) {
-  const name = `tce-${element.name.toLowerCase()}`;
+  const name = `tce-${element.type.toLowerCase()}`;
   const hookTypes = Object.values(hooks).join(', ');
   depd(name)(dedent`
     Using legacy handleStatics method - please replace it with content element hooks: ${hookTypes}
