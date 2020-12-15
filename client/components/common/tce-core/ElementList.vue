@@ -110,7 +110,7 @@ export default {
   }
 
   .content-element {
-    max-height: 150px;
+    max-height: 9.375rem;
     background: #f4f5f5;
 
     & > * {
