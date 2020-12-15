@@ -2,5 +2,5 @@ export default {
   SAVE: 'comment:save',
   REMOVE: 'comment:remove',
   SET_LAST_SEEN: 'comment:setLastSeen',
-  TOGGLE: 'comments:toggle'
+  LINK_TO_ELEMENT: 'comments:linkToElement'
 };

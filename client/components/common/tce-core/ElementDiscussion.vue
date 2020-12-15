@@ -137,7 +137,7 @@ export default {
     const { editorBus, events } = this;
     const { commentId, elementId } = this.$route.query;
     if (commentId) this.toggleDiscussion({ elementId });
-    editorBus.on(events.TOGGLE, query => this.toggleDiscussion(query));
+    editorBus.on(events.LINK_TO_ELEMENT, query => this.toggleDiscussion(query));
   },
   components: { Discussion }
 };
