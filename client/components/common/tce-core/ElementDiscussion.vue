@@ -115,7 +115,7 @@ export default {
         if (commentId) $router.push({ query });
       }, 50);
     },
-    queryReplacements(elementId) {
+    replaceRouteQuery(elementId) {
       const query = elementId ? { elementId } : {};
       this.$router.replace({ query });
     }
@@ -123,9 +123,9 @@ export default {
   watch: {
     isVisible(val) {
       const { commentId, elementId } = this.$route.query;
-      if (!val && commentId) return this.queryReplacements(elementId);
+      if (!val && commentId) return this.replaceRouteQuery(elementId);
       if (!val || !this.lastCommentAt) return;
-      if (elementId !== this.uid) this.queryReplacements(this.uid);
+      if (elementId !== this.uid) this.replaceRouteQuery(this.uid);
       this.setLastSeen(1000);
     },
     comments(val, oldVal) {
