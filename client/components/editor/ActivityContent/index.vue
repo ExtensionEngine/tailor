@@ -142,7 +142,8 @@ export default {
     scrollToElement(id, timeout = 500) {
       setTimeout(() => {
         const elementId = `#element_${id}`;
-        const element = this.$refs.activityContent.querySelector(elementId);
+        const element = this.$refs.activityContent?.querySelector(elementId);
+        if (!element) return;
         element.scrollIntoView({ block: 'center', behavior: 'smooth' });
       }, timeout);
     }
