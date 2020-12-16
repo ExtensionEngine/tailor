@@ -69,9 +69,7 @@ export default {
     ...mapChannels({ editorChannel: 'editor' }),
     options: vm => ({
       ...vm.dragOptions,
-      handle: '.drag-handle',
-      scrollSpeed: 15,
-      scrollSensitivity: 125
+      handle: '.drag-handle'
     }),
     nextPosition() {
       const lastItem = last(this.elements);
