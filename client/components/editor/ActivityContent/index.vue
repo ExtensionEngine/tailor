@@ -77,7 +77,7 @@ export default {
           element: seen.contentElement[it.uid] || 0,
           activity: seen.activity[this.activity.uid] || 0
         };
-        acc[it.uid] = { ...it, comments, lastSeen };
+        acc[it.uid] = { ...it, comments, lastSeen, isResolved: !comments.length };
       }, {});
     },
     containerConfigs: vm => getSupportedContainers(vm.activity.type)

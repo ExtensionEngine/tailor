@@ -16,6 +16,11 @@ const fetch = ({ commit }, payload) => {
     .then(items => commit('fetch', items));
 };
 
+const resolve = ({ commit }, commentIds) => {
+  return api.post('/resolve', { commentIds })
+    .then(() => commit('resolveComments', commentIds));
+};
+
 const remove = ({ commit }, comment) => {
   comment.deletedAt = new Date();
   commit('save', comment);
@@ -29,5 +34,6 @@ export {
   remove,
   save,
   setEndpoint,
-  update
+  update,
+  resolve
 };

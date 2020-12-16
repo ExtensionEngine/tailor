@@ -4,7 +4,8 @@ import orderBy from 'lodash/orderBy';
 import transform from 'lodash/transform';
 
 export const getComments = state => params => {
-  const comments = filter(state.items, params);
+  const opts = params.contentElementId ? { ...params, resolved: null } : params;
+  const comments = filter(state.items, opts);
   return orderBy(comments, 'createdAt', 'desc');
 };
 

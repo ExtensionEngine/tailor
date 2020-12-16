@@ -6,7 +6,7 @@ const { Model } = require('sequelize');
 
 class Comment extends Model {
   static fields(DataTypes) {
-    const { DATE, TEXT, UUID, UUIDV4 } = DataTypes;
+    const { BOOLEAN, DATE, TEXT, UUID, UUIDV4 } = DataTypes;
     return {
       uid: {
         type: UUID,
@@ -23,6 +23,9 @@ class Comment extends Model {
           if (deletedAt) return 'This comment has been deleted';
           return this.getDataValue('content');
         }
+      },
+      resolved: {
+        type: BOOLEAN
       },
       createdAt: {
         type: DATE,

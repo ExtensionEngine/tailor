@@ -18,7 +18,7 @@
 export default {
   name: 'text-editor',
   props: {
-    value: { type: String, default: '' },
+    value: { type: String, default: null },
     isFocused: { type: Boolean, default: false },
     showPreview: { type: Boolean, default: false },
     placeholder: { type: String, default: 'Add a comment...' }

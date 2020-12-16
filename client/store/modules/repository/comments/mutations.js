@@ -7,6 +7,7 @@ import {
   setEndpoint,
   update
 } from '@/store/helpers/mutations';
+import map from 'lodash/map';
 
 const markSeenComments = ({ seen }, payload) => {
   const { activityUid, elementUid, lastCommentAt, unseenElementComments } = payload;
@@ -20,6 +21,13 @@ const markSeenComments = ({ seen }, payload) => {
   seen.elementComments = [...seen.elementComments, ...unseenElementComments];
 };
 
+const resolveComments = (state, commentIds) => {
+  state.items = map(state.items, comment => {
+    const found = commentIds.find(id => id === comment.id);
+    return found ? { ...comment, resolved: true } : comment;
+  });
+};
+
 export {
   add,
   fetch,
@@ -28,5 +36,6 @@ export {
   reset,
   save,
   setEndpoint,
-  update
+  update,
+  resolveComments
 };

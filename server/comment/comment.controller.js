@@ -1,6 +1,7 @@
 'use strict';
 
 const { Comment, ContentElement, User } = require('../shared/database');
+const { OK } = require('http-status-codes');
 const pick = require('lodash/pick');
 
 const author = {
@@ -40,9 +41,16 @@ function remove({ comment }, res) {
     .then(data => res.json({ data }));
 }
 
+function resolve({ body }, res) {
+  const where = { id: body.commentIds };
+  return Comment.update({ resolved: true }, { where })
+    .then(() => res.sendStatus(OK));
+}
+
 module.exports = {
   list,
   create,
   patch,
-  remove
+  remove,
+  resolve
 };

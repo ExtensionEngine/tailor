@@ -21,6 +21,19 @@
         <span>{{ activator.tooltip }}</span>
       </v-tooltip>
     </template>
+    <div v-if="!isResolved" class="d-flex justify-end mt-3 mr-2">
+      <v-tooltip open-delay="800" left>
+        <template v-slot:activator="{ on }">
+          <v-btn v-on="on" @click="resolveComments" color="success" x-small text>
+            <v-icon color="success" size="18" class="mr-1">
+              mdi-check
+            </v-icon>
+            Resolve Discussion
+          </v-btn>
+        </template>
+        <span>Mark discussion as resolved</span>
+      </v-tooltip>
+    </div>
     <discussion
       @save="save"
       @update="save"
@@ -62,6 +75,7 @@ export default {
     uid: { type: String, required: true },
     comments: { type: Array, required: true },
     lastSeen: { type: Object, required: true },
+    isResolved: { type: Boolean, default: false },
     user: { type: Object, required: true }
   },
   data: () => ({ isVisible: false }),
@@ -104,6 +118,11 @@ export default {
         unseenElementComments: unseenComments
       };
       this.editorBus.emit(events.SET_LAST_SEEN, options);
+    },
+    resolveComments() {
+      const { comments, events } = this;
+      const commentIds = comments.map(({ id }) => id);
+      this.editorBus.emit(events.RESOLVE, commentIds);
     }
   },
   watch: {
