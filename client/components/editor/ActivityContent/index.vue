@@ -177,7 +177,9 @@ export default {
     },
     $route(route) {
       const { elementId } = route.query;
-      if (elementId) this.scrollToElement(elementId);
+      if (!elementId) return;
+      this.selectElement(elementId);
+      this.scrollToElement(elementId);
     }
   },
   async created() {
