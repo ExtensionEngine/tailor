@@ -11,13 +11,20 @@
         Save
       </v-btn>
     </div>
-    <v-btn
-      v-else
-      @click="$emit('edit')"
-      color="blue-grey darken-4"
-      text large>
-      Edit
-    </v-btn>
+    <div v-else>
+      <v-btn
+        @click="$emit('delete')"
+        color="blue-grey darken-4"
+        text large>
+        Delete
+      </v-btn>
+      <v-btn
+        @click="$emit('edit')"
+        color="blue-grey darken-4"
+        text large>
+        Edit
+      </v-btn>
+    </div>
   </div>
 </template>
 

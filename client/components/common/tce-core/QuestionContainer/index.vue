@@ -51,6 +51,7 @@
         @edit="edit"
         @save="save"
         @cancel="cancel"
+        @delete="$emit('delete')"
         :is-editing="isEditing"
         class="controls" />
     </div>
@@ -125,7 +126,6 @@ export default {
       }).catch(err => (this.errors = err.inner));
     },
     cancel() {
-      if (!this.editedElement.id) return this.$emit('delete');
       this.$emit('add', cloneDeep(this.undoState));
       this.editedElement = cloneDeep(this.undoState);
       this.isEditing = false;
