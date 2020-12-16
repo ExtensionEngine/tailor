@@ -1,5 +1,5 @@
 <template>
-  <v-card class="tce-question-container my-2 grey lighten-5">
+  <v-card class="tce-question-container my-2 grey lighten-5" elevation="0">
     <v-toolbar
       color="blue-grey darken-3"
       height="36"
@@ -174,7 +174,7 @@ const baseSchema = {
   }
 
   .content {
-    margin: 0.5rem 1.625rem;
+    margin: 0.5rem 1.625rem 0;
 
     @media (max-width: 1263px) {
       margin: 0.5rem;
