@@ -46,7 +46,7 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-import ActiveUsers from '@/components/common/ActiveUsers';
+import ActiveUsers from 'tce-core/ActiveUsers';
 import ActivityActions from './ActivityActions';
 import { ElementToolbar } from 'tce-core';
 import { getElementId } from 'tce-core/utils';
@@ -74,9 +74,7 @@ export default {
 
 <style lang="scss" scoped>
 .toolbar-wrapper {
-  position: fixed;
   width: 100%;
-  z-index: 99;
 
   ::v-deep .v-text-field__details {
     margin: 0 !important;

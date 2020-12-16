@@ -1,13 +1,13 @@
 import axios, { Axios } from 'axios';
 import { FORBIDDEN, UNAUTHORIZED } from 'http-status-codes';
 import buildFullPath from 'axios/lib/core/buildFullPath';
+import { EventEmitter } from 'events';
 
 Axios.prototype.submitForm = function (url, fields, options) {
   const action = buildFullPath(this.defaults.baseURL, url);
   return Promise.resolve(submitForm(action, fields, options));
 };
 
-const authScheme = process.env.AUTH_JWT_SCHEME;
 const config = {
   baseURL: process.env.API_PATH,
   withCredentials: true,
@@ -25,19 +25,11 @@ Object.defineProperty(client, 'base', {
   }
 });
 
-client.interceptors.request.use(config => {
-  const { token } = client;
-  if (token) {
-    config.headers.Authorization = [authScheme, token].join(' ');
-    return config;
-  }
-  delete config.headers.Authorization;
-  return config;
-});
+client.auth = new EventEmitter();
 
 client.interceptors.response.use(res => res, err => {
   if (err.response && [FORBIDDEN, UNAUTHORIZED].includes(err.response.status)) {
-    client.token = null;
+    client.auth.emit('error');
   }
   throw err;
 });

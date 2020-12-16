@@ -15,7 +15,12 @@
           <span v-if="isEditing" class="drag-handle">
             <v-icon>mdi-drag-vertical</v-icon>
           </span>
-          <v-chip :color="color" dark label small>{{ i + 1 }}</v-chip>
+          <v-chip
+            :color="color"
+            dark label small
+            class="readonly">
+            {{ i + 1 }}
+          </v-chip>
           <v-btn
             v-if="isEditing && !isSynced"
             @click="removeAnswerGroup(i)"
@@ -158,10 +163,7 @@ export default {
   watch: {
     question() { if (this.isGraded) this.attemptToSync(); }
   },
-  components: {
-    Draggable,
-    InputError
-  }
+  components: { Draggable, InputError }
 };
 </script>
 

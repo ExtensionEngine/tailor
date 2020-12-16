@@ -121,7 +121,7 @@ $swing: cubic-bezier(0.25, 0.8, 0.5, 1);
 .question-container {
   position: relative;
   min-height: 8.75rem;
-  padding: 1rem 1.75rem 0;
+  padding: 1rem 3rem 0 2.5rem;
   text-align: center;
   background: #ebebeb;
   border-radius: 0.125rem;
