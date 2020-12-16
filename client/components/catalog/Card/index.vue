@@ -113,9 +113,17 @@ export default {
 
 <style lang="scss" scoped>
 .repository-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 14.75rem;
   text-align: left;
   transition: all 0.3s ease;
   cursor: pointer;
+
+  @media (max-width: 1263px) {
+    height: 17.25rem;
+  }
 
   &:hover {
     transform: translateY(-0.25rem);
@@ -123,13 +131,8 @@ export default {
 }
 
 .card-body {
-  height: 11.5rem;
   padding: 0.625rem 0 0;
   overflow: hidden;
-
-  @media (max-width: 1263px) {
-    height: 14rem;
-  }
 
   .v-card__title {
     line-height: 1.75rem;
