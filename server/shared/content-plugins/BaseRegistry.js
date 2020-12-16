@@ -31,7 +31,7 @@ module.exports = class {
 
   getFullPath(path, isExtension) {
     const basePath = isExtension ? PATHS.EXTENSION : PATHS.DEFAULT;
-    return `${basePath}/content-${this._type}s/${path}/util`;
+    return `${basePath}/content-${this._type}s/${path}/hooks`;
   }
 
   loadExtensionList() {

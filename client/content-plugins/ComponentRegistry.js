@@ -52,7 +52,7 @@ export default class ComponentRegistry {
     const { position = _registry.length, isExtension } = options;
     const element = isExtension
       ? (await import(
-        /* webpackExclude: /util\.js$/ */
+        /* webpackExclude: /hooks\/.*$/ */
         `extensions/${_type}s/${path}`
       )).default
       : (await import(`components/${_type}s/${path}`)).default;
@@ -78,7 +78,7 @@ export default class ComponentRegistry {
 
   loadExtensionList() {
     return import(
-      /* webpackExclude: /util\.js$/ */
+      /* webpackExclude: /hooks\/.*$/ */
       `extensions/${this._type}s/${EXTENSIONS_LIST}`
     )
       .then(module => module.default)
