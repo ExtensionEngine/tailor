@@ -21,7 +21,7 @@ import { mapChannels } from '@/plugins/radio';
 export default {
   name: 'element-link',
   props: {
-    id: { type: Number, required: true },
+    id: { type: Number, default: null },
     activityId: { type: Number, required: true },
     contentElement: { type: Object, default: () => ({}) }
   },

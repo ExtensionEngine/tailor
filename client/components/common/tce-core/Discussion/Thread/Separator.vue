@@ -25,7 +25,7 @@
 
 <script>
 export default {
-  name: 'discussion-thread',
+  name: 'thread-separator',
   props: {
     comment: { type: Object, required: true },
     unseenComments: { type: Array, default: () => [] },
