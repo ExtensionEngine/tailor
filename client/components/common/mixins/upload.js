@@ -13,8 +13,6 @@ export default {
       const [file] = e.target.files;
       if (!file) return;
       this.form.append('file', file, file.name);
-      const { unpack } = this.uploadOptions || {};
-      if (unpack) this.form.append('unpack', true);
     },
     upload: loader(function (e) {
       this.createFileForm(e);

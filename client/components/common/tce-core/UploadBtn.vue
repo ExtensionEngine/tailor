@@ -48,13 +48,7 @@ export default {
     fileKey: { type: String, default: '' },
     validate: { type: Object, default: () => ({ ext: [] }) },
     label: { type: String, default: 'Choose a file' },
-    unpack: { type: Boolean, default: false },
     sm: { type: Boolean, default: false }
-  },
-  computed: {
-    uploadOptions() {
-      return { unpack: this.unpack };
-    }
   },
   methods: {
     async validateAndUpload(e) {
