@@ -6,7 +6,7 @@
         @click="linkToElement"
         :color="isSameRoute ? 'secondary' : 'teal'"
         text x-small>
-        {{ contentElement.type }}
+        {{ elementType }}
         <v-icon x-small class="ml-1">mdi-arrow-top-right-thick</v-icon>
       </v-btn>
     </template>
@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import { sentenceCase } from 'change-case';
+
 export default {
   name: 'element-link',
   props: {
@@ -24,6 +26,7 @@ export default {
   computed: {
     isEditor: vm => vm.$route.name === 'editor',
     isSameRoute: vm => vm.contentElement.uid === vm.$route.query.elementId,
+    elementType: vm => sentenceCase(vm.contentElement.type),
     editorRoute: ({ activityId, contentElement }) => ({
       name: 'editor',
       params: { activityId },
