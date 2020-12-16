@@ -9,6 +9,7 @@ const hooks = require('./elementHooks');
 const pick = require('lodash/pick');
 const storage = require('../storage');
 const storageProxy = require('../storage/proxy');
+const toCase = require('to-case');
 
 const EXTENSIONS_LIST = '../../../extensions/content-elements/index';
 
@@ -60,7 +61,7 @@ class ElementsRegistry extends BaseRegistry {
 module.exports = new ElementsRegistry();
 
 function deprecateHandleStatics(element) {
-  const name = `tce-${element.type.toLowerCase()}`;
+  const name = `tce-${toCase.slug(element.type)}`;
   const hookTypes = Object.values(hooks).join(', ');
   depd(name)(dedent`
     Using legacy handleStatics method - please replace it with content element hooks: ${hookTypes}
