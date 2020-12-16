@@ -25,11 +25,11 @@ export default {
     contentElement: { type: Object, default: () => ({}) }
   },
   computed: {
-    isSameRoute: vm => vm.contentElement.uid === vm.$route.query.elementId,
     elementLabel() {
       const { type } = this.contentElement;
       return find(this.$teRegistry._registry, { type })?.name;
     },
+    isSameRoute: vm => vm.contentElement.uid === vm.$route.query.elementId,
     isEditor: vm => vm.$route.name === 'editor',
     editorRoute: ({ activityId, contentElement }) => ({
       name: 'editor',
