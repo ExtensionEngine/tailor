@@ -42,7 +42,7 @@ function remove({ comment }, res) {
 }
 
 function resolve({ body }, res) {
-  const where = { id: body.commentIds };
+  const where = { contentElementId: body.contentElementId };
   return Comment.update({ resolved: true }, { where })
     .then(() => res.sendStatus(OK));
 }

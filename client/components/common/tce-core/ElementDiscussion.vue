@@ -119,6 +119,9 @@ export default {
       this.setLastSeen(2000);
     }
   },
+  provide() {
+    return { $editorBus: this.editorBus };
+  },
   components: { Discussion, DiscussionResolve }
 };
 </script>

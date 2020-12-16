@@ -20,10 +20,11 @@ export default {
       removeComment: 'remove',
       resolveComments: 'resolve'
     }),
-    ...mapMutations('repository/comments', ['markSeenComments']),
-    upsertComment(comment) {
+    ...mapMutations('repository/comments', ['markSeenComments', 'handleResolvement']),
+    async upsertComment(comment) {
       const action = comment.id ? 'updateComment' : 'saveComment';
-      this[action]({ ...comment, activityId: this.activityId });
+      await this[action]({ ...comment, activityId: this.activityId });
+      this.handleResolvement({ elementId: comment.contentElementId });
     },
     setLastSeenComment({ timeout, ...payload }) {
       setTimeout(() => this.markSeenComments(payload), timeout);

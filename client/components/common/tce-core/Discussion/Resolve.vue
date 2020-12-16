@@ -16,18 +16,17 @@
 
 <script>
 import events from '../Events/DiscussionEvent';
-import { mapChannels } from '@/plugins/radio';
 
 export default {
   name: 'thread-resolve',
+  inject: ['$editorBus'],
   props: {
     comments: { type: Array, required: true }
   },
-  computed: mapChannels({ editorBus: 'editor' }),
   methods: {
     resolveComments() {
-      const commentIds = this.comments.map(({ id }) => id);
-      this.editorBus.emit(events.RESOLVE, commentIds);
+      const { contentElementId } = this.comments[0];
+      this.$editorBus.emit(events.RESOLVE, contentElementId);
     }
   }
 };

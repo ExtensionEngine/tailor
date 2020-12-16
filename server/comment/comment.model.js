@@ -25,7 +25,8 @@ class Comment extends Model {
         }
       },
       resolved: {
-        type: BOOLEAN
+        type: BOOLEAN,
+        defaultValue: false
       },
       createdAt: {
         type: DATE,
