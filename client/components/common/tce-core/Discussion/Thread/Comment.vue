@@ -7,7 +7,7 @@
       <div class="header">
         <span class="author">
           {{ author.fullName || author.email }}
-          <v-icon v-if="isEdited" size="16" class="ml-1 pb-1">
+          <v-icon v-if="isEdited && !comment.resolved" size="16" class="ml-1 pb-1">
             mdi-pencil-outline
           </v-icon>
         </span>
@@ -16,6 +16,7 @@
         v-model="content"
         :is-focused="isEditing"
         :show-preview="!isEditing"
+        :resolved="comment.resolved"
         class="content" />
       <span v-if="isEditing" class="float-right">
         <v-btn @click="reset" text small>Cancel</v-btn>
@@ -84,7 +85,7 @@ export default {
     isEdited: vm => vm.comment.createdAt !== vm.comment.updatedAt,
     isDeleted: vm => !!vm.comment.deletedAt,
     isAuthor: vm => vm.author.id === vm.user.id,
-    showOptions: vm => vm.isAuthor && !vm.isDeleted,
+    showOptions: vm => vm.isAuthor && !vm.isDeleted && !vm.comment.resolved,
     options: vm => [
       { name: 'Edit', action: vm.toggleEdit, icon: 'mdi-pencil' },
       { name: 'Remove', action: vm.remove, icon: 'mdi-delete' }],
