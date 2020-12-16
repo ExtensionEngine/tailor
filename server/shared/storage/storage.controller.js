@@ -3,6 +3,7 @@
 const { getFileUrl, saveFile } = require('./');
 const { readFile, sha256 } = require('./util');
 const config = require('../../../config/server').storage;
+const fecha = require('fecha');
 const fromPairs = require('lodash/fromPairs');
 const JSZip = require('jszip');
 const mime = require('mime-types');
@@ -14,11 +15,13 @@ function getUrl(req, res) {
   return getFileUrl(key).then(url => res.json({ url }));
 }
 
-async function upload({ file, body }, res) {
+async function upload({ file, body, user }, res) {
   const { name } = path.parse(file.originalname);
   if (body.unpack) {
-    const assets = await uploadArchiveContent(file, name);
-    return res.json({ root: name, assets });
+    const timestamp = fecha.format(new Date(), 'YYYY-MM-DDTHH:mm:ss');
+    const root = `${timestamp}__${user.id}__${name}`;
+    const assets = await uploadArchiveContent(file, root);
+    return res.json({ root, assets });
   }
   const asset = await uploadFile(file, name);
   return res.json(asset);
