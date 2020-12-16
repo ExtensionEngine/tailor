@@ -22,7 +22,8 @@ export default {
   inject: ['$teRegistry'],
   props: {
     activityId: { type: Number, required: true },
-    contentElement: { type: Object, default: () => ({}) }
+    contentElement: { type: Object, default: () => ({}) },
+    contentElementId: { type: Number, default: null }
   },
   computed: {
     elementLabel() {
@@ -47,3 +48,11 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.v-btn {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+</style>

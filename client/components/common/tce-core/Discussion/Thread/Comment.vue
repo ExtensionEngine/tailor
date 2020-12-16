@@ -28,21 +28,19 @@
           <v-icon class="pr-1">mdi-check</v-icon> Save
         </v-btn>
       </span>
-      <div v-else class="footer">
-        <v-tooltip right>
-          <template v-slot:activator="{ on }">
-            <span v-on="on">
-              <timeago
-                :datetime="comment.createdAt"
-                :auto-update="60"
-                class="time" />
-            </span>
-          </template>
-          <span>{{ comment.createdAt | formatDate('M/D/YY h:mm A') }}</span>
-        </v-tooltip>
-        <element-link v-if="elementTag" v-bind="comment" />
-      </div>
+      <v-tooltip v-else right>
+        <template v-slot:activator="{ on }">
+          <span v-on="on">
+            <timeago
+              :datetime="comment.createdAt"
+              :auto-update="60"
+              class="time" />
+          </span>
+        </template>
+        <span>{{ comment.createdAt | formatDate('M/D/YY h:mm A') }}</span>
+      </v-tooltip>
     </div>
+    <slot name="element-link"></slot>
     <v-menu v-if="showOptions" bottom left offset-y>
       <template v-slot:activator="{ on }">
         <v-btn v-on="on" icon x-small>
@@ -65,7 +63,6 @@
 </template>
 
 <script>
-import ElementLink from './ElementLink';
 import { focus } from 'vue-focus';
 import TextEditor from '../TextEditor';
 
@@ -88,8 +85,7 @@ export default {
     showOptions: vm => vm.isAuthor && !vm.isDeleted && !vm.comment.resolved,
     options: vm => [
       { name: 'Edit', action: vm.toggleEdit, icon: 'mdi-pencil' },
-      { name: 'Remove', action: vm.remove, icon: 'mdi-delete' }],
-    elementTag: vm => vm.containAllComments && vm.comment.contentElementId
+      { name: 'Remove', action: vm.remove, icon: 'mdi-delete' }]
   },
   methods: {
     toggleEdit() {
@@ -115,13 +111,14 @@ export default {
     }
   },
   directives: { focus },
-  components: { ElementLink, TextEditor }
+  components: { TextEditor }
 };
 </script>
 
 <style lang="scss" scoped>
 .comment {
   display: flex;
+  position: relative;
   margin-bottom: 0.75rem;
   font-family: Roboto, Arial, sans-serif;
 
@@ -141,12 +138,6 @@ export default {
 
   .content {
     margin: 0.375rem 0 0 0;
-  }
-
-  .footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
   }
 
   .time {
