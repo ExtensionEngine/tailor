@@ -51,7 +51,10 @@ export default class ComponentRegistry {
     const { _registry, _type, _attrs, Vue } = this;
     const { position = _registry.length, isExtension } = options;
     const element = isExtension
-      ? (await import(`extensions/${_type}s/${path}`)).default
+      ? (await import(
+        /* webpackExclude: /util\.js$/ */
+        `extensions/${_type}s/${path}`
+      )).default
       : (await import(`components/${_type}s/${path}`)).default;
     this._validator(element);
 
@@ -74,7 +77,10 @@ export default class ComponentRegistry {
   }
 
   loadExtensionList() {
-    return import(`extensions/${this._type}s/${EXTENSIONS_LIST}`)
+    return import(
+      /* webpackExclude: /util\.js$/ */
+      `extensions/${this._type}s/${EXTENSIONS_LIST}`
+    )
       .then(module => module.default)
       .catch(() => console.log(`No ${this._name} extensions loaded!`) || []);
   }
