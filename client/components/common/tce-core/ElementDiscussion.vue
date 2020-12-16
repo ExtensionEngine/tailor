@@ -21,19 +21,7 @@
         <span>{{ activator.tooltip }}</span>
       </v-tooltip>
     </template>
-    <div v-if="!isResolved" class="d-flex justify-end mt-3 mr-2">
-      <v-tooltip open-delay="800" left>
-        <template v-slot:activator="{ on }">
-          <v-btn v-on="on" @click="resolveComments" color="success" x-small text>
-            <v-icon color="success" size="18" class="mr-1">
-              mdi-check
-            </v-icon>
-            Resolve Discussion
-          </v-btn>
-        </template>
-        <span>Mark discussion as resolved</span>
-      </v-tooltip>
-    </div>
+    <discussion-resolve v-bind="{ comments, isResolved }" />
     <discussion
       @save="save"
       @update="save"
@@ -46,6 +34,7 @@
 <script>
 import Discussion from 'tce-core/Discussion';
 import DiscussionEvent from './Events/DiscussionEvent';
+import DiscussionResolve from './Discussion/Resolve';
 import get from 'lodash/get';
 import isEqual from 'lodash/isEqual';
 import { mapChannels } from '@/plugins/radio';
@@ -118,11 +107,6 @@ export default {
         unseenElementComments: unseenComments
       };
       this.editorBus.emit(events.SET_LAST_SEEN, options);
-    },
-    resolveComments() {
-      const { comments, events } = this;
-      const commentIds = comments.map(({ id }) => id);
-      this.editorBus.emit(events.RESOLVE, commentIds);
     }
   },
   watch: {
@@ -135,7 +119,7 @@ export default {
       this.setLastSeen(2000);
     }
   },
-  components: { Discussion }
+  components: { Discussion, DiscussionResolve }
 };
 </script>
 
