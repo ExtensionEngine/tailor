@@ -104,40 +104,17 @@ export default {
         unseenElementComments: unseenComments
       };
       this.editorBus.emit(events.SET_LAST_SEEN, options);
-    },
-    toggleDiscussion(query) {
-      const { uid, comments, $router } = this;
-      if (!comments.length) return;
-      setTimeout(() => {
-        const { elementId, commentId } = query;
-        if (uid !== elementId) return;
-        this.isVisible = true;
-        if (commentId) $router.push({ query });
-      }, 50);
-    },
-    replaceRouteQuery(elementId) {
-      const query = elementId ? { elementId } : {};
-      this.$router.replace({ query });
     }
   },
   watch: {
     isVisible(val) {
-      const { commentId, elementId } = this.$route.query;
-      if (!val && commentId) return this.replaceRouteQuery(elementId);
       if (!val || !this.lastCommentAt) return;
-      if (elementId !== this.uid) this.replaceRouteQuery(this.uid);
       this.setLastSeen(1000);
     },
     comments(val, oldVal) {
       if (!this.isVisible || isEqual(val, oldVal)) return;
       this.setLastSeen(2000);
     }
-  },
-  created() {
-    const { editorBus, events } = this;
-    const { commentId, elementId } = this.$route.query;
-    if (commentId) this.toggleDiscussion({ elementId });
-    editorBus.on(events.LINK_TO_ELEMENT, query => this.toggleDiscussion(query));
   },
   components: { Discussion }
 };

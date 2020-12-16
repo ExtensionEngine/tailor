@@ -9,7 +9,9 @@ const author = {
   attributes: ['id', 'email', 'firstName', 'lastName', 'fullName', 'imgUrl']
 };
 
-const element = { model: ContentElement, as: 'contentElement', attributes: ['uid'] };
+const element = {
+  model: ContentElement, as: 'contentElement', attributes: ['uid', 'type']
+};
 
 function list({ repository, opts, query }, res) {
   const { activityId, contentElementId } = query;

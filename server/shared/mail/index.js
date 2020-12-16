@@ -26,9 +26,8 @@ const taskUrl = (repositoryId, taskId) =>
   urlJoin(origin, '/#/repository', `${repositoryId}/board?taskId=${taskId}`);
 const activityUrl = ({ repositoryId, activityId }) =>
   urlJoin(origin, '/#/repository', `${repositoryId}?activityId=${activityId}`);
-const elementUrl = comment => {
-  const { repositoryId, activityId, elementUid, id: commentId } = comment;
-  const query = `${activityId}?elementId=${elementUid}&commentId=${commentId}`;
+const elementUrl = ({ repositoryId, activityId, elementUid }) => {
+  const query = `${activityId}?elementId=${elementUid}`;
   return urlJoin(origin, '/#/repository', `${repositoryId}/editor`, query);
 };
 

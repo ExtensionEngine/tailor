@@ -12,7 +12,7 @@ exports.add = (Comment, Hooks, db) => {
   const { Repository, RepositoryUser, Activity, ContentElement, User } = db;
 
   const includeElement = {
-    model: ContentElement, as: 'contentElement', attributes: ['uid']
+    model: ContentElement, as: 'contentElement', attributes: ['uid', 'type']
   };
 
   Comment.addHook(Hooks.afterCreate, async comment => {
