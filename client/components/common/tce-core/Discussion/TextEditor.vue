@@ -1,7 +1,8 @@
 <template>
   <div :class="{ preview: showPreview }" class="comment-editor">
     <div v-if="showPreview" :class="{ resolved }" class="content">
-      <pre><span>{{ previewContent }}</span><br></pre>
+      <p v-if="resolved" class="resolved-label">Marked as resolved</p>
+      <pre><span>{{ content }}</span><br></pre>
     </div>
     <v-textarea
       v-else
@@ -25,8 +26,7 @@ export default {
     placeholder: { type: String, default: 'Add a comment...' }
   },
   computed: {
-    content: vm => vm.value?.trim(),
-    previewContent: vm => vm.resolved ? 'Marked as resolved' : vm.content
+    content: vm => vm.value?.trim()
   }
 };
 </script>
@@ -38,11 +38,6 @@ export default {
 
   .content {
     display: none;
-
-    &.resolved {
-      opacity: 0.7;
-      font-style: italic;
-    }
   }
 
   .content pre {
@@ -58,6 +53,17 @@ export default {
     background: inherit;
     border: none;
     overflow: hidden;
+  }
+
+  .content.resolved {
+    opacity: 0.7;
+
+    .resolved-label {
+      margin-bottom: 0.25rem;
+      font-size: 0.75rem;
+      font-style: italic;
+      opacity: 0.7;
+    }
   }
 }
 
