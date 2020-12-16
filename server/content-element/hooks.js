@@ -1,10 +1,12 @@
 'use strict';
 
-const { processStatics, resolveStatics } = require('../shared/storage/helpers');
+const elementHooks = require('../shared/content-plugins/elementHooks');
+const { elementRegistry } = require('../shared/content-plugins');
 const forEach = require('lodash/forEach');
 const get = require('lodash/get');
 const hash = require('hash-obj');
 const { isOutlineActivity } = require('../../config/shared/activities');
+const { resolveStatics } = require('../shared/storage/helpers');
 const sse = require('../shared/sse');
 
 module.exports = { add };
@@ -13,12 +15,18 @@ function add(ContentElement, Hooks, Models) {
   const { Events } = ContentElement;
 
   const mappings = {
-    [Hooks.beforeCreate]: [processAssets],
-    [Hooks.beforeUpdate]: [processAssets],
-    [Hooks.afterCreate]: [resolveAssets, sseCreate, touchRepository, touchOutline],
-    [Hooks.afterUpdate]: [resolveAssets, sseUpdate, touchRepository, touchOutline],
+    [Hooks.beforeCreate]: [customElementHook, processAssets],
+    [Hooks.beforeUpdate]: [customElementHook, processAssets],
+    [Hooks.afterCreate]: [customElementHook, resolveAssets, sseCreate, touchRepository, touchOutline],
+    [Hooks.afterUpdate]: [customElementHook, resolveAssets, sseUpdate, touchRepository, touchOutline],
     [Hooks.beforeDestroy]: [touchRepository, touchOutline],
     [Hooks.afterDestroy]: [sseDelete]
+  };
+  const elementHookMappings = {
+    [Hooks.beforeCreate]: [elementHooks.BEFORE_SAVE],
+    [Hooks.beforeUpdate]: [elementHooks.BEFORE_SAVE],
+    [Hooks.afterCreate]: [elementHooks.AFTER_SAVE, elementHooks.AFTER_LOADED],
+    [Hooks.afterUpdate]: [elementHooks.AFTER_SAVE, elementHooks.AFTER_LOADED]
   };
 
   forEach(mappings, (hooks, type) => {
@@ -42,6 +50,15 @@ function add(ContentElement, Hooks, Models) {
     sse.channel(element.repositoryId).send(Events.Delete, element);
   }
 
+  function customElementHook(hookType, element) {
+    const elementHookTypes = elementHookMappings[hookType];
+    if (!elementHookTypes) return;
+    return elementHookTypes
+      .map(hook => elementRegistry.getHook(element.type, hook))
+      .filter(Boolean)
+      .reduce((result, hook) => hook(result), element);
+  }
+
   function processAssets(hookType, element) {
     // pruneVirtualProps
     // data.assets is an obj containing asset urls where key represents location
@@ -52,7 +69,7 @@ function add(ContentElement, Hooks, Models) {
     const isUpdate = hookType === Hooks.beforeUpdate;
     if (isUpdate && !element.changed('data')) return Promise.resolve();
     element.contentSignature = hash(element.data, { algorithm: 'sha1' });
-    return processStatics(element);
+    return element;
   }
 
   function resolveAssets(_, element) {
