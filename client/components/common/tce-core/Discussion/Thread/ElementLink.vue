@@ -6,7 +6,7 @@
         @click="linkToElement"
         :color="isSameRoute ? 'secondary' : 'teal'"
         text x-small>
-        {{ elementType }}
+        {{ elementLabel }}
         <v-icon x-small class="ml-1">mdi-arrow-top-right-thick</v-icon>
       </v-btn>
     </template>
@@ -15,16 +15,20 @@
 </template>
 
 <script>
-import { sentenceCase } from 'change-case';
+import find from 'lodash/find';
 
 export default {
   name: 'element-link',
+  inject: ['$teRegistry'],
   props: {
     activityId: { type: Number, required: true },
     contentElement: { type: Object, default: () => ({}) }
   },
   computed: {
-    elementType: vm => sentenceCase(vm.contentElement.type),
+    elementLabel() {
+      const { type } = this.contentElement;
+      return find(this.$teRegistry._registry, { type })?.name;
+    },
     isSameRoute: vm => vm.contentElement.uid === vm.$route.query.elementId,
     isEditor: vm => vm.$route.name === 'editor',
     editorRoute: ({ activityId, contentElement }) => ({
