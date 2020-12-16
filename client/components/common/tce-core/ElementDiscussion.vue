@@ -21,7 +21,7 @@
         <span>{{ activator.tooltip }}</span>
       </v-tooltip>
     </template>
-    <discussion-resolve v-bind="{ comments, isResolved }" />
+    <discussion-resolve v-if="!isResolved" :comments="comments" />
     <discussion
       @save="save"
       @update="save"

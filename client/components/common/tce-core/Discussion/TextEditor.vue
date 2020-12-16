@@ -41,6 +41,7 @@ export default {
 
     &.resolved {
       opacity: 0.7;
+      font-style: italic;
     }
   }
 
