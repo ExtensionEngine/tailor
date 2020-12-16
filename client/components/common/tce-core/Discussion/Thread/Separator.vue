@@ -19,7 +19,7 @@
         </transition>
       </div>
     </div>
-    <v-divider v-else-if="index !== 0" class="mb-2 mt-0 mx-2" />
+    <v-divider v-else-if="!isFirstComment" class="mt-0 mb-2 mx-1" />
   </div>
 </template>
 
@@ -30,8 +30,8 @@ export default {
     comment: { type: Object, required: true },
     unseenComments: { type: Array, default: () => [] },
     seenMarker: { type: Boolean, default: false },
-    user: { type: Object, required: true },
-    index: { type: Number, required: true }
+    isFirstComment: { type: Boolean, required: true },
+    user: { type: Object, required: true }
   },
   data: () => ({ showSeenMarker: false }),
   computed: {
@@ -45,7 +45,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.unseen-separator {
+.separator-container .unseen-separator {
   text-align: center;
 
   ::v-deep .v-chip.v-chip--outlined.theme--light {

@@ -3,11 +3,12 @@
     <div v-for="(comment, index) in visibleItems" :key="comment.uid">
       <thread-separator
         @markSeen="$emit('markSeen')"
-        v-bind="{ comment, unseenComments, seenMarker, index, user }" />
+        v-bind="{ comment, user, unseenComments, seenMarker }"
+        :is-first-comment="index === 0" />
       <thread-comment
         @update="onUpdate"
         @remove="$emit('remove', comment)"
-        v-bind="{ comment, containAllComments, user }" />
+        v-bind="{ comment, user, containAllComments }" />
     </div>
   </ul>
 </template>
@@ -21,12 +22,12 @@ export default {
   name: 'discussion-thread',
   props: {
     items: { type: Array, required: true },
-    user: { type: Object, required: true },
     showAll: { type: Boolean, default: false },
     minDisplayed: { type: Number, default: 5 },
-    containAllComments: { type: Boolean, default: false },
     unseenComments: { type: Array, default: () => [] },
-    seenMarker: { type: Boolean, default: false }
+    containAllComments: { type: Boolean, default: false },
+    seenMarker: { type: Boolean, default: false },
+    user: { type: Object, required: true }
   },
   computed: {
     visibleItems: vm => vm.showAll ? vm.items : takeRgt(vm.items, vm.minDisplayed)
