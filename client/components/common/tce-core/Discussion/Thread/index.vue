@@ -8,12 +8,19 @@
       <thread-comment
         @update="onUpdate"
         @remove="$emit('remove', comment)"
-        v-bind="{ comment, user, containAllComments }" />
+        v-bind="{ comment, user }">
+        <template v-slot:element-link>
+          <element-link
+            v-if="containAllComments && comment.contentElementId"
+            v-bind="comment" />
+        </template>
+      </thread-comment>
     </div>
   </ul>
 </template>
 
 <script>
+import ElementLink from './ElementLink';
 import takeRgt from 'lodash/takeRight';
 import ThreadComment from './Comment';
 import ThreadSeparator from './Separator';
@@ -37,7 +44,7 @@ export default {
       this.$emit('update', { ...comment, content, updatedAt: Date.now() });
     }
   },
-  components: { ThreadSeparator, ThreadComment }
+  components: { ElementLink, ThreadSeparator, ThreadComment }
 };
 </script>
 
