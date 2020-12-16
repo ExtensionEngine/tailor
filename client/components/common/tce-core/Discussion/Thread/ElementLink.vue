@@ -24,9 +24,9 @@ export default {
     contentElement: { type: Object, default: () => ({}) }
   },
   computed: {
-    isEditor: vm => vm.$route.name === 'editor',
-    isSameRoute: vm => vm.contentElement.uid === vm.$route.query.elementId,
     elementType: vm => sentenceCase(vm.contentElement.type),
+    isSameRoute: vm => vm.contentElement.uid === vm.$route.query.elementId,
+    isEditor: vm => vm.$route.name === 'editor',
     editorRoute: ({ activityId, contentElement }) => ({
       name: 'editor',
       params: { activityId },
@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     linkToElement() {
-      const { editorRoute, isEditor, isSameRoute } = this;
+      const { isEditor, editorRoute, isSameRoute } = this;
       if (!isEditor) return this.$router.push(editorRoute);
       if (isSameRoute) this.$router.replace({ query: {} });
       this.$router.push({ query: editorRoute.query });
