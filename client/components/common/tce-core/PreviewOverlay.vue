@@ -1,6 +1,8 @@
 <template functional>
   <button class="overlay d-flex justify-center align-center">
-    <div class="message grey--text text--lighten-2">Click to preview</div>
+    <div class="message grey--text text--lighten-2">
+      <slot>Click to preview</slot>
+    </div>
   </button>
 </template>
 
