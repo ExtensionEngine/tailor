@@ -5,7 +5,7 @@
         v-for="{ id, name, truncatedName } in tags"
         :key="id"
         @click:close="showDeleteConfirmation(id, name)"
-        color="blue-grey lighten-4"
+        color="blue-grey lighten-4 mb-1"
         label light small close
         class="mr-2">
         <v-tooltip
@@ -82,7 +82,6 @@ export default {
 <style lang="scss" scoped>
 .tags-container {
   display: flex;
-  height: 2.125rem;
   justify-content: space-between;
   flex-basis: 100%;
 }
