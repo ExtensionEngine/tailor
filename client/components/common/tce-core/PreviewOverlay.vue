@@ -22,10 +22,5 @@ export default {
 .message {
   border-radius: 2px;
   font-size: 1.125rem;
-
-  &:focus {
-    box-shadow: 0 0 0 1px var(--v-secondary-base);
-    outline: none;
-  }
 }
 </style>
