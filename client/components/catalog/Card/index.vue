@@ -132,7 +132,6 @@ export default {
 
 .card-body {
   padding: 0.625rem 0 0;
-  overflow: hidden;
 
   .v-card__title {
     line-height: 1.75rem;
