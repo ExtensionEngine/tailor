@@ -130,7 +130,6 @@ export default {
   $accent-2: #ff4081;
 
   position: relative;
-  background: #fff;
 
   &::after {
     $width: 0.125rem;

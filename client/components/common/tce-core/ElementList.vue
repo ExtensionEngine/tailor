@@ -119,6 +119,7 @@ export default {
 
 ::v-deep .sortable-drag .content-element {
   max-height: auto;
+  background: #fff;
 }
 
 </style>
