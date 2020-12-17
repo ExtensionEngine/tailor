@@ -6,8 +6,7 @@ const state = {
   items: {},
   seen: {
     activity: {},
-    contentElement: {},
-    elementComments: []
+    contentElement: {}
   },
   $apiUrl: null
 };

@@ -34,6 +34,7 @@ import { getSupportedContainers } from 'shared/activities';
 import isEqual from 'lodash/isEqual';
 import loader from '@/components/common/loader';
 import { mapChannels } from '@/plugins/radio';
+import max from 'lodash/max';
 import throttle from 'lodash/throttle';
 import transform from 'lodash/transform';
 
@@ -70,14 +71,11 @@ export default {
     ...mapState({ user: state => state.auth.user }),
     activityId: vm => vm.activity.id,
     processedElements() {
-      const { elements, seen, activityId } = this;
+      const { elements, seen, activity, activityId } = this;
       return transform(elements, (acc, it) => {
         const comments = this.getComments({ activityId, contentElementId: it.id });
-        const lastSeen = {
-          element: seen.contentElement[it.uid] || 0,
-          activity: seen.activity[this.activity.uid] || 0
-        };
-        acc[it.uid] = { ...it, comments, lastSeen };
+        const allSeen = [seen.contentElement[it.uid], seen.activity[activity.uid]];
+        acc[it.uid] = { ...it, comments, lastSeen: max(allSeen) || 0 };
       }, {});
     },
     containerConfigs: vm => getSupportedContainers(vm.activity.type)

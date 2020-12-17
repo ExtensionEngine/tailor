@@ -5,9 +5,14 @@
       @update="saveComment"
       @remove="remove"
       @markSeen="setLastSeenComment"
-      v-bind="{ comments, user, showHeading, unseenComments, seenMarker }"
+      :comments="comments"
+      :last-seen="lastSeen"
+      :seen-confirmation="seenConfirmation"
+      :show-heading="showHeading"
+      :activity-id="activity.id"
+      :user="user"
       scroll-target="editor"
-      show-notifications contain-all-comments />
+      show-notifications is-activity-thread />
   </div>
 </template>
 
@@ -23,20 +28,18 @@ export default {
   props: {
     activity: { type: Object, required: true },
     showHeading: { type: Boolean, default: false },
-    seenMarker: { type: Boolean, default: false }
+    seenConfirmation: { type: Boolean, default: false }
   },
   data: () => ({ isVisible: false }),
   computed: {
-    ...mapGetters('repository/comments', ['getComments', 'getUnseenActivityComments']),
+    ...mapGetters('repository/comments', ['getComments']),
+    ...mapState('repository/comments', ['seen']),
     ...mapState({ user: state => state.auth.user }),
     comments() {
       const comments = this.getComments({ activityId: this.activity.id });
       return orderBy(comments, 'createdAt', 'desc');
     },
-    unseenComments() {
-      const unseenComments = this.getUnseenActivityComments(this.activity);
-      return orderBy(unseenComments, 'createdAt', 'asc');
-    },
+    lastSeen: vm => vm.seen.activity[vm.activity.uid],
     lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime()
   },
   methods: {
@@ -53,7 +56,7 @@ export default {
       setTimeout(() => this.markSeenComments(payload), timeout);
     },
     onIntersect(_entries, _observer, isIntersected) {
-      if (this.seenMarker) return;
+      if (this.seenConfirmation) return;
       this.isVisible = isIntersected;
     }
   },

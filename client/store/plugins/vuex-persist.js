@@ -12,9 +12,7 @@ export default new VuexPersistence({
   key: STORAGE_KEY,
   reducer: ({ repository }) => ({
     repository: {
-      comments: {
-        seen: repository.comments.seen
-      }
+      comments: { seen: repository.comments.seen }
     }
   }),
   storage: window.localStorage,

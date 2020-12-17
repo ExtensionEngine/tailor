@@ -1,7 +1,6 @@
 import filter from 'lodash/filter';
-import find from 'lodash/find';
+import max from 'lodash/max';
 import orderBy from 'lodash/orderBy';
-import transform from 'lodash/transform';
 
 export const getComments = state => params => {
   const comments = filter(state.items, params);
@@ -10,19 +9,11 @@ export const getComments = state => params => {
 
 export const getUnseenActivityComments = (state, _, { auth }) => activity => {
   const { items, seen } = state;
-  const lastSeen = seen.activity[activity.uid] || 0;
-  const comments = processUnseenComments(items, seen);
-  return filter(comments, it =>
+  const lastElementSeen = max(Object.values(seen.contentElement));
+  const lastSeen = max([seen.activity[activity.uid], lastElementSeen]) || 0;
+  return filter(items, it =>
     it.activityId === activity.id &&
     it.authorId !== auth.user.id &&
     new Date(it.createdAt).getTime() > lastSeen
   );
 };
-
-function processUnseenComments(items, seen) {
-  if (!seen.elementComments.length) return items;
-  return transform(items, (acc, comment, key) => {
-    const found = find(seen.elementComments, { id: comment.id });
-    if (!found) return (acc[key] = comment);
-  }, {});
-}
