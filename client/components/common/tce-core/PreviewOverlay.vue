@@ -1,30 +1,31 @@
 <template functional>
-  <button class="overlay d-flex justify-center align-center">
-    <div class="message grey--text text--lighten-2">
+  <v-overlay
+    :value="props.show"
+    opacity="0.9"
+    absolute>
+    <button class="message pa-2 grey--text text--lighten-2">
       <slot>Click to preview</slot>
-    </div>
-  </button>
+    </button>
+  </v-overlay>
 </template>
 
 <script>
-export default { name: 'tce-preview-overlay' };
+export default {
+  name: 'tce-preview-overlay',
+  props: {
+    show: { type: Boolean, default: false }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-.overlay {
-  position: absolute;
-  z-index: 3;
-  width: 100%;
-  height: 100%;
-  background-color: #111;
-  opacity: 0.9;
+.message {
+  border-radius: 2px;
+  font-size: 1.125rem;
 
-  &:hover {
-    cursor: pointer;
-  }
-
-  .message {
-    font-size: 1.125rem;
+  &:focus {
+    box-shadow: 0 0 0 1px var(--v-secondary-base);
+    outline: none;
   }
 }
 </style>

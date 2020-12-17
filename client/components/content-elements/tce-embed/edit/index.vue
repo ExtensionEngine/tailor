@@ -11,7 +11,7 @@
       active-icon="mdi-arrow-up" />
     <div v-else>
       <div class="content">
-        <preview-overlay v-if="!isDisabled && !isFocused" />
+        <preview-overlay :show="!isDisabled && !isFocused" />
         <!-- Dragging iframes is not supported inside sortablejs container! -->
         <iframe
           v-if="!isDragged"

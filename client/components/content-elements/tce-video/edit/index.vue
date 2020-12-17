@@ -9,7 +9,7 @@
       active-placeholder="Use toolbar to upload the video"
       active-icon="mdi-arrow-up" />
     <div v-else>
-      <preview-overlay v-if="!isDisabled && !isFocused">
+      <preview-overlay :show="!isDisabled && !isFocused">
         Double click to preview
       </preview-overlay>
       <div v-if="showError" class="overlay">
