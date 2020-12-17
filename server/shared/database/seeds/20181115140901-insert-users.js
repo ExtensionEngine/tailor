@@ -11,7 +11,7 @@ const users = [];
 times(5, i => {
   const suffix = i || '';
   users.push({
-    email: `admin${suffix}@extensionengine.com`,
+    email: `admin${suffix}@example.com`,
     password: 'admin123.',
     role: 'ADMIN',
     created_at: now,
