@@ -10,6 +10,8 @@ const mime = require('mime-types');
 const path = require('path');
 const pickBy = require('lodash/pickBy');
 
+const getStorageUrl = key => `${config.protocol}${key}`;
+
 function getUrl(req, res) {
   const { query: { key } } = req;
   return getFileUrl(key).then(url => res.json({ url }));
@@ -51,8 +53,4 @@ async function uploadArchiveContent(archive, name) {
     return [key, getStorageUrl(key)];
   }));
   return fromPairs(keys);
-}
-
-function getStorageUrl(key) {
-  return `${config.protocol}${key}`;
 }
