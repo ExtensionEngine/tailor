@@ -11,7 +11,8 @@
         :element="element"
         :selectable="selectable"
         :is-selected="!!selectionMap[element.id]"
-        :selection-disabled="isSelectionDisabled" />
+        :selection-disabled="isSelectionDisabled"
+        is-disabled />
     </div>
   </div>
 </template>

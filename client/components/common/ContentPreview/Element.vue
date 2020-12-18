@@ -11,7 +11,7 @@
       :element="element"
       :class="['content-element', { selected: isSelected }]"
       :set-width="false"
-      id-disabled />
+      v-bind="$attrs" />
   </div>
 </template>
 
