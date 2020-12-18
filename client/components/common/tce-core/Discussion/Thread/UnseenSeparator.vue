@@ -1,22 +1,20 @@
 <template>
   <div class="unseen-separator">
-    <v-divider class="my-3" />
-    <v-chip @click="showSeenConfirmation = !showSeenConfirmation" small outlined>
+    <v-divider />
+    <v-btn @click="showSeenConfirmation = !showSeenConfirmation" x-small rounded>
       Unseen
-    </v-chip>
-    <div class="d-flex justify-center">
-      <transition name="slide-fade">
-        <v-btn
-          v-if="showSeenConfirmation"
-          @click="$emit('markSeen')"
-          color="teal"
-          text x-small
-          class="seen-confirmation">
-          <v-icon size="16" class="mr-1">mdi-check</v-icon>
-          Mark All as Seen
-        </v-btn>
-      </transition>
-    </div>
+    </v-btn>
+    <transition name="slide-fade">
+      <v-btn
+        v-if="showSeenConfirmation"
+        @click="$emit('markSeen')"
+        color="teal"
+        text x-small
+        class="seen-confirmation">
+        <v-icon size="16" class="mr-1">mdi-check</v-icon>
+        Mark All as Seen
+      </v-btn>
+    </transition>
   </div>
 </template>
 
@@ -29,16 +27,22 @@ export default {
 
 <style lang="scss" scoped>
 .unseen-separator {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 
-  ::v-deep .v-chip.v-chip--outlined.theme--light {
-    margin-top: -3rem;
-    border-radius: 0.75rem !important;
-    background-color: #fff !important;
+  .v-divider {
+    width: 100%;
+    margin: 0.75rem 0;
+  }
+
+  .v-btn--rounded {
+    width: 4.5rem;
+    margin: -1.375rem 0 0.5rem 0;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
   }
 
   .seen-confirmation {
-    margin-top: -0.875rem;
     margin-bottom: 0.5rem;
   }
 
