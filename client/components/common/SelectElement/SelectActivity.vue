@@ -7,11 +7,12 @@
       clear-icon="mdi-close-circle-outline"
       clearable outlined />
     <v-treeview
-      v-show="hasSearchResults"
+      v-show="!noResultsMessage"
       ref="treeview"
       :items="activityTree"
       :search="search"
-      activatable transition open-all
+      :open="expandedItems"
+      activatable transition open-on-click
       class="py-3 px-1 treeview">
       <template v-slot:label="{ item: { id, data } }">
         {{ data.name }}
@@ -32,8 +33,8 @@
         </v-btn>
       </template>
     </v-treeview>
-    <v-alert :value="!hasSearchResults" color="primary" dark>
-      No matches found.
+    <v-alert :value="!!noResultsMessage" color="primary" dark>
+      {{ noResultsMessage }}
     </v-alert>
   </div>
 </template>
@@ -41,6 +42,7 @@
 <script>
 import groupBy from 'lodash/groupBy';
 import { isEditable } from 'shared/activities';
+import map from 'lodash/map';
 import pluralize from 'pluralize';
 import { toTreeFormat } from 'utils/activity';
 
@@ -53,11 +55,15 @@ export default {
   data: () => ({ search: '' }),
   computed: {
     groupedSelection: vm => groupBy(vm.selectedElements, 'outlineId'),
+    expandedItems: vm => map(vm.activities, 'id'),
     activityTree: vm => toTreeFormat(vm.activities, []),
-    hasSearchResults() {
-      if (!this.search || !this.$refs) return true;
-      const { excludedItems, nodes } = this.$refs.treeview;
-      return excludedItems.size !== Object.keys(nodes).length;
+    noResultsMessage() {
+      const { activities, search, $refs } = this;
+      if (!activities.length) return 'Empty repository';
+      if (!search || !$refs) return '';
+      const { excludedItems } = $refs.treeview;
+      if (excludedItems.size === activities.length) return 'No matches found';
+      return '';
     }
   },
   methods: {
