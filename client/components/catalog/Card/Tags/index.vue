@@ -7,7 +7,7 @@
         @click:close="showDeleteConfirmation(id, name)"
         color="blue-grey lighten-4"
         label light small close
-        class="mr-2">
+        class="mr-2 mb-1">
         <v-tooltip
           :disabled="name.length === truncatedName.length"
           open-delay="100"
@@ -82,7 +82,6 @@ export default {
 <style lang="scss" scoped>
 .tags-container {
   display: flex;
-  height: 2.125rem;
   justify-content: space-between;
   flex-basis: 100%;
 }

@@ -8,9 +8,7 @@
       active-placeholder="Use toolbar to upload the pdf"
       active-icon="mdi-arrow-up" />
     <div v-show="!showPlaceholder">
-      <div v-if="!isDisabled && !isFocused" class="overlay">
-        <div class="message grey--text text--lighten-2">Click to preview</div>
-      </div>
+      <preview-overlay :show="!isDisabled && !isFocused" />
       <div class="loader-outer">
         <div class="loader-inner">
           <circular-progress v-show="!showError" />
@@ -41,6 +39,7 @@ import { ElementPlaceholder } from 'tce-core';
 import get from 'lodash/get';
 import isIE from 'is-iexplorer';
 import isSafari from 'is-safari';
+import PreviewOverlay from 'tce-core/PreviewOverlay';
 
 const ERR_TIMEOUT = 10000;
 const TYPE = 'application/pdf';
@@ -95,28 +94,13 @@ export default {
   beforeDestroy() {
     this.pdfObject = null;
   },
-  components: { CircularProgress, ElementPlaceholder }
+  components: { CircularProgress, ElementPlaceholder, PreviewOverlay }
 };
 </script>
 
 <style lang="scss" scoped>
 .tce-pdf {
   position: relative;
-}
-
-.overlay {
-  position: absolute;
-  z-index: 3;
-  width: 100%;
-  height: 100%;
-  background-color: #111;
-  opacity: 0.9;
-
-  .message {
-    position: relative;
-    top: 45%;
-    font-size: 1.125rem;
-  }
 }
 
 .error {

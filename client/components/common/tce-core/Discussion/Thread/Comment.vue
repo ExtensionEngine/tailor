@@ -1,5 +1,5 @@
 <template>
-  <li class="comment">
+  <div class="comment">
     <v-avatar size="34" class="comment-avatar">
       <img :src="author.imgUrl">
     </v-avatar>
@@ -40,7 +40,6 @@
         <span>{{ comment.createdAt | formatDate('M/D/YY h:mm A') }}</span>
       </v-tooltip>
     </div>
-    <slot name="element-link"></slot>
     <v-menu v-if="showOptions" bottom left offset-y>
       <template v-slot:activator="{ on }">
         <v-btn v-on="on" icon x-small>
@@ -59,7 +58,7 @@
         </v-list-item>
       </v-list>
     </v-menu>
-  </li>
+  </div>
 </template>
 
 <script>
@@ -70,8 +69,7 @@ export default {
   name: 'thread-comment',
   props: {
     comment: { type: Object, required: true },
-    user: { type: Object, required: true },
-    containAllComments: { type: Boolean, default: false }
+    user: { type: Object, required: true }
   },
   data: vm => ({
     content: vm.comment.content,
@@ -119,7 +117,6 @@ export default {
 .comment {
   display: flex;
   position: relative;
-  margin-bottom: 0.75rem;
   font-family: Roboto, Arial, sans-serif;
 
   &-avatar {
@@ -133,6 +130,7 @@ export default {
   }
 
   .author {
+    color: #000;
     font-size: 1rem;
   }
 

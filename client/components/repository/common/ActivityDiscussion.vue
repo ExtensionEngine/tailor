@@ -1,13 +1,16 @@
 <template>
-  <div v-intersect="onIntersect" class="activity-discussion">
+  <div class="activity-discussion">
     <discussion
       @save="saveComment"
       @update="saveComment"
       @remove="remove"
       @markSeen="setLastSeenComment"
-      v-bind="{ comments, user, showHeading, unseenComments, seenMarker }"
+      :comments="comments"
+      :unseen-activity-comments="unseenComments"
+      :show-heading="showHeading"
+      :user="user"
       scroll-target="editor"
-      show-notifications contain-all-comments />
+      show-notifications is-activity-thread />
   </div>
 </template>
 
@@ -15,17 +18,14 @@
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import Discussion from 'tce-core/Discussion';
 import get from 'lodash/get';
-import isEqual from 'lodash/isEqual';
 import orderBy from 'lodash/orderBy';
 
 export default {
   name: 'activity-discussion',
   props: {
     activity: { type: Object, required: true },
-    showHeading: { type: Boolean, default: false },
-    seenMarker: { type: Boolean, default: false }
+    showHeading: { type: Boolean, default: false }
   },
-  data: () => ({ isVisible: false }),
   computed: {
     ...mapGetters('repository/comments', ['getComments', 'getUnseenActivityComments']),
     ...mapState({ user: state => state.auth.user }),
@@ -33,10 +33,7 @@ export default {
       const comments = this.getComments({ activityId: this.activity.id });
       return orderBy(comments, 'createdAt', 'desc');
     },
-    unseenComments() {
-      const unseenComments = this.getUnseenActivityComments(this.activity);
-      return orderBy(unseenComments, 'createdAt', 'asc');
-    },
+    unseenComments: vm => vm.getUnseenActivityComments(vm.activity),
     lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime()
   },
   methods: {
@@ -51,20 +48,6 @@ export default {
       const { activity, lastCommentAt } = this;
       const payload = { activityUid: activity.uid, lastCommentAt };
       setTimeout(() => this.markSeenComments(payload), timeout);
-    },
-    onIntersect(_entries, _observer, isIntersected) {
-      if (this.seenMarker) return;
-      this.isVisible = isIntersected;
-    }
-  },
-  watch: {
-    isVisible(val) {
-      if (!val || !this.lastCommentAt) return;
-      this.setLastSeenComment(1000);
-    },
-    comments(val, oldVal) {
-      if (!this.isVisible || isEqual(val, oldVal)) return;
-      this.setLastSeenComment(2000);
     }
   },
   created() {

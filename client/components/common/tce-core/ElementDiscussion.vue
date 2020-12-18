@@ -1,6 +1,7 @@
 <template>
   <v-menu
     v-model="isVisible"
+    @click.native.stop
     :close-on-content-click="false"
     min-width="300"
     transition="slide-y-transition"
@@ -63,8 +64,8 @@ export default {
     id: { type: Number, default: null },
     uid: { type: String, required: true },
     comments: { type: Array, required: true },
-    lastSeen: { type: Object, required: true },
     isResolved: { type: Boolean, default: false },
+    lastSeen: { type: Number, required: true },
     user: { type: Object, required: true }
   },
   data: () => ({ isVisible: false }),
@@ -76,9 +77,7 @@ export default {
       const { comments, user, lastSeen } = this;
       return comments.filter(it => {
         const createdAt = new Date(it.createdAt).getTime();
-        return it.author.id !== user.id &&
-          createdAt > lastSeen.element &&
-          createdAt > lastSeen.activity;
+        return it.author.id !== user.id && createdAt > lastSeen;
       });
     },
     activator() {
@@ -99,13 +98,8 @@ export default {
       });
     },
     setLastSeen(timeout) {
-      const { uid: elementUid, lastCommentAt, unseenComments, events } = this;
-      const options = {
-        elementUid,
-        lastCommentAt,
-        timeout,
-        unseenElementComments: unseenComments
-      };
+      const { uid: elementUid, lastCommentAt, events } = this;
+      const options = { elementUid, lastCommentAt, timeout };
       this.editorBus.emit(events.SET_LAST_SEEN, options);
     }
   },
@@ -132,6 +126,10 @@ export default {
 
   ::v-deep .embedded-discussion {
     text-align: left;
+  }
+
+  ::v-deep .comment .author {
+    font-size: 0.875rem;
   }
 }
 

@@ -25,20 +25,20 @@
       @update="$emit('update', $event)"
       @remove="$emit('remove', $event)"
       @markSeen="$emit('markSeen')"
+      @showAll="showAll = $event"
       :items="thread"
       :user="user"
       :show-all="showAll"
       :min-displayed="commentsShownLimit"
-      :contain-all-comments="containAllComments"
-      :unseen-comments="unseenComments"
-      :seen-marker="seenMarker"
+      :is-activity-thread="isActivityThread"
+      :unseen-activity-comments="unseenActivityComments"
       class="mt-2" />
     <div class="text-right">
       <text-editor
         ref="editor"
         v-model="comment.content"
         :placeholder="commentsCount ? 'Add a comment...' : 'Start the discussion...'" />
-      <v-btn @click="post" :disabled="isPostDisabled" icon>
+      <v-btn @click="post" :disabled="isTextEditorEmpty" icon>
         <v-icon>mdi-send</v-icon>
       </v-btn>
     </div>
@@ -57,27 +57,26 @@ export default {
   inheritAttrs: true,
   props: {
     comments: { type: Array, default: () => [] },
-    user: { type: Object, required: true },
-    showHeading: { type: Boolean, default: false },
-    showNotifications: { type: Boolean, default: false },
-    containAllComments: { type: Boolean, default: false },
     commentsShownLimit: { type: Number, default: 5 },
     scrollTarget: { type: String, default: 'discussion' },
-    unseenComments: { type: Array, default: () => [] },
-    seenMarker: { type: Boolean, default: false }
+    showHeading: { type: Boolean, default: false },
+    showNotifications: { type: Boolean, default: false },
+    isActivityThread: { type: Boolean, default: false },
+    unseenActivityComments: { type: Array, default: () => [] },
+    user: { type: Object, required: true }
   },
   data: () => ({ showAll: false, comment: initCommentInput() }),
   computed: {
     thread: vm => orderBy(vm.comments, ['createdAt'], ['asc']),
     commentsCount: vm => vm.thread.length,
     showAllToggle: vm => vm.commentsShownLimit < vm.thread.length,
-    isPostDisabled: vm => !vm.comment.content?.trim(),
+    isTextEditorEmpty: vm => !vm.comment.content?.trim(),
     discussion: vm => vm.$refs.discussion,
     editor: vm => vm.$refs.editor.$el
   },
   methods: {
     post() {
-      const { scrollTarget, comment, seenMarker, user: author } = this;
+      const { scrollTarget, comment, isActivityThread, user: author } = this;
       if (!comment.content) return;
       const payload = {
         content: comment.content,
@@ -87,7 +86,7 @@ export default {
       };
       this.comment = initCommentInput();
       this.$emit('save', payload);
-      if (seenMarker) this.$emit('markSeen');
+      if (isActivityThread) this.$emit('markSeen');
       // Keep editor/discussion container inside viewport.
       const scrollOptions = { block: 'center', behavior: 'smooth' };
       this.$nextTick(() => this[scrollTarget].scrollIntoView(scrollOptions));

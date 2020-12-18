@@ -12,9 +12,7 @@ export default new VuexPersistence({
   key: STORAGE_KEY,
   reducer: ({ repository }) => ({
     repository: {
-      comments: {
-        seen: repository.comments.seen
-      }
+      comments: { seen: repository.comments.seen }
     }
   }),
   storage: window.localStorage,
@@ -25,7 +23,7 @@ function migrateSeenState() {
   const storage = window.localStorage;
   const state = JSON.parse(storage.getItem(STORAGE_KEY));
   if (!state) return;
-  const { seenByActivity } = state.repository.comments;
+  const { seenByActivity } = state?.repository?.comments || {};
   if (!isEmpty(seenByActivity)) {
     state.repository.comments.seen = { activity: seenByActivity };
   }

@@ -1,7 +1,6 @@
 import filter from 'lodash/filter';
-import find from 'lodash/find';
+import get from 'lodash/get';
 import orderBy from 'lodash/orderBy';
-import transform from 'lodash/transform';
 
 export const getComments = state => params => {
   const opts = params.contentElementId ? { ...params, resolved: false } : params;
@@ -11,19 +10,14 @@ export const getComments = state => params => {
 
 export const getUnseenActivityComments = (state, _, { auth }) => activity => {
   const { items, seen } = state;
-  const lastSeen = seen.activity[activity.uid] || 0;
-  const comments = processUnseenComments(items, seen);
-  return filter(comments, it =>
-    it.activityId === activity.id &&
-    it.authorId !== auth.user.id &&
-    new Date(it.createdAt).getTime() > lastSeen
-  );
+  const lastActivitySeen = get(seen.activity, activity.uid, 0);
+  return filter(items, it => {
+    const isCurrentActivityComment = it.activityId === activity.id;
+    const isAuthor = it.authorId === auth.user.id;
+    const createdAt = new Date(it.createdAt).getTime();
+    if (!isCurrentActivityComment || isAuthor || lastActivitySeen >= createdAt) return;
+    if (!it.contentElement) return true;
+    const lastElementSeen = get(seen.contentElement, it.contentElement.uid, 0);
+    return lastElementSeen < createdAt;
+  });
 };
-
-function processUnseenComments(items, seen) {
-  if (!seen.elementComments.length) return items;
-  return transform(items, (acc, comment, key) => {
-    const found = find(seen.elementComments, { id: comment.id });
-    if (!found) return (acc[key] = comment);
-  }, {});
-}
