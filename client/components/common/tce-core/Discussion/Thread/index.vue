@@ -66,6 +66,7 @@ export default {
       this.isVisible = isIntersected;
     },
     scrollToFirstUnseen() {
+      if (!this.unseenActivityThread.length) return;
       this.$nextTick(() => {
         const element = this.$refs['unseen-separator'][0].$el;
         if (!element) return;
