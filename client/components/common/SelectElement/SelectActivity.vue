@@ -61,9 +61,9 @@ export default {
       const { activities, search, $refs } = this;
       if (!activities.length) return 'Empty repository';
       if (!search || !$refs) return '';
-      const { excludedItems } = $refs.treeview;
-      if (excludedItems.size === activities.length) return 'No matches found';
-      return '';
+      const { excludedItems, nodes } = $refs.treeview;
+      if (excludedItems.size !== Object.keys(nodes).length) return '';
+      return 'No matches found';
     }
   },
   methods: {
