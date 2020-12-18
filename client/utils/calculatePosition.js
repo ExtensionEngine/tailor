@@ -23,7 +23,7 @@ export const getPositions = (items, index, count = 1) => {
 /**
  * Calculates item position(s) based on the options provided.
  * @param {number} newPosition The index of the anchor item by which the new
- *     positions will be calculated.
+ *     positions will be calculated. Defaults to the end of the `items` array.
  * @param {Object[]} items An array of objects in which we are determining
  *     item's new position.
  * @param {boolean} isFirstChild Deprecated: Boolean value denoting whether
@@ -39,7 +39,10 @@ export default function ({ newPosition, items, action = REORDER, count = 1 }) {
   getDeprecationWarning(...arguments);
   const arr = [...items];
   if (action === REORDER) arr.splice(newPosition, count);
-  const index = action === ADD_AFTER ? newPosition + 1 : newPosition;
+  let index = items.length;
+  if (newPosition !== undefined) {
+    index = action === ADD_AFTER ? newPosition + 1 : newPosition;
+  }
   const positions = getPositions(arr, index, count);
   return count === 1 ? positions[0] : positions;
 }
