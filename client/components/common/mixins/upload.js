@@ -17,9 +17,9 @@ export default {
     upload: loader(function (e) {
       this.createFileForm(e);
       return this.$storageService.upload(this.form)
-        .then(({ url, publicUrl, key }) => {
+        .then(data => {
           const { name } = this.form.get('file');
-          this.$emit('upload', { url, publicUrl, key, name });
+          this.$emit('upload', { ...data, name });
         }).catch(() => {
           this.error = 'An error has occurred!';
         });
