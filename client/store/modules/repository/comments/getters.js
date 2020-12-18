@@ -1,5 +1,5 @@
 import filter from 'lodash/filter';
-import max from 'lodash/max';
+import get from 'lodash/get';
 import orderBy from 'lodash/orderBy';
 
 export const getComments = state => params => {
@@ -9,11 +9,13 @@ export const getComments = state => params => {
 
 export const getUnseenActivityComments = (state, _, { auth }) => activity => {
   const { items, seen } = state;
-  const lastElementSeen = max(Object.values(seen.contentElement));
-  const lastSeen = max([seen.activity[activity.uid], lastElementSeen]) || 0;
-  return filter(items, it =>
-    it.activityId === activity.id &&
-    it.authorId !== auth.user.id &&
-    new Date(it.createdAt).getTime() > lastSeen
-  );
+  const lastActivitySeen = get(seen.activity, activity.uid, 0);
+  return filter(items, it => {
+    const createdAt = new Date(it.createdAt).getTime();
+    const isAuthor = it.authorId === auth.user.id;
+    if (it.activityId !== activity.id || isAuthor || lastActivitySeen > createdAt) return;
+    if (!it.contentElement) return true;
+    const lastElementSeen = get(seen.contentElement, it.contentElement.uid, 0);
+    return lastElementSeen < createdAt;
+  });
 };
