@@ -58,7 +58,7 @@
         :activity="activity"
         v-bind="relationship" />
     </div>
-    <activity-discussion :activity="activity" show-heading seen-confirmation />
+    <activity-discussion :activity="activity" show-heading />
   </div>
 </template>
 

@@ -6,7 +6,8 @@
       class="thread-item">
       <unseen-separator
         v-if="showUnseenSeparator(comment)"
-        @markSeen="$emit('markSeen')" />
+        ref="unseen-separator"
+        @markSeen="markActivityThreadSeen" />
       <v-divider v-else class="thread-separator" />
       <thread-comment
         @update="onUpdate"
@@ -37,38 +38,48 @@ export default {
     items: { type: Array, required: true },
     showAll: { type: Boolean, default: false },
     minDisplayed: { type: Number, default: 5 },
-    lastSeen: { type: Number, required: true },
     isActivityThread: { type: Boolean, default: false },
-    seenConfirmation: { type: Boolean, default: false },
-    user: { type: Object, required: true },
-    activityId: { type: Number, default: null }
+    unseenActivityComments: { type: Array, required: true },
+    user: { type: Object, required: true }
   },
   computed: {
     isEditor: vm => vm.$route.name === 'editor',
     visibleItems: vm => vm.showAll ? vm.items : takeRgt(vm.items, vm.minDisplayed),
-    unseenActivityComments() {
-      const { items, user, lastSeen, activityId } = this;
-      if (!activityId) return [];
-      const unseenComments = items.filter(it => {
-        const createdAt = new Date(it.createdAt).getTime();
-        const isAuthor = it.authorId === user.id;
-        return it.activityId === activityId && !isAuthor && createdAt > lastSeen;
-      });
-      return orderBy(unseenComments, 'createdAt', 'asc');
-    },
-    firstUnseenComment: vm => vm.unseenActivityComments[0]
+    unseenActivityThread: vm => orderBy(vm.unseenActivityComments, 'createdAt', 'asc'),
+    firstUnseenComment: vm => vm.unseenActivityThread[0]
   },
   methods: {
     onUpdate(comment, content) {
       this.$emit('update', { ...comment, content, updatedAt: Date.now() });
     },
     showUnseenSeparator({ id, author }) {
-      const { seenConfirmation, firstUnseenComment, user } = this;
+      const { firstUnseenComment, user } = this;
       const isAuthor = user.id === author.id;
-      return seenConfirmation && !isAuthor && firstUnseenComment?.id === id;
+      return !isAuthor && firstUnseenComment?.id === id;
     },
     elementLabel({ contentElement: { type } }) {
       return find(this.$teRegistry._registry, { type })?.name;
+    },
+    goToFirstUnseen() {
+      this.$nextTick(() => {
+        const element = this.$refs['unseen-separator'][0].$el;
+        if (!element) return;
+        element.scrollIntoView();
+      });
+    },
+    markActivityThreadSeen() {
+      this.$emit('markSeen');
+      this.$emit('showAll', false);
+    }
+  },
+  watch: {
+    unseenActivityThread: {
+      immediate: true,
+      handler(activityComments) {
+        if (activityComments.length < this.minDisplayed) return;
+        this.$emit('showAll', true);
+        this.goToFirstUnseen();
+      }
     }
   },
   components: { ElementLink, ThreadComment, UnseenSeparator }

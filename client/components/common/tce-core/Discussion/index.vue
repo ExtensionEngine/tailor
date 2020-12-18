@@ -25,14 +25,13 @@
       @update="$emit('update', $event)"
       @remove="$emit('remove', $event)"
       @markSeen="$emit('markSeen')"
+      @showAll="showAll = $event"
       :items="thread"
       :user="user"
       :show-all="showAll"
       :min-displayed="commentsShownLimit"
       :is-activity-thread="isActivityThread"
-      :last-seen="lastSeen"
-      :seen-confirmation="seenConfirmation"
-      :activity-id="activityId"
+      :unseen-activity-comments="unseenActivityComments"
       class="mt-2" />
     <div class="text-right">
       <text-editor
@@ -58,15 +57,13 @@ export default {
   inheritAttrs: true,
   props: {
     comments: { type: Array, default: () => [] },
-    user: { type: Object, required: true },
+    commentsShownLimit: { type: Number, default: 5 },
+    scrollTarget: { type: String, default: 'discussion' },
     showHeading: { type: Boolean, default: false },
     showNotifications: { type: Boolean, default: false },
     isActivityThread: { type: Boolean, default: false },
-    commentsShownLimit: { type: Number, default: 5 },
-    scrollTarget: { type: String, default: 'discussion' },
-    lastSeen: { type: Number, default: 0 },
-    seenConfirmation: { type: Boolean, default: false },
-    activityId: { type: Number, default: null }
+    unseenActivityComments: { type: Array, default: () => [] },
+    user: { type: Object, required: true }
   },
   data: () => ({ showAll: false, comment: initCommentInput() }),
   computed: {
@@ -79,7 +76,7 @@ export default {
   },
   methods: {
     post() {
-      const { scrollTarget, comment, seenConfirmation, user: author } = this;
+      const { scrollTarget, comment, isActivityThread, user: author } = this;
       if (!comment.content) return;
       const payload = {
         content: comment.content,
@@ -89,7 +86,7 @@ export default {
       };
       this.comment = initCommentInput();
       this.$emit('save', payload);
-      if (seenConfirmation) this.$emit('markSeen');
+      if (isActivityThread) this.$emit('markSeen');
       // Keep editor/discussion container inside viewport.
       const scrollOptions = { block: 'center', behavior: 'smooth' };
       this.$nextTick(() => this[scrollTarget].scrollIntoView(scrollOptions));
