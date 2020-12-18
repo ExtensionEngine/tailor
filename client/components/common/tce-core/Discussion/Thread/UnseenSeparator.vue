@@ -33,7 +33,6 @@ export default {
 
   .v-divider {
     width: 100%;
-    margin: 0.75rem 0;
   }
 
   .v-btn--rounded {

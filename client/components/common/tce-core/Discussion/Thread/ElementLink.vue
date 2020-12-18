@@ -1,5 +1,5 @@
 <template>
-  <div class="element-link-container">
+  <div class="element-link">
     <v-tooltip left>
       <template v-slot:activator="{ on }">
         <v-btn

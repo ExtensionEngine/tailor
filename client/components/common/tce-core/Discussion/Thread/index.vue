@@ -17,8 +17,7 @@
         v-if="isActivityThread && comment.contentElement"
         v-bind="comment"
         :is-editor="isEditor"
-        :element-label="elementLabel(comment)"
-        class="element-link" />
+        :element-label="elementLabel(comment)" />
     </li>
   </ul>
 </template>
@@ -84,6 +83,10 @@ export default {
 
 .discussion-thread .thread-item {
   position: relative;
+
+  ::v-deep .unseen-separator .v-divider {
+    margin: 0.75rem 0;
+  }
 
   .thread-separator {
     margin: 0 0.25rem 0.5rem 0.25rem;
