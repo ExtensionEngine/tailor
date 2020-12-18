@@ -55,7 +55,10 @@ export default class ComponentRegistry {
         /* webpackExclude: /server\/.*$/ */
         `extensions/${_type}s/${path}`
       )).default
-      : (await import(`components/${_type}s/${path}`)).default;
+      : (await import(
+        /* webpackExclude: /server\/.*$/ */
+        `components/${_type}s/${path}`
+      )).default;
     this._validator(element);
 
     const id = getIdentifier(element);
