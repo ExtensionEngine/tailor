@@ -11,9 +11,10 @@ export const getUnseenActivityComments = (state, _, { auth }) => activity => {
   const { items, seen } = state;
   const lastActivitySeen = get(seen.activity, activity.uid, 0);
   return filter(items, it => {
-    const createdAt = new Date(it.createdAt).getTime();
+    const isCurrentActivityComment = it.activityId === activity.id;
     const isAuthor = it.authorId === auth.user.id;
-    if (it.activityId !== activity.id || isAuthor || lastActivitySeen > createdAt) return;
+    const createdAt = new Date(it.createdAt).getTime();
+    if (!isCurrentActivityComment || isAuthor || lastActivitySeen > createdAt) return;
     if (!it.contentElement) return true;
     const lastElementSeen = get(seen.contentElement, it.contentElement.uid, 0);
     return lastElementSeen < createdAt;
