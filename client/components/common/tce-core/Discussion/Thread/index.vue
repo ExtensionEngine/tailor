@@ -1,5 +1,5 @@
 <template>
-  <ul class="discussion-thread">
+  <ul v-intersect="onIntersect" class="discussion-thread">
     <li
       v-for="comment in visibleItems"
       :key="comment.uid"
@@ -42,6 +42,7 @@ export default {
     unseenActivityComments: { type: Array, required: true },
     user: { type: Object, required: true }
   },
+  data: () => ({ isVisible: false }),
   computed: {
     isEditor: vm => vm.$route.name === 'editor',
     visibleItems: vm => vm.showAll ? vm.items : takeRgt(vm.items, vm.minDisplayed),
@@ -60,6 +61,10 @@ export default {
       const isAuthor = user.id === author.id;
       return !isAuthor && firstUnseenComment?.id === id;
     },
+    onIntersect(_entries, _observer, isIntersected) {
+      if (!this.isActivityThread) return;
+      this.isVisible = isIntersected;
+    },
     scrollToFirstUnseen() {
       this.$nextTick(() => {
         const element = this.$refs['unseen-separator'][0].$el;
@@ -73,6 +78,7 @@ export default {
     }
   },
   watch: {
+    isVisible: 'scrollToFirstUnseen',
     unseenActivityThread: {
       immediate: true,
       handler(activityComments) {
