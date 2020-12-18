@@ -129,6 +129,7 @@ export default {
   }
 
   .author {
+    color: #000;
     font-size: 1rem;
   }
 

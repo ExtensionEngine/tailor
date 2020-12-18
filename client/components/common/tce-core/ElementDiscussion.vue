@@ -1,6 +1,7 @@
 <template>
   <v-menu
     v-model="isVisible"
+    @click.native.stop
     :close-on-content-click="false"
     min-width="300"
     transition="slide-y-transition"
@@ -119,6 +120,10 @@ export default {
 
   ::v-deep .embedded-discussion {
     text-align: left;
+  }
+
+  ::v-deep .comment .author {
+    font-size: 0.875rem;
   }
 }
 
