@@ -2,6 +2,7 @@
   <div class="mx-3">
     <v-text-field
       v-model="search"
+      :disabled="!activities.length"
       placeholder="Filter items..."
       prepend-inner-icon="mdi-filter-outline"
       clear-icon="mdi-close-circle-outline"
