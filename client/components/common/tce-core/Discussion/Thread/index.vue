@@ -46,8 +46,9 @@ export default {
   computed: {
     isEditor: vm => vm.$route.name === 'editor',
     visibleItems: vm => vm.showAll ? vm.items : takeRgt(vm.items, vm.minDisplayed),
-    unseenComments() {
+    unseenActivityComments() {
       const { items, user, lastSeen, activityId } = this;
+      if (!activityId) return [];
       const unseenComments = items.filter(it => {
         const createdAt = new Date(it.createdAt).getTime();
         const isAuthor = it.authorId === user.id;
@@ -55,7 +56,7 @@ export default {
       });
       return orderBy(unseenComments, 'createdAt', 'asc');
     },
-    firstUnseenComment: vm => vm.unseenComments[0]
+    firstUnseenComment: vm => vm.unseenActivityComments[0]
   },
   methods: {
     onUpdate(comment, content) {
