@@ -132,18 +132,19 @@ export default {
       const context = { items, newPosition };
       this.reorderElements({ element, context });
     },
-    requestDeletion(content, action, name) {
+    requestDeletion(content, action, name, onDelete = () => null) {
       this.showConfirmationModal({
         title: `Delete ${name}?`,
         message: `Are you sure you want to delete ${name}?`,
-        action: () => this[action](content)
+        action: () => this[action](content).then(onDelete)
       });
     },
     requestContainerDeletion(container, name = this.name) {
       this.requestDeletion(container, 'remove', name);
     },
     requestElementDeletion(element) {
-      this.requestDeletion(element, 'deleteElement', 'element');
+      const onDelete = () => this.$emit('focusoutElement');
+      this.requestDeletion(element, 'deleteElement', 'element', onDelete);
     },
     showNotification: throttle(function () {
       this.$snackbar.show('Element saved');

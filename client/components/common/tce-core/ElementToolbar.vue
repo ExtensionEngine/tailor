@@ -5,29 +5,22 @@
     <component
       :is="componentName"
       v-if="componentExists"
-      @save="saveElement"
+      @save="save"
       :element="element"
       :embed="embed" />
     <default-toolbar v-else :label="config.name" />
     <slot name="embed-toolbar"></slot>
-    <div class="delete-element">
+    <div class="actions-container">
       <slot name="actions"></slot>
-      <v-btn
-        v-if="!embed"
-        @click="requestDeleteConfirmation"
-        color="secondary darken-1"
-        dark fab small>
-        <v-icon color="grey lighten-3">mdi-delete</v-icon>
-      </v-btn>
     </div>
   </div>
 </template>
 
 <script>
 import { getElementId, getToolbarName, isQuestion } from './utils';
-import { mapChannels, mapRequests } from '@/plugins/radio';
 import DefaultToolbar from './DefaultToolbar';
 import { mapActions } from 'vuex';
+import { mapChannels } from '@/plugins/radio';
 import Vue from 'vue';
 
 export default {
@@ -58,28 +51,7 @@ export default {
       return !!Vue.options.components[this.componentName];
     }
   },
-  methods: {
-    ...mapRequests('app', ['showConfirmationModal']),
-    ...mapActions('repository/contentElements', {
-      saveElement: 'save',
-      removeElement: 'remove'
-    }),
-    remove(element) {
-      this.focusoutElement();
-      if (element.embedded) return this.elementBus.emit('delete');
-      this.removeElement(element);
-    },
-    focusoutElement() {
-      this.editorChannel.emit('element:focus');
-    },
-    requestDeleteConfirmation() {
-      this.showConfirmationModal({
-        title: 'Delete element?',
-        message: 'Are you sure you want to delete element?',
-        action: () => this.remove(this.element.parent || this.element)
-      });
-    }
-  },
+  methods: mapActions('repository/contentElements', ['save']),
   provide() {
     return {
       $elementBus: this.elementBus
@@ -97,7 +69,7 @@ export default {
   padding-right: 2.75rem;
   z-index: 99;
 
-  .delete-element {
+  .actions-container {
     position: absolute;
     right: 1.25rem;
     bottom: 1rem;

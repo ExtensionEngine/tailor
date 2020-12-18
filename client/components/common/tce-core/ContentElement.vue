@@ -16,12 +16,22 @@
       @focus="onSelect"
       :id="`element_${id}`"
       v-bind="{ ...$attrs, element, isFocused, isDragged, isDisabled, dense }" />
-    <div class="element-actions">
-      <discussion
+    <div v-if="!isDisabled" class="element-actions">
+      <div
         v-if="showDiscussion"
-        v-bind="element"
-        :is-element-selected="isFocused || isHovered"
-        :user="currentUser" />
+        :class="{ 'is-visible': isHighlighted || hasComments }">
+        <discussion v-bind="element" :user="currentUser" />
+      </div>
+      <div
+        v-if="!parent"
+        :class="{ 'is-visible': isHighlighted }">
+        <v-btn
+          @click="$emit('delete')"
+          color="pink lighten-1"
+          dark icon x-small>
+          <v-icon size="20">mdi-delete-outline</v-icon>
+        </v-btn>
+      </div>
     </div>
     <v-progress-linear
       v-if="isSaving"
@@ -62,6 +72,8 @@ export default {
     id: vm => getElementId(vm.element),
     componentName: vm => getComponentName(vm.element.type),
     isEmbed: vm => !!vm.parent || !vm.element.uid,
+    isHighlighted: vm => vm.isFocused || vm.isHovered,
+    hasComments: vm => !!vm.element.comments?.length,
     elementBus: vm => vm.$radio.channel(`element:${vm.id}`),
     currentUser: vm => vm.$getCurrentUser()
   },
@@ -156,12 +168,25 @@ export default {
 }
 
 .element-actions {
+  display: flex;
+  flex-direction: column;
   position: absolute;
   top: -0.0625rem;
   right: -1.25rem;
   width: 1.5rem;
   height: 100%;
-  padding-left: 0.5rem;
+  padding-left: 0.75rem;
+
+  > * {
+    min-height: 1.75rem;
+    opacity: 0;
+    transition: opacity 0.1s linear;
+  }
+
+  > .is-visible {
+    opacity: 1;
+    transition: opacity 0.5s linear;
+  }
 }
 
 .active-users {

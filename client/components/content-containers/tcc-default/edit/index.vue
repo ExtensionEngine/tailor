@@ -21,8 +21,9 @@
       <template v-slot:list-item="{ element, isDragged, position }">
         <inline-activator @click.native="showElementDrawer(position)" />
         <contained-content
-          @save="updateElement(element, 'data', $event)"
-          @save:meta="updateElement(element, 'meta', $event)"
+          @save="saveElement(element, 'data', $event)"
+          @save:meta="saveElement(element, 'meta', $event)"
+          @delete="$emit('delete:element', element)"
           v-bind="{ element, isDragged, setWidth: false }"
           show-discussion />
       </template>
@@ -82,7 +83,7 @@ export default {
       this.isElementDrawerVisible = false;
       this.insertPosition = Infinity;
     },
-    updateElement(element, key, data) {
+    saveElement(element, key, data) {
       this.$emit('save:element', {
         ...(element),
         [key]: data
