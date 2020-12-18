@@ -7,34 +7,40 @@
     scrollable>
     <template v-slot:header>{{ heading }}</template>
     <template v-slot:body>
-      <v-btn
-        v-if="toggleButton"
-        @click="toggleSelectAll"
-        outlined
-        class="float-right mr-4 mb-2">
-        <v-icon class="mr-2">mdi-{{ toggleButton.icon }}</v-icon>
-        {{ toggleButton.label }}
-      </v-btn>
-      <select-repository v-if="!activities.length" @selected="selectRepository" />
-      <select-activity
-        v-else-if="!selectedActivity"
-        @selected="activity => showActivityElements(activity)"
-        :activities="activities"
-        :selected-elements="selectedElements" />
-      <v-progress-circular v-else-if="loadingContent" indeterminate class="mt-5" />
-      <content-preview
-        v-else
-        @toggle="element => toggleElementSelection(element)"
-        :content-containers="contentContainers"
-        :selected="selectedElements"
-        :allowed-types="allowedTypes"
-        :multiple="multiple"
-        selectable />
+      <template v-if="!selectedActivity">
+        <select-repository
+          @selected="selectRepository"
+          :repository="repository"
+          :disabled="useCurrentRepo" />
+        <v-progress-circular v-if="loadingContent" indeterminate class="mt-5" />
+        <select-activity
+          v-else
+          @selected="showActivityElements"
+          :activities="activities"
+          :selected-elements="selectedElements" />
+      </template>
+      <template v-else>
+        <v-btn
+          v-if="toggleButton"
+          @click="toggleSelectAll"
+          outlined
+          class="float-right mr-4 mb-2">
+          <v-icon class="mr-2">mdi-{{ toggleButton.icon }}</v-icon>
+          {{ toggleButton.label }}
+        </v-btn>
+        <content-preview
+          @toggle="toggleElementSelection"
+          :content-containers="contentContainers"
+          :selected="selectedElements"
+          :allowed-types="allowedTypes"
+          :multiple="multiple"
+          selectable />
+      </template>
     </template>
     <template v-slot:actions>
       <v-btn
-        v-if="showBackButton"
-        @click="goBack"
+        v-if="selectedActivity"
+        @click="deselectActivity"
         text outlined
         class="mr-2">
         <v-icon>mdi-arrow-left</v-icon> Back
@@ -74,7 +80,7 @@ export default {
     headerIcon: { type: String, default: 'mdi-toy-brick-plus-outline' },
     useCurrentRepo: { type: Boolean, default: false }
   },
-  data: vm => {
+  data: () => {
     return {
       repository: null,
       selectedActivity: null,
@@ -97,10 +103,8 @@ export default {
       return elements.filter(it => this.allowedTypes.includes(it.type));
     },
     toggleButton() {
-      const {
-        allElementsSelected, elements, loadingContent, multiple, selectedActivity
-      } = this;
-      if (!multiple || !selectedActivity || !elements.length || loadingContent) return;
+      const { allElementsSelected, elements, multiple, selectedActivity } = this;
+      if (!multiple || !selectedActivity || !elements.length) return;
       const { SELECT, DESELECT } = TOGGLE_BUTTON;
       return allElementsSelected ? DESELECT : SELECT;
     }
@@ -131,11 +135,6 @@ export default {
         ? []
         : this.elements.map(this.assignActivity);
     },
-    goBack() {
-      if (this.selectedActivity) return this.deselectActivity();
-      this.repository = null;
-      this.activities = [];
-    },
     deselectActivity() {
       this.selectedActivity = null;
       this.selectedElements = [];
@@ -143,6 +142,7 @@ export default {
     async selectRepository(repository) {
       const { currentActivities, currentRepository } = this;
       this.repository = repository;
+      this.deselectActivity();
       this.activities = currentRepository.id === repository.id
         ? currentActivities
         : await this.fetchActivities(repository);
@@ -166,12 +166,8 @@ export default {
   },
   created() {
     this.selectedElements = [...this.selected];
-  },
-  mounted() {
-    if (this.useCurrentRepo) {
-      this.repository = this.currentRepository;
-      this.activities = this.currentActivities;
-    }
+    this.repository = this.currentRepository;
+    this.activities = this.currentActivities;
   },
   components: { ContentPreview, SelectActivity, SelectRepository, TailorDialog }
 };
