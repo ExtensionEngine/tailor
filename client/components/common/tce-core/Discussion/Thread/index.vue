@@ -52,15 +52,15 @@ export default {
     onUpdate(comment, content) {
       this.$emit('update', { ...comment, content, updatedAt: Date.now() });
     },
+    elementLabel({ contentElement: { type } }) {
+      return find(this.$teRegistry._registry, { type })?.name;
+    },
     showUnseenSeparator({ id, author }) {
       const { firstUnseenComment, user } = this;
       const isAuthor = user.id === author.id;
       return !isAuthor && firstUnseenComment?.id === id;
     },
-    elementLabel({ contentElement: { type } }) {
-      return find(this.$teRegistry._registry, { type })?.name;
-    },
-    goToFirstUnseen() {
+    scrollToFirstUnseen() {
       this.$nextTick(() => {
         const element = this.$refs['unseen-separator'][0].$el;
         if (!element) return;
@@ -78,7 +78,7 @@ export default {
       handler(activityComments) {
         if (activityComments.length < this.minDisplayed) return;
         this.$emit('showAll', true);
-        this.goToFirstUnseen();
+        this.scrollToFirstUnseen();
       }
     }
   },
