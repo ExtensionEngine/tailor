@@ -1,6 +1,6 @@
 import InsertLocation from './InsertLocation';
 
-const { ADD_BEFORE, REORDER } = InsertLocation;
+const { ADD_AFTER, REORDER } = InsertLocation;
 
 const distributePositions = ({ lower = 0, upper }, count) => {
   const delta = upper ? (upper - lower) / (count + 1) : 1;
@@ -39,7 +39,7 @@ export default function ({ newPosition, items, action = REORDER, count = 1 }) {
   getDeprecationWarning(...arguments);
   const arr = [...items];
   if (action === REORDER) arr.splice(newPosition, count);
-  const index = action === ADD_BEFORE ? newPosition - 1 : newPosition;
+  const index = action === ADD_AFTER ? newPosition + 1 : newPosition;
   const positions = getPositions(arr, index, count);
   return count === 1 ? positions[0] : positions;
 }
