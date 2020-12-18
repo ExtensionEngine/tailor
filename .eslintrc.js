@@ -14,7 +14,7 @@ module.exports = {
   },
   overrides: [{
     files: ['extensions/**'],
-    excludedFiles: ['extensions/**/server/**/*'],
+    excludedFiles: ['extensions/**/server/**'],
     parserOptions: {
       parser: '@babel/eslint-parser',
       sourceType: 'module'
