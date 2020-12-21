@@ -5,7 +5,7 @@
         <v-btn
           v-on="on"
           @click="linkToElement"
-          :color="isShown ? 'secondary' : 'teal'"
+          :color="isShown ? 'teal' : 'blue-grey'"
           text x-small>
           {{ elementLabel }}
           <v-icon x-small class="ml-1">mdi-arrow-top-right-thick</v-icon>

@@ -2,7 +2,8 @@
   <div class="unseen-separator">
     <v-divider />
     <v-chip
-      @click.close="$emit('markSeen')"
+      @click="$emit('markSeen')"
+      @click:close="$emit('markSeen')"
       close-icon="mdi-close"
       color="teal"
       small close outlined>
