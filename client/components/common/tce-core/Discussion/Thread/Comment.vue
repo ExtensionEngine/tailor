@@ -17,7 +17,7 @@
         :is-focused="isEditing"
         :show-preview="!isEditing"
         class="content" />
-      <span v-if="isEditing" class="float-right">
+      <span v-if="isEditing" class="float-left">
         <v-btn @click="reset" text small>Cancel</v-btn>
         <v-btn
           @click="save"
@@ -115,7 +115,6 @@ export default {
 <style lang="scss" scoped>
 .comment {
   display: flex;
-  position: relative;
   font-family: Roboto, Arial, sans-serif;
 
   &-avatar {
