@@ -7,7 +7,8 @@
       <unseen-separator
         v-if="showUnseenSeparator(comment)"
         ref="unseen-separator"
-        @markSeen="markActivityThreadSeen" />
+        @markSeen="markActivityThreadSeen"
+        :unseen-comments-count="unseenActivityThread.length" />
       <v-divider v-else class="thread-separator" />
       <thread-comment
         @update="onUpdate"
@@ -107,7 +108,7 @@ export default {
   position: relative;
 
   ::v-deep .unseen-separator .v-divider {
-    margin: 0.75rem 0;
+    margin: 1.5rem 0 0;
   }
 
   .thread-separator {
