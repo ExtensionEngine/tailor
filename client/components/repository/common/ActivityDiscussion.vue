@@ -5,11 +5,7 @@
       @update="saveComment"
       @remove="remove"
       @markSeen="setLastSeenComment"
-      :comments="comments"
-      :unseen-activity-comments="unseenComments"
-      :show-heading="showHeading"
-      :user="user"
-      scroll-target="editor"
+      v-bind="{ comments, unseenComments, showHeading, user, scrollTarget: 'editor' }"
       show-notifications is-activity-thread />
   </div>
 </template>
@@ -44,7 +40,7 @@ export default {
       const { activity, user: author } = this;
       return this[action]({ ...comment, author, activityId: activity.id });
     },
-    setLastSeenComment(timeout = 0) {
+    setLastSeenComment(timeout = 200) {
       const { activity, lastCommentAt } = this;
       const payload = { activityUid: activity.uid, lastCommentAt };
       setTimeout(() => this.markSeenComments(payload), timeout);

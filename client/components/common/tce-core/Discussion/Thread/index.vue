@@ -7,8 +7,8 @@
       <unseen-separator
         v-if="showUnseenSeparator(comment)"
         ref="unseen-separator"
-        @markSeen="markActivityThreadSeen"
-        :unseen-comments-count="unseenActivityThread.length" />
+        @markSeen="markSeen"
+        :unseen-comments-count="unseenThread.length" />
       <v-divider v-else class="thread-separator" />
       <thread-comment
         @update="onUpdate"
@@ -40,15 +40,15 @@ export default {
     showAll: { type: Boolean, default: false },
     minDisplayed: { type: Number, default: 5 },
     isActivityThread: { type: Boolean, default: false },
-    unseenActivityComments: { type: Array, required: true },
+    unseenComments: { type: Array, required: true },
     user: { type: Object, required: true }
   },
   data: () => ({ isVisible: false }),
   computed: {
     isEditor: vm => vm.$route.name === 'editor',
     visibleItems: vm => vm.showAll ? vm.items : takeRgt(vm.items, vm.minDisplayed),
-    unseenActivityThread: vm => orderBy(vm.unseenActivityComments, 'createdAt', 'asc'),
-    firstUnseenComment: vm => vm.unseenActivityThread[0]
+    unseenThread: vm => orderBy(vm.unseenComments, 'createdAt', 'asc'),
+    firstUnseenComment: vm => vm.unseenThread[0]
   },
   methods: {
     onUpdate(comment, content) {
@@ -63,7 +63,6 @@ export default {
       return !isAuthor && firstUnseenComment?.id === id;
     },
     onIntersect(_entries, _observer, isIntersected) {
-      if (!this.isActivityThread) return;
       this.isVisible = isIntersected;
     },
     scrollToFirstUnseen() {
@@ -71,24 +70,25 @@ export default {
       this.$nextTick(() => {
         const element = this.$refs['unseen-separator'][0].$el;
         if (!element) return;
-        element.scrollIntoView();
+        element.scrollIntoView({ behavior: 'smooth' });
       });
     },
-    markActivityThreadSeen() {
+    markSeen() {
       this.$emit('markSeen');
       this.$emit('showAll', false);
     }
   },
   watch: {
     isVisible(val) {
-      if (!val || !this.unseenActivityThread.length) return;
-      if (this.unseenActivityThread.length < this.minDisplayed) return;
+      const { unseenThread, minDisplayed } = this;
+      if (!val || !unseenThread.length) return;
+      if (unseenThread.length < minDisplayed) return;
       this.scrollToFirstUnseen();
     },
-    unseenActivityThread: {
+    unseenThread: {
       immediate: true,
-      handler(activityComments) {
-        if (activityComments.length < this.minDisplayed) return;
+      handler(unseenComments) {
+        if (unseenComments.length < this.minDisplayed) return;
         this.scrollToFirstUnseen();
       }
     }

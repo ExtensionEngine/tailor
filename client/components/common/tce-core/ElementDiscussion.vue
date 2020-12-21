@@ -26,7 +26,8 @@
       @save="save"
       @update="save"
       @remove="editorBus.emit(events.REMOVE, $event)"
-      v-bind="{ comments, user }"
+      @markSeen="setLastSeen"
+      v-bind="{ comments, user, unseenComments }"
       class="pa-2" />
   </v-menu>
 </template>
@@ -35,7 +36,6 @@
 import Discussion from 'tce-core/Discussion';
 import DiscussionEvent from './Events/DiscussionEvent';
 import get from 'lodash/get';
-import isEqual from 'lodash/isEqual';
 import { mapChannels } from '@/plugins/radio';
 
 const getActivatorOptions = unseenComments => ({
@@ -98,16 +98,6 @@ export default {
       const { uid: elementUid, lastCommentAt, events } = this;
       const options = { elementUid, lastCommentAt, timeout };
       this.editorBus.emit(events.SET_LAST_SEEN, options);
-    }
-  },
-  watch: {
-    isVisible(val) {
-      if (!val || !this.lastCommentAt) return;
-      this.setLastSeen(1000);
-    },
-    comments(val, oldVal) {
-      if (!this.isVisible || isEqual(val, oldVal)) return;
-      this.setLastSeen(2000);
     }
   },
   components: { Discussion }
