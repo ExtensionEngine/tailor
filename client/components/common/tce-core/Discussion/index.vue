@@ -67,7 +67,13 @@ export default {
   },
   data: () => ({ showAll: false, comment: initCommentInput() }),
   computed: {
-    thread: vm => orderBy(vm.comments, 'createdAt', 'asc'),
+    thread() {
+      const { comments, unseenComments } = this;
+      return orderBy(comments.map(comment => {
+        const unseen = unseenComments.find(it => it.id === comment.id);
+        return { ...comment, unseen: !!unseen };
+      }), ['unseen', 'createdAt'], 'asc');
+    },
     commentsCount: vm => vm.thread.length,
     showAllToggle: vm => vm.commentsShownLimit < vm.thread.length,
     isTextEditorEmpty: vm => !vm.comment.content?.trim(),
