@@ -66,7 +66,7 @@ export default {
       this.isVisible = isIntersected;
     },
     scrollToFirstUnseen() {
-      if (!this.unseenActivityThread.length) return;
+      this.$emit('showAll', true);
       this.$nextTick(() => {
         const element = this.$refs['unseen-separator'][0].$el;
         if (!element) return;
@@ -79,12 +79,15 @@ export default {
     }
   },
   watch: {
-    isVisible: 'scrollToFirstUnseen',
+    isVisible(val) {
+      if (!val || !this.unseenActivityThread.length) return;
+      if (this.unseenActivityThread.length < this.minDisplayed) return;
+      this.scrollToFirstUnseen();
+    },
     unseenActivityThread: {
       immediate: true,
       handler(activityComments) {
         if (activityComments.length < this.minDisplayed) return;
-        this.$emit('showAll', true);
         this.scrollToFirstUnseen();
       }
     }
