@@ -8,16 +8,22 @@
       color="teal"
       small close outlined>
       <v-icon size="14" class="mr-1">mdi-arrow-down</v-icon>
-      {{ unseenCommentsCount }} new messages
+      {{ unseenCommentsLabel }}
     </v-chip>
   </div>
 </template>
 
 <script>
+import pluralize from 'pluralize';
+
 export default {
   name: 'unseen-separator',
   props: {
     unseenCommentsCount: { type: Number, default: 0 }
+  },
+  computed: {
+    unseenCommentsLabel: ({ unseenCommentsCount }) =>
+      `${unseenCommentsCount} new ${pluralize('message', unseenCommentsCount)}`
   }
 };
 </script>
