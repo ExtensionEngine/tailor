@@ -1,9 +1,11 @@
 <template>
-  <div class="d-flex justify-end mt-3 mr-2">
+  <div class="d-flex justify-end mt-3">
     <v-tooltip open-delay="800" left>
       <template v-slot:activator="{ on }">
-        <v-btn v-on="on" @click="resolveComments" color="teal" x-small text>
-          <v-icon color="teal" size="16" class="mr-1">mdi-check</v-icon>
+        <v-btn v-on="on" @click="resolveComments" color="teal" small text>
+          <v-icon color="teal" size="24" class="mr-2">
+            mdi-check-circle-outline
+          </v-icon>
           Resolve Discussion
         </v-btn>
       </template>
