@@ -40,7 +40,7 @@
 <script>
 import CommentHeader from './Header';
 import { focus } from 'vue-focus';
-import TextEditor from '../TextEditor';
+import TextEditor from '../../TextEditor';
 
 export default {
   name: 'thread-comment',
