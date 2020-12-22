@@ -6,16 +6,23 @@
     class="activity-content blue-grey lighten-5">
     <div class="content-containers-wrapper">
       <content-loader v-if="isLoading" class="loader" />
-      <template v-else>
+      <publish-diff-provider
+        v-else
+        v-slot="{ processedElements }"
+        :show-diff="isPublishedPreview"
+        :elements="elementsWithComments"
+        :container-ids="containerIds"
+        :repository-id="repository.id"
+        :publish-timestamp="activity.publishedAt">
         <content-containers
           v-for="(containerGroup, type) in rootContainerGroups"
           :key="type"
           @focusoutElement="focusoutElement"
           v-bind="getContainerConfig(type)"
           :container-group="containerGroup"
-          :processed-elements="isPublishedPreview ? changesSincePublish : processedElements"
+          :processed-elements="processedElements"
           :parent-id="activityId" />
-      </template>
+      </publish-diff-provider>
     </div>
   </div>
 </template>
@@ -23,25 +30,18 @@
 <script>
 import { getElementId, isQuestion } from 'tce-core/utils';
 import { mapActions, mapGetters, mapState } from 'vuex';
-import assignWith from 'lodash/assignWith';
-import cloneDeep from 'lodash/cloneDeep';
 import commentEventListeners from 'components/common/mixins/commentEventListeners';
 import ContentContainers from './ContainerList';
 import ContentLoader from './Loader';
 import debounce from 'lodash/debounce';
 import differenceBy from 'lodash/differenceBy';
-import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import { getSupportedContainers } from 'shared/activities';
-import isAfter from 'date-fns/isAfter';
 import isEqual from 'lodash/isEqual';
 import loader from '@/components/common/loader';
-import map from 'lodash/map';
 import { mapChannels } from '@/plugins/radio';
-import mapValues from 'lodash/mapValues';
-import pickBy from 'lodash/pickBy';
-import revisionApi from '@/api/revision';
+import PublishDiffProvider from './PublishDiffProvider';
 import throttle from 'lodash/throttle';
 import transform from 'lodash/transform';
 
@@ -79,21 +79,13 @@ export default {
     ...mapState('editor', ['isPublishedPreview']),
     activityId: vm => vm.activity.id,
     containerIds: vm => vm.contentContainers.map(it => it.id),
-    processedElements() {
+    elementsWithComments() {
       const { elements, seen, activityId } = this;
       return transform(elements, (acc, it) => {
         const comments = this.getComments({ activityId, contentElementId: it.id });
         const lastSeen = seen.contentElement[it.uid] || 0;
         acc[it.uid] = { ...it, comments, lastSeen };
       }, {});
-    },
-    elementsWithPublishFlags() {
-      const elements = pickBy(this.processedElements, this.isActivityElement);
-      return mapValues(elements, this.addPublishFlags);
-    },
-    changesSincePublish() {
-      const { elementsWithPublishFlags, publishedRevisions } = this;
-      return this.unionElementsAndRevisions(elementsWithPublishFlags, publishedRevisions);
     },
     containerConfigs: vm => getSupportedContainers(vm.activity.type)
   },
@@ -112,11 +104,10 @@ export default {
       if (get(e, 'component.name') !== 'content-element') this.focusoutElement();
     },
     loadContents: loader(function () {
-      const { contentContainers, activityId } = this;
-      const ids = contentContainers.map(it => it.id);
-      if (ids.length <= 0) return;
+      const { activityId, containerIds } = this;
+      if (containerIds.length <= 0) return;
       return Promise.all([
-        this.getContentElements({ ids }),
+        this.getContentElements({ ids: containerIds }),
         this.fetchComments({ activityId })
       ]);
     }, 'isLoading', 800),
@@ -160,52 +151,6 @@ export default {
         const element = this.$refs.activityContent.querySelector(elementId);
         element.scrollIntoView();
       }, timeout);
-    },
-    fetchRevisions() {
-      const modifiedElements = filter(this.elementsWithPublishFlags, 'isModified');
-      const query = {
-        activityIds: this.containerIds,
-        entityIds: map(modifiedElements, 'id'),
-        entity: 'CONTENT_ELEMENT',
-        publishedOn: this.activity.publishedAt
-      };
-      return revisionApi.fetch(this.repository.id, query)
-        .then(revisions => {
-          this.publishedRevisions = this.normalizeRevisions(revisions);
-        });
-    },
-    normalizeRevisions(revisions) {
-      return revisions.reduce((all, { state }) => ({
-        ...all,
-        [state.uid]: state
-      }), {});
-    },
-    unionElementsAndRevisions(elements, revisions) {
-      elements = cloneDeep(elements);
-      return assignWith(elements, revisions, (element, revision) => ({
-        ...element,
-        ...revision,
-        isRemoved: !element,
-        isPublished: !element || element.isPublished
-      }));
-    },
-    addPublishFlags(element) {
-      const isPublished = this.isElementPublished(element);
-      const isModified = isPublished && this.isElementModified(element);
-      return { ...element, isPublished, isModified };
-    },
-    isActivityElement(element) {
-      return this.containerIds.some(id => id === element.activityId);
-    },
-    isElementPublished(element) {
-      const createdAt = new Date(element.createdAt);
-      const publishedAt = new Date(this.activity.publishedAt);
-      return isAfter(publishedAt, createdAt);
-    },
-    isElementModified(element) {
-      const updatedAt = new Date(element.updatedAt);
-      const publishedAt = new Date(this.activity.publishedAt);
-      return isAfter(updatedAt, publishedAt);
     }
   },
   watch: {
@@ -238,7 +183,6 @@ export default {
     isPublishedPreview(isOn) {
       if (!isOn) return;
       this.editorChannel.emit(CE_FOCUS_EVENT);
-      this.fetchRevisions();
     }
   },
   async created() {
@@ -251,7 +195,8 @@ export default {
   },
   components: {
     ContentContainers,
-    ContentLoader
+    ContentLoader,
+    PublishDiffProvider
   }
 };
 </script>

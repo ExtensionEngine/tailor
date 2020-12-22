@@ -1,21 +1,21 @@
 <template>
   <div
     @click="onSelect"
-    :class="[changeSincePublish, {
+    :class="[element.changeSincePublish, {
       selected: activeUsers.length,
       focused: isFocused,
-      'published-preview': isPublishedPreview && changeSincePublish,
+      'published-preview': element.changeSincePublish,
       frame
     }]"
     class="content-element">
-    <div :class="{ visible: isPublishedPreview && changeSincePublish }" class="header d-flex">
+    <div :class="{ visible: element.changeSincePublish }" class="header d-flex">
       <v-chip
-        v-if="isPublishedPreview && changeSincePublish"
-        :text-color="element.isPublished ? 'secondary' : 'success'"
+        v-if="element.changeSincePublish"
+        :text-color="element.changeSincePublish === 'changed' ? 'secondary' : 'success'"
         color="blue-grey lighten-5"
         small round
         class="published-preview-chip ml-auto font-weight-medium text-capitalize">
-        {{ changeSincePublish }}
+        {{ element.changeSincePublish }}
       </v-chip>
     </div>
     <active-users :users="activeUsers" :size="20" class="active-users" />
@@ -58,7 +58,6 @@ import { getComponentName, getElementId } from './utils';
 import ActiveUsers from 'tce-core/ActiveUsers';
 import Discussion from './ElementDiscussion';
 import { mapChannels } from '@/plugins/radio';
-import { mapState } from 'vuex';
 
 export default {
   name: 'content-element',
@@ -81,24 +80,17 @@ export default {
   }),
   computed: {
     ...mapChannels({ editorBus: 'editor' }),
-    ...mapState('editor', ['isPublishedPreview']),
     id: vm => getElementId(vm.element),
     componentName: vm => getComponentName(vm.element.type),
     isEmbed: vm => !!vm.parent || !vm.element.uid,
     isHighlighted: vm => vm.isFocused || vm.isHovered,
     hasComments: vm => !!vm.element.comments?.length,
     elementBus: vm => vm.$radio.channel(`element:${vm.id}`),
-    currentUser: vm => vm.$getCurrentUser(),
-    changeSincePublish() {
-      if (!this.element.isPublished) return 'added';
-      if (this.element.isModified) return 'changed';
-      if (this.element.isRemoved) return 'removed';
-      return null;
-    }
+    currentUser: vm => vm.$getCurrentUser()
   },
   methods: {
     onSelect(e) {
-      if (this.isDisabled || e.component) return;
+      if (this.isDisabled || this.element.changeSincePublish || e.component) return;
       this.focus();
       e.component = { name: 'content-element', data: this.element };
     },
