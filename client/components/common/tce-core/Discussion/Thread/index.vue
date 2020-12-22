@@ -7,7 +7,8 @@
       <unseen-separator
         v-if="showUnseenSeparator(comment)"
         ref="unseen-separator"
-        @markSeen="markActivityThreadSeen" />
+        @markSeen="markSeen"
+        :unseen-comments-count="unseenThread.length" />
       <v-divider v-else class="thread-separator" />
       <thread-comment
         @update="onUpdate"
@@ -39,15 +40,15 @@ export default {
     showAll: { type: Boolean, default: false },
     minDisplayed: { type: Number, default: 5 },
     isActivityThread: { type: Boolean, default: false },
-    unseenActivityComments: { type: Array, required: true },
+    unseenComments: { type: Array, required: true },
     user: { type: Object, required: true }
   },
   data: () => ({ isVisible: false }),
   computed: {
     isEditor: vm => vm.$route.name === 'editor',
     visibleItems: vm => vm.showAll ? vm.items : takeRgt(vm.items, vm.minDisplayed),
-    unseenActivityThread: vm => orderBy(vm.unseenActivityComments, 'createdAt', 'asc'),
-    firstUnseenComment: vm => vm.unseenActivityThread[0]
+    unseenThread: vm => orderBy(vm.unseenComments, 'createdAt', 'asc'),
+    firstUnseenComment: vm => vm.unseenThread[0]
   },
   methods: {
     onUpdate(comment, content) {
@@ -62,29 +63,32 @@ export default {
       return !isAuthor && firstUnseenComment?.id === id;
     },
     onIntersect(_entries, _observer, isIntersected) {
-      if (!this.isActivityThread) return;
       this.isVisible = isIntersected;
     },
     scrollToFirstUnseen() {
-      if (!this.unseenActivityThread.length) return;
+      this.$emit('showAll', true);
       this.$nextTick(() => {
         const element = this.$refs['unseen-separator'][0].$el;
         if (!element) return;
-        element.scrollIntoView();
+        element.scrollIntoView({ behavior: 'smooth' });
       });
     },
-    markActivityThreadSeen() {
+    markSeen() {
       this.$emit('markSeen');
       this.$emit('showAll', false);
     }
   },
   watch: {
-    isVisible: 'scrollToFirstUnseen',
-    unseenActivityThread: {
+    isVisible(val) {
+      const { unseenThread, minDisplayed } = this;
+      if (!val || !unseenThread.length) return;
+      if (unseenThread.length < minDisplayed) return;
+      this.scrollToFirstUnseen();
+    },
+    unseenThread: {
       immediate: true,
-      handler(activityComments) {
-        if (activityComments.length < this.minDisplayed) return;
-        this.$emit('showAll', true);
+      handler(unseenComments) {
+        if (unseenComments.length < this.minDisplayed) return;
         this.scrollToFirstUnseen();
       }
     }
@@ -104,7 +108,7 @@ export default {
   position: relative;
 
   ::v-deep .unseen-separator .v-divider {
-    margin: 0.75rem 0;
+    margin: 1.5rem 0 0;
   }
 
   .thread-separator {

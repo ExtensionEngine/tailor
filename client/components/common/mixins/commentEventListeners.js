@@ -26,7 +26,7 @@ export default {
       await this[action]({ ...comment, activityId: this.activityId });
       this.handleResolvement({ elementId: comment.contentElementId });
     },
-    setLastSeenComment({ timeout, ...payload }) {
+    setLastSeenComment({ timeout = 200, ...payload }) {
       setTimeout(() => this.markSeenComments(payload), timeout);
     }
   },

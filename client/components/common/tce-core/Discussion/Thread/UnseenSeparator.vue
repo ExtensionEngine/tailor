@@ -1,53 +1,46 @@
 <template>
   <div class="unseen-separator">
     <v-divider />
-    <v-btn @click="showSeenConfirmation = !showSeenConfirmation" x-small rounded>
-      Unseen
-    </v-btn>
-    <transition name="slide-fade">
-      <v-btn
-        v-if="showSeenConfirmation"
-        @click="$emit('markSeen')"
-        color="teal"
-        text x-small
-        class="seen-confirmation">
-        <v-icon size="16" class="mr-1">mdi-check</v-icon>
-        Mark All as Seen
-      </v-btn>
-    </transition>
+    <v-chip
+      @click="$emit('markSeen')"
+      @click:close="$emit('markSeen')"
+      close-icon="mdi-close"
+      color="teal"
+      small close outlined>
+      <v-icon size="14" class="mr-1">mdi-arrow-down</v-icon>
+      <span class="mr-2">{{ unseenCommentsLabel }}</span>
+    </v-chip>
   </div>
 </template>
 
 <script>
+import pluralize from 'pluralize';
+
 export default {
   name: 'unseen-separator',
-  data: () => ({ showSeenConfirmation: false })
+  props: {
+    unseenCommentsCount: { type: Number, default: 0 }
+  },
+  computed: {
+    unseenCommentsLabel: ({ unseenCommentsCount }) =>
+      `${unseenCommentsCount} new ${pluralize('message', unseenCommentsCount)}`
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .unseen-separator {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
+  text-align: center;
 
-  .v-divider {
-    width: 100%;
-  }
+  ::v-deep .v-chip.v-chip--outlined.v-chip {
+    margin: -1rem 0 0.5rem 0;
+    border-radius: 1rem !important;
+    background-color: #fafafa !important;
 
-  .v-btn--rounded {
-    width: 4.5rem;
-    margin: -1.375rem 0 0.5rem 0;
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
-  }
-
-  .seen-confirmation {
-    margin-bottom: 0.5rem;
-  }
-
-  .slide-fade-enter, .slide-fade-leave-to {
-    transform: translateX(0.625rem);
-    opacity: 0;
+    .v-chip__content .v-chip__close {
+      margin-top: 0.125rem;
+      font-size: 0.75rem !important;
+    }
   }
 }
 </style>

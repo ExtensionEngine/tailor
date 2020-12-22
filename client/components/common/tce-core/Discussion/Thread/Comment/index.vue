@@ -4,21 +4,14 @@
       <img :src="author.imgUrl">
     </v-avatar>
     <div class="comment-body pl-3">
-      <div class="header">
-        <span class="author">
-          {{ author.fullName || author.email }}
-          <v-icon v-if="isEdited && !comment.resolved" size="16" class="ml-1 pb-1">
-            mdi-pencil-outline
-          </v-icon>
-        </span>
-      </div>
+      <comment-header v-bind="comment" :author="author" :is-edited="isEdited" />
       <text-editor
         v-model="content"
         :is-focused="isEditing"
         :show-preview="!isEditing"
         :resolved="comment.resolved"
         class="content" />
-      <span v-if="isEditing" class="float-right">
+      <span v-if="isEditing" class="float-left">
         <v-btn @click="reset" text small>Cancel</v-btn>
         <v-btn
           @click="save"
@@ -28,42 +21,24 @@
           <v-icon class="pr-1">mdi-check</v-icon> Save
         </v-btn>
       </span>
-      <v-tooltip v-else right>
-        <template v-slot:activator="{ on }">
-          <span v-on="on">
-            <timeago
-              :datetime="comment.createdAt"
-              :auto-update="60"
-              class="time" />
-          </span>
-        </template>
-        <span>{{ comment.createdAt | formatDate('M/D/YY h:mm A') }}</span>
-      </v-tooltip>
     </div>
-    <v-menu v-if="showOptions" bottom left offset-y>
-      <template v-slot:activator="{ on }">
-        <v-btn v-on="on" icon x-small>
-          <v-icon>mdi-dots-vertical</v-icon>
-        </v-btn>
-      </template>
-      <v-list dense>
-        <v-list-item
-          v-for="{ name, action, icon } in options"
-          :key="name"
-          @mousedown.prevent="action">
-          <v-list-item-title class="text-left">
-            <v-icon small class="pr-1">{{ icon }}</v-icon>
-            {{ name }}
-          </v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-menu>
+    <div v-if="showOptions" class="actions">
+      <v-btn
+        v-for="{ name, action, icon } in options"
+        :key="name"
+        @click="action"
+        x-small icon
+        class="mr-1">
+        <v-icon size="14" color="grey">{{ icon }}</v-icon>
+      </v-btn>
+    </div>
   </div>
 </template>
 
 <script>
+import CommentHeader from './Header';
 import { focus } from 'vue-focus';
-import TextEditor from '../TextEditor';
+import TextEditor from '../../TextEditor';
 
 export default {
   name: 'thread-comment',
@@ -82,8 +57,8 @@ export default {
     isAuthor: vm => vm.author.id === vm.user.id,
     showOptions: vm => vm.isAuthor && !vm.isDeleted && !vm.comment.resolved,
     options: vm => [
-      { name: 'Edit', action: vm.toggleEdit, icon: 'mdi-pencil' },
-      { name: 'Remove', action: vm.remove, icon: 'mdi-delete' }]
+      { name: 'Edit', action: vm.toggleEdit, icon: 'mdi-pencil-outline' },
+      { name: 'Remove', action: vm.remove, icon: 'mdi-trash-can-outline' }]
   },
   methods: {
     toggleEdit() {
@@ -109,14 +84,13 @@ export default {
     }
   },
   directives: { focus },
-  components: { TextEditor }
+  components: { CommentHeader, TextEditor }
 };
 </script>
 
 <style lang="scss" scoped>
 .comment {
   display: flex;
-  position: relative;
   font-family: Roboto, Arial, sans-serif;
 
   &-avatar {
@@ -129,22 +103,8 @@ export default {
     flex: 1;
   }
 
-  .author {
-    color: #000;
-    font-size: 1rem;
-  }
-
   .content {
     margin: 0.375rem 0 0 0;
   }
-
-  .time {
-    color: #888;
-    font-size: 0.75rem;
-  }
-}
-
-.v-menu__content {
-  cursor: pointer !important;
 }
 </style>
