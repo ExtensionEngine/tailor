@@ -55,7 +55,6 @@ export default {
 
 <style lang="scss" scoped>
 .activity-discussion {
-  position: relative;
   margin: 1rem 0 1.75rem;
   padding: 0.375rem 1rem;
   border: 1px solid #bbb;
