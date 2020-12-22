@@ -8,7 +8,7 @@
       color="teal"
       small close outlined>
       <v-icon size="14" class="mr-1">mdi-arrow-down</v-icon>
-      {{ unseenCommentsLabel }}
+      <span class="mr-2">{{ unseenCommentsLabel }}</span>
     </v-chip>
   </div>
 </template>
@@ -37,7 +37,7 @@ export default {
     border-radius: 1rem !important;
     background-color: #fafafa !important;
 
-    .v-chip__close.v-icon {
+    .v-chip__content .v-chip__close {
       margin-top: 0.125rem;
       font-size: 0.75rem !important;
     }

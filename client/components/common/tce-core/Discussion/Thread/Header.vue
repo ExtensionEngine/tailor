@@ -1,21 +1,23 @@
 <template>
   <div class="header">
+    <div class="d-block">
+      <v-tooltip right>
+        <template v-slot:activator="{ on }">
+          <span v-on="authorLabel.length > 25 ? on : null" class="author">
+            {{ authorLabel | truncate(25) }}
+          </span>
+        </template>
+        {{ authorLabel }}
+      </v-tooltip>
+      <span v-if="isEdited" class="edited">(edited)</span>
+    </div>
     <v-tooltip right>
       <template v-slot:activator="{ on }">
-        <span v-on="authorLabel.length > 25 ? on : null" class="author">
-          {{ authorLabel | truncate(25) }}
+        <span v-on="on" class="mb-0">
+          <timeago :datetime="createdAt" :auto-update="60" class="time" />
         </span>
       </template>
-      {{ authorLabel }}
-    </v-tooltip>
-    <span v-if="isEdited" class="edited">(edited)</span>
-    <v-tooltip right>
-      <template v-slot:activator="{ on }">
-        <p v-on="on" class="mb-0">
-          <timeago :datetime="createdAt" :auto-update="60" class="time" />
-        </p>
-      </template>
-      <span>{{ createdAt | formatDate('M/D/YY h:mm A') }}</span>
+      <span>{{ createdAt | formatDate('DD. MMM h:mm A') }}</span>
     </v-tooltip>
   </div>
 </template>
@@ -26,7 +28,7 @@ export default {
   props: {
     author: { type: Object, required: true },
     isEdited: { type: Boolean, default: false },
-    createdAt: { type: String, required: true }
+    createdAt: { type: [Number, String], required: true }
   },
   computed: {
     authorLabel: vm => vm.author.fullName || vm.author.email
@@ -41,12 +43,7 @@ export default {
     font-size: 1rem;
   }
 
-  .edited {
-    color: grey;
-    font-size: 0.75rem;
-  }
-
-  .time {
+  .edited, .time {
     color: #888;
     font-size: 0.75rem;
   }

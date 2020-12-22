@@ -4,7 +4,10 @@
       <img :src="author.imgUrl">
     </v-avatar>
     <div class="comment-body pl-3">
-      <comment-header v-bind="{ author, isEdited, createdAt: comment.createdAt }" />
+      <comment-header
+        :author="author"
+        :is-edited="isEdited"
+        :created-at="comment.createdAt" />
       <text-editor
         v-model="content"
         :is-focused="isEditing"
@@ -25,7 +28,7 @@
       <v-btn
         v-for="{ name, action, icon } in options"
         :key="name"
-        @mousedown.prevent="action"
+        @click="action"
         x-small icon
         class="mr-1">
         <v-icon size="14" color="grey">{{ icon }}</v-icon>
@@ -105,9 +108,5 @@ export default {
   .content {
     margin: 0.375rem 0 0 0;
   }
-}
-
-.v-menu__content {
-  cursor: pointer !important;
 }
 </style>
