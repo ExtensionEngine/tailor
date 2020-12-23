@@ -4,7 +4,6 @@
     :class="[element.changeSincePublish, {
       selected: activeUsers.length,
       focused: isFocused,
-      'published-preview': element.changeSincePublish,
       frame
     }]"
     class="content-element">
@@ -14,7 +13,7 @@
         :text-color="element.changeSincePublish === 'changed' ? 'secondary' : 'success'"
         color="blue-grey lighten-5"
         small round
-        class="published-preview-chip ml-auto font-weight-medium text-capitalize">
+        class="published-preview-chip readonly ml-auto font-weight-medium text-capitalize">
         {{ element.changeSincePublish }}
       </v-chip>
     </div>
@@ -216,14 +215,12 @@ export default {
   left: 0;
 }
 
-.published-preview {
-  &.added {
-    @include highlight(var(--v-success-lighten2));
-  }
+.added {
+  @include highlight(var(--v-success-lighten2));
+}
 
-  &.changed, &.removed {
-    @include highlight(var(--v-secondary-lighten4));
-  }
+.changed, .removed {
+  @include highlight(var(--v-secondary-lighten4));
 }
 
 .header {
