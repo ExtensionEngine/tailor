@@ -13,7 +13,7 @@ import {
   ValidationProvider
 } from 'vee-validate';
 import FileFilter from '@/directives/file-filter';
-import OidcClient from './OidcCLient';
+import OidcClient from './OidcClient';
 import QuestionContainer from 'tce-core/QuestionContainer';
 import { sync } from 'vuex-router-sync';
 import Radio from '@/plugins/radio';

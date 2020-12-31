@@ -1,6 +1,6 @@
 import path from 'path';
 
-class OidcCLient {
+class OidcClient {
   constructor() {
     this.enabled = process.env.OIDC_ENABLED;
     this.baseUrl = path.join(process.env.API_PATH, '/oidc');
@@ -40,9 +40,9 @@ class OidcCLient {
         window.document.body.removeChild(iframe);
         resolve('auth:success');
       });
-      iframe.contentWindow.addEventListener('auth:error', e => {
+      iframe.contentWindow.addEventListener('auth:fail', e => {
         window.document.body.removeChild(iframe);
-        reject(new Error('auth:error'));
+        reject(new Error('auth:fail'));
       });
     });
   }
@@ -50,7 +50,7 @@ class OidcCLient {
 
 export default {
   install(Vue) {
-    const oidcClient = new OidcCLient();
+    const oidcClient = new OidcClient();
     Vue.prototype.$oidc = oidcClient;
     Vue.oidc = oidcClient;
   }
