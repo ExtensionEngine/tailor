@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "@extensionengine/tce-jodit": "github:extensionengine/tce-jodit#eede0d3b144c29b",
+    "@extensionengine/tce-scorm": "github:ExtensionEngine/tce-scorm#41efb8ca1dfddd2",
     "@mdi/font": "^4.8.95",
     "@ungap/global-this": "^0.4.0",
     "JSONStream": "^1.3.5",
@@ -103,6 +104,7 @@
     "morgan": "^1.9.0",
     "multer": "^1.4.2",
     "mustache": "^3.2.1",
+    "node-rsa": "^1.1.1",
     "openid-client": "^4.2.1",
     "p-min-delay": "^3.1.0",
     "passport": "^0.4.1",
@@ -132,7 +134,6 @@
     "untildify": "^4.0.0",
     "url-join": "^4.0.1",
     "url-parse": "^1.4.7",
-    "url-regex": "^5.0.0",
     "v-hotkey": "^0.8.0",
     "validator": "^13.1.17",
     "vee-validate": "^3.3.0",

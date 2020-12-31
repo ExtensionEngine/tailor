@@ -1,36 +1,56 @@
 'use strict';
 
 const { getFileUrl, saveFile } = require('./');
-const { ASSET_ROOT } = require('./helpers');
-const crypto = require('crypto');
-const fs = require('fs');
+const { readFile, sha256 } = require('./util');
+const config = require('../../../config/server').storage;
+const fecha = require('fecha');
+const fromPairs = require('lodash/fromPairs');
+const JSZip = require('jszip');
+const mime = require('mime-types');
 const path = require('path');
+const pickBy = require('lodash/pickBy');
+
+const getStorageUrl = key => `${config.protocol}${key}`;
 
 function getUrl(req, res) {
   const { query: { key } } = req;
   return getFileUrl(key).then(url => res.json({ url }));
 }
 
-async function upload({ file }, res) {
-  const buffer = await readFile(file);
-  const hash = sha256(file.originalname, buffer);
-  const extension = path.extname(file.originalname);
-  const name = path.basename(file.originalname, extension).substring(0, 180).trim();
-  const key = path.join(ASSET_ROOT, `${hash}___${name}${extension}`);
-  await saveFile(key, buffer, { ContentType: file.mimetype });
-  const publicUrl = await getFileUrl(key);
-  return res.json({ key, url: `storage://${key}`, publicUrl });
+async function upload({ file, body, user }, res) {
+  const { name } = path.parse(file.originalname);
+  if (body.unpack) {
+    const timestamp = fecha.format(new Date(), 'YYYY-MM-DDTHH:mm:ss');
+    const root = `${timestamp}__${user.id}__${name}`;
+    const assets = await uploadArchiveContent(file, root);
+    return res.json({ root, assets });
+  }
+  const asset = await uploadFile(file, name);
+  return res.json(asset);
 }
 
 module.exports = { getUrl, upload };
 
-function readFile(file) {
-  if (file.buffer) return Promise.resolve(file.buffer);
-  return fs.readFile(file.path);
+async function uploadFile(file, name) {
+  const buffer = await readFile(file);
+  const hash = sha256(file.originalname, buffer);
+  const extension = path.extname(file.originalname);
+  const key = path.join(config.path, `${hash}___${name}${extension}`);
+  await saveFile(key, buffer, { ContentType: file.mimetype });
+  const publicUrl = await getFileUrl(key);
+  return { key, publicUrl, url: getStorageUrl(key) };
 }
 
-function sha256(...args) {
-  const hash = crypto.createHash('sha256');
-  args.forEach(arg => hash.update(arg));
-  return hash.digest('hex');
+async function uploadArchiveContent(archive, name) {
+  const buffer = await readFile(archive);
+  const content = await JSZip.loadAsync(buffer);
+  const files = pickBy(content.files, it => !it.dir);
+  const keys = await Promise.all(Object.keys(files).map(async src => {
+    const key = path.join(config.path, `${name}/${src}`);
+    const file = await content.file(src).async('uint8array');
+    const mimeType = mime.lookup(src);
+    await saveFile(key, Buffer.from(file), { ContentType: mimeType });
+    return [key, getStorageUrl(key)];
+  }));
+  return fromPairs(keys);
 }

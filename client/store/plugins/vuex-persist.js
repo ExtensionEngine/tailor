@@ -1,18 +1,32 @@
+import isEmpty from 'lodash/isEmpty';
 import VuexPersistence from 'vuex-persist';
 
 const OBSERVED_MUTATIONS = [
   'repository/comments/markSeenComments'
 ];
 
+const STORAGE_KEY = 'TAILOR_APP_STATE';
+migrateSeenState();
+
 export default new VuexPersistence({
-  key: 'TAILOR_APP_STATE',
-  reducer: state => ({
+  key: STORAGE_KEY,
+  reducer: ({ repository }) => ({
     repository: {
-      comments: {
-        seenByActivity: state.repository.comments.seenByActivity
-      }
+      comments: { seen: repository.comments.seen }
     }
   }),
   storage: window.localStorage,
   filter: mutation => OBSERVED_MUTATIONS.includes(mutation.type)
 }).plugin;
+
+function migrateSeenState() {
+  const storage = window.localStorage;
+  const state = JSON.parse(storage.getItem(STORAGE_KEY));
+  if (!state) return;
+  const { seenByActivity } = state?.repository?.comments || {};
+  if (!isEmpty(seenByActivity)) {
+    state.repository.comments.seen = { activity: seenByActivity };
+  }
+  if (seenByActivity) delete state.repository.comments.seenByActivity;
+  storage.setItem(STORAGE_KEY, JSON.stringify(state));
+}

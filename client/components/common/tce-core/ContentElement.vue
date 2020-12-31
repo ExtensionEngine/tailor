@@ -15,12 +15,24 @@
       @delete="$emit('delete')"
       @focus="onSelect"
       :id="`element_${id}`"
-      v-bind="$attrs"
-      :element="element"
-      :is-focused="isFocused"
-      :is-dragged="isDragged"
-      :is-disabled="isDisabled"
-      :dense="dense" />
+      v-bind="{ ...$attrs, element, isFocused, isDragged, isDisabled, dense }" />
+    <div v-if="!isDisabled" class="element-actions">
+      <div
+        v-if="showDiscussion"
+        :class="{ 'is-visible': isHighlighted || hasComments }">
+        <discussion v-bind="element" :user="currentUser" />
+      </div>
+      <div
+        v-if="!parent"
+        :class="{ 'is-visible': isHighlighted }">
+        <v-btn
+          @click="$emit('delete')"
+          color="pink lighten-1"
+          dark icon x-small>
+          <v-icon size="20">mdi-delete-outline</v-icon>
+        </v-btn>
+      </div>
+    </div>
     <v-progress-linear
       v-if="isSaving"
       height="2"
@@ -33,6 +45,7 @@
 <script>
 import { getComponentName, getElementId } from './utils';
 import ActiveUsers from 'tce-core/ActiveUsers';
+import Discussion from './ElementDiscussion';
 import { mapChannels } from '@/plugins/radio';
 
 export default {
@@ -42,10 +55,12 @@ export default {
   props: {
     element: { type: Object, required: true },
     parent: { type: Object, default: null },
+    isHovered: { type: Boolean, default: false },
     isDragged: { type: Boolean, default: false },
     isDisabled: { type: Boolean, default: false },
     frame: { type: Boolean, default: true },
-    dense: { type: Boolean, default: false }
+    dense: { type: Boolean, default: false },
+    showDiscussion: { type: Boolean, default: false }
   },
   data: () => ({
     isFocused: false,
@@ -57,6 +72,8 @@ export default {
     id: vm => getElementId(vm.element),
     componentName: vm => getComponentName(vm.element.type),
     isEmbed: vm => !!vm.parent || !vm.element.uid,
+    isHighlighted: vm => vm.isFocused || vm.isHovered,
+    hasComments: vm => !!vm.element.comments?.length,
     elementBus: vm => vm.$radio.channel(`element:${vm.id}`),
     currentUser: vm => vm.$getCurrentUser()
   },
@@ -101,11 +118,9 @@ export default {
     });
   },
   provide() {
-    return {
-      $elementBus: this.elementBus
-    };
+    return { $elementBus: this.elementBus };
   },
-  components: { ActiveUsers }
+  components: { ActiveUsers, Discussion }
 };
 </script>
 
@@ -150,6 +165,28 @@ export default {
 .frame {
   padding: 10px 20px;
   border: 1px solid #e1e1e1;
+}
+
+.element-actions {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: -0.0625rem;
+  right: -1.25rem;
+  width: 1.5rem;
+  height: 100%;
+  padding-left: 0.75rem;
+
+  > * {
+    min-height: 1.75rem;
+    opacity: 0;
+    transition: opacity 0.1s linear;
+  }
+
+  > .is-visible {
+    opacity: 1;
+    transition: opacity 0.5s linear;
+  }
 }
 
 .active-users {

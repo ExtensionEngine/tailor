@@ -25,7 +25,7 @@
       :name="name"
       :container="container"
       :activities="activities"
-      :elements="elements"
+      :elements="processedElements"
       :tes="elements"
       :position="index"
       v-bind="$attrs" />
@@ -54,7 +54,8 @@ export default {
   inheritAttrs: false,
   inject: ['$ccRegistry'],
   props: {
-    containerGroup: { type: Array, default() { return []; } },
+    containerGroup: { type: Array, default: () => ({}) },
+    processedElements: { type: Object, required: true },
     type: { type: String, required: true },
     templateId: { type: String, default: null },
     parentId: { type: Number, required: true },
@@ -70,12 +71,8 @@ export default {
       const id = getContainerTemplateId(this);
       return getContainerName(this.$ccRegistry.get(id) ? id : 'DEFAULT');
     },
-    name() {
-      return this.label.toLowerCase();
-    },
-    addBtnEnabled() {
-      return !(!this.multiple && this.containerGroup.length);
-    },
+    name: vm => vm.label.toLowerCase(),
+    addBtnEnabled: vm => !(!vm.multiple && vm.containerGroup.length),
     nextPosition() {
       const last = get(maxBy(this.containerGroup, 'position'), 'position', 0);
       return last + 1;
@@ -108,18 +105,19 @@ export default {
       const context = { items, newPosition, isFirstChild };
       this.reorderElements({ element, context });
     },
-    requestDeletion(content, action, name) {
+    requestDeletion(content, action, name, onDelete = () => null) {
       this.showConfirmationModal({
         title: `Delete ${name}?`,
         message: `Are you sure you want to delete ${name}?`,
-        action: () => this[action](content)
+        action: () => this[action](content).then(onDelete)
       });
     },
     requestContainerDeletion(container, name = this.name) {
       this.requestDeletion(container, 'remove', name);
     },
     requestElementDeletion(element) {
-      this.requestDeletion(element, 'deleteElement', 'element');
+      const onDelete = () => this.$emit('focusoutElement');
+      this.requestDeletion(element, 'deleteElement', 'element', onDelete);
     },
     showNotification: throttle(function () {
       this.$snackbar.show('Element saved');

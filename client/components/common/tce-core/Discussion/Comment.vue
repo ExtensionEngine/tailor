@@ -20,7 +20,7 @@
       <span v-if="isEditing" class="float-right">
         <v-btn @click="reset" text small>Cancel</v-btn>
         <v-btn @click="save" :disabled="!content.trim()" color="green" text small>
-          <v-icon class="pr-1">mdi-check</v-icon> Save changes
+          <v-icon class="pr-1">mdi-check</v-icon> Save
         </v-btn>
       </span>
       <v-tooltip v-else right>
@@ -58,28 +58,24 @@
 
 <script>
 import { focus } from 'vue-focus';
-import { mapState } from 'vuex';
 import TextEditor from './TextEditor';
 
 export default {
   name: 'thread-comment',
   props: {
-    comment: { type: Object, required: true }
+    comment: { type: Object, required: true },
+    user: { type: Object, required: true }
   },
   data: vm => ({ isEditing: false, content: vm.comment.content }),
   computed: {
-    ...mapState({ user: state => state.auth.user }),
     author: vm => vm.comment.author,
     isEdited: vm => vm.comment.createdAt !== vm.comment.updatedAt,
     isDeleted: vm => !!vm.comment.deletedAt,
     isAuthor: vm => vm.author.id === vm.user.id,
     showOptions: vm => vm.isAuthor && !vm.isDeleted,
-    options() {
-      return [
-        { name: 'Edit', action: this.toggleEdit, icon: 'mdi-pencil' },
-        { name: 'Remove', action: this.remove, icon: 'mdi-delete' }
-      ];
-    }
+    options: vm => [
+      { name: 'Edit', action: vm.toggleEdit, icon: 'mdi-pencil' },
+      { name: 'Remove', action: vm.remove, icon: 'mdi-delete' }]
   },
   methods: {
     toggleEdit() {
@@ -101,9 +97,7 @@ export default {
   watch: {
     comment: {
       deep: true,
-      handler() {
-        this.reset();
-      }
+      handler: 'reset'
     }
   },
   directives: { focus },

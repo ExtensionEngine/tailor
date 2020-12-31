@@ -36,6 +36,7 @@ const devServer = {
   },
   proxy: {
     '/api': { target: serverUrl },
+    '/proxy': serverUrl,
     ...(STORAGE_PATH ? { '/repository': serverUrl } : {})
   },
   // Override using: `npm run dev:server -- --port <number>`

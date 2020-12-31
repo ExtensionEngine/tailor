@@ -1,12 +1,9 @@
 <template>
   <div class="inline-activator">
     <hr>
-    <v-chip
-      color="blue-grey darken-4"
-      label dark small
-      class="pa-1">
-      <v-icon>mdi-plus</v-icon>
-    </v-chip>
+    <v-avatar color="teal accent-4" size="22">
+      <v-icon dark>mdi-plus</v-icon>
+    </v-avatar>
     <hr>
   </div>
 </template>
@@ -17,7 +14,7 @@
   align-items: center;
   width: 100%;
   margin: 0;
-  padding: 0 50px;
+  padding: 0 3.125rem;
   opacity: 0;
   transition: opacity 0.3s, padding 0.3s;
   cursor: pointer;
@@ -25,17 +22,12 @@
   hr {
     flex: 1;
     display: inline-flex;
-    height: 1px;
     margin: 0;
-    background-color: #90a4ae;
-  }
-
-  .v-chip {
-    margin: 0;
+    border-top: 0.0625rem dashed #1de9b6;
   }
 
   &:hover {
-    padding: 10px 0;
+    padding: 0.75rem 0;
     opacity: 1;
     transition: opacity 0.3s 0.25s, padding 0.3s 0.1s;
   }
