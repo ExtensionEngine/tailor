@@ -34,19 +34,25 @@ const CC_ATTRS = ['id', 'uid', 'type', 'position', 'createdAt', 'updatedAt'];
 function publishActivity(activity) {
   return getStructureData(activity).then(data => {
     const { repository, predecessors, spine } = data;
+
     predecessors.forEach(it => {
       const exists = find(spine.structure, { id: it.id });
       if (!exists) addToSpine(spine, it);
     });
+
     activity.publishedAt = new Date();
     addToSpine(spine, activity);
-    return publishContent(activity).then(content => {
-      attachContentSummary(find(spine.structure, { id: activity.id }), content);
-      return saveSpine(spine)
-        .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
-        .then(() => updatePublishingStatus(repository, activity))
-        .then(() => activity.save());
-    });
+
+    return cleanActivityFolder(repository, activity)
+      .then(() => publishContent(activity))
+      .then(content => {
+        const publishedData = find(spine.structure, { id: activity.id });
+        return attachContentSummary(publishedData, content);
+      })
+      .then(() => saveSpine(spine))
+      .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
+      .then(() => updatePublishingStatus(repository, activity))
+      .then(() => activity.save());
   });
 }
 
@@ -137,6 +143,11 @@ function publishContainers(parent) {
       const { id, publishedAs = 'container' } = it;
       return saveFile(parent, `${id}.${publishedAs}`, it).then(() => it);
     });
+}
+
+function cleanActivityFolder(repository, activity) {
+  const path = getBaseUrl(repository.id, activity.id);
+  return storage.cleanFolder(path);
 }
 
 function fetchContainers(parent) {

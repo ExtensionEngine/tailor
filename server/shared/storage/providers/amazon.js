@@ -96,8 +96,8 @@ class Amazon {
   }
 
   // API docs: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#listObjects-property
-  listFiles(options = {}) {
-    const params = Object.assign(options, { Bucket: this.bucket });
+  listFiles(key, options = {}) {
+    const params = Object.assign(options, { Bucket: this.bucket, Prefix: key });
     return this.client.listObjects(params).promise();
   }
 
@@ -112,6 +112,17 @@ class Amazon {
     const expires = options.expires || DEFAULT_EXPIRATION_TIME;
     const params = Object.assign(options, { Bucket: this.bucket, Key: key, Expires: expires });
     return this.client.getSignedUrlPromise('getObject', params);
+  }
+
+  // API docs: https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#deleteObjects-property
+  cleanFolder(key) {
+    return this.listFiles(key).then(({ Contents: files }) => {
+      if (!files.length) return;
+
+      const objects = files.map(file => ({ Key: file.Key }));
+      const params = { Bucket: this.bucket, Delete: { Objects: objects } };
+      return this.client.deleteObjects(params).promise();
+    });
   }
 }
 

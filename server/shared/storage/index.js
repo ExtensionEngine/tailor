@@ -50,6 +50,10 @@ class Storage {
     return this.provider.copyFile(key, newKey, options);
   }
 
+  cleanFolder(key) {
+    return this.provider.cleanFolder(key);
+  }
+
   static createProvider(options) {
     // Validate provider name.
     const providerName = options.provider;
