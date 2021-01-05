@@ -1,5 +1,7 @@
 import path from 'path';
 
+const SILENT_REFRESH_TIMEOUT = 5000;
+
 class OidcClient {
   constructor() {
     this.enabled = process.env.OIDC_ENABLED;
@@ -46,16 +48,16 @@ class OidcClient {
       iframe.style.height = 0;
       iframe.src = this._getSilentUrl();
       window.document.body.appendChild(iframe);
-      iframe.contentWindow.addEventListener('auth:success', e => {
-        window.document.body.removeChild(iframe);
-        this.active = true;
-        resolve('auth:success');
-      });
-      iframe.contentWindow.addEventListener('auth:fail', e => {
-        window.document.body.removeChild(iframe);
-        this.active = false;
-        reject(new Error('auth:fail'));
-      });
+      const removeElement = () => window.document.body.removeChild(iframe);
+      const getCallback = (success = true) => () => {
+        clearTimeout(this._silentRefreshTimeout);
+        removeElement();
+        this.active = success;
+        return success ? resolve('auth:success') : reject(new Error('auth:fail'));
+      };
+      iframe.contentWindow.addEventListener('auth:success', getCallback());
+      iframe.contentWindow.addEventListener('auth:fail', getCallback(false));
+      this._silentRefreshTimeout = setTimeout(getCallback(false), SILENT_REFRESH_TIMEOUT);
     });
   }
 }
