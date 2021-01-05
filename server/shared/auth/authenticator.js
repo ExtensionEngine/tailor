@@ -44,9 +44,9 @@ class Auth extends Authenticator {
         audience: Audience.Scope.Access,
         expiresIn: '5 days'
       });
-      const { name, signed, secure } = config.jwt.cookie;
+      const { name, signed, secure, httpOnly } = config.jwt.cookie;
       const expires = addDays(new Date(), 5);
-      res.cookie(name, token, { signed, secure, expires });
+      res.cookie(name, token, { signed, secure, expires, httpOnly });
       return next();
     };
   }
