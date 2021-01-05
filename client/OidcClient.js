@@ -18,12 +18,22 @@ class OidcClient {
     return url;
   }
 
+  _getLogoutUrl() {
+    const url = new URL(this.baseUrl, window.location.href);
+    url.searchParams.set('action', 'logout');
+    return url;
+  }
+
   authenticate() {
     window.location.replace(this.baseUrl);
   }
 
   reauthenticate() {
     window.location.replace(this._getResignUrl());
+  }
+
+  logout() {
+    window.location.replace(this._getLogoutUrl());
   }
 
   slientlyRefresh() {
@@ -38,10 +48,12 @@ class OidcClient {
       window.document.body.appendChild(iframe);
       iframe.contentWindow.addEventListener('auth:success', e => {
         window.document.body.removeChild(iframe);
+        this.active = true;
         resolve('auth:success');
       });
       iframe.contentWindow.addEventListener('auth:fail', e => {
         window.document.body.removeChild(iframe);
+        this.active = false;
         reject(new Error('auth:fail'));
       });
     });

@@ -1,6 +1,6 @@
 'use strict';
 
-const { authenticate } = require('../shared/auth');
+const { authenticate, logout } = require('../shared/auth');
 const { BAD_REQUEST } = require('http-status-codes');
 const { errors: OIDCError } = require('openid-client');
 const path = require('path');
@@ -17,6 +17,7 @@ const scope = ['openid', 'profile', 'email'].join(' ');
 
 const isSilentAuth = req => req.query.silent === 'true';
 const isResign = req => req.query.resign === 'true';
+const isLogoutRequest = req => req.query.action === 'logout';
 
 const getPrompt = req => {
   if (isResign(req)) return 'login';
@@ -28,9 +29,11 @@ const isOIDCError = err => OIDCErrors.some(Ctor => err instanceof Ctor);
 
 router
   .get('/', (req, res, next) => {
+    const strategy = req.passport.strategy('oidc');
+    if (isLogoutRequest(req)) return strategy.logout()(req, res, next);
     const prompt = getPrompt(req);
     const params = { scope, ...prompt && { prompt } };
-    if (req.query.silent === 'true') {
+    if (isSilentAuth(req)) {
       const strategy = req.passport.strategy('oidc');
       const callbackUri = new URL(strategy.options.callbackURL);
       callbackUri.searchParams.set('silent', 'true');
@@ -38,7 +41,12 @@ router
     }
     return authenticate('oidc', params)(req, res, next);
   })
-  .get('/callback', login)
+  .get('/callback',
+    (req, res, next) => {
+      if (!isLogoutRequest(req)) return login(req, res, next);
+      return logout({ middleware: true })(req, res, next);
+    },
+    (_, res) => res.redirect('/'))
   .use((err, req, res, next) => {
     if (!isOIDCError(err) && !isSilentAuth(req)) {
       return res.redirect(ACCESS_DENIED_ROUTE + err.email);
