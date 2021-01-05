@@ -28,7 +28,15 @@ module.exports = class OIDCStrategy extends BaseOIDCStrategy {
 
   logoutUrl(params = {}) {
     const { client } = this;
-    return client.endSessionUrl({ ...params, client_id: client.client_id });
+    const url = new URL(client.endSessionUrl({
+      ...params,
+      client_id: client.client_id
+    }));
+    const customRedirectUriKey = this.options.postLogoutUriKey;
+    if (!this.options.postLogoutUriKey) return url.href;
+    const redirectUri = url.searchParams.get('post_logout_redirect_uri');
+    url.searchParams.set(customRedirectUriKey, redirectUri);
+    return url.href;
   }
 
   logout(params) {

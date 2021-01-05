@@ -34,6 +34,7 @@ module.exports = {
     tokenEndpoint: env.OIDC_TOKEN_ENDPOINT,
     userInfoEndpoint: env.OIDC_USERINFO_ENDPOINT,
     logoutEndpoint: env.OIDC_LOGOUT_ENDPOINT,
+    postLogoutUriKey: env.OIDC_POST_LOGOUT_URI_KEY,
     enableSignup: yn(env.OIDC_ALLOW_SIGNUP),
     defaultRole: Object.values(role)
       .find(it => it === env.OIDC_DEFAULT_ROLE) || role.USER
