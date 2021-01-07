@@ -48,10 +48,10 @@ class OidcClient {
       iframe.style.height = 0;
       iframe.src = this._getSilentUrl();
       window.document.body.appendChild(iframe);
-      const removeElement = () => window.document.body.removeChild(iframe);
       const getCallback = (success = true) => () => {
         clearTimeout(this._silentRefreshTimeout);
-        removeElement();
+        this._silentRefreshTimeout = null;
+        window.document.body.removeChild(iframe);
         this.active = success;
         return success ? resolve('auth:success') : reject(new Error('auth:fail'));
       };
