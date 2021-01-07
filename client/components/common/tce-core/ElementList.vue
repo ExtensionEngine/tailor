@@ -6,6 +6,7 @@
       @update="reorder"
       :list="elements"
       v-bind="options"
+      :disabled="isPublishedPreview"
       class="row">
       <div
         v-for="(element, index) in elements"
@@ -22,7 +23,7 @@
         </slot>
       </div>
     </draggable>
-    <template v-if="enableAdd">
+    <template v-if="enableAdd && !isPublishedPreview">
       <slot
         :include="supportedTypes"
         :activity="activity"
@@ -50,6 +51,7 @@ import get from 'lodash/get';
 import { getElementId } from 'tce-core/utils';
 import last from 'lodash/last';
 import { mapChannels } from '@/plugins/radio';
+import { mapState } from 'vuex';
 
 const CE_FOCUS_EVENT = 'element:focus';
 
@@ -67,6 +69,7 @@ export default {
   data: () => ({ dragElementIndex: null }),
   computed: {
     ...mapChannels({ editorChannel: 'editor' }),
+    ...mapState('editor', ['isPublishedPreview']),
     options: vm => ({
       ...vm.dragOptions,
       handle: '.drag-handle',

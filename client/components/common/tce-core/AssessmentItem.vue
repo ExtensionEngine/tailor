@@ -12,6 +12,7 @@
       @save="save"
       @delete="$emit('delete')"
       :element="assessment"
+      :is-disabled="isDisabled"
       class="question-container">
       <template v-slot:default="{ isEditing }">
         <div class="px-6 d-flex justify-end">
@@ -38,6 +39,7 @@
       <span class="question">{{ question | truncate(50) }}</span>
       <v-btn
         @click.stop="$emit('delete')"
+        :class="{ disabled: isDisabled }"
         color="primary"
         icon
         class="delete">
@@ -64,7 +66,8 @@ export default {
   props: {
     assessment: { type: Object, required: true },
     expanded: { type: Boolean, default: false },
-    draggable: { type: Boolean, default: false }
+    draggable: { type: Boolean, default: false },
+    isDisabled: { type: Boolean, default: false }
   },
   data() {
     return { hover: false };
@@ -139,7 +142,7 @@ export default {
     opacity: 0;
   }
 
-  &.hover:not(.sortable-chosen) .delete {
+  &.hover:not(.sortable-chosen) .delete:not(.disabled) {
     opacity: 1;
   }
 }

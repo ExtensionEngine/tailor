@@ -7,13 +7,15 @@
       frame
     }]"
     class="content-element">
-    <div :class="{ visible: element.changeSincePublish }" class="header d-flex">
+    <div
+      :class="{ visible: isPublishedPreview && element.changeSincePublish }"
+      class="header d-flex">
       <v-chip
         v-if="element.changeSincePublish"
         :text-color="element.changeSincePublish === 'changed' ? 'secondary' : 'success'"
         color="blue-grey lighten-5"
         small round
-        class="published-preview-chip readonly ml-auto font-weight-medium text-capitalize">
+        class="readonly ml-auto font-weight-medium text-capitalize">
         {{ element.changeSincePublish }}
       </v-chip>
     </div>
@@ -26,7 +28,7 @@
       @focus="onSelect"
       :id="`element_${id}`"
       v-bind="{ ...$attrs, element, isFocused, isDragged, isDisabled, dense }" />
-    <div v-if="!isDisabled" class="element-actions">
+    <div v-if="!isDisabled && !isPublishedPreview" class="element-actions">
       <div
         v-if="showDiscussion"
         :class="{ 'is-visible': isHighlighted || hasComments }">
@@ -57,6 +59,7 @@ import { getComponentName, getElementId } from './utils';
 import ActiveUsers from 'tce-core/ActiveUsers';
 import Discussion from './ElementDiscussion';
 import { mapChannels } from '@/plugins/radio';
+import { mapState } from 'vuex';
 
 export default {
   name: 'content-element',
@@ -79,6 +82,7 @@ export default {
   }),
   computed: {
     ...mapChannels({ editorBus: 'editor' }),
+    ...mapState('editor', ['isPublishedPreview']),
     id: vm => getElementId(vm.element),
     componentName: vm => getComponentName(vm.element.type),
     isEmbed: vm => !!vm.parent || !vm.element.uid,
@@ -89,7 +93,7 @@ export default {
   },
   methods: {
     onSelect(e) {
-      if (this.isDisabled || this.element.changeSincePublish || e.component) return;
+      if (this.isDisabled || this.isPublishedPreview || e.component) return;
       this.focus();
       e.component = { name: 'content-element', data: this.element };
     },

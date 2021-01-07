@@ -28,6 +28,7 @@
       :elements="processedElements"
       :tes="elements"
       :position="index"
+      :is-disabled="isDisabled"
       v-bind="$attrs" />
     <div v-if="addBtnEnabled">
       <v-btn @click="addContainer" color="blue-grey darken-3" text class="mt-4">
@@ -62,7 +63,8 @@ export default {
     label: { type: String, required: true },
     required: { type: Boolean, default: true },
     multiple: { type: Boolean, default: false },
-    displayHeading: { type: Boolean, default: false }
+    displayHeading: { type: Boolean, default: false },
+    isDisabled: { type: Boolean, default: false }
   },
   computed: {
     ...mapState('repository/activities', { activities: 'items' }),
@@ -72,7 +74,7 @@ export default {
       return getContainerName(this.$ccRegistry.get(id) ? id : 'DEFAULT');
     },
     name: vm => vm.label.toLowerCase(),
-    addBtnEnabled: vm => !(!vm.multiple && vm.containerGroup.length),
+    addBtnEnabled: vm => !vm.isDisabled && !(!vm.multiple && vm.containerGroup.length),
     nextPosition() {
       const last = get(maxBy(this.containerGroup, 'position'), 'position', 0);
       return last + 1;

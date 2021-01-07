@@ -21,7 +21,8 @@
           v-bind="getContainerConfig(type)"
           :container-group="containerGroup"
           :processed-elements="processedElements"
-          :parent-id="activityId" />
+          :parent-id="activityId"
+          :is-disabled="isPublishedPreview" />
       </publish-diff-provider>
     </div>
   </div>
