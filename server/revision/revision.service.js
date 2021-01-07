@@ -1,4 +1,5 @@
 'use strict';
+
 const { Revision, Sequelize } = require('../shared/database');
 
 const { Op } = Sequelize;

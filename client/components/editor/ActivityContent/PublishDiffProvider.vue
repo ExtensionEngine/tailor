@@ -12,12 +12,10 @@ import merge from 'lodash/merge';
 import omit from 'lodash/omit';
 import revisionApi from '@/api/revision';
 
-function getPublishedState(revisions) {
-  return revisions.reduce((all, { state }) => ({
-    ...all,
-    [state.uid]: omit(state, ['createdAt', 'updatedAt'])
-  }), {});
-}
+const getPublishedState = revisions => revisions.reduce((all, { state }) => ({
+  ...all,
+  [state.uid]: omit(state, ['createdAt', 'updatedAt'])
+}), {});
 
 export default {
   name: 'publish-diff-provider',
