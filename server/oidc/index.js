@@ -19,10 +19,17 @@ const isSilentAuth = req => req.query.silent === 'true';
 const isResign = req => req.query.resign === 'true';
 const isLogoutRequest = req => req.query.action === 'logout';
 
-const getPrompt = req => {
-  if (isResign(req)) return 'login';
-  if (isSilentAuth(req)) return 'none';
-  return '';
+const getPromptParams = req => {
+  if (isResign(req)) return { prompt: 'login' };
+  if (isSilentAuth(req)) return { prompt: 'none' };
+  return {};
+};
+
+const getSilentAuthParams = req => {
+  const strategy = req.passport.strategy('oidc');
+  const callbackUri = new URL(strategy.options.callbackURL);
+  callbackUri.searchParams.set('silent', 'true');
+  return { redirect_uri: callbackUri.href };
 };
 
 const isOIDCError = err => OIDCErrors.some(Ctor => err instanceof Ctor);
@@ -31,14 +38,11 @@ router
   .get('/', (req, res, next) => {
     const strategy = req.passport.strategy('oidc');
     if (isLogoutRequest(req)) return strategy.logout()(req, res, next);
-    const prompt = getPrompt(req);
-    const params = { scope, ...prompt && { prompt } };
-    if (isSilentAuth(req)) {
-      const strategy = req.passport.strategy('oidc');
-      const callbackUri = new URL(strategy.options.callbackURL);
-      callbackUri.searchParams.set('silent', 'true');
-      params.redirect_uri = callbackUri.href;
-    }
+    const params = {
+      scope,
+      ...getPromptParams(req),
+      ...isSilentAuth && getSilentAuthParams(req)
+    };
     return authenticate('oidc', params)(req, res, next);
   })
   .get('/callback',
@@ -64,7 +68,11 @@ module.exports = {
 };
 
 function login(req, res, next) {
-  authenticate('oidc', { setCookie: true })(req, res, err => {
+  const params = {
+    setCookie: true,
+    ...(isSilentAuth(req) && getSilentAuthParams(req))
+  };
+  authenticate('oidc', params)(req, res, err => {
     if (err) return next(err);
     if (!isSilentAuth(req)) return res.redirect('/');
     const template = path.resolve(__dirname, './authenticated.mustache');
