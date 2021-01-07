@@ -22,13 +22,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.default {
+.default-activator-state {
   padding: 0 50px;
   opacity: 0;
 }
 
 .inline-activator {
-  @extend .default;
+  @extend .default-activator-state;
 
   display: flex;
   align-items: center;
@@ -57,7 +57,7 @@ export default {
   }
 
   &.disabled, &.disabled:hover {
-    @extend .default;
+    @extend .default-activator-state;
 
     pointer-events: none;
   }
