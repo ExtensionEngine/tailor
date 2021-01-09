@@ -13,7 +13,7 @@
           {{ activity.data.name }}
           <template v-if="showPublishDiff">
             <span class="px-2 grey--text">@</span>
-            <v-chip color="blue-grey lighten-4" small label>
+            <v-chip color="readonly blue-grey lighten-4" small label>
               {{ activity.publishedAt | formatDate }}
             </v-chip>
           </template>
