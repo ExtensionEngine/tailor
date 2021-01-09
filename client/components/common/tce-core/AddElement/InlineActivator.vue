@@ -23,7 +23,7 @@ export default {
 
 <style lang="scss" scoped>
 .default-activator-state {
-  padding: 0 50px;
+  padding: 0 3.125rem;
   opacity: 0;
 }
 
