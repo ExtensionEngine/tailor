@@ -9,7 +9,7 @@
       <publish-diff-provider
         v-else
         v-slot="{ processedElements }"
-        :show-diff="isPublishedPreview"
+        :show-diff="showPublishDiff"
         :elements="elementsWithComments"
         :container-ids="containerIds"
         :repository-id="repository.id"
@@ -22,7 +22,7 @@
           :container-group="containerGroup"
           :processed-elements="processedElements"
           :parent-id="activityId"
-          :is-disabled="isPublishedPreview" />
+          :is-disabled="showPublishDiff" />
       </publish-diff-provider>
     </div>
   </div>
@@ -77,7 +77,7 @@ export default {
     ...mapGetters('repository/comments', ['getComments']),
     ...mapState('repository/comments', ['seen']),
     ...mapState({ user: state => state.auth.user }),
-    ...mapState('editor', ['isPublishedPreview']),
+    ...mapState('editor', ['showPublishDiff']),
     activityId: vm => vm.activity.id,
     containerIds: vm => vm.contentContainers.map(it => it.id),
     elementsWithComments() {
@@ -181,7 +181,7 @@ export default {
         items.forEach(({ elementId, ...user }) => this.selectElement(elementId, user, isSelected));
       });
     },
-    isPublishedPreview(isOn) {
+    showPublishDiff(isOn) {
       if (!isOn) return;
       this.editorChannel.emit(CE_FOCUS_EVENT);
     }

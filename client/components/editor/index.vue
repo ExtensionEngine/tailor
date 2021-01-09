@@ -52,10 +52,10 @@ export default {
     activeUsers: vm => vm.getActiveUsers('activity', vm.activityId)
   },
   methods: {
-    ...mapMutations('editor', ['setIsPublishedPreview']),
+    ...mapMutations('editor', ['setShowPublishDiff']),
     ...mapActions('repository', ['initialize']),
     resetPublishedPreview() {
-      if (this.isPublishedPreview) this.setIsPublishedPreview(false);
+      if (this.showPublishDiff) this.setShowPublishDiff(false);
     },
     selectElement(element) {
       this.selectedElement = element;

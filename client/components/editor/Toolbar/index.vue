@@ -2,16 +2,16 @@
   <div class="toolbar-wrapper">
     <div
       v-show="activity"
-      :class="[isPublishedPreview ? 'darken-4' : 'darken-3']"
+      :class="[showPublishDiff ? 'darken-4' : 'darken-3']"
       class="activity-toolbar blue-grey">
       <activity-actions class="d-flex flex-grow-0" />
       <h1 class="pt-2 headline text-truncate">
         <span>{{ config.label }}</span>
         <span class="px-2 grey--text">|</span>
         <span class="secondary--text text--lighten-2">
-          <span v-if="isPublishedPreview" class="pr-1">Preview of published</span>
+          <span v-if="showPublishDiff" class="pr-1">Preview of published</span>
           {{ activity.data.name }}
-          <template v-if="isPublishedPreview">
+          <template v-if="showPublishDiff">
             <span class="px-2 grey--text">@</span>
             <v-chip color="blue-grey lighten-4" small label>
               {{ activity.publishedAt | formatDate }}
@@ -19,7 +19,7 @@
           </template>
         </span>
       </h1>
-      <active-users v-if="!isPublishedPreview" :users="activeUsers" class="mx-6" />
+      <active-users v-if="!showPublishDiff" :users="activeUsers" class="mx-6" />
     </div>
     <element-toolbar
       v-if="element && element.parent"
@@ -59,7 +59,7 @@ export default {
     activeUsers: { type: Array, default: () => [] }
   },
   computed: {
-    ...mapState('editor', ['isPublishedPreview']),
+    ...mapState('editor', ['showPublishDiff']),
     ...mapGetters('editor', ['activity']),
     config() {
       return getLevel(this.activity.type);

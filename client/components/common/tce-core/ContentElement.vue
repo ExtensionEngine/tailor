@@ -8,7 +8,7 @@
     }]"
     class="content-element">
     <div
-      :class="{ visible: isPublishedPreview && element.changeSincePublish }"
+      :class="{ visible: showPublishDiff && element.changeSincePublish }"
       class="header d-flex">
       <v-chip
         v-if="element.changeSincePublish"
@@ -28,7 +28,7 @@
       @focus="onSelect"
       :id="`element_${id}`"
       v-bind="{ ...$attrs, element, isFocused, isDragged, isDisabled, dense }" />
-    <div v-if="!isDisabled && !isPublishedPreview" class="element-actions">
+    <div v-if="!isDisabled && !showPublishDiff" class="element-actions">
       <div
         v-if="showDiscussion"
         :class="{ 'is-visible': isHighlighted || hasComments }">
@@ -82,7 +82,7 @@ export default {
   }),
   computed: {
     ...mapChannels({ editorBus: 'editor' }),
-    ...mapState('editor', ['isPublishedPreview']),
+    ...mapState('editor', ['showPublishDiff']),
     id: vm => getElementId(vm.element),
     componentName: vm => getComponentName(vm.element.type),
     isEmbed: vm => !!vm.parent || !vm.element.uid,
@@ -93,7 +93,7 @@ export default {
   },
   methods: {
     onSelect(e) {
-      if (this.isDisabled || this.isPublishedPreview || e.component) return;
+      if (this.isDisabled || this.showPublishDiff || e.component) return;
       this.focus();
       e.component = { name: 'content-element', data: this.element };
     },

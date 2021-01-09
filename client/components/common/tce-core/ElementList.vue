@@ -6,7 +6,7 @@
       @update="reorder"
       :list="elements"
       v-bind="options"
-      :disabled="isPublishedPreview"
+      :disabled="showPublishDiff"
       class="row">
       <div
         v-for="(element, index) in elements"
@@ -23,7 +23,7 @@
         </slot>
       </div>
     </draggable>
-    <template v-if="enableAdd && !isPublishedPreview">
+    <template v-if="enableAdd && !showPublishDiff">
       <slot
         :include="supportedTypes"
         :activity="activity"
@@ -69,7 +69,7 @@ export default {
   data: () => ({ dragElementIndex: null }),
   computed: {
     ...mapChannels({ editorChannel: 'editor' }),
-    ...mapState('editor', ['isPublishedPreview']),
+    ...mapState('editor', ['showPublishDiff']),
     options: vm => ({
       ...vm.dragOptions,
       handle: '.drag-handle',

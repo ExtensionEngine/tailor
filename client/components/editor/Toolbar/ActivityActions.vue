@@ -33,7 +33,7 @@ export default {
   name: 'activity-actions',
   mixins: [publishMixin],
   computed: {
-    ...mapState('editor', ['isPublishedPreview']),
+    ...mapState('editor', ['showPublishDiff']),
     ...mapGetters(['isAdmin']),
     ...mapGetters('editor', ['activity']),
     ...mapGetters('repository', ['isRepositoryAdmin']),
@@ -55,9 +55,9 @@ export default {
       }, {
         title: 'View changes since publish',
         icon: 'file-eye-outline',
-        active: this.isPublishedPreview,
+        active: this.showPublishDiff,
         disabled: !this.activity.publishedAt,
-        action: () => this.previewPublished()
+        action: () => this.togglePublishDiff()
       }];
       if (!this.isAdmin && !this.isRepositoryAdmin) return items;
       return items.concat({
@@ -68,15 +68,15 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('editor', ['setIsPublishedPreview']),
+    ...mapMutations('editor', ['setShowPublishDiff']),
     ...mapActions('repository/activities', { publishActivity: 'publish' }),
     preview() {
       const { repositoryId, id } = this.activity;
       return activityApi.createPreview(repositoryId, id)
         .then(location => window.open(location));
     },
-    previewPublished() {
-      this.setIsPublishedPreview(!this.isPublishedPreview);
+    togglePublishDiff() {
+      this.setShowPublishDiff(!this.showPublishDiff);
     }
   }
 };

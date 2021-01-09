@@ -1,5 +1,5 @@
-const setIsPublishedPreview = (state, isPublishedPreview) => {
-  state.isPublishedPreview = isPublishedPreview;
+const setShowPublishDiff = (state, showPublishDiff) => {
+  state.showPublishDiff = showPublishDiff;
 };
 
-export { setIsPublishedPreview };
+export { setShowPublishDiff };
