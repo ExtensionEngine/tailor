@@ -52,7 +52,7 @@ export default {
       return !this.elements[element.uid];
     },
     getChangeType(element) {
-      if (this.isAdded(element)) return 'added';
+      if (this.isAdded(element)) return 'new';
       if (this.isRemoved(element)) return 'removed';
       if (this.isModified(element)) return 'changed';
       return null;

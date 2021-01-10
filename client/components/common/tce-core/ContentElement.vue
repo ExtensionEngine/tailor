@@ -211,7 +211,7 @@ export default {
   left: 0;
 }
 
-.added {
+.new {
   @include highlight(var(--v-success-lighten2));
 }
 
