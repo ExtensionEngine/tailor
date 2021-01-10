@@ -7,17 +7,8 @@
       frame
     }]"
     class="content-element">
-    <div
-      :class="{ visible: showPublishDiff && element.changeSincePublish }"
-      class="header d-flex">
-      <v-chip
-        v-if="element.changeSincePublish"
-        :text-color="element.changeSincePublish === 'changed' ? 'secondary' : 'success'"
-        color="blue-grey lighten-5"
-        small round
-        class="readonly ml-auto font-weight-medium text-capitalize">
-        {{ element.changeSincePublish }}
-      </v-chip>
+    <div :class="{ visible: showPublishDiff && element.changeSincePublish }" class="header d-flex">
+      <publish-diff-chip :change-type="element.changeSincePublish" />
     </div>
     <active-users :users="activeUsers" :size="20" class="active-users" />
     <component
@@ -60,6 +51,7 @@ import ActiveUsers from 'tce-core/ActiveUsers';
 import Discussion from './ElementDiscussion';
 import { mapChannels } from '@/plugins/radio';
 import { mapState } from 'vuex';
+import PublishDiffChip from './PublishDiffChip';
 
 export default {
   name: 'content-element',
@@ -134,7 +126,7 @@ export default {
   provide() {
     return { $elementBus: this.elementBus };
   },
-  components: { ActiveUsers, Discussion }
+  components: { ActiveUsers, Discussion, PublishDiffChip }
 };
 </script>
 
