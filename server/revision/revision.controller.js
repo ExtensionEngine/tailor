@@ -2,7 +2,7 @@
 
 const { Revision, User } = require('../shared/database');
 const { resolveStatics } = require('../shared/storage/helpers');
-const revisionService = require('./revision.service');
+const service = require('./revision.service');
 
 function index({ repository, query }, res) {
   const { limit, offset, entity, publishedOn } = query;
@@ -19,11 +19,11 @@ function index({ repository, query }, res) {
     offset
   };
   if (publishedOn) {
-    return revisionService.getPublished(filter, opts)
+    return service.getRevisionsUponPublish(filter, opts)
       .then(data => res.json({ data }));
   }
   if (entity) {
-    return revisionService.getByEntity(filter, opts)
+    return service.getEntityRevisions(filter, opts)
       .then(data => res.json({ data }));
   }
   return Revision.findAll(opts).then(data => res.json({ data }));

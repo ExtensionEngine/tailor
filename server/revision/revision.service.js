@@ -4,7 +4,7 @@ const { Revision, Sequelize } = require('../shared/database');
 
 const { Op } = Sequelize;
 
-function getByEntity(query, options) {
+function getEntityRevisions(query, options) {
   const { repositoryId, entity, entityId } = query;
   const where = {
     repositoryId,
@@ -14,7 +14,7 @@ function getByEntity(query, options) {
   return Revision.findAll({ ...options, where });
 }
 
-async function getPublished(query, options) {
+async function getRevisionsUponPublish(query, options) {
   const { repositoryId, activityIds, entity, entityIds = [], publishedOn } = query;
   const removes = await Revision.findAll({
     attributes: ['state'],
@@ -39,4 +39,4 @@ async function getPublished(query, options) {
   return Revision.scope('lastByEntity').findAll({ ...options, where });
 }
 
-module.exports = { getByEntity, getPublished };
+module.exports = { getEntityRevisions, getRevisionsUponPublish };
