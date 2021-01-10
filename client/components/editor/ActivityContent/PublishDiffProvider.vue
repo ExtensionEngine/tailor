@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import cloneDeep from 'lodash/cloneDeep';
 import isAfter from 'date-fns/isAfter';
 import map from 'lodash/map';
 import mapValues from 'lodash/mapValues';
@@ -29,8 +30,8 @@ export default {
   data: () => ({ publishedElements: {} }),
   computed: {
     elementsWithPublishDiff() {
-      const { elements, publishedElements } = this;
-      return mapValues(merge(elements, publishedElements), element => ({
+      const elements = cloneDeep(this.elements);
+      return mapValues(merge(elements, this.publishedElements), element => ({
         ...element,
         changeSincePublish: this.getChangeType(element)
       }));
