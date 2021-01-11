@@ -11,7 +11,7 @@
         v-slot="{ processedElements }"
         :show-diff="showPublishDiff"
         :elements="elementsWithComments"
-        :container-ids="containerIds"
+        :activity-id="activity.id"
         :repository-id="repository.id"
         :publish-timestamp="activity.publishedAt">
         <content-containers

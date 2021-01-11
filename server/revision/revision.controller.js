@@ -1,6 +1,6 @@
 'use strict';
 
-const { Revision, User, Sequelize } = require('../shared/database');
+const { Activity, Revision, User, Sequelize } = require('../shared/database');
 const { resolveStatics } = require('../shared/storage/helpers');
 
 const { Op } = Sequelize;
@@ -22,15 +22,17 @@ function index({ repository, query }, res) {
 }
 
 async function getStateByMoment({ repository, query }, res) {
-  const { activityIds, entity, entityIds = [], timestamp } = query;
+  const { activityId, entity, entityIds = [], timestamp } = query;
   const repositoryId = repository.id;
+  const activity = await Activity.findByPk(activityId);
+  const { nodes } = await activity.descendants();
   const removes = await Revision.findAll({
     attributes: ['state'],
     where: {
       repositoryId,
       entity,
       operation: 'REMOVE',
-      state: { activityId: { [Op.in]: activityIds } },
+      state: { activityId: { [Op.in]: nodes.map(it => it.id) } },
       createdAt: { [Op.gt]: timestamp }
     }
   });

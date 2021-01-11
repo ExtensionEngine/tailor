@@ -24,7 +24,7 @@ export default {
     showDiff: { type: Boolean, default: false },
     publishTimestamp: { type: String, required: true },
     elements: { type: Object, default: () => ({}) },
-    containerIds: { type: Array, default: () => [] },
+    activityId: { type: Number, required: true },
     repositoryId: { type: Number, required: true }
   },
   data: () => ({ publishedElements: {} }),
@@ -61,7 +61,7 @@ export default {
       const query = {
         entity: 'CONTENT_ELEMENT',
         entityIds: map(this.elements, 'id'),
-        activityIds: this.containerIds,
+        activityId: this.activityId,
         timestamp: this.publishTimestamp
       };
       return revisionApi.getStateByMoment(this.repositoryId, query)
