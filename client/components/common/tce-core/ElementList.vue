@@ -6,7 +6,7 @@
       @update="reorder"
       :list="elements"
       v-bind="options"
-      :disabled="showPublishDiff"
+      :disabled="isDisabled"
       class="row">
       <div
         v-for="(element, index) in elements"
@@ -19,11 +19,12 @@
           :element="element"
           :is-dragged="dragElementIndex === index"
           :position="index"
+          :is-disabled="isDisabled"
           name="list-item">
         </slot>
       </div>
     </draggable>
-    <template v-if="enableAdd && !showPublishDiff">
+    <template v-if="enableAdd && !isDisabled">
       <slot
         :include="supportedTypes"
         :activity="activity"
@@ -51,7 +52,6 @@ import get from 'lodash/get';
 import { getElementId } from 'tce-core/utils';
 import last from 'lodash/last';
 import { mapChannels } from '@/plugins/radio';
-import { mapState } from 'vuex';
 
 const CE_FOCUS_EVENT = 'element:focus';
 
@@ -63,13 +63,13 @@ export default {
     supportedTypes: { type: Array, default: null },
     activity: { type: Object, default: null },
     layout: { type: Boolean, default: false },
+    isDisabled: { type: Boolean, default: false },
     enableAdd: { type: Boolean, default: true },
     addElementOptions: { type: Object, default: () => ({}) }
   },
   data: () => ({ dragElementIndex: null }),
   computed: {
     ...mapChannels({ editorChannel: 'editor' }),
-    ...mapState('editor', ['showPublishDiff']),
     options: vm => ({
       ...vm.dragOptions,
       handle: '.drag-handle',

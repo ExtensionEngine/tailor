@@ -17,9 +17,9 @@
       :activity="container"
       :supported-types="types"
       :layout="layout"
-      :enable-add="!isDisabled"
+      :is-disabled="isDisabled"
       class="element-list">
-      <template v-slot:list-item="{ element, isDragged, position }">
+      <template v-slot:list-item="{ element, isDragged, isDisabled, position }">
         <inline-activator
           @click.native="showElementDrawer(position - 1)"
           :disabled="isDisabled" />
@@ -27,7 +27,7 @@
           @save="saveElement(element, 'data', $event)"
           @save:meta="saveElement(element, 'meta', $event)"
           @delete="$emit('deleteElement', element)"
-          v-bind="{ element, isDragged, setWidth: false }"
+          v-bind="{ element, isDragged, isDisabled, setWidth: false }"
           show-discussion />
       </template>
       <template v-slot:list-add="{ position: lastPosition, ...slotProps }">

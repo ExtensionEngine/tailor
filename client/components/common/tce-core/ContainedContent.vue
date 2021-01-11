@@ -7,7 +7,7 @@
     @dragover="scrollContainer"
     :class="[widthClass, { disabled: isDisabled, hovered: isHovered }]"
     class="contained-content">
-    <span v-if="!showPublishDiff" class="drag-handle">
+    <span v-if="!isDisabled" class="drag-handle">
       <span class="mdi mdi-drag-vertical"></span>
     </span>
     <content-element
@@ -22,7 +22,6 @@
 <script>
 import ContentElement from './ContentElement';
 import get from 'lodash/get';
-import { mapState } from 'vuex';
 import throttle from 'lodash/throttle';
 
 export default {
@@ -37,7 +36,6 @@ export default {
   },
   data: () => ({ isHovered: false }),
   computed: {
-    ...mapState('editor', ['showPublishDiff']),
     bindings() {
       const {
         element, isDisabled, isDragged, isHovered, dense, $attrs: attrs
