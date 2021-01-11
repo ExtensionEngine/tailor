@@ -19,7 +19,6 @@
           :element="element"
           :is-dragged="dragElementIndex === index"
           :position="index"
-          :is-disabled="isDisabled"
           name="list-item">
         </slot>
       </div>

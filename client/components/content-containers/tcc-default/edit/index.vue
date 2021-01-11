@@ -19,7 +19,7 @@
       :layout="layout"
       :is-disabled="isDisabled"
       class="element-list">
-      <template v-slot:list-item="{ element, isDragged, isDisabled, position }">
+      <template v-slot:list-item="{ element, isDragged, position }">
         <inline-activator
           @click.native="showElementDrawer(position - 1)"
           :disabled="isDisabled" />
