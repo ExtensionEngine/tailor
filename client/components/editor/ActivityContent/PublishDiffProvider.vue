@@ -62,9 +62,9 @@ export default {
         entity: 'CONTENT_ELEMENT',
         entityIds: map(this.elements, 'id'),
         activityIds: this.containerIds,
-        publishedOn: this.publishTimestamp
+        timestamp: this.publishTimestamp
       };
-      return revisionApi.fetch(this.repositoryId, query)
+      return revisionApi.getStateByMoment(this.repositoryId, query)
         .then(revisions => {
           this.publishedElements = getPublishedState(revisions);
         });

@@ -9,6 +9,7 @@ const router = require('express').Router();
 router.param('revisionId', getRevision);
 
 router
+  .get('/time-travel', ctrl.getStateByMoment)
   .get('/', ctrl.index)
   .get('/:revisionId', ctrl.resolve);
 
