@@ -1,6 +1,6 @@
 'use strict';
 
-const { Activity, Revision, User, Sequelize } = require('../shared/database');
+const { Activity, Revision, Sequelize, User } = require('../shared/database');
 const { resolveStatics } = require('../shared/storage/helpers');
 
 const { Op } = Sequelize;
