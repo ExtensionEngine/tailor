@@ -1,5 +1,7 @@
+'use strict';
+
 const crypto = require('crypto');
-const info = require('./info');
+const info = require('../info');
 const isString = require('lodash/isString');
 const isUrl = require('is-url');
 const mime = require('mime-types');
