@@ -41,7 +41,6 @@ import uploadMixin from '@/components/common/mixins/upload';
 
 export default {
   name: 'upload-btn',
-  inject: ['$storageService'],
   mixins: [uploadMixin],
   props: {
     id: { type: String, default: () => uniqueId('file_') },
