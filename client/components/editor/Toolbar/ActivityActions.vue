@@ -54,7 +54,7 @@ export default {
         action: () => this.preview()
       }, {
         title: 'View changes since publish',
-        icon: 'file-eye-outline',
+        icon: 'plus-minus',
         active: this.showPublishDiff,
         disabled: !this.activity.publishedAt,
         action: () => this.togglePublishDiff()
