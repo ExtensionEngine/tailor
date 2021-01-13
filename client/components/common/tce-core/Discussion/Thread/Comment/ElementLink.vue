@@ -1,13 +1,14 @@
 <template>
   <div class="element-link">
-    <v-tooltip left>
+    <v-divider vertical />
+    <v-tooltip right>
       <template v-slot:activator="{ on }">
         <v-btn
           v-on="on"
           @click="linkToElement"
           :color="isShown ? 'teal' : 'blue-grey'"
           text x-small>
-          {{ elementLabel }}
+          {{ label }}
           <v-icon x-small class="ml-1">mdi-arrow-top-right-thick</v-icon>
         </v-btn>
       </template>
@@ -17,22 +18,22 @@
 </template>
 
 <script>
-const getEditorRoute = ({ activityId, contentElement }) => ({
+const getEditorRoute = ({ activityId, elementUid }) => ({
   name: 'editor',
   params: { activityId },
-  query: { elementId: contentElement.uid }
+  query: { elementId: elementUid }
 });
 
 export default {
   name: 'element-link',
   props: {
     activityId: { type: Number, required: true },
-    contentElement: { type: Object, required: true },
-    elementLabel: { type: String, required: true },
+    elementUid: { type: String, required: true },
+    label: { type: String, required: true },
     isEditor: { type: Boolean, required: true }
   },
   computed: {
-    isShown: vm => vm.contentElement.uid === vm.$route.query.elementId
+    isShown: vm => vm.elementUid === vm.$route.query.elementId
   },
   methods: {
     linkToElement() {
@@ -45,3 +46,14 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.element-link {
+  display: inline-flex;
+  align-self: flex-end;
+
+  hr.v-divider--vertical {
+    margin: 0.125rem 0.125rem 0.125rem 0.625rem;
+  }
+}
+</style>

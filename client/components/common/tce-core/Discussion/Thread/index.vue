@@ -1,31 +1,26 @@
 <template>
   <ul v-intersect="onIntersect" class="discussion-thread">
     <li
-      v-for="comment in visibleItems"
+      v-for="comment in visibleComments"
       :key="comment.uid"
       class="thread-item">
       <unseen-separator
         v-if="showUnseenSeparator(comment)"
         ref="unseen-separator"
-        @markSeen="markSeen"
+        @seen="markSeen"
         :unseen-comments-count="unseenThread.length" />
       <v-divider v-else class="thread-separator" />
       <thread-comment
         @update="onUpdate"
         @remove="$emit('remove', comment)"
-        v-bind="{ comment, user }"
+        v-bind="{ comment, user, isActivityThread, isEditor }"
+        :element-label="getElementLabel(comment)"
         class="mb-3" />
-      <element-link
-        v-if="isActivityThread && comment.contentElement"
-        v-bind="comment"
-        :is-editor="isEditor"
-        :element-label="elementLabel(comment)" />
     </li>
   </ul>
 </template>
 
 <script>
-import ElementLink from './ElementLink';
 import find from 'lodash/find';
 import orderBy from 'lodash/orderBy';
 import takeRgt from 'lodash/takeRight';
@@ -46,7 +41,7 @@ export default {
   data: () => ({ isVisible: false }),
   computed: {
     isEditor: vm => vm.$route.name === 'editor',
-    visibleItems: vm => vm.showAll ? vm.items : takeRgt(vm.items, vm.minDisplayed),
+    visibleComments: vm => vm.showAll ? vm.items : takeRgt(vm.items, vm.minDisplayed),
     unseenThread: vm => orderBy(vm.unseenComments, 'createdAt', 'asc'),
     firstUnseenComment: vm => vm.unseenThread[0]
   },
@@ -54,8 +49,9 @@ export default {
     onUpdate(comment, content) {
       this.$emit('update', { ...comment, content, updatedAt: Date.now() });
     },
-    elementLabel({ contentElement: { type } }) {
-      return find(this.$teRegistry._registry, { type })?.name;
+    getElementLabel({ contentElement }) {
+      if (!contentElement) return;
+      return find(this.$teRegistry._registry, { type: contentElement.type })?.name;
     },
     showUnseenSeparator({ id, author }) {
       const { firstUnseenComment, user } = this;
@@ -74,7 +70,7 @@ export default {
       });
     },
     markSeen() {
-      this.$emit('markSeen');
+      this.$emit('seen');
       this.$emit('showAll', false);
     }
   },
@@ -93,7 +89,7 @@ export default {
       }
     }
   },
-  components: { ElementLink, ThreadComment, UnseenSeparator }
+  components: { ThreadComment, UnseenSeparator }
 };
 </script>
 
@@ -105,8 +101,6 @@ export default {
 }
 
 .discussion-thread .thread-item {
-  position: relative;
-
   ::v-deep .unseen-separator .v-divider {
     margin: 1.5rem 0 0;
   }
@@ -117,12 +111,6 @@ export default {
 
   &:first-child .thread-separator {
     display: none;
-  }
-
-  ::v-deep .element-link .v-btn {
-    position: absolute;
-    right: 0;
-    bottom: 0;
   }
 }
 </style>

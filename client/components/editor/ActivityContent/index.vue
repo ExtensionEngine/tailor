@@ -71,10 +71,11 @@ export default {
     ...mapState({ user: state => state.auth.user }),
     activityId: vm => vm.activity.id,
     processedElements() {
-      const { elements, seen, activity, activityId } = this;
+      const { elements, seen } = this;
+      const { id: activityId, uid: activityUid } = this.activity;
       return transform(elements, (acc, it) => {
         const comments = this.getComments({ activityId, contentElementId: it.id });
-        const allSeen = [seen.contentElement[it.uid], seen.activity[activity.uid]];
+        const allSeen = [seen.contentElement[it.uid], seen.activity[activityUid]];
         acc[it.uid] = { ...it, comments, lastSeen: max(allSeen) || 0 };
       }, {});
     },

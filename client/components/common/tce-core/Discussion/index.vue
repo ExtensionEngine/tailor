@@ -24,7 +24,7 @@
       v-if="thread.length"
       @update="$emit('update', $event)"
       @remove="$emit('remove', $event)"
-      @markSeen="$emit('markSeen')"
+      @seen="$emit('seen')"
       @showAll="showAll = $event"
       :items="thread"
       :user="user"
@@ -93,7 +93,7 @@ export default {
       };
       this.comment = initCommentInput();
       this.$emit('save', payload);
-      this.$emit('markSeen');
+      this.$emit('seen');
       // Keep editor/discussion container inside viewport.
       const scrollOptions = { block: 'center', behavior: 'smooth' };
       this.$nextTick(() => this[scrollTarget].scrollIntoView(scrollOptions));

@@ -6,7 +6,7 @@ const pick = require('lodash/pick');
 const author = {
   model: User,
   as: 'author',
-  attributes: ['id', 'email', 'firstName', 'lastName', 'fullName', 'imgUrl']
+  attributes: ['id', 'email', 'label', 'imgUrl']
 };
 
 const element = {

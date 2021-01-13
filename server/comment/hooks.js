@@ -19,7 +19,7 @@ exports.add = (Comment, Hooks, db) => {
     const includeAuthor = {
       model: User,
       as: 'author',
-      attributes: ['id', 'email', 'firstName', 'lastName', 'fullName', 'imgUrl']
+      attributes: ['id', 'email', 'label', 'imgUrl']
     };
     const include = [includeAuthor, includeElement];
     const { author, contentElement } = await comment.reload({ include });

@@ -2,11 +2,11 @@
   <div class="unseen-separator">
     <v-divider />
     <v-chip
-      @click="$emit('markSeen')"
-      @click:close="$emit('markSeen')"
+      @click="$emit('seen')"
+      @click:close="$emit('seen')"
       close-icon="mdi-close"
       color="teal"
-      small close outlined>
+      outlined small close>
       <v-icon size="14" class="mr-1">mdi-arrow-down</v-icon>
       <span class="mr-2">{{ unseenCommentsLabel }}</span>
     </v-chip>

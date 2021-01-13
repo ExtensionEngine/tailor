@@ -1,51 +1,101 @@
 <template>
   <div class="header">
-    <div class="d-block">
-      <v-tooltip right>
-        <template v-slot:activator="{ on }">
-          <span v-on="authorLabel.length > 25 ? on : null" class="author">
-            {{ authorLabel | truncate(25) }}
-          </span>
-        </template>
-        {{ authorLabel }}
-      </v-tooltip>
-      <span v-if="isEdited" class="edited">(edited)</span>
+    <v-avatar size="34" class="comment-avatar">
+      <img :src="author.imgUrl">
+    </v-avatar>
+    <div class="d-flex flex-column">
+      <div class="d-block">
+        <v-tooltip right>
+          <template v-slot:activator="{ on }">
+            <span v-on="on" class="author">{{ author.label | truncate(25) }}</span>
+          </template>
+          {{ author.label }}
+        </v-tooltip>
+        <span v-if="isEdited" class="edited">(edited)</span>
+      </div>
+      <div class="d-flex align-center">
+        <v-tooltip right>
+          <template v-slot:activator="{ on }">
+            <span v-on="on">
+              <timeago
+                :datetime="comment.createdAt"
+                :auto-update="60"
+                class="time" />
+            </span>
+          </template>
+          <span>{{ comment.createdAt | formatDate('DD. MMM h:mm A') }}</span>
+        </v-tooltip>
+        <element-link
+          v-if="isActivityThread && elementLabel"
+          v-bind="{ ...comment, elementUid, isEditor, label: elementLabel }" />
+      </div>
     </div>
-    <v-tooltip right>
-      <template v-slot:activator="{ on }">
-        <span v-on="on" class="mb-0">
-          <timeago :datetime="createdAt" :auto-update="60" class="time" />
-        </span>
-      </template>
-      <span>{{ createdAt | formatDate('DD. MMM h:mm A') }}</span>
-    </v-tooltip>
+    <div v-if="showOptions" class="actions">
+      <v-btn
+        v-for="{ name, action, icon } in options"
+        :key="name"
+        @click="$emit(action)"
+        x-small icon
+        class="mr-1">
+        <v-icon size="14" color="grey">{{ icon }}</v-icon>
+      </v-btn>
+    </div>
   </div>
 </template>
 
 <script>
+import ElementLink from './ElementLink';
+
 export default {
   name: 'comment-header',
   props: {
-    author: { type: Object, required: true },
-    isEdited: { type: Boolean, default: false },
-    createdAt: { type: [Number, String], required: true }
+    comment: { type: Object, required: true },
+    user: { type: Object, required: true },
+    isActivityThread: { type: Boolean, default: false },
+    isEditor: { type: Boolean, default: false },
+    elementLabel: { type: String, default: null }
   },
   computed: {
-    authorLabel: vm => vm.author.fullName || vm.author.email
-  }
+    elementUid: vm => vm.comment.contentElement.uid,
+    author: vm => vm.comment.author,
+    isAuthor: vm => vm.author.id === vm.user.id,
+    isEdited: vm => vm.comment.createdAt !== vm.comment.updatedAt,
+    isDeleted: vm => !!vm.comment.deletedAt,
+    showOptions: vm => vm.isAuthor && !vm.isDeleted,
+    options: vm => [
+      { name: 'Edit', action: 'toggleEdit', icon: 'mdi-pencil-outline' },
+      { name: 'Remove', action: 'remove', icon: 'mdi-trash-can-outline' }]
+  },
+  components: { ElementLink }
 };
 </script>
 
 <style lang="scss" scoped>
+$avatar-size: 2.5rem;
+$author-color: #000;
+$timestamp-color: #888;
+
 .header {
+  display: flex;
+  align-items: flex-start;
+
+  .comment-avatar {
+    width: $avatar-size;
+    margin: 0.375rem 0.375rem 0 0;
+  }
+
   .author {
-    color: #000;
+    color: $author-color;
     font-size: 1rem;
   }
 
   .edited, .time {
-    color: #888;
+    color: $timestamp-color;
     font-size: 0.75rem;
+  }
+
+  .actions {
+    margin-left: auto;
   }
 }
 </style>

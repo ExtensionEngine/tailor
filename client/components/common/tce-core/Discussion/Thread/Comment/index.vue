@@ -1,38 +1,21 @@
 <template>
   <div class="comment">
-    <v-avatar size="34" class="comment-avatar">
-      <img :src="author.imgUrl">
-    </v-avatar>
-    <div class="comment-body pl-3">
-      <comment-header
-        :author="author"
-        :is-edited="isEdited"
-        :created-at="comment.createdAt" />
+    <comment-header
+      @toggleEdit="toggleEdit"
+      @remove="remove"
+      v-bind="{ comment, user, isActivityThread, isEditor, elementLabel }" />
+    <div class="comment-body">
       <text-editor
         v-model="content"
         :is-focused="isEditing"
         :show-preview="!isEditing"
         class="content" />
-      <span v-if="isEditing" class="float-left">
+      <span v-if="isEditing" class="d-flex justify-end">
         <v-btn @click="reset" text small>Cancel</v-btn>
-        <v-btn
-          @click="save"
-          :disabled="content && !content.trim()"
-          color="green"
-          text small>
+        <v-btn @click="save" color="green" text small>
           <v-icon class="pr-1">mdi-check</v-icon> Save
         </v-btn>
       </span>
-    </div>
-    <div v-if="showOptions" class="actions">
-      <v-btn
-        v-for="{ name, action, icon } in options"
-        :key="name"
-        @click="action"
-        x-small icon
-        class="mr-1">
-        <v-icon size="14" color="grey">{{ icon }}</v-icon>
-      </v-btn>
     </div>
   </div>
 </template>
@@ -46,30 +29,24 @@ export default {
   name: 'thread-comment',
   props: {
     comment: { type: Object, required: true },
-    user: { type: Object, required: true }
+    user: { type: Object, required: true },
+    isActivityThread: { type: Boolean, default: false },
+    isEditor: { type: Boolean, default: false },
+    elementLabel: { type: String, default: null }
   },
   data: vm => ({
     content: vm.comment.content,
     isEditing: false
   }),
-  computed: {
-    author: vm => vm.comment.author,
-    isEdited: vm => vm.comment.createdAt !== vm.comment.updatedAt,
-    isDeleted: vm => !!vm.comment.deletedAt,
-    isAuthor: vm => vm.author.id === vm.user.id,
-    showOptions: vm => vm.isAuthor && !vm.isDeleted,
-    options: vm => [
-      { name: 'Edit', action: vm.toggleEdit, icon: 'mdi-pencil-outline' },
-      { name: 'Remove', action: vm.remove, icon: 'mdi-trash-can-outline' }]
-  },
   methods: {
     toggleEdit() {
       this.isEditing = !this.isEditing;
     },
     save() {
-      if (!this.content) return;
+      const { comment, content } = this;
+      if (!content) return this.$emit('remove', comment);
       this.toggleEdit();
-      this.$emit('update', this.comment, this.content);
+      this.$emit('update', comment, content);
     },
     remove() {
       this.$emit('remove', this.comment);
@@ -93,16 +70,12 @@ export default {
 <style lang="scss" scoped>
 .comment {
   display: flex;
+  flex-direction: column;
   font-family: Roboto, Arial, sans-serif;
-
-  &-avatar {
-    width: 2.5rem;
-    margin-top: 0.375rem;
-    overflow: hidden;
-  }
 
   &-body {
     flex: 1;
+    padding: 0.375rem 0 0 2.5rem;
   }
 
   .content {
