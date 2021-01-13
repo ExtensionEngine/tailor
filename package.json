@@ -116,7 +116,7 @@
     "pg-hstore": "^2.3.3",
     "pg-query-stream": "^3.2.0",
     "pluralize": "^8.0.0",
-    "plyrue": "^2.1.4",
+    "plyrue": "^2.3.0",
     "poi-preset-sass-resources": "^4.1.0",
     "promise-queue": "^2.2.3",
     "randomstring": "^1.1.5",
