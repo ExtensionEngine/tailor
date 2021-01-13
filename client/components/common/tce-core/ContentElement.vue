@@ -11,7 +11,9 @@
     <div
       :class="{ visible: showPublishDiff && element.changeSincePublish }"
       class="header d-flex">
-      <publish-diff-chip :change-type="element.changeSincePublish" />
+      <publish-diff-chip
+        :change-type="element.changeSincePublish"
+        class="ml-auto " />
     </div>
     <active-users :users="activeUsers" :size="20" class="active-users" />
     <component

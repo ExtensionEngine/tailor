@@ -4,7 +4,7 @@
     :text-color="changeType === 'new' ? 'success' : 'secondary'"
     color="blue-grey lighten-5"
     small round
-    class="readonly ml-auto font-weight-medium text-capitalize">
+    class="readonly font-weight-medium text-capitalize">
     {{ changeType }}
   </v-chip>
 </template>
