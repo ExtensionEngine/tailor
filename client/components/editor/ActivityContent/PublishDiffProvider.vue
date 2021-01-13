@@ -47,23 +47,14 @@ export default {
   computed: {
     processedElements() {
       const elements = cloneDeep(this.elements);
-      return mapValues(merge(elements, this.publishedElements), element => ({
-        ...element,
-        changeSincePublish: this.getChangeType(element)
-      }));
+      return mapValues(merge(elements, this.publishedElements), this.addChangeType);
     },
     processedActivities() {
       const activities = cloneDeep(this.activities);
       return merge(activities, this.publishedActivities);
     },
     processedContainerGroups() {
-      return reduce(this.containerGroups, (groups, group, type) => {
-        const containers = filter(this.publishedActivities, {
-          type,
-          parentId: this.activityId
-        });
-        return { ...groups, [type]: [...group, ...containers] };
-      }, {});
+      return reduce(this.containerGroups, this.addPublishedContainersToGroup, {});
     }
   },
   methods: {
@@ -85,6 +76,19 @@ export default {
       if (this.isRemoved(element)) return 'removed';
       if (this.isModified(element)) return 'changed';
       return null;
+    },
+    addChangeType(element) {
+      return { ...element, changeSincePublish: this.getChangeType(element) };
+    },
+    addPublishedContainersToGroup(groups, group, type) {
+      const publishedContainers = filter(this.publishedActivities, {
+        type,
+        parentId: this.activityId
+      });
+      return {
+        ...groups,
+        [type]: [...group, ...publishedContainers]
+      };
     },
     fetchPublishedState() {
       const query = {
