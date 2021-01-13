@@ -42,8 +42,7 @@ export default {
   },
   data: () => ({
     isLoading: true,
-    selectedElement: null,
-    publishedRevisions: {}
+    selectedElement: null
   }),
   computed: {
     ...mapGetters('editor', ['activity', 'contentContainers', 'rootContainerGroups']),
