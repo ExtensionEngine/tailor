@@ -37,7 +37,7 @@ export default {
     containerGroups: { type: Object, default: () => ({}) },
     activityId: { type: Number, required: true },
     repositoryId: { type: Number, required: true },
-    publishTimestamp: { type: String, required: true },
+    publishTimestamp: { type: String, default: null },
     showDiff: { type: Boolean, default: false }
   },
   data: () => ({ publishedElements: {}, publishedActivities: {} }),
@@ -56,11 +56,13 @@ export default {
   },
   methods: {
     isAdded(element) {
+      if (!this.publishTimestamp) return true;
       const createdAt = new Date(element.createdAt);
       const publishedAt = new Date(this.publishTimestamp);
       return isAfter(createdAt, publishedAt);
     },
     isModified(element) {
+      if (!this.publishTimestamp) return false;
       const updatedAt = new Date(element.updatedAt);
       const publishedAt = new Date(this.publishTimestamp);
       return isAfter(updatedAt, publishedAt);
