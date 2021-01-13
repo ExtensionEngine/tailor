@@ -1,8 +1,6 @@
 'use strict';
 
 const { Activity, Revision, Sequelize, User } = require('../shared/database');
-const get = require('lodash/get');
-const groupBy = require('lodash/groupBy');
 const { resolveStatics } = require('../shared/storage/helpers');
 
 const { Op } = Sequelize;
