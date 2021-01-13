@@ -6,7 +6,7 @@
       class="thread-item">
       <unseen-separator
         v-if="showUnseenSeparator(comment)"
-        ref="unseen-separator"
+        ref="unseenSeparator"
         @seen="markSeen"
         :unseen-comments-count="unseenThread.length" />
       <v-divider v-else class="thread-separator" />
@@ -61,10 +61,12 @@ export default {
     onIntersect(_entries, _observer, isIntersected) {
       this.isVisible = isIntersected;
     },
-    scrollToFirstUnseen() {
+    scrollToFirstUnseen(unseenComments) {
+      const unseen = unseenComments || this.unseenThread;
+      if (unseen.length < this.minDisplayed) return;
       this.$emit('showAll', true);
       this.$nextTick(() => {
-        const element = this.$refs['unseen-separator'][0].$el;
+        const element = this.$refs.unseenSeparator[0].$el;
         if (!element) return;
         element.scrollIntoView({ behavior: 'smooth' });
       });
@@ -76,17 +78,12 @@ export default {
   },
   watch: {
     isVisible(val) {
-      const { unseenThread, minDisplayed } = this;
-      if (!val || !unseenThread.length) return;
-      if (unseenThread.length < minDisplayed) return;
+      if (!val || !this.unseenThread.length) return;
       this.scrollToFirstUnseen();
     },
     unseenThread: {
       immediate: true,
-      handler(unseenComments) {
-        if (unseenComments.length < this.minDisplayed) return;
-        this.scrollToFirstUnseen();
-      }
+      handler: 'scrollToFirstUnseen'
     }
   },
   components: { ThreadComment, UnseenSeparator }

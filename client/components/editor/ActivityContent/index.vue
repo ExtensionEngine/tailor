@@ -75,8 +75,8 @@ export default {
       const { id: activityId, uid: activityUid } = this.activity;
       return transform(elements, (acc, it) => {
         const comments = this.getComments({ activityId, contentElementId: it.id });
-        const allSeen = [seen.contentElement[it.uid], seen.activity[activityUid]];
-        acc[it.uid] = { ...it, comments, lastSeen: max(allSeen) || 0 };
+        const seenUids = [seen.contentElement[it.uid], seen.activity[activityUid]];
+        acc[it.uid] = { ...it, comments, lastSeen: max(seenUids) || 0 };
       }, {});
     },
     containerConfigs: vm => getSupportedContainers(vm.activity.type)
