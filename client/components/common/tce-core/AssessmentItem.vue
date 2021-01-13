@@ -2,7 +2,7 @@
   <li
     @mouseenter="hover = true"
     @mouseleave="hover = false"
-    :class="{ hover }"
+    :class="[assessment.changeSincePublish, { hover, expanded, diff: showPublishDiff }]"
     class="list-group-item assessment-item elevation-1">
     <span v-if="draggable" class="drag-handle">
       <v-icon>mdi-drag-vertical</v-icon>
@@ -37,7 +37,11 @@
         {{ elementConfig.subtype }}
       </v-chip>
       <span class="question">{{ question | truncate(50) }}</span>
+      <publish-diff-chip
+        v-if="showPublishDiff && assessment.changeSincePublish"
+        :change-type="assessment.changeSincePublish" />
       <v-btn
+        v-else
         @click.stop="$emit('delete')"
         :class="{ disabled: isDisabled }"
         color="primary"
@@ -53,6 +57,8 @@
 import cloneDeep from 'lodash/cloneDeep';
 import filter from 'lodash/filter';
 import map from 'lodash/map';
+import { mapState } from 'vuex';
+import PublishDiffChip from './PublishDiffChip';
 
 const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
 const blankRegex = /(@blank)/g;
@@ -73,6 +79,7 @@ export default {
     return { hover: false };
   },
   computed: {
+    ...mapState('editor', ['showPublishDiff']),
     elementConfig() {
       return this.$teRegistry.get(this.assessment.data.type);
     },
@@ -88,7 +95,8 @@ export default {
       Object.assign(assessment.data, data);
       this.$emit('save', assessment);
     }
-  }
+  },
+  components: { PublishDiffChip }
 };
 </script>
 
@@ -149,5 +157,21 @@ export default {
 
 .question-container {
   margin: 0 !important;
+}
+
+.diff {
+  border: none;
+
+  &.expanded {
+    border-radius: 4px;
+  }
+
+  &.new {
+    @include highlight(var(--v-success-lighten2));
+  }
+
+  &.changed, &.removed {
+    @include highlight(var(--v-secondary-lighten4));
+  }
 }
 </style>
