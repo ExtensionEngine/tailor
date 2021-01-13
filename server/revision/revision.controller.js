@@ -25,7 +25,7 @@ function index({ repository, query, opts }, res) {
 async function getStateByMoment({ query }, res) {
   const { activityId, elementIds, timestamp } = query;
   const activity = await Activity.findByPk(activityId);
-  const removes = await getActivityNodeRemoves(activity, timestamp);
+  const removes = await getPublishedEntityRemoves(activity, timestamp);
   const entityIds = [...elementIds, ...map(removes.elements, 'state.id')];
   const removedActivityIds = map(removes.activities, 'state.id');
   const elements = await getLastRevision(entityIds, removedActivityIds, timestamp);
@@ -45,26 +45,29 @@ module.exports = {
   resolve
 };
 
-async function getActivityNodeRemoves(activity, afterTimestamp) {
+async function getPublishedEntityRemoves(activity, publishTimestamp) {
   const { nodes } = await activity.descendants({ paranoid: false });
-  const whereRemoved = {
+  const whereRemovedAfter = {
     operation: 'REMOVE',
-    createdAt: { [Op.gt]: afterTimestamp }
+    createdAt: { [Op.gt]: publishTimestamp }
+  };
+  const whereCreatedBefore = {
+    createdAt: { [Op.lt]: publishTimestamp }
   };
   const hasNodeId = { [Op.in]: map(nodes, 'id') };
   const [activities, elements] = await Promise.all([
     Revision.findAll({
       where: {
-        ...whereRemoved,
+        ...whereRemovedAfter,
         entity: 'ACTIVITY',
-        state: { id: hasNodeId }
+        state: { ...whereCreatedBefore, id: hasNodeId }
       }
     }),
     Revision.findAll({
       where: {
-        ...whereRemoved,
+        ...whereRemovedAfter,
         entity: 'CONTENT_ELEMENT',
-        state: { activityId: hasNodeId }
+        state: { ...whereCreatedBefore, activityId: hasNodeId }
       }
     })
   ]);
