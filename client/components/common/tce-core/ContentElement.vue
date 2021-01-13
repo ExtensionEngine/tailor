@@ -232,7 +232,7 @@ export default {
   }
 
   .element-actions {
-    display: none
+    display: none;
   }
 }
 
