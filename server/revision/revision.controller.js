@@ -78,11 +78,11 @@ function getLastRevision(ids, activityIds, beforeTimestamp) {
   const whereCreateOrUpdate = {
     operation: { [Op.or]: ['CREATE', 'UPDATE'] }
   };
-  const whereCreatedBefore = { createdAt: { [Op.lt]: beforeTimestamp } };
+  const whereBefore = { createdAt: { [Op.lt]: beforeTimestamp } };
   return Revision.scope('lastByEntity').findAll({
     where: {
       ...whereCreateOrUpdate,
-      ...whereCreatedBefore,
+      ...whereBefore,
       state: {
         [Op.or]: [{
           id: { [Op.in]: ids }
