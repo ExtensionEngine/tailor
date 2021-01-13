@@ -32,18 +32,15 @@ const getPublishedState = revisions => revisions.reduce((all, { state }) => ({
 export default {
   name: 'publish-diff-provider',
   props: {
-    showDiff: { type: Boolean, default: false },
-    publishTimestamp: { type: String, required: true },
     elements: { type: Object, default: () => ({}) },
     activities: { type: Object, default: () => ({}) },
     containerGroups: { type: Object, default: () => ({}) },
     activityId: { type: Number, required: true },
-    repositoryId: { type: Number, required: true }
+    repositoryId: { type: Number, required: true },
+    publishTimestamp: { type: String, required: true },
+    showDiff: { type: Boolean, default: false }
   },
-  data: () => ({
-    publishedElements: {},
-    publishedActivities: {}
-  }),
+  data: () => ({ publishedElements: {}, publishedActivities: {} }),
   computed: {
     processedElements() {
       const elements = cloneDeep(this.elements);
