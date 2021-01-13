@@ -4,10 +4,13 @@
     :class="[element.changeSincePublish, {
       selected: activeUsers.length,
       focused: isFocused,
+      diff: showPublishDiff,
       frame
     }]"
     class="content-element">
-    <div :class="{ visible: showPublishDiff && element.changeSincePublish }" class="header d-flex">
+    <div
+      :class="{ visible: showPublishDiff && element.changeSincePublish }"
+      class="header d-flex">
       <publish-diff-chip :change-type="element.changeSincePublish" />
     </div>
     <active-users :users="activeUsers" :size="20" class="active-users" />
@@ -19,7 +22,7 @@
       @focus="onSelect"
       :id="`element_${id}`"
       v-bind="{ ...$attrs, element, isFocused, isDragged, isDisabled, dense }" />
-    <div v-if="!isDisabled && !showPublishDiff" class="element-actions">
+    <div v-if="!isDisabled" class="element-actions">
       <div
         v-if="showDiscussion"
         :class="{ 'is-visible': isHighlighted || hasComments }">
@@ -211,14 +214,6 @@ export default {
   left: 0;
 }
 
-.new {
-  @include highlight(var(--v-success-lighten2));
-}
-
-.changed, .removed {
-  @include highlight(var(--v-secondary-lighten4));
-}
-
 .header {
   width: 100%;
   max-height: 0;
@@ -228,4 +223,19 @@ export default {
     padding: 0 0 0.5rem;
   }
 }
+
+.diff {
+  &.new {
+    @include highlight(var(--v-success-lighten2));
+  }
+
+  &.changed, &.removed {
+    @include highlight(var(--v-secondary-lighten4));
+  }
+
+  .element-actions {
+    display: none
+  }
+}
+
 </style>
