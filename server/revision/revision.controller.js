@@ -1,6 +1,8 @@
 'use strict';
 
 const { Activity, Revision, Sequelize, User } = require('../shared/database');
+const get = require('lodash/get');
+const groupBy = require('lodash/groupBy');
 const { resolveStatics } = require('../shared/storage/helpers');
 
 const { Op } = Sequelize;
@@ -22,33 +24,43 @@ function index({ repository, query }, res) {
 }
 
 async function getStateByMoment({ repository, query }, res) {
-  const { activityId, entity, entityIds = [], timestamp } = query;
+  const { activityId, timestamp } = query;
+  const elementIds = (query.elementIds || []).map(Number);
   const repositoryId = repository.id;
   const activity = await Activity.findByPk(activityId);
-  const { nodes } = await activity.descendants();
-  const removes = await Revision.findAll({
-    attributes: ['state'],
+  const { nodes } = await activity.descendants({ paranoid: false });
+  const whereRemoved = {
+    repositoryId,
+    operation: 'REMOVE',
+    state: { id: { [Op.in]: nodes.map(it => it.id) } },
+    createdAt: { [Op.gt]: timestamp }
+  };
+  const [removedActivities, removedElements] = await Promise.all([
+    Revision.findAll({ where: { ...whereRemoved, entity: 'ACTIVITY' } }),
+    Revision.findAll({
+      attributes: ['state'],
+      where: { ...whereRemoved, entity: 'CONTENT_ELEMENT' }
+    })
+  ]);
+  const removedElementIds = removedElements.map(it => it.state.id);
+  const activityIds = removedActivities.map(it => it.state.id);
+  const elements = await Revision.scope('lastByEntity').findAll({
     where: {
       repositoryId,
-      entity,
-      operation: 'REMOVE',
-      state: { activityId: { [Op.in]: nodes.map(it => it.id) } },
-      createdAt: { [Op.gt]: timestamp }
+      operation: {
+        [Op.or]: ['CREATE', 'UPDATE']
+      },
+      state: {
+        [Op.or]: [{
+          id: { [Op.in]: [...elementIds, ...removedElementIds] }
+        }, {
+          activityId: { [Op.in]: activityIds }
+        }]
+      },
+      createdAt: { [Op.lt]: timestamp }
     }
   });
-  const removedEntityIds = removes.map(it => it.state.id);
-  const ids = [...entityIds, ...removedEntityIds].map(Number);
-  if (!ids.length) return [];
-  const where = {
-    repositoryId,
-    entity,
-    operation: 'UPDATE',
-    state: { id: { [Op.in]: ids } },
-    createdAt: { [Op.lt]: timestamp }
-  };
-  return Revision.scope('lastByEntity')
-    .findAll({ where })
-    .then(data => res.json({ data }));
+  return res.json({ data: { elements, activities: removedActivities } });
 }
 
 function resolve({ revision }, res) {

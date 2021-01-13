@@ -24,7 +24,7 @@
       @delete="requestContainerDeletion(container)"
       :name="name"
       :container="container"
-      :activities="activities"
+      :activities="processedActivities"
       :elements="processedElements"
       :tes="elements"
       :position="index"
@@ -57,6 +57,7 @@ export default {
   props: {
     containerGroup: { type: Array, default: () => ({}) },
     processedElements: { type: Object, required: true },
+    processedActivities: { type: Object, required: true },
     type: { type: String, required: true },
     templateId: { type: String, default: null },
     parentId: { type: Number, required: true },
@@ -67,7 +68,6 @@ export default {
     isDisabled: { type: Boolean, default: false }
   },
   computed: {
-    ...mapState('repository/activities', { activities: 'items' }),
     ...mapState('repository/contentElements', { elements: 'items' }),
     containerName() {
       const id = getContainerTemplateId(this);

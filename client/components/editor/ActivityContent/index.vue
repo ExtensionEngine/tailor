@@ -8,19 +8,22 @@
       <content-loader v-if="isLoading" class="loader" />
       <publish-diff-provider
         v-else
-        v-slot="{ processedElements }"
+        v-slot="{ processedElements, processedActivities, processedContainerGroups }"
         :show-diff="showPublishDiff"
         :elements="elementsWithComments"
+        :activities="activities"
+        :container-groups="rootContainerGroups"
         :activity-id="activity.id"
         :repository-id="repository.id"
         :publish-timestamp="activity.publishedAt">
         <content-containers
-          v-for="(containerGroup, type) in rootContainerGroups"
+          v-for="(containerGroup, type) in processedContainerGroups"
           :key="type"
           @focusoutElement="focusoutElement"
           v-bind="getContainerConfig(type)"
           :container-group="containerGroup"
           :processed-elements="processedElements"
+          :processed-activities="processedActivities"
           :parent-id="activityId"
           :is-disabled="showPublishDiff" />
       </publish-diff-provider>
@@ -74,6 +77,7 @@ export default {
     ...mapGetters('repository', ['activities']),
     ...mapGetters('editor', ['collaboratorSelections']),
     ...mapGetters('repository/contentElements', ['elements']),
+    ...mapGetters('repository/activities', ['activities']),
     ...mapGetters('repository/comments', ['getComments']),
     ...mapState('repository/comments', ['seen']),
     ...mapState({ user: state => state.auth.user }),

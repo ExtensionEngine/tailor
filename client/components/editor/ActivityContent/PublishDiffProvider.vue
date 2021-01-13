@@ -1,16 +1,27 @@
 <template>
   <div>
-    <slot :processed-elements="showDiff ? elementsWithPublishDiff : elements"></slot>
+    <slot
+      v-if="showDiff"
+      v-bind="{ processedElements, processedContainerGroups, processedActivities }">
+    </slot>
+    <slot
+      v-else
+      :processed-elements="elements"
+      :processed-container-groups="containerGroups"
+      :processed-activities="activities">
+    </slot>
   </div>
 </template>
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
+import filter from 'lodash/filter';
 import isAfter from 'date-fns/isAfter';
 import map from 'lodash/map';
 import mapValues from 'lodash/mapValues';
 import merge from 'lodash/merge';
 import omit from 'lodash/omit';
+import reduce from 'lodash/reduce';
 import revisionApi from '@/api/revision';
 
 const getPublishedState = revisions => revisions.reduce((all, { state }) => ({
@@ -24,17 +35,35 @@ export default {
     showDiff: { type: Boolean, default: false },
     publishTimestamp: { type: String, required: true },
     elements: { type: Object, default: () => ({}) },
+    activities: { type: Object, default: () => ({}) },
+    containerGroups: { type: Object, default: () => ({}) },
     activityId: { type: Number, required: true },
     repositoryId: { type: Number, required: true }
   },
-  data: () => ({ publishedElements: {} }),
+  data: () => ({
+    publishedElements: {},
+    publishedActivities: {}
+  }),
   computed: {
-    elementsWithPublishDiff() {
+    processedElements() {
       const elements = cloneDeep(this.elements);
       return mapValues(merge(elements, this.publishedElements), element => ({
         ...element,
         changeSincePublish: this.getChangeType(element)
       }));
+    },
+    processedActivities() {
+      const activities = cloneDeep(this.activities);
+      return merge(activities, this.publishedActivities);
+    },
+    processedContainerGroups() {
+      return reduce(this.containerGroups, (groups, group, type) => {
+        const containers = filter(this.publishedActivities, {
+          type,
+          parentId: this.activityId
+        });
+        return { ...groups, [type]: [...group, ...containers] };
+      }, {});
     }
   },
   methods: {
@@ -57,22 +86,22 @@ export default {
       if (this.isModified(element)) return 'changed';
       return null;
     },
-    fetchPublishedElements() {
+    fetchPublishedState() {
       const query = {
-        entity: 'CONTENT_ELEMENT',
-        entityIds: map(this.elements, 'id'),
+        elementIds: map(this.elements, 'id'),
         activityId: this.activityId,
         timestamp: this.publishTimestamp
       };
       return revisionApi.getStateByMoment(this.repositoryId, query)
-        .then(revisions => {
-          this.publishedElements = getPublishedState(revisions);
+        .then(({ activities, elements }) => {
+          this.publishedElements = getPublishedState(elements);
+          this.publishedActivities = getPublishedState(activities);
         });
     }
   },
   watch: {
     showDiff(isOn) {
-      if (isOn) this.fetchPublishedElements();
+      if (isOn) this.fetchPublishedState();
     }
   }
 };
