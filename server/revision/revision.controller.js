@@ -22,9 +22,8 @@ function index({ repository, query, opts }, res) {
 }
 
 async function getStateByMoment({ repository, query }, res) {
-  const { activityId, timestamp } = query;
-  const elementIds = (query.elementIds || []).map(Number);
   const repositoryId = repository.id;
+  const { activityId, elementIds, timestamp } = query;
   const activity = await Activity.findByPk(activityId);
   const { nodes } = await activity.descendants({ paranoid: false });
   const whereRemoved = {
