@@ -30,14 +30,24 @@ async function getStateByMoment({ repository, query }, res) {
   const whereRemoved = {
     repositoryId,
     operation: 'REMOVE',
-    state: { id: { [Op.in]: nodes.map(it => it.id) } },
     createdAt: { [Op.gt]: timestamp }
   };
+  const hasNodeId = { [Op.in]: nodes.map(it => it.id) };
   const [removedActivities, removedElements] = await Promise.all([
-    Revision.findAll({ where: { ...whereRemoved, entity: 'ACTIVITY' } }),
+    Revision.findAll({
+      where: {
+        ...whereRemoved,
+        entity: 'ACTIVITY',
+        state: { id: hasNodeId }
+      }
+    }),
     Revision.findAll({
       attributes: ['state'],
-      where: { ...whereRemoved, entity: 'CONTENT_ELEMENT' }
+      where: {
+        ...whereRemoved,
+        entity: 'CONTENT_ELEMENT',
+        state: { activityId: hasNodeId }
+      }
     })
   ]);
   const removedElementIds = removedElements.map(it => it.state.id);
