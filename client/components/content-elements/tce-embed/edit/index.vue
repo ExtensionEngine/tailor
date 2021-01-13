@@ -11,9 +11,7 @@
       active-icon="mdi-arrow-up" />
     <div v-else>
       <div class="content">
-        <div v-show="!isDisabled && !isFocused" class="overlay">
-          <div class="message grey--text text--lighten-2">Click to preview</div>
-        </div>
+        <preview-overlay :show="!isDisabled && !isFocused" />
         <!-- Dragging iframes is not supported inside sortablejs container! -->
         <iframe
           v-if="!isDragged"
@@ -30,6 +28,7 @@
 
 <script>
 import { ElementPlaceholder } from 'tce-core';
+import PreviewOverlay from 'tce-core/PreviewOverlay';
 
 export default {
   name: 'tce-embed',
@@ -53,7 +52,8 @@ export default {
     this.$elementBus.on('save', data => this.$emit('save', data));
   },
   components: {
-    ElementPlaceholder
+    ElementPlaceholder,
+    PreviewOverlay
   }
 };
 </script>
@@ -64,23 +64,6 @@ export default {
   overflow: auto;
 }
 
-.overlay {
-  display: flex;
-  flex-flow: row;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  z-index: 3;
-  width: 100%;
-  height: 100%;
-  background-color: #111;
-  opacity: 0.9;
-
-  .message {
-    font-size: 1.125rem;
-  }
-}
-
 .content {
   position: absolute;
   top: 0;
@@ -89,9 +72,5 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-}
-
-.disabled .overlay {
-  display: none;
 }
 </style>

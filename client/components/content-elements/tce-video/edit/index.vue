@@ -9,11 +9,9 @@
       active-placeholder="Use toolbar to upload the video"
       active-icon="mdi-arrow-up" />
     <div v-else>
-      <div v-if="!isDisabled && !isFocused" class="overlay">
-        <div class="message grey--text text--lighten-2">
-          Double click to preview
-        </div>
-      </div>
+      <preview-overlay :show="!isDisabled && !isFocused">
+        Double click to preview
+      </preview-overlay>
       <div v-if="showError" class="overlay">
         <div class="message secondary--text">
           <v-icon>mdi-alert</v-icon> Error loading media!
@@ -42,6 +40,7 @@ import { ElementPlaceholder } from 'tce-core';
 import { extname } from 'path';
 import get from 'lodash/get';
 import { PlyrueComponent as Plyrue } from 'plyrue';
+import PreviewOverlay from 'tce-core/PreviewOverlay';
 
 const { MEDIA_ERR_SRC_NOT_SUPPORTED } = window.MediaError;
 
@@ -101,7 +100,7 @@ export default {
   mounted() {
     this.$elementBus.on('save', ({ data }) => this.$emit('save', data));
   },
-  components: { ElementPlaceholder, Plyrue }
+  components: { ElementPlaceholder, Plyrue, PreviewOverlay }
 };
 
 function isShareLink({ hostname }) {
@@ -154,9 +153,5 @@ function mimetype({ pathname }) {
       display: none;
     }
   }
-}
-
-.disabled .overlay {
-  display: none;
 }
 </style>
