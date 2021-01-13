@@ -5,8 +5,8 @@ const { resolveStatics } = require('../shared/storage/helpers');
 
 const { Op } = Sequelize;
 
-function index({ repository, query }, res) {
-  const { limit, offset, entity, entityId } = query;
+function index({ repository, query, opts }, res) {
+  const { entity, entityId } = query;
   const where = { repositoryId: repository.id };
   if (entity) {
     where.entity = entity;
@@ -17,7 +17,7 @@ function index({ repository, query }, res) {
     paranoid: false,
     attributes: ['id', 'email', 'firstName', 'lastName', 'fullName', 'label']
   }];
-  const opts = { where, include, order: [['createdAt', 'DESC']], limit, offset };
+  Object.assign(opts, { where, include });
   return Revision.findAll(opts).then(data => res.json({ data }));
 }
 
