@@ -136,10 +136,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@mixin highlight($color) {
-  box-shadow: 0 0 0 2px $color;
-}
-
 .content-element {
   $accent-1: #1de9b6;
   $accent-2: #ff4081;
