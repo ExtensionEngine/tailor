@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import ActivityContent from './ActivityContent';
 import get from 'lodash/get';
 import { getElementId } from 'tce-core/utils';
@@ -49,6 +49,7 @@ export default {
     ...mapGetters('editor', ['activity', 'contentContainers', 'rootContainerGroups']),
     ...mapGetters('repository', ['repository', 'outlineActivities']),
     ...mapGetters('repository/userTracking', ['getActiveUsers']),
+    ...mapState('editor', ['showPublishDiff']),
     activeUsers: vm => vm.getActiveUsers('activity', vm.activityId)
   },
   methods: {
