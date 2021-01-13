@@ -64,7 +64,7 @@ class Revision extends Model {
           literal(`DISTINCT ON (${entityIdRawField}) 1`),
           ...Object.keys(this.rawAttributes)
         ],
-        order: [[literal(entityIdRawField)]]
+        order: [[literal(entityIdRawField)], ['createdAt', 'DESC']]
       }
     };
   }
