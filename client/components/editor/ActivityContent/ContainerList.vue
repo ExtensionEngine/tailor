@@ -28,7 +28,7 @@
       :elements="processedElements"
       :tes="elements"
       :position="index"
-      :is-disabled="isDisabled"
+      :is-disabled="showPublishDiff"
       v-bind="$attrs" />
     <div v-if="addBtnEnabled">
       <v-btn @click="addContainer" color="blue-grey darken-3" text class="mt-4">
@@ -64,17 +64,20 @@ export default {
     label: { type: String, required: true },
     required: { type: Boolean, default: true },
     multiple: { type: Boolean, default: false },
-    displayHeading: { type: Boolean, default: false },
-    isDisabled: { type: Boolean, default: false }
+    displayHeading: { type: Boolean, default: false }
   },
   computed: {
     ...mapState('repository/contentElements', { elements: 'items' }),
+    ...mapState('editor', ['showPublishDiff']),
     containerName() {
       const id = getContainerTemplateId(this);
       return getContainerName(this.$ccRegistry.get(id) ? id : 'DEFAULT');
     },
     name: vm => vm.label.toLowerCase(),
-    addBtnEnabled: vm => !vm.isDisabled && !(!vm.multiple && vm.containerGroup.length),
+    addBtnEnabled() {
+      const isMultipleOrEmpty = this.multiple || !this.containerGroup.length;
+      return !this.showPublishDiff && isMultipleOrEmpty;
+    },
     nextPosition() {
       const last = get(maxBy(this.containerGroup, 'position'), 'position', 0);
       return last + 1;

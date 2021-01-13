@@ -24,8 +24,7 @@
           :container-group="containerGroup"
           :processed-elements="processedElements"
           :processed-activities="processedActivities"
-          :parent-id="activityId"
-          :is-disabled="showPublishDiff" />
+          :parent-id="activityId" />
       </publish-diff-provider>
     </div>
   </div>
