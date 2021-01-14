@@ -1,31 +1,24 @@
 <template>
   <ul v-intersect="onIntersect" class="discussion-thread">
-    <li
-      v-for="comment in visibleComments"
+    <thread-item
+      v-for="(comment, index) in visibleComments"
       :key="comment.uid"
-      class="thread-item">
-      <unseen-separator
-        v-if="showUnseenSeparator(comment)"
-        ref="unseenSeparator"
-        @seen="markSeen"
-        :unseen-comments-count="unseenThread.length" />
-      <v-divider v-else class="thread-separator" />
-      <thread-comment
-        @update="onUpdate"
-        @remove="$emit('remove', comment)"
-        v-bind="{ comment, user, isActivityThread, isEditor }"
-        :element-label="getElementLabel(comment)"
-        class="mb-3" />
-    </li>
+      ref="threadItem"
+      @seen="markSeen"
+      @update="onUpdate"
+      @remove="$emit('remove', comment)"
+      v-bind="{ comment, isActivityThread, user, isEditor }"
+      :element-label="getElementLabel(comment)"
+      :unseen-count="unseenThread.length"
+      :is-first-unseen="firstUnseenIndex === index" />
   </ul>
 </template>
 
 <script>
-import find from 'lodash/find';
+import filter from 'lodash/filter';
 import orderBy from 'lodash/orderBy';
 import takeRgt from 'lodash/takeRight';
-import ThreadComment from './Comment';
-import UnseenSeparator from './UnseenSeparator';
+import ThreadItem from './Item';
 
 export default {
   name: 'discussion-thread',
@@ -35,15 +28,14 @@ export default {
     showAll: { type: Boolean, default: false },
     minDisplayed: { type: Number, default: 5 },
     isActivityThread: { type: Boolean, default: false },
-    unseenComments: { type: Array, required: true },
     user: { type: Object, required: true }
   },
   data: () => ({ isVisible: false }),
   computed: {
     isEditor: vm => vm.$route.name === 'editor',
     visibleComments: vm => vm.showAll ? vm.items : takeRgt(vm.items, vm.minDisplayed),
-    unseenThread: vm => orderBy(vm.unseenComments, 'createdAt', 'asc'),
-    firstUnseenComment: vm => vm.unseenThread[0]
+    unseenThread: vm => orderBy(filter(vm.items, 'unseen'), 'createdAt', 'asc'),
+    firstUnseenIndex: vm => vm.items.findIndex(it => it.unseen)
   },
   methods: {
     onUpdate(comment, content) {
@@ -53,20 +45,16 @@ export default {
       if (!contentElement) return;
       return find(this.$teRegistry._registry, { type: contentElement.type })?.name;
     },
-    showUnseenSeparator({ id, author }) {
-      const { firstUnseenComment, user } = this;
-      const isAuthor = user.id === author.id;
-      return !isAuthor && firstUnseenComment?.id === id;
-    },
     onIntersect(_entries, _observer, isIntersected) {
       this.isVisible = isIntersected;
     },
-    scrollToFirstUnseen(unseenComments) {
-      const unseen = unseenComments || this.unseenThread;
-      if (unseen.length < this.minDisplayed) return;
+    toggleUnseen(unseenComments) {
+      const { $refs, unseenThread, minDisplayed, firstUnseenIndex } = this;
+      const unseen = unseenComments || unseenThread;
+      if (unseen.length < minDisplayed) return;
       this.$emit('showAll', true);
       this.$nextTick(() => {
-        const element = this.$refs.unseenSeparator[0].$el;
+        const element = $refs.threadItem[firstUnseenIndex].$el;
         if (!element) return;
         element.scrollIntoView({ behavior: 'smooth' });
       });
@@ -79,14 +67,14 @@ export default {
   watch: {
     isVisible(val) {
       if (!val || !this.unseenThread.length) return;
-      this.scrollToFirstUnseen();
+      this.toggleUnseen();
     },
     unseenThread: {
       immediate: true,
-      handler: 'scrollToFirstUnseen'
+      handler: 'toggleUnseen'
     }
   },
-  components: { ThreadComment, UnseenSeparator }
+  components: { ThreadItem }
 };
 </script>
 
@@ -95,19 +83,5 @@ export default {
   margin: 0;
   padding: 0;
   list-style: none;
-}
-
-.discussion-thread .thread-item {
-  ::v-deep .unseen-separator .v-divider {
-    margin: 1.5rem 0 0;
-  }
-
-  .thread-separator {
-    margin: 0 0.25rem 0.5rem 0.25rem;
-  }
-
-  &:first-child .thread-separator {
-    display: none;
-  }
 }
 </style>

@@ -27,11 +27,10 @@
       @seen="$emit('seen')"
       @showAll="showAll = $event"
       :items="thread"
-      :user="user"
       :show-all="showAll"
       :min-displayed="commentsShownLimit"
-      :unseen-comments="unseenComments"
       :is-activity-thread="isActivityThread"
+      :user="user"
       class="mt-2" />
     <div class="text-right">
       <text-editor

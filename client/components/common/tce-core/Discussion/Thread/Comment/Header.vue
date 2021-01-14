@@ -36,7 +36,7 @@
         :key="name"
         @click="$emit(action)"
         x-small icon
-        class="mr-1">
+        class="ml-1">
         <v-icon size="14" color="grey">{{ icon }}</v-icon>
       </v-btn>
     </div>
