@@ -14,7 +14,7 @@ export const getUnseenActivityComments = ({ seen }, getters, { auth }) => activi
     const isAuthor = it.authorId === auth.user.id;
     const createdAt = new Date(it.createdAt).getTime();
     if (isAuthor || lastActivitySeenDate >= createdAt) return;
-    if (!it.contentElement) return true;
+    if (!it.contentElement) return true; // Early return activity comment.
     const lastElementSeenDate = get(seen.contentElement, it.contentElement.uid, 0);
     return lastElementSeenDate < createdAt;
   });
