@@ -50,7 +50,7 @@ export default {
 <style lang="scss" scoped>
 .thread-item {
   .thread-separator .v-divider {
-    margin: 0 0.25rem 0.5rem 0.25rem;
+    margin: 0 0.25rem 1rem 0.25rem;
   }
 
   &:first-child .thread-separator {
@@ -62,11 +62,11 @@ export default {
   text-align: center;
 
   .v-divider {
-    margin: 1.5rem 0 0;
+    margin: 1rem 0 0.25rem;
   }
 
   ::v-deep .v-chip.v-chip--outlined.v-chip {
-    margin: -1rem 0 0.5rem 0;
+    margin: -1.5rem 0 0.5rem 0;
     border-radius: 1rem !important;
     background-color: #fafafa !important;
 

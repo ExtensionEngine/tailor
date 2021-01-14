@@ -19,6 +19,7 @@
 
 <script>
 import filter from 'lodash/filter';
+import find from 'lodash/find';
 import orderBy from 'lodash/orderBy';
 import takeRgt from 'lodash/takeRight';
 import ThreadItem from './Item';
