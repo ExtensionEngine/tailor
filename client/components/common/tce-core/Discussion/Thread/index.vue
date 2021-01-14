@@ -1,16 +1,19 @@
 <template>
   <ul v-intersect="onIntersect" class="discussion-thread">
     <thread-item
-      v-for="(comment, index) in visibleComments"
+      v-for="comment in visibleComments"
       :key="comment.uid"
       ref="threadItem"
       @seen="markSeen"
       @update="onUpdate"
       @remove="$emit('remove', comment)"
-      v-bind="{ comment, isActivityThread, user, isEditor }"
+      :comment="comment"
+      :is-editor="isEditor"
       :element-label="getElementLabel(comment)"
       :unseen-count="unseenThread.length"
-      :is-first-unseen="firstUnseenIndex === index" />
+      :is-first-unseen="firstUnseen.id === comment.id"
+      :is-activity-thread="isActivityThread"
+      :user="user" />
   </ul>
 </template>
 
@@ -35,7 +38,10 @@ export default {
     isEditor: vm => vm.$route.name === 'editor',
     visibleComments: vm => vm.showAll ? vm.items : takeRgt(vm.items, vm.minDisplayed),
     unseenThread: vm => orderBy(filter(vm.items, 'unseen'), 'createdAt', 'asc'),
-    firstUnseenIndex: vm => vm.items.findIndex(it => it.unseen)
+    firstUnseen: ({ items }) => ({
+      id: items.find(it => it.unseen)?.id,
+      index: items.findIndex(it => it.unseen)
+    })
   },
   methods: {
     onUpdate(comment, content) {
@@ -49,12 +55,12 @@ export default {
       this.isVisible = isIntersected;
     },
     toggleUnseen(unseenComments) {
-      const { $refs, unseenThread, minDisplayed, firstUnseenIndex } = this;
+      const { $refs, unseenThread, minDisplayed, firstUnseen } = this;
       const unseen = unseenComments || unseenThread;
       if (unseen.length < minDisplayed) return;
       this.$emit('showAll', true);
       this.$nextTick(() => {
-        const element = $refs.threadItem[firstUnseenIndex].$el;
+        const element = $refs.threadItem[firstUnseen.index].$el;
         if (!element) return;
         element.scrollIntoView({ behavior: 'smooth' });
       });

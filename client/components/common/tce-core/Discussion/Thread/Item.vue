@@ -1,8 +1,9 @@
 <template>
   <li class="thread-item">
-    <div v-if="showUnseenSeparator" class="unseen-separator">
+    <div :class="{ unseen: showUnseenSeparator }" class="thread-separator">
       <v-divider />
       <v-chip
+        v-if="showUnseenSeparator"
         @click="$emit('seen')"
         @click:close="$emit('seen')"
         close-icon="mdi-close"
@@ -12,7 +13,6 @@
         <span class="mr-2">{{ unseenCommentsLabel }}</span>
       </v-chip>
     </div>
-    <v-divider v-else class="thread-separator" />
     <thread-comment
       v-on="$listeners"
       v-bind="{ comment, user, isActivityThread, isEditor, elementLabel }"
@@ -36,8 +36,10 @@ export default {
     isEditor: { type: Boolean, required: true }
   },
   computed: {
-    authorId: vm => vm.comment.author.id,
-    showUnseenSeparator: vm => vm.user.id !== vm.authorId && vm.isFirstUnseen,
+    showUnseenSeparator() {
+      const { user, comment, isFirstUnseen } = this;
+      return user.id !== comment.authorId && isFirstUnseen;
+    },
     unseenCommentsLabel: ({ unseenCount }) =>
       `${unseenCount} new ${pluralize('message', unseenCount)}`
   },
@@ -47,7 +49,7 @@ export default {
 
 <style lang="scss" scoped>
 .thread-item {
-  .thread-separator {
+  .thread-separator .v-divider {
     margin: 0 0.25rem 0.5rem 0.25rem;
   }
 
@@ -56,7 +58,7 @@ export default {
   }
 }
 
-.thread-item .unseen-separator {
+.thread-item .thread-separator.unseen {
   text-align: center;
 
   .v-divider {
