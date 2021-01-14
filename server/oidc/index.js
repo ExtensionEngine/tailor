@@ -41,7 +41,7 @@ router
     const params = {
       scope,
       ...getPromptParams(req),
-      ...isSilentAuth && getSilentAuthParams(req)
+      ...isSilentAuth(req) && getSilentAuthParams(req)
     };
     return authenticate('oidc', params)(req, res, next);
   })
