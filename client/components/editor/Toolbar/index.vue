@@ -9,15 +9,16 @@
         <span>{{ config.label }}</span>
         <span class="px-2 grey--text">|</span>
         <span class="secondary--text text--lighten-2">
-          <span v-if="showPublishDiff" class="pr-1">Preview of published</span>
           {{ activity.data.name }}
-          <template v-if="showPublishDiff">
-            <span class="px-2 grey--text">@</span>
-            <v-chip color="readonly blue-grey lighten-4" small label>
-              {{ activity.publishedAt | formatDate }}
-            </v-chip>
-          </template>
         </span>
+        <template v-if="showPublishDiff">
+          <span class="px-2 grey--text">|</span>
+          <span class="white--text">comparing with published</span>
+          <span class="px-2 grey--text">@</span>
+          <v-chip color="readonly blue-grey lighten-4" small label>
+            {{ activity.publishedAt | formatDate }}
+          </v-chip>
+        </template>
       </h1>
       <active-users v-if="!showPublishDiff" :users="activeUsers" class="mx-6" />
     </div>

@@ -53,7 +53,9 @@ export default {
         icon: 'eye',
         action: () => this.preview()
       }, {
-        title: 'View changes since publish',
+        title: this.showPublishDiff
+          ? 'Stop comparing with published'
+          : 'Compare with published',
         icon: 'plus-minus',
         active: this.showPublishDiff,
         disabled: !this.activity.publishedAt,
