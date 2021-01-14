@@ -8,7 +8,6 @@
       @update="onUpdate"
       @remove="$emit('remove', comment)"
       :comment="comment"
-      :is-editor="isEditor"
       :element-label="getElementLabel(comment)"
       :unseen-count="unseenThread.length"
       :is-first-unseen="firstUnseen.id === comment.id"
@@ -36,7 +35,6 @@ export default {
   },
   data: () => ({ isVisible: false }),
   computed: {
-    isEditor: vm => vm.$route.name === 'editor',
     visibleComments: vm => vm.showAll ? vm.items : takeRgt(vm.items, vm.minDisplayed),
     unseenThread: vm => orderBy(filter(vm.items, 'unseen'), 'createdAt', 'asc'),
     firstUnseen: ({ items }) => ({

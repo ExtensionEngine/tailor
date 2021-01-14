@@ -15,7 +15,7 @@
     </div>
     <thread-comment
       v-on="$listeners"
-      v-bind="{ comment, user, isActivityThread, isEditor, elementLabel }"
+      v-bind="{ comment, user, isActivityThread, elementLabel }"
       class="mb-3" />
   </li>
 </template>
@@ -32,8 +32,7 @@ export default {
     unseenCount: { type: Number, required: true },
     isFirstUnseen: { type: Boolean, required: true },
     isActivityThread: { type: Boolean, default: false },
-    user: { type: Object, required: true },
-    isEditor: { type: Boolean, required: true }
+    user: { type: Object, required: true }
   },
   computed: {
     showUnseenSeparator() {

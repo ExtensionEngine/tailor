@@ -25,9 +25,12 @@
           </template>
           <span>{{ comment.createdAt | formatDate('DD. MMM h:mm A') }}</span>
         </v-tooltip>
-        <element-link
+        <v-divider vertical />
+        <editor-link
           v-if="isActivityThread && elementLabel"
-          v-bind="{ ...comment, elementUid, isEditor, label: elementLabel }" />
+          :activity-id="comment.activityId"
+          :element-uid="elementUid"
+          :label="elementLabel" />
       </div>
     </div>
     <div v-if="showOptions" class="actions">
@@ -44,7 +47,7 @@
 </template>
 
 <script>
-import ElementLink from './ElementLink';
+import EditorLink from 'tce-core/EditorLink';
 
 export default {
   name: 'comment-header',
@@ -52,7 +55,6 @@ export default {
     comment: { type: Object, required: true },
     user: { type: Object, required: true },
     isActivityThread: { type: Boolean, default: false },
-    isEditor: { type: Boolean, default: false },
     elementLabel: { type: String, default: null }
   },
   computed: {
@@ -66,7 +68,7 @@ export default {
       { name: 'Edit', action: 'toggleEdit', icon: 'mdi-pencil-outline' },
       { name: 'Remove', action: 'remove', icon: 'mdi-trash-can-outline' }]
   },
-  components: { ElementLink }
+  components: { EditorLink }
 };
 </script>
 
@@ -92,6 +94,15 @@ $timestamp-color: #888;
   .edited, .time {
     color: $timestamp-color;
     font-size: 0.75rem;
+  }
+
+  hr.v-divider--vertical {
+    margin: 0.25rem 0.125rem 0.125rem 0.625rem;
+  }
+
+  ::v-deep .editor-link {
+    display: inline-flex;
+    align-self: flex-end;
   }
 
   .actions {
