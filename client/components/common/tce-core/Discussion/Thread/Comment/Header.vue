@@ -73,26 +73,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$avatar-size: 2.5rem;
-$author-color: #000;
-$timestamp-color: #888;
-
 .header {
   display: flex;
   align-items: flex-start;
 
   .comment-avatar {
-    width: $avatar-size;
     margin: 0.375rem 0.375rem 0 0;
   }
 
   .author {
-    color: $author-color;
+    color: #000;
     font-size: 1rem;
   }
 
   .edited, .time {
-    color: $timestamp-color;
+    color: #888;
     font-size: 0.75rem;
   }
 
