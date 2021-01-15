@@ -2,6 +2,7 @@
 
 const { authenticate, logout } = require('../shared/auth');
 const { BAD_REQUEST } = require('http-status-codes');
+const get = require('lodash/get');
 const { errors: OIDCError } = require('openid-client');
 const path = require('path');
 const router = require('express').Router();
@@ -18,6 +19,7 @@ const scope = ['openid', 'profile', 'email'].join(' ');
 const isSilentAuth = req => req.query.silent === 'true';
 const isResign = req => req.query.resign === 'true';
 const isLogoutRequest = req => req.query.action === 'logout';
+const isActiveStrategy = req => req.authStrategy === 'oidc';
 
 const getPromptParams = req => {
   if (isResign(req)) return { prompt: 'login' };
@@ -55,6 +57,11 @@ router
     if (!isOIDCError(err) && !isSilentAuth(req)) {
       return res.redirect(ACCESS_DENIED_ROUTE + err.email);
     }
+    if (isSilentAuth(req) && isActiveStrategy(req)) {
+      return logout({ middleware: true })(req, res, () => next(err));
+    }
+    return next(err);
+  }, (err, req, res, next) => {
     const template = path.resolve(__dirname, './error.mustache');
     const status = err.status || BAD_REQUEST;
     return res.render(template, err, (_, html) => {

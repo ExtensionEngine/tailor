@@ -30,13 +30,13 @@ class Auth extends Authenticator {
     const authenticateUser = super.authenticate(strategy, options, callback);
     return (req, res, next) => {
       const authenticateCallback = options.setCookie
-        ? this._wrapAuthenticateCallback(req, res, next)
+        ? this._wrapAuthenticateCallback(req, res, next, strategy)
         : next;
       return authenticateUser(req, res, authenticateCallback);
     };
   }
 
-  _wrapAuthenticateCallback(req, res, next) {
+  _wrapAuthenticateCallback(req, res, next, strategy) {
     return (...args) => {
       if (args.length > 0) return next(args[0]);
       const { user } = req;
@@ -46,7 +46,9 @@ class Auth extends Authenticator {
       });
       const { name, signed, secure, httpOnly } = config.jwt.cookie;
       const expires = addDays(new Date(), 5);
-      res.cookie(name, token, { signed, secure, expires, httpOnly });
+      const options = { signed, secure, expires, httpOnly };
+      res.cookie(name, token, options);
+      res.cookie('strategy', strategy, options);
       return next();
     };
   }
@@ -54,6 +56,7 @@ class Auth extends Authenticator {
   logout({ middleware = false } = {}) {
     return (_, res, next) => {
       res.clearCookie(config.jwt.cookie.name);
+      res.clearCookie('strategy');
       return middleware ? next() : res.end();
     };
   }

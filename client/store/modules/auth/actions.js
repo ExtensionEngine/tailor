@@ -22,8 +22,8 @@ export const resetPassword = (_, { token, password }) => {
 
 export const fetchUserInfo = ({ commit }) => {
   return api.getUserInfo()
-    .then(({ data: { user } }) => commit('setUser', user))
-    .catch(() => commit('setUser', null));
+    .then(({ data: { user, authStrategy } }) => commit('setAuth', { user, authStrategy }))
+    .catch(() => commit('resetAuth', null));
 };
 
 export const updateInfo = ({ commit }, userData) => {
