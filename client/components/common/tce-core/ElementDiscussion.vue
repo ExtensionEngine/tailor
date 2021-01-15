@@ -22,13 +22,12 @@
         <span>{{ activator.tooltip }}</span>
       </v-tooltip>
     </template>
-    <discussion-resolve v-if="!isResolved" :comments="comments" />
     <discussion
       @save="save"
       @update="save"
       @remove="editorBus.emit(events.REMOVE, $event)"
       @seen="setLastSeen"
-      v-bind="{ comments, unseenComments, user }"
+      v-bind="{ comments, unseenComments, isResolved, user }"
       class="pa-2" />
   </v-menu>
 </template>
@@ -36,7 +35,6 @@
 <script>
 import Discussion from 'tce-core/Discussion';
 import DiscussionEvent from './Events/DiscussionEvent';
-import DiscussionResolve from './Discussion/Resolve';
 import get from 'lodash/get';
 import { mapChannels } from '@/plugins/radio';
 
@@ -106,19 +104,19 @@ export default {
   provide() {
     return { $editorBus: this.editorBus };
   },
-  components: { Discussion, DiscussionResolve }
+  components: { Discussion }
 };
 </script>
 
 <style lang="scss" scoped>
-.v-menu__content {
+::v-deep .v-menu__content {
   background: #fff;
 
-  ::v-deep .embedded-discussion {
+  .embedded-discussion {
     text-align: left;
   }
 
-  ::v-deep .comment .author {
+  .comment .author {
     font-size: 0.875rem;
   }
 }

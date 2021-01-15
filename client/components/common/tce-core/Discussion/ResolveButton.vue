@@ -1,9 +1,9 @@
 <template>
-  <div class="d-flex justify-end mt-3">
+  <div class="resolve-button">
     <v-tooltip open-delay="800" left>
       <template v-slot:activator="{ on }">
-        <v-btn v-on="on" @click="resolveComments" color="teal" small text>
-          <v-icon color="teal" size="24" class="mr-2">
+        <v-btn v-on="on" @click="resolveComments" color="teal accent-4" small text>
+          <v-icon color="teal accent-4" size="24" class="mr-2">
             mdi-check-circle-outline
           </v-icon>
           Resolve Discussion
@@ -18,7 +18,7 @@
 import events from '../Events/DiscussionEvent';
 
 export default {
-  name: 'thread-resolve',
+  name: 'resolve-button',
   inject: ['$editorBus'],
   props: {
     comments: { type: Array, required: true }

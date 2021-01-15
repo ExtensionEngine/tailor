@@ -1,5 +1,6 @@
 <template>
   <div ref="discussion" class="embedded-discussion">
+    <resolve-button v-if="!isResolved" :comments="comments" />
     <div :class="{ 'pb-7': !showHeading && showAllToggle }">
       <v-btn
         v-if="showAllToggle"
@@ -47,6 +48,7 @@
 <script>
 import DiscussionThread from './Thread';
 import orderBy from 'lodash/orderBy';
+import ResolveButton from './ResolveButton';
 import TextEditor from './TextEditor';
 
 const initCommentInput = () => ({ content: '' });
@@ -62,6 +64,7 @@ export default {
     showHeading: { type: Boolean, default: false },
     showNotifications: { type: Boolean, default: false },
     isActivityThread: { type: Boolean, default: false },
+    isResolved: { type: Boolean, default: false },
     user: { type: Object, required: true }
   },
   data: () => ({ showAll: false, comment: initCommentInput() }),
@@ -108,6 +111,7 @@ export default {
   },
   components: {
     DiscussionThread,
+    ResolveButton,
     TextEditor
   }
 };
@@ -116,6 +120,12 @@ export default {
 <style lang="scss" scoped>
 .embedded-discussion {
   font-family: Roboto, Arial, sans-serif;
+
+  .resolve-button {
+    display: flex;
+    justify-content: flex-end;
+    margin: 0.75rem -0.25rem 0 0;
+  }
 }
 
 .header {
