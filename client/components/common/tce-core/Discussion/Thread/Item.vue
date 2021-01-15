@@ -30,14 +30,14 @@ export default {
     comment: { type: Object, required: true },
     elementLabel: { type: String, default: null },
     unseenCount: { type: Number, required: true },
-    isFirstUnseen: { type: Boolean, required: true },
+    isFirstUnseen: { type: Boolean, default: false },
     isActivityThread: { type: Boolean, default: false },
     user: { type: Object, required: true }
   },
   computed: {
     showUnseenSeparator() {
       const { user, comment, isFirstUnseen } = this;
-      return user.id !== comment.authorId && isFirstUnseen;
+      return user.id !== comment.author.id && isFirstUnseen;
     },
     unseenCommentsLabel: ({ unseenCount }) =>
       `${unseenCount} new ${pluralize('message', unseenCount)}`

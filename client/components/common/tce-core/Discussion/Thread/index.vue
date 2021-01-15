@@ -37,10 +37,10 @@ export default {
   computed: {
     visibleComments: vm => vm.showAll ? vm.items : takeRgt(vm.items, vm.minDisplayed),
     unseenThread: vm => orderBy(filter(vm.items, 'unseen'), 'createdAt', 'asc'),
-    firstUnseen: ({ items }) => ({
-      id: items.find(it => it.unseen)?.id,
-      index: items.findIndex(it => it.unseen)
-    })
+    firstUnseen() {
+      const firstUnseenIndex = this.items.findIndex(it => it.unseen);
+      return { id: this.items[firstUnseenIndex]?.id, index: firstUnseenIndex };
+    }
   },
   methods: {
     onUpdate(comment, content) {
