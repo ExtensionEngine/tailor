@@ -3,11 +3,11 @@
     <v-avatar size="34" class="comment-avatar">
       <img :src="author.imgUrl">
     </v-avatar>
-    <div class="d-flex flex-column">
+    <div class="info-container">
       <div class="d-flex align-center">
         <v-tooltip right>
           <template v-slot:activator="{ on }">
-            <span v-on="on" class="author">{{ author.label | truncate(20) }}</span>
+            <span v-on="on" class="author text-truncate">{{ author.label }}</span>
           </template>
           {{ author.label }}
         </v-tooltip>
@@ -25,12 +25,13 @@
           </template>
           <span>{{ comment.createdAt | formatDate('DD. MMM h:mm A') }}</span>
         </v-tooltip>
-        <v-divider vertical />
-        <editor-link
-          v-if="isActivityThread && elementLabel"
-          :activity-id="comment.activityId"
-          :element-uid="elementUid"
-          :label="elementLabel" />
+        <template v-if="isActivityThread && elementLabel">
+          <v-divider vertical />
+          <editor-link
+            :activity-id="comment.activityId"
+            :element-uid="elementUid"
+            :label="elementLabel" />
+        </template>
       </div>
     </div>
     <div v-if="showOptions" class="actions">
@@ -81,23 +82,33 @@ export default {
     margin: 0.375rem 0.375rem 0 0;
   }
 
-  .author {
-    color: #000;
-    font-size: 1rem;
-  }
+  .info-container {
+    display: flex;
+    flex-direction: column;
+    flex: 0 100%;
+    max-width: calc(100% - 6rem);
 
-  .edited, .time {
-    color: #888;
-    font-size: 0.75rem;
-  }
+    .author {
+      display: inline-block;
+      max-width: 75%;
+      color: #000;
+      font-size: 1rem;
+    }
 
-  hr.v-divider--vertical {
-    margin: 0.25rem 0.125rem 0.125rem 0.625rem;
-  }
+    .edited, .time {
+      margin-left: 0.125rem;
+      color: #888;
+      font-size: 0.75rem;
+    }
 
-  ::v-deep .editor-link {
-    display: inline-flex;
-    align-self: flex-end;
+    hr.v-divider--vertical {
+      margin: 0.25rem 0.125rem 0.125rem 0.625rem;
+    }
+
+    ::v-deep .editor-link {
+      display: inline-flex;
+      align-self: flex-end;
+    }
   }
 
   .actions {
