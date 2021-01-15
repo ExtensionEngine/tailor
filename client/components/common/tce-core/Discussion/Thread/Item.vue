@@ -3,7 +3,7 @@
     <div :class="{ unseen: showUnseenSeparator }" class="thread-separator">
       <v-divider />
       <v-chip
-        v-if="showUnseenSeparator"
+        v-show="showUnseenSeparator"
         @click="$emit('seen')"
         @click:close="$emit('seen')"
         close-icon="mdi-close"
@@ -29,7 +29,6 @@ export default {
   props: {
     comment: { type: Object, required: true },
     elementLabel: { type: String, default: null },
-    unseenCount: { type: Number, required: true },
     isFirstUnseen: { type: Boolean, default: false },
     isActivityThread: { type: Boolean, default: false },
     user: { type: Object, required: true }
@@ -39,8 +38,10 @@ export default {
       const { comment, isFirstUnseen, user } = this;
       return user.id !== comment.author.id && isFirstUnseen;
     },
-    unseenCommentsLabel: ({ unseenCount }) =>
-      `${unseenCount} new ${pluralize('message', unseenCount)}`
+    unseenCommentsLabel() {
+      const { unseenCount } = this.comment;
+      return `${unseenCount} new ${pluralize('message', unseenCount)}`;
+    }
   },
   components: { ThreadComment }
 };
