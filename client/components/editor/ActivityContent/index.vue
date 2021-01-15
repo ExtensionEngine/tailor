@@ -145,20 +145,27 @@ export default {
         if (!element) return;
         element.scrollIntoView({ block: 'center', behavior: 'smooth' });
       }, timeout);
-    }
-  },
-  watch: {
-    isLoading(val) {
+    },
+    revealElement({ timeout = 0, multipleSelections } = {}) {
       const { elementId } = this.$route.query;
-      if (val || !elementId) return;
+      if (!elementId) return;
       // Select and scroll to element if elementId is set
       setTimeout(() => {
         this.selectElement(elementId);
         this.scrollToElement(elementId);
+        if (!multipleSelections) return;
         this.collaboratorSelections
           .forEach(({ elementId, ...user }) => this.selectElement(elementId, user));
-      }, CE_SELECTION_DELAY);
+      }, timeout);
+    }
+  },
+  watch: {
+    isLoading(val) {
+      if (val) return;
+      const options = { timeout: CE_SELECTION_DELAY, multipleSelections: true };
+      this.revealElement(options);
     },
+    $route: 'revealElement',
     focusedElement: {
       deep: true,
       handler(val) {
@@ -173,12 +180,6 @@ export default {
       [[removeSelection, false], [isSelected, true]].forEach(([items, isSelected]) => {
         items.forEach(({ elementId, ...user }) => this.selectElement(elementId, user, isSelected));
       });
-    },
-    $route(route) {
-      const { elementId } = route.query;
-      if (!elementId) return;
-      this.selectElement(elementId);
-      this.scrollToElement(elementId);
     }
   },
   async created() {
