@@ -4,10 +4,10 @@
       <img :src="author.imgUrl">
     </v-avatar>
     <div class="d-flex flex-column">
-      <div class="d-block">
+      <div class="d-flex align-center">
         <v-tooltip right>
           <template v-slot:activator="{ on }">
-            <span v-on="on" class="author">{{ author.label | truncate(25) }}</span>
+            <span v-on="on" class="author">{{ author.label | truncate(20) }}</span>
           </template>
           {{ author.label }}
         </v-tooltip>
