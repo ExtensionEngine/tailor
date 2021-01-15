@@ -53,7 +53,7 @@ export default {
     onIntersect(_entries, _observer, isIntersected) {
       this.isVisible = isIntersected;
     },
-    toggleUnseen(unseenComments) {
+    revealUnseen(unseenComments) {
       const { $refs, unseenThread, minDisplayed, firstUnseen } = this;
       const unseen = unseenComments || unseenThread;
       if (unseen.length < minDisplayed) return;
@@ -72,11 +72,11 @@ export default {
   watch: {
     isVisible(val) {
       if (!val || !this.unseenThread.length) return;
-      this.toggleUnseen();
+      this.revealUnseen();
     },
     unseenThread: {
       immediate: true,
-      handler: 'toggleUnseen'
+      handler: 'revealUnseen'
     }
   },
   components: { ThreadItem }

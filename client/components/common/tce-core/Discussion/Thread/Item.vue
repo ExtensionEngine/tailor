@@ -36,7 +36,7 @@ export default {
   },
   computed: {
     showUnseenSeparator() {
-      const { user, comment, isFirstUnseen } = this;
+      const { comment, isFirstUnseen, user } = this;
       return user.id !== comment.author.id && isFirstUnseen;
     },
     unseenCommentsLabel: ({ unseenCount }) =>
