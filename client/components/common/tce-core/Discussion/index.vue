@@ -1,6 +1,6 @@
 <template>
   <div ref="discussion" class="embedded-discussion">
-    <resolve-button v-if="!isResolved" :comments="comments" />
+    <resolve-button v-if="!isResolved && !isActivityThread" :comments="comments" />
     <div :class="{ 'pb-7': !showHeading && showAllToggle }">
       <v-btn
         v-if="showAllToggle"
