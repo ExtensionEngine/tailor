@@ -1,7 +1,7 @@
 <template>
   <div :class="{ preview: showPreview }" class="comment-editor">
-    <div v-if="showPreview" :class="{ resolved }" class="content">
-      <p v-if="resolved" class="resolved-label">Marked as resolved</p>
+    <div v-if="showPreview" :class="{ resolved: isResolved }" class="content">
+      <p v-if="isResolved" class="resolved-label">Marked as resolved</p>
       <pre><span>{{ content }}</span><br></pre>
     </div>
     <v-textarea
@@ -22,7 +22,7 @@ export default {
     value: { type: String, default: null },
     isFocused: { type: Boolean, default: false },
     showPreview: { type: Boolean, default: false },
-    resolved: { type: Boolean, default: false },
+    isResolved: { type: Boolean, default: false },
     placeholder: { type: String, default: 'Add a comment...' }
   },
   computed: {

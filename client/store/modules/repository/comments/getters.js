@@ -8,16 +8,16 @@ export const getComments = state => params => {
   return orderBy(comments, 'createdAt', 'desc');
 };
 
-export const getUnseenActivityComments = (state, _, { auth }) => activity => {
-  const { items, seen } = state;
-  const lastActivitySeen = get(seen.activity, activity.uid, 0);
-  return filter(items, it => {
-    const isCurrentActivityComment = it.activityId === activity.id;
+export const getUnseenActivityComments = ({ seen }, getters, { auth }) => activity => {
+  const activityComments = getters.getComments({ activityId: activity.id });
+  const lastActivitySeenDate = get(seen.activity, activity.uid, 0);
+  return filter(activityComments, it => {
     const isAuthor = it.authorId === auth.user.id;
     const createdAt = new Date(it.createdAt).getTime();
-    if (!isCurrentActivityComment || isAuthor || lastActivitySeen >= createdAt) return;
+    if (isAuthor || lastActivitySeenDate >= createdAt) return;
     if (!it.contentElement) return true;
-    const lastElementSeen = get(seen.contentElement, it.contentElement.uid, 0);
-    return lastElementSeen < createdAt;
+    // Return unseen activity comment if contentElement is not set
+    const lastElementSeenDate = get(seen.contentElement, it.contentElement.uid, 0);
+    return lastElementSeenDate < createdAt;
   });
 };

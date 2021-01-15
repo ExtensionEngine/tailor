@@ -27,8 +27,8 @@
       @save="save"
       @update="save"
       @remove="editorBus.emit(events.REMOVE, $event)"
-      @markSeen="setLastSeen"
-      v-bind="{ comments, user, unseenComments }"
+      @seen="setLastSeen"
+      v-bind="{ comments, unseenComments, user }"
       class="pa-2" />
   </v-menu>
 </template>

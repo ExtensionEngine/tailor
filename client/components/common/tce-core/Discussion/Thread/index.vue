@@ -1,36 +1,27 @@
 <template>
   <ul v-intersect="onIntersect" class="discussion-thread">
-    <li
-      v-for="comment in visibleItems"
+    <thread-item
+      v-for="comment in visibleComments"
       :key="comment.uid"
-      class="thread-item">
-      <unseen-separator
-        v-if="showUnseenSeparator(comment)"
-        ref="unseen-separator"
-        @markSeen="markSeen"
-        :unseen-comments-count="unseenThread.length" />
-      <v-divider v-else class="thread-separator" />
-      <thread-comment
-        @update="onUpdate"
-        @remove="$emit('remove', comment)"
-        v-bind="{ comment, user }"
-        class="mb-3" />
-      <element-link
-        v-if="isActivityThread && comment.contentElement"
-        v-bind="comment"
-        :is-editor="isEditor"
-        :element-label="elementLabel(comment)" />
-    </li>
+      ref="threadItem"
+      @seen="markSeen"
+      @update="onUpdate"
+      @remove="$emit('remove', comment)"
+      :comment="comment"
+      :element-label="getElementLabel(comment)"
+      :unseen-count="unseenThread.length"
+      :is-first-unseen="firstUnseen.id === comment.id"
+      :is-activity-thread="isActivityThread"
+      :user="user" />
   </ul>
 </template>
 
 <script>
-import ElementLink from './ElementLink';
+import filter from 'lodash/filter';
 import find from 'lodash/find';
 import orderBy from 'lodash/orderBy';
 import takeRgt from 'lodash/takeRight';
-import ThreadComment from './Comment';
-import UnseenSeparator from './UnseenSeparator';
+import ThreadItem from './Item';
 
 export default {
   name: 'discussion-thread',
@@ -40,60 +31,55 @@ export default {
     showAll: { type: Boolean, default: false },
     minDisplayed: { type: Number, default: 5 },
     isActivityThread: { type: Boolean, default: false },
-    unseenComments: { type: Array, required: true },
     user: { type: Object, required: true }
   },
   data: () => ({ isVisible: false }),
   computed: {
-    isEditor: vm => vm.$route.name === 'editor',
-    visibleItems: vm => vm.showAll ? vm.items : takeRgt(vm.items, vm.minDisplayed),
-    unseenThread: vm => orderBy(vm.unseenComments, 'createdAt', 'asc'),
-    firstUnseenComment: vm => vm.unseenThread[0]
+    visibleComments: vm => vm.showAll ? vm.items : takeRgt(vm.items, vm.minDisplayed),
+    unseenThread: vm => orderBy(filter(vm.items, 'unseen'), 'createdAt', 'asc'),
+    firstUnseen() {
+      const firstUnseenIndex = this.items.findIndex(it => it.unseen);
+      return { id: this.items[firstUnseenIndex]?.id, index: firstUnseenIndex };
+    }
   },
   methods: {
     onUpdate(comment, content) {
       this.$emit('update', { ...comment, content, updatedAt: Date.now() });
     },
-    elementLabel({ contentElement: { type } }) {
-      return find(this.$teRegistry._registry, { type })?.name;
-    },
-    showUnseenSeparator({ id, author }) {
-      const { firstUnseenComment, user } = this;
-      const isAuthor = user.id === author.id;
-      return !isAuthor && firstUnseenComment?.id === id;
+    getElementLabel({ contentElement }) {
+      if (!contentElement) return;
+      return find(this.$teRegistry._registry, { type: contentElement.type })?.name;
     },
     onIntersect(_entries, _observer, isIntersected) {
       this.isVisible = isIntersected;
     },
-    scrollToFirstUnseen() {
+    revealUnseen(unseenComments) {
+      const { $refs, unseenThread, minDisplayed, firstUnseen } = this;
+      const unseen = unseenComments || unseenThread;
+      if (unseen.length < minDisplayed) return;
       this.$emit('showAll', true);
       this.$nextTick(() => {
-        const element = this.$refs['unseen-separator'][0].$el;
+        const element = $refs.threadItem[firstUnseen.index].$el;
         if (!element) return;
         element.scrollIntoView({ behavior: 'smooth' });
       });
     },
     markSeen() {
-      this.$emit('markSeen');
+      this.$emit('seen');
       this.$emit('showAll', false);
     }
   },
   watch: {
     isVisible(val) {
-      const { unseenThread, minDisplayed } = this;
-      if (!val || !unseenThread.length) return;
-      if (unseenThread.length < minDisplayed) return;
-      this.scrollToFirstUnseen();
+      if (!val || !this.unseenThread.length) return;
+      this.revealUnseen();
     },
     unseenThread: {
       immediate: true,
-      handler(unseenComments) {
-        if (unseenComments.length < this.minDisplayed) return;
-        this.scrollToFirstUnseen();
-      }
+      handler: 'revealUnseen'
     }
   },
-  components: { ElementLink, ThreadComment, UnseenSeparator }
+  components: { ThreadItem }
 };
 </script>
 
@@ -102,27 +88,5 @@ export default {
   margin: 0;
   padding: 0;
   list-style: none;
-}
-
-.discussion-thread .thread-item {
-  position: relative;
-
-  ::v-deep .unseen-separator .v-divider {
-    margin: 1.5rem 0 0;
-  }
-
-  .thread-separator {
-    margin: 0 0.25rem 0.5rem 0.25rem;
-  }
-
-  &:first-child .thread-separator {
-    display: none;
-  }
-
-  ::v-deep .element-link .v-btn {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-  }
 }
 </style>

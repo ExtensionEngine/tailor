@@ -4,7 +4,7 @@
       @save="saveComment"
       @update="saveComment"
       @remove="remove"
-      @markSeen="setLastSeenComment"
+      @seen="setLastSeenComment"
       v-bind="{ comments, unseenComments, showHeading, user, scrollTarget: 'editor' }"
       show-notifications is-activity-thread />
   </div>
