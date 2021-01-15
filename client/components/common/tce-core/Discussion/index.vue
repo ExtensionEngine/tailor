@@ -1,6 +1,6 @@
 <template>
   <div ref="discussion" class="embedded-discussion">
-    <resolve-button v-if="!isResolved && !isActivityThread" :comments="comments" />
+    <resolve-button v-if="showResolveButton" :comments="comments" />
     <div :class="{ 'pb-7': !showHeading && showAllToggle }">
       <v-btn
         v-if="showAllToggle"
@@ -81,7 +81,8 @@ export default {
     showAllToggle: vm => vm.commentsShownLimit < vm.thread.length,
     isTextEditorEmpty: vm => !vm.comment.content?.trim(),
     discussion: vm => vm.$refs.discussion,
-    editor: vm => vm.$refs.editor.$el
+    editor: vm => vm.$refs.editor.$el,
+    showResolveButton: vm => !vm.isResolved && !vm.isActivityThread
   },
   methods: {
     post() {

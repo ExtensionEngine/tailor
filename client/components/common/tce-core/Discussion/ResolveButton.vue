@@ -2,8 +2,8 @@
   <div class="resolve-button">
     <v-tooltip open-delay="800" left>
       <template v-slot:activator="{ on }">
-        <v-btn v-on="on" @click="resolveComments" color="teal accent-4" small text>
-          <v-icon color="teal accent-4" size="24" class="mr-2">
+        <v-btn v-on="on" @click="resolve" color="teal accent-4" small text>
+          <v-icon size="24" color="teal accent-4" class="mr-2">
             mdi-check-circle-outline
           </v-icon>
           Resolve Discussion
@@ -24,7 +24,7 @@ export default {
     comments: { type: Array, required: true }
   },
   methods: {
-    resolveComments() {
+    resolve() {
       const { contentElementId } = this.comments[0];
       this.$editorBus.emit(events.RESOLVE, contentElementId);
     }
