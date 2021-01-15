@@ -1,11 +1,13 @@
 import path from 'path';
 
+const isProduction = process.env.NODE_ENV === 'production';
 const SILENT_REFRESH_TIMEOUT = 5000;
 
 class OidcClient {
   constructor() {
     this.enabled = process.env.OIDC_ENABLED;
     this.baseUrl = path.join(process.env.API_PATH, '/oidc');
+    this._silentRefreshTimeout = null;
   }
 
   _getSilentUrl() {
@@ -57,7 +59,9 @@ class OidcClient {
       };
       iframe.contentWindow.addEventListener('auth:success', getCallback());
       iframe.contentWindow.addEventListener('auth:fail', getCallback(false));
-      this._silentRefreshTimeout = setTimeout(getCallback(false), SILENT_REFRESH_TIMEOUT);
+      if (isProduction) {
+        this._silentRefreshTimeout = setTimeout(getCallback(false), SILENT_REFRESH_TIMEOUT);
+      }
     });
   }
 }
