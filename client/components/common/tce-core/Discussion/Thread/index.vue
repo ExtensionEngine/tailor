@@ -9,7 +9,6 @@
       @remove="$emit('remove', comment)"
       :comment="comment"
       :element-label="getElementLabel(comment)"
-      :unseen-count="unseenThread.length"
       :is-first-unseen="firstUnseen.id === comment.id"
       :is-activity-thread="isActivityThread"
       :user="user" />
@@ -36,9 +35,9 @@ export default {
   data: () => ({ isVisible: false }),
   computed: {
     visibleComments: vm => vm.showAll ? vm.items : takeRgt(vm.items, vm.minDisplayed),
-    unseenThread: vm => orderBy(filter(vm.items, 'unseen'), 'createdAt', 'asc'),
+    unseenThread: vm => orderBy(filter(vm.items, 'isUnseen'), 'createdAt', 'asc'),
     firstUnseen() {
-      const firstUnseenIndex = this.items.findIndex(it => it.unseen);
+      const firstUnseenIndex = this.items.findIndex(it => it.isUnseen);
       return { id: this.items[firstUnseenIndex]?.id, index: firstUnseenIndex };
     }
   },
