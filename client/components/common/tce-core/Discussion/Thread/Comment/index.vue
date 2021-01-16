@@ -3,7 +3,7 @@
     <comment-header
       @toggleEdit="toggleEdit"
       @remove="remove"
-      v-bind="{ comment, user, isActivityThread, elementLabel }" />
+      v-bind="{ comment, isActivityThread, elementLabel, user }" />
     <div class="comment-body">
       <text-editor
         v-model="content"
@@ -29,9 +29,9 @@ export default {
   name: 'thread-comment',
   props: {
     comment: { type: Object, required: true },
-    user: { type: Object, required: true },
     isActivityThread: { type: Boolean, default: false },
-    elementLabel: { type: String, default: null }
+    elementLabel: { type: String, default: null },
+    user: { type: Object, required: true }
   },
   data: vm => ({
     content: vm.comment.content,
