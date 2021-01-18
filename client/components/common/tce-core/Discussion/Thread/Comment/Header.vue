@@ -54,9 +54,9 @@ export default {
   name: 'comment-header',
   props: {
     comment: { type: Object, required: true },
-    user: { type: Object, required: true },
     isActivityThread: { type: Boolean, default: false },
-    elementLabel: { type: String, default: null }
+    elementLabel: { type: String, default: null },
+    user: { type: Object, required: true }
   },
   computed: {
     elementUid: vm => vm.comment.contentElement.uid,

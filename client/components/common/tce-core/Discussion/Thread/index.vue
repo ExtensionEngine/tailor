@@ -8,9 +8,9 @@
       @update="onUpdate"
       @remove="$emit('remove', comment)"
       :comment="comment"
-      :element-label="getElementLabel(comment)"
-      :is-first-unseen="firstUnseen.id === comment.id"
       :is-activity-thread="isActivityThread"
+      :is-first-unseen="firstUnseen.id === comment.id"
+      :element-label="getElementLabel(comment)"
       :user="user" />
   </ul>
 </template>

@@ -15,7 +15,7 @@
     </div>
     <thread-comment
       v-on="$listeners"
-      v-bind="{ comment, user, isActivityThread, elementLabel }"
+      v-bind="{ comment, isActivityThread, elementLabel, user }"
       class="mb-3" />
   </li>
 </template>
@@ -28,9 +28,9 @@ export default {
   name: 'thread-item',
   props: {
     comment: { type: Object, required: true },
-    elementLabel: { type: String, default: null },
-    isFirstUnseen: { type: Boolean, default: false },
     isActivityThread: { type: Boolean, default: false },
+    isFirstUnseen: { type: Boolean, default: false },
+    elementLabel: { type: String, default: null },
     user: { type: Object, required: true }
   },
   computed: {
