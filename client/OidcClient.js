@@ -1,3 +1,4 @@
+import { EventEmitter } from 'events';
 import path from 'path';
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -6,23 +7,22 @@ const SILENT_REFRESH_TIMEOUT = 5000;
 class OidcClient {
   constructor() {
     this.enabled = process.env.OIDC_ENABLED;
-    this.baseUrl = path.join(process.env.API_PATH, '/oidc');
-    this._silentRefreshTimeout = null;
+    this.baseUrl = path.join(process.env.API_PATH, 'oidc');
   }
 
-  _getSilentUrl() {
+  get silentUrl() {
     const url = new URL(this.baseUrl, window.location.href);
     url.searchParams.set('silent', true);
     return url;
   }
 
-  _getResignUrl() {
+  get resignUrl() {
     const url = new URL(this.baseUrl, window.location.href);
     url.searchParams.set('resign', true);
     return url;
   }
 
-  _getLogoutUrl() {
+  get logoutUrl() {
     const url = new URL(this.baseUrl, window.location.href);
     url.searchParams.set('action', 'logout');
     return url;
@@ -33,35 +33,18 @@ class OidcClient {
   }
 
   reauthenticate() {
-    window.location.replace(this._getResignUrl());
+    window.location.replace(this.resignUrl);
   }
 
   logout() {
-    window.location.replace(this._getLogoutUrl());
+    window.location.replace(this.logoutUrl);
   }
 
   slientlyRefresh() {
     return new Promise((resolve, reject) => {
-      const iframe = window.document.createElement('iframe');
-      iframe.style.visibility = 'hidden';
-      iframe.style.position = 'absolute';
-      iframe.style.display = 'none';
-      iframe.style.width = 0;
-      iframe.style.height = 0;
-      iframe.src = this._getSilentUrl();
-      window.document.body.appendChild(iframe);
-      const getCallback = (success = true) => () => {
-        clearTimeout(this._silentRefreshTimeout);
-        this._silentRefreshTimeout = null;
-        window.document.body.removeChild(iframe);
-        this.active = success;
-        return success ? resolve('auth:success') : reject(new Error('auth:fail'));
-      };
-      iframe.contentWindow.addEventListener('auth:success', getCallback());
-      iframe.contentWindow.addEventListener('auth:fail', getCallback(false));
-      if (isProduction) {
-        this._silentRefreshTimeout = setTimeout(getCallback(false), SILENT_REFRESH_TIMEOUT);
-      }
+      const iframe = new RefreshIframe(this.silentUrl, SILENT_REFRESH_TIMEOUT);
+      iframe.on('auth:success', () => resolve('auth:success'));
+      iframe.on('auth:fail', () => reject(new Error('auth:fail')));
     });
   }
 }
@@ -73,3 +56,44 @@ export default {
     Vue.oidc = oidcClient;
   }
 };
+
+class RefreshIframe extends EventEmitter {
+  constructor(src, timeout) {
+    super();
+    this._iframe = window.document.createElement('iframe');
+    Object.assign(this._iframe.style, {
+      visibility: 'hidden',
+      position: 'absolute',
+      display: 'none',
+      width: 0,
+      height: 0
+    });
+    this._iframe.src = src;
+    this.mount();
+    this._iframe.contentWindow.addEventListener('auth:success', this.onSuccess);
+    this._iframe.contentWindow.addEventListener('auth:fail', this.onFail);
+    if (isProduction && timeout) {
+      this._timeout = setTimeout(this.onFail, timeout);
+    }
+  }
+
+  mount() {
+    window.document.body.appendChild(this._iframe);
+  }
+
+  destroy() {
+    window.document.body.removeChild(this._iframe);
+    clearTimeout(this._timeout);
+    this._timeout = null;
+  }
+
+  onSuccess() {
+    this.emit('auth:success');
+    this.destroy();
+  }
+
+  onFail() {
+    this.emit('auth:fail');
+    this.destroy();
+  }
+}
