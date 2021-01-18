@@ -101,7 +101,7 @@ export default {
         })
         .catch(err => {
           this.$radio.channel(`element:${getElementId(element)}`)
-            .emit('error', err.response.data);
+            .emit('error', err.response);
         });
     },
     reorderContentElements({ newPosition, items }) {
