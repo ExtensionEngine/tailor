@@ -92,7 +92,7 @@ $sidebar-width: 25rem;
 
 .editor-content-container {
   display: flex;
-  height: calc(100% - 3.125rem);
+  height: calc(100% - 3.5rem);
 
   .sidebar {
     flex-basis: $sidebar-width;
