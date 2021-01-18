@@ -6,7 +6,7 @@
       v-bind="{ comment, isActivityThread, elementLabel, user }" />
     <div class="comment-body">
       <text-editor
-        v-model="content"
+        v-model.trim="content"
         :is-focused="isEditing"
         :show-preview="!isEditing"
         class="content" />

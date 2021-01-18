@@ -35,7 +35,7 @@
     <div class="text-right">
       <text-editor
         ref="editor"
-        v-model="comment.content"
+        v-model.trim="comment.content"
         :placeholder="commentsCount ? 'Add a comment...' : 'Start the discussion...'" />
       <v-btn @click="post" :disabled="isTextEditorEmpty" icon>
         <v-icon>mdi-send</v-icon>

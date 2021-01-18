@@ -1,12 +1,12 @@
 <template>
   <div :class="{ preview: showPreview }" class="comment-editor">
     <div v-if="showPreview" class="content">
-      <pre><span>{{ content }}</span><br></pre>
+      <pre><span>{{ value }}</span><br></pre>
     </div>
     <v-textarea
       v-else
       @input="$emit('input', $event)"
-      :value="content"
+      :value="value"
       :autofocus="isFocused"
       :placeholder="placeholder"
       rows="3"
@@ -22,9 +22,6 @@ export default {
     isFocused: { type: Boolean, default: false },
     showPreview: { type: Boolean, default: false },
     placeholder: { type: String, default: 'Add a comment...' }
-  },
-  computed: {
-    content: vm => vm.value?.trim()
   }
 };
 </script>
