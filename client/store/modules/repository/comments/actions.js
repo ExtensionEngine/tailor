@@ -16,10 +16,10 @@ const fetch = ({ commit }, payload) => {
     .then(items => commit('fetch', items));
 };
 
-const resolve = async ({ commit }, contentElementId) => {
-  await api.post('/resolve', { contentElementId });
+const resolve = ({ commit }, contentElementId) => {
   const data = { elementId: contentElementId, resolved: true };
   commit('handleResolvement', data);
+  return api.post('/resolve', { contentElementId });
 };
 
 const remove = ({ commit }, comment) => {
