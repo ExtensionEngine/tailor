@@ -75,8 +75,8 @@ export default {
       const { id: activityId, uid: activityUid } = this.activity;
       return transform(elements, (acc, it) => {
         const comments = this.getComments({ activityId, contentElementId: it.id });
-        const seenUids = [seen.contentElement[it.uid], seen.activity[activityUid]];
-        acc[it.uid] = { ...it, comments, lastSeen: max(seenUids) || 0 };
+        const lastSeen = max([seen.contentElement[it.uid], seen.activity[activityUid]]);
+        acc[it.uid] = { ...it, comments, lastSeen: lastSeen || 0 };
       }, {});
     },
     containerConfigs: vm => getSupportedContainers(vm.activity.type)
@@ -146,24 +146,22 @@ export default {
         element.scrollIntoView({ block: 'center', behavior: 'smooth' });
       }, timeout);
     },
-    revealElement({ timeout = 0, multipleSelections } = {}) {
+    revealElement() {
       const { elementId } = this.$route.query;
       if (!elementId) return;
       // Select and scroll to element if elementId is set
-      setTimeout(() => {
-        this.selectElement(elementId);
-        this.scrollToElement(elementId);
-        if (!multipleSelections) return;
-        this.collaboratorSelections
-          .forEach(({ elementId, ...user }) => this.selectElement(elementId, user));
-      }, timeout);
+      this.selectElement(elementId);
+      this.scrollToElement(elementId);
     }
   },
   watch: {
     isLoading(val) {
       if (val) return;
-      const options = { timeout: CE_SELECTION_DELAY, multipleSelections: true };
-      this.revealElement(options);
+      setTimeout(() => {
+        this.revealElement();
+        this.collaboratorSelections
+          .forEach(({ elementId, ...user }) => this.selectElement(elementId, user));
+      }, CE_SELECTION_DELAY);
     },
     $route: 'revealElement',
     focusedElement: {

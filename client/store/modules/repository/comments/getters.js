@@ -9,14 +9,14 @@ export const getComments = state => params => {
 
 export const getUnseenActivityComments = ({ seen }, getters, { auth }) => activity => {
   const activityComments = getters.getComments({ activityId: activity.id });
-  const lastActivitySeenDate = get(seen.activity, activity.uid, 0);
+  const activitySeenAt = get(seen.activity, activity.uid, 0);
   return filter(activityComments, it => {
     const isAuthor = it.authorId === auth.user.id;
     const createdAt = new Date(it.createdAt).getTime();
-    if (isAuthor || lastActivitySeenDate >= createdAt) return;
+    if (isAuthor || activitySeenAt >= createdAt) return;
     if (!it.contentElement) return true;
     // Return unseen activity comment if contentElement is not set
-    const lastElementSeenDate = get(seen.contentElement, it.contentElement.uid, 0);
-    return lastElementSeenDate < createdAt;
+    const elementSeenAt = get(seen.contentElement, it.contentElement.uid, 0);
+    return elementSeenAt < createdAt;
   });
 };
