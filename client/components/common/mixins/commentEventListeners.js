@@ -21,7 +21,7 @@ export default {
       removeComment: 'remove',
       resolveComments: 'resolve'
     }),
-    ...mapMutations('repository/comments', ['markSeenComments', 'handleResolvement']),
+    ...mapMutations('repository/comments', ['markSeenComments']),
     async upsertComment(comment, { hasComments } = {}) {
       const { id, contentElementId: elementId } = comment;
       const action = id ? 'updateComment' : 'saveComment';
@@ -34,7 +34,7 @@ export default {
   },
   mounted() {
     COMMENT_EVENTS.forEach(({ event, action }) => {
-      this.editorBus.on(event, (data, options) => this[action](data, options));
+      this.editorBus.on(event, this[action]);
     });
   }
 };
