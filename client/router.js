@@ -135,11 +135,6 @@ export default function getRouter() {
     }
     return next();
   });
-
-  request.auth.on('error', () => {
-    const redirect = router.currentRoute.fullPath;
-    router.replace({ name: 'login', query: { redirect } }).catch(() => {});
-  });
   return router;
 }
 

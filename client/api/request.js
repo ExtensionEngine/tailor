@@ -1,7 +1,6 @@
 import axios, { Axios } from 'axios';
 import { FORBIDDEN, UNAUTHORIZED } from 'http-status-codes';
 import buildFullPath from 'axios/lib/core/buildFullPath';
-import { EventEmitter } from 'events';
 
 Axios.prototype.submitForm = function (url, fields, options) {
   const action = buildFullPath(this.defaults.baseURL, url);
@@ -25,12 +24,10 @@ Object.defineProperty(client, 'base', {
   }
 });
 
-client.auth = new EventEmitter();
+const isAuthError = err => [FORBIDDEN, UNAUTHORIZED].includes(err.response?.status);
 
 client.interceptors.response.use(res => res, err => {
-  if (err.response && [FORBIDDEN, UNAUTHORIZED].includes(err.response.status)) {
-    return window.location.reload();
-  }
+  if (isAuthError(err)) return window.location.reload();
   throw err;
 });
 
