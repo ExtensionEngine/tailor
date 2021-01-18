@@ -11,15 +11,14 @@ const plugSSE = ({ commit }) => {
     .subscribe(Events.Delete, item => commit('update', item));
 };
 
-const fetch = ({ commit }, payload) => {
+const fetch = ({ commit }, payload = {}) => {
   return api.fetch(payload)
     .then(items => commit('fetch', items));
 };
 
-const resolve = ({ commit }, contentElementId) => {
-  const data = { elementId: contentElementId, resolved: true };
-  commit('handleResolvement', data);
-  return api.post('/resolve', { contentElementId });
+const resolve = ({ dispatch }, contentElementId) => {
+  return api.post('/resolve', { contentElementId })
+    .then(() => dispatch('fetch', { contentElementId }));
 };
 
 const remove = ({ commit }, comment) => {

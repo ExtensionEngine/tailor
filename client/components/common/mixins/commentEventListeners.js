@@ -15,16 +15,18 @@ export default {
   computed: mapChannels({ editorBus: 'editor' }),
   methods: {
     ...mapActions('repository/comments', {
+      fetchComments: 'fetch',
       saveComment: 'save',
       updateComment: 'update',
       removeComment: 'remove',
       resolveComments: 'resolve'
     }),
     ...mapMutations('repository/comments', ['markSeenComments', 'handleResolvement']),
-    async upsertComment(comment) {
-      const action = comment.id ? 'updateComment' : 'saveComment';
+    async upsertComment(comment, { hasComments } = {}) {
+      const { id, contentElementId: elementId } = comment;
+      const action = id ? 'updateComment' : 'saveComment';
       await this[action]({ ...comment, activityId: this.activityId });
-      this.handleResolvement({ elementId: comment.contentElementId });
+      if (!hasComments) this.fetchComments({ elementId });
     },
     setLastSeenComment({ timeout = 200, ...payload }) {
       setTimeout(() => this.markSeenComments(payload), timeout);
@@ -32,7 +34,7 @@ export default {
   },
   mounted() {
     COMMENT_EVENTS.forEach(({ event, action }) => {
-      this.editorBus.on(event, data => this[action](data));
+      this.editorBus.on(event, (data, options) => this[action](data, options));
     });
   }
 };
