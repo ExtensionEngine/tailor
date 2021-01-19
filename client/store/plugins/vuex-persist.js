@@ -23,7 +23,7 @@ function migrateSeenState() {
   const storage = window.localStorage;
   const state = JSON.parse(storage.getItem(STORAGE_KEY));
   if (!state) return;
-  const { seenByActivity } = state.repository.comments;
+  const { seenByActivity } = state?.repository?.comments || {};
   if (!isEmpty(seenByActivity)) {
     state.repository.comments.seen = { activity: seenByActivity };
   }

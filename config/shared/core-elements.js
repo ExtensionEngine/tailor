@@ -7,6 +7,7 @@ module.exports = [
   'tce-embed',
   'tce-audio',
   'tce-page-break',
+  'tce-scorm',
   'tce-pdf',
   'tce-accordion',
   'tce-table',

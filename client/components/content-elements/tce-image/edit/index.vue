@@ -107,10 +107,10 @@ export default {
       if (!this.showCropper || !this.$refs.cropper) return;
       this.$refs.cropper.show();
     },
-    load(dataUrl) {
-      this.currentImage = dataUrl;
-      this.persistedImage = dataUrl;
-      if (dataUrl && this.$refs.cropper) this.$refs.cropper.replace(dataUrl);
+    load(imageUrl) {
+      this.currentImage = imageUrl;
+      this.persistedImage = imageUrl;
+      if (imageUrl && this.$refs.cropper) this.$refs.cropper.replace(imageUrl);
     },
     save(image) {
       return getImageDimensions(image).then(({ width, height }) => {
@@ -130,9 +130,7 @@ export default {
   },
   mounted() {
     this.containerWidth = this.$el.parentElement.offsetWidth;
-
-    toDataUrl(this.element.data.url)
-      .then(dataUrl => this.load(dataUrl));
+    this.load(this.element.data.url);
 
     this.$elementBus.on('upload', dataUrl => {
       if (this.currentImage) this.$refs.cropper.replace(dataUrl);
