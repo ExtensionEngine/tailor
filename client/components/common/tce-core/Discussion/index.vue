@@ -30,6 +30,7 @@
       :show-all="showAll"
       :min-displayed="commentsShownLimit"
       :is-activity-thread="isActivityThread"
+      :unseen-count="unseenComments.length"
       :user="user"
       class="mt-2" />
     <div class="text-right">

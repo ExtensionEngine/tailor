@@ -5,10 +5,10 @@
       @remove="$emit('remove', comment)"
       v-bind="{ isActivityThread, user, comments: visibleComments.seen }" />
     <unseen-divider
-      v-show="unseenThread.length"
+      v-show="unseenCount"
       ref="unseenDivider"
       @seen="markSeen"
-      :unseen-count="unseenThread.length" />
+      :unseen-count="unseenCount" />
     <thread-list
       @update="onUpdate"
       @remove="$emit('remove', comment)"
@@ -17,8 +17,6 @@
 </template>
 
 <script>
-import filter from 'lodash/filter';
-import orderBy from 'lodash/orderBy';
 import takeRgt from 'lodash/takeRight';
 import ThreadList from './List';
 import transform from 'lodash/transform';
@@ -31,6 +29,7 @@ export default {
     showAll: { type: Boolean, default: false },
     minDisplayed: { type: Number, default: 5 },
     isActivityThread: { type: Boolean, default: false },
+    unseenCount: { type: Number, required: true },
     user: { type: Object, required: true }
   },
   data: () => ({ isVisible: false }),
@@ -42,8 +41,7 @@ export default {
         const key = it.unseen ? 'unseen' : 'seen';
         return acc[key].push(it);
       }, { seen: [], unseen: [] });
-    },
-    unseenThread: vm => orderBy(filter(vm.items, 'unseen'), 'createdAt', 'asc')
+    }
   },
   methods: {
     onUpdate(comment, content) {
@@ -52,10 +50,9 @@ export default {
     onIntersect(_entries, _observer, isIntersected) {
       this.isVisible = isIntersected;
     },
-    revealUnseen(unseenComments) {
-      const { $refs, unseenThread, minDisplayed } = this;
-      const unseen = unseenComments || unseenThread;
-      if (unseen.length < minDisplayed) return;
+    revealUnseen(unseenCount) {
+      const { $refs, minDisplayed } = this;
+      if ((unseenCount || this.unseenCount) < minDisplayed) return;
       this.$emit('showAll', true);
       this.$nextTick(() => {
         const element = $refs.unseenDivider.$el;
@@ -70,10 +67,10 @@ export default {
   },
   watch: {
     isVisible(val) {
-      if (!val || !this.unseenThread.length) return;
+      if (!val || !this.unseenCount) return;
       this.revealUnseen();
     },
-    unseenThread: {
+    unseenCount: {
       immediate: true,
       handler: 'revealUnseen'
     }
