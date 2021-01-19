@@ -1,5 +1,5 @@
 <template>
-  <div v-intersect="onIntersect" class="discussion-thread">
+  <div v-intersect="onIntersect">
     <thread-list
       @update="onUpdate"
       @remove="$emit('remove', comment)"
@@ -78,19 +78,3 @@ export default {
   components: { UnseenDivider, ThreadList }
 };
 </script>
-
-<style lang="scss" scoped>
-.discussion-thread ::v-deep .thread-list {
-  margin: 0;
-
-  .thread-list-item {
-    .v-divider {
-      margin: 0 0.25rem 1rem 0.25rem;
-    }
-
-    &:first-child .v-divider {
-      display: none;
-    }
-  }
-}
-</style>

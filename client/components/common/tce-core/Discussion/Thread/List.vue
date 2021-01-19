@@ -36,7 +36,18 @@ export default {
 
 <style lang="scss" scoped>
 .thread-list {
+  margin: 0;
   padding: 0;
   list-style: none;
+
+  .thread-list-item {
+    .v-divider {
+      margin: 0 0.25rem 1rem 0.25rem;
+    }
+
+    &:first-child .v-divider {
+      display: none;
+    }
+  }
 }
 </style>
