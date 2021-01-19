@@ -2,7 +2,12 @@
   <div class="resolve-button">
     <v-tooltip open-delay="800" left>
       <template v-slot:activator="{ on }">
-        <v-btn v-on="on" @click="resolve" color="teal accent-4" small text>
+        <v-btn
+          v-on="on"
+          @click="resolve"
+          color="teal accent-4"
+          small text
+          class="px-1">
           <v-icon size="24" color="teal accent-4" class="mr-2">
             mdi-check-circle-outline
           </v-icon>

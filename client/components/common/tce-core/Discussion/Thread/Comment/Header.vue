@@ -11,7 +11,7 @@
           </template>
           {{ author.label }}
         </v-tooltip>
-        <span v-if="isEdited && !isResolved" class="edited">(edited)</span>
+        <span v-if="showEditedLabel" class="edited">(edited)</span>
       </div>
       <div class="d-flex align-center">
         <v-tooltip right>
@@ -62,9 +62,9 @@ export default {
     elementUid: vm => vm.comment.contentElement.uid,
     author: vm => vm.comment.author,
     isAuthor: vm => vm.author.id === vm.user.id,
-    isEdited: vm => vm.comment.createdAt !== vm.comment.updatedAt,
     isDeleted: vm => !!vm.comment.deletedAt,
     isResolved: vm => vm.comment.resolved,
+    showEditedLabel: vm => !!vm.comment.editedAt && !vm.isResolved,
     showOptions: vm => vm.isAuthor && !vm.isDeleted && !vm.isResolved,
     options: vm => [
       { name: 'Edit', action: 'toggleEdit', icon: 'mdi-pencil-outline' },

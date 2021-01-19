@@ -126,7 +126,7 @@ export default {
   .resolve-button {
     display: flex;
     justify-content: flex-end;
-    margin: 0.75rem -0.25rem 0 0;
+    margin: 0.5rem 0 0 0;
   }
 }
 

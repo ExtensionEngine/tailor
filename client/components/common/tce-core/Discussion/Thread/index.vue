@@ -43,7 +43,7 @@ export default {
   },
   methods: {
     onUpdate(comment, content) {
-      this.$emit('update', { ...comment, content, updatedAt: Date.now() });
+      this.$emit('update', { ...comment, content, editedAt: Date.now() });
     },
     onIntersect(_entries, _observer, isIntersected) {
       this.isVisible = isIntersected;

@@ -28,6 +28,10 @@ class Comment extends Model {
         type: BOOLEAN,
         defaultValue: false
       },
+      editedAt: {
+        type: DATE,
+        field: 'edited_at'
+      },
       createdAt: {
         type: DATE,
         field: 'created_at'
