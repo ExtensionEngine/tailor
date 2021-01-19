@@ -5,7 +5,7 @@
       @remove="$emit('remove', comment)"
       v-bind="{ isActivityThread, user, comments: visibleComments.seen }" />
     <unseen-divider
-      v-show="unseenCount"
+      v-if="unseenCount"
       ref="unseenDivider"
       @seen="markSeen"
       :unseen-count="unseenCount" />
@@ -17,9 +17,9 @@
 </template>
 
 <script>
+import partition from 'lodash/partition';
 import takeRgt from 'lodash/takeRight';
 import ThreadList from './List';
-import transform from 'lodash/transform';
 import UnseenDivider from './UnseenDivider';
 
 export default {
@@ -37,10 +37,8 @@ export default {
     visibleComments() {
       const { items, minDisplayed, showAll } = this;
       const comments = showAll ? items : takeRgt(items, minDisplayed);
-      return transform(comments, (acc, comment) => {
-        const key = comment.unseen ? 'unseen' : 'seen';
-        return acc[key].push(comment);
-      }, { seen: [], unseen: [] });
+      const [unseen, seen] = partition(comments, 'unseen');
+      return { seen, unseen };
     }
   },
   methods: {
