@@ -14,10 +14,10 @@ const tceConfig = Object.keys(envs)
   .map(it => it.match(regex))
   .filter(Boolean)
   .map(([env, element, secret]) => ({ env, element: camelCase(element), secret: camelCase(secret) }))
-  .reduce((acc, { env, element, secret }) => ({
-    ...acc,
+  .reduce((config, { env, element, secret }) => ({
+    ...config,
     [element]: {
-      ...acc[element],
+      ...config[element],
       [secret]: process.env[env]
     }
   }), {});
