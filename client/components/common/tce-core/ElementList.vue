@@ -69,9 +69,7 @@ export default {
     ...mapChannels({ editorChannel: 'editor' }),
     options: vm => ({
       ...vm.dragOptions,
-      handle: '.drag-handle',
-      scrollSpeed: 15,
-      scrollSensitivity: 125
+      handle: '.drag-handle'
     }),
     nextPosition() {
       const lastItem = last(this.elements);
@@ -103,4 +101,25 @@ export default {
 .list-group {
   padding: 0.625rem 1.5rem;
 }
+
+::v-deep .sortable-ghost {
+  .drag-handle {
+    display: none;
+  }
+
+  .content-element {
+    max-height: 9.375rem;
+    background: #f4f5f5;
+
+    & > * {
+      visibility: hidden;
+    }
+  }
+}
+
+::v-deep .sortable-drag .content-element {
+  max-height: auto;
+  background: #fff;
+}
+
 </style>
