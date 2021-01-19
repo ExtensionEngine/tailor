@@ -31,12 +31,13 @@
       :show-all="showAll"
       :min-displayed="commentsShownLimit"
       :is-activity-thread="isActivityThread"
+      :unseen-count="unseenComments.length"
       :user="user"
       class="mt-2" />
     <div class="text-right">
       <text-editor
         ref="editor"
-        v-model="comment.content"
+        v-model.trim="comment.content"
         :placeholder="commentsCount ? 'Add a comment...' : 'Start the discussion...'" />
       <v-btn @click="post" :disabled="isTextEditorEmpty" icon>
         <v-icon>mdi-send</v-icon>
@@ -71,15 +72,14 @@ export default {
   computed: {
     thread() {
       const { comments, unseenComments } = this;
-      const unseenCount = unseenComments.length;
       const processedThread = comments.map(comment => {
-        const isUnseen = !!unseenComments.find(it => it.id === comment.id);
-        return { ...comment, isUnseen, unseenCount };
+        const unseen = unseenComments.find(it => it.id === comment.id);
+        return { ...comment, unseen: !!unseen };
       });
-      return orderBy(processedThread, ['isUnseen', 'createdAt'], 'asc');
+      return orderBy(processedThread, ['unseen', 'createdAt'], 'asc');
     },
     commentsCount: vm => vm.thread.length,
-    showAllToggle: vm => vm.commentsShownLimit < vm.thread.length,
+    showAllToggle: vm => vm.commentsShownLimit < vm.commentsCount,
     isTextEditorEmpty: vm => !vm.comment.content?.trim(),
     discussion: vm => vm.$refs.discussion,
     editor: vm => vm.$refs.editor.$el,
