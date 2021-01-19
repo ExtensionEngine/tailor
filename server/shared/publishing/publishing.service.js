@@ -7,7 +7,7 @@ const {
   updatePublishingStatus,
   updateRepositoryCatalog
 } = require('./helpers');
-const oauthClient = require('./oauthClient');
+const oauthClient = require('../webhookProvider');
 const PromiseQueue = require('promise-queue');
 
 class PublishingService {

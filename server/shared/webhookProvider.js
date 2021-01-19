@@ -6,9 +6,9 @@ const {
   tokenHost,
   tokenPath,
   webhookUrl
-} = require('../../../config/server/consumer');
+} = require('../../config/server/consumer');
 const { ClientCredentials } = require('simple-oauth2');
-const Deferred = require('../../shared/util/Deferred');
+const Deferred = require('./util/Deferred');
 const request = require('axios');
 
 const client = new ClientCredentials({
