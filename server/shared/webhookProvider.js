@@ -8,22 +8,20 @@ const {
   webhookUrl
 } = require('../../config/server/consumer');
 const { ClientCredentials } = require('simple-oauth2');
-const Deferred = require('./util/Deferred');
 const request = require('axios');
 
 const client = new ClientCredentials({
   client: { id: clientId, secret: clientSecret },
   auth: { tokenHost, tokenPath }
 });
-const deferred = new Deferred();
 
-deferred.promise = getAccessToken();
+let accessToken;
 
-let accessToken = deferred.resolve();
+getAccessToken();
 
 async function send(payload) {
   if (!accessToken || accessToken.expired()) {
-    accessToken = await getAccessToken();
+    await getAccessToken();
   }
   return request.post(webhookUrl, payload, {
     headers: { Authorization: `Bearer ${accessToken.token.access_token}` }
@@ -32,6 +30,7 @@ async function send(payload) {
 
 function getAccessToken() {
   return client.getToken()
+    .then(token => { accessToken = token; })
     .catch(error => console.error('Access Token Error', error.message));
 }
 
