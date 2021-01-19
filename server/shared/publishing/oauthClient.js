@@ -1,15 +1,16 @@
 'use strict';
 
+const {
+  clientID: clientId,
+  clientSecret,
+  tokenHost,
+  tokenPath,
+  webhookUrl
+} = require('../../../config/server/consumer');
 const { ClientCredentials } = require('simple-oauth2');
-const config = require('../../../config/server/consumer');
 const Deferred = require('../../shared/util/Deferred');
 const request = require('axios');
 
-const clientId = config.clientID;
-const clientSecret = config.clientSecret;
-const tokenHost = config.tokenHost;
-const tokenPath = config.tokenPath;
-const webhookUrl = config.webhookUrl;
 const client = new ClientCredentials({
   client: { id: clientId, secret: clientSecret },
   auth: { tokenHost, tokenPath }
