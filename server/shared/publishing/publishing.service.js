@@ -16,8 +16,9 @@ class PublishingService {
   }
 
   publishActivity(activity) {
-    return this.queue.add(() => publishActivity(activity)
-      .then(data => oauthClient.send(data) && data));
+    const publish = () => publishActivity(activity)
+      .then(data => oauthClient.send(data) && data);
+    return this.queue.add(publish);
   }
 
   publishRepoDetails(repository) {
