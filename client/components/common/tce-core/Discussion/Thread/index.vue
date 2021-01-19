@@ -1,30 +1,31 @@
 <template>
-  <ul v-intersect="onIntersect" class="discussion-thread">
-    <thread-item
-      v-for="comment in visibleComments"
-      :key="comment.uid"
-      ref="threadItem"
-      @seen="markSeen"
+  <div v-intersect="onIntersect" class="discussion-thread">
+    <thread-list
       @update="onUpdate"
       @remove="$emit('remove', comment)"
-      :comment="comment"
-      :is-activity-thread="isActivityThread"
-      :is-first-unseen="firstUnseen.id === comment.id"
-      :element-label="getElementLabel(comment)"
-      :user="user" />
-  </ul>
+      v-bind="{ isActivityThread, user, comments: visibleComments.seen }" />
+    <unseen-divider
+      v-show="unseenThread.length"
+      ref="unseenDivider"
+      @seen="markSeen"
+      :unseen-count="unseenThread.length" />
+    <thread-list
+      @update="onUpdate"
+      @remove="$emit('remove', comment)"
+      v-bind="{ isActivityThread, user, comments: visibleComments.unseen }" />
+  </div>
 </template>
 
 <script>
 import filter from 'lodash/filter';
-import find from 'lodash/find';
 import orderBy from 'lodash/orderBy';
 import takeRgt from 'lodash/takeRight';
-import ThreadItem from './Item';
+import ThreadList from './List';
+import transform from 'lodash/transform';
+import UnseenDivider from './UnseenDivider';
 
 export default {
   name: 'discussion-thread',
-  inject: ['$teRegistry'],
   props: {
     items: { type: Array, required: true },
     showAll: { type: Boolean, default: false },
@@ -34,31 +35,30 @@ export default {
   },
   data: () => ({ isVisible: false }),
   computed: {
-    visibleComments: vm => vm.showAll ? vm.items : takeRgt(vm.items, vm.minDisplayed),
-    unseenThread: vm => orderBy(filter(vm.items, 'isUnseen'), 'createdAt', 'asc'),
-    firstUnseen() {
-      const firstUnseenIndex = this.items.findIndex(it => it.isUnseen);
-      return { id: this.items[firstUnseenIndex]?.id, index: firstUnseenIndex };
-    }
+    visibleComments() {
+      const { items, minDisplayed, showAll } = this;
+      const comments = showAll ? items : takeRgt(items, minDisplayed);
+      return transform(comments, (acc, it) => {
+        const key = it.unseen ? 'unseen' : 'seen';
+        return acc[key].push(it);
+      }, { seen: [], unseen: [] });
+    },
+    unseenThread: vm => orderBy(filter(vm.items, 'unseen'), 'createdAt', 'asc')
   },
   methods: {
     onUpdate(comment, content) {
       this.$emit('update', { ...comment, content, updatedAt: Date.now() });
     },
-    getElementLabel({ contentElement }) {
-      if (!contentElement) return;
-      return find(this.$teRegistry._registry, { type: contentElement.type })?.name;
-    },
     onIntersect(_entries, _observer, isIntersected) {
       this.isVisible = isIntersected;
     },
     revealUnseen(unseenComments) {
-      const { $refs, unseenThread, minDisplayed, firstUnseen } = this;
+      const { $refs, unseenThread, minDisplayed } = this;
       const unseen = unseenComments || unseenThread;
       if (unseen.length < minDisplayed) return;
       this.$emit('showAll', true);
       this.$nextTick(() => {
-        const element = $refs.threadItem[firstUnseen.index].$el;
+        const element = $refs.unseenDivider.$el;
         if (!element) return;
         element.scrollIntoView({ behavior: 'smooth' });
       });
@@ -78,14 +78,22 @@ export default {
       handler: 'revealUnseen'
     }
   },
-  components: { ThreadItem }
+  components: { UnseenDivider, ThreadList }
 };
 </script>
 
 <style lang="scss" scoped>
-.discussion-thread {
+.discussion-thread ::v-deep .thread-list {
   margin: 0;
-  padding: 0;
-  list-style: none;
+
+  .thread-list-item {
+    .v-divider {
+      margin: 0 0.25rem 1rem 0.25rem;
+    }
+
+    &:first-child .v-divider {
+      display: none;
+    }
+  }
 }
 </style>

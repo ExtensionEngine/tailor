@@ -68,12 +68,11 @@ export default {
   computed: {
     thread() {
       const { comments, unseenComments } = this;
-      const unseenCount = unseenComments.length;
       const processedThread = comments.map(comment => {
-        const isUnseen = !!unseenComments.find(it => it.id === comment.id);
-        return { ...comment, isUnseen, unseenCount };
+        const unseen = unseenComments.find(it => it.id === comment.id);
+        return { ...comment, unseen: !!unseen };
       });
-      return orderBy(processedThread, ['isUnseen', 'createdAt'], 'asc');
+      return orderBy(processedThread, ['unseen', 'createdAt'], 'asc');
     },
     commentsCount: vm => vm.thread.length,
     showAllToggle: vm => vm.commentsShownLimit < vm.thread.length,
