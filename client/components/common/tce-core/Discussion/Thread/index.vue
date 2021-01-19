@@ -37,9 +37,9 @@ export default {
     visibleComments() {
       const { items, minDisplayed, showAll } = this;
       const comments = showAll ? items : takeRgt(items, minDisplayed);
-      return transform(comments, (acc, it) => {
-        const key = it.unseen ? 'unseen' : 'seen';
-        return acc[key].push(it);
+      return transform(comments, (acc, comment) => {
+        const key = comment.unseen ? 'unseen' : 'seen';
+        return acc[key].push(comment);
       }, { seen: [], unseen: [] });
     }
   },
