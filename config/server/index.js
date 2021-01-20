@@ -22,7 +22,7 @@ module.exports = {
   mail,
   storage,
   previewUrl,
-  ...tce
+  tce
 };
 
 // Legacy config support

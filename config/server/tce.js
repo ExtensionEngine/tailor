@@ -1,25 +1,17 @@
 'use strict';
 
 const camelCase = require('lodash/camelCase');
-const coreElements = require('../shared/core-elements');
-const extensionElements = require('../../extensions/content-elements');
-const snakeCase = require('lodash/snakeCase');
 
-const elements = [...coreElements, ...extensionElements]
-  .map(it => snakeCase(it).toUpperCase());
 const envs = process.env;
-const regex = new RegExp(`^(${elements.join('|')})_(.*)`);
+const regex = new RegExp('^TCE_(.*)');
 
 const tceConfig = Object.keys(envs)
   .map(it => it.match(regex))
   .filter(Boolean)
-  .map(([env, element, secret]) => ({ env, element: camelCase(element), secret: camelCase(secret) }))
-  .reduce((config, { env, element, secret }) => ({
+  .map(([env, secret]) => ({ env, secret: camelCase(secret) }))
+  .reduce((config, { env, secret }) => ({
     ...config,
-    [element]: {
-      ...config[element],
-      [secret]: process.env[env]
-    }
+    [secret]: process.env[env]
   }), {});
 
 module.exports = tceConfig;
