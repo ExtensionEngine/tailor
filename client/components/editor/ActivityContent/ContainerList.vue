@@ -100,7 +100,7 @@ export default {
           elementChannel.emit('saved');
           this.showNotification();
         })
-        .catch(err => elementChannel.emit('error', err.response));
+        .catch(err => elementChannel.emit('error', err));
     },
     reorderContentElements({ newPosition, items }) {
       const element = items[newPosition];
