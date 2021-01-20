@@ -94,15 +94,13 @@ export default {
       this.save({ type, parentId, position });
     },
     saveContentElement(element) {
+      const elementChannel = this.$radio.channel(`element:${getElementId(element)}`);
       return this.saveElement(element)
         .then(() => {
-          this.$radio.channel(`element:${getElementId(element)}`).emit('saved');
+          elementChannel.emit('saved');
           this.showNotification();
         })
-        .catch(err => {
-          this.$radio.channel(`element:${getElementId(element)}`)
-            .emit('error', err.response);
-        });
+        .catch(err => elementChannel.emit('error', err.response));
     },
     reorderContentElements({ newPosition, items }) {
       const element = items[newPosition];

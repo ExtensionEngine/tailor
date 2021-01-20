@@ -2,16 +2,12 @@
 
 const camelCase = require('lodash/camelCase');
 
-const envs = process.env;
-const regex = new RegExp('^TCE_(.*)');
-
-const tceConfig = Object.keys(envs)
-  .map(it => it.match(regex))
+const tceConfig = Object.keys(process.env)
+  .map(it => it.match(/^TCE_(.*)/))
   .filter(Boolean)
-  .map(([env, secret]) => ({ env, secret: camelCase(secret) }))
-  .reduce((config, { env, secret }) => ({
+  .reduce((config, [prefixedKey, key]) => ({
     ...config,
-    [secret]: process.env[env]
+    [camelCase(key)]: process.env[prefixedKey]
   }), {});
 
 module.exports = tceConfig;
