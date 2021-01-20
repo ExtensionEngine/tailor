@@ -28,7 +28,9 @@
           <v-icon class="mr-2">mdi-{{ toggleButton.icon }}</v-icon>
           {{ toggleButton.label }}
         </v-btn>
+        <v-progress-circular v-if="loadingContent" indeterminate class="mt-5" />
         <content-preview
+          v-else
           @toggle="toggleElementSelection"
           :content-containers="contentContainers"
           :selected="selectedElements"
