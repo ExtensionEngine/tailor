@@ -9,9 +9,12 @@ const getColumns = ({ BOOLEAN, DATE }) => [
 
 exports.up = (qi, Sequelize) => {
   const columns = getColumns(Sequelize);
-  return Promise.all(
-    columns.map(({ name, ...options }) => qi.addColumn(TABLE_NAME, name, options))
-  );
+  return qi.sequelize.transaction(transaction => {
+    const pendingColumns = columns.map(({ name, ...options }) => {
+      return qi.addColumn(TABLE_NAME, name, { ...options, transaction });
+    });
+    return Promise.all(pendingColumns);
+  });
 };
 
 exports.down = (qi, Sequelize) => {
