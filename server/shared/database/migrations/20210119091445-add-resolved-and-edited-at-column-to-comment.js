@@ -7,14 +7,13 @@ const getColumns = ({ BOOLEAN, DATE }) => [
   { name: 'edited_at', type: DATE, defaultValue: null }
 ];
 
-exports.up = (qi, Sequelize) => {
+exports.up = async (qi, Sequelize) => {
   const columns = getColumns(Sequelize);
-  return qi.sequelize.transaction(transaction => {
-    const pendingColumns = columns.map(({ name, ...options }) => {
-      return qi.addColumn(TABLE_NAME, name, { ...options, transaction });
-    });
-    return Promise.all(pendingColumns);
-  });
+  const transaction = await qi.sequelize.transaction();
+  await Promise.all(columns.map(({ name, ...options }) => {
+    return qi.addColumn(TABLE_NAME, name, { ...options, transaction });
+  }));
+  return transaction.commit();
 };
 
 exports.down = (qi, Sequelize) => {
