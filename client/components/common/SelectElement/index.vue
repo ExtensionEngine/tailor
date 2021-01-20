@@ -139,6 +139,7 @@ export default {
     },
     deselectActivity() {
       this.selectedActivity = null;
+      this.contentContainers = [];
       this.selectedElements = [];
     },
     async selectRepository(repository) {
