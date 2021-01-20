@@ -6,7 +6,7 @@
     </div>
     <v-textarea
       v-else
-      @input="$emit('input', $event)"
+      v-on="$listeners"
       :value="value"
       :autofocus="isFocused"
       :placeholder="placeholder"

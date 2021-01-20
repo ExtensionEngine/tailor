@@ -19,13 +19,10 @@ import pluralize from 'pluralize';
 export default {
   name: 'unseen-divider',
   props: {
-    unseenCount: { type: Number, required: true }
+    count: { type: Number, required: true }
   },
   computed: {
-    unseenCommentsLabel() {
-      const { unseenCount } = this;
-      return `${unseenCount} new ${pluralize('message', unseenCount)}`;
-    }
+    unseenCommentsLabel: ({ count }) => `${count} new ${pluralize('message', count)}`
   }
 };
 </script>
