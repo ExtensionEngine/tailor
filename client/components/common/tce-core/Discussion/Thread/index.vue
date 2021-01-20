@@ -1,14 +1,16 @@
 <template>
-  <div v-intersect="onIntersect">
+  <div v-intersect="onIntersect" class="discussion-thread">
     <thread-list
       @update="onUpdate"
       @remove="$emit('remove', comment)"
       v-bind="{ isActivityThread, user, comments: visibleComments.seen }" />
-    <unseen-divider
-      v-if="unseenCount"
-      ref="unseenDivider"
-      @seen="markSeen"
-      :count="unseenCount" />
+    <transition name="fade">
+      <unseen-divider
+        v-if="unseenCount"
+        ref="unseenDivider"
+        @seen="markSeen"
+        :count="unseenCount" />
+    </transition>
     <thread-list
       @update="onUpdate"
       @remove="$emit('remove', comment)"
@@ -76,3 +78,15 @@ export default {
   components: { UnseenDivider, ThreadList }
 };
 </script>
+
+<style lang="scss" scoped>
+.discussion-thread {
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity 0.5s;
+  }
+
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
+  }
+}
+</style>
