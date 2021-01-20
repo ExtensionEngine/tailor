@@ -43,7 +43,7 @@ export default {
     },
     save() {
       const { comment, content } = this;
-      if (!content) return this.$emit('remove', comment);
+      if (!content) return this.remove();
       this.toggleEdit();
       this.$emit('update', comment, content);
     },

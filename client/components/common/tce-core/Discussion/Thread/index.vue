@@ -2,7 +2,7 @@
   <div v-intersect="onIntersect" class="discussion-thread">
     <thread-list
       @update="onUpdate"
-      @remove="$emit('remove', comment)"
+      @remove="$emit('remove', $event)"
       v-bind="{ isActivityThread, user, comments: visibleComments.seen }" />
     <transition name="fade">
       <unseen-divider
@@ -13,7 +13,7 @@
     </transition>
     <thread-list
       @update="onUpdate"
-      @remove="$emit('remove', comment)"
+      @remove="$emit('remove', $event)"
       v-bind="{ isActivityThread, user, comments: visibleComments.unseen }" />
   </div>
 </template>
@@ -50,9 +50,9 @@ export default {
     onIntersect(_entries, _observer, isIntersected) {
       this.isVisible = isIntersected;
     },
-    revealUnseen(unseenCount) {
+    revealUnseen(count) {
       const { $refs, minDisplayed } = this;
-      if ((unseenCount || this.unseenCount) < minDisplayed) return;
+      if ((count || this.unseenCount) < minDisplayed) return;
       this.$emit('showAll', true);
       this.$nextTick(() => {
         const element = $refs.unseenDivider.$el;

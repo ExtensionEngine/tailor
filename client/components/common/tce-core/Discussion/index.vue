@@ -23,7 +23,7 @@
     <discussion-thread
       v-if="thread.length"
       @update="$emit('update', $event)"
-      @remove="$emit('remove', $event)"
+      @remove="remove"
       @seen="$emit('seen')"
       @showAll="showAll = $event"
       :items="thread"
@@ -48,6 +48,7 @@
 
 <script>
 import DiscussionThread from './Thread';
+import { mapRequests } from '@/plugins/radio';
 import orderBy from 'lodash/orderBy';
 import TextEditor from './TextEditor';
 
@@ -83,6 +84,7 @@ export default {
     editor: vm => vm.$refs.editor.$el
   },
   methods: {
+    ...mapRequests('app', ['showConfirmationModal']),
     post() {
       const { scrollTarget, comment, user: author } = this;
       if (!comment.content) return;
@@ -97,6 +99,13 @@ export default {
       // Keep editor/discussion container inside viewport.
       const scrollOptions = { block: 'center', behavior: 'smooth' };
       this.$nextTick(() => this[scrollTarget].scrollIntoView(scrollOptions));
+    },
+    remove(comment) {
+      this.showConfirmationModal({
+        title: 'Remove comment',
+        message: 'Are you sure you want to remove this comment?',
+        action: () => this.$emit('remove', comment)
+      });
     }
   },
   watch: {
