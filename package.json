@@ -129,7 +129,6 @@
     "snyk": "^1.425.4",
     "strip-json-comments": "^3.0.1",
     "tar-fs": "^2.1.0",
-    "tce-apivideo": "git+https://github.com/ExtensionEngine/tce-apivideo.git#feature/implement-api-video",
     "to-case": "^2.0.0",
     "tooltip.js": "^1.3.3",
     "untildify": "^4.0.0",

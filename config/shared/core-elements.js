@@ -22,6 +22,5 @@ module.exports = [
   'tce-fill-blank',
   'tce-matching-question',
   'tce-drag-drop',
-  'tce-html',
-  'tce-api-video'
+  'tce-html'
 ];
