@@ -11,7 +11,7 @@ export const getUnseenActivityComments = ({ seen }, getters, { auth }) => activi
   const activityComments = getters.getComments({ activityId: activity.id });
   const activitySeenAt = get(seen.activity, activity.uid, 0);
   return filter(activityComments, it => {
-    const isAuthor = it.authorId === auth.user.id;
+    const isAuthor = it.author.id === auth.user.id;
     const createdAt = new Date(it.createdAt).getTime();
     if (isAuthor || activitySeenAt >= createdAt) return;
     if (!it.contentElement) return true;

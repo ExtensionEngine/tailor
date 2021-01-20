@@ -37,6 +37,7 @@
       <text-editor
         ref="editor"
         v-model.trim="comment.content"
+        @focus="$emit('seen')"
         :placeholder="commentsCount ? 'Add a comment...' : 'Start the discussion...'" />
       <v-btn @click="post" :disabled="isTextEditorEmpty" icon>
         <v-icon>mdi-send</v-icon>
@@ -93,7 +94,6 @@ export default {
       };
       this.comment = initCommentInput();
       this.$emit('save', payload);
-      this.$emit('seen');
       // Keep editor/discussion container inside viewport.
       const scrollOptions = { block: 'center', behavior: 'smooth' };
       this.$nextTick(() => this[scrollTarget].scrollIntoView(scrollOptions));

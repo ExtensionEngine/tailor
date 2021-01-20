@@ -8,7 +8,7 @@
       v-if="unseenCount"
       ref="unseenDivider"
       @seen="markSeen"
-      :unseen-count="unseenCount" />
+      :count="unseenCount" />
     <thread-list
       @update="onUpdate"
       @remove="$emit('remove', comment)"
