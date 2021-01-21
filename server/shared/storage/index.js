@@ -30,6 +30,10 @@ class Storage {
     return this.provider.deleteFile(key, options);
   }
 
+  deleteFiles(keys, options = {}) {
+    return this.provider.deleteFiles(keys, options);
+  }
+
   listFiles(options = {}) {
     return this.provider.listFiles(options);
   }
@@ -48,10 +52,6 @@ class Storage {
 
   copyFile(key, newKey, options = {}) {
     return this.provider.copyFile(key, newKey, options);
-  }
-
-  cleanFolder(key) {
-    return this.provider.cleanFolder(key);
   }
 
   static createProvider(options) {

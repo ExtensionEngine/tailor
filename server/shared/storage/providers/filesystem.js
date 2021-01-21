@@ -75,8 +75,13 @@ class FilesystemStorage {
     return fs.unlinkAsync(this.path(key));
   }
 
+  deleteFiles(keys) {
+    return Promise.map(keys, key => this.deleteFile(key));
+  }
+
   listFiles(key, options = {}) {
     return fs.readdirAsync(this.path(key), options)
+      .map(fileName => `${key}/${fileName}`)
       .catch(err => {
         if (isNotFound(err)) return null;
         return Promise.reject(err);
@@ -89,12 +94,6 @@ class FilesystemStorage {
 
   getFileUrl(key) {
     return Promise.resolve(`${config.origin}/${key}`);
-  }
-
-  cleanFolder(key) {
-    return this.listFiles(key).then(files => {
-      if (files) return Promise.map(files, file => this.deleteFile(`${key}/${file}`));
-    });
   }
 }
 
