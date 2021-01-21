@@ -38,7 +38,8 @@
         ref="editor"
         v-model.trim="comment.content"
         @focus="$emit('seen')"
-        :placeholder="commentsCount ? 'Add a comment...' : 'Start the discussion...'" />
+        :placeholder="commentsCount ? 'Add a comment...' : 'Start the discussion...'"
+        class="text-editor" />
       <v-btn @click="post" :disabled="isTextEditorEmpty" icon>
         <v-icon>mdi-send</v-icon>
       </v-btn>
@@ -126,6 +127,10 @@ export default {
 <style lang="scss" scoped>
 .embedded-discussion {
   font-family: Roboto, Arial, sans-serif;
+
+  .text-editor {
+    margin: 0 0.25rem 0 0.25rem;
+  }
 }
 
 .header {

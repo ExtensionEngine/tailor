@@ -87,6 +87,7 @@ export default {
     flex-direction: column;
     flex: 0 100%;
     max-width: calc(100% - 6rem);
+    margin-left: 0.125rem;
 
     .author {
       display: inline-block;
@@ -96,7 +97,6 @@ export default {
     }
 
     .edited, .time {
-      margin-left: 0.125rem;
       color: #888;
       font-size: 0.75rem;
     }

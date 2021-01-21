@@ -74,11 +74,11 @@ export default {
 
   &-body {
     flex: 1;
-    padding: 0.375rem 0 0 2.5rem;
+    padding: 0 0.25rem 0 2.625rem;
   }
 
   .content {
-    margin: 0.375rem 0 0 0;
+    margin: 0.75rem 0 0 0;
   }
 }
 </style>
