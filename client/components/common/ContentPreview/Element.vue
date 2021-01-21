@@ -57,6 +57,10 @@ export default {
 
   &.selected {
     border-color: #444;
+
+    &::after {
+      display: none;
+    }
   }
 }
 
