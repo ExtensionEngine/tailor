@@ -11,7 +11,7 @@
           </template>
           {{ author.label }}
         </v-tooltip>
-        <span v-if="showEditedLabel" class="edited">(edited)</span>
+        <span v-if="showEditedLabel" class="edited ml-1">(edited)</span>
       </div>
       <div class="d-flex align-center">
         <v-tooltip right>
@@ -88,6 +88,7 @@ export default {
     flex-direction: column;
     flex: 0 100%;
     max-width: calc(100% - 6rem);
+    margin-left: 0.125rem;
 
     .author {
       display: inline-block;
@@ -97,7 +98,6 @@ export default {
     }
 
     .edited, .time {
-      margin-left: 0.125rem;
       color: #888;
       font-size: 0.75rem;
     }

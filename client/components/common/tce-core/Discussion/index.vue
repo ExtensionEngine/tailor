@@ -1,9 +1,9 @@
 <template>
   <div ref="discussion" class="embedded-discussion">
     <resolve-button v-if="showResolveButton" :comments="comments" />
-    <div :class="{ 'pb-7': !showHeading && showAllToggle }">
+    <div :class="{ 'pb-7': !showHeading && hasHiddenComments }">
       <v-btn
-        v-if="showAllToggle"
+        v-if="hasHiddenComments"
         @click="showAll = !showAll"
         text x-small
         class="float-right mt-1">
@@ -24,7 +24,7 @@
     <discussion-thread
       v-if="thread.length"
       @update="$emit('update', $event)"
-      @remove="$emit('remove', $event)"
+      @remove="remove"
       @seen="$emit('seen')"
       @showAll="showAll = $event"
       :items="thread"
@@ -34,9 +34,8 @@
       :unseen-count="unseenComments.length"
       :user="user"
       class="mt-2" />
-    <div class="text-right">
+    <div ref="editor" class="text-right">
       <text-editor
-        ref="editor"
         v-model.trim="comment.content"
         @focus="$emit('seen')"
         :placeholder="commentsCount ? 'Add a comment...' : 'Start the discussion...'" />
@@ -49,6 +48,7 @@
 
 <script>
 import DiscussionThread from './Thread';
+import { mapRequests } from '@/plugins/radio';
 import orderBy from 'lodash/orderBy';
 import ResolveButton from './ResolveButton';
 import TextEditor from './TextEditor';
@@ -69,7 +69,10 @@ export default {
     isResolved: { type: Boolean, default: false },
     user: { type: Object, required: true }
   },
-  data: () => ({ showAll: false, comment: initCommentInput() }),
+  data: () => ({
+    showAll: false,
+    comment: initCommentInput()
+  }),
   computed: {
     thread() {
       const { comments, unseenComments } = this;
@@ -80,13 +83,14 @@ export default {
       return orderBy(processedThread, ['unseen', 'createdAt'], 'asc');
     },
     commentsCount: vm => vm.thread.length,
-    showAllToggle: vm => vm.commentsShownLimit < vm.commentsCount,
+    hasHiddenComments: vm => vm.commentsShownLimit < vm.commentsCount,
     isTextEditorEmpty: vm => !vm.comment.content?.trim(),
     discussion: vm => vm.$refs.discussion,
-    editor: vm => vm.$refs.editor.$el,
+    editor: vm => vm.$refs.editor,
     showResolveButton: vm => !vm.isResolved && !vm.isActivityThread
   },
   methods: {
+    ...mapRequests('app', ['showConfirmationModal']),
     post() {
       const { scrollTarget, comment, user: author } = this;
       if (!comment.content) return;
@@ -101,6 +105,13 @@ export default {
       // Keep editor/discussion container inside viewport.
       const scrollOptions = { block: 'center', behavior: 'smooth' };
       this.$nextTick(() => this[scrollTarget].scrollIntoView(scrollOptions));
+    },
+    remove(comment) {
+      this.showConfirmationModal({
+        title: 'Remove comment',
+        message: 'Are you sure you want to remove this comment?',
+        action: () => this.$emit('remove', comment)
+      });
     }
   },
   watch: {
@@ -128,11 +139,15 @@ export default {
     justify-content: flex-end;
     margin: 0.5rem 0 0 0;
   }
-}
 
-.header {
-  margin: 0.875rem 0 1.625rem 0;
-  font-size: 1.125rem;
-  font-weight: 400;
+  .header {
+    margin: 0.875rem 0 1.625rem 0;
+    font-size: 1.125rem;
+    font-weight: 400;
+  }
+
+  .comment-editor {
+    margin: 0 0.25rem 0 0.25rem;
+  }
 }
 </style>

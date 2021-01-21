@@ -9,8 +9,7 @@
         v-model.trim="content"
         :is-focused="isEditing"
         :show-preview="!isEditing"
-        :is-resolved="comment.resolved"
-        class="content" />
+        :is-resolved="comment.resolved" />
       <span v-if="isEditing" class="d-flex justify-end">
         <v-btn @click="reset" text small>Cancel</v-btn>
         <v-btn @click="save" color="green" text small>
@@ -44,7 +43,7 @@ export default {
     },
     save() {
       const { comment, content } = this;
-      if (!content) return this.$emit('remove', comment);
+      if (!content) return this.remove();
       this.toggleEdit();
       this.$emit('update', comment, content);
     },
@@ -75,11 +74,11 @@ export default {
 
   &-body {
     flex: 1;
-    padding: 0.375rem 0 0 2.5rem;
+    padding: 0 0.25rem 0 2.625rem;
   }
 
-  .content {
-    margin: 0.375rem 0 0 0;
+  &-editor {
+    margin: 0.75rem 0 0 0;
   }
 }
 </style>
