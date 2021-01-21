@@ -1,8 +1,8 @@
 <template>
   <div ref="discussion" class="embedded-discussion">
-    <div :class="{ 'pb-7': !showHeading && showAllToggle }">
+    <div :class="{ 'pb-7': !showHeading && hasHiddenComments }">
       <v-btn
-        v-if="showAllToggle"
+        v-if="hasHiddenComments"
         @click="showAll = !showAll"
         text x-small
         class="float-right mt-1">
@@ -80,7 +80,7 @@ export default {
       return orderBy(processedThread, ['unseen', 'createdAt'], 'asc');
     },
     commentsCount: vm => vm.thread.length,
-    showAllToggle: vm => vm.commentsShownLimit < vm.commentsCount,
+    hasHiddenComments: vm => vm.commentsShownLimit < vm.commentsCount,
     isTextEditorEmpty: vm => !vm.comment.content?.trim(),
     discussion: vm => vm.$refs.discussion,
     editor: vm => vm.$refs.editor
