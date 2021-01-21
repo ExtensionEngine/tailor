@@ -11,7 +11,7 @@
           </template>
           {{ author.label }}
         </v-tooltip>
-        <span v-if="isEdited" class="edited">(edited)</span>
+        <span v-if="isEdited" class="edited ml-1">(edited)</span>
       </div>
       <div class="d-flex align-center">
         <v-tooltip right>
