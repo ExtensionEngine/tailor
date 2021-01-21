@@ -18,7 +18,8 @@ function list({ repository, opts, query }, res) {
   const { activityId, contentElementId } = query;
   if (activityId) opts.where.activityId = activityId;
   if (contentElementId) opts.where.contentElementId = contentElementId;
-  return repository.getComments({ ...opts, include: [author, element] })
+  return repository
+    .getComments({ ...opts, include: [author, element], paranoid: true })
     .then(data => res.json({ data }));
 }
 

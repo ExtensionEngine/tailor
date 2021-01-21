@@ -87,7 +87,11 @@ export default {
     isTextEditorEmpty: vm => !vm.comment.content?.trim(),
     discussion: vm => vm.$refs.discussion,
     editor: vm => vm.$refs.editor,
-    showResolveButton: vm => !vm.isResolved && !vm.isActivityThread
+    showResolveButton() {
+      const { isResolved, isActivityThread, comments } = this;
+      const availableComments = comments.filter(it => !it.deletedAt);
+      return !isResolved && !isActivityThread && availableComments.length;
+    }
   },
   methods: {
     ...mapRequests('app', ['showConfirmationModal']),
