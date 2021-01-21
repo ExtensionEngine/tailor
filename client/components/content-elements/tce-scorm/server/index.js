@@ -1,3 +1,5 @@
+'use strict';
+
 const { beforeSave } = require('@extensionengine/tce-scorm/dist/util');
 const { options } = require('@extensionengine/tce-scorm/dist/tce-scorm');
 
