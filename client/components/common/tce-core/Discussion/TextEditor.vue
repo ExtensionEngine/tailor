@@ -1,14 +1,14 @@
-<template>
-  <div :class="{ preview: showPreview }" class="comment-editor">
-    <div v-if="showPreview" class="content">
-      <pre><span>{{ value }}</span><br></pre>
+<template functional>
+  <div :class="{ preview: props.showPreview }" class="comment-editor">
+    <div v-if="props.showPreview" class="content">
+      <pre><span>{{ props.value }}</span><br></pre>
     </div>
     <v-textarea
       v-else
-      v-on="$listeners"
-      :value="value"
-      :autofocus="isFocused"
-      :placeholder="placeholder"
+      v-on="listeners"
+      :value="props.value"
+      :autofocus="props.isFocused"
+      :placeholder="props.placeholder"
       rows="3"
       outlined auto-grow clearable counter />
   </div>

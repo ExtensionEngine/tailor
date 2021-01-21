@@ -8,8 +8,7 @@
       <text-editor
         v-model.trim="content"
         :is-focused="isEditing"
-        :show-preview="!isEditing"
-        class="content" />
+        :show-preview="!isEditing" />
       <span v-if="isEditing" class="d-flex justify-end">
         <v-btn @click="reset" text small>Cancel</v-btn>
         <v-btn @click="save" color="green" text small>
@@ -77,7 +76,7 @@ export default {
     padding: 0 0.25rem 0 2.625rem;
   }
 
-  .content {
+  &-editor {
     margin: 0.75rem 0 0 0;
   }
 }

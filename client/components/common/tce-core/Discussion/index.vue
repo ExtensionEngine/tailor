@@ -33,13 +33,11 @@
       :unseen-count="unseenComments.length"
       :user="user"
       class="mt-2" />
-    <div class="text-right">
+    <div ref="editor" class="text-right">
       <text-editor
-        ref="editor"
         v-model.trim="comment.content"
         @focus="$emit('seen')"
-        :placeholder="commentsCount ? 'Add a comment...' : 'Start the discussion...'"
-        class="text-editor" />
+        :placeholder="commentsCount ? 'Add a comment...' : 'Start the discussion...'" />
       <v-btn @click="post" :disabled="isTextEditorEmpty" icon>
         <v-icon>mdi-send</v-icon>
       </v-btn>
@@ -68,7 +66,10 @@ export default {
     isActivityThread: { type: Boolean, default: false },
     user: { type: Object, required: true }
   },
-  data: () => ({ showAll: false, comment: initCommentInput() }),
+  data: () => ({
+    showAll: false,
+    comment: initCommentInput()
+  }),
   computed: {
     thread() {
       const { comments, unseenComments } = this;
@@ -82,7 +83,7 @@ export default {
     showAllToggle: vm => vm.commentsShownLimit < vm.commentsCount,
     isTextEditorEmpty: vm => !vm.comment.content?.trim(),
     discussion: vm => vm.$refs.discussion,
-    editor: vm => vm.$refs.editor.$el
+    editor: vm => vm.$refs.editor
   },
   methods: {
     ...mapRequests('app', ['showConfirmationModal']),
@@ -128,14 +129,14 @@ export default {
 .embedded-discussion {
   font-family: Roboto, Arial, sans-serif;
 
-  .text-editor {
+  .header {
+    margin: 0.875rem 0 1.625rem 0;
+    font-size: 1.125rem;
+    font-weight: 400;
+  }
+
+  .comment-editor {
     margin: 0 0.25rem 0 0.25rem;
   }
-}
-
-.header {
-  margin: 0.875rem 0 1.625rem 0;
-  font-size: 1.125rem;
-  font-weight: 400;
 }
 </style>
