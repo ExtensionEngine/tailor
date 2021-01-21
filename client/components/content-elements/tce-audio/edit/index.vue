@@ -43,7 +43,7 @@ export default {
   },
   computed: {
     source: vm => vm.element.data.url,
-    showPlaceholder: vm => !vm.source,
+    showPlaceholder: vm => !vm.source || vm.isDisabled,
     sources: vm => ([{
       src: vm.source,
       title: 'Audio Track'
