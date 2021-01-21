@@ -1,7 +1,7 @@
 'use strict';
 
 const {
-  clientID: clientId,
+  clientId,
   clientSecret,
   tokenHost,
   tokenPath,
