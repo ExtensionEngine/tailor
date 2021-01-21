@@ -1,6 +1,5 @@
 /* eslint-disable sort-imports */
 import { numeric as numericParser } from 'client/utils/paramsParser';
-import request from './api/request';
 import Router from 'vue-router';
 import { role } from '@/../config/shared';
 import Vue from 'vue';

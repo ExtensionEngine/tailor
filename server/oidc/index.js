@@ -2,7 +2,6 @@
 
 const { authenticate, logout } = require('../shared/auth');
 const { BAD_REQUEST } = require('http-status-codes');
-const get = require('lodash/get');
 const { errors: OIDCError } = require('openid-client');
 const path = require('path');
 const router = require('express').Router();
