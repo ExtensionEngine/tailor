@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="content-preview">
     <v-alert v-if="!elements.length" color="grey darken-4" text class="mx-4">
       No available elements.
     </v-alert>
@@ -51,3 +51,12 @@ export default {
   components: { ContentElement }
 };
 </script>
+
+<style lang="scss" scoped>
+.content-preview .v-alert {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 19rem;
+}
+</style>
