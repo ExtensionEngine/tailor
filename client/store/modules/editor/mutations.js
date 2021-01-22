@@ -1,5 +1,5 @@
-const setShowPublishDiff = (state, showPublishDiff) => {
-  state.showPublishDiff = showPublishDiff;
+const togglePublishDiff = (state, showPublishDiff) => {
+  state.showPublishDiff = showPublishDiff ?? !state.showPublishDiff;
 };
 
-export { setShowPublishDiff };
+export { togglePublishDiff };

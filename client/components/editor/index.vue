@@ -52,10 +52,10 @@ export default {
     activeUsers: vm => vm.getActiveUsers('activity', vm.activityId)
   },
   methods: {
-    ...mapMutations('editor', ['setShowPublishDiff']),
+    ...mapMutations('editor', ['togglePublishDiff']),
     ...mapActions('repository', ['initialize']),
-    resetPublishedPreview() {
-      if (this.showPublishDiff) this.setShowPublishDiff(false);
+    closePublishDiff() {
+      this.togglePublishDiff(false);
     },
     selectElement(element) {
       this.selectedElement = element;
@@ -76,7 +76,7 @@ export default {
     });
     return { $editorState };
   },
-  watch: { activityId: 'resetPublishedPreview' },
+  watch: { activityId: 'closePublishDiff' },
   async created() {
     const { repositoryId: currentRepositoryId, repository: storeRepository } = this;
     const repositoryLoaded = !!storeRepository;
@@ -87,7 +87,7 @@ export default {
     this.isLoading = false;
   },
   beforeDestroy() {
-    this.resetPublishedPreview();
+    this.closePublishDiff();
   },
   components: {
     ActivityContent,

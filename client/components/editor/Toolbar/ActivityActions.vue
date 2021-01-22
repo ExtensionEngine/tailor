@@ -70,15 +70,12 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('editor', ['setShowPublishDiff']),
+    ...mapMutations('editor', ['togglePublishDiff']),
     ...mapActions('repository/activities', { publishActivity: 'publish' }),
     preview() {
       const { repositoryId, id } = this.activity;
       return activityApi.createPreview(repositoryId, id)
         .then(location => window.open(location));
-    },
-    togglePublishDiff() {
-      this.setShowPublishDiff(!this.showPublishDiff);
     }
   }
 };
