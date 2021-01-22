@@ -114,7 +114,8 @@ export default {
       this.showConfirmationModal({
         title: 'Remove comment',
         message: 'Are you sure you want to remove this comment?',
-        action: () => this.$emit('remove', comment)
+        action: () => this.$emit('remove', comment),
+        options: { vm: this }
       });
     }
   },

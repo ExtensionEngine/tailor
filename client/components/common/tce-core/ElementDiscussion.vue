@@ -3,6 +3,7 @@
     v-model="isVisible"
     @click.native.stop
     :close-on-content-click="false"
+    :close-on-click="!isConfirmationActive"
     min-width="300"
     transition="slide-y-transition"
     left offset-y attach>
@@ -26,6 +27,7 @@
       @save="save"
       @update="save"
       @remove="editorBus.emit(events.REMOVE, $event)"
+      @confirmationActive="isConfirmationActive = $event"
       @seen="setLastSeen"
       v-bind="{ comments, unseenComments, isResolved, user }"
       class="pa-2" />
@@ -66,7 +68,10 @@ export default {
     lastSeen: { type: Number, required: true },
     user: { type: Object, required: true }
   },
-  data: () => ({ isVisible: false }),
+  data: () => ({
+    isVisible: false,
+    isConfirmationActive: false
+  }),
   computed: {
     ...mapChannels({ editorBus: 'editor' }),
     events: () => DiscussionEvent,
