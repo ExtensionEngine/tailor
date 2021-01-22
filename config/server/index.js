@@ -2,6 +2,7 @@
 
 const auth = require('./auth');
 const common = require('./common');
+const consumer = require('./consumer');
 const isLocalhost = require('is-localhost');
 const mail = require('./mail');
 const parse = require('url-parse');
@@ -22,7 +23,8 @@ module.exports = {
   auth,
   mail,
   storage,
-  previewUrl
+  previewUrl,
+  consumer
 };
 
 // Legacy config support

@@ -3,7 +3,7 @@
 require('dotenv').config();
 require('../shared/logger').enabled = false;
 
-const Deffered = require('../shared/util/Deffered');
+const Deferred = require('../shared/util/Deferred');
 const { User } = require('../shared/database');
 const { user: role } = require('../../config/shared').role;
 
@@ -14,7 +14,7 @@ if (args.length !== 1) {
 }
 
 const email = args[0];
-const mailing = new Deffered();
+const mailing = new Deferred();
 
 User.invite({ email, role: role.ADMIN }, mailing.callback)
   .then(user => Promise.all([user, mailing.promise]))
