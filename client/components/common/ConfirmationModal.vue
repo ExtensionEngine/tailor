@@ -33,22 +33,20 @@ export default {
     open(context) {
       this.context = context;
       this.show = true;
-      this.setConfirmation();
     },
     close() {
-      this.setConfirmation(false);
       this.show = false;
-      this.context = createContext();
     },
     confirm() {
       this.context.action();
       this.close();
-    },
-    setConfirmation(value = true) {
-      const { options } = this.context;
-      if (!options) return;
-      // The instance reference of the component that triggers confirmation modal
-      options.vm.$emit('confirmationActive', value);
+    }
+  },
+  watch: {
+    show(val) {
+      const action = val ? this.context.onOpen : this.context.onClose;
+      if (!val) this.context = createContext();
+      return action && action();
     }
   },
   created() {

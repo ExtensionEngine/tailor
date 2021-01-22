@@ -27,9 +27,9 @@
       @save="save"
       @update="save"
       @remove="editorBus.emit(events.REMOVE, $event)"
-      @confirmationActive="isConfirmationActive = $event"
       @seen="setLastSeen"
       v-bind="{ comments, unseenComments, isResolved, user }"
+      :confirmation-active.sync="isConfirmationActive"
       class="pa-2" />
   </v-menu>
 </template>

@@ -115,7 +115,8 @@ export default {
         title: 'Remove comment',
         message: 'Are you sure you want to remove this comment?',
         action: () => this.$emit('remove', comment),
-        options: { vm: this }
+        onOpen: () => this.$emit('update:confirmationActive', true),
+        onClose: () => this.$emit('update:confirmationActive', false)
       });
     }
   },
