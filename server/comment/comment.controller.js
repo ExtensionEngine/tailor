@@ -18,8 +18,7 @@ function list({ repository, opts, query }, res) {
   const { activityId, contentElementId } = query;
   if (activityId) opts.where.activityId = activityId;
   if (contentElementId) opts.where.contentElementId = contentElementId;
-  return repository
-    .getComments({ ...opts, include: [author, element], paranoid: true })
+  return repository.getComments({ ...opts, include: [author, element] })
     .then(data => res.json({ data }));
 }
 
@@ -44,7 +43,7 @@ function remove({ comment }, res) {
 
 async function resolve({ body }, res) {
   const where = { contentElementId: body.contentElementId };
-  await Comment.update({ resolved: true }, { where });
+  await Comment.update({ resolved: true }, { where, paranoid: false });
   return res.sendStatus(NO_CONTENT);
 }
 
