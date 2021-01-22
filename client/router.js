@@ -24,7 +24,7 @@ import SystemSettings from './components/system-settings';
 import SystemUserManagement from './components/system-settings/UserManagement';
 import TreeView from './components/repository/TreeView';
 import UserSettings from './components/user-settings';
-import WorkflowBoard from './components/repository/WorkflowBoard';
+import Workflow from './components/repository/Workflow';
 
 Vue.use(Router);
 
@@ -64,7 +64,7 @@ const options = {
     }, {
       path: 'board',
       name: 'board',
-      component: WorkflowBoard
+      component: Workflow
     }, {
       path: 'revisions',
       name: 'revisions',

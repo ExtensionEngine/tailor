@@ -30,7 +30,7 @@
 import { mapActions, mapGetters } from 'vuex';
 import { priorities } from 'shared/workflow';
 import TailorDialog from '@/components/common/TailorDialog';
-import TaskFieldGroup from '@/components/repository/WorkflowBoard/Sidebar/FieldGroup';
+import TaskFieldGroup from '@/components/repository/Workflow/Sidebar/FieldGroup';
 
 const defaultPriority = priorities.find(it => it.default);
 const initTaskState = statuses => ({

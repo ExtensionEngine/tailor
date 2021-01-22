@@ -1,12 +1,23 @@
 <template>
-  <div class="board d-flex flex-column grey lighten-4 py-3">
-    <v-progress-circular v-if="showLoader" color="primary" indeterminate class="align-self-center" />
+  <div class="workflow d-flex flex-column grey lighten-4 py-3">
+    <v-progress-circular
+      v-if="showLoader"
+      color="primary"
+      indeterminate
+      class="align-self-center" />
     <template v-else>
-      <board-filters
-        v-bind.sync="filters"
-        :assignee-options="assignees"
-        :show-unassigned="unassignedTaskExists" />
-      <board-columns :tasks="filteredTasks" />
+      <div class="controls d-flex justify-space-between align-center pr-4">
+        <workflow-filters
+          v-bind.sync="filters"
+          :assignee-options="assignees"
+          :show-unassigned="unassignedTaskExists" />
+        <v-switch v-model="isBoardView" label="View board" hide-details />
+      </div>
+      <workflow-board
+        v-if="isBoardView"
+        :tasks="filteredTasks"
+        class="board" />
+      <workflow-overview v-else :tasks="filteredTasks" class="overview px-4" />
       <sidebar />
     </template>
   </div>
@@ -14,22 +25,24 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import BoardColumns from './Columns';
-import BoardFilters from './Filters';
 import conforms from 'lodash/conforms';
 import isAfter from 'date-fns/isAfter';
 import Sidebar from './Sidebar';
 import sub from 'date-fns/sub';
+import WorkflowBoard from './Board';
+import WorkflowFilters from './Filters';
+import WorkflowOverview from './Overview';
 
 const RECENCY_THRESHOLD = { days: 2 };
 const SEARCH_TEXT_LENGTH_THRESHOLD = 3;
 
 export default {
-  name: 'workflow-board',
+  name: 'workflow-view',
   props: {
     showLoader: { type: Boolean, default: false }
   },
   data: () => ({
+    isBoardView: false,
     filters: {
       searchText: null,
       recentOnly: false,
@@ -92,17 +105,27 @@ export default {
     this.getTasks();
     this.getUsers();
   },
-  components: { BoardFilters, BoardColumns, Sidebar }
+  components: { Sidebar, WorkflowBoard, WorkflowFilters, WorkflowOverview }
 };
 </script>
 
 <style lang="scss" scoped>
-.board {
+$sidebar-width: 27.1875rem;
+
+.workflow {
   position: relative;
   height: 100%;
 
   .v-progress-circular {
     margin-top: 7.5rem;
   }
+}
+
+.controls, .overview, .board {
+  max-width: calc(100% - #{$sidebar-width} - 1rem);
+}
+
+.board {
+  overflow-x: scroll;
 }
 </style>

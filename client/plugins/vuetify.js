@@ -3,7 +3,7 @@ import colors from 'vuetify/es5/util/colors';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
 import VuetifySnackbar from '@/plugins/vuetify-snackbar';
-import workflowIcons from '@/components/repository/WorkflowBoard/icons';
+import workflowIcons from '@/components/repository/Workflow/icons';
 
 Vue.use(Vuetify);
 Vue.use(VuetifySnackbar);

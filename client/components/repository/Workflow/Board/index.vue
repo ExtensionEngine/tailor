@@ -1,5 +1,5 @@
 <template>
-  <div class="tasks">
+  <div>
     <div class="column-layout mt-4 px-4">
       <h5
         v-for="status in workflow.statuses"
@@ -25,7 +25,7 @@ import groupBy from 'lodash/groupBy';
 import { mapGetters } from 'vuex';
 
 export default {
-  name: 'workflow-board-columns',
+  name: 'workflow-board',
   props: {
     tasks: { type: Array, default: () => ([]) }
   },
@@ -38,8 +38,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$sidebar-width: 27.1875rem;
-
 .column-layout {
   display: grid;
   grid: auto / auto-flow minmax(16rem, 25rem);
@@ -53,10 +51,5 @@ $sidebar-width: 27.1875rem;
 
 .cards {
   padding-bottom: 10rem;
-}
-
-.tasks {
-  max-width: calc(100% - #{$sidebar-width} - 1rem);
-  overflow-x: scroll;
 }
 </style>
