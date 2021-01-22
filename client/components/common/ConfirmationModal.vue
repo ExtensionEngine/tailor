@@ -31,7 +31,8 @@ export default {
   computed: mapChannels({ appChannel: 'app' }),
   methods: {
     open(context) {
-      Object.assign(this, { context, show: true });
+      this.context = context;
+      this.show = true;
       this.setConfirmation();
     },
     close() {
@@ -45,8 +46,8 @@ export default {
     },
     setConfirmation(value = true) {
       const { options } = this.context;
-      if (options.vm) return;
-      // The instance reference of the component that triggers confirmation dialog
+      if (!options) return;
+      // The instance reference of the component that triggers confirmation modal
       options.vm.$emit('confirmationActive', value);
     }
   },
