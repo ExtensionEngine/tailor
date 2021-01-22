@@ -3,7 +3,7 @@ import { numeric as numericParser } from 'client/utils/paramsParser';
 import request from './api/request';
 import Router from 'vue-router';
 import { role } from '@/../config/shared';
-import store from './store';
+import getStore from './store';
 import Vue from 'vue';
 
 import Auth from './components/auth/Container';
@@ -131,10 +131,10 @@ export default function getRouter() {
     if (to.matched.some(it => it.meta.auth) && !auth.user) {
       return next({ path: '/login', query: { redirect: to.fullPath } });
     }
-    if (!isAllowed(to)) {
+    return isAllowed(to).then(allowed => {
+      if (!allowed) return next();
       return next({ path: from.fullPath });
-    }
-    return next();
+    });
   });
 
   request.auth.on('error', () => {
@@ -146,5 +146,6 @@ export default function getRouter() {
 
 function isAllowed(route) {
   const { meta = {} } = route.matched.find(({ meta = {} }) => meta.allowed) || {};
-  return !meta.allowed || meta.allowed.includes(store.state.auth.user.role);
+  if (!meta.allowed) return Promise.resolve(true);
+  return getStore().then(({ state }) => meta.allowed.includes(state.auth.user.role));
 }
