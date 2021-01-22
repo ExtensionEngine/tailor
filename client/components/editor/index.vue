@@ -66,6 +66,16 @@ export default {
       this.$router.replace({ query });
     }
   },
+  provide() {
+    const $editorState = {};
+    Object.defineProperties($editorState, {
+      isPublishDiff: {
+        get: () => this.showPublishDiff,
+        enumerable: true
+      }
+    });
+    return { $editorState };
+  },
   watch: { activityId: 'resetPublishedPreview' },
   async created() {
     const { repositoryId: currentRepositoryId, repository: storeRepository } = this;

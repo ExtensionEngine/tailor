@@ -2,7 +2,11 @@
   <li
     @mouseenter="hover = true"
     @mouseleave="hover = false"
-    :class="[assessment.changeSincePublish, { hover, expanded, diff: showPublishDiff }]"
+    :class="[assessment.changeSincePublish, {
+      hover,
+      expanded,
+      diff: $editorState.isPublishDiff
+    }]"
     class="list-group-item assessment-item elevation-1">
     <span v-if="draggable" class="drag-handle">
       <v-icon>mdi-drag-vertical</v-icon>
@@ -38,7 +42,7 @@
       </v-chip>
       <span class="question">{{ question | truncate(50) }}</span>
       <publish-diff-chip
-        v-if="showPublishDiff && assessment.changeSincePublish"
+        v-if="$editorState.isPublishDiff && assessment.changeSincePublish"
         :change-type="assessment.changeSincePublish" />
       <v-btn
         v-else
@@ -57,7 +61,6 @@
 import cloneDeep from 'lodash/cloneDeep';
 import filter from 'lodash/filter';
 import map from 'lodash/map';
-import { mapState } from 'vuex';
 import PublishDiffChip from './PublishDiffChip';
 
 const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
@@ -68,7 +71,7 @@ const getTextAssets = item => filter(item, it => TEXT_CONTAINERS.includes(it.typ
 
 export default {
   name: 'assessment-item',
-  inject: ['$teRegistry'],
+  inject: ['$teRegistry', '$editorState'],
   props: {
     assessment: { type: Object, required: true },
     expanded: { type: Boolean, default: false },
@@ -79,7 +82,6 @@ export default {
     return { hover: false };
   },
   computed: {
-    ...mapState('editor', ['showPublishDiff']),
     elementConfig() {
       return this.$teRegistry.get(this.assessment.data.type);
     },

@@ -4,12 +4,12 @@
     :class="[element.changeSincePublish, {
       selected: activeUsers.length,
       focused: isFocused,
-      diff: showPublishDiff,
+      diff: $editorState.isPublishDiff,
       frame
     }]"
     class="content-element">
     <div
-      :class="{ visible: showPublishDiff && element.changeSincePublish }"
+      :class="{ visible: $editorState.isPublishDiff && element.changeSincePublish }"
       class="header d-flex">
       <publish-diff-chip
         :change-type="element.changeSincePublish"
@@ -55,12 +55,11 @@ import { getComponentName, getElementId } from './utils';
 import ActiveUsers from 'tce-core/ActiveUsers';
 import Discussion from './ElementDiscussion';
 import { mapChannels } from '@/plugins/radio';
-import { mapState } from 'vuex';
 import PublishDiffChip from './PublishDiffChip';
 
 export default {
   name: 'content-element',
-  inject: ['$getCurrentUser'],
+  inject: ['$getCurrentUser', '$editorState'],
   inheritAttrs: false,
   props: {
     element: { type: Object, required: true },
@@ -79,7 +78,6 @@ export default {
   }),
   computed: {
     ...mapChannels({ editorBus: 'editor' }),
-    ...mapState('editor', ['showPublishDiff']),
     id: vm => getElementId(vm.element),
     componentName: vm => getComponentName(vm.element.type),
     isEmbed: vm => !!vm.parent || !vm.element.uid,
@@ -90,7 +88,7 @@ export default {
   },
   methods: {
     onSelect(e) {
-      if (this.isDisabled || this.showPublishDiff || e.component) return;
+      if (this.isDisabled || this.$editorState.isPublishDiff || e.component) return;
       this.focus();
       e.component = { name: 'content-element', data: this.element };
     },
