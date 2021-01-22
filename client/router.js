@@ -132,8 +132,7 @@ export default function getRouter() {
       return next({ path: '/login', query: { redirect: to.fullPath } });
     }
     return isAllowed(to).then(allowed => {
-      if (!allowed) return next();
-      return next({ path: from.fullPath });
+      return allowed ? next() : next({ path: from.fullPath });
     });
   });
 
