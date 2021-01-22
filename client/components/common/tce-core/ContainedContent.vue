@@ -7,7 +7,7 @@
     @dragover="scrollContainer"
     :class="[widthClass, { disabled: isDisabled, hovered: isHovered }]"
     class="contained-content">
-    <span class="drag-handle">
+    <span v-if="!isDisabled" class="drag-handle">
       <span class="mdi mdi-drag-vertical"></span>
     </span>
     <content-element
