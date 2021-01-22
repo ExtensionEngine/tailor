@@ -8,6 +8,7 @@
         v-for="element in container.elements"
         :key="element.id"
         @toggle="$emit('toggle', element)"
+        @element:open="$emit('element:open', $event)"
         :element="element"
         :selectable="selectable"
         :is-selected="!!selectionMap[element.id]"

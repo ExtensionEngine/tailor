@@ -32,6 +32,7 @@
         <content-preview
           v-else
           @toggle="toggleElementSelection"
+          @element:open="openElement"
           :content-containers="contentContainers"
           :selected="selectedElements"
           :allowed-types="allowedTypes"
@@ -165,6 +166,16 @@ export default {
     },
     close() {
       this.$emit('close');
+    },
+    openElement(elementId) {
+      const {
+        selectedActivity: { id: activityId },
+        repository: { id: repositoryId }
+      } = this;
+      const params = { activityId, repositoryId };
+      const route = { name: 'editor', params, query: { elementId } };
+      const { href } = this.$router.resolve(route);
+      window.open(href, '_blank');
     }
   },
   created() {

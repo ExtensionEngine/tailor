@@ -7,11 +7,28 @@
       @click.prevent
       :input-value="isSelected"
       :disabled="disabled" />
-    <content-element
-      :element="element"
-      :class="['content-element', { selected: isSelected }]"
-      :set-width="false"
-      v-bind="$attrs" />
+    <v-hover v-slot:default="{ hover }">
+      <div class="element-wrapper">
+        <content-element
+          :element="element"
+          :class="['content-element', { selected: isSelected }]"
+          :set-width="false"
+          v-bind="$attrs" />
+        <v-tooltip open-delay="400" top>
+          <template v-slot:activator="{ on }">
+            <v-btn
+              v-on="on"
+              @click.stop="$emit('element:open', element.uid)"
+              color="pink darken-1"
+              fab small dark
+              :class="['open-element-button', { visible: hover }]">
+              <v-icon small dark>mdi-open-in-new</v-icon>
+            </v-btn>
+          </template>
+          <span>Open in editor</span>
+        </v-tooltip>
+      </div>
+    </v-hover>
   </div>
 </template>
 
@@ -73,6 +90,22 @@ export default {
 
   .ql-editor {
     word-break: break-all;
+  }
+}
+
+.element-wrapper {
+  position: relative;
+  flex-grow: 1;
+}
+
+.open-element-button {
+  position: absolute;
+  top: 0.5rem;
+  right: -1.25rem;
+  transition: opacity 0.5s;
+
+  &:not(.visible) {
+    opacity: 0;
   }
 }
 </style>
