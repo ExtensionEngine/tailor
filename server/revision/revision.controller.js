@@ -22,7 +22,7 @@ function index({ repository, query, opts }, res) {
   return Revision.findAll(opts).then(data => res.json({ data }));
 }
 
-async function getStateByMoment({ query }, res) {
+async function getStateAtMoment({ query }, res) {
   const { activityId, elementIds, timestamp } = query;
   const activity = await Activity.findByPk(activityId);
   const removes = await getEntityRemovesSinceMoment(activity, timestamp);
@@ -41,7 +41,7 @@ function resolve({ revision }, res) {
 
 module.exports = {
   index,
-  getStateByMoment,
+  getStateAtMoment,
   resolve
 };
 

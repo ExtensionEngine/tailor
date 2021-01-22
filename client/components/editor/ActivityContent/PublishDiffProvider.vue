@@ -95,7 +95,7 @@ export default {
         activityId: this.activityId,
         timestamp: this.publishTimestamp
       };
-      return revisionApi.getStateByMoment(this.repositoryId, query)
+      return revisionApi.getStateAtMoment(this.repositoryId, query)
         .then(({ activities, elements }) => {
           this.publishedElements = getPublishedState(elements);
           this.publishedActivities = getPublishedState(activities);

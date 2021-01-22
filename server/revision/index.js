@@ -16,7 +16,7 @@ const defaultListQuery = {
 };
 
 router
-  .get('/time-travel', processQuery({ elementIds: [] }), ctrl.getStateByMoment)
+  .get('/time-travel', processQuery({ elementIds: [] }), ctrl.getStateAtMoment)
   .get('/', processListQuery(defaultListQuery), ctrl.index)
   .get('/:revisionId', ctrl.resolve);
 

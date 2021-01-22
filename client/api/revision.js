@@ -11,7 +11,7 @@ function fetch(repositoryId, params) {
   return request.get(urls.root(repositoryId), { params }).then(extractData);
 }
 
-function getStateByMoment(repositoryId, params) {
+function getStateAtMoment(repositoryId, params) {
   return request.get(urls.timeTravel(repositoryId), { params })
     .then(extractData);
 }
@@ -23,6 +23,6 @@ function get(repositoryId, id, params) {
 
 export default {
   fetch,
-  getStateByMoment,
+  getStateAtMoment,
   get
 };
