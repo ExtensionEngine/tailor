@@ -44,6 +44,7 @@ import { getSupportedContainers } from 'shared/activities';
 import isEqual from 'lodash/isEqual';
 import loader from '@/components/common/loader';
 import { mapChannels } from '@/plugins/radio';
+import max from 'lodash/max';
 import PublishDiffProvider from './PublishDiffProvider';
 import throttle from 'lodash/throttle';
 import transform from 'lodash/transform';
@@ -84,11 +85,12 @@ export default {
     activityId: vm => vm.activity.id,
     containerIds: vm => vm.contentContainers.map(it => it.id),
     elementsWithComments() {
-      const { elements, seen, activityId } = this;
+      const { elements, seen } = this;
+      const { id: activityId, uid: activityUid } = this.activity;
       return transform(elements, (acc, it) => {
         const comments = this.getComments({ activityId, contentElementId: it.id });
-        const lastSeen = seen.contentElement[it.uid] || 0;
-        acc[it.uid] = { ...it, comments, lastSeen };
+        const lastSeen = max([seen.contentElement[it.uid], seen.activity[activityUid]]);
+        acc[it.uid] = { ...it, comments, lastSeen: lastSeen || 0 };
       }, {});
     },
     containerConfigs: vm => getSupportedContainers(vm.activity.type)
@@ -152,23 +154,29 @@ export default {
     scrollToElement(id, timeout = 500) {
       setTimeout(() => {
         const elementId = `#element_${id}`;
-        const element = this.$refs.activityContent.querySelector(elementId);
-        element.scrollIntoView();
+        const element = this.$refs.activityContent?.querySelector(elementId);
+        if (!element) return;
+        element.scrollIntoView({ block: 'center', behavior: 'smooth' });
       }, timeout);
+    },
+    revealElement() {
+      const { elementId } = this.$route.query;
+      if (!elementId) return;
+      // Select and scroll to element if elementId is set
+      this.selectElement(elementId);
+      this.scrollToElement(elementId);
     }
   },
   watch: {
     isLoading(val) {
-      const { elementId } = this.$route.query;
-      if (val || !elementId) return;
-      // Select and scroll to element if elementId is set
+      if (val) return;
       setTimeout(() => {
-        this.selectElement(elementId);
-        this.scrollToElement(elementId);
+        this.revealElement();
         this.collaboratorSelections
           .forEach(({ elementId, ...user }) => this.selectElement(elementId, user));
       }, CE_SELECTION_DELAY);
     },
+    $route: 'revealElement',
     focusedElement: {
       deep: true,
       handler(val) {
