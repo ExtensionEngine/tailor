@@ -1,11 +1,12 @@
 <template>
-  <div v-intersect="onIntersect" class="activity-discussion">
+  <div class="activity-discussion">
     <discussion
       @save="saveComment"
       @update="saveComment"
       @remove="remove"
-      v-bind="{ comments, user, showHeading, scrollTarget: 'editor' }"
-      show-notifications />
+      @seen="setLastSeenComment"
+      v-bind="{ comments, unseenComments, showHeading, user, scrollTarget: 'editor' }"
+      show-notifications is-activity-thread />
   </div>
 </template>
 
@@ -21,14 +22,14 @@ export default {
     activity: { type: Object, required: true },
     showHeading: { type: Boolean, default: false }
   },
-  data: () => ({ isVisible: false }),
   computed: {
-    ...mapGetters('repository/comments', ['getComments']),
+    ...mapGetters('repository/comments', ['getComments', 'getUnseenActivityComments']),
     ...mapState({ user: state => state.auth.user }),
     comments() {
-      const params = { activityId: this.activity.id, contentElementId: null };
-      return orderBy(this.getComments(params), 'createdAt', 'desc');
+      const comments = this.getComments({ activityId: this.activity.id });
+      return orderBy(comments, 'createdAt', 'desc');
     },
+    unseenComments: vm => vm.getUnseenActivityComments(vm.activity),
     lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime()
   },
   methods: {
@@ -39,23 +40,10 @@ export default {
       const { activity, user: author } = this;
       return this[action]({ ...comment, author, activityId: activity.id });
     },
-    setLastSeenComment(timeout) {
+    setLastSeenComment(timeout = 200) {
       const { activity, lastCommentAt } = this;
       const payload = { activityUid: activity.uid, lastCommentAt };
       setTimeout(() => this.markSeenComments(payload), timeout);
-    },
-    onIntersect(_entries, _observer, isIntersected) {
-      this.isVisible = isIntersected;
-    }
-  },
-  watch: {
-    isVisible(val) {
-      if (!val || !this.lastCommentAt) return;
-      this.setLastSeenComment(1000);
-    },
-    comments(val, oldVal) {
-      if (!this.isVisible || val === oldVal) return;
-      this.setLastSeenComment(2000);
     }
   },
   created() {

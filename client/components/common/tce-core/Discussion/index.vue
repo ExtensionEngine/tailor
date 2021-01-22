@@ -1,8 +1,8 @@
 <template>
   <div ref="discussion" class="embedded-discussion">
-    <div :class="{ 'pb-7': !showHeading && showAllToggle }">
+    <div :class="{ 'pb-7': !showHeading && hasHiddenComments }">
       <v-btn
-        v-if="showAllToggle"
+        v-if="hasHiddenComments"
         @click="showAll = !showAll"
         text x-small
         class="float-right mt-1">
@@ -23,19 +23,22 @@
     <discussion-thread
       v-if="thread.length"
       @update="$emit('update', $event)"
-      @remove="$emit('remove', $event)"
+      @remove="remove"
+      @seen="$emit('seen')"
+      @showAll="showAll = $event"
       :items="thread"
-      :user="user"
-      :min-displayed="commentsShownLimit"
       :show-all="showAll"
+      :min-displayed="commentsShownLimit"
+      :is-activity-thread="isActivityThread"
+      :unseen-count="unseenComments.length"
+      :user="user"
       class="mt-2" />
-    <div class="text-right">
+    <div ref="editor" class="text-right">
       <text-editor
-        ref="editor"
-        v-model="comment.content"
-        @change="post"
+        v-model.trim="comment.content"
+        @focus="$emit('seen')"
         :placeholder="commentsCount ? 'Add a comment...' : 'Start the discussion...'" />
-      <v-btn @click="post" icon>
+      <v-btn @click="post" :disabled="isTextEditorEmpty" icon>
         <v-icon>mdi-send</v-icon>
       </v-btn>
     </div>
@@ -44,6 +47,7 @@
 
 <script>
 import DiscussionThread from './Thread';
+import { mapRequests } from '@/plugins/radio';
 import orderBy from 'lodash/orderBy';
 import TextEditor from './TextEditor';
 
@@ -54,21 +58,35 @@ export default {
   inheritAttrs: true,
   props: {
     comments: { type: Array, default: () => [] },
-    user: { type: Object, required: true },
+    unseenComments: { type: Array, default: () => [] },
+    commentsShownLimit: { type: Number, default: 5 },
+    scrollTarget: { type: String, default: 'discussion' },
     showHeading: { type: Boolean, default: false },
     showNotifications: { type: Boolean, default: false },
-    commentsShownLimit: { type: Number, default: 5 },
-    scrollTarget: { type: String, default: 'discussion' }
+    isActivityThread: { type: Boolean, default: false },
+    user: { type: Object, required: true }
   },
-  data: () => ({ showAll: false, comment: initCommentInput() }),
+  data: () => ({
+    showAll: false,
+    comment: initCommentInput()
+  }),
   computed: {
-    thread: vm => orderBy(vm.comments, ['createdAt'], ['asc']),
+    thread() {
+      const { comments, unseenComments } = this;
+      const processedThread = comments.map(comment => {
+        const unseen = unseenComments.find(it => it.id === comment.id);
+        return { ...comment, unseen: !!unseen };
+      });
+      return orderBy(processedThread, ['unseen', 'createdAt'], 'asc');
+    },
     commentsCount: vm => vm.thread.length,
-    showAllToggle: vm => vm.commentsShownLimit < vm.thread.length,
+    hasHiddenComments: vm => vm.commentsShownLimit < vm.commentsCount,
+    isTextEditorEmpty: vm => !vm.comment.content?.trim(),
     discussion: vm => vm.$refs.discussion,
-    editor: vm => vm.$refs.editor.$el
+    editor: vm => vm.$refs.editor
   },
   methods: {
+    ...mapRequests('app', ['showConfirmationModal']),
     post() {
       const { scrollTarget, comment, user: author } = this;
       if (!comment.content) return;
@@ -81,7 +99,15 @@ export default {
       this.comment = initCommentInput();
       this.$emit('save', payload);
       // Keep editor/discussion container inside viewport.
-      this.$nextTick(() => this[scrollTarget].scrollIntoView({ behavior: 'smooth' }));
+      const scrollOptions = { block: 'center', behavior: 'smooth' };
+      this.$nextTick(() => this[scrollTarget].scrollIntoView(scrollOptions));
+    },
+    remove(comment) {
+      this.showConfirmationModal({
+        title: 'Remove comment',
+        message: 'Are you sure you want to remove this comment?',
+        action: () => this.$emit('remove', comment)
+      });
     }
   },
   watch: {
@@ -102,11 +128,15 @@ export default {
 <style lang="scss" scoped>
 .embedded-discussion {
   font-family: Roboto, Arial, sans-serif;
-}
 
-.header {
-  margin: 0.875rem 0 1.625rem 0;
-  font-size: 1.125rem;
-  font-weight: 400;
+  .header {
+    margin: 0.875rem 0 1.625rem 0;
+    font-size: 1.125rem;
+    font-weight: 400;
+  }
+
+  .comment-editor {
+    margin: 0 0.25rem 0 0.25rem;
+  }
 }
 </style>

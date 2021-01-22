@@ -1,14 +1,14 @@
-<template>
-  <div :class="{ preview: showPreview }" class="comment-editor">
-    <div v-if="showPreview" class="content">
-      <pre><span>{{ content }}</span><br></pre>
+<template functional>
+  <div :class="{ preview: props.showPreview }" class="comment-editor">
+    <div v-if="props.showPreview" class="content">
+      <pre><span>{{ props.value }}</span><br></pre>
     </div>
     <v-textarea
       v-else
-      @change="$emit('input', $event)"
-      :value="content"
-      :autofocus="isFocused"
-      :placeholder="placeholder"
+      v-on="listeners"
+      :value="props.value"
+      :autofocus="props.isFocused"
+      :placeholder="props.placeholder"
       rows="3"
       outlined auto-grow clearable counter />
   </div>
@@ -18,13 +18,10 @@
 export default {
   name: 'text-editor',
   props: {
-    value: { type: String, required: true },
+    value: { type: String, default: '' },
     isFocused: { type: Boolean, default: false },
     showPreview: { type: Boolean, default: false },
     placeholder: { type: String, default: 'Add a comment...' }
-  },
-  computed: {
-    content: vm => vm.value.trim()
   }
 };
 </script>

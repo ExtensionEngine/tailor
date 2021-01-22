@@ -1,6 +1,7 @@
 <template>
   <v-menu
     v-model="isVisible"
+    @click.native.stop
     :close-on-content-click="false"
     min-width="300"
     transition="slide-y-transition"
@@ -25,7 +26,8 @@
       @save="save"
       @update="save"
       @remove="editorBus.emit(events.REMOVE, $event)"
-      v-bind="{ comments, user }"
+      @seen="setLastSeen"
+      v-bind="{ comments, unseenComments, user }"
       class="pa-2" />
   </v-menu>
 </template>
@@ -70,10 +72,10 @@ export default {
     lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime(),
     unseenComments() {
       const { comments, user, lastSeen } = this;
-      return comments.filter(it => (
-        it.author.id !== user.id &&
-        new Date(it.createdAt).getTime() > lastSeen
-      ));
+      return comments.filter(it => {
+        const createdAt = new Date(it.createdAt).getTime();
+        return it.author.id !== user.id && createdAt > lastSeen;
+      });
     },
     activator() {
       const { comments, unseenComments } = this;
@@ -93,19 +95,9 @@ export default {
       });
     },
     setLastSeen(timeout) {
-      const { uid: elementUid, lastCommentAt } = this;
+      const { uid: elementUid, lastCommentAt, events } = this;
       const options = { elementUid, lastCommentAt, timeout };
-      this.editorBus.emit(DiscussionEvent.SET_LAST_SEEN, options);
-    }
-  },
-  watch: {
-    isVisible(val) {
-      if (!val || !this.lastCommentAt) return;
-      this.setLastSeen(1000);
-    },
-    comments(val, oldVal) {
-      if (!this.isVisible || val === oldVal) return;
-      this.setLastSeen(2000);
+      this.editorBus.emit(events.SET_LAST_SEEN, options);
     }
   },
   components: { Discussion }
@@ -118,6 +110,10 @@ export default {
 
   ::v-deep .embedded-discussion {
     text-align: left;
+  }
+
+  ::v-deep .comment .author {
+    font-size: 0.875rem;
   }
 }
 
