@@ -32,11 +32,11 @@ const getPublishedState = revisions => revisions.reduce((all, { state }) => ({
 export default {
   name: 'publish-diff-provider',
   props: {
+    activityId: { type: Number, required: true },
+    repositoryId: { type: Number, required: true },
     elements: { type: Object, default: () => ({}) },
     activities: { type: Object, default: () => ({}) },
     containerGroups: { type: Object, default: () => ({}) },
-    activityId: { type: Number, required: true },
-    repositoryId: { type: Number, required: true },
     publishTimestamp: { type: String, default: null },
     showDiff: { type: Boolean, default: false }
   },

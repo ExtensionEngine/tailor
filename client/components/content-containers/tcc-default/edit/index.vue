@@ -1,7 +1,13 @@
 <template>
   <v-sheet class="content-container mb-5 elevation-1">
     <div class="d-flex justify-end">
-      <v-btn v-if="!isDisabled" @click="$emit('delete')" color="pink" text>Delete {{ name }}</v-btn>
+      <v-btn
+        v-if="!isDisabled"
+        @click="$emit('delete')"
+        color="pink"
+        text>
+        Delete {{ name }}
+      </v-btn>
     </div>
     <v-alert
       :value="!containerElements.length"
