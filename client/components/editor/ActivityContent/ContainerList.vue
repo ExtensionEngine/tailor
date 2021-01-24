@@ -99,10 +99,13 @@ export default {
       this.save({ type, parentId, position });
     },
     saveContentElement(element) {
-      return this.saveElement(element).then(() => {
-        this.$radio.channel(`element:${getElementId(element)}`).emit('saved');
-        this.showNotification();
-      });
+      const elementChannel = this.$radio.channel(`element:${getElementId(element)}`);
+      return this.saveElement(element)
+        .then(() => {
+          elementChannel.emit('saved');
+          this.showNotification();
+        })
+        .catch(err => elementChannel.emit('error', err));
     },
     reorderContentElements({ newPosition, items }) {
       const element = items[newPosition];
