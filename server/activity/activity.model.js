@@ -178,7 +178,7 @@ class Activity extends Model {
     const { attributes } = options;
     const node = !isEmpty(attributes) ? pick(this, attributes) : this;
     nodes.push(node);
-    return Promise.resolve(this.getChildren({ attributes }))
+    return Promise.resolve(this.getChildren(options))
       .map(it => it.descendants(options, nodes, leaves))
       .then(children => {
         if (!isEmpty(children)) return { nodes, leaves };

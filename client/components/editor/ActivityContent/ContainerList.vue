@@ -24,10 +24,11 @@
       @delete="requestContainerDeletion(container)"
       :name="name"
       :container="container"
-      :activities="activities"
+      :activities="processedActivities"
       :elements="processedElements"
       :tes="elements"
       :position="index"
+      :is-disabled="showPublishDiff"
       v-bind="$attrs" />
     <div v-if="addBtnEnabled">
       <v-btn @click="addContainer" color="blue-grey darken-3" text class="mt-4">
@@ -78,6 +79,7 @@ export default {
   props: {
     containerGroup: { type: Array, default: () => ({}) },
     processedElements: { type: Object, required: true },
+    processedActivities: { type: Object, required: true },
     type: { type: String, required: true },
     templateId: { type: String, default: null },
     parentId: { type: Number, required: true },
@@ -87,8 +89,8 @@ export default {
     displayHeading: { type: Boolean, default: false }
   },
   computed: {
-    ...mapState('repository/activities', { activities: 'items' }),
     ...mapState('repository/contentElements', { elements: 'items' }),
+    ...mapState('editor', ['showPublishDiff']),
     deprecatedListeners() {
       return mapValues(DEPRECATED_LISTENERS, ({ action, ...config }, listener) => {
         return this.deprecateEvent(action, { oldEvent: listener, ...config });
@@ -99,7 +101,10 @@ export default {
       return getContainerName(this.$ccRegistry.get(id) ? id : 'DEFAULT');
     },
     name: vm => vm.label.toLowerCase(),
-    addBtnEnabled: vm => !(!vm.multiple && vm.containerGroup.length),
+    addBtnEnabled() {
+      const isMultipleOrEmpty = this.multiple || !this.containerGroup.length;
+      return !this.showPublishDiff && isMultipleOrEmpty;
+    },
     nextPosition() {
       const last = get(maxBy(this.containerGroup, 'position'), 'position', 0);
       return last + 1;
@@ -121,10 +126,12 @@ export default {
     },
     saveContentElements(elements) {
       castArray(elements).forEach(element => {
+        const elementChannel = this.$radio.channel(`element:${getElementId(element)}`);
         return this.saveElement(element).then(() => {
-          this.$radio.channel(`element:${getElementId(element)}`).emit('saved');
+          elementChannel.emit('saved');
           this.showNotification();
-        });
+        })
+        .catch(err => elementChannel.emit('error', err));
       });
     },
     reorderContentElements({ newPosition, items }) {

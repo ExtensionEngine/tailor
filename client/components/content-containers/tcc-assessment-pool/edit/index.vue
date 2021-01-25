@@ -17,9 +17,11 @@
         @save="saveAssessment"
         @delete="$emit('delete:element', it)"
         :assessment="it"
-        :expanded="isSelected(it)" />
+        :expanded="isSelected(it)"
+        :is-disabled="isDisabled" />
     </ul>
     <add-element
+      v-if="!isDisabled"
       @add="addAssessments"
       :items="assessments"
       :include="['ASSESSMENT']"
@@ -42,7 +44,8 @@ export default {
   name: 'assessment-pool',
   props: {
     container: { type: Object, required: true },
-    elements: { type: Object, required: true }
+    elements: { type: Object, required: true },
+    isDisabled: { type: Boolean, default: false }
   },
   data: () => ({
     selected: [],
