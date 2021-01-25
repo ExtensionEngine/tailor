@@ -59,13 +59,17 @@ import contentElementApi from 'client/api/contentElement';
 import ContentPreview from '@/components/common/ContentPreview';
 import flatMap from 'lodash/flatMap';
 import { getDescendants as getContainers } from '@/utils/activity';
+import { getSupportedContainers } from 'shared/activities';
 import loader from '@/components/common/loader';
+import map from 'lodash/map';
 import { mapGetters } from 'vuex';
 import repositoryApi from '@/api/repository';
 import SelectActivity from './SelectActivity';
 import SelectRepository from './SelectRepository';
 import sortBy from 'lodash/sortBy';
 import TailorDialog from '@/components/common/TailorDialog';
+
+const getContainerTypes = type => map(getSupportedContainers(type), 'type');
 
 const TOGGLE_BUTTON = {
   SELECT: { label: 'Select all', icon: 'checkbox-multiple-marked-outline' },
@@ -100,6 +104,22 @@ export default {
     }),
     allElementsSelected: vm => vm.selectedElements.length === vm.elements.length,
     showBackButton: vm => vm.useCurrentRepo ? !!vm.selectedActivity : !!vm.repository,
+    containers() {
+      const { selectedActivity, activities } = this;
+      if (!selectedActivity || !activities.length) return [];
+      const rootTypes = getContainerTypes(selectedActivity.type);
+      let containers = activities.filter(({ type, parentId }) => {
+        return parentId === selectedActivity.id && rootTypes.includes(type);
+      });
+      containers = sortBy(containers, [
+        it => rootTypes.indexOf(it.type), 'position', 'createdAt'
+      ]);
+      return containers.reduce((acc, container) => {
+        const subcontainers = getContainers(activities, container);
+        acc.push(container, ...sortBy(subcontainers, 'position'));
+        return acc;
+      }, []);
+    },
     elements() {
       const elements = flatMap(this.contentContainers, 'elements');
       if (!this.allowedTypes.length) return elements;
@@ -115,13 +135,12 @@ export default {
   methods: {
     async showActivityElements(activity) {
       this.selectedActivity = activity;
-      const { activities } = this;
-      const containers = sortBy(getContainers(activities, activity), 'position');
+      const { containers } = this;
       const elements = await this.fetchElements(containers);
-      this.contentContainers = containers.map(container => ({
-        ...container,
-        elements: elements.filter(element => element.activityId === container.id)
-      }));
+      this.contentContainers = containers.map(container => {
+        const containerElements = elements.filter(it => it.activityId === container.id);
+        return { ...containers, elements: sortBy(containerElements, 'position') };
+      });
     },
     assignActivity(element) {
       return { ...element, activity: this.selectedActivity };
