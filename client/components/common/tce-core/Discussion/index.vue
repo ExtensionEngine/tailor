@@ -1,6 +1,6 @@
 <template>
   <div ref="discussion" class="embedded-discussion">
-    <resolve-button v-if="showResolveButton" :comments="comments" />
+    <resolve-button v-if="showResolveButton" v-on="$listeners" />
     <div :class="{ 'pb-7': !showHeading && hasHiddenComments }">
       <v-btn
         v-if="hasHiddenComments"

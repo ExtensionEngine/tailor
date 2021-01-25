@@ -28,6 +28,7 @@
       @update="save"
       @remove="editorBus.emit(events.REMOVE, $event)"
       @seen="setLastSeen"
+      @resolve="resolve"
       v-bind="{ comments, unseenComments, hasUnresolvedComments, user }"
       :confirmation-active.sync="isConfirmationActive"
       class="pa-2" />
@@ -102,10 +103,11 @@ export default {
       const { uid: elementUid, lastCommentAt, events } = this;
       const options = { elementUid, lastCommentAt, timeout };
       this.editorBus.emit(events.SET_LAST_SEEN, options);
+    },
+    resolve() {
+      const { id: elementId, events } = this;
+      this.editorBus.emit(events.RESOLVE, elementId);
     }
-  },
-  provide() {
-    return { $editorBus: this.editorBus };
   },
   components: { Discussion }
 };

@@ -1,10 +1,10 @@
-<template>
+<template functional>
   <div class="resolve-btn-container">
     <v-tooltip open-delay="800" left>
       <template v-slot:activator="{ on }">
         <v-btn
           v-on="on"
-          @click="resolve"
+          @click="listeners.resolve"
           color="teal accent-4"
           small text
           class="px-1">
@@ -20,19 +20,7 @@
 </template>
 
 <script>
-import events from '../Events/DiscussionEvent';
-
 export default {
-  name: 'resolve-comments-btn',
-  inject: ['$editorBus'],
-  props: {
-    comments: { type: Array, required: true }
-  },
-  methods: {
-    resolve() {
-      const { contentElementId } = this.comments[0];
-      this.$editorBus.emit(events.RESOLVE, contentElementId);
-    }
-  }
+  name: 'resolve-comments-btn'
 };
 </script>
