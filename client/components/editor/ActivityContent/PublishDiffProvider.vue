@@ -29,6 +29,8 @@ const getPublishedState = revisions => revisions.reduce((all, { state }) => ({
   [state.uid]: omit(state, ['createdAt', 'updatedAt'])
 }), {});
 
+const pureMerge = (source, target) => produce(source, draft => merge(draft, target));
+
 export default {
   name: 'publish-diff-provider',
   props: {
@@ -43,11 +45,11 @@ export default {
   data: () => ({ publishedElements: {}, publishedActivities: {} }),
   computed: {
     processedElements() {
-      const elements = produce(this.elements, draftState => merge(draftState, this.publishedElements));
+      const elements = pureMerge(this.elements, this.publishedElements);
       return mapValues(elements, this.addChangeType);
     },
     processedActivities() {
-      return produce(this.activities, draftState => merge(draftState, this.publishedActivities));
+      return pureMerge(this.activities, this.publishedActivities);
     },
     processedContainerGroups() {
       return reduce(this.containerGroups, this.addPublishedContainersToGroup, {});
