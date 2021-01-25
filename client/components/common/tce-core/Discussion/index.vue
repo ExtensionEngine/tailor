@@ -66,7 +66,7 @@ export default {
     showHeading: { type: Boolean, default: false },
     showNotifications: { type: Boolean, default: false },
     isActivityThread: { type: Boolean, default: false },
-    isResolved: { type: Boolean, default: false },
+    hasUnresolvedComments: { type: Boolean, default: false },
     user: { type: Object, required: true }
   },
   data: () => ({
@@ -87,7 +87,7 @@ export default {
     isTextEditorEmpty: vm => !vm.comment.content?.trim(),
     discussion: vm => vm.$refs.discussion,
     editor: vm => vm.$refs.editor,
-    showResolveButton: vm => !vm.isResolved && !vm.isActivityThread
+    showResolveButton: vm => !vm.hasUnresolvedComments && !vm.isActivityThread
   },
   methods: {
     ...mapRequests('app', ['showConfirmationModal']),
@@ -136,7 +136,7 @@ export default {
 .embedded-discussion {
   font-family: Roboto, Arial, sans-serif;
 
-  .resolve-button {
+  .resolve-btn-container {
     display: flex;
     justify-content: flex-end;
     margin: 0.5rem 0 0 0;

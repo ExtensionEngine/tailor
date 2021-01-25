@@ -1,5 +1,5 @@
 <template>
-  <div class="resolve-button">
+  <div class="resolve-btn-container">
     <v-tooltip open-delay="800" left>
       <template v-slot:activator="{ on }">
         <v-btn
@@ -14,7 +14,7 @@
           Resolve Discussion
         </v-btn>
       </template>
-      <span>Mark discussion as resolved</span>
+      <span>Mark as resolved and hide discussion</span>
     </v-tooltip>
   </div>
 </template>
@@ -23,7 +23,7 @@
 import events from '../Events/DiscussionEvent';
 
 export default {
-  name: 'resolve-button',
+  name: 'resolve-comments-btn',
   inject: ['$editorBus'],
   props: {
     comments: { type: Array, required: true }

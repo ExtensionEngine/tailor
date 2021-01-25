@@ -28,7 +28,7 @@
       @update="save"
       @remove="editorBus.emit(events.REMOVE, $event)"
       @seen="setLastSeen"
-      v-bind="{ comments, unseenComments, isResolved, user }"
+      v-bind="{ comments, unseenComments, hasUnresolvedComments, user }"
       :confirmation-active.sync="isConfirmationActive"
       class="pa-2" />
   </v-menu>
@@ -64,7 +64,7 @@ export default {
     id: { type: Number, default: null },
     uid: { type: String, required: true },
     comments: { type: Array, required: true },
-    isResolved: { type: Boolean, default: false },
+    hasUnresolvedComments: { type: Boolean, default: false },
     lastSeen: { type: Number, required: true },
     user: { type: Object, required: true }
   },
