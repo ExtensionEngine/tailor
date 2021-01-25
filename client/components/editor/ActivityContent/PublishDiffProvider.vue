@@ -14,13 +14,13 @@
 </template>
 
 <script>
-import cloneDeep from 'lodash/cloneDeep';
 import filter from 'lodash/filter';
 import isAfter from 'date-fns/isAfter';
 import map from 'lodash/map';
 import mapValues from 'lodash/mapValues';
 import merge from 'lodash/merge';
 import omit from 'lodash/omit';
+import produce from 'immer';
 import reduce from 'lodash/reduce';
 import revisionApi from '@/api/revision';
 
@@ -43,12 +43,11 @@ export default {
   data: () => ({ publishedElements: {}, publishedActivities: {} }),
   computed: {
     processedElements() {
-      const elements = cloneDeep(this.elements);
-      return mapValues(merge(elements, this.publishedElements), this.addChangeType);
+      const elements = produce(this.elements, draftState => merge(draftState, this.publishedElements));
+      return mapValues(elements, this.addChangeType);
     },
     processedActivities() {
-      const activities = cloneDeep(this.activities);
-      return merge(activities, this.publishedActivities);
+      return produce(this.activities, draftState => merge(draftState, this.publishedActivities));
     },
     processedContainerGroups() {
       return reduce(this.containerGroups, this.addPublishedContainersToGroup, {});
