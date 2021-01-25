@@ -10,14 +10,15 @@
         <workflow-filters
           v-bind.sync="filters"
           :assignee-options="assignees"
-          :show-unassigned="unassignedTaskExists" />
+          :show-unassigned="unassignedTaskExists"
+          class="px-4" />
         <v-switch v-model="isBoardView" label="View board" hide-details />
       </div>
       <workflow-board
         v-if="isBoardView"
         :tasks="filteredTasks"
-        class="board" />
-      <workflow-overview v-else :tasks="filteredTasks" class="overview px-4" />
+        class="board mt-3" />
+      <workflow-overview v-else :tasks="filteredTasks" class="overview mt-3 px-4" />
       <sidebar />
     </template>
   </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex align-center px-4">
+  <div class="d-flex align-center">
     <v-text-field
       @input="updateFilter('searchText', $event)"
       :value="searchText"

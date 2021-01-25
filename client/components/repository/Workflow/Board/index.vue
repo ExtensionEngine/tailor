@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="column-layout mt-4 px-4">
+    <div class="column-layout px-4">
       <h5
         v-for="status in workflow.statuses"
         :key="status.id"
