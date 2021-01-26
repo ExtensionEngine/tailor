@@ -34,8 +34,8 @@ export default {
     hasElements: vm => !isEmpty(vm.embeds)
   },
   methods: {
-    save(item, embeds = {}) {
-      item = produce(item, draft => {
+    save(originalItem, embeds = {}) {
+      const item = produce(originalItem, draft => {
         forEach(embeds, it => (draft.body[it.id] = true));
       });
       this.$emit('save', { item, embeds });
