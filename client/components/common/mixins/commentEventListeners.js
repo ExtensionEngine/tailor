@@ -22,11 +22,11 @@ export default {
       resolveComments: 'resolve'
     }),
     ...mapMutations('repository/comments', ['markSeenComments']),
-    async upsertComment(comment, { hasComments } = {}) {
+    async upsertComment({ hasUnresolvedComments, ...comment }) {
       const { id, contentElementId: elementId } = comment;
       const action = id ? 'updateComment' : 'saveComment';
       await this[action]({ ...comment, activityId: this.activityId });
-      if (!hasComments) this.fetchComments({ elementId });
+      if (hasUnresolvedComments) this.fetchComments({ elementId });
     },
     setLastSeenComment({ timeout = 200, ...payload }) {
       setTimeout(() => this.markSeenComments(payload), timeout);

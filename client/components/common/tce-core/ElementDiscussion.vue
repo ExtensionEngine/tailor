@@ -94,10 +94,13 @@ export default {
   },
   methods: {
     save(data) {
-      const { comments, editorBus, user: author, id: elementId } = this;
-      const payload = { ...data, author, contentElementId: elementId };
-      const options = { hasComments: !!comments.length };
-      return editorBus.emit(DiscussionEvent.SAVE, payload, options);
+      const { user: author, id: elementId, hasUnresolvedComments } = this;
+      return this.editorBus.emit(DiscussionEvent.SAVE, {
+        ...data,
+        author,
+        contentElementId: elementId,
+        hasUnresolvedComments
+      });
     },
     setLastSeen(timeout) {
       const { uid: elementUid, lastCommentAt, events } = this;
