@@ -6,9 +6,9 @@
       dark
       class="repository-card">
       <div @click="navigateTo()" class="card-body">
-        <v-chip :color="repository.data.color" x-small class="readonly ml-4 px-1" />
-        <span class="schema-name">{{ schema }}</span>
-        <div class="controls float-right">
+        <div class="header ml-4">
+          <v-chip :color="repository.data.color" x-small class="readonly px-1" />
+          <span class="schema-name mx-2">{{ schema }}</span>
           <v-tooltip open-delay="100" top>
             <template v-slot:activator="{ on }">
               <span v-on="on">
@@ -133,22 +133,25 @@ export default {
 .card-body {
   padding: 0.625rem 0 0;
 
-  .v-card__title {
-    line-height: 1.75rem;
+  .header {
+    display: flex;
+    align-items: center;
   }
 
   .schema-name {
-    padding: 0 0 0 0.25rem;
+    flex-grow: 1;
     color: #fafafa;
     font-size: 0.75rem;
     font-weight: 500;
     letter-spacing: 1px;
     text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  .controls {
-    display: flex;
-    align-items: center;
+  .v-card__title {
+    line-height: 1.75rem;
   }
 
   .v-avatar {
