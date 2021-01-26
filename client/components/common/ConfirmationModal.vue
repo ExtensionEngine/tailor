@@ -15,6 +15,7 @@
 
 <script>
 import { focus } from 'vue-focus';
+import invoke from 'lodash/invoke';
 import { mapChannels } from '@/plugins/radio';
 import TailorDialog from '@/components/common/TailorDialog';
 
@@ -33,10 +34,10 @@ export default {
     open(context) {
       this.context = context;
       this.show = true;
-      this.context.onOpen && this.context.onOpen();
+      invoke(this.context, 'onOpen');
     },
     close() {
-      this.context.onClose && this.context.onClose();
+      invoke(this.context, 'onClose');
       this.show = false;
       this.context = createContext();
     },
