@@ -3,7 +3,7 @@ import { numeric as numericParser } from 'client/utils/paramsParser';
 import request from './api/request';
 import Router from 'vue-router';
 import { role } from '@/../config/shared';
-import store from './store';
+import { store } from './store';
 import Vue from 'vue';
 
 import Auth from './components/auth/Container';

@@ -21,7 +21,7 @@ const modules = {
   editor
 };
 
-const store = new Vuex.Store({
+export const store = new Vuex.Store({
   middlewares,
   modules,
   plugins,
