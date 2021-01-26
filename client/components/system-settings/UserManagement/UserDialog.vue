@@ -82,10 +82,10 @@
 
 <script>
 import api from '@/api/user';
-import cloneDeep from 'lodash/cloneDeep';
 import humanize from 'humanize-string';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
+import produce from 'immer';
 import { user as roles } from 'shared/role';
 import TailorDialog from '@/components/common/TailorDialog';
 
@@ -95,6 +95,8 @@ const resetUser = () => ({
   lastName: '',
   role: null
 });
+
+const noop = () => {};
 
 export default {
   name: 'user-dialog',
@@ -121,8 +123,8 @@ export default {
       this.$emit('update:visible', false);
     },
     async submit() {
-      const action = this.isNewUser ? 'create' : 'update';
-      api.upsert(this.user).then(() => this.$emit(`${action}d`));
+      const action = this.isNewUser ? 'created' : 'updated';
+      api.upsert(this.user).then(() => this.$emit(action));
       this.close();
     },
     reinvite() {
@@ -134,7 +136,7 @@ export default {
     show(val) {
       if (!val) return;
       this.$nextTick(() => this.$refs.form.reset());
-      if (!isEmpty(this.userData)) this.user = cloneDeep(this.userData);
+      if (!isEmpty(this.userData)) this.user = produce(this.userData, noop);
     }
   },
   components: { TailorDialog }
