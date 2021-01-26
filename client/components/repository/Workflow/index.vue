@@ -12,7 +12,11 @@
           :assignee-options="assignees"
           :show-unassigned="unassignedTaskExists"
           class="px-4" />
-        <v-switch v-model="isBoardView" label="View board" hide-details />
+        <v-switch
+          v-model="isBoardView"
+          label="View board"
+          hide-details
+          class="toggle-view d-flex pa-0 ma-0" />
       </div>
       <workflow-board
         v-if="isBoardView"
@@ -128,5 +132,14 @@ $sidebar-width: 27.1875rem;
 
 .board {
   overflow-x: scroll;
+}
+
+.toggle-view {
+  height: 100%;
+  align-items: center;
+
+  ::v-deep .v-label {
+    margin: 0;
+  }
 }
 </style>
