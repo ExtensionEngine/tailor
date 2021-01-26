@@ -33,10 +33,10 @@ export default {
     open(context) {
       this.context = context;
       this.show = true;
-      this.context.onOpen();
+      this.context.onOpen && this.context.onOpen();
     },
     close() {
-      this.context.onClose();
+      this.context.onClose && this.context.onClose();
       this.show = false;
       this.context = createContext();
     },
