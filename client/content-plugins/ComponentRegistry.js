@@ -3,11 +3,11 @@ import {
   isQuestion,
   processAnswerType
 } from 'tce-core/utils';
-import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
 import kebabCase from 'lodash/kebabCase';
 import noop from 'lodash/noop';
 import pick from 'lodash/pick';
+import produce from 'immer';
 import Promise from 'bluebird';
 import sortBy from 'lodash/sortBy';
 
@@ -69,14 +69,14 @@ export default class ComponentRegistry {
   }
 
   get all() {
-    return sortBy(cloneDeep(this._registry), 'position');
+    return sortBy(this._registry, 'position');
   }
 
   get(type) {
     if (!type) return null;
     const { _registry: registry } = this;
     const res = find(registry, this._getCondition(type));
-    return res && cloneDeep(res);
+    return res && produce(res, noop);
   }
 
   loadExtensionList() {
