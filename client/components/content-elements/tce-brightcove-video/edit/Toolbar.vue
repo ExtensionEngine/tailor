@@ -40,6 +40,7 @@
 import cloneDeep from 'lodash/cloneDeep';
 import isEmpty from 'lodash/isEmpty';
 import pick from 'lodash/pick';
+import produce from 'immer';
 
 const props = ['accountId', 'playerId', 'videoId'];
 
@@ -60,8 +61,9 @@ export default {
   methods: {
     save() {
       this.edit = false;
-      const element = cloneDeep(this.element);
-      Object.assign(element.data, pick(this, props));
+      const element = produce(this.element, draft => {
+        Object.assign(draft.data, pick(this, props));
+      });
       this.$emit('save', element);
     }
   }

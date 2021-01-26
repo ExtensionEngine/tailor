@@ -18,8 +18,8 @@
 </template>
 
 <script>
-import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
+import produce from 'immer';
 
 export default {
   inject: ['$elementBus'],
@@ -38,8 +38,7 @@ export default {
   },
   watch: {
     title: debounce(function () {
-      const data = cloneDeep(this.element.data);
-      data.title = this.title;
+      const data = produce(this.element.data, draft => { draft.title = this.title; });
       this.$elementBus.emit('save', data);
     }, 500)
   }

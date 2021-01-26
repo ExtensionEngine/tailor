@@ -17,9 +17,9 @@
 </template>
 
 <script>
-import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
 import InputAsset from '@/components/common/InputAsset';
+import produce from 'immer';
 import set from 'lodash/set';
 
 export default {
@@ -33,9 +33,10 @@ export default {
     url: vm => get(vm.element, 'data.assets.url')
   },
   methods: {
-    save({ url, publicUrl }) {
-      const element = cloneDeep(this.element);
-      set(element.data, 'assets.url', url);
+    save({ url }) {
+      const element = produce(this.element, draft => {
+        set(draft.data, 'assets.url', url);
+      });
       this.$emit('save', element);
     }
   },

@@ -43,8 +43,10 @@ import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import last from 'lodash/last';
 import map from 'lodash/map';
+import noop from 'lodash/noop';
 import omit from 'lodash/omit';
 import pick from 'lodash/pick';
+import produce from 'immer';
 import reduce from 'lodash/reduce';
 
 const DEFAULT_HEIGHT = 500;
@@ -77,12 +79,9 @@ export default {
   },
   methods: {
     saveItem({ item, embeds = {} }) {
-      const items = cloneDeep(this.items);
-      items[item.id] = item;
-      this.$emit('save', {
-        items,
-        embeds: Object.assign(cloneDeep(this.embeds), embeds)
-      });
+      embeds = produce(embeds, noop);
+      const items = produce(this.items, draft => { draft[item.id] = item; });
+      this.$emit('save', { items, embeds });
     },
     deleteItem(index) {
       const indices = getIndices(this.items);

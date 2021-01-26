@@ -18,10 +18,10 @@
 </template>
 
 <script>
-import cloneDeep from 'lodash/cloneDeep';
 import { EmbeddedContainer } from 'tce-core';
 import forEach from 'lodash/forEach';
 import isEmpty from 'lodash/isEmpty';
+import produce from 'immer';
 
 export default {
   name: 'carousel-item',
@@ -35,8 +35,9 @@ export default {
   },
   methods: {
     save(item, embeds = {}) {
-      item = cloneDeep(item);
-      forEach(embeds, it => (item.body[it.id] = true));
+      item = produce(item, draft => {
+        forEach(embeds, it => (draft.body[it.id] = true));
+      });
       this.$emit('save', { item, embeds });
     },
     deleteEmbed(embed) {

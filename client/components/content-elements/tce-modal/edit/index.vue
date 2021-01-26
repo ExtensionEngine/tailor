@@ -34,9 +34,9 @@
 </template>
 
 <script>
-import cloneDeep from 'lodash/cloneDeep';
 import { EmbeddedContainer } from 'tce-core';
 import Preview from './Preview';
+import produce from 'immer';
 import values from 'lodash/values';
 
 export default {
@@ -60,8 +60,7 @@ export default {
   },
   methods: {
     deleteEmbed(item) {
-      const data = cloneDeep(this.element.data);
-      delete data.embeds[item.id];
+      const data = produce(this.element.data, draft => { delete draft.embeds[item.id]; });
       this.$emit('save', data);
     }
   },
