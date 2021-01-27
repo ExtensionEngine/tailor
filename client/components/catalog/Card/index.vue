@@ -8,7 +8,12 @@
       <div @click="navigateTo()" class="card-body">
         <div class="header ml-4">
           <v-chip :color="repository.data.color" x-small class="readonly px-1" />
-          <span class="schema-name mx-2">{{ schema }}</span>
+          <v-tooltip open-delay="300" top>
+            <template v-slot:activator="{ on }">
+              <span v-on="on" class="schema-name mx-2">{{ schema }}</span>
+            </template>
+            {{ schema }}
+          </v-tooltip>
           <v-tooltip open-delay="100" top>
             <template v-slot:activator="{ on }">
               <span v-on="on">
