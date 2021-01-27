@@ -27,7 +27,7 @@
       class="element-list">
       <template v-slot:list-item="{ element, isDragged, position }">
         <inline-activator
-          @click.native="showElementDrawer(position)"
+          @click="showElementDrawer(position)"
           :disabled="isDisabled" />
         <contained-content
           @save="saveElement(element, 'data', $event)"
