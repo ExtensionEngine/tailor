@@ -47,7 +47,6 @@ export default {
   computed: {
     ...mapGetters('repository', ['workflow']),
     headers() {
-      console.log(this.items);
       return [{
         text: 'Name',
         value: 'name'
