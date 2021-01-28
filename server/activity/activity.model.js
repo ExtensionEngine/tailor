@@ -65,7 +65,7 @@ class Activity extends Model {
     };
   }
 
-  static associate({ ContentElement, Comment, Repository, Task }) {
+  static associate({ ActivityStatus, ContentElement, Comment, Repository }) {
     this.hasMany(ContentElement, {
       foreignKey: { name: 'activityId', field: 'activity_id' }
     });
@@ -83,7 +83,8 @@ class Activity extends Model {
       as: 'children',
       foreignKey: { name: 'parentId', field: 'parent_id' }
     });
-    this.hasMany(Task, {
+    this.hasMany(ActivityStatus, {
+      as: 'status',
       foreignKey: { name: 'activityId', field: 'activity_id' }
     });
   }
@@ -92,9 +93,12 @@ class Activity extends Model {
     hooks.add(this, Hooks, models);
   }
 
-  static scopes() {
+  static scopes({ ActivityStatus }) {
     const notNull = { [Op.ne]: null };
     return {
+      defaultScope: {
+        include: [{ model: ActivityStatus, as: 'status' }]
+      },
       withReferences(relationships = []) {
         const or = relationships.map(type => ({ [`refs.${type}`]: notNull }));
         return { where: { [Op.or]: or } };

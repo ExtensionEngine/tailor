@@ -1,7 +1,7 @@
 <template>
   <div class="overview">
     <v-data-table
-      @click:row="selectTask($event.id)"
+      @click:row="selectActivity($event.id)"
       :headers="headers"
       :items="items"
       item-class="class"
@@ -36,24 +36,21 @@
 import AssigneeAvatar from '@/components/repository/common/AssigneeAvatar';
 import { mapGetters } from 'vuex';
 import { priorities } from 'shared/workflow';
-import selectTask from '@/components/repository/common/selectTask';
+import selectActivity from '@/components/repository/common/selectActivity';
 
 export default {
   name: 'workflow-overview',
-  mixins: [selectTask],
+  mixins: [selectActivity],
   props: {
-    tasks: { type: Array, default: () => [] }
+    activities: { type: Array, default: () => [] }
   },
   computed: {
     ...mapGetters('repository', ['workflow']),
     headers() {
       console.log(this.items);
       return [{
-        text: 'Task',
-        value: 'activity.data.name'
-      }, {
-        text: 'ID',
-        value: 'shortId'
+        text: 'Name',
+        value: 'name'
       }, {
         text: 'Status',
         value: 'status'
@@ -70,15 +67,19 @@ export default {
       }];
     },
     items() {
-      return this.tasks.map(it => ({
-        ...it,
-        status: this.getStatusById(it.status),
-        priority: this.getPriorityById(it.priority),
-        class: this.isTaskSelected(it) && 'selected'
+      return this.activities.map(({ id, data, status }) => ({
+        ...status,
+        name: data.name,
+        status: this.getStatusById(status.status),
+        priority: this.getPriorityById(status.priority),
+        class: this.isActivitySelected(id) && 'selected'
       }));
     }
   },
   methods: {
+    isActivitySelected(id) {
+      return this.selectedActivity && this.selectedActivity.id === id;
+    },
     getStatusById(id) {
       return this.workflow.statuses.find(it => it.id === id);
     },

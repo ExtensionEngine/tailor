@@ -10,19 +10,10 @@
         <workflow-filters
           v-bind.sync="filters"
           :assignee-options="assignees"
-          :show-unassigned="unassignedTaskExists"
+          :show-unassigned="unassignedActivityExists"
           class="px-4" />
-        <v-switch
-          v-model="isBoardView"
-          label="View board"
-          hide-details
-          class="toggle-view d-flex pa-0 ma-0" />
       </div>
-      <workflow-board
-        v-if="isBoardView"
-        :tasks="filteredTasks"
-        class="board mt-3" />
-      <workflow-overview v-else :tasks="filteredTasks" class="overview mt-3 px-4" />
+      <workflow-overview :activities="filteredActivities" class="overview mt-3 px-4" />
       <sidebar />
     </template>
   </div>
@@ -34,7 +25,6 @@ import conforms from 'lodash/conforms';
 import isAfter from 'date-fns/isAfter';
 import Sidebar from './Sidebar';
 import sub from 'date-fns/sub';
-import WorkflowBoard from './Board';
 import WorkflowFilters from './Filters';
 import WorkflowOverview from './Overview';
 
@@ -47,7 +37,6 @@ export default {
     showLoader: { type: Boolean, default: false }
   },
   data: () => ({
-    isBoardView: false,
     filters: {
       searchText: null,
       recentOnly: false,
@@ -56,10 +45,10 @@ export default {
     }
   }),
   computed: {
-    ...mapGetters('repository', ['repository', 'tasks']),
-    unassignedTaskExists: vm => vm.tasks.some(it => !it.assigneeId),
-    searchableTasks() {
-      return this.tasks.map(it => ({
+    ...mapGetters('repository', { activities: 'workflowActivities' }),
+    unassignedActivityExists: vm => vm.activities.some(it => !it.status.assigneeId),
+    searchableActivities() {
+      return this.activities.map(it => ({
         ...it,
         searchableText: this.getSearchableText(it)
       }));
@@ -71,15 +60,16 @@ export default {
     isFilteredBySearchText() {
       return this.filters.searchText?.length > SEARCH_TEXT_LENGTH_THRESHOLD;
     },
-    filteredTasks() {
-      return this.searchableTasks.filter(conforms({
-        ...this.filters.recentOnly && { updatedAt: this.filterByRecency },
-        ...this.isFilteredByAssignee && { assigneeId: this.filterByAssignee },
+    filteredActivities() {
+      return this.searchableActivities.filter(conforms({
+        ...this.filters.recentOnly && { status: this.filterByRecency },
+        ...this.isFilteredByAssignee && { status: this.filterByAssignee },
         ...this.isFilteredBySearchText && { searchableText: this.filterBySearchText }
       }));
     },
     assignees() {
-      return this.tasks.reduce((all, { assignee }) => {
+      return this.activities.reduce((all, { status }) => {
+        const { assignee } = status;
         if (!assignee) return all;
         const isActive = this.filters.selectedAssigneeIds.includes(assignee.id);
         return { ...all, [assignee.id]: { ...assignee, isActive } };
@@ -88,12 +78,11 @@ export default {
   },
   methods: {
     ...mapActions('repository', ['getUsers']),
-    ...mapActions('repository/tasks', { getTasks: 'reset' }),
-    filterByAssignee(id) {
+    filterByAssignee({ assigneeId: id }) {
       if (this.filters.unassigned && !id) return true;
       return this.filters.selectedAssigneeIds.includes(id);
     },
-    filterByRecency(updatedAt) {
+    filterByRecency({ updatedAt }) {
       const parsed = new Date(updatedAt);
       const updatedAtLimit = sub(new Date(), RECENCY_THRESHOLD);
       return isAfter(parsed, updatedAtLimit);
@@ -101,16 +90,15 @@ export default {
     filterBySearchText(searchableText) {
       return searchableText.indexOf(this.filters.searchText.toLowerCase()) !== -1;
     },
-    getSearchableText({ shortId, description, activity }) {
-      const { name } = activity.data;
-      return `${shortId} ${name} ${description}`.toLowerCase();
+    getSearchableText({ data, shortId, status }) {
+      const { description } = status;
+      return `${shortId} ${data.name} ${description}`.toLowerCase();
     }
   },
   created() {
-    this.getTasks();
     this.getUsers();
   },
-  components: { Sidebar, WorkflowBoard, WorkflowFilters, WorkflowOverview }
+  components: { Sidebar, WorkflowFilters, WorkflowOverview }
 };
 </script>
 
@@ -126,20 +114,7 @@ $sidebar-width: 27.1875rem;
   }
 }
 
-.controls, .overview, .board {
+.controls, .overview {
   max-width: calc(100% - #{$sidebar-width} - 1rem);
-}
-
-.board {
-  overflow-x: scroll;
-}
-
-.toggle-view {
-  height: 100%;
-  align-items: center;
-
-  ::v-deep .v-label {
-    margin: 0;
-  }
 }
 </style>

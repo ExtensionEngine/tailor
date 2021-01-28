@@ -1,10 +1,11 @@
 'use strict';
 
+const { Activity, ActivityStatus } = require('../shared/database');
 const {
   getOutlineLevels,
-  isOutlineActivity
+  isOutlineActivity,
+  isTrackedInWorkflow
 } = require('../../config/shared/activities');
-const { Activity } = require('../shared/database');
 const { fetchActivityContent } = require('../shared/publishing/helpers');
 const find = require('lodash/find');
 const get = require('lodash/get');
@@ -19,7 +20,7 @@ function list({ repository, query, opts }, res) {
     .then(data => res.json({ data }));
 }
 
-function create({ user, repository, body }, res) {
+async function create({ user, repository, body }, res) {
   const outlineConfig = find(getOutlineLevels(repository.schema), { type: body.type });
   const data = {
     ...pick(body, ['uid', 'type', 'parentId', 'position']),
@@ -27,8 +28,16 @@ function create({ user, repository, body }, res) {
     repositoryId: repository.id
   };
   const context = { userId: user.id, repository };
-  return Activity.create(data, { context })
-    .then(data => res.json({ data }));
+  const activity = await Activity.create(data, { context });
+
+  if (isTrackedInWorkflow(activity.type)) {
+    const status = await ActivityStatus.createDefault(
+      repository.schema,
+      activity.id
+    );
+    return res.json({ data: { ...activity.toJSON(), status } });
+  }
+  return res.json({ data: activity });
 }
 
 function show({ activity }, res) {
@@ -91,6 +100,13 @@ function getPreviewUrl({ activity }, res) {
     });
 }
 
+async function updateStatus({ body, activity }, res) {
+  const data = pick(body, ['assigneeId', 'status', 'priority', 'description', 'dueDate']);
+  const status = await activity.createStatus(data);
+  const assignee = await status.getAssignee();
+  res.json({ data: { ...status.toJSON(), assignee } });
+}
+
 function updatePublishingStatus(repository, activity) {
   if (!isOutlineActivity(activity.type)) return Promise.resolve();
   return publishingService.updatePublishingStatus(repository);
@@ -105,5 +121,6 @@ module.exports = {
   reorder,
   clone,
   publish,
-  getPreviewUrl
+  getPreviewUrl,
+  updateStatus
 };

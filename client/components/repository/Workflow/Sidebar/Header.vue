@@ -5,8 +5,7 @@
         Related <span class="text-lowercase">{{ activityConfig.label }}</span>
       </h5>
       <activity-card
-        v-bind="activity"
-        :name="activityName"
+        v-bind="{ id, name, shortId }"
         :type-label="activityConfig.label"
         :color="activityConfig.color" />
     </div>
@@ -15,7 +14,7 @@
         <template #activator="{ on }">
           <label-chip v-on="on">{{ shortId }}</label-chip>
         </template>
-        Task ID
+        Activity ID
       </v-tooltip>
       <v-btn
         v-clipboard:copy="shortId"
@@ -30,7 +29,7 @@
         Copy id
       </v-btn>
       <v-btn
-        v-clipboard:copy="taskUrl"
+        v-clipboard:copy="statusUrl"
         v-clipboard:success="() => {
           $snackbar.show('Link copied to the clipboard', { immediate: true })
         }"
@@ -40,13 +39,6 @@
         class="ml-2 px-1">
         <v-icon class="pr-2">mdi-link</v-icon>
         Copy link
-      </v-btn>
-      <v-btn
-        @click="requestArchiveConfirmation"
-        color="blue-grey darken-3"
-        text small
-        class="ml-2 px-1">
-        <v-icon class="pr-2">mdi-package-down</v-icon> Archive
       </v-btn>
       <div class="mt-1 caption grey--text text--darken-1">
         Created at {{ createdAt | formatDate }}
@@ -58,10 +50,10 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
 import ActivityCard from './ActivityCard';
 import find from 'lodash/find';
 import LabelChip from '@/components/repository/common/LabelChip';
+import { mapGetters } from 'vuex';
 import { mapRequests } from '@/plugins/radio';
 
 export default {
@@ -69,28 +61,17 @@ export default {
     uid: { type: String, required: true },
     id: { type: Number, required: true },
     shortId: { type: String, required: true },
-    activity: { type: Object, required: true },
+    name: { type: String, required: true },
+    type: { type: String, required: true },
     createdAt: { type: String, required: true },
     updatedAt: { type: String, required: true }
   },
   computed: {
     ...mapGetters('repository', ['structure']),
-    activityConfig: vm => find(vm.structure, { type: vm.activity.type }),
-    taskUrl: () => window.location.href,
-    activityName: vm => vm.activity.data.name
+    activityConfig: vm => find(vm.structure, { type: vm.type }),
+    statusUrl: () => window.location.href
   },
-  methods: {
-    ...mapActions('repository/tasks', ['archive']),
-    ...mapRequests('app', ['showConfirmationModal']),
-    requestArchiveConfirmation() {
-      const model = { id: this.id, uid: this.uid };
-      this.showConfirmationModal({
-        title: 'Archive task?',
-        message: 'Are you sure you want to archive task?',
-        action: () => this.archive(model)
-      });
-    }
-  },
+  methods: mapRequests('app', ['showConfirmationModal']),
   components: { ActivityCard, LabelChip }
 };
 </script>

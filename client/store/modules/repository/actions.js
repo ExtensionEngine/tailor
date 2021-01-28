@@ -20,7 +20,7 @@ function initializeSSE(id, store) {
   const { dispatch, commit } = store;
   feed.connect(id, conn => commit('setSseId', conn.id));
   const modules = [
-    'activities', 'contentElements', 'comments', 'userTracking', 'tasks'];
+    'activities', 'contentElements', 'comments', 'userTracking'];
   each(modules, module => dispatch(`${module}/plugSSE`));
 }
 
@@ -31,8 +31,7 @@ export const reset = ({ commit, dispatch }, id) => {
     activities: 'activities',
     contentElements: 'content-elements',
     revisions: 'revisions',
-    comments: 'comments',
-    tasks: 'tasks'
+    comments: 'comments'
   };
   commit('setSseId', null);
   commit('setRepositoryId', id);

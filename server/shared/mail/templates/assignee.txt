@@ -1,0 +1,15 @@
+Tailor
+=================================================
+
+You've been assigned to an activity.
+{{data.name}}
+{{#html}}{{{status.description}}}{{/html}}
+
+View the task by visiting the link:
+
+{{{href}}}
+
+Or copy and paste this URL into your browser.
+
+
+-------------------------------------------------

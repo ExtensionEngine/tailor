@@ -4,17 +4,19 @@
     color="grey lighten-5"
     absolute right permanent
     class="px-4">
-    <template v-if="selectedTask">
+    <template v-if="trackedActivity">
       <sidebar-header
-        v-bind="selectedTask"
+        v-bind="trackedActivity"
+        :name="trackedActivity.data.name"
+        :updated-at="trackedActivity.status.updatedAt"
         class="pt-4" />
-      <task-field-group
-        @update="updateTask"
-        v-bind="selectedTask"
+      <status-field-group
+        @update="updateStatus"
+        v-bind="trackedActivity.status"
         class="mt-9 mb-12" />
     </template>
     <section v-else class="placeholder grey--text text--darken-3">
-      <h4>Task Sidebar</h4>
+      <h4>Status Sidebar</h4>
       <v-icon>mdi-chevron-left</v-icon>
       <div class="info-content">{{ emptyMessage }}</div>
     </section>
@@ -23,27 +25,36 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import { isTrackedInWorkflow } from 'shared/activities';
 import SidebarHeader from './Header';
-import TaskFieldGroup from './FieldGroup';
+import StatusFieldGroup from './FieldGroup';
 
 export default {
   props: {
     emptyMessage: {
       type: String,
-      default: 'Please select Task on the left to view and edit its details here.'
+      default: 'Please select Activity on the left to view and edit its status here.'
     }
   },
   computed: {
-    ...mapGetters('repository', ['selectedTask'])
-  },
-  methods: {
-    ...mapActions('repository/tasks', ['save']),
-    updateTask(key, value) {
-      this.save({ ...this.selectedTask, [key]: value || null })
-        .then(() => { this.$snackbar.show('Task saved'); });
+    ...mapGetters('repository', ['selectedActivity']),
+    trackedActivity() {
+      if (!isTrackedInWorkflow(this.selectedActivity.type)) return null;
+      return this.selectedActivity;
     }
   },
-  components: { TaskFieldGroup, SidebarHeader }
+  methods: {
+    ...mapActions('repository/activities', ['saveStatus']),
+    updateStatus(key, value) {
+      const status = {
+        ...this.trackedActivity.status,
+        [key]: value || null
+      };
+      this.saveStatus({ activity: this.trackedActivity, status })
+        .then(() => { this.$snackbar.show('Status saved'); });
+    }
+  },
+  components: { StatusFieldGroup, SidebarHeader }
 };
 </script>
 

@@ -32,8 +32,6 @@ function add(Activity, Hooks, Models) {
     sse.channel(activity.repositoryId).send(Events.Delete, activity);
   }
 
-  Activity.addHook(Hooks.afterDestroy, destroyActivityTasks);
-
   const isRepository = it => it instanceof Models.Repository;
 
   function touchRepository(hookType, activity, { context = {} }) {
@@ -51,9 +49,5 @@ function add(Activity, Hooks, Models) {
       ? activity
       : await activity.getOutlineParent(transaction);
     return outlineActivity && outlineActivity.touch(transaction);
-  }
-
-  function destroyActivityTasks(activity) {
-    Models.Task.destroy({ where: { activityId: activity.id } });
   }
 }

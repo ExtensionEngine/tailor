@@ -23,6 +23,7 @@ router.route('/:activityId')
 router
   .post('/:activityId/reorder', ctrl.reorder)
   .post('/:activityId/clone', ctrl.clone)
+  .post('/:activityId/status', ctrl.updateStatus)
   .get('/:activityId/publish', ctrl.publish)
   .get('/:activityId/preview', ctrl.getPreviewUrl);
 

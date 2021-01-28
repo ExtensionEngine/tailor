@@ -47,9 +47,10 @@
         @update="updateActivity"
         :meta="it" />
     </div>
-    <activity-tasks
+    <activity-status
       v-if="config.isTrackedInWorkflow"
-      :activity="activity"
+      v-bind="activity"
+      :name="activity.data.name"
       class="mb-12" />
     <div>
       <relationship
@@ -66,7 +67,7 @@
 import { getActivityMetadata, getLevel } from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex';
 import ActivityDiscussion from '../ActivityDiscussion';
-import ActivityTasks from './Tasks';
+import ActivityStatus from './Status';
 import LabelChip from '@/components/repository/common/LabelChip';
 import MetaInput from 'tce-core/MetaInput';
 import Relationship from './Relationship';
@@ -92,7 +93,7 @@ export default {
     }
   },
   components: {
-    ActivityTasks,
+    ActivityStatus,
     ActivityDiscussion,
     Relationship,
     MetaInput,

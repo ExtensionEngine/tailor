@@ -34,7 +34,8 @@ export const activities = (_state, getters, rootState) => {
   const { repository: { activities: { items } } } = rootState;
   return map(items, it => ({
     ...it,
-    shortId: `A-${hashids.encode(it.id)}`
+    shortId: `A-${hashids.encode(it.id)}`,
+    status: getActivityStatus(it)
   }));
 };
 
@@ -58,25 +59,12 @@ export const workflow = (_state, { repository }) => {
 
 export const hasWorkflow = (_state, { workflow }) => Boolean(workflow);
 
-export const workflowActivities = (_state, { structure = [] }) =>
-  structure.filter(activity => activity.isTrackedInWorkflow);
-
-export const tasks = (state, getters, rootState) => {
-  if (!getters.repository) return [];
-  const { repository: { tasks: { items } } } = rootState;
-  return map(items, it => ({
-    ...it,
-    activity: find(getters.activities, { id: it.activityId }),
-    assignee: get(state.users, it.assigneeId),
-    author: get(state.users, it.authorId),
-    shortId: `T-${hashids.encode(it.id)}`
-  }));
-};
-
-export const selectedTask = (_state, getters, rootState) => {
-  const { route: { query: { taskId } } } = rootState;
-  if (!taskId) return;
-  return find(getters.tasks, { id: parseInt(taskId, 10) });
+export const workflowActivities = (_state, getters) => {
+  const { structure, activities } = getters;
+  const trackedTypes = structure
+    .filter(activity => activity.isTrackedInWorkflow)
+    .map(it => it.type);
+  return activities.filter(it => trackedTypes.includes(it.type));
 };
 
 export const isCollapsed = state => {
@@ -91,3 +79,9 @@ export const isRepositoryAdmin = (state, _, rootState) => {
   const repositoryUser = find(state.users, { id: user.id });
   return get(repositoryUser, 'repositoryRole') === role.repository.ADMIN;
 };
+
+function getActivityStatus(activity) {
+  if (!Array.isArray(activity.status)) return activity.status;
+  const [status] = activity.status;
+  return status;
+}

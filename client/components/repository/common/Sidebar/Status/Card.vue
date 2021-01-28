@@ -1,9 +1,9 @@
 <template>
   <router-link :to="route">
     <v-sheet elevation="2" class="card px-3 pt-1 pb-4">
-      <h4 class="mb-4 h4">{{ label }}</h4>
+      <h4 class="mb-4 h4">{{ name }}</h4>
       <div class="d-flex align-center mt-auto">
-        <assignee-avatar v-bind="assignee" />
+        <assignee-avatar v-bind="status.assignee" />
         <v-tooltip open-delay="500" bottom>
           <template #activator="{ on }">
             <v-icon v-on="on" class="priority-icon mx-5">
@@ -12,10 +12,10 @@
           </template>
           {{ priorityConfig.label }} priority
         </v-tooltip>
-        <v-tooltip v-if="dueDate" open-delay="500" bottom>
+        <v-tooltip v-if="status.dueDate" open-delay="500" bottom>
           <template #activator="{ on }">
             <label-chip v-on="on" class="mr-3">
-              {{ dueDate | formatDate('MM/DD/YY') }}
+              {{ status.dueDate | formatDate('MM/DD/YY') }}
             </label-chip>
           </template>
           Due date
@@ -32,7 +32,7 @@
           <template #activator="{ on }">
             <label-chip v-on="on">{{ shortId }}</label-chip>
           </template>
-          Task ID
+          Activity ID
         </v-tooltip>
       </div>
     </v-sheet>
@@ -47,21 +47,18 @@ import { mapGetters } from 'vuex';
 import { priorities } from 'shared/workflow';
 
 export default {
-  name: 'activity-sidebar-task-card',
+  name: 'activity-status-card',
   props: {
     id: { type: Number, default: null },
     shortId: { type: String, required: true },
-    label: { type: String, required: true },
-    status: { type: String, required: true },
-    assignee: { type: Object, default: null },
-    priority: { type: String, required: true },
-    dueDate: { type: String, default: null }
+    name: { type: String, required: true },
+    status: { type: Object, required: true }
   },
   computed: {
     ...mapGetters('repository', ['workflow']),
-    statusConfig: vm => find(vm.workflow.statuses, { id: vm.status }),
-    priorityConfig: vm => priorities.find(it => it.id === vm.priority),
-    route: vm => ({ name: 'board', query: { ...vm.$route.query, taskId: vm.id } })
+    statusConfig: vm => find(vm.workflow.statuses, { id: vm.status.status }),
+    priorityConfig: vm => priorities.find(it => it.id === vm.status.priority),
+    route: vm => ({ name: 'board', query: vm.$route.query })
   },
   components: { LabelChip, AssigneeAvatar }
 };
