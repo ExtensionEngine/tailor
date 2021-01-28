@@ -69,7 +69,7 @@ export default {
     assigneeId: { type: Number, default: null },
     priority: {
       type: String,
-      default: defaultPriority ? defaultPriority.id : null
+      default: defaultPriority.id
     },
     dueDate: { type: String, default: null }
   },
