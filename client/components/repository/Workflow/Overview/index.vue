@@ -52,14 +52,17 @@ export default {
         value: 'name'
       }, {
         text: 'Status',
-        value: 'status'
+        value: 'status',
+        sort: this.sortByStatus
       }, {
         text: 'Assignee',
-        value: 'assignee'
+        value: 'assignee',
+        sort: this.sortByAssignee
       }, {
         text: 'Priority',
         value: 'priority',
-        sortable: true
+        sortable: true,
+        sort: this.sortByPriority
       }, {
         text: 'Due date',
         value: 'dueDate'
@@ -85,8 +88,18 @@ export default {
     getPriorityById(id) {
       return priorities.find(it => it.id === id);
     },
-    isTaskSelected(task) {
-      return this.selectedTask && this.selectedTask.id === task.id;
+    sortByStatus(first, second) {
+      const statusIds = this.workflow.statuses.map(it => it.id);
+      return statusIds.indexOf(first.id) - statusIds.indexOf(second.id);
+    },
+    sortByAssignee(first, second) {
+      if (!second || !second.label) return -1;
+      if (!first || !first.label) return 1;
+      return first.label.localeCompare(second.label);
+    },
+    sortByPriority(first, second) {
+      const priorityIds = priorities.map(it => it.id);
+      return priorityIds.indexOf(second.id) - priorityIds.indexOf(first.id);
     }
   },
   components: { AssigneeAvatar }
