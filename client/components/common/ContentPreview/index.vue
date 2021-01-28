@@ -3,7 +3,10 @@
     <v-alert v-if="!elements.length" color="grey darken-4" text class="mx-4">
       No available elements.
     </v-alert>
-    <div v-for="container in processedContainers" :key="container.id">
+    <div
+      v-for="container in processedContainers"
+      :key="container.id"
+      class="container">
       <content-element
         v-for="element in container.elements"
         :key="element.id"
@@ -54,10 +57,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.content-preview .v-alert {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 19rem;
+.content-preview {
+  .v-alert {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 19rem;
+  }
+
+  .container:last-child {
+    margin-bottom: 0.625rem;
+  }
 }
 </style>
