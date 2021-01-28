@@ -6,10 +6,10 @@ const request = require('axios');
 const yup = require('yup');
 
 const schema = yup.object().shape({
-  webhookUrl: yup.string().required(),
+  webhookUrl: yup.string().url().required(),
   clientId: yup.string().required(),
   clientSecret: yup.string().required(),
-  tokenHost: yup.string().required(),
+  tokenHost: yup.string().url().required(),
   tokenPath: yup.string().required()
 });
 
