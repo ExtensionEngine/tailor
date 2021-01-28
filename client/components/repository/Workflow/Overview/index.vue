@@ -96,7 +96,7 @@ export default {
 <style lang="scss" scoped>
 .overview ::v-deep .v-data-table {
   tr > td:first-of-type {
-    max-width: 200px;
+    max-width: 18.75rem;
   }
 
   .selected {
