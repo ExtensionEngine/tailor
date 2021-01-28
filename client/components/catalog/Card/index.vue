@@ -8,9 +8,9 @@
       <div @click="navigateTo()" class="card-body">
         <div class="header ml-4">
           <v-chip :color="repository.data.color" x-small class="readonly px-1" />
-          <v-tooltip open-delay="300" top>
+          <v-tooltip :disabled="!isTruncated" open-delay="300" top>
             <template v-slot:activator="{ on }">
-              <span v-on="on" class="schema-name mx-2">{{ schema }}</span>
+              <span ref="schemaName" v-on="on" class="schema-name mx-2">{{ schema }}</span>
             </template>
             {{ schema }}
           </v-tooltip>
@@ -93,6 +93,7 @@ export default {
   props: {
     repository: { type: Object, required: true }
   },
+  data: () => ({ isTruncated: false }),
   computed: {
     name: ({ repository }) => repository.name,
     description: ({ repository }) => repository.description,
@@ -110,7 +111,14 @@ export default {
         name,
         params: { repositoryId: this.repository.id }
       });
+    },
+    detectTruncation() {
+      const { clientWidth, scrollWidth } = this.$refs.schemaName;
+      this.isTruncated = clientWidth < scrollWidth;
     }
+  },
+  mounted() {
+    this.$nextTick(() => this.detectTruncation());
   },
   components: { Tags }
 };
