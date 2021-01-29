@@ -25,7 +25,7 @@ export default function ($apiUrl) {
     commit('add', payload);
   };
 
-  const save = ({ state, commit }, model) => {
+  const save = ({ state, commit }, { ...model }) => {
     if (!model.uid) model.uid = uuid();
     model._synced = false;
     model._version = Date.now();

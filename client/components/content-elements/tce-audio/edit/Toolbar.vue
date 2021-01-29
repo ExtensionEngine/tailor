@@ -19,8 +19,7 @@
 <script>
 import get from 'lodash/get';
 import InputAsset from '@/components/common/InputAsset';
-import produce from 'immer';
-import set from 'lodash/set';
+import { set } from '@/utils/reducers';
 
 export default {
   name: 'tce-audio-toolbar',
@@ -34,9 +33,7 @@ export default {
   },
   methods: {
     save({ url }) {
-      const element = produce(this.element, draft => {
-        set(draft.data, 'assets.url', url);
-      });
+      const element = set(this.element, 'data.assets.url', url);
       this.$emit('save', element);
     }
   },
