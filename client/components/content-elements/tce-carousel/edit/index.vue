@@ -36,8 +36,8 @@
 </template>
 
 <script>
+import { assign, set } from '@/utils/reducers';
 import CarouselItem from './CarouselItem';
-import cloneDeep from 'lodash/cloneDeep';
 import { ElementPlaceholder } from 'tce-core';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
@@ -49,6 +49,7 @@ import reduce from 'lodash/reduce';
 
 const DEFAULT_HEIGHT = 500;
 const getIndices = obj => map(obj, (val, key) => parseInt(key)).sort((a, b) => a - b);
+const defaultElementData = { embeds: {}, items: {}, height: DEFAULT_HEIGHT };
 
 export default {
   name: 'tce-carousel',
@@ -67,6 +68,10 @@ export default {
     height: vm => vm.element.data.height,
     items: vm => vm.element.data.items || {},
     hasItems: vm => !isEmpty(vm.items),
+    elementData() {
+      if (this.element.data.items) return this.element.data;
+      return assign(this.element.data, defaultElementData);
+    },
     embeds: vm => vm.element.data.embeds || {},
     embedsByItem() {
       return reduce(this.items, (acc, item) => {
@@ -77,11 +82,10 @@ export default {
   },
   methods: {
     saveItem({ item, embeds = {} }) {
-      const items = cloneDeep(this.items);
-      items[item.id] = item;
+      const items = set(this.items, item.id, item);
       this.$emit('save', {
         items,
-        embeds: Object.assign(cloneDeep(this.embeds), embeds)
+        embeds: assign(this.embeds, embeds)
       });
     },
     deleteItem(index) {
@@ -100,22 +104,15 @@ export default {
   },
   mounted() {
     this.$elementBus.on('add', () => {
-      const element = cloneDeep(this.element);
       const indices = getIndices(this.items) || [];
       const id = this.hasItems ? last(indices) + 1 : 1;
-      if (!element.data.items) {
-        Object.assign(element.data, {
-          embeds: {}, items: {}, height: DEFAULT_HEIGHT
-        });
-      }
-      element.data.items[id] = { id, body: {} };
-      this.$emit('save', element.data);
+      const data = set(this.elementData, `items[${id}]`, { id, body: {} });
+      this.$emit('save', data);
       this.activateItem(indices.length);
     });
     this.$elementBus.on('remove', () => this.deleteItem(this.activeItem));
     this.$elementBus.on('height', height => {
-      const data = cloneDeep(this.element.data);
-      data.height = height;
+      const data = set(this.element.data, 'height', height);
       this.$emit('save', data);
     });
   },

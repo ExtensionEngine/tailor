@@ -37,10 +37,10 @@
 </template>
 
 <script>
+import { assign } from '@/utils/reducers';
 import cloneDeep from 'lodash/cloneDeep';
 import isEmpty from 'lodash/isEmpty';
 import pick from 'lodash/pick';
-import produce from 'immer';
 
 const props = ['accountId', 'playerId', 'videoId'];
 
@@ -61,10 +61,8 @@ export default {
   methods: {
     save() {
       this.edit = false;
-      const element = produce(this.element, draft => {
-        Object.assign(draft.data, pick(this, props));
-      });
-      this.$emit('save', element);
+      const data = assign(this.elements.data, pick(this, props));
+      this.$emit('save', { ...this.element, data });
     }
   }
 };

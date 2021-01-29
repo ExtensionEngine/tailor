@@ -6,3 +6,9 @@ export function set(source, key, value) {
     _set(draft, key, value);
   });
 }
+
+export function assign(object, ...sources) {
+  return produce(object, draft => {
+    Object.assign(draft, ...sources);
+  });
+}
