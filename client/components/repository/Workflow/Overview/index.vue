@@ -71,6 +71,7 @@ export default {
     items() {
       return this.activities.map(({ id, data, status }) => ({
         ...status,
+        id,
         name: data.name,
         status: this.getStatusById(status.status),
         priority: this.getPriorityById(status.priority),
