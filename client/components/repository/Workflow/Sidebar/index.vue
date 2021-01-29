@@ -4,15 +4,15 @@
     color="grey lighten-5"
     absolute right permanent
     class="px-4">
-    <template v-if="trackedActivity">
+    <template v-if="isTrackedActivity">
       <sidebar-header
-        v-bind="trackedActivity"
-        :name="trackedActivity.data.name"
-        :updated-at="trackedActivity.status.updatedAt"
+        v-bind="selectedActivity"
+        :name="selectedActivity.data.name"
+        :updated-at="selectedActivity.status.updatedAt"
         class="pt-4" />
       <status-field-group
         @update="updateStatus"
-        v-bind="trackedActivity.status"
+        v-bind="selectedActivity.status"
         class="mt-9 mb-12" />
     </template>
     <section v-else class="placeholder grey--text text--darken-3">
@@ -38,19 +38,19 @@ export default {
   },
   computed: {
     ...mapGetters('repository', ['selectedActivity']),
-    trackedActivity() {
-      if (!isTrackedInWorkflow(this.selectedActivity.type)) return null;
-      return this.selectedActivity;
+    isTrackedActivity() {
+      console.log(this.selectedActivity);
+      return this.selectedActivity && isTrackedInWorkflow(this.selectedActivity.type);
     }
   },
   methods: {
     ...mapActions('repository/activities', ['saveStatus']),
     updateStatus(key, value) {
       const status = {
-        ...this.trackedActivity.status,
+        ...this.selectedActivity.status,
         [key]: value || null
       };
-      this.saveStatus({ activity: this.trackedActivity, status })
+      this.saveStatus({ activity: this.selectedActivity, status })
         .then(() => { this.$snackbar.show('Status saved'); });
     }
   },
