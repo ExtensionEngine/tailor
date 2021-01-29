@@ -6,7 +6,7 @@ const {
 } = require('../../config/shared/workflow');
 const { Activity: Events } = require('../../common/sse');
 const { getSchema } = require('../../config/shared/activities');
-const hooks = require('./activityStatus.hooks');
+const hooks = require('./status.hooks');
 const { Model } = require('sequelize');
 
 const priorityIds = priorities.map(it => it.id);
