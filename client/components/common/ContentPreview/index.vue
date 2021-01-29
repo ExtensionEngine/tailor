@@ -6,7 +6,7 @@
     <div
       v-for="container in processedContainers"
       :key="container.id"
-      class="container">
+      class="content-container">
       <content-element
         v-for="element in container.elements"
         :key="element.id"
@@ -65,7 +65,7 @@ export default {
     height: 19rem;
   }
 
-  .container:last-child {
+  .content-container:last-child {
     margin-bottom: 0.625rem;
   }
 }
