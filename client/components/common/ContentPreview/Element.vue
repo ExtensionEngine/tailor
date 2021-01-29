@@ -62,7 +62,8 @@ export default {
 .element-preview-container {
   display: flex;
   position: relative;
-  margin: 0.5rem 0;
+  margin: 1rem 0;
+  float: none;
 
   .v-input {
     margin: 0;
@@ -71,8 +72,11 @@ export default {
 
 .content-element {
   flex: 1 0;
+  box-shadow: none;
+  border: 1px solid #e1e1e1;
 
   &.selected {
+    border-style: dashed;
     border-color: #444;
 
     &::after {
