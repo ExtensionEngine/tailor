@@ -4,7 +4,9 @@ const yup = require('yup');
 
 const workflowStatus = yup.object().shape({
   id: yup.string().required(),
-  label: yup.string().required()
+  label: yup.string().required(),
+  color: yup.string().required(),
+  default: yup.boolean()
 });
 
 const workflow = yup.object().shape({
