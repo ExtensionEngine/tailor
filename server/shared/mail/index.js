@@ -23,7 +23,7 @@ const templatesDir = path.join(__dirname, './templates/');
 
 const resetUrl = token => urlJoin(origin, '/#/reset-password/', token);
 const activityStatusUrl = (repositoryId, activityId) =>
-  urlJoin(origin, '/#/repository', `${repositoryId}/board?activityId=${activityId}`);
+  urlJoin(origin, '/#/repository', `${repositoryId}/progress?activityId=${activityId}`);
 const activityUrl = ({ repositoryId, activityId }) =>
   urlJoin(origin, '/#/repository', `${repositoryId}?activityId=${activityId}`);
 const elementUrl = ({ repositoryId, activityId, elementUid }) => {
