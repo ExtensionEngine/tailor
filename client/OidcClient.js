@@ -70,10 +70,10 @@ class RefreshIframe extends EventEmitter {
     });
     this._iframe.src = src;
     this.mount();
-    this._iframe.contentWindow.addEventListener('auth:success', this.onSuccess);
-    this._iframe.contentWindow.addEventListener('auth:fail', this.onFail);
+    this._iframe.contentWindow.addEventListener('auth:success', () => this.onSuccess());
+    this._iframe.contentWindow.addEventListener('auth:fail', () => this.onFail());
     if (isProduction && timeout) {
-      this._timeout = setTimeout(this.onFail, timeout);
+      this._timeout = setTimeout(() => this.onFail(), timeout);
     }
   }
 
