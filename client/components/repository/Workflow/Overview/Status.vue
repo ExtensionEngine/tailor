@@ -1,9 +1,7 @@
 <template functional>
-  <span
-    :style="{ 'background-color': props.color }"
-    class="status px-2 py-1 rounded">
+  <v-chip :color="props.color" label class="status">
     {{ props.label }}
-  </span>
+  </v-chip>
 </template>
 
 <script>
