@@ -1,11 +1,8 @@
 <template>
-  <div
-    @click="toggleSelection"
-    :class="elementWidth"
-    class="element-preview-container">
+  <div :class="elementWidth" class="element-preview-container">
     <v-checkbox
       v-if="selectable"
-      @click.prevent
+      @click="toggleSelection"
       :input-value="isSelected"
       :disabled="disabled" />
     <v-hover v-slot:default="{ hover }">

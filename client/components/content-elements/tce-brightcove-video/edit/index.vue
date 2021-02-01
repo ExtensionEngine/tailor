@@ -9,7 +9,7 @@
       active-placeholder="Use toolbar to set the video parameters"
       active-icon="mdi-arrow-up" />
     <div v-else>
-      <preview-overlay :show="isDisabled || !isFocused">
+      <preview-overlay :show="!isDisabled && !isFocused">
         Double click to preview
       </preview-overlay>
       <brightcove-player

@@ -8,7 +8,7 @@
       active-placeholder="Use toolbar to upload the pdf"
       active-icon="mdi-arrow-up" />
     <div v-show="!showPlaceholder">
-      <preview-overlay :show="isDisabled || !isFocused" />
+      <preview-overlay :show="!isDisabled && !isFocused" />
       <div class="loader-outer">
         <div class="loader-inner">
           <circular-progress v-show="!showError" />
