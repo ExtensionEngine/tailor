@@ -199,8 +199,7 @@ export default {
       if (!val && oldVal) this.onHidden();
     },
     show(val) {
-      if (val) return this.showElementPicker();
-      this.onHidden();
+      return val ? this.showElementPicker() : this.onHidden();
     }
   },
   components: { AddNewElement, SelectElement }
