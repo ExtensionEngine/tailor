@@ -14,11 +14,13 @@
         @click="toggleAssignee(id)"
         v-bind="assignee"
         :class="{ active: isActive }"
+        show-tooltip
         class="avatar" />
       <assignee-avatar
         v-if="showUnassigned"
         @click="updateFilter('unassigned', !unassigned)"
         :class="{ active: unassigned }"
+        show-tooltip
         class="avatar" />
     </div>
     <v-btn

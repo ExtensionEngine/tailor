@@ -3,7 +3,7 @@
     <v-sheet elevation="2" class="card px-3 pt-1 pb-4">
       <h4 class="mb-4 h4">{{ name }}</h4>
       <div class="d-flex align-center mt-auto">
-        <assignee-avatar v-bind="status.assignee" />
+        <assignee-avatar v-bind="status.assignee" show-tooltip />
         <v-tooltip open-delay="500" bottom>
           <template #activator="{ on }">
             <v-icon v-on="on" class="priority-icon mx-5">
