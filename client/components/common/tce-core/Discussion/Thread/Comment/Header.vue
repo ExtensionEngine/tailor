@@ -63,7 +63,7 @@ export default {
     author: vm => vm.comment.author,
     isAuthor: vm => vm.author.id === vm.user.id,
     isDeleted: vm => !!vm.comment.deletedAt,
-    isResolved: vm => vm.comment.resolved,
+    isResolved: vm => !!vm.comment.resolvedAt,
     showEditedLabel: vm => !!vm.comment.editedAt,
     showOptions: vm => vm.isAuthor && !vm.isDeleted && !vm.isResolved,
     options: vm => [
