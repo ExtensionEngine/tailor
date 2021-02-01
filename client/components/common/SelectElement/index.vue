@@ -55,6 +55,7 @@
 </template>
 
 <script>
+import activitiesApi from '@/api/activity';
 import contentElementApi from 'client/api/contentElement';
 import ContentPreview from '@/components/common/ContentPreview';
 import flatMap from 'lodash/flatMap';
@@ -63,7 +64,6 @@ import { getSupportedContainers } from 'shared/activities';
 import loader from '@/components/common/loader';
 import map from 'lodash/map';
 import { mapGetters } from 'vuex';
-import repositoryApi from '@/api/repository';
 import SelectActivity from './SelectActivity';
 import SelectRepository from './SelectRepository';
 import sortBy from 'lodash/sortBy';
@@ -168,8 +168,7 @@ export default {
         : await this.fetchActivities(repository);
     },
     fetchActivities: loader(function (repository) {
-      return repositoryApi.get(repository.id, { withActivities: true })
-        .then(({ activities }) => activities);
+      return activitiesApi.getActivities(repository.id);
     }, 'loadingContent'),
     fetchElements: loader(function (containers) {
       const { id: repositoryId } = this.repository;
