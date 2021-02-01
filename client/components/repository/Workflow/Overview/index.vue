@@ -1,35 +1,34 @@
 <template>
-  <div class="overview">
-    <v-data-table
-      @click:row="selectActivity($event.id)"
-      :headers="headers"
-      :items="items"
-      item-class="class"
-      hide-default-footer>
-      <template #item.status="{ value }">
-        <span
-          v-if="value"
-          :style="{ 'background-color': value.color }"
-          class="status px-2 py-1 rounded">
-          {{ value.label }}
-        </span>
-      </template>
-      <template #item.assignee="{ value }">
-        <assignee-avatar v-bind="value" small class="mr-2" />
-        <span v-if="value && value.label">{{ value.label }}</span>
-        <span v-else>Unassigned</span>
-      </template>
-      <template #item.priority="{ value }">
-        <v-icon class="priority-icon mr-3">
-          {{ `$vuetify.icons.${value.icon}` }}
-        </v-icon>
+  <v-data-table
+    @click:row="selectActivity($event.id)"
+    :headers="headers"
+    :items="items"
+    item-class="class"
+    disable-pagination hide-default-footer
+    class="overview">
+    <template #item.status="{ value }">
+      <span
+        v-if="value"
+        :style="{ 'background-color': value.color }"
+        class="status px-2 py-1 rounded">
         {{ value.label }}
-      </template>
-      <template #item.dueDate="{ value }">
-        {{ value | formatDate('MM/DD/YY') }}
-      </template>
-    </v-data-table>
-  </div>
+      </span>
+    </template>
+    <template #item.assignee="{ value }">
+      <assignee-avatar v-bind="value" small class="mr-2" />
+      <span v-if="value && value.label">{{ value.label }}</span>
+      <span v-else>Unassigned</span>
+    </template>
+    <template #item.priority="{ value }">
+      <v-icon class="priority-icon mr-3">
+        {{ `$vuetify.icons.${value.icon}` }}
+      </v-icon>
+      {{ value.label }}
+    </template>
+    <template #item.dueDate="{ value }">
+      {{ value | formatDate('MM/DD/YY') }}
+    </template>
+  </v-data-table>
 </template>
 
 <script>
@@ -108,7 +107,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.overview ::v-deep .v-data-table {
+.overview ::v-deep {
   tr > td:first-of-type {
     max-width: 18.75rem;
   }
