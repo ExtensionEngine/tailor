@@ -138,24 +138,21 @@ export default {
       const { containers } = this;
       const elements = await this.fetchElements(containers);
       this.contentContainers = containers.map(container => {
-        const containerElements = elements.filter(it => it.activityId === container.id);
-        return { ...containers, elements: sortBy(containerElements, 'position') };
+        const containerElements = elements
+          .filter(it => it.activityId === container.id)
+          .map(element => ({ ...element, activity }));
+        return { ...container, elements: sortBy(containerElements, 'position') };
       });
-    },
-    assignActivity(element) {
-      return { ...element, activity: this.selectedActivity };
     },
     toggleElementSelection(element) {
       const { selectedElements: elements } = this;
       const existing = elements.find(it => it.id === element.id);
       this.selectedElements = existing
         ? elements.filter(it => it.id !== element.id)
-        : elements.concat(this.assignActivity(element));
+        : elements.concat(element);
     },
     toggleSelectAll() {
-      this.selectedElements = this.allElementsSelected
-        ? []
-        : this.elements.map(this.assignActivity);
+      this.selectedElements = this.allElementsSelected ? [] : this.elements;
     },
     deselectActivity() {
       this.selectedActivity = null;
