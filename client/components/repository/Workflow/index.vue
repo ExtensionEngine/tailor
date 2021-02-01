@@ -29,7 +29,7 @@ import WorkflowFilters from './Filters';
 import WorkflowOverview from './Overview';
 
 const RECENCY_THRESHOLD = { days: 2 };
-const SEARCH_TEXT_LENGTH_THRESHOLD = 3;
+const SEARCH_TEXT_LENGTH_THRESHOLD = 2;
 
 export default {
   name: 'workflow-view',
