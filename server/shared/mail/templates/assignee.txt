@@ -5,7 +5,7 @@ You've been assigned to an activity.
 {{data.name}}
 {{#html}}{{{status.description}}}{{/html}}
 
-View the task by visiting the link:
+View the activity status by visiting the link:
 
 {{{href}}}
 
