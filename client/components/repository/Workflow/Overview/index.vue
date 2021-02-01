@@ -15,12 +15,12 @@
       </span>
     </template>
     <template #item.assignee="{ value }">
-      <assignee-avatar v-bind="value" small class="mr-2" />
+      <assignee-avatar v-bind="value" small class="mr-1" />
       <span v-if="value && value.label">{{ value.label }}</span>
       <span v-else>Unassigned</span>
     </template>
     <template #item.priority="{ value }">
-      <v-icon class="priority-icon mr-3">
+      <v-icon class="priority-icon mr-1">
         {{ `$vuetify.icons.${value.icon}` }}
       </v-icon>
       {{ value.label }}
@@ -69,9 +69,9 @@ export default {
     },
     items() {
       return this.activities.map(({ id, data, status }) => ({
-        ...status,
         id,
         name: data.name,
+        assignee: status.assignee,
         status: this.getStatusById(status.status),
         priority: this.getPriorityById(status.priority),
         class: this.isActivitySelected(id) && 'selected'
@@ -109,7 +109,7 @@ export default {
 <style lang="scss" scoped>
 .overview ::v-deep {
   tr > td:first-of-type {
-    max-width: 18.75rem;
+    max-width: 22rem;
   }
 
   .selected {
