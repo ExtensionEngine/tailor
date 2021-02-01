@@ -9,7 +9,7 @@
         v-model.trim="content"
         :is-focused="isEditing"
         :show-preview="!isEditing"
-        :is-resolved="comment.resolved" />
+        :is-resolved="!!comment.resolvedAt" />
       <span v-if="isEditing" class="d-flex justify-end">
         <v-btn @click="reset" text small>Cancel</v-btn>
         <v-btn @click="save" color="green" text small>

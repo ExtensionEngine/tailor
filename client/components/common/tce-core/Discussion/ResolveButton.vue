@@ -3,8 +3,7 @@
     <v-tooltip open-delay="800" left>
       <template v-slot:activator="{ on }">
         <v-btn
-          v-on="on"
-          @click="listeners.resolve"
+          v-on="{ ...listeners, ...on }"
           color="teal accent-4"
           small text
           class="px-1">

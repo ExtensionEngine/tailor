@@ -6,7 +6,7 @@ const { Model } = require('sequelize');
 
 class Comment extends Model {
   static fields(DataTypes) {
-    const { BOOLEAN, DATE, TEXT, UUID, UUIDV4 } = DataTypes;
+    const { DATE, TEXT, UUID, UUIDV4 } = DataTypes;
     return {
       uid: {
         type: UUID,
@@ -24,9 +24,9 @@ class Comment extends Model {
           return this.getDataValue('content');
         }
       },
-      resolved: {
-        type: BOOLEAN,
-        defaultValue: false
+      resolvedAt: {
+        type: DATE,
+        field: 'resolved_at'
       },
       editedAt: {
         type: DATE,

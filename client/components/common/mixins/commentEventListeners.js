@@ -32,7 +32,7 @@ export default {
       setTimeout(() => this.markSeenComments(payload), timeout);
     }
   },
-  mounted() {
+  created() {
     COMMENT_EVENTS.forEach(({ event, action }) => {
       this.editorBus.on(event, this[action]);
     });

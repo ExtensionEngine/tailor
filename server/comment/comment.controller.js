@@ -41,9 +41,9 @@ function remove({ comment }, res) {
     .then(data => res.json({ data }));
 }
 
-async function resolve({ body }, res) {
-  const where = { contentElementId: body.contentElementId };
-  await Comment.update({ resolved: true }, { where, paranoid: false });
+async function resolve({ body: { contentElementId } }, res) {
+  const where = contentElementId ? { contentElementId } : {};
+  await Comment.update({ resolvedAt: new Date() }, { where, paranoid: false });
   return res.sendStatus(NO_CONTENT);
 }
 

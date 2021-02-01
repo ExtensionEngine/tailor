@@ -64,7 +64,7 @@ export default {
     isAuthor: vm => vm.author.id === vm.user.id,
     isDeleted: vm => !!vm.comment.deletedAt,
     isResolved: vm => vm.comment.resolved,
-    showEditedLabel: vm => !!vm.comment.editedAt && !vm.isResolved,
+    showEditedLabel: vm => !!vm.comment.editedAt,
     showOptions: vm => vm.isAuthor && !vm.isDeleted && !vm.isResolved,
     options: vm => [
       { name: 'Edit', action: 'toggleEdit', icon: 'mdi-pencil-outline' },
