@@ -58,7 +58,7 @@ export default {
     ...mapGetters('repository', ['workflow']),
     statusConfig: vm => find(vm.workflow.statuses, { id: vm.status.status }),
     priorityConfig: vm => priorities.find(it => it.id === vm.status.priority),
-    route: vm => ({ name: 'board', query: vm.$route.query })
+    route: vm => ({ name: 'progress', query: vm.$route.query })
   },
   components: { LabelChip, AssigneeAvatar }
 };

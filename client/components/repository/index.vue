@@ -59,8 +59,8 @@ export default {
       return [
         { name: 'Structure', route: 'repository', icon: 'file-tree', query },
         hasActivities && this.hasWorkflow && {
-          name: 'Board',
-          route: 'board',
+          name: 'Progress',
+          route: 'progress',
           icon: 'view-dashboard-variant',
           query
         },

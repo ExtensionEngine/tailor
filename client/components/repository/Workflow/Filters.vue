@@ -36,7 +36,7 @@ import AssigneeAvatar from '@/components/repository/common/AssigneeAvatar';
 import xor from 'lodash/xor';
 
 export default {
-  name: 'workflow-board-filters',
+  name: 'workflow-filters',
   props: {
     searchText: { type: String, default: null },
     recentOnly: { type: Boolean, default: false },

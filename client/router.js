@@ -62,8 +62,8 @@ const options = {
         component: RepoUserManagement
       }]
     }, {
-      path: 'board',
-      name: 'board',
+      path: 'progress',
+      name: 'progress',
       component: Workflow
     }, {
       path: 'revisions',
