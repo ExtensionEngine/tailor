@@ -1,7 +1,8 @@
 <template>
   <div
     @click="toggleSelection"
-    :class="['element-preview-container', elementWidth]">
+    :class="elementWidth"
+    class="element-preview-container">
     <v-checkbox
       v-if="selectable"
       @click.prevent
@@ -10,10 +11,11 @@
     <v-hover v-slot:default="{ hover }">
       <div class="element-wrapper">
         <content-element
+          v-bind="$attrs"
           :element="element"
-          :class="['content-element', { selected: isSelected }]"
           :set-width="false"
-          v-bind="$attrs" />
+          :class="{ selected: isSelected }"
+          class="content-element" />
         <v-tooltip open-delay="400" top>
           <template v-slot:activator="{ on }">
             <v-btn
@@ -21,7 +23,8 @@
               @click.stop="$emit('element:open', element.uid)"
               color="pink darken-1"
               fab small dark
-              :class="['open-element-button', { visible: hover }]">
+              :class="{ visible: hover }"
+              class="open-element-button">
               <v-icon small dark>mdi-open-in-new</v-icon>
             </v-btn>
           </template>
