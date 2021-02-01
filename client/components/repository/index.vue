@@ -67,7 +67,7 @@ export default {
         hasActivities && this.hasWorkflow && {
           name: 'Progress',
           route: 'progress',
-          icon: 'view-dashboard-variant',
+          icon: 'chart-timeline-variant',
           query
         },
         hasActivities && { name: 'History', route: 'revisions', icon: 'history' },
