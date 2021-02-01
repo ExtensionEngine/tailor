@@ -16,7 +16,7 @@
             :key="element.position"
             @click.stop="$emit('add', [element])"
             :disabled="!isAllowed(element.type)"
-            class="element">
+            class="add-element">
             <v-icon v-if="element.ui.icon">{{ element.ui.icon }}</v-icon>
             <h5 class="body-2">{{ element.name }}</h5>
           </button>
@@ -79,7 +79,7 @@ $disabled-color: #a1a1a1;
   flex-wrap: wrap;
 }
 
-.element {
+.add-element {
   align-self: center;
   width: 8.125rem;
   min-width: 8.125rem;
