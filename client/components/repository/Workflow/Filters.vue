@@ -59,6 +59,7 @@ export default {
 
 <style lang="scss" scoped>
 .search-field {
+  min-width: 14.5rem;
   max-width: 17.5rem;
 }
 
