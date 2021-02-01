@@ -6,14 +6,12 @@
       indeterminate
       class="align-self-center" />
     <template v-else>
-      <div class="controls d-flex justify-space-between align-center pr-4">
-        <workflow-filters
-          v-bind.sync="filters"
-          :assignee-options="assignees"
-          :show-unassigned="unassignedActivityExists"
-          class="px-4" />
-      </div>
-      <workflow-overview :activities="filteredActivities" class="overview mt-3 px-4" />
+      <workflow-filters
+        v-bind.sync="filters"
+        :assignee-options="assignees"
+        :show-unassigned="unassignedActivityExists"
+        class="controls mx-4" />
+      <workflow-overview :activities="filteredActivities" class="overview mt-3 mx-4" />
       <sidebar />
     </template>
   </div>
@@ -116,6 +114,6 @@ $sidebar-width: 27.1875rem;
 }
 
 .controls, .overview {
-  max-width: calc(100% - #{$sidebar-width} - 1rem);
+  max-width: calc(100% - #{$sidebar-width} - 3rem);
 }
 </style>
