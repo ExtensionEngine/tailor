@@ -2,6 +2,7 @@
 
 const forEach = require('lodash/forEach');
 const mail = require('../shared/mail');
+const { Op } = require('sequelize');
 const sse = require('../shared/sse');
 
 exports.add = (ActivityStatus, Hooks) => {
@@ -24,7 +25,10 @@ exports.add = (ActivityStatus, Hooks) => {
 
   async function notifyAssignee(_, status) {
     const previousStatus = await ActivityStatus.findOne({
-      where: { activityId: status.activityId },
+      where: {
+        [Op.not]: { id: status.id },
+        activityId: status.activityId
+      },
       order: [['createdAt', 'DESC']]
     });
     if (previousStatus.assigneeId === status.assigneeId) return;
