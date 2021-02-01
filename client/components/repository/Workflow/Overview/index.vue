@@ -20,8 +20,8 @@
     <template #item.priority="{ value }">
       <overview-priority v-bind="value" />
     </template>
-    <template #item.dueDate="item">
-      <overview-due-date v-bind="item" />
+    <template #item.dueDate="{ value }">
+      <overview-due-date v-if="value" :value="value" />
     </template>
   </v-data-table>
 </template>
