@@ -9,7 +9,8 @@ const workflowStatus = yup.object().shape({
 
 const workflow = yup.object().shape({
   id: yup.string().required(),
-  statuses: yup.array().of(workflowStatus).min(1)
+  statuses: yup.array().of(workflowStatus).min(1),
+  dueDateWarningThreshold: yup.object().shape({ days: yup.string() })
 });
 
 const workflows = yup.array().of(workflow);

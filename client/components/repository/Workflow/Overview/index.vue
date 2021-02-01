@@ -20,8 +20,8 @@
     <template #item.priority="{ value }">
       <overview-priority v-bind="value" />
     </template>
-    <template #item.dueDate="{ value }">
-      {{ value | formatDate('MM/DD/YY') }}
+    <template #item.dueDate="item">
+      <overview-due-date v-bind="item" />
     </template>
   </v-data-table>
 </template>
@@ -29,6 +29,7 @@
 <script>
 import AssigneeAvatar from '@/components/repository/common/AssigneeAvatar';
 import { mapGetters } from 'vuex';
+import OverviewDueDate from './DueDate';
 import OverviewName from './Name';
 import OverviewPriority from './Priority';
 import OverviewStatus from './Status';
@@ -100,7 +101,7 @@ export default {
       return priorityIds.indexOf(second.id) - priorityIds.indexOf(first.id);
     }
   },
-  components: { AssigneeAvatar, OverviewName, OverviewPriority, OverviewStatus }
+  components: { AssigneeAvatar, OverviewDueDate, OverviewName, OverviewPriority, OverviewStatus }
 };
 </script>
 
