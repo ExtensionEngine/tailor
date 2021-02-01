@@ -1,6 +1,12 @@
 <template>
-  <div :class="warning">
-    {{ value | formatDate('MM/DD/YY') }}
+  <div class="due-date d-flex align-center" :class="warning">
+    <v-icon
+      v-if="value"
+      size="16"
+      class="icon mr-1">
+      mdi-clock-outline
+    </v-icon>
+    {{ value | formatDate('mediumDate') }}
   </div>
 </template>
 
@@ -45,11 +51,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.elapsed {
-  color: var(--v-error-darken1);
+@mixin set-due-date-color($color) {
+  color: $color;
+
+  .icon {
+    color: $color;
+    caret-color: $color;
+  }
 }
 
-.soon {
-  color: var(--v-warning-lighten1);
+.due-date {
+  @include set-due-date-color(#a1a1a1);
+
+  &.elapsed {
+    @include set-due-date-color(var(--v-error-darken1));
+  }
+
+  &.soon {
+    @include set-due-date-color(var(--v-warning-lighten1));
+  }
 }
 </style>
