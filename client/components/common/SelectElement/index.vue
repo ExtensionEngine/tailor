@@ -184,11 +184,10 @@ export default {
       this.$emit('close');
     },
     openElement(elementId) {
-      const {
-        selectedActivity: { id: activityId },
-        repository: { id: repositoryId }
-      } = this;
-      const params = { activityId, repositoryId };
+      const params = {
+        activityId: this.selectedActivity.id,
+        repositoryId: this.repository.id
+      };
       const route = { name: 'editor', params, query: { elementId } };
       const { href } = this.$router.resolve(route);
       window.open(href, '_blank');
