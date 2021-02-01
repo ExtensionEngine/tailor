@@ -1,7 +1,8 @@
 'use strict';
 
+const { BAD_REQUEST, NO_CONTENT } = require('http-status-codes');
 const { Comment, ContentElement, User } = require('../shared/database');
-const { NO_CONTENT } = require('http-status-codes');
+const { createError } = require('../shared/error/helpers');
 const pick = require('lodash/pick');
 
 const author = {
@@ -42,8 +43,9 @@ function remove({ comment }, res) {
 }
 
 async function resolve({ body: { contentElementId } }, res) {
-  const where = contentElementId ? { contentElementId } : {};
-  await Comment.update({ resolvedAt: new Date() }, { where, paranoid: false });
+  if (!contentElementId) return createError(BAD_REQUEST, 'contentElementId required!');
+  const options = { where: { contentElementId }, paranoid: false };
+  await Comment.update({ resolvedAt: new Date() }, options);
   return res.sendStatus(NO_CONTENT);
 }
 
