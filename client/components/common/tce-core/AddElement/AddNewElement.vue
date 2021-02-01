@@ -11,15 +11,20 @@
           <span>{{ group.name }}</span>
         </div>
         <div class="group-elements">
-          <button
+          <v-hover
             v-for="element in group.elements"
             :key="element.position"
-            @click.stop="$emit('add', [element])"
-            :disabled="!isAllowed(element.type)"
-            class="add-element">
-            <v-icon v-if="element.ui.icon">{{ element.ui.icon }}</v-icon>
-            <h5 class="body-2">{{ element.name }}</h5>
-          </button>
+            v-slot:default="{ hover }">
+            <v-btn
+              @click.stop="$emit('add', [element])"
+              :disabled="!isAllowed(element.type)"
+              :color="hover ? 'pink' : '#333'"
+              text
+              class="add-element">
+              <v-icon v-if="element.ui.icon">{{ element.ui.icon }}</v-icon>
+              <span class="button-text body-2">{{ element.name }}</span>
+            </v-btn>
+          </v-hover>
         </div>
       </div>
     </div>
@@ -43,10 +48,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$font-color: #333;
-$accent-color: #d81b60;
-$disabled-color: #a1a1a1;
-
 .element-container {
   min-height: 25rem;
   padding: 0 0 1.875rem;
@@ -80,48 +81,33 @@ $disabled-color: #a1a1a1;
 }
 
 .add-element {
-  align-self: center;
   width: 8.125rem;
   min-width: 8.125rem;
+  height: auto !important;
   min-height: 4.375rem;
-  padding: 0.375rem;
-  color: $font-color;
-  font-size: 1.25rem;
-  border: 1px solid #fff;
-  border-radius: 4px;
-  outline: none;
-  cursor: pointer;
+  padding: 0 !important;
+  border: 1px solid transparent;
+  white-space: normal;
+
+  ::v-deep .v-btn__content {
+    flex: 1 1 100%;
+    padding: 0.375rem;
+    flex-direction: column;
+    text-transform: none;
+  }
 
   .v-icon {
     padding: 0.125rem 0;
-    color: $font-color;
     font-size: 1.875rem;
   }
 
-  &:disabled {
-    color: $disabled-color;
-    cursor: not-allowed;
-
-    .v-icon {
-      color: $disabled-color;
-    }
+  .button-text {
+    margin: 0.625rem 0;
   }
 
   &:enabled:hover {
-    color: $accent-color;
     background: #fcfcfc;
     border: 1px solid #888;
-
-    .v-icon {
-      color: $accent-color;
-    }
-  }
-
-  &-title {
-    margin: 0;
-    padding: 0;
-    font-weight: 500;
-    line-height: 1.25rem;
   }
 }
 
