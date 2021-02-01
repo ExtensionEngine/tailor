@@ -49,6 +49,7 @@ class Auth extends Authenticator {
       const options = { signed, secure, expires, httpOnly };
       res.cookie(name, token, options);
       res.cookie('strategy', strategy, options);
+      req.authStrategy = strategy;
       return next();
     };
   }
