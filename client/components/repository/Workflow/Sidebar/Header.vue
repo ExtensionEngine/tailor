@@ -54,7 +54,6 @@ import ActivityCard from './ActivityCard';
 import find from 'lodash/find';
 import LabelChip from '@/components/repository/common/LabelChip';
 import { mapGetters } from 'vuex';
-import { mapRequests } from '@/plugins/radio';
 
 export default {
   props: {
@@ -71,7 +70,6 @@ export default {
     activityConfig: vm => find(vm.structure, { type: vm.type }),
     statusUrl: () => window.location.href
   },
-  methods: mapRequests('app', ['showConfirmationModal']),
   components: { ActivityCard, LabelChip }
 };
 </script>
