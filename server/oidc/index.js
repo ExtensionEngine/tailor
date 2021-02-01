@@ -27,6 +27,7 @@ const getPromptParams = req => {
 };
 
 const getSilentAuthParams = req => {
+  if (!isSilentAuth(req)) return {};
   const strategy = req.passport.strategy('oidc');
   const callbackUri = new URL(strategy.options.callbackURL);
   callbackUri.searchParams.set('silent', 'true');
@@ -42,7 +43,7 @@ router
     const params = {
       scope,
       ...getPromptParams(req),
-      ...isSilentAuth(req) && getSilentAuthParams(req)
+      ...getSilentAuthParams(req)
     };
     return authenticate('oidc', params)(req, res, next);
   })
