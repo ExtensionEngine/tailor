@@ -4,13 +4,18 @@
       :elevation="isCardHovered ? 20 : 1"
       color="blue-grey darken-4"
       dark
-      class="repository-card">
+      class="repository-card d-flex flex-column justify-space-between text-left">
       <div @click="navigateTo()" class="card-body">
-        <div class="header ml-4">
+        <div class="d-flex align-center ml-4">
           <v-chip :color="repository.data.color" x-small class="readonly px-1" />
           <v-tooltip :disabled="!isTruncated" open-delay="300" top>
             <template v-slot:activator="{ on }">
-              <span ref="schemaName" v-on="on" class="schema-name mx-2">{{ schema }}</span>
+              <span
+                ref="schemaName"
+                v-on="on"
+                class="schema-name flex-grow-1 text-truncate text-uppercase mx-2">
+                {{ schema }}
+              </span>
             </template>
             {{ schema }}
           </v-tooltip>
@@ -126,11 +131,7 @@ export default {
 
 <style lang="scss" scoped>
 .repository-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   height: 14.75rem;
-  text-align: left;
   transition: all 0.3s ease;
   cursor: pointer;
 
@@ -146,21 +147,11 @@ export default {
 .card-body {
   padding: 0.625rem 0 0;
 
-  .header {
-    display: flex;
-    align-items: center;
-  }
-
   .schema-name {
-    flex-grow: 1;
     color: #fafafa;
     font-size: 0.75rem;
     font-weight: 500;
     letter-spacing: 1px;
-    text-transform: uppercase;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   .v-card__title {
