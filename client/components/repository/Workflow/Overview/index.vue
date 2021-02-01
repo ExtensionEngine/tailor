@@ -6,6 +6,16 @@
     item-class="class"
     disable-pagination hide-default-footer
     class="overview">
+    <template #item.name="{ value }">
+      <v-tooltip open-delay="800" bottom>
+        <template #activator="{ on }">
+          <div v-on="on" class="text-truncate">
+            {{ value }}
+          </div>
+        </template>
+        {{ value }}
+      </v-tooltip>
+    </template>
     <template #item.status="{ value }">
       <span :style="{ 'background-color': value.color }" class="status px-2 py-1 rounded">
         {{ value.label }}
