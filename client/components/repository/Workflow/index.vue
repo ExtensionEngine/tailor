@@ -78,9 +78,9 @@ export default {
   },
   methods: {
     ...mapActions('repository', ['getUsers']),
-    filterByAssignee({ assigneeId: id }) {
-      if (this.filters.unassigned && !id) return true;
-      return this.filters.selectedAssigneeIds.includes(id);
+    filterByAssignee({ assigneeId }) {
+      if (this.filters.unassigned && !assigneeId) return true;
+      return this.filters.selectedAssigneeIds.includes(assigneeId);
     },
     filterByRecency({ updatedAt }) {
       const parsed = new Date(updatedAt);
@@ -88,11 +88,12 @@ export default {
       return isAfter(parsed, updatedAtLimit);
     },
     filterBySearchText(searchableText) {
-      return searchableText.indexOf(this.filters.searchText.toLowerCase()) !== -1;
+      return searchableText.includes(this.filters.searchText.toLowerCase());
     },
     getSearchableText({ data, shortId, status }) {
+      const { name } = data;
       const { description } = status;
-      return `${shortId} ${data.name} ${description}`.toLowerCase();
+      return `${shortId} ${name} ${description}`.toLowerCase();
     }
   },
   created() {

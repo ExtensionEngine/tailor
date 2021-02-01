@@ -36,7 +36,8 @@ exports.add = (ActivityStatus, Hooks, { Activity }) => {
   }
 
   function withActivity(...hooks) {
-    return (type, status) => Activity.findOne({ where: { id: status.activityId } })
+    return (type, status) => Activity
+      .findOne({ where: { id: status.activityId } })
       .then(activity => hooks.forEach(hook => hook(type, activity)));
   }
 };
