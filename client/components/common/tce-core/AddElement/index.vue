@@ -54,10 +54,7 @@
             </div>
           </template>
           <v-spacer />
-          <v-btn
-            @click="showElementBrowser = !showElementBrowser"
-            dark text
-            class="">
+          <v-btn @click="showElementBrowser = !showElementBrowser" dark text>
             <v-icon class="mr-2">mdi-content-copy</v-icon>
             Copy existing
           </v-btn>
