@@ -6,20 +6,11 @@
     item-class="class"
     disable-pagination hide-default-footer
     class="overview">
-    <template #item.name="{ value }">
-      <v-tooltip open-delay="800" bottom>
-        <template #activator="{ on }">
-          <div v-on="on" class="text-truncate">
-            {{ value }}
-          </div>
-        </template>
-        {{ value }}
-      </v-tooltip>
+    <template #item.name="item">
+      <overview-name v-bind="item" />
     </template>
     <template #item.status="{ value }">
-      <span :style="{ 'background-color': value.color }" class="status px-2 py-1 rounded">
-        {{ value.label }}
-      </span>
+      <overview-status v-bind="value" />
     </template>
     <template #item.assignee="{ value }">
       <assignee-avatar v-bind="value" small class="mr-1" />
@@ -27,10 +18,7 @@
       <span v-else>Unassigned</span>
     </template>
     <template #item.priority="{ value }">
-      <v-icon class="priority-icon mr-1">
-        {{ `$vuetify.icons.${value.icon}` }}
-      </v-icon>
-      {{ value.label }}
+      <overview-priority v-bind="value" />
     </template>
     <template #item.dueDate="{ value }">
       {{ value | formatDate('MM/DD/YY') }}
@@ -41,6 +29,9 @@
 <script>
 import AssigneeAvatar from '@/components/repository/common/AssigneeAvatar';
 import { mapGetters } from 'vuex';
+import OverviewName from './Name';
+import OverviewPriority from './Priority';
+import OverviewStatus from './Status';
 import { priorities } from 'shared/workflow';
 import selectActivity from '@/components/repository/common/selectActivity';
 
@@ -109,7 +100,7 @@ export default {
       return priorityIds.indexOf(second.id) - priorityIds.indexOf(first.id);
     }
   },
-  components: { AssigneeAvatar }
+  components: { AssigneeAvatar, OverviewName, OverviewPriority, OverviewStatus }
 };
 </script>
 
@@ -125,14 +116,6 @@ export default {
 
   tr:hover:not(.selected) {
     cursor: pointer;
-  }
-
-  .status {
-    color: var(--text-color-default);
-  }
-
-  .priority-icon {
-    width: 0.75rem;
   }
 }
 </style>
