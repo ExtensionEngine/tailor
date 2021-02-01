@@ -5,11 +5,11 @@ const mail = require('../shared/mail');
 const { Op } = require('sequelize');
 const sse = require('../shared/sse');
 
-exports.add = (ActivityStatus, Hooks) => {
+exports.add = (ActivityStatus, Hooks, { Activity }) => {
   const { Events } = ActivityStatus;
 
   const mappings = {
-    [Hooks.afterCreate]: [sseCreate, notifyAssignee]
+    [Hooks.afterCreate]: [withActivity(sseUpdate, notifyAssignee)]
   };
 
   forEach(mappings, (hooks, type) => {
@@ -18,12 +18,12 @@ exports.add = (ActivityStatus, Hooks) => {
     });
   });
 
-  async function sseCreate(_, status) {
-    const activity = await status.getActivity();
-    sse.channel(status.repositoryId).send(Events.Update, { ...activity, status });
+  function sseUpdate(_, activity) {
+    sse.channel(activity.repositoryId).send(Events.Update, activity);
   }
 
-  async function notifyAssignee(_, status) {
+  async function notifyAssignee(_, activity) {
+    const { status } = activity;
     const previousStatus = await ActivityStatus.findOne({
       where: {
         [Op.not]: { id: status.id },
@@ -32,16 +32,16 @@ exports.add = (ActivityStatus, Hooks) => {
       order: [['createdAt', 'DESC']]
     });
     if (previousStatus.assigneeId === status.assigneeId) return;
-    sendEmailNotification(status);
+    sendEmailNotification(activity);
+  }
+
+  function withActivity(...hooks) {
+    return (type, status) => Activity.findOne({ where: { id: status.activityId } })
+      .then(activity => hooks.forEach(hook => hook(type, activity)));
   }
 };
 
-async function sendEmailNotification(activityStatus) {
-  const assignee = await activityStatus.getAssignee();
-  const activity = await activityStatus.getActivity();
-  if (!assignee) return;
-  mail.sendAssigneeNotification(assignee.email, {
-    ...activity.toJSON(),
-    status: activityStatus
-  });
+async function sendEmailNotification(activity) {
+  if (!activity.assignee) return;
+  mail.sendAssigneeNotification(activity.assignee.email, activity);
 }
