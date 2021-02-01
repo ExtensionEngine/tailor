@@ -116,4 +116,9 @@ $sidebar-width: 27.1875rem;
 .controls, .overview {
   max-width: calc(100% - #{$sidebar-width} - 3rem);
 }
+
+.overview {
+  height: 100%;
+  overflow-y: scroll;
+}
 </style>
