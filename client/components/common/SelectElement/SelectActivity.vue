@@ -13,7 +13,7 @@
       :items="activityTree"
       :search="search"
       :open="expandedItems"
-      activatable transition open-on-click
+      transition open-on-click
       class="py-3 px-1 treeview">
       <template v-slot:label="{ item: { id, data } }">
         {{ data.name }}
@@ -86,6 +86,12 @@ export default {
 
   .v-chip.custom-chip {
     border-radius: 12px !important;
+  }
+
+  ::v-deep .v-treeview-node--leaf {
+    > .v-treeview-node__root, .v-treeview-node__content > * {
+      cursor: auto;
+    }
   }
 }
 </style>
