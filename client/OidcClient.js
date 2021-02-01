@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import path from 'path';
+import join from 'url-join';
 
 const isProduction = process.env.NODE_ENV === 'production';
 const SILENT_REFRESH_TIMEOUT = 5000;
@@ -7,7 +7,7 @@ const SILENT_REFRESH_TIMEOUT = 5000;
 class OidcClient {
   constructor() {
     this.enabled = process.env.OIDC_ENABLED;
-    this.baseUrl = path.join(process.env.API_PATH, 'oidc');
+    this.baseUrl = join(process.env.API_PATH, 'oidc');
   }
 
   get silentUrl() {
