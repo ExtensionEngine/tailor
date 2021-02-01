@@ -20,7 +20,7 @@ export default {
   computed: {
     ...mapGetters('repository', ['workflow']),
     currentDate: vm => vm.truncateTime(new Date()),
-    dueDate: vm => vm.truncateTime(vm.value),
+    dueDate: vm => vm.truncateTime(new Date(vm.value)),
     didWarningThresholdElapse() {
       const { dueDateWarningThreshold } = this.workflow;
       if (!dueDateWarningThreshold) return false;
