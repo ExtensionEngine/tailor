@@ -1,4 +1,4 @@
-import { getOutlineLevels, getSchema } from 'shared/activities';
+import { getOutlineLevels, getSchema, isTrackedInWorkflow } from 'shared/activities';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
@@ -59,12 +59,8 @@ export const workflow = (_state, { repository }) => {
 
 export const hasWorkflow = (_state, { workflow }) => Boolean(workflow);
 
-export const workflowActivities = (_state, getters) => {
-  const { structure, activities } = getters;
-  const trackedTypes = structure
-    .filter(activity => activity.isTrackedInWorkflow)
-    .map(it => it.type);
-  return activities.filter(it => trackedTypes.includes(it.type));
+export const workflowActivities = (_state, { activities }) => {
+  return activities.filter(it => isTrackedInWorkflow(it.type));
 };
 
 export const isCollapsed = state => {
