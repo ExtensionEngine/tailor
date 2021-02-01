@@ -39,7 +39,8 @@ export default {
   computed: {
     ...mapGetters('repository', ['selectedActivity']),
     isTrackedActivity() {
-      return this.selectedActivity && isTrackedInWorkflow(this.selectedActivity.type);
+      const type = this.selectedActivity?.type;
+      return type && isTrackedInWorkflow(type);
     }
   },
   methods: {

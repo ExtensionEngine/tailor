@@ -51,16 +51,15 @@ export default {
       }, {
         text: 'Status',
         value: 'status',
-        sort: this.sortByStatus
+        sort: this.compareStatuses
       }, {
         text: 'Assignee',
         value: 'assignee',
-        sort: this.sortByAssignee
+        sort: this.compareAssignees
       }, {
         text: 'Priority',
         value: 'priority',
-        sortable: true,
-        sort: this.sortByPriority
+        sort: this.comparePriorities
       }, {
         text: 'Due date',
         value: 'dueDate'
@@ -87,21 +86,27 @@ export default {
     getPriorityById(id) {
       return priorities.find(it => it.id === id);
     },
-    sortByStatus(first, second) {
+    compareStatuses(first, second) {
       const statusIds = this.workflow.statuses.map(it => it.id);
       return statusIds.indexOf(first.id) - statusIds.indexOf(second.id);
     },
-    sortByAssignee(first, second) {
+    compareAssignees(first, second) {
       if (!second || !second.label) return -1;
       if (!first || !first.label) return 1;
       return first.label.localeCompare(second.label);
     },
-    sortByPriority(first, second) {
+    comparePriorities(first, second) {
       const priorityIds = priorities.map(it => it.id);
       return priorityIds.indexOf(second.id) - priorityIds.indexOf(first.id);
     }
   },
-  components: { AssigneeAvatar, OverviewDueDate, OverviewName, OverviewPriority, OverviewStatus }
+  components: {
+    AssigneeAvatar,
+    OverviewDueDate,
+    OverviewName,
+    OverviewPriority,
+    OverviewStatus
+  }
 };
 </script>
 
@@ -111,12 +116,12 @@ export default {
     max-width: 22rem;
   }
 
-  .selected {
-    background: #eceff1;
-  }
-
   tr:hover:not(.selected) {
     cursor: pointer;
+  }
+
+  .selected {
+    background: #eceff1;
   }
 }
 </style>
