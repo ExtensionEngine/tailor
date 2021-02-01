@@ -7,10 +7,7 @@
     disable-pagination hide-default-footer
     class="overview">
     <template #item.status="{ value }">
-      <span
-        v-if="value"
-        :style="{ 'background-color': value.color }"
-        class="status px-2 py-1 rounded">
+      <span :style="{ 'background-color': value.color }" class="status px-2 py-1 rounded">
         {{ value.label }}
       </span>
     </template>
