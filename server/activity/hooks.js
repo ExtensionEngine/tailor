@@ -1,7 +1,13 @@
 'use strict';
 
+const {
+  getSchema,
+  getSchemaId,
+  isOutlineActivity,
+  isTrackedInWorkflow
+} = require('../../config/shared/activities');
 const forEach = require('lodash/forEach');
-const { isOutlineActivity } = require('../../config/shared/activities');
+const { getDefaultWorkflowStatus } = require('../../config/shared/workflow');
 const sse = require('../shared/sse');
 
 module.exports = { add };
@@ -10,7 +16,7 @@ function add(Activity, Hooks, Models) {
   const { Events } = Activity;
 
   const mappings = {
-    [Hooks.afterCreate]: [sseCreate, touchRepository, touchOutline],
+    [Hooks.afterCreate]: [createStatus, sseCreate, touchRepository, touchOutline],
     [Hooks.afterUpdate]: [sseUpdate, touchRepository, touchOutline],
     [Hooks.afterDestroy]: [sseDelete, touchRepository, touchOutline]
   };
@@ -18,6 +24,14 @@ function add(Activity, Hooks, Models) {
   forEach(mappings, (hooks, type) => {
     forEach(hooks, hook => Activity.addHook(type, Hooks.withType(type, hook)));
   });
+
+  function createStatus(_, activity) {
+    if (!isTrackedInWorkflow(activity.type)) return;
+    const schemaId = getSchemaId(activity.type);
+    const { workflowId } = getSchema(schemaId);
+    const defaultStatus = getDefaultWorkflowStatus(workflowId);
+    return activity.createStatus(defaultStatus);
+  }
 
   function sseCreate(_, activity) {
     sse.channel(activity.repositoryId).send(Events.Create, activity);

@@ -1,11 +1,10 @@
 'use strict';
 
-const { Activity, ActivityStatus } = require('../shared/database');
 const {
   getOutlineLevels,
-  isOutlineActivity,
-  isTrackedInWorkflow
+  isOutlineActivity
 } = require('../../config/shared/activities');
+const { Activity } = require('../shared/database');
 const { fetchActivityContent } = require('../shared/publishing/helpers');
 const find = require('lodash/find');
 const get = require('lodash/get');
@@ -29,14 +28,7 @@ async function create({ user, repository, body }, res) {
   };
   const context = { userId: user.id, repository };
   const activity = await Activity.create(data, { context });
-
-  if (isTrackedInWorkflow(activity.type)) {
-    const status = await ActivityStatus.createDefault(
-      repository.schema,
-      activity.id
-    );
-    return res.json({ data: { ...activity.toJSON(), status } });
-  }
+  await activity.reload();
   return res.json({ data: activity });
 }
 

@@ -1,13 +1,9 @@
 'use strict';
 
-const {
-  getDefaultWorkflowStatus,
-  priorities
-} = require('../../config/shared/workflow');
 const { Activity: Events } = require('../../common/sse');
-const { getSchema } = require('../../config/shared/activities');
 const hooks = require('./status.hooks');
 const { Model } = require('sequelize');
+const { priorities } = require('../../config/shared/workflow');
 
 const priorityIds = priorities.map(it => it.id);
 
@@ -77,12 +73,6 @@ class ActivityStatus extends Model {
 
   static hooks(Hooks, models) {
     hooks.add(this, Hooks, models);
-  }
-
-  static createDefault(schema, activityId) {
-    const { workflowId } = getSchema(schema);
-    const { status, priority } = getDefaultWorkflowStatus(workflowId);
-    return this.create({ activityId, status, priority });
   }
 }
 
