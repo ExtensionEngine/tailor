@@ -1,5 +1,5 @@
 <template functional>
-  <v-chip :color="props.color" label dark class="status">
+  <v-chip :color="props.color" label dark class="column-status readonly">
     {{ props.label }}
   </v-chip>
 </template>
@@ -16,7 +16,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.status {
+.column-status {
   color: var(--text-color-default);
 }
 </style>
