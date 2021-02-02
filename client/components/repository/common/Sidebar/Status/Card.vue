@@ -18,7 +18,7 @@
               v-on="on"
               :color="statusConfig.color"
               label dark small
-              class="mr-3">
+              class="readonly mr-3">
               {{ statusConfig.label }}
             </v-chip>
           </template>
