@@ -1,5 +1,8 @@
 <template>
-  <div v-intersect="onIntersect" class="discussion-thread">
+  <div
+    v-intersect="onIntersect"
+    :class="{ 'scroll-container': !isActivityThread }"
+    class="discussion-thread">
     <thread-list
       @update="onUpdate"
       @remove="$emit('remove', $event)"
@@ -81,9 +84,11 @@ export default {
 
 <style lang="scss" scoped>
 .discussion-thread {
-  max-height: 31.25rem;
-  overflow-y: scroll;
-  overflow-x: hidden;
+  &.scroll-container {
+    max-height: 31.25rem;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
 
   .fade-enter-active, .fade-leave-active {
     transition: opacity 0.5s;
