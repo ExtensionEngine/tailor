@@ -1,8 +1,8 @@
 <template>
   <v-toolbar flat dense class="transparent">
-    <v-list color="transparent">
+    <v-list color="transparent" class="d-flex">
       <v-tooltip
-        v-for="({ title, icon, action }) in actions"
+        v-for="({ title, icon, action, active, disabled }) in actions"
         :key="title"
         color="blue-grey darken-3"
         bottom>
@@ -10,9 +10,11 @@
           <v-btn
             v-on="on"
             @click.stop="action"
-            color="grey lighten-3"
-            icon
-            class="mr-1">
+            :input-value="active"
+            :disabled="disabled"
+            active-class="pink darken-2"
+            icon dark
+            class="mr-2">
             <v-icon>mdi-{{ icon }}</v-icon>
           </v-btn>
         </template>
@@ -23,7 +25,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import activityApi from '@/api/activity';
 import publishMixin from 'components/common/mixins/publish';
 
@@ -31,6 +33,7 @@ export default {
   name: 'activity-actions',
   mixins: [publishMixin],
   computed: {
+    ...mapState('editor', ['showPublishDiff']),
     ...mapGetters(['isAdmin']),
     ...mapGetters('editor', ['activity']),
     ...mapGetters('repository', ['isRepositoryAdmin']),
@@ -49,6 +52,14 @@ export default {
         title: 'Preview',
         icon: 'eye',
         action: () => this.preview()
+      }, {
+        title: this.showPublishDiff
+          ? 'Stop comparing with published'
+          : 'Compare with published',
+        icon: 'plus-minus',
+        active: this.showPublishDiff,
+        disabled: !this.activity.publishedAt,
+        action: () => this.togglePublishDiff()
       }];
       if (!this.isAdmin && !this.isRepositoryAdmin) return items;
       return items.concat({
@@ -59,6 +70,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations('editor', ['togglePublishDiff']),
     ...mapActions('repository/activities', { publishActivity: 'publish' }),
     preview() {
       const { repositoryId, id } = this.activity;

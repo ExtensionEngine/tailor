@@ -7,8 +7,8 @@ const {
   updatePublishingStatus,
   updateRepositoryCatalog
 } = require('./helpers');
-const oauthClient = require('../webhookProvider');
 const PromiseQueue = require('promise-queue');
+const webhook = require('../webhookProvider');
 
 class PublishingService {
   constructor() {
@@ -17,7 +17,10 @@ class PublishingService {
 
   publishActivity(activity) {
     const publish = () => publishActivity(activity)
-      .then(data => oauthClient.send(data) && data);
+      .then(data => {
+        if (webhook.isConnected) webhook.send(data);
+        return data;
+      });
     return this.queue.add(publish);
   }
 

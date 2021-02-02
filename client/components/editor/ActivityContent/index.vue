@@ -6,16 +6,26 @@
     class="activity-content blue-grey lighten-5">
     <div class="content-containers-wrapper">
       <content-loader v-if="isLoading" class="loader" />
-      <template v-else>
+      <publish-diff-provider
+        v-else
+        v-slot="{ processedElements, processedActivities, processedContainerGroups }"
+        :show-diff="showPublishDiff"
+        :elements="elementsWithComments"
+        :activities="activities"
+        :container-groups="rootContainerGroups"
+        :activity-id="activity.id"
+        :repository-id="repository.id"
+        :publish-timestamp="activity.publishedAt">
         <content-containers
-          v-for="(containerGroup, type) in rootContainerGroups"
+          v-for="(containerGroup, type) in processedContainerGroups"
           :key="type"
           @focusoutElement="focusoutElement"
           v-bind="getContainerConfig(type)"
           :container-group="containerGroup"
           :processed-elements="processedElements"
+          :processed-activities="processedActivities"
           :parent-id="activityId" />
-      </template>
+      </publish-diff-provider>
     </div>
   </div>
 </template>
@@ -35,6 +45,7 @@ import isEqual from 'lodash/isEqual';
 import loader from '@/components/common/loader';
 import { mapChannels } from '@/plugins/radio';
 import max from 'lodash/max';
+import PublishDiffProvider from './PublishDiffProvider';
 import throttle from 'lodash/throttle';
 import transform from 'lodash/transform';
 
@@ -66,11 +77,14 @@ export default {
     ...mapGetters('repository', ['activities']),
     ...mapGetters('editor', ['collaboratorSelections']),
     ...mapGetters('repository/contentElements', ['elements']),
+    ...mapGetters('repository/activities', ['activities']),
     ...mapGetters('repository/comments', ['getComments']),
     ...mapState('repository/comments', ['seen']),
     ...mapState({ user: state => state.auth.user }),
+    ...mapState('editor', ['showPublishDiff']),
     activityId: vm => vm.activity.id,
-    processedElements() {
+    containerIds: vm => vm.contentContainers.map(it => it.id),
+    elementsWithComments() {
       const { elements, seen } = this;
       const { id: activityId, uid: activityUid } = this.activity;
       return transform(elements, (acc, it) => {
@@ -96,11 +110,10 @@ export default {
       if (get(e, 'component.name') !== 'content-element') this.focusoutElement();
     },
     loadContents: loader(function () {
-      const { contentContainers, activityId } = this;
-      const ids = contentContainers.map(it => it.id);
-      if (ids.length <= 0) return;
+      const { activityId, containerIds } = this;
+      if (containerIds.length <= 0) return;
       return Promise.all([
-        this.getContentElements({ ids }),
+        this.getContentElements({ ids: containerIds }),
         this.fetchComments({ activityId })
       ]);
     }, 'isLoading', 800),
@@ -178,6 +191,10 @@ export default {
       [[removeSelection, false], [isSelected, true]].forEach(([items, isSelected]) => {
         items.forEach(({ elementId, ...user }) => this.selectElement(elementId, user, isSelected));
       });
+    },
+    showPublishDiff(isOn) {
+      if (!isOn) return;
+      this.editorChannel.emit(CE_FOCUS_EVENT);
     }
   },
   async created() {
@@ -190,7 +207,8 @@ export default {
   },
   components: {
     ContentContainers,
-    ContentLoader
+    ContentLoader,
+    PublishDiffProvider
   }
 };
 </script>

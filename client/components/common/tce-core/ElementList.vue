@@ -6,6 +6,7 @@
       @update="reorder"
       :list="elements"
       v-bind="options"
+      :disabled="isDisabled"
       class="row">
       <div
         v-for="(element, index) in elements"
@@ -22,7 +23,7 @@
         </slot>
       </div>
     </draggable>
-    <template v-if="enableAdd">
+    <template v-if="enableAdd && !isDisabled">
       <slot
         :include="supportedTypes"
         :activity="activity"
@@ -61,6 +62,7 @@ export default {
     supportedTypes: { type: Array, default: null },
     activity: { type: Object, default: null },
     layout: { type: Boolean, default: false },
+    isDisabled: { type: Boolean, default: false },
     enableAdd: { type: Boolean, default: true },
     addElementOptions: { type: Object, default: () => ({}) }
   },

@@ -3,11 +3,17 @@ import request from './request';
 
 const urls = {
   root: repositoryId => `/repositories/${repositoryId}/revisions`,
+  timeTravel: repositoryId => `/repositories/${repositoryId}/revisions/time-travel`,
   resource: (repositoryId, id) => `${urls.root(repositoryId)}/${id}`
 };
 
 function fetch(repositoryId, params) {
   return request.get(urls.root(repositoryId), { params }).then(extractData);
+}
+
+function getStateAtMoment(repositoryId, params) {
+  return request.get(urls.timeTravel(repositoryId), { params })
+    .then(extractData);
 }
 
 function get(repositoryId, id, params) {
@@ -17,5 +23,6 @@ function get(repositoryId, id, params) {
 
 export default {
   fetch,
+  getStateAtMoment,
   get
 };
