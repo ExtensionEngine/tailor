@@ -14,7 +14,7 @@
         <template #activator="{ on }">
           <label-chip v-on="on">{{ shortId }}</label-chip>
         </template>
-        Activity ID
+        {{ activityConfig.label }} ID
       </v-tooltip>
       <v-btn
         v-clipboard:copy="shortId"
@@ -51,7 +51,7 @@
 
 <script>
 import ActivityCard from './ActivityCard';
-import find from 'lodash/find';
+import { getLevel } from 'shared/activities';
 import LabelChip from '@/components/repository/common/LabelChip';
 import { mapGetters } from 'vuex';
 
@@ -67,7 +67,7 @@ export default {
   },
   computed: {
     ...mapGetters('repository', ['structure']),
-    activityConfig: vm => find(vm.structure, { type: vm.type }),
+    activityConfig: vm => getLevel(vm.type),
     statusUrl: () => window.location.href
   },
   components: { ActivityCard, LabelChip }
