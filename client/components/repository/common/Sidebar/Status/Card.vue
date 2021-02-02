@@ -36,7 +36,7 @@
           <template #activator="{ on }">
             <label-chip v-on="on">{{ shortId }}</label-chip>
           </template>
-          Activity ID
+          {{ activityConfig.label }} ID
         </v-tooltip>
       </div>
     </v-sheet>
@@ -46,6 +46,7 @@
 <script>
 import AssigneeAvatar from '@/components/repository/common/AssigneeAvatar';
 import find from 'lodash/find';
+import { getLevel } from 'shared/activities';
 import LabelChip from '@/components/repository/common/LabelChip';
 import { mapGetters } from 'vuex';
 import { priorities } from 'shared/workflow';
@@ -56,10 +57,12 @@ export default {
     id: { type: Number, default: null },
     shortId: { type: String, required: true },
     name: { type: String, required: true },
+    type: { type: String, required: true },
     status: { type: Object, required: true }
   },
   computed: {
     ...mapGetters('repository', ['workflow']),
+    activityConfig: vm => getLevel(vm.type),
     statusConfig: vm => find(vm.workflow.statuses, { id: vm.status.status }),
     priorityConfig: vm => priorities.find(it => it.id === vm.status.priority),
     route: vm => ({ name: 'progress', query: vm.$route.query })
