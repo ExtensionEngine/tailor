@@ -35,10 +35,9 @@ export default {
   },
   methods: {
     truncateTime(dateTime) {
-      const year = dateTime.getFullYear();
-      const month = dateTime.getMonth() + 1;
-      const day = dateTime.getDate();
-      return new Date(`${year}-${month}-${day}`);
+      const format = 'YYYY-MM-DD';
+      const date = fecha.format(dateTime, format);
+      return fecha.parse(date, format);
     }
   }
 };
