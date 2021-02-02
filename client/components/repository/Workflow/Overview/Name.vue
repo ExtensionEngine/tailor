@@ -1,11 +1,11 @@
-<template functional>
+<template>
   <v-tooltip open-delay="800" bottom>
     <template #activator="{ on }">
       <div v-on="on" class="column-name text-truncate">
-        {{ props.value }}
+        {{ value }}
       </div>
     </template>
-    {{ props.value }}
+    {{ value }}
   </v-tooltip>
 </template>
 

@@ -1,9 +1,9 @@
-<template functional>
+<template>
   <div class="d-flex align-center">
     <v-icon class="priority-icon mr-2">
-      {{ `$vuetify.icons.${props.icon}` }}
+      {{ `$vuetify.icons.${icon}` }}
     </v-icon>
-    {{ props.label }}
+    {{ label }}
   </div>
 </template>
 
