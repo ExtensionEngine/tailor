@@ -119,7 +119,8 @@ properties:
 - **subLevels** `Array<String>` - An array of sub-types.
 - **label** `String` - Display label.
 - **color** `String` - Display color in hexadecimal notation.
-- **isTrackedInWorkflow** `Boolean` - Defines whether workflow tasks can be created for this activity type.
+- **isTrackedInWorkflow** `Boolean` - Defines whether the workflow status will
+  be tracked for this activity type.
 - **contentContainers** `Array<String>` - Array of content container types that
   define which content containers can be added.
 - **hasExams** `Boolean` - Activity allows adding exam activities to it.
@@ -254,7 +255,7 @@ Example:
 
 ## Workflows
 
-For each schema, workflow can be defined to enable users to track and assign tasks related to activities. Each workflow is defined by a set of statuses that the task can have.
+For each schema, workflow can be defined to enable users to track and assign activities which are flagged for tracking. Each workflow is defined by a set of statuses that the activity can have.
 Workflows are assigned to schemas through schema's `workflowId` option in [tailor configuration file](#content-repository-structure).
 
 Workflows are configured with the following options in the [tailor configuration file](#content-repository-structure):
@@ -265,14 +266,19 @@ An array of Workflow objects.
 
 #### Workflow
 
-Defines activity task statuses for repository workflow. Workflow can be reused across multiple [schemas](#schema) by assigning same workflow ID to schema's `workflowId` option.
+Defines activity statuses for repository workflow. Workflow can be reused across multiple [schemas](#schema) by assigning same workflow ID to schema's `workflowId` option.
 
 - **id** `String` - Workflow identifier.
-- **statuses** `Array<TaskStatus>` - An array of possible task statuses.
+- **statuses** `Array<ActivityStatus>` - An array of possible activity statuses.
+- **dueDateWarningThreshold** `Object` - Defines threshold (in days, weeks or
+  months) relative to
+  activity's due date, after which the warning of upcoming due date is
+  displayed.
 
-#### TaskStatus
-- **id** `String` - Task status identifier.
+#### ActivityStatus
+- **id** `String` - Activity status identifier.
 - **label** `String` - Display label.
+- **color** `String` - Display color.
 
 ## EXTENSIONS
 
