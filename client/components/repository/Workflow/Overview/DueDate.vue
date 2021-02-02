@@ -6,9 +6,14 @@
 </template>
 
 <script>
+import compareAsc from 'date-fns/compareAsc';
+import fecha from 'fecha';
 import isAfter from 'date-fns/isAfter';
 import { mapGetters } from 'vuex';
 import sub from 'date-fns/sub';
+
+const isAfterOrEqual = (firstDate, secondDate) =>
+  compareAsc(firstDate, secondDate) !== -1;
 
 export default {
   name: 'overview-due-date',
@@ -25,7 +30,7 @@ export default {
       const { dueDateWarningThreshold } = this.workflow;
       if (!dueDateWarningThreshold) return false;
       const warningStartDate = sub(this.dueDate, dueDateWarningThreshold);
-      return isAfter(this.currentDate, warningStartDate);
+      return isAfterOrEqual(this.currentDate, warningStartDate);
     },
     warning() {
       if (isAfter(this.currentDate, this.dueDate)) return 'elapsed';
