@@ -1,5 +1,5 @@
 <template functional>
-  <v-chip :color="props.color" label class="status">
+  <v-chip :color="props.color" label dark class="status">
     {{ props.label }}
   </v-chip>
 </template>
