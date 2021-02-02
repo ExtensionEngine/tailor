@@ -33,7 +33,7 @@ export default {
   props: {
     emptyMessage: {
       type: String,
-      default: 'Please select Activity on the left to view and edit its status here.'
+      default: 'Please select item on the left to view and edit its status here.'
     }
   },
   computed: {
