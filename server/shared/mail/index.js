@@ -108,7 +108,7 @@ function sendAssigneeNotification(assignee, activity) {
   return send({
     from,
     to: recipients,
-    subject: `You've been assigned to the activity "${activity.data.name}".`,
+    subject: `You've been assigned to the ${activity.label} "${activity.data.name}".`,
     text,
     attachment: [{ data: html, alternative: true }]
   });

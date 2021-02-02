@@ -13,37 +13,17 @@
           padding-left="0"
           color="#444"
           font-size="16px">
-          You've been assigned to an activity.
+          You've been assigned to the {{label}} "{{data.name}}".
         </mj-text>
-      </mj-column>
-    </mj-section>
-    <mj-section padding="0 10px">
-      <mj-column
-        background-color="#f1f1f1"
-        border-radius="8px">
-        <mj-text
-          mj-class="content"
-          padding="20px"
-          color="#444"
-          font-size="16px">
-          <b>{{data.name}}</b>
-          <br>
-          <br>
-          {{{status.description}}}
-        </mj-text>
-      </mj-column>
-    </mj-section>
-    <mj-section padding="20px 10px 0">
-      <mj-column>
         <mj-text
           mj-class="content"
           padding-left="0"
           color="#444"
           font-size="16px">
-          View the activity status by clicking the button below:
+          View the {{label}} status by clicking the button below:
         </mj-text>
         <mj-button mj-class="ctaButton" href="{{href}}">
-          View {{data.name}}
+          View {{data.name}} status
         </mj-button>
       </mj-column>
     </mj-section>

@@ -1,6 +1,7 @@
 'use strict';
 
 const forEach = require('lodash/forEach');
+const { getLevel } = require('../../config/shared/activities');
 const mail = require('../shared/mail');
 const { Op } = require('sequelize');
 const sse = require('../shared/sse');
@@ -23,7 +24,8 @@ exports.add = (ActivityStatus, Hooks, { Activity }) => {
   }
 
   async function notifyAssignee(_, activity) {
-    const { status } = activity;
+    const [status] = activity.status;
+    if (!status.assigneeId) return;
     const previousStatus = await ActivityStatus.findOne({
       where: {
         [Op.not]: { id: status.id },
@@ -43,6 +45,10 @@ exports.add = (ActivityStatus, Hooks, { Activity }) => {
 };
 
 async function sendEmailNotification(activity) {
-  if (!activity.assignee) return;
-  mail.sendAssigneeNotification(activity.assignee.email, activity);
+  const { label } = getLevel(activity.type);
+  const [status] = activity.status;
+  mail.sendAssigneeNotification(status.assignee.email, {
+    ...activity.toJSON(),
+    label: label.toLowerCase()
+  });
 }
