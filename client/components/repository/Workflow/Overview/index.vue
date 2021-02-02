@@ -13,11 +13,7 @@
       <overview-status v-bind="value" />
     </template>
     <template #item.assignee="{ value }">
-      <div class="d-flex align-center">
-        <assignee-avatar v-bind="value" small class="mr-2" />
-        <span v-if="value && value.label">{{ value.label }}</span>
-        <span v-else>Unassigned</span>
-      </div>
+      <overview-assignee v-bind="value" />
     </template>
     <template #item.priority="{ value }">
       <overview-priority v-bind="value" />
@@ -29,8 +25,8 @@
 </template>
 
 <script>
-import AssigneeAvatar from '@/components/repository/common/AssigneeAvatar';
 import { mapGetters } from 'vuex';
+import OverviewAssignee from './Assignee';
 import OverviewDueDate from './DueDate';
 import OverviewName from './Name';
 import OverviewPriority from './Priority';
@@ -103,7 +99,7 @@ export default {
     }
   },
   components: {
-    AssigneeAvatar,
+    OverviewAssignee,
     OverviewDueDate,
     OverviewName,
     OverviewPriority,
@@ -114,8 +110,12 @@ export default {
 
 <style lang="scss" scoped>
 .overview ::v-deep {
-  tr > td:first-of-type {
-    max-width: 22rem;
+  .column-name {
+    max-width: 17.75rem;
+  }
+
+  .column-assignee {
+    max-width: 11.5rem;
   }
 
   tr:hover:not(.selected) {

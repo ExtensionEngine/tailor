@@ -1,7 +1,7 @@
 <template functional>
   <v-tooltip open-delay="800" bottom>
     <template #activator="{ on }">
-      <div v-on="on" class="text-truncate">
+      <div v-on="on" class="column-name text-truncate">
         {{ props.value }}
       </div>
     </template>
