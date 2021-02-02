@@ -12,9 +12,11 @@
       <overview-status v-bind="value" />
     </template>
     <template #item.assignee="{ value }">
-      <assignee-avatar v-bind="value" small class="mr-1" />
-      <span v-if="value && value.label">{{ value.label }}</span>
-      <span v-else>Unassigned</span>
+      <div class="d-flex align-center">
+        <assignee-avatar v-bind="value" small class="mr-2" />
+        <span v-if="value && value.label">{{ value.label }}</span>
+        <span v-else>Unassigned</span>
+      </div>
     </template>
     <template #item.priority="{ value }">
       <overview-priority v-bind="value" />

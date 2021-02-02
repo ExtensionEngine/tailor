@@ -1,7 +1,7 @@
 <template>
   <div class="due-date d-flex align-center" :class="warning">
     <v-icon size="16" class="icon mr-1">mdi-clock-outline</v-icon>
-    {{ value | formatDate('mediumDate') }}
+    <span class="text-no-wrap">{{ value | formatDate('mediumDate') }}</span>
   </div>
 </template>
 

@@ -1,6 +1,6 @@
 <template functional>
-  <div>
-    <v-icon class="priority-icon mr-1">
+  <div class="d-flex align-center">
+    <v-icon class="priority-icon mr-2">
       {{ `$vuetify.icons.${props.icon}` }}
     </v-icon>
     {{ props.label }}
