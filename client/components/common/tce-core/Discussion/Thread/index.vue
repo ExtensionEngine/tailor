@@ -81,6 +81,9 @@ export default {
 
 <style lang="scss" scoped>
 .discussion-thread {
+  max-height: 31.25rem;
+  overflow: scroll;
+
   .fade-enter-active, .fade-leave-active {
     transition: opacity 0.5s;
   }

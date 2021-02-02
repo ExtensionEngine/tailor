@@ -76,7 +76,7 @@ export default {
       return transform(elements, (acc, it) => {
         const comments = this.getComments({ activityId, contentElementId: it.id });
         const lastSeen = max([seen.contentElement[it.uid], seen.activity[activityUid]]);
-        const hasUnresolvedComments = !comments.length;
+        const hasUnresolvedComments = !!comments.length;
         acc[it.uid] = { ...it, comments, hasUnresolvedComments, lastSeen: lastSeen || 0 };
       }, {});
     },

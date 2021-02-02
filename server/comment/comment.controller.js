@@ -8,7 +8,7 @@ const pick = require('lodash/pick');
 const author = {
   model: User,
   as: 'author',
-  attributes: ['id', 'email', 'label', 'imgUrl']
+  attributes: ['id', 'email', 'firstName', 'lastName', 'fullName', 'label', 'imgUrl']
 };
 
 const element = {

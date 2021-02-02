@@ -87,7 +87,7 @@ export default {
     isTextEditorEmpty: vm => !vm.comment.content?.trim(),
     discussion: vm => vm.$refs.discussion,
     editor: vm => vm.$refs.editor,
-    showResolveButton: vm => !vm.hasUnresolvedComments && !vm.isActivityThread
+    showResolveButton: vm => vm.hasUnresolvedComments && !vm.isActivityThread
   },
   methods: {
     ...mapRequests('app', ['showConfirmationModal']),
