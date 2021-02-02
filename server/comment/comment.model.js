@@ -3,6 +3,7 @@
 const { Comment: Events } = require('../../common/sse');
 const hooks = require('./hooks');
 const { Model } = require('sequelize');
+const sse = require('../shared/sse');
 
 class Comment extends Model {
   static fields(DataTypes) {
@@ -79,6 +80,13 @@ class Comment extends Model {
 
   static get Events() {
     return Events;
+  }
+
+  static emitResolvement(comments) {
+    const { Events } = this;
+    comments.forEach(comment => {
+      sse.channel(comment.repositoryId).send(Events.Update, comment);
+    });
   }
 }
 

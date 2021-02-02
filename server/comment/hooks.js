@@ -82,6 +82,8 @@ exports.add = (Comment, Hooks, db) => {
   function unresolveComments({ contentElementId }) {
     if (!contentElementId) return;
     const where = { contentElementId };
-    return Comment.update({ resolvedAt: null }, { where, paranoid: false });
+    const options = { where, paranoid: false, returning: true };
+    return Comment.update({ resolvedAt: null }, options)
+      .then(([_, comments]) => Comment.emitResolvement(comments));
   }
 };
