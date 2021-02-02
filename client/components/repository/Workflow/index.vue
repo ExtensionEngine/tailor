@@ -106,7 +106,7 @@ $sidebar-width: 27.1875rem;
 
 .workflow {
   position: relative;
-  height: 100%;
+  max-height: 100%;
 
   .v-progress-circular {
     margin-top: 7.5rem;
