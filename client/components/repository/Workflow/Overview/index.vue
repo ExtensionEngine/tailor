@@ -25,13 +25,13 @@
 </template>
 
 <script>
+import { getPriority, getStatus, priorities } from 'shared/workflow';
 import { mapGetters } from 'vuex';
 import OverviewAssignee from './Assignee';
 import OverviewDueDate from './DueDate';
 import OverviewName from './Name';
 import OverviewPriority from './Priority';
 import OverviewStatus from './Status';
-import { priorities } from 'shared/workflow';
 import selectActivity from '@/components/repository/common/selectActivity';
 
 export default {
@@ -69,7 +69,7 @@ export default {
         id,
         name: data.name,
         status: this.getStatusById(status.status),
-        priority: this.getPriorityById(status.priority),
+        priority: getPriority(status.priority),
         class: this.isActivitySelected(id) && 'selected'
       }));
     }
@@ -79,10 +79,7 @@ export default {
       return this.selectedActivity && this.selectedActivity.id === id;
     },
     getStatusById(id) {
-      return this.workflow.statuses.find(it => it.id === id);
-    },
-    getPriorityById(id) {
-      return priorities.find(it => it.id === id);
+      return getStatus(id, this.workflow.id);
     },
     compareStatuses(first, second) {
       const statusIds = this.workflow.statuses.map(it => it.id);

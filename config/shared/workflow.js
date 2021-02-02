@@ -16,6 +16,15 @@ function getWorkflow(id) {
   return find(WORKFLOWS, { id });
 }
 
+function getStatus(id, workflowId) {
+  const workflow = getWorkflow(workflowId);
+  return find(workflow.statuses, { id });
+}
+
+function getPriority(id) {
+  return find(priorities, { id });
+}
+
 function getDefaultWorkflowStatus(id) {
   const { statuses } = getWorkflow(id);
   const { id: status } = statuses.find(it => it.default);
@@ -25,4 +34,10 @@ function getDefaultWorkflowStatus(id) {
 
 validateWorkflow(WORKFLOWS);
 
-module.exports = { priorities, getWorkflow, getDefaultWorkflowStatus };
+module.exports = {
+  priorities,
+  getWorkflow,
+  getStatus,
+  getPriority,
+  getDefaultWorkflowStatus
+};
