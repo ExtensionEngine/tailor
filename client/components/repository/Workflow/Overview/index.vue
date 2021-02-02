@@ -3,6 +3,7 @@
     @click:row="selectActivity($event.id)"
     :headers="headers"
     :items="items"
+    item-class="class"
     disable-pagination hide-default-footer
     class="overview">
     <template #item.name="item">
