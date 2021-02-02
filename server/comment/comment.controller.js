@@ -46,7 +46,7 @@ function resolve({ body: { contentElementId } }, res) {
   if (!contentElementId) return createError(BAD_REQUEST, 'contentElementId required!');
   const options = { where: { contentElementId }, paranoid: false, returning: true };
   return Comment.update({ resolvedAt: new Date() }, options)
-    .then(([_, comments]) => Comment.emitResolvement(comments))
+    .then(([_, comments]) => Comment.emitUpdatedComments(comments))
     .then(() => res.sendStatus(NO_CONTENT));
 }
 

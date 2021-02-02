@@ -82,7 +82,7 @@ class Comment extends Model {
     return Events;
   }
 
-  static emitResolvement(comments) {
+  static emitUpdatedComments(comments) {
     const { Events } = this;
     comments.forEach(comment => {
       sse.channel(comment.repositoryId).send(Events.Update, comment);

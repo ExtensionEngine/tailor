@@ -48,6 +48,11 @@ function add(ContentElement, Hooks, Models) {
   async function sseDelete(_, element) {
     await element.reload({ paranoid: false });
     sse.channel(element.repositoryId).send(Events.Delete, element);
+    const { Comment, ContentElement } = Models;
+    const where = { contentElementId: element.id };
+    const include = { model: ContentElement, as: 'contentElement' };
+    const comments = await Comment.findAll({ where, include, paranoid: false });
+    return Comment.emitUpdatedComments(comments);
   }
 
   function customElementHook(hookType, element) {

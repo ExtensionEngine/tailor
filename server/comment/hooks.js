@@ -84,6 +84,6 @@ exports.add = (Comment, Hooks, db) => {
     const where = { contentElementId };
     const options = { where, paranoid: false, returning: true };
     return Comment.update({ resolvedAt: null }, options)
-      .then(([_, comments]) => Comment.emitResolvement(comments));
+      .then(([_, comments]) => Comment.emitUpdatedComments(comments));
   }
 };
