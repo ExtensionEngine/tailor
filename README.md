@@ -270,10 +270,7 @@ Defines activity statuses for repository workflow. Workflow can be reused across
 
 - **id** `String` - Workflow identifier.
 - **statuses** `Array<ActivityStatus>` - An array of possible activity statuses.
-- **dueDateWarningThreshold** `Object` - Defines threshold (in days, weeks or
-  months) relative to
-  activity's due date, after which the warning of upcoming due date is
-  displayed.
+- **dueDateWarningThreshold** `Object` - Defines threshold (in days, weeks or months) relative to activity's due date, after which the warning of upcoming due date is displayed.
 
 #### ActivityStatus
 - **id** `String` - Activity status identifier.
