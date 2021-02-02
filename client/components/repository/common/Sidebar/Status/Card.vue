@@ -12,6 +12,18 @@
           </template>
           {{ priorityConfig.label }} priority
         </v-tooltip>
+        <v-tooltip open-delay="500" bottom>
+          <template #activator="{ on }">
+            <v-chip
+              v-on="on"
+              :color="statusConfig.color"
+              label dark small
+              class="mr-3">
+              {{ statusConfig.label }}
+            </v-chip>
+          </template>
+          Status
+        </v-tooltip>
         <v-tooltip v-if="status.dueDate" open-delay="500" bottom>
           <template #activator="{ on }">
             <label-chip v-on="on" class="mr-3">
@@ -19,14 +31,6 @@
             </label-chip>
           </template>
           Due date
-        </v-tooltip>
-        <v-tooltip open-delay="500" bottom>
-          <template #activator="{ on }">
-            <label-chip v-on="on" class="mr-3">
-              {{ statusConfig.label }}
-            </label-chip>
-          </template>
-          Status
         </v-tooltip>
         <v-tooltip open-delay="500" bottom>
           <template #activator="{ on }">
