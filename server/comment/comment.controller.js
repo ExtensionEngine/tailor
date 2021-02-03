@@ -50,8 +50,8 @@ function updateResolvement({ body }, res) {
   }
   const where = pickBy({ id, contentElementId }, val => !!val);
   const options = { where, paranoid: false, returning: true };
-  const payload = { resolvedAt: resolvedAt ? null : new Date() };
-  return Comment.update(payload, options)
+  const data = { resolvedAt: resolvedAt ? null : new Date() };
+  return Comment.update(data, options)
     .then(([_, comments]) => Comment.emitUpdatedComments(comments))
     .then(() => res.sendStatus(NO_CONTENT));
 }
