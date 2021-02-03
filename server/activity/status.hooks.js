@@ -38,11 +38,9 @@ exports.add = (ActivityStatus, Hooks, { Activity }) => {
   }
 
   function withActivity(...hooks) {
-    return afterTransaction((type, status, opts) => {
-      Activity
-        .findOne({ where: { id: status.activityId } })
-        .then(activity => hooks.forEach(hook => hook(type, activity)));
-    });
+    const invokeHooks = (type, status, opts) => status.getActivity()
+      .then(activity => hooks.forEach(hook => hook(type, activity, opts)));
+    return afterTransaction(invokeHooks);
   }
 };
 

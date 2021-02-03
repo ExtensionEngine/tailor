@@ -19,7 +19,7 @@ function list({ repository, query, opts }, res) {
     .then(data => res.json({ data }));
 }
 
-async function create({ user, repository, body }, res) {
+function create({ user, repository, body }, res) {
   const outlineConfig = find(getOutlineLevels(repository.schema), { type: body.type });
   const data = {
     ...pick(body, ['uid', 'type', 'parentId', 'position']),
@@ -27,8 +27,8 @@ async function create({ user, repository, body }, res) {
     repositoryId: repository.id
   };
   const context = { userId: user.id, repository };
-  const activity = await Activity.create(data, { context });
-  return res.json({ data: activity });
+  return Activity.create(data, { context })
+    .then(data => res.json({ data }));
 }
 
 function show({ activity }, res) {
