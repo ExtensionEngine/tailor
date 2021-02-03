@@ -29,6 +29,7 @@ async function create({ user, repository, body }, res) {
   const context = { userId: user.id, repository };
   const activity = await sequelize.transaction(transaction =>
     Activity.create(data, { context, transaction }));
+  // Ensure activity status is attached
   await activity.reload();
   return res.json({ data: activity });
 }
