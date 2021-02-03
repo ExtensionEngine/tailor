@@ -10,7 +10,8 @@ exports.add = (ActivityStatus, Hooks, { Activity }) => {
   const { Events } = ActivityStatus;
 
   const mappings = {
-    [Hooks.afterCreate]: [withActivity(sseUpdate, notifyAssignee)]
+    [Hooks.afterCreate]: [withActivity(sseUpdate, notifyAssignee)],
+    [Hooks.afterBulkCreate]: [withActivity(sseUpdate, notifyAssignee)]
   };
 
   forEach(mappings, (hooks, type) => {
@@ -38,9 +39,11 @@ exports.add = (ActivityStatus, Hooks, { Activity }) => {
   }
 
   function withActivity(...hooks) {
-    return (type, status) => Activity
-      .findOne({ where: { id: status.activityId } })
-      .then(activity => hooks.forEach(hook => hook(type, activity)));
+    return afterTransaction((type, status, opts) => {
+      Activity
+        .findOne({ where: { id: status.activityId } })
+        .then(activity => hooks.forEach(hook => hook(type, activity)));
+    });
   }
 };
 
@@ -52,3 +55,8 @@ async function sendEmailNotification(activity) {
     label: label.toLowerCase()
   });
 }
+
+const afterTransaction = method => (type, status, opts) => {
+  if (!opts.transaction) return method(type, status, opts);
+  opts.transaction.afterCommit(() => method(type, status, opts));
+};

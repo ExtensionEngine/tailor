@@ -1,10 +1,10 @@
 'use strict';
 
+const { Activity, sequelize } = require('../shared/database');
 const {
   getOutlineLevels,
   isOutlineActivity
 } = require('../../config/shared/activities');
-const { Activity } = require('../shared/database');
 const { fetchActivityContent } = require('../shared/publishing/helpers');
 const find = require('lodash/find');
 const get = require('lodash/get');
@@ -27,7 +27,8 @@ async function create({ user, repository, body }, res) {
     repositoryId: repository.id
   };
   const context = { userId: user.id, repository };
-  const activity = await Activity.create(data, { context });
+  const activity = await sequelize.transaction(transaction =>
+    Activity.create(data, { context, transaction }));
   await activity.reload();
   return res.json({ data: activity });
 }

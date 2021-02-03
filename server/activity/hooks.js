@@ -21,9 +21,9 @@ function add(Activity, Hooks, Models) {
     forEach(hooks, hook => Activity.addHook(type, Hooks.withType(type, hook)));
   });
 
-  function createStatus(_, activity) {
+  function createStatus(_, activity, { transaction }) {
     const defaultStatus = getDefaultActivityStatus(activity.type);
-    return activity.createStatus(defaultStatus);
+    return activity.createStatus(defaultStatus, { transaction });
   }
 
   function createStatusForEachActivity(_, activities, { transaction }) {
