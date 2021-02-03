@@ -6,6 +6,7 @@
     <thread-list
       @update="onUpdate"
       @remove="$emit('remove', $event)"
+      @resolve="$emit('resolve', $event)"
       v-bind="{ isActivityThread, user, comments: visibleComments.seen }" />
     <transition name="fade">
       <unseen-divider
@@ -17,6 +18,7 @@
     <thread-list
       @update="onUpdate"
       @remove="$emit('remove', $event)"
+      @resolve="$emit('resolve', $event)"
       v-bind="{ isActivityThread, user, comments: visibleComments.unseen }" />
   </div>
 </template>

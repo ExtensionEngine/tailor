@@ -16,7 +16,6 @@ exports.add = (Comment, Hooks, db) => {
   };
 
   Comment.addHook(Hooks.afterCreate, async comment => {
-    await unresolveComments(comment);
     const includeAuthor = {
       model: User,
       as: 'author',
@@ -77,13 +76,5 @@ exports.add = (Comment, Hooks, db) => {
     const collaborators = map(repository.repositoryUsers, 'user.email');
     const recipients = without(collaborators, author.email);
     if (recipients.length) mail.sendCommentNotification(recipients, data);
-  }
-
-  function unresolveComments({ contentElementId }) {
-    if (!contentElementId) return;
-    const where = { contentElementId };
-    const options = { where, paranoid: false, returning: true };
-    return Comment.update({ resolvedAt: null }, options)
-      .then(([_, comments]) => Comment.emitUpdatedComments(comments));
   }
 };

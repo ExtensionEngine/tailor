@@ -10,10 +10,10 @@
           <v-icon size="24" color="teal accent-4" class="mr-2">
             mdi-check-circle-outline
           </v-icon>
-          Resolve Discussion
+          Resolve All
         </v-btn>
       </template>
-      <span>Mark as resolved and hide discussion</span>
+      <span>Mark all as resolved and hide discussion</span>
     </v-tooltip>
   </div>
 </template>

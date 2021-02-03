@@ -65,6 +65,10 @@ export default {
       opacity: 0.7;
     }
   }
+
+  .v-textarea .v-input__slot {
+    width: auto;
+  }
 }
 
 .comment-editor.preview {

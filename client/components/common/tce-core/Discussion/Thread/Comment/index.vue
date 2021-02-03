@@ -3,6 +3,7 @@
     <comment-header
       @toggleEdit="toggleEdit"
       @remove="remove"
+      @resolve="$emit('resolve', comment.id)"
       v-bind="{ comment, isActivityThread, elementLabel, user }" />
     <div class="comment-body">
       <text-editor

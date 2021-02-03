@@ -107,9 +107,9 @@ export default {
       const options = { elementUid, lastCommentAt, timeout };
       this.editorBus.emit(events.SET_LAST_SEEN, options);
     },
-    resolve() {
-      const { id: elementId, events } = this;
-      this.editorBus.emit(events.RESOLVE, elementId);
+    resolve(id) {
+      const { id: contentElementId, events } = this;
+      this.editorBus.emit(events.RESOLVE, { id, contentElementId });
     }
   },
   components: { Discussion }

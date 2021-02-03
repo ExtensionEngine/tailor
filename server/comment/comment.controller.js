@@ -42,9 +42,11 @@ function remove({ comment }, res) {
     .then(data => res.json({ data }));
 }
 
-function resolve({ body: { contentElementId } }, res) {
+function resolve({ body }, res) {
+  const { id = null, contentElementId } = body;
   if (!contentElementId) return createError(BAD_REQUEST, 'contentElementId required!');
-  const options = { where: { contentElementId }, paranoid: false, returning: true };
+  const where = id ? { id, contentElementId } : { contentElementId };
+  const options = { where, paranoid: false, returning: true };
   return Comment.update({ resolvedAt: new Date() }, options)
     .then(([_, comments]) => Comment.emitUpdatedComments(comments))
     .then(() => res.sendStatus(NO_CONTENT));

@@ -24,8 +24,9 @@
     <discussion-thread
       v-if="thread.length"
       @update="$emit('update', $event)"
-      @remove="remove"
+      @resolve="$emit('resolve', $event)"
       @seen="$emit('seen')"
+      @remove="remove"
       @showAll="showAll = $event"
       :items="thread"
       :show-all="showAll"

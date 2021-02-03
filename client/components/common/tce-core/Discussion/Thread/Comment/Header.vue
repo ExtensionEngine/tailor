@@ -66,9 +66,11 @@ export default {
     isResolved: vm => !!vm.comment.resolvedAt,
     showEditedLabel: vm => !!vm.comment.editedAt,
     showOptions: vm => vm.isAuthor && !vm.isDeleted && !vm.isResolved,
-    options: vm => [
+    options: () => [
+      { name: 'Resolve', action: 'resolve', icon: 'mdi-check' },
       { name: 'Edit', action: 'toggleEdit', icon: 'mdi-pencil-outline' },
-      { name: 'Remove', action: 'remove', icon: 'mdi-trash-can-outline' }]
+      { name: 'Remove', action: 'remove', icon: 'mdi-trash-can-outline' }
+    ]
   },
   components: { EditorLink }
 };
@@ -87,7 +89,7 @@ export default {
     display: flex;
     flex-direction: column;
     flex: 0 100%;
-    max-width: calc(100% - 6rem);
+    max-width: calc(100% - 8rem);
     margin-left: 0.125rem;
 
     .author {

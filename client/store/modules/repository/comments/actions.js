@@ -16,9 +16,9 @@ const fetch = ({ commit }, payload) => {
     .then(items => commit('fetch', items));
 };
 
-const resolve = ({ dispatch }, contentElementId) => {
-  return api.post('/resolve', { contentElementId })
-    .then(() => dispatch('fetch', { contentElementId }));
+const resolve = ({ dispatch }, params) => {
+  return api.post('/resolve', params)
+    .then(() => dispatch('fetch', params));
 };
 
 const remove = ({ commit }, comment) => {
