@@ -43,15 +43,16 @@ function remove({ comment }, res) {
     .then(data => res.json({ data }));
 }
 
-async function updateResolvement({ body }, res) {
+function updateResolvement({ repository, body }, res) {
   const { id, resolvedAt, contentElementId } = body;
   if (!contentElementId && !id) {
     return createError(BAD_REQUEST, 'id or contentElementId required!');
   }
-  const where = pickBy({ id, contentElementId }, val => !!val);
+  const { id: repositoryId } = repository;
+  const where = pickBy({ id, repositoryId, contentElementId }, val => !!val);
   const data = { resolvedAt: resolvedAt ? null : new Date() };
-  await Comment.update(data, { where, paranoid: false });
-  res.sendStatus(NO_CONTENT);
+  return Comment.update(data, { where, paranoid: false })
+    .then(() => res.sendStatus(NO_CONTENT));
 }
 
 module.exports = {
