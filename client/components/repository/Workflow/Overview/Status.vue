@@ -1,8 +1,5 @@
 <template>
-  <v-chip
-    :color="color"
-    label dark
-    class="column-status readonly">
+  <v-chip :color="color" label dark class="readonly">
     {{ label }}
   </v-chip>
 </template>
@@ -17,9 +14,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.column-status {
-  color: var(--text-color-default);
-}
-</style>
