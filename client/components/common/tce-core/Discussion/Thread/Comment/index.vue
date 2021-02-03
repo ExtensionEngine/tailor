@@ -12,7 +12,7 @@
         v-bind="{ content, isResolved }" />
       <template v-else>
         <v-textarea
-          v-model.trim="comment.content"
+          v-model.trim="content"
           rows="3"
           autofocus
           outlined

@@ -41,7 +41,7 @@
         @click="$emit(action)"
         x-small icon
         class="ml-1">
-        <v-icon size="14" :color="color"> mdi-{{ icon }}</v-icon>
+        <v-icon :color="color" size="14"> mdi-{{ icon }}</v-icon>
       </v-btn>
     </div>
   </div>

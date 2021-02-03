@@ -32,8 +32,8 @@ function create({ user, repository: { id: repositoryId }, body }, res) {
 }
 
 function patch({ comment, body }, res) {
-  const { content, editedAt } = body;
-  return comment.update({ content, editedAt })
+  const { content } = body;
+  return comment.update({ content, editedAt: new Date() })
     .then(comment => comment.reload({ include: [author] }))
     .then(data => res.json({ data }));
 }
