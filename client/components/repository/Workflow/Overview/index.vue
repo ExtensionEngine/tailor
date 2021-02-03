@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { getPriority, getStatus, priorities } from 'shared/workflow';
+import { getPriority, priorities } from 'shared/workflow';
 import { mapGetters } from 'vuex';
 import OverviewAssignee from './Assignee';
 import OverviewDueDate from './DueDate';
@@ -79,7 +79,7 @@ export default {
       return this.selectedActivity && this.selectedActivity.id === id;
     },
     getStatusById(id) {
-      return getStatus(id, this.workflow.id);
+      return this.workflow.statuses.find(it => it.id === id);
     },
     compareStatuses(first, second) {
       const statusIds = this.workflow.statuses.map(it => it.id);
