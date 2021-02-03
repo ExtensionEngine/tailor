@@ -1,6 +1,9 @@
-<template functional>
-  <v-chip :color="props.color" label dark class="column-status readonly">
-    {{ props.label }}
+<template>
+  <v-chip
+    :color="color"
+    label dark
+    class="column-status readonly">
+    {{ label }}
   </v-chip>
 </template>
 
