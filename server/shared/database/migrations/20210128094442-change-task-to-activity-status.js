@@ -39,11 +39,7 @@ exports.up = async qi => {
 
   return qi.sequelize.transaction(async transaction => {
     await Promise.all(Object.keys(COLUMNS).map(removeColumn));
-    return qi.renameTable(
-      OLD_TABLE_NAME,
-      NEW_TABLE_NAME,
-      { transaction }
-    );
+    return qi.renameTable(OLD_TABLE_NAME, NEW_TABLE_NAME, { transaction });
 
     function removeColumn(name) {
       return qi.removeColumn(OLD_TABLE_NAME, name, { transaction });
@@ -54,19 +50,10 @@ exports.up = async qi => {
 exports.down = async qi => {
   await qi.sequelize.transaction(async transaction => {
     await Promise.all(Object.entries(COLUMNS).map(addColumn));
-    await qi.renameTable(
-      NEW_TABLE_NAME,
-      OLD_TABLE_NAME,
-      { transaction }
-    );
+    await qi.renameTable(NEW_TABLE_NAME, OLD_TABLE_NAME, { transaction });
 
     function addColumn([name, options]) {
-      return qi.addColumn(
-        NEW_TABLE_NAME,
-        name,
-        options,
-        { transaction }
-      );
+      return qi.addColumn(NEW_TABLE_NAME, name, options, { transaction });
     }
   });
 
