@@ -4,7 +4,7 @@
       @toggleEdit="toggleEdit"
       @remove="remove"
       @resolve="$emit('resolve', comment)"
-      v-bind="{ comment, isActivityThread, elementLabel, user }" />
+      v-bind="{ comment, isActivityThread, isResolved, elementLabel, user }" />
     <div class="comment-body">
       <comment-preview
         v-if="!isEditing"

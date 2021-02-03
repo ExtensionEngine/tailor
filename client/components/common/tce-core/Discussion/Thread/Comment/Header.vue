@@ -61,6 +61,7 @@ export default {
   props: {
     comment: { type: Object, required: true },
     isActivityThread: { type: Boolean, default: false },
+    isResolved: { type: Boolean, default: false },
     elementLabel: { type: String, default: null },
     user: { type: Object, required: true }
   },
@@ -69,7 +70,6 @@ export default {
     author: vm => vm.comment.author,
     isAuthor: vm => vm.author.id === vm.user.id,
     isDeleted: vm => !!vm.comment.deletedAt,
-    isResolved: vm => !!vm.comment.resolvedAt,
     showEditedLabel: vm => !!vm.comment.editedAt,
     showOptions: vm => vm.isAuthor && !vm.isDeleted && !vm.isResolved,
     options() {
