@@ -1,6 +1,6 @@
 <template functional>
   <div :class="{ resolved: props.isResolved }" class="content">
-    <div v-if="props.isResolved" class="options">
+    <div v-if="props.isResolved" class="resolvement-options">
       <span class="font-italic mr-1">Marked as resolved.</span>
       <v-btn
         @click="listeners.unresolve"
@@ -46,7 +46,7 @@ export default {
 .content.resolved {
   opacity: 0.7;
 
-  .options {
+  .resolvement-options {
     display: flex;
     align-items: center;
     margin-bottom: 0.25rem;
