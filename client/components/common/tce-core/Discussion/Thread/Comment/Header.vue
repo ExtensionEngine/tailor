@@ -57,7 +57,7 @@ const getOptions = () => ({
 });
 
 export default {
-  action: 'comment-header',
+  name: 'comment-header',
   props: {
     comment: { type: Object, required: true },
     isActivityThread: { type: Boolean, default: false },
