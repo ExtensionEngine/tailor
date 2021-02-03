@@ -8,7 +8,7 @@
           small text
           class="px-1">
           <v-icon size="24" color="teal accent-4" class="mr-2">
-            mdi-check-circle-outline
+            mdi-check-box-outline
           </v-icon>
           Resolve All
         </v-btn>

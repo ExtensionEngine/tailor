@@ -1,6 +1,6 @@
 <template>
   <div ref="discussion" class="embedded-discussion">
-    <resolve-button v-if="showResolveButton" @click="$emit('resolve')" />
+    <resolve-button v-if="showResolveButton" @click="resolveAll" />
     <div :class="{ 'pb-7': !showHeading && hasHiddenComments }">
       <v-btn
         v-if="hasHiddenComments"
@@ -115,9 +115,21 @@ export default {
         title: 'Remove comment',
         message: 'Are you sure you want to remove this comment?',
         action: () => this.$emit('remove', comment),
-        onOpen: () => this.$emit('update:confirmationActive', true),
-        onClose: () => this.$emit('update:confirmationActive', false)
+        ...this.onConfirmationActive()
       });
+    },
+    resolveAll() {
+      this.showConfirmationModal({
+        title: 'Resolve all comments',
+        message: 'Are you sure you want to resolve all comments?',
+        action: () => this.$emit('resolve'),
+        ...this.onConfirmationActive()
+      });
+    },
+    onConfirmationActive() {
+      const onOpen = () => this.$emit('update:confirmationActive', true);
+      const onClose = () => this.$emit('update:confirmationActive', false);
+      return { onOpen, onClose };
     }
   },
   watch: {
