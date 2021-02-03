@@ -47,9 +47,9 @@
 import AssigneeAvatar from '@/components/repository/common/AssigneeAvatar';
 import find from 'lodash/find';
 import { getLevel } from 'shared/activities';
+import { getPriority } from 'shared/workflow';
 import LabelChip from '@/components/repository/common/LabelChip';
 import { mapGetters } from 'vuex';
-import { priorities } from 'shared/workflow';
 
 export default {
   name: 'activity-status-card',
@@ -64,7 +64,7 @@ export default {
     ...mapGetters('repository', ['workflow']),
     activityConfig: vm => getLevel(vm.type),
     statusConfig: vm => find(vm.workflow.statuses, { id: vm.status.status }),
-    priorityConfig: vm => priorities.find(it => it.id === vm.status.priority),
+    priorityConfig: vm => getPriority(vm.status.priority),
     route: vm => ({ name: 'progress', query: vm.$route.query })
   },
   components: { LabelChip, AssigneeAvatar }
