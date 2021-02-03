@@ -1,13 +1,8 @@
 'use strict';
 
-const {
-  getSchema,
-  getSchemaId,
-  isOutlineActivity,
-  isTrackedInWorkflow
-} = require('../../config/shared/activities');
+const { isOutlineActivity, isTrackedInWorkflow } = require('../../config/shared/activities');
 const forEach = require('lodash/forEach');
-const { getDefaultWorkflowStatus } = require('../../config/shared/workflow');
+const { getDefaultActivityStatus } = require('../../config/shared/workflow');
 const sse = require('../shared/sse');
 
 module.exports = { add };
@@ -18,7 +13,8 @@ function add(Activity, Hooks, Models) {
   const mappings = {
     [Hooks.afterCreate]: [createStatus, sseCreate, touchRepository, touchOutline],
     [Hooks.afterUpdate]: [sseUpdate, touchRepository, touchOutline],
-    [Hooks.afterDestroy]: [sseDelete, touchRepository, touchOutline]
+    [Hooks.afterDestroy]: [sseDelete, touchRepository, touchOutline],
+    [Hooks.afterBulkCreate]: [createStatusForEachActivity]
   };
 
   forEach(mappings, (hooks, type) => {
@@ -26,11 +22,13 @@ function add(Activity, Hooks, Models) {
   });
 
   function createStatus(_, activity) {
-    if (!isTrackedInWorkflow(activity.type)) return;
-    const schemaId = getSchemaId(activity.type);
-    const { workflowId } = getSchema(schemaId);
-    const defaultStatus = getDefaultWorkflowStatus(workflowId);
+    const defaultStatus = getDefaultActivityStatus(activity.type);
     return activity.createStatus(defaultStatus);
+  }
+
+  function createStatusForEachActivity(_, activities, { transaction }) {
+    const statuses = activities.map(getDefaultStatus).filter(Boolean);
+    return Models.ActivityStatus.bulkCreate(statuses, { transaction });
   }
 
   function sseCreate(_, activity) {
@@ -64,4 +62,9 @@ function add(Activity, Hooks, Models) {
       : await activity.getOutlineParent(transaction);
     return outlineActivity && outlineActivity.touch(transaction);
   }
+}
+
+function getDefaultStatus({ id, type }) {
+  if (!isTrackedInWorkflow(type)) return;
+  return { ...getDefaultActivityStatus(type), activityId: id };
 }
