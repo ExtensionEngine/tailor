@@ -25,7 +25,6 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import { isTrackedInWorkflow } from 'shared/activities';
 import SidebarHeader from './Header';
 import StatusFieldGroup from './FieldGroup';
 
@@ -39,8 +38,7 @@ export default {
   computed: {
     ...mapGetters('repository', ['selectedActivity']),
     isTrackedActivity() {
-      const type = this.selectedActivity?.type;
-      return type && isTrackedInWorkflow(type);
+      return this.selectedActivity?.isTrackedInWorkflow;
     }
   },
   methods: {

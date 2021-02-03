@@ -17,7 +17,7 @@ const Promise = require('bluebird');
 
 class Activity extends Model {
   static fields(DataTypes) {
-    const { STRING, DOUBLE, JSONB, BOOLEAN, DATE, UUID, UUIDV4 } = DataTypes;
+    const { STRING, DOUBLE, JSONB, BOOLEAN, DATE, UUID, UUIDV4, VIRTUAL } = DataTypes;
     return {
       uid: {
         type: UUID,
@@ -43,6 +43,12 @@ class Activity extends Model {
         type: BOOLEAN,
         defaultValue: false,
         allowNull: false
+      },
+      isTrackedInWorkflow: {
+        type: VIRTUAL,
+        get() {
+          return isTrackedInWorkflow(this.get('type'));
+        }
       },
       publishedAt: {
         type: DATE,
@@ -70,7 +76,7 @@ class Activity extends Model {
   static async create(data, opts) {
     return this.sequelize.transaction(async transaction => {
       const activity = await super.create(data, { ...opts, transaction });
-      if (isTrackedInWorkflow(activity.type)) {
+      if (activity.isTrackedInWorkflow) {
         const defaultStatus = getDefaultActivityStatus(activity.type);
         await activity.createStatus(defaultStatus, { transaction });
       }
@@ -82,7 +88,7 @@ class Activity extends Model {
     return this.sequelize.transaction(async transaction => {
       const activities = await super.bulkCreate(data, { ...opts, transaction });
       const statusData = activities
-        .filter(it => isTrackedInWorkflow(it.type))
+        .filter(it => it.isTrackedInWorkflow)
         .map(getDefaultStatus);
       const ActivityStatus = this.sequelize.model('ActivityStatus');
       await ActivityStatus.bulkCreate(statusData, { transaction });

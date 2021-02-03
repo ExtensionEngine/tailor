@@ -48,7 +48,7 @@
         :meta="it" />
     </div>
     <activity-status
-      v-if="config.isTrackedInWorkflow"
+      v-if="activity.isTrackedInWorkflow"
       v-bind="activity"
       :name="activity.data.name"
       class="mb-12" />
