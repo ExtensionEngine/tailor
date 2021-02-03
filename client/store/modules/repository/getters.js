@@ -1,8 +1,8 @@
+import { getDefaultActivityStatus, getWorkflow } from 'shared/workflow';
 import { getOutlineLevels, getSchema, isTrackedInWorkflow } from 'shared/activities';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
-import { getWorkflow } from 'shared/workflow';
 import Hashids from 'hashids';
 import map from 'lodash/map';
 import { role } from 'shared';
@@ -77,6 +77,7 @@ export const isRepositoryAdmin = (state, _, rootState) => {
 };
 
 function getActivityStatus(activity) {
+  if (!activity.status) return getDefaultActivityStatus(activity.type);
   if (!Array.isArray(activity.status)) return activity.status;
   const [status] = activity.status;
   return status;
