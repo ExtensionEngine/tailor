@@ -34,24 +34,15 @@
         </template>
       </div>
     </div>
-    <div class="actions">
+    <div v-if="showOptions" class="actions">
       <v-btn
-        v-if="!isResolved && !isActivityThread"
-        @click="$emit('resolve')"
+        v-for="({ action, icon, color }, name) in options"
+        :key="name"
+        @click="$emit(action)"
         x-small icon
         class="ml-1">
-        <v-icon color="teal accent-4" size="14">mdi-check-box-outline</v-icon>
+        <v-icon size="14" :color="color"> mdi-{{ icon }}</v-icon>
       </v-btn>
-      <template v-if="showOptions">
-        <v-btn
-          v-for="{ name, action, icon } in options"
-          :key="name"
-          @click="$emit(action)"
-          x-small icon
-          class="ml-1">
-          <v-icon size="14" color="grey">{{ icon }}</v-icon>
-        </v-btn>
-      </template>
     </div>
   </div>
 </template>
@@ -59,8 +50,14 @@
 <script>
 import EditorLink from 'tce-core/EditorLink';
 
+const getOptions = () => ({
+  resolve: { action: 'resolve', icon: 'check-box-outline', color: 'teal accent-4' },
+  edit: { action: 'toggleEdit', icon: 'pencil-outline', color: 'grey' },
+  remove: { action: 'remove', icon: 'trash-can-outline', color: 'grey' }
+});
+
 export default {
-  name: 'comment-header',
+  action: 'comment-header',
   props: {
     comment: { type: Object, required: true },
     isActivityThread: { type: Boolean, default: false },
@@ -75,10 +72,11 @@ export default {
     isResolved: vm => !!vm.comment.resolvedAt,
     showEditedLabel: vm => !!vm.comment.editedAt,
     showOptions: vm => vm.isAuthor && !vm.isDeleted && !vm.isResolved,
-    options: () => [
-      { name: 'Edit', action: 'toggleEdit', icon: 'mdi-pencil-outline' },
-      { name: 'Remove', action: 'remove', icon: 'mdi-trash-can-outline' }
-    ]
+    options() {
+      const options = getOptions();
+      if (this.isActivityThread) delete options.resolve;
+      return options;
+    }
   },
   components: { EditorLink }
 };
