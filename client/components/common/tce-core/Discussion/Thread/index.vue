@@ -7,6 +7,7 @@
       @update="onUpdate"
       @remove="$emit('remove', $event)"
       @resolve="$emit('resolve', $event)"
+      @unresolve="$emit('unresolve', $event)"
       v-bind="{ isActivityThread, user, comments: visibleComments.seen }" />
     <transition name="fade">
       <unseen-divider
@@ -19,6 +20,7 @@
       @update="onUpdate"
       @remove="$emit('remove', $event)"
       @resolve="$emit('resolve', $event)"
+      @unresolve="$emit('unresolve', $event)"
       v-bind="{ isActivityThread, user, comments: visibleComments.unseen }" />
   </div>
 </template>

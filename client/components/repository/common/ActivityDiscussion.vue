@@ -5,6 +5,7 @@
       @update="saveComment"
       @remove="remove"
       @seen="setLastSeenComment"
+      @unresolve="updateResolvement"
       v-bind="{ comments, unseenComments, showHeading, user, scrollTarget: 'editor' }"
       show-notifications is-activity-thread />
   </div>
@@ -33,7 +34,9 @@ export default {
     lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime()
   },
   methods: {
-    ...mapActions('repository/comments', ['fetch', 'save', 'update', 'remove']),
+    ...mapActions('repository/comments', [
+      'fetch', 'save', 'update', 'remove', 'updateResolvement'
+    ]),
     ...mapMutations('repository/comments', ['markSeenComments']),
     saveComment(comment) {
       const action = comment.id ? 'update' : 'save';

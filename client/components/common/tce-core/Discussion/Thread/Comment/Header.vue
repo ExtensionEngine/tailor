@@ -34,15 +34,24 @@
         </template>
       </div>
     </div>
-    <div v-if="showOptions" class="actions">
+    <div class="actions">
       <v-btn
-        v-for="{ name, action, icon } in options"
-        :key="name"
-        @click="$emit(action)"
+        v-if="!isResolved && !isActivityThread"
+        @click="$emit('resolve')"
         x-small icon
         class="ml-1">
-        <v-icon size="14" color="grey">{{ icon }}</v-icon>
+        <v-icon color="teal accent-4" size="14">mdi-check-box-outline</v-icon>
       </v-btn>
+      <template v-if="showOptions">
+        <v-btn
+          v-for="{ name, action, icon } in options"
+          :key="name"
+          @click="$emit(action)"
+          x-small icon
+          class="ml-1">
+          <v-icon size="14" color="grey">{{ icon }}</v-icon>
+        </v-btn>
+      </template>
     </div>
   </div>
 </template>
@@ -67,7 +76,6 @@ export default {
     showEditedLabel: vm => !!vm.comment.editedAt,
     showOptions: vm => vm.isAuthor && !vm.isDeleted && !vm.isResolved,
     options: () => [
-      { name: 'Resolve', action: 'resolve', icon: 'mdi-check' },
       { name: 'Edit', action: 'toggleEdit', icon: 'mdi-pencil-outline' },
       { name: 'Remove', action: 'remove', icon: 'mdi-trash-can-outline' }
     ]

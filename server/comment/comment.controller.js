@@ -4,6 +4,7 @@ const { BAD_REQUEST, NO_CONTENT } = require('http-status-codes');
 const { Comment, ContentElement, User } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const pick = require('lodash/pick');
+const pickBy = require('lodash/pickBy');
 
 const author = {
   model: User,
@@ -42,12 +43,15 @@ function remove({ comment }, res) {
     .then(data => res.json({ data }));
 }
 
-function resolve({ body }, res) {
-  const { id = null, contentElementId } = body;
-  if (!contentElementId) return createError(BAD_REQUEST, 'contentElementId required!');
-  const where = id ? { id, contentElementId } : { contentElementId };
+function updateResolvement({ body }, res) {
+  const { id, resolvedAt, contentElementId } = body;
+  if (!contentElementId && !id) {
+    return createError(BAD_REQUEST, 'id or contentElementId required!');
+  }
+  const where = pickBy({ id, contentElementId }, val => !!val);
   const options = { where, paranoid: false, returning: true };
-  return Comment.update({ resolvedAt: new Date() }, options)
+  const payload = { resolvedAt: resolvedAt ? null : new Date() };
+  return Comment.update(payload, options)
     .then(([_, comments]) => Comment.emitUpdatedComments(comments))
     .then(() => res.sendStatus(NO_CONTENT));
 }
@@ -57,5 +61,5 @@ module.exports = {
   create,
   patch,
   remove,
-  resolve
+  updateResolvement
 };

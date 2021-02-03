@@ -19,7 +19,7 @@ export default {
       saveComment: 'save',
       updateComment: 'update',
       removeComment: 'remove',
-      resolveComments: 'resolve'
+      resolveComments: 'updateResolvement'
     }),
     ...mapMutations('repository/comments', ['markSeenComments']),
     async upsertComment({ hasUnresolvedComments, ...comment }) {

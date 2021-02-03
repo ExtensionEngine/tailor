@@ -25,6 +25,7 @@
       v-if="thread.length"
       @update="$emit('update', $event)"
       @resolve="$emit('resolve', $event)"
+      @unresolve="$emit('unresolve', $event)"
       @seen="$emit('seen')"
       @remove="remove"
       @showAll="showAll = $event"
@@ -36,10 +37,13 @@
       :user="user"
       class="mt-2" />
     <div ref="editor" class="text-right">
-      <text-editor
+      <v-textarea
         v-model.trim="comment.content"
         @focus="$emit('seen')"
-        :placeholder="commentsCount ? 'Add a comment...' : 'Start the discussion...'" />
+        :placeholder="commentsCount ? 'Add a comment...' : 'Start the discussion...'"
+        rows="3"
+        outlined auto-grow clearable counter
+        class="comment-editor" />
       <v-btn @click="post" :disabled="isTextEditorEmpty" icon>
         <v-icon>mdi-send</v-icon>
       </v-btn>
@@ -52,7 +56,6 @@ import DiscussionThread from './Thread';
 import { mapRequests } from '@/plugins/radio';
 import orderBy from 'lodash/orderBy';
 import ResolveButton from './ResolveButton';
-import TextEditor from './TextEditor';
 
 const initCommentInput = () => ({ content: '' });
 
@@ -127,8 +130,7 @@ export default {
   },
   components: {
     DiscussionThread,
-    ResolveButton,
-    TextEditor
+    ResolveButton
   }
 };
 </script>

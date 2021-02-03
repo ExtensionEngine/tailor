@@ -16,7 +16,7 @@ const fetch = ({ commit }, payload) => {
     .then(items => commit('fetch', items));
 };
 
-const resolve = ({ dispatch }, params) => {
+const updateResolvement = ({ dispatch }, params) => {
   return api.post('/resolve', params)
     .then(() => dispatch('fetch', params));
 };
@@ -35,5 +35,5 @@ export {
   save,
   setEndpoint,
   update,
-  resolve
+  updateResolvement
 };

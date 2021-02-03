@@ -3,28 +3,37 @@
     <comment-header
       @toggleEdit="toggleEdit"
       @remove="remove"
-      @resolve="$emit('resolve', comment.id)"
+      @resolve="$emit('resolve', comment)"
       v-bind="{ comment, isActivityThread, elementLabel, user }" />
     <div class="comment-body">
-      <text-editor
-        v-model.trim="content"
-        :is-focused="isEditing"
-        :show-preview="!isEditing"
-        :is-resolved="!!comment.resolvedAt" />
-      <span v-if="isEditing" class="d-flex justify-end">
-        <v-btn @click="reset" text small>Cancel</v-btn>
-        <v-btn @click="save" color="green" text small>
-          <v-icon class="pr-1">mdi-check</v-icon> Save
-        </v-btn>
-      </span>
+      <comment-preview
+        v-if="!isEditing"
+        @unresolve="$emit('unresolve', comment)"
+        v-bind="{ content, isResolved }" />
+      <template v-else>
+        <v-textarea
+          v-model.trim="comment.content"
+          rows="3"
+          autofocus
+          outlined
+          auto-grow
+          clearable
+          counter
+          class="comment-editor" />
+        <span class="d-flex justify-end">
+          <v-btn @click="reset" text small>Cancel</v-btn>
+          <v-btn @click="save" color="green" text small>
+            <v-icon class="pr-1">mdi-check</v-icon> Save
+          </v-btn>
+        </span>
+      </template>
     </div>
   </div>
 </template>
 
 <script>
 import CommentHeader from './Header';
-import { focus } from 'vue-focus';
-import TextEditor from '../../TextEditor';
+import CommentPreview from './Preview';
 
 export default {
   name: 'thread-comment',
@@ -38,6 +47,9 @@ export default {
     content: vm.comment.content,
     isEditing: false
   }),
+  computed: {
+    isResolved: ({ comment }) => !!comment.resolvedAt
+  },
   methods: {
     toggleEdit() {
       this.isEditing = !this.isEditing;
@@ -62,8 +74,7 @@ export default {
       handler: 'reset'
     }
   },
-  directives: { focus },
-  components: { CommentHeader, TextEditor }
+  components: { CommentHeader, CommentPreview }
 };
 </script>
 
@@ -78,8 +89,12 @@ export default {
     padding: 0 0.25rem 0 2.625rem;
   }
 
-  &-editor {
+  &-editor.v-textarea {
     margin: 0.75rem 0 0 0;
+
+    ::v-deep .v-input__slot {
+      width: auto;
+    }
   }
 }
 </style>
