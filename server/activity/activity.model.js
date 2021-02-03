@@ -2,11 +2,13 @@
 
 const {
   getSiblingTypes,
-  isOutlineActivity
+  isOutlineActivity,
+  isTrackedInWorkflow
 } = require('../../config/shared/activities');
 const { Model, Op } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
 const { Activity: Events } = require('../../common/sse');
+const { getDefaultActivityStatus } = require('../../config/shared/workflow');
 const hooks = require('./hooks');
 const isEmpty = require('lodash/isEmpty');
 const map = require('lodash/map');
@@ -63,6 +65,34 @@ class Activity extends Model {
         field: 'deleted_at'
       }
     };
+  }
+
+  static async create(data, opts) {
+    return this.sequelize.transaction(async transaction => {
+      const activity = await super.create(data, { ...opts, transaction });
+      if (isTrackedInWorkflow(activity.type)) {
+        const defaultStatus = getDefaultActivityStatus(activity.type);
+        activity.status = await activity.createStatus(defaultStatus, { transaction });
+      }
+      return activity;
+    }, { transaction: opts.transaction });
+  }
+
+  static async bulkCreate(data, opts) {
+    return this.sequelize.transaction(async transaction => {
+      const activities = await super.bulkCreate(data, { ...opts, transaction });
+      const statusData = activities
+        .filter(it => isTrackedInWorkflow(it.type))
+        .map(it => ({ ...getDefaultActivityStatus(it.type), activityId: it.id }));
+      const statuses = await this.sequelize
+        .model('ActivityStatus')
+        .bulkCreate(statusData, { transaction });
+      return activities.map(activity => {
+        const status = statuses.find(it => it.activityId === activity.id);
+        if (status) activity.status = status;
+        return activity;
+      });
+    }, { transaction: opts.transaction });
   }
 
   static associate({ ActivityStatus, ContentElement, Comment, Repository }) {
