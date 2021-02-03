@@ -19,8 +19,7 @@ export const initialize = async (store, id) => {
 function initializeSSE(id, store) {
   const { dispatch, commit } = store;
   feed.connect(id, conn => commit('setSseId', conn.id));
-  const modules = [
-    'activities', 'contentElements', 'comments', 'userTracking'];
+  const modules = ['activities', 'contentElements', 'comments', 'userTracking'];
   each(modules, module => dispatch(`${module}/plugSSE`));
 }
 
