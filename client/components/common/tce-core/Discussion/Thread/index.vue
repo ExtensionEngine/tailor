@@ -84,10 +84,14 @@ export default {
 
 <style lang="scss" scoped>
 .discussion-thread {
+  width: 100%;
+
   &.scroll-container {
     max-height: 31.25rem;
     overflow-y: scroll;
     overflow-x: hidden;
+    padding-right: 1.5rem;
+    box-sizing: content-box;
   }
 
   .fade-enter-active, .fade-leave-active {
