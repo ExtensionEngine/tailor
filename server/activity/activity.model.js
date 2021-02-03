@@ -72,7 +72,7 @@ class Activity extends Model {
       const activity = await super.create(data, { ...opts, transaction });
       if (isTrackedInWorkflow(activity.type)) {
         const defaultStatus = getDefaultActivityStatus(activity.type);
-        activity.status = await activity.createStatus(defaultStatus, { transaction });
+        await activity.createStatus(defaultStatus, { transaction });
       }
       return activity;
     }, { transaction: opts.transaction });
@@ -83,15 +83,10 @@ class Activity extends Model {
       const activities = await super.bulkCreate(data, { ...opts, transaction });
       const statusData = activities
         .filter(it => isTrackedInWorkflow(it.type))
-        .map(it => ({ ...getDefaultActivityStatus(it.type), activityId: it.id }));
-      const statuses = await this.sequelize
-        .model('ActivityStatus')
-        .bulkCreate(statusData, { transaction });
-      return activities.map(activity => {
-        const status = statuses.find(it => it.activityId === activity.id);
-        if (status) activity.status = status;
-        return activity;
-      });
+        .map(getDefaultStatus);
+      const ActivityStatus = this.sequelize.model('ActivityStatus');
+      await ActivityStatus.bulkCreate(statusData, { transaction });
+      return activities;
     }, { transaction: opts.transaction });
   }
 
@@ -275,6 +270,11 @@ function removeAll(Model, where = {}, options = {}) {
   const { soft, transaction } = options;
   if (!soft) return Model.destroy({ where });
   return Model.update({ detached: true }, { where, transaction });
+}
+
+function getDefaultStatus({ id, type }) {
+  const defaultStatus = getDefaultActivityStatus(type);
+  return { ...defaultStatus, activityId: id };
 }
 
 module.exports = Activity;
