@@ -1,8 +1,13 @@
 <template>
-  <div v-intersect="onIntersect" class="discussion-thread">
+  <div
+    v-intersect="onIntersect"
+    :class="{ 'scroll-container': !isActivityThread }"
+    class="discussion-thread">
     <thread-list
       @update="onUpdate"
       @remove="$emit('remove', $event)"
+      @resolve="$emit('resolve', $event)"
+      @unresolve="$emit('unresolve', $event)"
       v-bind="{ isActivityThread, user, comments: visibleComments.seen }" />
     <transition name="fade">
       <unseen-divider
@@ -14,6 +19,8 @@
     <thread-list
       @update="onUpdate"
       @remove="$emit('remove', $event)"
+      @resolve="$emit('resolve', $event)"
+      @unresolve="$emit('unresolve', $event)"
       v-bind="{ isActivityThread, user, comments: visibleComments.unseen }" />
   </div>
 </template>
@@ -45,7 +52,7 @@ export default {
   },
   methods: {
     onUpdate(comment, content) {
-      this.$emit('update', { ...comment, content, updatedAt: Date.now() });
+      this.$emit('update', { ...comment, content });
     },
     onIntersect(_entries, _observer, isIntersected) {
       this.isVisible = isIntersected;
@@ -81,6 +88,16 @@ export default {
 
 <style lang="scss" scoped>
 .discussion-thread {
+  width: 100%;
+
+  &.scroll-container {
+    max-height: 31.25rem;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding-right: 1.5rem;
+    box-sizing: content-box;
+  }
+
   .fade-enter-active, .fade-leave-active {
     transition: opacity 0.5s;
   }

@@ -3,6 +3,7 @@ import get from 'lodash/get';
 import orderBy from 'lodash/orderBy';
 
 export const getComments = state => params => {
+  if (params.contentElementId) params.resolvedAt = null;
   const comments = filter(state.items, params);
   return orderBy(comments, 'createdAt', 'desc');
 };

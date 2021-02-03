@@ -23,6 +23,8 @@ router.route('/:commentId')
   .patch(canEdit, ctrl.patch)
   .delete(canEdit, ctrl.remove);
 
+router.post('/resolve', ctrl.updateResolvement);
+
 function getComment(req, _res, next, commentId) {
   const include = [{
     model: User,

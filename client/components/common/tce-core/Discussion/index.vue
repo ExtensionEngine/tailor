@@ -1,5 +1,6 @@
 <template>
   <div ref="discussion" class="embedded-discussion">
+    <resolve-button v-if="showResolveButton" @click="resolveAll" />
     <div :class="{ 'pb-7': !showHeading && hasHiddenComments }">
       <v-btn
         v-if="hasHiddenComments"
@@ -23,8 +24,10 @@
     <discussion-thread
       v-if="thread.length"
       @update="$emit('update', $event)"
-      @remove="remove"
+      @resolve="$emit('resolve', $event)"
+      @unresolve="$emit('unresolve', $event)"
       @seen="$emit('seen')"
+      @remove="remove"
       @showAll="showAll = $event"
       :items="thread"
       :show-all="showAll"
@@ -34,10 +37,13 @@
       :user="user"
       class="mt-2" />
     <div ref="editor" class="text-right">
-      <text-editor
+      <v-textarea
         v-model.trim="comment.content"
         @focus="$emit('seen')"
-        :placeholder="commentsCount ? 'Add a comment...' : 'Start the discussion...'" />
+        :placeholder="commentsCount ? 'Add a comment...' : 'Start the discussion...'"
+        rows="3"
+        outlined auto-grow clearable counter
+        class="comment-editor" />
       <v-btn @click="post" :disabled="isTextEditorEmpty" icon>
         <v-icon>mdi-send</v-icon>
       </v-btn>
@@ -49,7 +55,7 @@
 import DiscussionThread from './Thread';
 import { mapRequests } from '@/plugins/radio';
 import orderBy from 'lodash/orderBy';
-import TextEditor from './TextEditor';
+import ResolveButton from './ResolveButton';
 
 const initCommentInput = () => ({ content: '' });
 
@@ -64,6 +70,7 @@ export default {
     showHeading: { type: Boolean, default: false },
     showNotifications: { type: Boolean, default: false },
     isActivityThread: { type: Boolean, default: false },
+    hasUnresolvedComments: { type: Boolean, default: false },
     user: { type: Object, required: true }
   },
   data: () => ({
@@ -83,7 +90,8 @@ export default {
     hasHiddenComments: vm => vm.commentsShownLimit < vm.commentsCount,
     isTextEditorEmpty: vm => !vm.comment.content?.trim(),
     discussion: vm => vm.$refs.discussion,
-    editor: vm => vm.$refs.editor
+    editor: vm => vm.$refs.editor,
+    showResolveButton: vm => vm.hasUnresolvedComments && !vm.isActivityThread
   },
   methods: {
     ...mapRequests('app', ['showConfirmationModal']),
@@ -106,8 +114,22 @@ export default {
       this.showConfirmationModal({
         title: 'Remove comment',
         message: 'Are you sure you want to remove this comment?',
-        action: () => this.$emit('remove', comment)
+        action: () => this.$emit('remove', comment),
+        ...this.onConfirmationActive()
       });
+    },
+    resolveAll() {
+      this.showConfirmationModal({
+        title: 'Resolve all comments',
+        message: 'Are you sure you want to resolve all comments?',
+        action: () => this.$emit('resolve'),
+        ...this.onConfirmationActive()
+      });
+    },
+    onConfirmationActive() {
+      const onOpen = () => this.$emit('update:confirmationActive', true);
+      const onClose = () => this.$emit('update:confirmationActive', false);
+      return { onOpen, onClose };
     }
   },
   watch: {
@@ -120,7 +142,7 @@ export default {
   },
   components: {
     DiscussionThread,
-    TextEditor
+    ResolveButton
   }
 };
 </script>
@@ -128,6 +150,12 @@ export default {
 <style lang="scss" scoped>
 .embedded-discussion {
   font-family: Roboto, Arial, sans-serif;
+
+  .resolve-btn-container {
+    display: flex;
+    justify-content: flex-end;
+    margin: 0.5rem 0 0 0;
+  }
 
   .header {
     margin: 0.875rem 0 1.625rem 0;

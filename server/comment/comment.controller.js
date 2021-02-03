@@ -1,12 +1,15 @@
 'use strict';
 
+const { BAD_REQUEST, NO_CONTENT } = require('http-status-codes');
 const { Comment, ContentElement, User } = require('../shared/database');
+const { createError } = require('../shared/error/helpers');
 const pick = require('lodash/pick');
+const pickBy = require('lodash/pickBy');
 
 const author = {
   model: User,
   as: 'author',
-  attributes: ['id', 'email', 'label', 'imgUrl']
+  attributes: ['id', 'email', 'firstName', 'lastName', 'fullName', 'label', 'imgUrl']
 };
 
 const element = {
@@ -30,7 +33,7 @@ function create({ user, repository: { id: repositoryId }, body }, res) {
 
 function patch({ comment, body }, res) {
   const { content } = body;
-  return comment.update({ content })
+  return comment.update({ content, editedAt: new Date() })
     .then(comment => comment.reload({ include: [author] }))
     .then(data => res.json({ data }));
 }
@@ -40,9 +43,22 @@ function remove({ comment }, res) {
     .then(data => res.json({ data }));
 }
 
+function updateResolvement({ repository, body }, res) {
+  const { id, resolvedAt, contentElementId } = body;
+  if (!contentElementId && !id) {
+    return createError(BAD_REQUEST, 'id or contentElementId required!');
+  }
+  const { id: repositoryId } = repository;
+  const where = pickBy({ id, repositoryId, contentElementId }, val => !!val);
+  const data = { resolvedAt: resolvedAt ? null : new Date() };
+  return Comment.update(data, { where, paranoid: false })
+    .then(() => res.sendStatus(NO_CONTENT));
+}
+
 module.exports = {
   list,
   create,
   patch,
-  remove
+  remove,
+  updateResolvement
 };

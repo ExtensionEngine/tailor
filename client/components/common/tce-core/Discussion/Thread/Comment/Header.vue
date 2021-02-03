@@ -11,7 +11,7 @@
           </template>
           {{ author.label }}
         </v-tooltip>
-        <span v-if="isEdited" class="edited ml-1">(edited)</span>
+        <span v-if="showEditedLabel" class="edited ml-1">(edited)</span>
       </div>
       <div class="d-flex align-center">
         <v-tooltip right>
@@ -36,12 +36,12 @@
     </div>
     <div v-if="showOptions" class="actions">
       <v-btn
-        v-for="{ name, action, icon } in options"
+        v-for="({ action, icon, color }, name) in options"
         :key="name"
         @click="$emit(action)"
         x-small icon
         class="ml-1">
-        <v-icon size="14" color="grey">{{ icon }}</v-icon>
+        <v-icon :color="color" size="14"> mdi-{{ icon }}</v-icon>
       </v-btn>
     </div>
   </div>
@@ -50,11 +50,18 @@
 <script>
 import EditorLink from 'tce-core/EditorLink';
 
+const getOptions = () => ({
+  resolve: { action: 'resolve', icon: 'check-box-outline', color: 'teal accent-4' },
+  edit: { action: 'toggleEdit', icon: 'pencil-outline', color: 'grey' },
+  remove: { action: 'remove', icon: 'trash-can-outline', color: 'grey' }
+});
+
 export default {
   name: 'comment-header',
   props: {
     comment: { type: Object, required: true },
     isActivityThread: { type: Boolean, default: false },
+    isResolved: { type: Boolean, default: false },
     elementLabel: { type: String, default: null },
     user: { type: Object, required: true }
   },
@@ -62,12 +69,14 @@ export default {
     elementUid: vm => vm.comment.contentElement.uid,
     author: vm => vm.comment.author,
     isAuthor: vm => vm.author.id === vm.user.id,
-    isEdited: vm => vm.comment.createdAt !== vm.comment.updatedAt,
     isDeleted: vm => !!vm.comment.deletedAt,
-    showOptions: vm => vm.isAuthor && !vm.isDeleted,
-    options: vm => [
-      { name: 'Edit', action: 'toggleEdit', icon: 'mdi-pencil-outline' },
-      { name: 'Remove', action: 'remove', icon: 'mdi-trash-can-outline' }]
+    showEditedLabel: vm => !!vm.comment.editedAt,
+    showOptions: vm => vm.isAuthor && !vm.isDeleted && !vm.isResolved,
+    options() {
+      const options = getOptions();
+      if (this.isActivityThread) delete options.resolve;
+      return options;
+    }
   },
   components: { EditorLink }
 };
@@ -86,7 +95,7 @@ export default {
     display: flex;
     flex-direction: column;
     flex: 0 100%;
-    max-width: calc(100% - 6rem);
+    max-width: calc(100% - 8rem);
     margin-left: 0.125rem;
 
     .author {

@@ -90,7 +90,8 @@ export default {
       return transform(elements, (acc, it) => {
         const comments = this.getComments({ activityId, contentElementId: it.id });
         const lastSeen = max([seen.contentElement[it.uid], seen.activity[activityUid]]);
-        acc[it.uid] = { ...it, comments, lastSeen: lastSeen || 0 };
+        const hasUnresolvedComments = !!comments.length;
+        acc[it.uid] = { ...it, comments, hasUnresolvedComments, lastSeen: lastSeen || 0 };
       }, {});
     },
     containerConfigs: vm => getSupportedContainers(vm.activity.type)

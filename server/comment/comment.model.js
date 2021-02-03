@@ -24,6 +24,14 @@ class Comment extends Model {
           return this.getDataValue('content');
         }
       },
+      resolvedAt: {
+        type: DATE,
+        field: 'resolved_at'
+      },
+      editedAt: {
+        type: DATE,
+        field: 'edited_at'
+      },
       createdAt: {
         type: DATE,
         field: 'created_at'

@@ -3,6 +3,7 @@
     v-model="isVisible"
     @click.native.stop
     :close-on-content-click="false"
+    :close-on-click="!isConfirmationActive"
     min-width="300"
     transition="slide-y-transition"
     left offset-y attach>
@@ -27,7 +28,9 @@
       @update="save"
       @remove="editorBus.emit(events.REMOVE, $event)"
       @seen="setLastSeen"
-      v-bind="{ comments, unseenComments, user }"
+      @resolve="resolve"
+      v-bind="{ comments, unseenComments, hasUnresolvedComments, user }"
+      :confirmation-active.sync="isConfirmationActive"
       class="pa-2" />
   </v-menu>
 </template>
@@ -62,10 +65,14 @@ export default {
     id: { type: Number, default: null },
     uid: { type: String, required: true },
     comments: { type: Array, required: true },
+    hasUnresolvedComments: { type: Boolean, default: false },
     lastSeen: { type: Number, required: true },
     user: { type: Object, required: true }
   },
-  data: () => ({ isVisible: false }),
+  data: () => ({
+    isVisible: false,
+    isConfirmationActive: false
+  }),
   computed: {
     ...mapChannels({ editorBus: 'editor' }),
     events: () => DiscussionEvent,
@@ -87,17 +94,22 @@ export default {
   },
   methods: {
     save(data) {
-      const { editorBus, user: author, id: elementId } = this;
-      return editorBus.emit(DiscussionEvent.SAVE, {
+      const { user: author, id: elementId, hasUnresolvedComments } = this;
+      return this.editorBus.emit(DiscussionEvent.SAVE, {
         ...data,
         author,
-        contentElementId: elementId
+        contentElementId: elementId,
+        hasUnresolvedComments
       });
     },
     setLastSeen(timeout) {
       const { uid: elementUid, lastCommentAt, events } = this;
       const options = { elementUid, lastCommentAt, timeout };
       this.editorBus.emit(events.SET_LAST_SEEN, options);
+    },
+    resolve({ id, resolvedAt } = {}) {
+      const { id: contentElementId, events } = this;
+      this.editorBus.emit(events.RESOLVE, { id, contentElementId, resolvedAt });
     }
   },
   components: { Discussion }
@@ -105,14 +117,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.v-menu__content {
+::v-deep .v-menu__content {
   background: #fff;
 
-  ::v-deep .embedded-discussion {
+  .embedded-discussion {
     text-align: left;
   }
 
-  ::v-deep .comment .author {
+  .comment .author {
     font-size: 0.875rem;
   }
 }

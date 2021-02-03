@@ -19,7 +19,9 @@ exports.add = (Comment, Hooks, db) => {
     const includeAuthor = {
       model: User,
       as: 'author',
-      attributes: ['id', 'email', 'label', 'imgUrl']
+      attributes: [
+        'id', 'email', 'firstName', 'lastName', 'fullName', 'label', 'imgUrl'
+      ]
     };
     const include = [includeAuthor, includeElement];
     const { author, contentElement } = await comment.reload({ include });
@@ -31,6 +33,13 @@ exports.add = (Comment, Hooks, db) => {
   Comment.addHook(Hooks.afterUpdate, comment => {
     sse.channel(comment.repositoryId).send(Events.Update, comment);
     sendEmailNotification(comment, { isCreate: false });
+  });
+
+  Comment.addHook(Hooks.afterBulkUpdate, async ({ where }) => {
+    const comments = await Comment.findAll({ where });
+    comments.forEach(comment => {
+      sse.channel(comment.repositoryId).send(Events.Update, comment);
+    });
   });
 
   Comment.addHook(Hooks.afterDestroy, comment => {
