@@ -1,5 +1,5 @@
 <template>
-  <div class="workflow d-flex flex-column grey lighten-4 py-3">
+  <div class="workflow d-flex flex-column grey lighten-4 pt-3 py-5">
     <v-progress-circular
       v-if="showLoader"
       color="primary"
@@ -106,7 +106,7 @@ $sidebar-width: 27.1875rem;
 
 .workflow {
   position: relative;
-  max-height: 100%;
+  height: 100%;
 
   .v-progress-circular {
     margin-top: 7.5rem;
@@ -118,7 +118,6 @@ $sidebar-width: 27.1875rem;
 }
 
 .overview {
-  height: 100%;
   overflow-y: scroll;
 }
 </style>
