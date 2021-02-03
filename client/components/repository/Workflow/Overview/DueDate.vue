@@ -66,7 +66,7 @@ export default {
   }
 
   &.soon {
-    @include set-color(var(--v-warning-lighten1));
+    @include set-color(var(--v-warning-base));
   }
 }
 </style>
