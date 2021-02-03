@@ -10,8 +10,7 @@ exports.add = (ActivityStatus, Hooks, { Activity }) => {
   const { Events } = ActivityStatus;
 
   const mappings = {
-    [Hooks.afterCreate]: [withActivity(sseUpdate, notifyAssignee)],
-    [Hooks.afterBulkCreate]: [withActivity(sseUpdate, notifyAssignee)]
+    [Hooks.afterCreate]: [withActivity(sseUpdate, notifyAssignee)]
   };
 
   forEach(mappings, (hooks, type) => {
