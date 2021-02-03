@@ -27,7 +27,7 @@ function getPriority(id) {
 
 function getDefaultWorkflowStatus(id) {
   const { statuses } = getWorkflow(id);
-  const { id: status } = statuses.find(it => it.default);
+  const { id: status } = statuses.find(it => it.default) || statuses[0];
   const { id: priority } = priorities.find(it => it.default);
   return { status, priority };
 }
