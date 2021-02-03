@@ -35,6 +35,13 @@ exports.add = (Comment, Hooks, db) => {
     sendEmailNotification(comment, { isCreate: false });
   });
 
+  Comment.addHook(Hooks.afterBulkUpdate, async ({ where }) => {
+    const comments = await Comment.findAll({ where });
+    comments.forEach(comment => {
+      sse.channel(comment.repositoryId).send(Events.Update, comment);
+    });
+  });
+
   Comment.addHook(Hooks.afterDestroy, comment => {
     Comment.findByPk(comment.id, { paranoid: false }).then(comment => {
       sse.channel(comment.repositoryId).send(Events.Delete, comment);

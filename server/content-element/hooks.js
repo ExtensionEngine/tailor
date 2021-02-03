@@ -50,8 +50,7 @@ function add(ContentElement, Hooks, Models) {
     sse.channel(element.repositoryId).send(Events.Delete, element);
     const { Comment } = Models;
     const where = { contentElementId: element.id };
-    return Comment.update({ activityId: null }, { where, returning: true })
-      .then(([_, comments]) => Comment.emitUpdatedComments(comments));
+    return Comment.update({ activityId: null }, { where, returning: true });
   }
 
   function customElementHook(hookType, element) {
