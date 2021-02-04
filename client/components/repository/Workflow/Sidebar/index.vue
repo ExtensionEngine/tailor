@@ -37,9 +37,7 @@ export default {
   },
   computed: {
     ...mapGetters('repository', ['selectedActivity']),
-    isTrackedActivity() {
-      return this.selectedActivity?.isTrackedInWorkflow;
-    }
+    isTrackedActivity: vm => vm.selectedActivity?.isTrackedInWorkflow
   },
   methods: {
     ...mapActions('repository/activities', ['saveStatus']),
