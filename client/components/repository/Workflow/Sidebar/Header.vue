@@ -42,8 +42,10 @@
       </v-btn>
       <div class="mt-1 caption grey--text text--darken-1">
         Created at {{ createdAt | formatDate }}
-        <span class="mx-1">|</span>
-        Updated at {{ updatedAt | formatDate }}
+        <template v-if="updatedAt">
+          <span class="mx-1">|</span>
+          Updated at {{ updatedAt | formatDate }}
+        </template>
       </div>
     </div>
   </header>
@@ -63,7 +65,7 @@ export default {
     name: { type: String, required: true },
     type: { type: String, required: true },
     createdAt: { type: String, required: true },
-    updatedAt: { type: String, required: true }
+    updatedAt: { type: String, default: null }
   },
   computed: {
     ...mapGetters('repository', ['structure']),
