@@ -77,8 +77,8 @@ export const isRepositoryAdmin = (state, _, rootState) => {
 };
 
 function getActivityStatus(activity) {
-  if (!activity.status) return getDefaultActivityStatus(activity.type);
-  if (!Array.isArray(activity.status)) return activity.status;
+  const defaultStatus = getDefaultActivityStatus(activity.type);
+  if (!Array.isArray(activity.status)) return activity.status || defaultStatus;
   const [status] = activity.status;
-  return status;
+  return status || defaultStatus;
 }
