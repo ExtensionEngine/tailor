@@ -112,6 +112,14 @@ export default {
       this.editorBus.emit(events.RESOLVE, { id, contentElementId, resolvedAt });
     }
   },
+  watch: {
+    isVisible(val) {
+      const { elementId } = this.$route.query;
+      if (!val || elementId === this.uid) return;
+      const query = { elementId: this.uid };
+      this.$router.push({ query });
+    }
+  },
   components: { Discussion }
 };
 </script>
