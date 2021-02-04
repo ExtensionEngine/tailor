@@ -12,11 +12,7 @@ const workflowStatus = yup.object().shape({
 const duration = yup.object().shape({
   months: yup.number(),
   weeks: yup.number(),
-  days: yup.number().when(['months', 'weeks'], {
-    is: (months, weeks) => months || weeks,
-    then: yup.number(),
-    otherwise: yup.number().required()
-  })
+  days: yup.number()
 });
 
 const workflow = yup.object().shape({
