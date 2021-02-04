@@ -31,9 +31,10 @@ export const getPositions = (items, index, count = 1) => {
  * @param {string} [action=REORDER] A string value determining where the item
  *     should be placed in relation to `newPosition`. Defaults to `REORDER` in
  *     case of items reorder.
- * @param {number} count A number of positions to return.
+ * @param {number} count A number of items for which position needs to be
+ *     determinate.
  * @return {(number|Array)} Single position if `count` is 1 or an array containing
- * `count` positions.
+ *     `count` positions.
  */
 export default function ({ newPosition, items, action = REORDER, count = 1 }) {
   getDeprecationWarning(...arguments);
