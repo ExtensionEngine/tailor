@@ -48,9 +48,9 @@ export default {
   methods: {
     ...mapRequests('app', ['showConfirmationModal']),
     addItems(items) {
+      items = Array.isArray(items) ? items : [items];
       const container = cloneDeep(this.container);
       container.embeds = { ...container.embeds, ...mapKeys(items, 'id') };
-
       this.$emit('save', container);
     },
     reorderItem({ newPosition, items }) {
