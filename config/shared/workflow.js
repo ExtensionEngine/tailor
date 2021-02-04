@@ -32,6 +32,7 @@ function getDefaultActivityStatus(type) {
   const schemaId = getSchemaId(type);
   if (!schemaId) return;
   const { workflowId } = getSchema(schemaId);
+  if (!workflowId) return;
   return getDefaultWorkflowStatus(workflowId);
 }
 
