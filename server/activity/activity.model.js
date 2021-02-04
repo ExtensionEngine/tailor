@@ -47,7 +47,8 @@ class Activity extends Model {
       isTrackedInWorkflow: {
         type: VIRTUAL,
         get() {
-          return isTrackedInWorkflow(this.get('type'));
+          const type = this.get('type');
+          return type && isTrackedInWorkflow(type);
         }
       },
       publishedAt: {
