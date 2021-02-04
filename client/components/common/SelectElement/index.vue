@@ -155,7 +155,7 @@ export default {
     deselectActivity() {
       this.selectedActivity = null;
       this.contentContainers = [];
-      this.selectedElements = [];
+      this.selectedElements = [...this.selected];
     },
     async selectRepository(repository) {
       const { currentActivities, currentRepository } = this;
