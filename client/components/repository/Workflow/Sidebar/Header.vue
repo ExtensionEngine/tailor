@@ -42,7 +42,7 @@
       </v-btn>
       <div class="mt-1 caption grey--text text--darken-1">
         Created at {{ createdAt | formatDate }}
-        <template v-if="updatedAt">
+        <template v-if="isUpdated">
           <span class="mx-1">|</span>
           Updated at {{ updatedAt | formatDate }}
         </template>
@@ -53,7 +53,9 @@
 
 <script>
 import ActivityCard from './ActivityCard';
+import fecha from 'fecha';
 import { getLevel } from 'shared/activities';
+import isBefore from 'date-fns/isBefore';
 import LabelChip from '@/components/repository/common/LabelChip';
 import { mapGetters } from 'vuex';
 
@@ -70,7 +72,19 @@ export default {
   computed: {
     ...mapGetters('repository', ['structure']),
     activityConfig: vm => getLevel(vm.type),
+    isUpdated() {
+      if (!this.updatedAt) return false;
+      const createdAt = this.truncateSeconds(new Date(this.createdAt));
+      const updatedAt = this.truncateSeconds(new Date(this.updatedAt));
+      return isBefore(createdAt, updatedAt);
+    },
     statusUrl: () => window.location.href
+  },
+  methods: {
+    truncateSeconds(date) {
+      const format = 'MM/DD/YY HH:mm';
+      return fecha.parse(fecha.format(date, format), format);
+    }
   },
   components: { ActivityCard, LabelChip }
 };
