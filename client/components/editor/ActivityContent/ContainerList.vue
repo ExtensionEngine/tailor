@@ -51,6 +51,8 @@ import isEmpty from 'lodash/isEmpty';
 import { mapRequests } from '@/plugins/radio';
 import mapValues from 'lodash/mapValues';
 import maxBy from 'lodash/maxBy';
+import pluralize from 'pluralize';
+import Promise from 'bluebird';
 import throttle from 'lodash/throttle';
 
 const DEPRECATED_LISTENERS = {
@@ -125,13 +127,20 @@ export default {
       this.save({ type, parentId, position });
     },
     saveContentElements(elements) {
-      castArray(elements).forEach(element => {
+      // TODO: implement endpoint to save multiple elements at once
+      const contentElements = castArray(elements);
+      Promise.map(contentElements, element => {
         const elementChannel = this.$radio.channel(`element:${getElementId(element)}`);
-        return this.saveElement(element).then(() => {
-          elementChannel.emit('saved');
-          this.showNotification();
-        })
-        .catch(err => elementChannel.emit('error', err));
+        return this.saveElement(element)
+          .then(() => elementChannel.emit('saved'))
+          .catch(err => {
+            elementChannel.emit('error', err);
+            return Promise.reject(err);
+          });
+      })
+      .then(() => {
+        const message = `${pluralize('Element', contentElements.length)} saved`;
+        this.showNotification(message);
       });
     },
     reorderContentElements({ newPosition, items }) {
@@ -153,8 +162,8 @@ export default {
       const onDelete = () => this.$emit('focusoutElement');
       this.requestDeletion(element, 'deleteElement', 'element', onDelete);
     },
-    showNotification: throttle(function () {
-      this.$snackbar.show('Element saved');
+    showNotification: throttle(function (message) {
+      this.$snackbar.show(message);
     }, 4000)
   },
   created() {
