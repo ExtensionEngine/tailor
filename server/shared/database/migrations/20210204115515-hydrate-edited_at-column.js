@@ -4,7 +4,8 @@ const head = require('lodash/head');
 
 exports.up = async qi => {
   const comments = await getComments(qi);
-  return updateComments(comments, qi);
+  if (!comments.length) return;
+  return updateColumnValues(comments, qi);
 };
 
 exports.down = () => {};
@@ -23,7 +24,7 @@ async function getComments({ sequelize }) {
   return head(await sequelize.query(sql, { raw: true }));
 }
 
-function updateComments(comments, { sequelize }) {
+function updateColumnValues(comments, { sequelize }) {
   return Promise.all(comments.map(({ id, updatedAt }) => {
     const sql = 'UPDATE comment SET edited_at = :updatedAt WHERE id = :id';
     const replacements = { id, updatedAt };
