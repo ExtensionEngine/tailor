@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex align-center px-4">
+  <div class="d-flex align-center">
     <v-text-field
       @input="updateFilter('searchText', $event)"
       :value="searchText"
@@ -14,11 +14,13 @@
         @click="toggleAssignee(id)"
         v-bind="assignee"
         :class="{ active: isActive }"
+        show-tooltip
         class="avatar" />
       <assignee-avatar
         v-if="showUnassigned"
         @click="updateFilter('unassigned', !unassigned)"
         :class="{ active: unassigned }"
+        show-tooltip
         class="avatar" />
     </div>
     <v-btn
@@ -36,7 +38,7 @@ import AssigneeAvatar from '@/components/repository/common/AssigneeAvatar';
 import xor from 'lodash/xor';
 
 export default {
-  name: 'workflow-board-filters',
+  name: 'workflow-filters',
   props: {
     searchText: { type: String, default: null },
     recentOnly: { type: Boolean, default: false },
@@ -59,6 +61,7 @@ export default {
 
 <style lang="scss" scoped>
 .search-field {
+  min-width: 14.5rem;
   max-width: 17.5rem;
 }
 

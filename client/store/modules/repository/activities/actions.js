@@ -69,6 +69,13 @@ const calculateCopyPosition = ({ state }, { anchor, action }) => {
   return calculatePosition(context);
 };
 
+const saveStatus = ({ commit }, { activity, status }) => {
+  return api.post(`${activity.id}/status`, status)
+    .then(({ data: { data } }) => {
+      commit('save', { ...activity, status: data });
+    });
+};
+
 export {
   calculateCopyPosition,
   calculateInsertPosition,
@@ -82,5 +89,6 @@ export {
   reset,
   save,
   setEndpoint,
-  update
+  update,
+  saveStatus
 };

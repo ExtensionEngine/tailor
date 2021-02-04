@@ -18,7 +18,7 @@
 import LabelChip from '@/components/repository/common/LabelChip';
 
 export default {
-  name: 'workflow-board-activity-card',
+  name: 'workflow-activity-card',
   props: {
     id: { type: Number, required: true },
     name: { type: String, required: true },

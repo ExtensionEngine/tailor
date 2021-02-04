@@ -91,6 +91,13 @@ function getPreviewUrl({ activity }, res) {
     });
 }
 
+async function updateStatus({ body, activity }, res) {
+  const data = pick(body, ['assigneeId', 'status', 'priority', 'description', 'dueDate']);
+  const status = await activity.createStatus(data);
+  await status.reload();
+  return res.json({ data: status });
+}
+
 function updatePublishingStatus(repository, activity) {
   if (!isOutlineActivity(activity.type)) return Promise.resolve();
   return publishingService.updatePublishingStatus(repository);
@@ -105,5 +112,6 @@ module.exports = {
   reorder,
   clone,
   publish,
-  getPreviewUrl
+  getPreviewUrl,
+  updateStatus
 };

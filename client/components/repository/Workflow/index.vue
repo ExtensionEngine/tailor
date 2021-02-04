@@ -1,12 +1,17 @@
 <template>
-  <div class="board d-flex flex-column grey lighten-4 py-3">
-    <v-progress-circular v-if="showLoader" color="primary" indeterminate class="align-self-center" />
+  <div class="workflow d-flex flex-column grey lighten-4 pt-3 py-5">
+    <v-progress-circular
+      v-if="showLoader"
+      color="primary"
+      indeterminate
+      class="align-self-center" />
     <template v-else>
-      <board-filters
+      <workflow-filters
         v-bind.sync="filters"
         :assignee-options="assignees"
-        :show-unassigned="unassignedTaskExists" />
-      <board-columns :tasks="filteredTasks" />
+        :show-unassigned="unassignedActivityExists"
+        class="controls mx-4" />
+      <workflow-overview :activities="filteredActivities" class="overview mt-3 mx-4" />
       <sidebar />
     </template>
   </div>
@@ -14,18 +19,18 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import BoardColumns from './Columns';
-import BoardFilters from './Filters';
 import conforms from 'lodash/conforms';
 import isAfter from 'date-fns/isAfter';
 import Sidebar from './Sidebar';
 import sub from 'date-fns/sub';
+import WorkflowFilters from './Filters';
+import WorkflowOverview from './Overview';
 
 const RECENCY_THRESHOLD = { days: 2 };
-const SEARCH_TEXT_LENGTH_THRESHOLD = 3;
+const SEARCH_TEXT_LENGTH_THRESHOLD = 2;
 
 export default {
-  name: 'workflow-board',
+  name: 'workflow-view',
   props: {
     showLoader: { type: Boolean, default: false }
   },
@@ -38,10 +43,10 @@ export default {
     }
   }),
   computed: {
-    ...mapGetters('repository', ['repository', 'tasks']),
-    unassignedTaskExists: vm => vm.tasks.some(it => !it.assigneeId),
-    searchableTasks() {
-      return this.tasks.map(it => ({
+    ...mapGetters('repository', { activities: 'workflowActivities' }),
+    unassignedActivityExists: vm => vm.activities.some(it => !it.status.assigneeId),
+    searchableActivities() {
+      return this.activities.map(it => ({
         ...it,
         searchableText: this.getSearchableText(it)
       }));
@@ -53,15 +58,16 @@ export default {
     isFilteredBySearchText() {
       return this.filters.searchText?.length > SEARCH_TEXT_LENGTH_THRESHOLD;
     },
-    filteredTasks() {
-      return this.searchableTasks.filter(conforms({
-        ...this.filters.recentOnly && { updatedAt: this.filterByRecency },
-        ...this.isFilteredByAssignee && { assigneeId: this.filterByAssignee },
+    filteredActivities() {
+      return this.searchableActivities.filter(conforms({
+        ...this.filters.recentOnly && { status: this.filterByRecency },
+        ...this.isFilteredByAssignee && { status: this.filterByAssignee },
         ...this.isFilteredBySearchText && { searchableText: this.filterBySearchText }
       }));
     },
     assignees() {
-      return this.tasks.reduce((all, { assignee }) => {
+      return this.activities.reduce((all, { status }) => {
+        const { assignee } = status;
         if (!assignee) return all;
         const isActive = this.filters.selectedAssigneeIds.includes(assignee.id);
         return { ...all, [assignee.id]: { ...assignee, isActive } };
@@ -70,39 +76,48 @@ export default {
   },
   methods: {
     ...mapActions('repository', ['getUsers']),
-    ...mapActions('repository/tasks', { getTasks: 'reset' }),
-    filterByAssignee(id) {
-      if (this.filters.unassigned && !id) return true;
-      return this.filters.selectedAssigneeIds.includes(id);
+    filterByAssignee({ assigneeId }) {
+      if (this.filters.unassigned && !assigneeId) return true;
+      return this.filters.selectedAssigneeIds.includes(assigneeId);
     },
-    filterByRecency(updatedAt) {
+    filterByRecency({ updatedAt }) {
       const parsed = new Date(updatedAt);
       const updatedAtLimit = sub(new Date(), RECENCY_THRESHOLD);
       return isAfter(parsed, updatedAtLimit);
     },
     filterBySearchText(searchableText) {
-      return searchableText.indexOf(this.filters.searchText.toLowerCase()) !== -1;
+      return searchableText.includes(this.filters.searchText.toLowerCase());
     },
-    getSearchableText({ shortId, description, activity }) {
-      const { name } = activity.data;
+    getSearchableText({ data, shortId, status }) {
+      const { name } = data;
+      const { description } = status;
       return `${shortId} ${name} ${description}`.toLowerCase();
     }
   },
   created() {
-    this.getTasks();
     this.getUsers();
   },
-  components: { BoardFilters, BoardColumns, Sidebar }
+  components: { Sidebar, WorkflowFilters, WorkflowOverview }
 };
 </script>
 
 <style lang="scss" scoped>
-.board {
+$sidebar-width: 27.1875rem;
+
+.workflow {
   position: relative;
   height: 100%;
 
   .v-progress-circular {
     margin-top: 7.5rem;
   }
+}
+
+.controls, .overview {
+  max-width: calc(100% - #{$sidebar-width} - 3rem);
+}
+
+.overview {
+  overflow-y: scroll;
 }
 </style>

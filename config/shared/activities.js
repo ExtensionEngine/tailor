@@ -32,6 +32,7 @@ module.exports = {
   getLevel: getActivityConfig,
   getOutlineLevels,
   isOutlineActivity,
+  isTrackedInWorkflow,
   getRepositoryMetadata,
   getActivityMetadata,
   getElementMetadata,
@@ -66,6 +67,13 @@ function isOutlineActivity(type) {
   const schema = getSchemaId(type);
   if (!schema) return false;
   return !!find(getOutlineLevels(schema), { type });
+}
+
+function isTrackedInWorkflow(type) {
+  const schema = getSchemaId(type);
+  if (!schema) return false;
+  const activity = find(getOutlineLevels(schema), { type });
+  return activity && activity.isTrackedInWorkflow;
 }
 
 function getActivityMetadata(activity = {}) {

@@ -1,7 +1,6 @@
-<template functional>
+<template>
   <v-chip
-    v-on="listeners"
-    :class="[data.staticClass, data.class]"
+    v-on="$listeners"
     color="blue-grey lighten-5"
     label small
     class="readonly flex-shrink-0 caption text-uppercase">

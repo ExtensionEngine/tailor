@@ -22,8 +22,8 @@ const send = promisify(server.send.bind(server));
 const templatesDir = path.join(__dirname, './templates/');
 
 const resetUrl = token => urlJoin(origin, '/#/reset-password/', token);
-const taskUrl = (repositoryId, taskId) =>
-  urlJoin(origin, '/#/repository', `${repositoryId}/board?taskId=${taskId}`);
+const activityStatusUrl = (repositoryId, activityId) =>
+  urlJoin(origin, '/#/repository', `${repositoryId}/progress?activityId=${activityId}`);
 const activityUrl = ({ repositoryId, activityId }) =>
   urlJoin(origin, '/#/repository', `${repositoryId}?activityId=${activityId}`);
 const elementUrl = ({ repositoryId, activityId, elementUid }) => {
@@ -36,7 +36,7 @@ module.exports = {
   invite,
   resetPassword,
   sendCommentNotification,
-  sendTaskAssigneeNotification
+  sendAssigneeNotification
 };
 
 function invite(user, token) {
@@ -96,17 +96,19 @@ function sendCommentNotification(users, comment) {
   });
 }
 
-function sendTaskAssigneeNotification(assignee, activity, task) {
+function sendAssigneeNotification(assignee, activity) {
   const recipients = assignee;
-  const { name: label } = activity.data;
-  const data = { ...task, label, href: taskUrl(task.repositoryId, task.id) };
-  const html = renderHtml(path.join(templatesDir, 'task.mjml'), data);
-  const text = renderText(path.join(templatesDir, 'task.txt'), data);
+  const data = {
+    ...activity,
+    href: activityStatusUrl(activity.repositoryId, activity.id)
+  };
+  const html = renderHtml(path.join(templatesDir, 'assignee.mjml'), data);
+  const text = renderText(path.join(templatesDir, 'assignee.txt'), data);
   logger.info({ recipients, sender: from }, '📧  Sending notification email to:', recipients);
   return send({
     from,
     to: recipients,
-    subject: `You've been assigned task for "${label}."`,
+    subject: `You've been assigned to the ${activity.label} "${activity.data.name}".`,
     text,
     attachment: [{ data: html, alternative: true }]
   });

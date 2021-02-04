@@ -4,17 +4,19 @@
     color="grey lighten-5"
     absolute right permanent
     class="px-4">
-    <template v-if="selectedTask">
+    <template v-if="isTrackedActivity">
       <sidebar-header
-        v-bind="selectedTask"
+        v-bind="selectedActivity"
+        :name="selectedActivity.data.name"
+        :updated-at="selectedActivity.status.updatedAt"
         class="pt-4" />
-      <task-field-group
-        @update="updateTask"
-        v-bind="selectedTask"
+      <status-field-group
+        @update="updateStatus"
+        v-bind="selectedActivity.status"
         class="mt-9 mb-12" />
     </template>
     <section v-else class="placeholder grey--text text--darken-3">
-      <h4>Task Sidebar</h4>
+      <h4>Status Sidebar</h4>
       <v-icon>mdi-chevron-left</v-icon>
       <div class="info-content">{{ emptyMessage }}</div>
     </section>
@@ -24,26 +26,31 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import SidebarHeader from './Header';
-import TaskFieldGroup from './FieldGroup';
+import StatusFieldGroup from './FieldGroup';
 
 export default {
   props: {
     emptyMessage: {
       type: String,
-      default: 'Please select Task on the left to view and edit its details here.'
+      default: 'Please select item on the left to view and edit its status here.'
     }
   },
   computed: {
-    ...mapGetters('repository', ['selectedTask'])
+    ...mapGetters('repository', ['selectedActivity']),
+    isTrackedActivity: vm => vm.selectedActivity?.isTrackedInWorkflow
   },
   methods: {
-    ...mapActions('repository/tasks', ['save']),
-    updateTask(key, value) {
-      this.save({ ...this.selectedTask, [key]: value || null })
-        .then(() => { this.$snackbar.show('Task saved'); });
+    ...mapActions('repository/activities', ['saveStatus']),
+    updateStatus(key, value) {
+      const status = {
+        ...this.selectedActivity.status,
+        [key]: value || null
+      };
+      this.saveStatus({ activity: this.selectedActivity, status })
+        .then(() => { this.$snackbar.show('Status saved'); });
     }
   },
-  components: { TaskFieldGroup, SidebarHeader }
+  components: { StatusFieldGroup, SidebarHeader }
 };
 </script>
 

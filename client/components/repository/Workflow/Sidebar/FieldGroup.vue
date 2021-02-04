@@ -62,14 +62,14 @@ import SelectPriority from '@/components/repository/common/SelectPriority';
 const defaultPriority = priorities.find(it => it.default);
 
 export default {
-  name: 'task-field-group',
+  name: 'status-field-group',
   props: {
     description: { type: String, default: null },
     status: { type: String, default: null },
     assigneeId: { type: Number, default: null },
     priority: {
       type: String,
-      default: defaultPriority ? defaultPriority.id : null
+      default: defaultPriority.id
     },
     dueDate: { type: String, default: null }
   },
