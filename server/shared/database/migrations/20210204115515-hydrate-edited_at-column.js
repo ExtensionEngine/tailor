@@ -2,8 +2,15 @@
 
 const head = require('lodash/head');
 
-exports.up = async ({ sequelize }) => {
-  const selectSql = `
+exports.up = async qi => {
+  const comments = await getComments(qi);
+  return updateComments(comments, qi);
+};
+
+exports.down = () => {};
+
+async function getComments({ sequelize }) {
+  const sql = `
     SELECT
       id,
       created_at AS "createdAt",
@@ -13,12 +20,13 @@ exports.up = async ({ sequelize }) => {
     WHERE
       created_at != updated_at;
   `;
-  const comments = head(await sequelize.query(selectSql, { raw: true }));
-  Promise.all(comments.map(({ id, updatedAt }) => {
-    const updateSql = 'UPDATE comment SET edited_at = :updatedAt WHERE id = :id';
-    const replacements = { id, updatedAt };
-    return sequelize.query(updateSql, { replacements });
-  }));
-};
+  return head(await sequelize.query(sql, { raw: true }));
+}
 
-exports.down = () => {};
+function updateComments(comments, { sequelize }) {
+  return Promise.all(comments.map(({ id, updatedAt }) => {
+    const sql = 'UPDATE comment SET edited_at = :updatedAt WHERE id = :id';
+    const replacements = { id, updatedAt };
+    return sequelize.query(sql, { replacements });
+  }));
+}
