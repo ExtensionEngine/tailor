@@ -9,7 +9,7 @@
       <span class="subtitle-2 mr-4">Accordion</span>
       <span v-if="isDisabled">Click on the item to expand</span>
     </v-toolbar>
-    <v-expansion-panels :disabled="isDisabled" multiple tile hover>
+    <v-expansion-panels multiple tile hover>
       <element-placeholder
         v-if="!hasItems"
         :is-focused="isFocused"
