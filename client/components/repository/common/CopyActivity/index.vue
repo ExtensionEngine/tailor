@@ -13,35 +13,30 @@
       Copy items from {{ schema.name | pluralize }}
     </template>
     <template v-slot:body>
-      <v-progress-circular
-        v-if="isFetchingRepositories"
-        color="primary"
-        indeterminate
-        class="mt-4" />
-      <div v-else-if="isCopyingActivities" class="ma-4">
+      <div v-if="isCopyingActivities" class="ma-4">
         <div class="subtitle-1 text-center mb-2">
           Copying {{ selectedActivities.length }} items...
         </div>
         <v-progress-linear color="primary" indeterminate />
       </div>
-      <div v-else>
-        <v-autocomplete
-          @input="selectRepository"
-          :value="selectedRepository"
-          :items="repositories"
-          :label="schema.name"
-          placeholder="Select..."
-          item-text="name"
-          prepend-inner-icon="mdi-magnify"
-          outlined return-object
-          class="mx-3 pt-3" />
-        <repository-tree
-          v-if="selectedRepository && !isFetchingActivities"
-          @change="selectedActivities = $event"
-          :schema-name="schema.name"
-          :supported-levels="levels"
-          :activities="selectedRepository.activities || []" />
-      </div>
+      <v-combobox
+        @input="selectRepository"
+        @update:search-input="fetchRepositories"
+        :loading="isFetchingRepositories"
+        :value="selectedRepository"
+        :items="repositories"
+        :label="schema.name"
+        placeholder="Type to search repositories..."
+        item-text="name"
+        prepend-inner-icon="mdi-magnify"
+        outlined return-object
+        class="mx-3 pt-3" />
+      <repository-tree
+        v-if="selectedRepository && !isFetchingActivities"
+        @change="selectedActivities = $event"
+        :schema-name="schema.name"
+        :supported-levels="levels"
+        :activities="selectedRepository.activities || []" />
     </template>
     <template v-slot:actions>
       <v-btn @click="close" :disabled="isCopyingActivities" text>Cancel</v-btn>
@@ -60,9 +55,12 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import activityApi from 'client/api/activity';
+import debounce from 'lodash/debounce';
+import find from 'lodash/find';
 import head from 'lodash/head';
 import InsertLocation from '@/utils/InsertLocation';
 import last from 'lodash/last';
+import loader from '@/components/common/loader';
 import pluralize from 'pluralize';
 import Promise from 'bluebird';
 import repositoryApi from 'client/api/repository';
@@ -88,7 +86,7 @@ export default {
     selectedRepository: null,
     selectedActivities: [],
     copiedActivities: [],
-    isFetchingRepositories: true,
+    isFetchingRepositories: false,
     isFetchingActivities: false,
     isCopyingActivities: false
   }),
@@ -105,6 +103,7 @@ export default {
   methods: {
     ...mapActions('repository/activities', ['clone', 'calculateCopyPosition']),
     async selectRepository(repository) {
+      if (!find(this.repositories, { id: repository.id })) return;
       this.selectedRepository = repository;
       this.selectedActivities = [];
       if (repository.activities) return;
@@ -143,12 +142,16 @@ export default {
     close() {
       this.visible = false;
       this.$emit('close');
-    }
+    },
+    fetchRepositories: debounce(loader(function (search = '') {
+      const params = { search, schema: this.repository.schema };
+      return repositoryApi.getRepositories(params).then(repositories => {
+        this.repositories = sortBy(repositories, 'name');
+      });
+    }, 'isFetchingRepositories'), 500)
   },
-  async created() {
-    const { schema } = this.repository;
-    this.repositories = sortBy(await repositoryApi.getRepositories({ schema }), 'name');
-    this.isFetchingRepositories = false;
+  created() {
+    this.fetchRepositories();
   },
   mounted() {
     this.visible = !this.showActivator;

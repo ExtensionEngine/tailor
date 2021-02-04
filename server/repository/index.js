@@ -7,7 +7,7 @@ const ctrl = require('./repository.controller');
 const feed = require('./feed');
 const multer = require('multer');
 const path = require('path');
-const processQuery = require('../shared/util/processListQuery')();
+const processQuery = require('../shared/util/processListQuery');
 const { Repository } = require('../shared/database');
 const router = require('express').Router();
 const { setSignedCookies } = require('../shared/storage/proxy/mw');
@@ -32,7 +32,7 @@ router
   .use('/:repositoryId', hasAccess, setSignedCookies);
 
 router.route('/')
-  .get(processQuery, ctrl.index)
+  .get(processQuery({ limit: 100 }), ctrl.index)
   .post(authorize(), ctrl.create);
 
 router.route('/:repositoryId')

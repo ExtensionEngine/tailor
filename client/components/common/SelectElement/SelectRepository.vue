@@ -16,11 +16,9 @@
 
 <script>
 import debounce from 'lodash/debounce';
-import find from 'lodash/find';
 import loader from '@/components/common/loader';
 import repositoryApi from '@/api/repository';
-
-const SEARCH_MIN_LENGTH = 3;
+import sortBy from 'lodash/sortBy';
 
 export default {
   name: 'select-repository',
@@ -38,12 +36,13 @@ export default {
       }
     },
     fetchRepositories: debounce(loader(function (search) {
-      if (!search || search.length < SEARCH_MIN_LENGTH) {
-        return (this.repositories = []);
-      }
-      return repositoryApi.getRepositories({ search })
-        .then(repositories => (this.repositories = repositories));
+      return repositoryApi.getRepositories({ search }).then(repositories => {
+        this.repositories = sortBy(repositories, 'name');
+      });
     }, 'loading'), 500)
+  },
+  created() {
+    this.fetchRepositories();
   }
 };
 </script>
