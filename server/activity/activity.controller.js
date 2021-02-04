@@ -94,8 +94,8 @@ function getPreviewUrl({ activity }, res) {
 async function updateStatus({ body, activity }, res) {
   const data = pick(body, ['assigneeId', 'status', 'priority', 'description', 'dueDate']);
   const status = await activity.createStatus(data);
-  const assignee = await status.getAssignee();
-  res.json({ data: { ...status.toJSON(), assignee } });
+  await status.reload();
+  return res.json({ data: status });
 }
 
 function updatePublishingStatus(repository, activity) {
