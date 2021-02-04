@@ -32,7 +32,7 @@
         <content-preview
           v-else
           @toggle="toggleElementSelection"
-          @element:open="openElement"
+          @element:open="openInEditor"
           :content-containers="contentContainers"
           :selected="selectedElements"
           :allowed-types="allowedTypes"
@@ -87,16 +87,14 @@ export default {
     headerIcon: { type: String, default: 'mdi-toy-brick-plus-outline' },
     useCurrentRepo: { type: Boolean, default: false }
   },
-  data: () => {
-    return {
-      repository: null,
-      selectedActivity: null,
-      contentContainers: [],
-      selectedElements: [],
-      loadingContent: false,
-      activities: []
-    };
-  },
+  data: () => ({
+    repository: null,
+    selectedActivity: null,
+    contentContainers: [],
+    selectedElements: [],
+    loadingContent: false,
+    activities: []
+  }),
   computed: {
     ...mapGetters('repository', {
       currentRepository: 'repository',
@@ -104,7 +102,7 @@ export default {
     }),
     allElementsSelected: vm => vm.selectedElements.length === vm.elements.length,
     showBackButton: vm => vm.useCurrentRepo ? !!vm.selectedActivity : !!vm.repository,
-    containers() {
+    processedContainers() {
       const { selectedActivity, activities } = this;
       if (!selectedActivity || !activities.length) return [];
       const rootTypes = getContainerTypes(selectedActivity.type);
@@ -135,9 +133,9 @@ export default {
   methods: {
     async showActivityElements(activity) {
       this.selectedActivity = activity;
-      const { containers } = this;
-      const elements = await this.fetchElements(containers);
-      this.contentContainers = containers.map(container => {
+      const { processedContainers } = this;
+      const elements = await this.fetchElements(processedContainers);
+      this.contentContainers = processedContainers.map(container => {
         const containerElements = elements
           .filter(it => it.activityId === container.id)
           .map(element => ({ ...element, activity }));
@@ -182,7 +180,7 @@ export default {
     close() {
       this.$emit('close');
     },
-    openElement(elementId) {
+    openInEditor(elementId) {
       const params = {
         activityId: this.selectedActivity.id,
         repositoryId: this.repository.id

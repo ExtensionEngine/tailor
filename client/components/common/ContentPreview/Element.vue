@@ -11,8 +11,8 @@
           v-bind="$attrs"
           :element="element"
           :set-width="false"
-          :class="{ selected: isSelected }"
-          class="content-element" />
+          class="content-element"
+          :class="{ selected: isSelected }" />
         <v-tooltip open-delay="400" top>
           <template v-slot:activator="{ on }">
             <v-btn
@@ -20,8 +20,8 @@
               @click.stop="$emit('element:open', element.uid)"
               color="pink darken-1"
               fab small dark
-              :class="{ visible: hover }"
-              class="open-element-button">
+              class="open-element-button"
+              :class="{ visible: hover }">
               <v-icon small dark>mdi-open-in-new</v-icon>
             </v-btn>
           </template>
@@ -62,8 +62,8 @@ export default {
 .element-preview-container {
   display: flex;
   position: relative;
-  margin: 1rem 0;
   float: none;
+  margin: 1rem 0;
 
   .v-input {
     margin: 0;

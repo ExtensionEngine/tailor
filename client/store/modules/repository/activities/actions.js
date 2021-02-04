@@ -52,9 +52,10 @@ const clone = ({ commit }, mapping) => {
 
 const calculateInsertPosition = ({ state }, { activity, anchor, action }) => {
   const items = getOutlineChildren(state.items, activity.parentId);
-  if (action === ADD_INTO) return calculatePosition({ items, action });
-  const newPosition = anchor ? findIndex(items, { id: anchor.id }) : 1;
-  const context = { items, newPosition, action };
+  const context = { items, action };
+  if (action !== ADD_INTO) {
+    context.newPosition = anchor ? findIndex(items, { id: anchor.id }) : 1;
+  }
   return calculatePosition(context);
 };
 

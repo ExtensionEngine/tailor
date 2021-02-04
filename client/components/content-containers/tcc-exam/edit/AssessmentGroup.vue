@@ -113,8 +113,7 @@ export default {
       });
     },
     saveAssessment(assessment) {
-      if (assessment.id) return this.$emit('update:element', assessment);
-      this.$emit('save:element', assessment);
+      this.$emit(assessment.id ? 'update:element' : 'save:element', assessment);
     },
     deleteAssessment(assessment) {
       if (!assessment.id) return this.clearUnsavedAssessments([assessment]);

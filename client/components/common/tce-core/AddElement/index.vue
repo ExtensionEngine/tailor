@@ -47,7 +47,7 @@
                 <v-icon>mdi-select-compare</v-icon>
               </v-btn>
             </v-btn-toggle>
-            <v-divider class="mr-3" vertical />
+            <v-divider vertical class="mr-3" />
             <div class="width-label px-1 subtitle-1 grey--text text--lighten-4">
               Element width
               <span class="pl-1">{{ elementWidth }}</span>%

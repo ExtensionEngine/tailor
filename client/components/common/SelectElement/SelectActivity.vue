@@ -12,7 +12,7 @@
       ref="treeview"
       :items="activityTree"
       :search="search"
-      :open="expandedItems"
+      :open="expandedActivityIds"
       transition open-on-click
       class="py-3 px-1 treeview">
       <template v-slot:label="{ item: { id, data } }">
@@ -56,7 +56,7 @@ export default {
   data: () => ({ search: '' }),
   computed: {
     groupedSelection: vm => groupBy(vm.selectedElements, 'outlineId'),
-    expandedItems: vm => map(vm.activities, 'id'),
+    expandedActivityIds: vm => map(vm.activities, 'id'),
     activityTree: vm => toTreeFormat(vm.activities, []),
     noResultsMessage() {
       const { activities, search, $refs } = this;

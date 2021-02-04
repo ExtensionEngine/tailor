@@ -40,8 +40,7 @@ export default {
   },
   methods: {
     isAllowed(type) {
-      if (!this.allowedTypes.length) return true;
-      return this.allowedTypes.includes(type);
+      return !this.allowedTypes.length || this.allowedTypes.includes(type);
     }
   }
 };

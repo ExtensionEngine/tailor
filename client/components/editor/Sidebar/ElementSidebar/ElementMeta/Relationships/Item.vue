@@ -38,8 +38,8 @@
       :heading="defaultPlaceholder"
       :multiple="multiple"
       :allowed-types="allowedTypes"
-      use-current-repo
-      header-icon="mdi-transit-connection-variant" />
+      header-icon="mdi-transit-connection-variant"
+      use-current-repo />
   </v-list-item>
 </template>
 
