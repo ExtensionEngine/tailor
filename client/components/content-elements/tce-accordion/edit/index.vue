@@ -7,7 +7,7 @@
       dark
       class="text-left elevation-5">
       <span class="subtitle-2 mr-4">Accordion</span>
-      <span v-if="isDisabled">Click on the item to expand</span>
+      <span>Click on the item to expand</span>
     </v-toolbar>
     <v-expansion-panels multiple tile hover>
       <element-placeholder
