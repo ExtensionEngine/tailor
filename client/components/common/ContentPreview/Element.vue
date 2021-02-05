@@ -1,27 +1,27 @@
 <template>
-  <div :class="elementWidth" class="element-preview-container">
+  <div :class="elementWidth" class="element-preview-container float-none">
     <v-checkbox
       v-if="selectable"
       @click="toggleSelection"
       :input-value="isSelected"
       :disabled="disabled" />
     <v-hover v-slot:default="{ hover }">
-      <div class="element-wrapper">
+      <div class="element-wrapper flex-grow-1">
         <content-element
           v-bind="$attrs"
           :element="element"
           :set-width="false"
-          class="content-element"
-          :class="{ selected: isSelected }" />
+          :class="{ selected: isSelected }"
+          class="content-element" />
         <v-tooltip open-delay="400" top>
           <template v-slot:activator="{ on }">
             <v-btn
               v-on="on"
               @click.stop="$emit('element:open', element.uid)"
+              :class="{ visible: hover }"
               color="pink darken-1"
               fab small dark
-              class="open-element-button"
-              :class="{ visible: hover }">
+              class="open-element-button">
               <v-icon small dark>mdi-open-in-new</v-icon>
             </v-btn>
           </template>
@@ -62,7 +62,6 @@ export default {
 .element-preview-container {
   display: flex;
   position: relative;
-  float: none;
   margin: 1rem 0;
 
   .v-input {
@@ -99,7 +98,6 @@ export default {
 
 .element-wrapper {
   position: relative;
-  flex-grow: 1;
 }
 
 .open-element-button {

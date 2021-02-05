@@ -63,8 +63,8 @@ export default {
       if (!activities.length) return 'Empty repository';
       if (!search || !$refs) return '';
       const { excludedItems, nodes } = $refs.treeview;
-      if (excludedItems.size !== Object.keys(nodes).length) return '';
-      return 'No matches found';
+      const hasSearchResults = excludedItems.size !== Object.keys(nodes).length;
+      return !hasSearchResults && 'No matches found';
     }
   },
   methods: {
@@ -88,8 +88,8 @@ export default {
     border-radius: 12px !important;
   }
 
-  ::v-deep .v-treeview-node--leaf {
-    > .v-treeview-node__root, .v-treeview-node__content > * {
+  ::v-deep .v-treeview-node {
+    &--leaf > &__root, &--leaf > &__content > * {
       cursor: auto;
     }
   }

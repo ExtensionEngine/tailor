@@ -39,7 +39,7 @@
       :multiple="multiple"
       :allowed-types="allowedTypes"
       header-icon="mdi-transit-connection-variant"
-      use-current-repo />
+      only-current-repo />
   </v-list-item>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
   <v-combobox
-    @input="select"
+    @input="selectRepository"
     @update:search-input="fetchRepositories"
     :value="repository"
     :items="repositories"
@@ -30,7 +30,7 @@ export default {
     loading: false
   }),
   methods: {
-    select(repository) {
+    selectRepository(repository) {
       if (find(this.repositories, { id: repository.id })) {
         this.$emit('selected', repository);
       }

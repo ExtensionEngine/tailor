@@ -18,7 +18,7 @@
             <v-btn
               @click.stop="$emit('add', [element])"
               :disabled="!isAllowed(element.type)"
-              :color="hover ? 'pink' : '#333'"
+              :color="hover ? 'secondary' : '#333'"
               text
               class="add-element">
               <v-icon v-if="element.ui.icon">{{ element.ui.icon }}</v-icon>
@@ -58,11 +58,11 @@ export default {
   padding-top: 1.25rem;
   font-size: 1rem;
   font-weight: 500;
-  line-height: 1.75rem;
+  line-height: 1.75;
   text-align: left;
 
   .v-icon, span {
-    line-height: 1.75rem;
+    line-height: 1.75;
     vertical-align: middle;
   }
 

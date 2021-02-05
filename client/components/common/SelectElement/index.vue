@@ -11,7 +11,7 @@
         <select-repository
           @selected="selectRepository"
           :repository="selected.repository"
-          :disabled="useCurrentRepo" />
+          :disabled="onlyCurrentRepo" />
         <v-progress-circular v-if="loadingContent" indeterminate class="mt-5" />
         <select-activity
           v-else
@@ -85,7 +85,7 @@ export default {
     multiple: { type: Boolean, default: true },
     submitLabel: { type: String, default: 'Save' },
     headerIcon: { type: String, default: 'mdi-toy-brick-plus-outline' },
-    useCurrentRepo: { type: Boolean, default: false }
+    onlyCurrentRepo: { type: Boolean, default: false }
   },
   data: () => ({
     items: {
@@ -139,11 +139,14 @@ export default {
       const { processedContainers } = this;
       const elements = await this.fetchElements(processedContainers);
       this.items.contentContainers = processedContainers.map(container => {
-        const containerElements = elements
-          .filter(it => it.activityId === container.id)
-          .map(element => ({ ...element, outline: activity }));
-        return { ...container, elements: sortBy(containerElements, 'position') };
+        return this.assignElements(container, activity, elements);
       });
+    },
+    assignElements(container, activity, elements) {
+      const containerElements = elements
+          .filter(it => it.activityId === container.id)
+          .map(element => ({ ...element, activity }));
+      return { ...container, elements: sortBy(containerElements, 'position') };
     },
     toggleElementSelection(element) {
       const { selected: { elements } } = this;
