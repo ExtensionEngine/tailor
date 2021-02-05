@@ -28,9 +28,14 @@ export const getPositions = (items, index, count = 1) => {
  *     item's new position.
  * @param {boolean} isFirstChild Deprecated: Boolean value denoting whether
  *     the item should be placed as the first child of its parent.
- * @param {string} [action=REORDER] A string value determining where the item
- *     should be placed in relation to `newPosition`. Defaults to `REORDER` in
- *     case of items reorder.
+ * @param {"ADD_AFTER" | "ADD_BEFORE" | "REORDER" } [action=REORDER]
+ *     A string value determining where the item should be placed
+ *     in relation to `newPosition`.
+ *     `ADD_BEFORE` returns position(s) placed before the anchor element.
+ *     `ADD_AFTER` returns position(s) placed after the anchor element.
+ *     `REORDER` returns calculated position(s) based on `position` property of
+ *     adjacent elements.
+ *     Defaults to `REORDER`.
  * @param {number} count A number of items for which position needs to be
  *     determinate.
  * @return {(number|Array)} Single position if `count` is 1 or an array containing
