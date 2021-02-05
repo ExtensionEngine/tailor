@@ -16,6 +16,7 @@
 
 <script>
 import debounce from 'lodash/debounce';
+import find from 'lodash/find';
 import loader from '@/components/common/loader';
 import repositoryApi from '@/api/repository';
 import sortBy from 'lodash/sortBy';
