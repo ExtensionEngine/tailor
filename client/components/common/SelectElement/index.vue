@@ -7,17 +7,17 @@
     scrollable>
     <template v-slot:header>{{ heading }}</template>
     <template v-slot:body>
-      <template v-if="!selected.activity">
+      <template v-if="!selection.activity">
         <select-repository
           @selected="selectRepository"
-          :repository="selected.repository"
+          :repository="selection.repository"
           :disabled="onlyCurrentRepo" />
         <v-progress-circular v-if="loadingContent" indeterminate class="mt-5" />
         <select-activity
           v-else
           @selected="showActivityElements"
           :activities="items.activities"
-          :selected-elements="selected.elements" />
+          :selected-elements="selection.elements" />
       </template>
       <template v-else>
         <v-btn
@@ -34,7 +34,7 @@
           @toggle="toggleElementSelection"
           @element:open="openInEditor"
           :content-containers="items.contentContainers"
-          :selected="selected.elements"
+          :selected="selection.elements"
           :allowed-types="allowedTypes"
           :multiple="multiple"
           selectable />
@@ -42,7 +42,7 @@
     </template>
     <template v-slot:actions>
       <v-btn
-        v-if="selected.activity"
+        v-if="selection.activity"
         @click="deselectActivity"
         text outlined
         class="mr-2">
@@ -92,7 +92,7 @@ export default {
       activities: [],
       contentContainers: []
     },
-    selected: {
+    selection: {
       repository: null,
       activity: null,
       elements: []
@@ -104,9 +104,9 @@ export default {
       currentRepository: 'repository',
       currentActivities: 'activities'
     }),
-    allElementsSelected: vm => vm.selected.elements.length === vm.elements.length,
+    allElementsSelected: vm => vm.selection.elements.length === vm.elements.length,
     processedContainers() {
-      const { selected: { activity }, items: { activities } } = this;
+      const { selection: { activity }, items: { activities } } = this;
       if (!activity || !activities.length) return [];
       const rootTypes = getContainerTypes(activity.type);
       return this.getActivityContainers(activity, activities, rootTypes);
@@ -117,8 +117,8 @@ export default {
       return elements.filter(it => this.allowedTypes.includes(it.type));
     },
     toggleButton() {
-      const { allElementsSelected, elements, multiple, selected } = this;
-      if (!multiple || !selected.activity || !elements.length) return;
+      const { allElementsSelected, elements, multiple, selection } = this;
+      if (!multiple || !selection.activity || !elements.length) return;
       const { SELECT, DESELECT } = TOGGLE_BUTTON;
       return allElementsSelected ? DESELECT : SELECT;
     }
@@ -138,7 +138,7 @@ export default {
       }, []);
     },
     async showActivityElements(activity) {
-      this.selected.activity = activity;
+      this.selection.activity = activity;
       const { processedContainers } = this;
       const elements = await this.fetchElements(processedContainers);
       this.items.contentContainers = processedContainers.map(container => {
@@ -152,23 +152,23 @@ export default {
       return { ...container, elements: sortBy(containerElements, 'position') };
     },
     toggleElementSelection(element) {
-      const { selected: { elements } } = this;
+      const { selection: { elements } } = this;
       const existing = elements.find(it => it.id === element.id);
-      this.selected.elements = existing
+      this.selection.elements = existing
         ? elements.filter(it => it.id !== element.id)
         : elements.concat(element);
     },
     toggleSelectAll() {
-      this.selected.elements = this.allElementsSelected ? [] : this.elements;
+      this.selection.elements = this.allElementsSelected ? [] : this.elements;
     },
     deselectActivity() {
-      this.selected.activity = null;
+      this.selection.activity = null;
       this.items.contentContainers = [];
-      this.selected.elements = [...this.selected];
+      this.selection.elements = [...this.selected];
     },
     async selectRepository(repository) {
       const { currentActivities, currentRepository } = this;
-      this.selected.repository = repository;
+      this.selection.repository = repository;
       this.deselectActivity();
       this.items.activities = currentRepository.id === repository.id
         ? currentActivities
@@ -178,12 +178,12 @@ export default {
       return activitiesApi.getActivities(repository.id);
     }, 'loadingContent'),
     fetchElements: loader(function (containers) {
-      const { id: repositoryId } = this.selected.repository;
+      const { id: repositoryId } = this.selection.repository;
       const queryOpts = { repositoryId, ids: containers.map(it => it.id) };
       return contentElementApi.fetch(queryOpts);
     }, 'loadingContent', 500),
     save() {
-      this.$emit('selected', [...this.selected.elements]);
+      this.$emit('selected', [...this.selection.elements]);
       this.close();
     },
     close() {
@@ -191,8 +191,8 @@ export default {
     },
     openInEditor(elementId) {
       const params = {
-        activityId: this.selected.activity.id,
-        repositoryId: this.selected.repository.id
+        activityId: this.selection.activity.id,
+        repositoryId: this.selection.repository.id
       };
       const route = { name: 'editor', params, query: { elementId } };
       const { href } = this.$router.resolve(route);
@@ -200,8 +200,8 @@ export default {
     }
   },
   created() {
-    this.selected.elements = [...this.selected];
-    this.selected.repository = this.currentRepository;
+    this.selection.elements = [...this.selected];
+    this.selection.repository = this.currentRepository;
     this.items.activities = this.currentActivities;
   },
   components: { ContentPreview, SelectActivity, SelectRepository, TailorDialog }
