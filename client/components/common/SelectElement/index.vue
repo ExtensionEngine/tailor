@@ -109,17 +109,7 @@ export default {
       const { selected: { activity }, items: { activities } } = this;
       if (!activity || !activities.length) return [];
       const rootTypes = getContainerTypes(activity.type);
-      let containers = activities.filter(({ type, parentId }) => {
-        return parentId === activity.id && rootTypes.includes(type);
-      });
-      containers = sortBy(containers, [
-        it => rootTypes.indexOf(it.type), 'position', 'createdAt'
-      ]);
-      return containers.reduce((acc, container) => {
-        const subcontainers = getContainers(activities, container);
-        acc.push(container, ...sortBy(subcontainers, 'position'));
-        return acc;
-      }, []);
+      return this.getActivityContainers(activity, activities, rootTypes);
     },
     elements() {
       const elements = flatMap(this.items.contentContainers, 'elements');
@@ -134,6 +124,19 @@ export default {
     }
   },
   methods: {
+    getActivityContainers(activity, activities, rootTypes) {
+      let containers = activities.filter(({ type, parentId }) => {
+        return parentId === activity.id && rootTypes.includes(type);
+      });
+      containers = sortBy(containers, [
+        it => rootTypes.indexOf(it.type), 'position', 'createdAt'
+      ]);
+      return containers.reduce((acc, container) => {
+        const subcontainers = getContainers(activities, container);
+        acc.push(container, ...sortBy(subcontainers, 'position'));
+        return acc;
+      }, []);
+    },
     async showActivityElements(activity) {
       this.selected.activity = activity;
       const { processedContainers } = this;
