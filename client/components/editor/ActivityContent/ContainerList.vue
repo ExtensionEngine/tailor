@@ -129,19 +129,20 @@ export default {
     saveContentElements(elements) {
       // TODO: implement endpoint to save multiple elements at once
       const contentElements = castArray(elements);
-      Promise.map(contentElements, element => {
-        const elementChannel = this.$radio.channel(`element:${getElementId(element)}`);
-        return this.saveElement(element)
-          .then(() => elementChannel.emit('saved'))
-          .catch(err => {
-            elementChannel.emit('error', err);
-            return Promise.reject(err);
-          });
-      })
-      .then(() => {
-        const message = `${pluralize('Element', contentElements.length)} saved`;
-        this.showNotification(message);
-      });
+      return Promise.map(contentElements, element => this.persistElement(element))
+        .then(() => {
+          const message = `${pluralize('Element', contentElements.length)} saved`;
+          this.showNotification(message);
+        });
+    },
+    persistElement(element) {
+      const elementChannel = this.$radio.channel(`element:${getElementId(element)}`);
+      return this.saveElement(element)
+        .then(() => elementChannel.emit('saved'))
+        .catch(err => {
+          elementChannel.emit('error', err);
+          return Promise.reject(err);
+        });
     },
     reorderContentElements({ newPosition, items }) {
       const element = items[newPosition];
