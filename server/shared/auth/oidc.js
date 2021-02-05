@@ -34,7 +34,7 @@ module.exports = class OIDCStrategy extends BaseOIDCStrategy {
       id_token_hint: oidcData.tokenSet.id_token
     }));
     const customRedirectUriKey = this.options.postLogoutUriKey;
-    if (!this.options.postLogoutUriKey) return url.href;
+    if (!customRedirectUriKey) return url.href;
     const redirectUri = url.searchParams.get('post_logout_redirect_uri');
     url.searchParams.set(customRedirectUriKey, redirectUri);
     return url.href;
