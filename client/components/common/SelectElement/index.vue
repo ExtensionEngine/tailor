@@ -7,17 +7,17 @@
     scrollable>
     <template v-slot:header>{{ heading }}</template>
     <template v-slot:body>
-      <template v-if="!selectedActivity">
+      <template v-if="!selected.activity">
         <select-repository
           @selected="selectRepository"
-          :repository="repository"
+          :repository="selected.repository"
           :disabled="useCurrentRepo" />
         <v-progress-circular v-if="loadingContent" indeterminate class="mt-5" />
         <select-activity
           v-else
           @selected="showActivityElements"
-          :activities="activities"
-          :selected-elements="selectedElements" />
+          :activities="items.activities"
+          :selected-elements="selected.elements" />
       </template>
       <template v-else>
         <v-btn
@@ -33,8 +33,8 @@
           v-else
           @toggle="toggleElementSelection"
           @element:open="openInEditor"
-          :content-containers="contentContainers"
-          :selected="selectedElements"
+          :content-containers="items.contentContainers"
+          :selected="selected.elements"
           :allowed-types="allowedTypes"
           :multiple="multiple"
           selectable />
@@ -42,7 +42,7 @@
     </template>
     <template v-slot:actions>
       <v-btn
-        v-if="selectedActivity"
+        v-if="selected.activity"
         @click="deselectActivity"
         text outlined
         class="mr-2">
@@ -88,26 +88,29 @@ export default {
     useCurrentRepo: { type: Boolean, default: false }
   },
   data: () => ({
-    repository: null,
-    selectedActivity: null,
-    contentContainers: [],
-    selectedElements: [],
-    loadingContent: false,
-    activities: []
+    items: {
+      activities: [],
+      contentContainers: []
+    },
+    selected: {
+      repository: null,
+      activity: null,
+      elements: []
+    },
+    loadingContent: false
   }),
   computed: {
     ...mapGetters('repository', {
       currentRepository: 'repository',
       currentActivities: 'activities'
     }),
-    allElementsSelected: vm => vm.selectedElements.length === vm.elements.length,
-    showBackButton: vm => vm.useCurrentRepo ? !!vm.selectedActivity : !!vm.repository,
+    allElementsSelected: vm => vm.selected.elements.length === vm.elements.length,
     processedContainers() {
-      const { selectedActivity, activities } = this;
-      if (!selectedActivity || !activities.length) return [];
-      const rootTypes = getContainerTypes(selectedActivity.type);
+      const { selected: { activity }, items: { activities } } = this;
+      if (!activity || !activities.length) return [];
+      const rootTypes = getContainerTypes(activity.type);
       let containers = activities.filter(({ type, parentId }) => {
-        return parentId === selectedActivity.id && rootTypes.includes(type);
+        return parentId === activity.id && rootTypes.includes(type);
       });
       containers = sortBy(containers, [
         it => rootTypes.indexOf(it.type), 'position', 'createdAt'
@@ -119,49 +122,49 @@ export default {
       }, []);
     },
     elements() {
-      const elements = flatMap(this.contentContainers, 'elements');
+      const elements = flatMap(this.items.contentContainers, 'elements');
       if (!this.allowedTypes.length) return elements;
       return elements.filter(it => this.allowedTypes.includes(it.type));
     },
     toggleButton() {
-      const { allElementsSelected, elements, multiple, selectedActivity } = this;
-      if (!multiple || !selectedActivity || !elements.length) return;
+      const { allElementsSelected, elements, multiple, selected } = this;
+      if (!multiple || !selected.activity || !elements.length) return;
       const { SELECT, DESELECT } = TOGGLE_BUTTON;
       return allElementsSelected ? DESELECT : SELECT;
     }
   },
   methods: {
     async showActivityElements(activity) {
-      this.selectedActivity = activity;
+      this.selected.activity = activity;
       const { processedContainers } = this;
       const elements = await this.fetchElements(processedContainers);
-      this.contentContainers = processedContainers.map(container => {
+      this.items.contentContainers = processedContainers.map(container => {
         const containerElements = elements
           .filter(it => it.activityId === container.id)
-          .map(element => ({ ...element, activity }));
+          .map(element => ({ ...element, outline: activity }));
         return { ...container, elements: sortBy(containerElements, 'position') };
       });
     },
     toggleElementSelection(element) {
-      const { selectedElements: elements } = this;
+      const { selected: { elements } } = this;
       const existing = elements.find(it => it.id === element.id);
-      this.selectedElements = existing
+      this.selected.elements = existing
         ? elements.filter(it => it.id !== element.id)
         : elements.concat(element);
     },
     toggleSelectAll() {
-      this.selectedElements = this.allElementsSelected ? [] : this.elements;
+      this.selected.elements = this.allElementsSelected ? [] : this.elements;
     },
     deselectActivity() {
-      this.selectedActivity = null;
-      this.contentContainers = [];
-      this.selectedElements = [...this.selected];
+      this.selected.activity = null;
+      this.items.contentContainers = [];
+      this.selected.elements = [...this.selected];
     },
     async selectRepository(repository) {
       const { currentActivities, currentRepository } = this;
-      this.repository = repository;
+      this.selected.repository = repository;
       this.deselectActivity();
-      this.activities = currentRepository.id === repository.id
+      this.items.activities = currentRepository.id === repository.id
         ? currentActivities
         : await this.fetchActivities(repository);
     },
@@ -169,12 +172,12 @@ export default {
       return activitiesApi.getActivities(repository.id);
     }, 'loadingContent'),
     fetchElements: loader(function (containers) {
-      const { id: repositoryId } = this.repository;
+      const { id: repositoryId } = this.selected.repository;
       const queryOpts = { repositoryId, ids: containers.map(it => it.id) };
       return contentElementApi.fetch(queryOpts);
     }, 'loadingContent', 500),
     save() {
-      this.$emit('selected', [...this.selectedElements]);
+      this.$emit('selected', [...this.selected.elements]);
       this.close();
     },
     close() {
@@ -182,8 +185,8 @@ export default {
     },
     openInEditor(elementId) {
       const params = {
-        activityId: this.selectedActivity.id,
-        repositoryId: this.repository.id
+        activityId: this.selected.activity.id,
+        repositoryId: this.selected.repository.id
       };
       const route = { name: 'editor', params, query: { elementId } };
       const { href } = this.$router.resolve(route);
@@ -191,9 +194,9 @@ export default {
     }
   },
   created() {
-    this.selectedElements = [...this.selected];
-    this.repository = this.currentRepository;
-    this.activities = this.currentActivities;
+    this.selected.elements = [...this.selected];
+    this.selected.repository = this.currentRepository;
+    this.items.activities = this.currentActivities;
   },
   components: { ContentPreview, SelectActivity, SelectRepository, TailorDialog }
 };
