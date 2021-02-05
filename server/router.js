@@ -3,7 +3,7 @@
 const { auth: authConfig } = require('../config/server');
 const { authenticate } = require('./shared/auth');
 const express = require('express');
-const { extractAuthStrategy } = require('./shared/auth/mw');
+const { extractAuthData } = require('./shared/auth/mw');
 const repository = require('./repository');
 const storage = require('./shared/storage/storage.router');
 const tag = require('./tag');
@@ -11,7 +11,7 @@ const user = require('./user');
 
 const router = express.Router();
 router.use(processBody);
-router.use(extractAuthStrategy);
+router.use(extractAuthData);
 
 // Public routes:
 router.use(user.path, user.router);

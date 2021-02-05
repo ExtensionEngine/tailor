@@ -14,13 +14,13 @@ function authorize(...allowed) {
   };
 }
 
-function extractAuthStrategy(req, res, next) {
+function extractAuthData(req, res, next) {
   const path = authConfig.jwt.cookie.signed ? 'signedCookies' : 'cookies';
-  req.authStrategy = get(req[path], 'strategy', null);
+  req.authData = get(req[path], 'auth', null);
   return next();
 }
 
 module.exports = {
   authorize,
-  extractAuthStrategy
+  extractAuthData
 };

@@ -26,11 +26,12 @@ module.exports = class OIDCStrategy extends BaseOIDCStrategy {
     return this.options.logoutEnabled;
   }
 
-  logoutUrl(params = {}) {
+  logoutUrl({ oidcData, ...params } = {}) {
     const { client } = this;
     const url = new URL(client.endSessionUrl({
       ...params,
-      client_id: client.client_id
+      client_id: client.client_id,
+      id_token_hint: oidcData.tokenSet.id_token
     }));
     const customRedirectUriKey = this.options.postLogoutUriKey;
     if (!this.options.postLogoutUriKey) return url.href;
@@ -42,7 +43,8 @@ module.exports = class OIDCStrategy extends BaseOIDCStrategy {
   logout(params) {
     return (req, res) => {
       req.logout();
-      res.redirect(this.logoutUrl(params));
+      const { oidc: oidcData } = req.authData;
+      res.redirect(this.logoutUrl({ ...params, oidcData }));
     };
   }
 };

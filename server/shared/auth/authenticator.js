@@ -48,8 +48,9 @@ class Auth extends Authenticator {
       const expires = addDays(new Date(), 5);
       const options = { signed, secure, expires, httpOnly };
       res.cookie(name, token, options);
-      res.cookie('strategy', strategy, options);
-      req.authStrategy = strategy;
+      const authData = { strategy, [strategy]: user.authData };
+      res.cookie('auth', authData, options);
+      req.authData = authData;
       return next();
     };
   }
@@ -57,7 +58,7 @@ class Auth extends Authenticator {
   logout({ middleware = false } = {}) {
     return (_, res, next) => {
       res.clearCookie(config.jwt.cookie.name);
-      res.clearCookie('strategy');
+      res.clearCookie('auth');
       return middleware ? next() : res.end();
     };
   }
