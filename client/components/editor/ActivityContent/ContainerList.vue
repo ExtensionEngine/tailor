@@ -69,8 +69,8 @@ const DEPRECATED_LISTENERS = {
     }]
   },
   updateElement: { action: 'updateElement' },
-  reorderElement: { action: 'reorderElements' },
-  deleteElement: { action: 'deleteElement' }
+  reorderElement: { action: 'reorderContentElements' },
+  deleteElement: { action: 'requestElementDeletion' }
 };
 
 export default {
