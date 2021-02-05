@@ -105,11 +105,17 @@ export default {
       currentActivities: 'activities'
     }),
     allElementsSelected: vm => vm.selection.elements.length === vm.elements.length,
+    rootContainerTypes() {
+      const type = this.selection.activity?.type;
+      return type && getContainerTypes(type);
+    },
     processedContainers() {
       const { selection: { activity }, items: { activities } } = this;
       if (!activity || !activities.length) return [];
-      const rootTypes = getContainerTypes(activity.type);
-      return this.getActivityContainers(activity, activities, rootTypes);
+      const containers = sortBy(activities.filter(this.isRootContainer), [
+        this.getTypePosition, 'position', 'createdAt'
+      ]);
+      return flatMap(containers, it => [it, ...this.getSubcontainers(it)]);
     },
     elements() {
       const elements = flatMap(this.items.contentContainers, 'elements');
@@ -124,18 +130,16 @@ export default {
     }
   },
   methods: {
-    getActivityContainers(activity, activities, rootTypes) {
-      let containers = activities.filter(({ type, parentId }) => {
-        return parentId === activity.id && rootTypes.includes(type);
-      });
-      containers = sortBy(containers, [
-        it => rootTypes.indexOf(it.type), 'position', 'createdAt'
-      ]);
-      return containers.reduce((acc, container) => {
-        const subcontainers = getContainers(activities, container);
-        acc.push(container, ...sortBy(subcontainers, 'position'));
-        return acc;
-      }, []);
+    getTypePosition({ type }) {
+      return this.rootContainerTypes.indexOf(type);
+    },
+    isRootContainer({ parentId, type }) {
+      const { selection: { activity }, rootContainerTypes } = this;
+      return parentId === activity.id && rootContainerTypes.includes(type);
+    },
+    getSubcontainers(container) {
+      const { items: { activities } } = this;
+      return sortBy(getContainers(activities, container), 'position');
     },
     async showActivityElements(activity) {
       this.selection.activity = activity;
