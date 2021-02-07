@@ -15,10 +15,10 @@ const OIDCErrors = [
 ];
 const scope = ['openid', 'profile', 'email'].join(' ');
 
-const isSilentAuth = req => req.query.silent === 'true';
-const isResign = req => req.query.resign === 'true';
-const isLogoutRequest = req => req.query.action === 'logout';
-const isActiveStrategy = req => req.authStrategy === 'oidc';
+const isSilentAuth = ({ query }) => query.silent === 'true';
+const isResign = ({ query }) => query.resign === 'true';
+const isLogoutRequest = ({ query }) => query.action === 'logout';
+const isActiveStrategy = ({ authData = {} }) => authData.strategy === 'oidc';
 
 const getPromptParams = req => {
   if (isResign(req)) return { prompt: 'login' };

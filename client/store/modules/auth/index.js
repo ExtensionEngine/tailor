@@ -4,7 +4,7 @@ import * as mutations from './mutations';
 
 const state = {
   user: null,
-  authStrategy: null
+  authData: null
 };
 
 export default {

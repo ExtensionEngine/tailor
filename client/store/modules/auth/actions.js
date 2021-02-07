@@ -2,7 +2,7 @@ import api from '@/api/auth';
 
 export const login = ({ commit }, credentials) => {
   return api.login(credentials)
-    .then(({ data: { user, authStrategy } }) => commit('setAuth', { user, authStrategy }));
+    .then(({ data: { user, authData } }) => commit('setAuth', { user, authData }));
 };
 
 export const logout = ({ commit }) => {
@@ -22,7 +22,7 @@ export const resetPassword = (_, { token, password }) => {
 
 export const fetchUserInfo = ({ commit }) => {
   return api.getUserInfo()
-    .then(({ data: { user, authStrategy } }) => commit('setAuth', { user, authStrategy }))
+    .then(({ data: { user, authData } }) => commit('setAuth', { user, authData }))
     .catch(() => commit('resetAuth'));
 };
 

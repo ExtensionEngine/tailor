@@ -2,12 +2,12 @@ export const setUser = (state, user) => {
   state.user = user;
 };
 
-export const setAuth = (state, { user, authStrategy }) => {
+export const setAuth = (state, { user, authData }) => {
   state.user = user;
-  state.strategy = authStrategy;
+  state.authData = authData;
 };
 
 export const resetAuth = state => {
   state.user = null;
-  state.strategy = null;
+  state.authData = null;
 };
