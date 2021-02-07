@@ -37,42 +37,48 @@ const getSilentAuthParams = req => {
 const isOIDCError = err => OIDCErrors.some(Ctor => err instanceof Ctor);
 
 router
-  .get('/', (req, res, next) => {
-    const strategy = req.passport.strategy('oidc');
-    if (isLogoutRequest(req)) return strategy.logout()(req, res, next);
-    const params = {
-      scope,
-      ...getPromptParams(req),
-      ...getSilentAuthParams(req)
-    };
-    return authenticate('oidc', params)(req, res, next);
-  })
-  .get('/callback',
-    (req, res, next) => {
-      if (!isLogoutRequest(req)) return login(req, res, next);
-      return logout({ middleware: true })(req, res, next);
-    },
-    (_, res) => res.redirect('/'))
-  .use((err, req, res, next) => {
-    if (!isOIDCError(err) && !isSilentAuth(req)) {
-      return res.redirect(ACCESS_DENIED_ROUTE + err.email);
-    }
-    if (isSilentAuth(req) && isActiveStrategy(req)) {
-      return logout({ middleware: true })(req, res, () => next(err));
-    }
-    return next(err);
-  }, (err, req, res, next) => {
-    const template = path.resolve(__dirname, './error.mustache');
-    const status = err.status || BAD_REQUEST;
-    return res.render(template, err, (_, html) => {
-      res.status(status).send(html);
-    });
-  });
+  .get('/', authRequestHandler)
+  .get('/callback', idpCallbackHandler, (_, res) => res.redirect('/'))
+  .use(accessDeniedHandler, defaultErrorHandler);
 
 module.exports = {
   path: '/oidc',
   router
 };
+
+// Initiate login and logout actions
+function authRequestHandler(req, res, next) {
+  const strategy = req.passport.strategy('oidc');
+  if (isLogoutRequest(req)) return strategy.logout()(req, res, next);
+  const params = {
+    scope,
+    ...getPromptParams(req),
+    ...getSilentAuthParams(req)
+  };
+  return authenticate('oidc', params)(req, res, next);
+}
+
+// Triggered upon OIDC provider response
+function idpCallbackHandler(req, res, next) {
+  if (!isLogoutRequest(req)) return login(req, res, next);
+  return logout({ middleware: true })(req, res, next);
+}
+
+function accessDeniedHandler(err, req, res, next) {
+  if (!isOIDCError(err) && !isSilentAuth(req)) {
+    return res.redirect(ACCESS_DENIED_ROUTE + err.email);
+  }
+  if (isSilentAuth(req) && isActiveStrategy(req)) {
+    return logout({ middleware: true })(req, res, () => next(err));
+  }
+  return next(err);
+}
+
+function defaultErrorHandler(err, _req, res) {
+  const template = path.resolve(__dirname, './error.mustache');
+  const status = err.status || BAD_REQUEST;
+  return res.render(template, err, (_, html) => res.status(status).send(html));
+}
 
 function login(req, res, next) {
   const params = {
