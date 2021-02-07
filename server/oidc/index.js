@@ -74,7 +74,7 @@ function accessDeniedHandler(err, req, res, next) {
   return next(err);
 }
 
-function defaultErrorHandler(err, _req, res) {
+function defaultErrorHandler(err, _req, res, _next) {
   const template = path.resolve(__dirname, './error.mustache');
   const status = err.status || BAD_REQUEST;
   return res.render(template, err, (_, html) => res.status(status).send(html));
