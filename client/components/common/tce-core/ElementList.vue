@@ -27,16 +27,17 @@
       <slot
         :include="supportedTypes"
         :activity="activity"
-        :position="nextPosition"
+        :position="elements.length"
         :layout="layout"
         name="list-add">
         <add-element
-          @add="el => $emit('add', el)"
+          @add="$emit('add', $event)"
+          :items="elements"
           :include="supportedTypes"
           :activity="activity"
           :label="addElementOptions.label"
           :large="addElementOptions.large"
-          :position="nextPosition"
+          :position="elements.length"
           :layout="layout"
           class="mt-1" />
       </slot>
@@ -49,7 +50,6 @@ import AddElement from './AddElement';
 import Draggable from 'vuedraggable';
 import get from 'lodash/get';
 import { getElementId } from 'tce-core/utils';
-import last from 'lodash/last';
 import { mapChannels } from '@/plugins/radio';
 
 const CE_FOCUS_EVENT = 'element:focus';
@@ -72,11 +72,7 @@ export default {
     options: vm => ({
       ...vm.dragOptions,
       handle: '.drag-handle'
-    }),
-    nextPosition() {
-      const lastItem = last(this.elements);
-      return lastItem ? lastItem.position + 1 : 1;
-    }
+    })
   },
   methods: {
     get,

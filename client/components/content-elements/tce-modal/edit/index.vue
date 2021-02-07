@@ -28,7 +28,8 @@
       <preview
         v-else
         :label="title"
-        :elements="embeds" />
+        :elements="embeds"
+        :is-disabled="isDisabled" />
     </div>
   </div>
 </template>

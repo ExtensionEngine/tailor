@@ -32,12 +32,14 @@
     </v-list-item-action>
     <select-element
       v-if="showElementBrowser"
-      @selected="$emit('save', $event)"
+      @selected="select"
       @close="showElementBrowser = false"
       :selected="value"
       :heading="defaultPlaceholder"
       :multiple="multiple"
-      :allowed-types="allowedTypes" />
+      :allowed-types="allowedTypes"
+      header-icon="mdi-transit-connection-variant"
+      only-current-repo />
   </v-list-item>
 </template>
 
@@ -84,6 +86,14 @@ export default {
         message: `Are you sure you want to remove ${label}?`,
         action: () => this.$emit('save', [])
       });
+    },
+    select(elements) {
+      const items = elements.map(it => {
+        if (!it.activity) return it;
+        const { id, activity, activityId: containerId } = it;
+        return { id, containerId, outlineId: activity.id };
+      });
+      this.$emit('save', items);
     }
   },
   components: { SelectElement }

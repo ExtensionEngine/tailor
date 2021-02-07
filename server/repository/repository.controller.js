@@ -32,6 +32,11 @@ const lowercaseName = sequelize.fn('lower', sequelize.col('repository.name'));
 
 const JobCache = new Map();
 
+const getFilter = search => {
+  const term = search.length < 3 ? `${search}%` : `%${search}%`;
+  return { [Op.iLike]: term };
+};
+
 const includeLastRevision = () => ({
   model: Revision,
   include: [{
@@ -60,7 +65,7 @@ const includeRepositoryTags = query => {
 };
 
 function index({ query, user, opts }, res) {
-  if (query.search) opts.where.name = { [Op.iLike]: `%${query.search}%` };
+  if (query.search) opts.where.name = getFilter(query.search);
   if (query.schema) opts.where.schema = { [Op.eq]: query.schema };
   if (getVal(opts, 'order.0.0') === 'name') opts.order[0][0] = lowercaseName;
   opts.include = [

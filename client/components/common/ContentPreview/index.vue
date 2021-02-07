@@ -1,17 +1,22 @@
 <template>
-  <div>
+  <div class="content-preview">
     <v-alert v-if="!elements.length" color="grey darken-4" text class="mx-4">
       No available elements.
     </v-alert>
-    <div v-for="container in processedContainers" :key="container.id">
+    <div
+      v-for="container in processedContainers"
+      :key="container.id"
+      class="content-container">
       <content-element
         v-for="element in container.elements"
         :key="element.id"
         @toggle="$emit('toggle', element)"
+        @element:open="$emit('element:open', $event)"
         :element="element"
         :selectable="selectable"
         :is-selected="!!selectionMap[element.id]"
-        :selection-disabled="isSelectionDisabled" />
+        :selection-disabled="isSelectionDisabled"
+        is-disabled />
     </div>
   </div>
 </template>
@@ -50,3 +55,18 @@ export default {
   components: { ContentElement }
 };
 </script>
+
+<style lang="scss" scoped>
+.content-preview {
+  .v-alert {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 19rem;
+  }
+
+  .content-container:last-child {
+    margin-bottom: 0.625rem;
+  }
+}
+</style>

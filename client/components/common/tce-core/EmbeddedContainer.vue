@@ -1,6 +1,6 @@
 <template>
   <element-list
-    @add="addItem"
+    @add="addItems"
     @update="reorderItem"
     :add-element-options="addElementOptions"
     :elements="embeds"
@@ -21,12 +21,12 @@
 </template>
 
 <script>
+import calculatePosition from 'utils/calculatePosition';
 import cloneDeep from 'lodash/cloneDeep';
 import ContainedContent from './ContainedContent';
 import ElementList from './ElementList';
-import last from 'lodash/last';
+import mapKeys from 'lodash/mapKeys';
 import { mapRequests } from '@/plugins/radio';
-import { resolveElementPosition } from './utils';
 import values from 'lodash/values';
 
 export default {
@@ -43,26 +43,21 @@ export default {
     embeds() {
       const items = this.container.embeds;
       return items ? values(items).sort((a, b) => a.position - b.position) : [];
-    },
-    nextPosition() {
-      return this.embeds.length ? last(this.embeds).position + 1 : 1;
     }
   },
   methods: {
     ...mapRequests('app', ['showConfirmationModal']),
-    addItem(item) {
+    addItems(items) {
+      items = Array.isArray(items) ? items : [items];
       const container = cloneDeep(this.container);
-      if (!item.position) item.position = this.nextPosition;
-      container.embeds = container.embeds || {};
-      container.embeds[item.id] = item;
+      container.embeds = { ...container.embeds, ...mapKeys(items, 'id') };
       this.$emit('save', container);
     },
     reorderItem({ newPosition, items }) {
-      const isFirstChild = newPosition === 0;
-      const context = { items, newPosition, isFirstChild };
+      const context = { items, newPosition };
       const container = cloneDeep(this.container);
       const reordered = container.embeds[items[newPosition].id];
-      reordered.position = resolveElementPosition(context);
+      reordered.position = calculatePosition(context);
       this.$emit('save', container);
     },
     save(item, key, value) {

@@ -17,62 +17,66 @@
         <v-icon>{{ icon }}</v-icon>
       </v-btn>
     </slot>
-    <v-bottom-sheet v-model="isVisible" max-width="1240" inset>
-      <div class="element-container">
-        <v-toolbar
-          v-if="layout"
-          color="blue-grey darken-4"
-          dense
-          class="mb-2 elevation-1">
+    <template v-if="isVisible">
+      <select-element
+        v-if="showElementBrowser"
+        @selected="addElements"
+        @close="showElementBrowser = false"
+        :allowed-types="allowedTypes"
+        submit-label="Copy"
+        heading="Copy elements"
+        header-icon="mdi-content-duplicate"
+        multiple />
+      <add-new-element
+        v-else
+        v-model="isVisible"
+        @add="addElements"
+        :library="library"
+        :allowed-types="allowedTypes">
+        <template v-slot:header>
+          <template v-if="layout">
+            <v-btn-toggle
+              v-model="elementWidth"
+              active-class="blue-grey darken-2"
+              background-color="transparent"
+              dark tile borderless mandatory>
+              <v-btn :value="100" icon>
+                <v-icon>mdi-square-outline</v-icon>
+              </v-btn>
+              <v-btn :value="50" icon>
+                <v-icon>mdi-select-compare</v-icon>
+              </v-btn>
+            </v-btn-toggle>
+            <v-divider vertical class="mr-3" />
+            <div class="width-label px-1 subtitle-1 grey--text text--lighten-4">
+              Element width
+              <span class="pl-1">{{ elementWidth }}</span>%
+            </div>
+          </template>
           <v-spacer />
-          <v-divider vertical />
-          <v-btn-toggle
-            v-model="elementWidth"
-            active-class="blue-grey darken-2"
-            background-color="transparent"
-            dark tile borderless mandatory>
-            <v-btn :value="100" icon>
-              <v-icon>mdi-square-outline</v-icon>
-            </v-btn>
-            <v-btn :value="50" icon>
-              <v-icon>mdi-select-compare</v-icon>
-            </v-btn>
-          </v-btn-toggle>
-          <v-divider class="mr-3" vertical />
-          <div class="width-label px-1 subtitle-1 grey--text text--lighten-4">
-            Element width
-            <span class="px-1">{{ elementWidth }}</span>%
-          </div>
-        </v-toolbar>
-        <div
-          v-for="group in library"
-          :key="group.name">
-          <div class="group-heading blue-grey--text text--darken-4">
-            <span>{{ group.name }}</span>
-          </div>
-          <div class="group-elements">
-            <button
-              v-for="element in group.elements"
-              :key="element.position"
-              @click.stop="add(element)"
-              :disabled="isElementDisabled(element)"
-              class="element">
-              <v-icon v-if="element.ui.icon">{{ element.ui.icon }}</v-icon>
-              <h5 class="body-2">{{ element.name }}</h5>
-            </button>
-          </div>
-        </div>
-      </div>
-    </v-bottom-sheet>
+          <v-btn @click="showElementBrowser = !showElementBrowser" dark text>
+            <v-icon class="mr-2">mdi-content-copy</v-icon>
+            Copy existing
+          </v-btn>
+        </template>
+      </add-new-element>
+    </template>
   </div>
 </template>
 
 <script>
+import AddNewElement from './AddNewElement';
 import filter from 'lodash/filter';
-import get from 'lodash/get';
+import flatMap from 'lodash/flatMap';
+import { getPositions } from 'utils/calculatePosition';
+import intersection from 'lodash/intersection';
 import { isQuestion } from '../utils';
+import pick from 'lodash/pick';
 import reduce from 'lodash/reduce';
+import reject from 'lodash/reject';
 import uuid from '@/utils/uuid';
+
+const SelectElement = () => import('components/common/SelectElement');
 
 const DEFAULT_ELEMENT_WIDTH = 100;
 const LAYOUT = { HALF_WIDTH: 6, FULL_WIDTH: 12 };
@@ -82,15 +86,22 @@ const ELEMENT_GROUPS = [
   { name: 'Nongraded questions', icon: 'mdi-comment-question-outline' }
 ];
 
+const getQuestionData = (element, type) => {
+  const data = { width: LAYOUT.FULL_WIDTH };
+  const question = [{ id: uuid(), data, type: 'JODIT_HTML', embedded: true }];
+  return { question, type, ...element.data };
+};
+
 export default {
   name: 'add-element',
   inject: ['$teRegistry'],
   props: {
-    show: { type: Boolean, default: false },
+    items: { type: Array, required: true },
     activity: { type: Object, default: null },
     position: { type: Number, default: null },
     layout: { type: Boolean, default: true },
     include: { type: Array, default: null },
+    show: { type: Boolean, default: false },
     large: { type: Boolean, default: false },
     label: { type: String, default: 'Add content' },
     icon: { type: String, default: 'mdi-plus' }
@@ -98,7 +109,8 @@ export default {
   data() {
     return {
       isVisible: false,
-      elementWidth: DEFAULT_ELEMENT_WIDTH
+      elementWidth: DEFAULT_ELEMENT_WIDTH,
+      showElementBrowser: false
     };
   },
   computed: {
@@ -137,33 +149,42 @@ export default {
     },
     processedWidth() {
       return this.elementWidth === 50 ? LAYOUT.HALF_WIDTH : LAYOUT.FULL_WIDTH;
+    },
+    allowedTypes() {
+      const { elementWidth, include, layout, library } = this;
+      const elements = flatMap(library, 'elements');
+      if (!layout) return include || [];
+      const allowedElements = elementWidth === DEFAULT_ELEMENT_WIDTH
+        ? elements
+        : reject(elements, 'ui.forceFullWidth');
+      const allowedTypes = allowedElements.map(it => it.type);
+      return include ? intersection(include, allowedTypes) : allowedTypes;
     }
   },
   methods: {
-    add({ type, subtype, initState = () => ({}) }) {
-      const element = { type, data: { width: this.processedWidth } };
-      // If content element within activity
-      if (this.activity) {
-        element.activityId = this.activity.id;
-        element.position = this.position;
-      } else {
-        // If embed, assign id
-        element.id = uuid();
-        element.embedded = true;
-      }
-      if (isQuestion(element.type)) {
-        const data = { width: LAYOUT.FULL_WIDTH };
-        const question = [{ id: uuid(), data, type: 'JODIT_HTML', embedded: true }];
-        element.data = { ...element.data, question, type: subtype };
-      }
-      element.data = { ...element.data, ...initState() };
-      if (element.type === 'REFLECTION') delete element.data.correct;
-      this.$emit('add', element);
+    addElements(elements) {
+      const positions = getPositions(this.items, this.position, elements.length);
+      const items = elements.map((it, index) => {
+        return this.buildElement({ ...it, position: positions[index] });
+      });
+      this.$emit('add', items);
       this.isVisible = false;
     },
-    isElementDisabled(element) {
-      if (this.elementWidth === DEFAULT_ELEMENT_WIDTH) return false;
-      return get(element, 'ui.forceFullWidth', false);
+    buildElement(el) {
+      const { processedWidth: width, activity } = this;
+      const { position, subtype, data = {}, initState = () => ({}) } = el;
+      const element = {
+        position,
+        ...pick(el, ['type', 'refs']),
+        data: { ...initState(), ...data, width }
+      };
+      const contextData = activity
+        ? { activityId: activity.id } // If content element within activity
+        : { id: uuid(), embedded: true }; // If embed, assign id
+      Object.assign(element, contextData);
+      if (isQuestion(element.type)) element.data = getQuestionData(element, subtype);
+      if (element.type === 'REFLECTION') delete element.data.correct;
+      return element;
     },
     onHidden() {
       this.elementWidth = DEFAULT_ELEMENT_WIDTH;
@@ -174,106 +195,13 @@ export default {
     }
   },
   watch: {
-    show(val) {
-      if (val) this.isVisible = val;
-    },
     isVisible(val, oldVal) {
       if (!val && oldVal) this.onHidden();
+    },
+    show(val) {
+      return val ? this.showElementPicker() : this.onHidden();
     }
-  }
+  },
+  components: { AddNewElement, SelectElement }
 };
 </script>
-
-<style lang="scss" scoped>
-$font-color: #333;
-$accent-color: #d81b60;
-$disabled-color: #a1a1a1;
-
-.element-container {
-  min-height: 25rem;
-  padding: 0 0 1.875rem;
-  background: #fff;
-}
-
-.group-heading {
-  margin: 0 2.5rem 0.375rem;
-  padding-top: 1.25rem;
-  font-size: 1rem;
-  font-weight: 500;
-  line-height: 1.75rem;
-  text-align: left;
-
-  .v-icon, span {
-    line-height: 1.75rem;
-    vertical-align: middle;
-  }
-
-  .v-icon {
-    margin-right: 0.375rem;
-    color: #546e7a;
-  }
-}
-
-.group-elements {
-  display: flex;
-  width: 100%;
-  padding: 0 1.875rem;
-  flex-wrap: wrap;
-}
-
-.element {
-  align-self: center;
-  width: 8.125rem;
-  min-width: 8.125rem;
-  min-height: 4.375rem;
-  padding: 0.375rem;
-  color: $font-color;
-  font-size: 1.25rem;
-  border: 1px solid #fff;
-  border-radius: 4px;
-  outline: none;
-  cursor: pointer;
-
-  .v-icon {
-    padding: 0.125rem 0;
-    color: $font-color;
-    font-size: 1.875rem;
-  }
-
-  &:disabled {
-    color: $disabled-color;
-    cursor: not-allowed;
-
-    .v-icon {
-      color: $disabled-color;
-    }
-  }
-
-  &:enabled:hover {
-    color: $accent-color;
-    background: #fcfcfc;
-    border: 1px solid #888;
-
-    .v-icon {
-      color: $accent-color;
-    }
-  }
-
-  &-title {
-    margin: 0;
-    padding: 0;
-    font-weight: 500;
-    line-height: 1.25rem;
-  }
-}
-
-.v-toolbar {
-  .v-divider {
-    align-self: auto;
-  }
-
-  .width-label {
-    min-width: 11.25rem;
-  }
-}
-</style>

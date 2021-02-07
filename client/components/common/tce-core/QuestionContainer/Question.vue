@@ -20,8 +20,10 @@
     </div>
     <add-element
       v-slot="{ addElement }"
-      @add="addQuestionElement"
+      @add="addQuestionElements"
+      :items="question"
       :layout="false"
+      :position="question.length"
       :disabled="!isEditing"
       :include="['JODIT_HTML', 'IMAGE', 'EMBED', 'HTML']"
       :class="{ invisible: !isEditing }">
@@ -80,9 +82,9 @@ export default {
     dragOptions: () => DRAG_OPTIONS
   },
   methods: {
-    addQuestionElement(element) {
+    addQuestionElements(elements) {
       const question = cloneDeep(this.assessment.data.question);
-      this.$emit('update', { question: question.concat(element) });
+      this.$emit('update', { question: question.concat(elements) });
     },
     updateElement(element, data) {
       if (!this.isEditing) return;
