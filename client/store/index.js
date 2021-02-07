@@ -4,7 +4,6 @@ import editor from './modules/editor';
 import plugins from './plugins';
 import repositories from './modules/repositories';
 import repository from './modules/repository';
-import request from '../api/request';
 import settings from '../settings';
 import Vue from 'vue';
 import Vuex from 'vuex';
@@ -28,8 +27,14 @@ const store = new Vuex.Store({
   strict: false
 });
 
-request.auth.on('error', () => store.commit('setUser', null));
-
 export default function getStore() {
-  return store.dispatch('fetchUserInfo').then(() => store);
+  return hydrateUserStore().then(() => store);
+}
+
+function hydrateUserStore() {
+  const authRefresh = Vue.oidc.enabled
+    ? Vue.oidc.slientlyRefresh().catch(() => {})
+    : Promise.resolve();
+
+  return authRefresh.then(() => store.dispatch('fetchUserInfo'));
 }

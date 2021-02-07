@@ -30,7 +30,7 @@ function changePassword(currentPassword, newPassword) {
 }
 
 function getUserInfo() {
-  return request.get(urls.profile);
+  return request.base.get(urls.profile);
 }
 
 function updateUserInfo(userData) {

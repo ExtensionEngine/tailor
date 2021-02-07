@@ -2,12 +2,12 @@ import api from '@/api/auth';
 
 export const login = ({ commit }, credentials) => {
   return api.login(credentials)
-    .then(({ data: { user } }) => commit('setUser', user));
+    .then(({ data: { user, authData } }) => commit('setAuth', { user, authData }));
 };
 
 export const logout = ({ commit }) => {
   return api.logout()
-    .then(() => commit('setUser', null));
+    .then(() => commit('resetAuth'));
 };
 
 export const changePassword = (_, { currentPassword, newPassword }) => {
@@ -22,8 +22,8 @@ export const resetPassword = (_, { token, password }) => {
 
 export const fetchUserInfo = ({ commit }) => {
   return api.getUserInfo()
-    .then(({ data: { user } }) => commit('setUser', user))
-    .catch(() => commit('setUser', null));
+    .then(({ data: { user, authData } }) => commit('setAuth', { user, authData }))
+    .catch(() => commit('resetAuth'));
 };
 
 export const updateInfo = ({ commit }, userData) => {

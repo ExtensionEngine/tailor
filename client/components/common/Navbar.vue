@@ -59,7 +59,7 @@ export default {
     user: { type: Object, required: true }
   },
   computed: {
-    ...mapGetters(['isAdmin']),
+    ...mapGetters(['isAdmin', 'isOidcActive']),
     ...mapGetters('repository', ['repository']),
     title: () => BRAND_CONFIG.TITLE,
     logo: () => BRAND_CONFIG.LOGO_FULL,
@@ -81,6 +81,7 @@ export default {
   methods: {
     ...mapActions({ apiLogout: 'logout' }),
     logout() {
+      if (this.isOidcActive) return this.$oidc.logout();
       return this.apiLogout()
         .then(() => this.$router.push({ name: 'login' }));
     }

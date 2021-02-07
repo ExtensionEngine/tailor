@@ -88,7 +88,7 @@ export default {
     localError: null
   }),
   computed: {
-    oidcEnabled: () => process.env.OIDC_ENABLED,
+    oidcEnabled: vm => vm.$oidc.enabled,
     oidcLoginText: () => process.env.OIDC_LOGIN_TEXT || 'Login with OAuth',
     accessDenied: vm => vm.$route.query.accessDenied,
     oidcError: vm => vm.accessDenied && getOidcErrorMessage(vm.accessDenied, vm.oidcLoginText),
@@ -97,9 +97,8 @@ export default {
   methods: {
     ...mapActions(['login']),
     loginOIDC() {
-      const resign = this.oidcError ? '?resign=true' : '';
-      const oidcPath = `api/oidc${resign}`;
-      window.location.replace(oidcPath);
+      const action = this.oidcError ? 'reauthenticate' : 'authenticate';
+      this.$oidc[action]();
     },
     submit() {
       this.message = '';

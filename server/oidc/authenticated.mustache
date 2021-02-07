@@ -7,10 +7,8 @@
   <title>{{ title }}</title>
 </head>
 <body>
-  <h1>Authentication failed</h1>
-  <p>Oops! Something went wrong</p>
   <script>
-    window.dispatchEvent(new Event('auth:fail'));
+    window.dispatchEvent(new Event('auth:success'));
   </script>
 </body>
 </html>

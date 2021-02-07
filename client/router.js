@@ -1,9 +1,7 @@
 /* eslint-disable sort-imports */
 import { numeric as numericParser } from 'client/utils/paramsParser';
-import request from './api/request';
 import Router from 'vue-router';
 import { role } from '@/../config/shared';
-import store from './store';
 import Vue from 'vue';
 
 import Auth from './components/auth/Container';
@@ -127,24 +125,20 @@ const options = {
 export default function getRouter() {
   const router = new Router(options);
   router.beforeEach((to, from, next) => {
-    const auth = router.app?.$store.state.auth;
-    if (to.matched.some(it => it.meta.auth) && !auth.user) {
+    const auth = router.app.$store.state.auth;
+    if (isAuthRequired(to, auth)) {
       return next({ path: '/login', query: { redirect: to.fullPath } });
     }
-    if (!isAllowed(to)) {
-      return next({ path: from.fullPath });
-    }
-    return next();
-  });
-
-  request.auth.on('error', () => {
-    const redirect = router.currentRoute.fullPath;
-    router.replace({ name: 'login', query: { redirect } }).catch(() => {});
+    return isAllowed(to, auth) ? next() : next({ path: from.fullPath });
   });
   return router;
 }
 
-function isAllowed(route) {
+function isAuthRequired(route, { user }) {
+  return route.matched.some(it => it.meta.auth) && !user;
+}
+
+function isAllowed(route, { user }) {
   const { meta = {} } = route.matched.find(({ meta = {} }) => meta.allowed) || {};
-  return !meta.allowed || meta.allowed.includes(store.state.auth.user.role);
+  return !meta.allowed || meta.allowed.includes(user.role);
 }

@@ -43,8 +43,8 @@ function resetPassword({ body, user }, res) {
     .then(() => res.sendStatus(NO_CONTENT));
 }
 
-function getProfile({ user }, res) {
-  return res.json({ user: user.profile });
+function getProfile({ user, authData }, res) {
+  return res.json({ user: user.profile, authData });
 }
 
 function updateProfile({ user, body }, res) {

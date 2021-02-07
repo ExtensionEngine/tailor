@@ -56,9 +56,12 @@ function verifyJWT(payload, done) {
     .error(err => done(err, false));
 }
 
-function verifyOIDC(_tokenSet, profile, done) {
+function verifyOIDC(tokenSet, profile, done) {
   return findOrCreateOIDCUser(profile)
-    .then(user => done(null, user))
+    .then(user => {
+      user.authData = { tokenSet };
+      done(null, user);
+    })
     .catch(err => done(Object.assign(err, { email: profile.email }), false));
 }
 
