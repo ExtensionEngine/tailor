@@ -1,15 +1,26 @@
 <template>
   <div class="toolbar-wrapper">
-    <div v-show="activity" class="activity-toolbar blue-grey darken-3">
-      <activity-actions class="activity-actions" />
+    <div
+      v-show="activity"
+      :class="[showPublishDiff ? 'darken-4' : 'darken-3']"
+      class="activity-toolbar blue-grey">
+      <activity-actions class="d-flex flex-grow-0" />
       <h1 class="pt-2 headline text-truncate">
         <span>{{ config.label }}</span>
         <span class="px-2 grey--text">|</span>
         <span class="secondary--text text--lighten-2">
           {{ activity.data.name }}
         </span>
+        <template v-if="showPublishDiff">
+          <span class="px-2 grey--text">|</span>
+          <span class="white--text">comparing with published</span>
+          <span class="px-2 grey--text">@</span>
+          <v-chip color="readonly blue-grey lighten-4" small label>
+            {{ activity.publishedAt | formatDate }}
+          </v-chip>
+        </template>
       </h1>
-      <active-users :users="activeUsers" class="mx-6" />
+      <active-users v-if="!showPublishDiff" :users="activeUsers" class="mx-6" />
     </div>
     <element-toolbar
       v-if="element && element.parent"
@@ -35,12 +46,12 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex';
 import ActiveUsers from 'tce-core/ActiveUsers';
 import ActivityActions from './ActivityActions';
 import { ElementToolbar } from 'tce-core';
 import { getElementId } from 'tce-core/utils';
 import { getLevel } from 'shared/activities';
-import { mapGetters } from 'vuex';
 
 export default {
   name: 'editor-toolbar',
@@ -49,6 +60,7 @@ export default {
     activeUsers: { type: Array, default: () => [] }
   },
   computed: {
+    ...mapState('editor', ['showPublishDiff']),
     ...mapGetters('editor', ['activity']),
     config() {
       return getLevel(this.activity.type);
@@ -86,8 +98,8 @@ export default {
 
 .activity-toolbar {
   display: flex;
-  height: 3.125rem;
-  padding: 0;
+  height: 3.5rem;
+  padding: 0.25rem 0 0;
   z-index: 999;
 
   h1 {
@@ -97,9 +109,5 @@ export default {
     font-size: 1.375rem;
     text-align: left;
   }
-}
-
-.activity-actions {
-  max-width: 10.75rem;
 }
 </style>

@@ -58,16 +58,16 @@ export default {
       const query = { ...this.$route.query, activityId };
       return [
         { name: 'Structure', route: 'repository', icon: 'file-tree', query },
-        hasActivities && this.hasWorkflow && {
-          name: 'Board',
-          route: 'board',
-          icon: 'view-dashboard-variant',
-          query
-        },
         hasActivities && {
           name: 'Graph View',
           route: 'tree-view',
           icon: 'graph-outline',
+          query
+        },
+        hasActivities && this.hasWorkflow && {
+          name: 'Progress',
+          route: 'progress',
+          icon: 'chart-timeline-variant',
           query
         },
         hasActivities && { name: 'History', route: 'revisions', icon: 'history' },

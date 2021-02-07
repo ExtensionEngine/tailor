@@ -6,6 +6,7 @@
       @update="reorder"
       :list="elements"
       v-bind="options"
+      :disabled="isDisabled"
       class="row">
       <div
         v-for="(element, index) in elements"
@@ -22,20 +23,21 @@
         </slot>
       </div>
     </draggable>
-    <template v-if="enableAdd">
+    <template v-if="enableAdd && !isDisabled">
       <slot
         :include="supportedTypes"
         :activity="activity"
-        :position="nextPosition"
+        :position="elements.length"
         :layout="layout"
         name="list-add">
         <add-element
-          @add="el => $emit('add', el)"
+          @add="$emit('add', $event)"
+          :items="elements"
           :include="supportedTypes"
           :activity="activity"
           :label="addElementOptions.label"
           :large="addElementOptions.large"
-          :position="nextPosition"
+          :position="elements.length"
           :layout="layout"
           class="mt-1" />
       </slot>
@@ -48,7 +50,6 @@ import AddElement from './AddElement';
 import Draggable from 'vuedraggable';
 import get from 'lodash/get';
 import { getElementId } from 'tce-core/utils';
-import last from 'lodash/last';
 import { mapChannels } from '@/plugins/radio';
 
 const CE_FOCUS_EVENT = 'element:focus';
@@ -61,6 +62,7 @@ export default {
     supportedTypes: { type: Array, default: null },
     activity: { type: Object, default: null },
     layout: { type: Boolean, default: false },
+    isDisabled: { type: Boolean, default: false },
     enableAdd: { type: Boolean, default: true },
     addElementOptions: { type: Object, default: () => ({}) }
   },
@@ -69,14 +71,8 @@ export default {
     ...mapChannels({ editorChannel: 'editor' }),
     options: vm => ({
       ...vm.dragOptions,
-      handle: '.drag-handle',
-      scrollSpeed: 15,
-      scrollSensitivity: 125
-    }),
-    nextPosition() {
-      const lastItem = last(this.elements);
-      return lastItem ? lastItem.position + 1 : 1;
-    }
+      handle: '.drag-handle'
+    })
   },
   methods: {
     get,
@@ -103,4 +99,25 @@ export default {
 .list-group {
   padding: 0.625rem 1.5rem;
 }
+
+::v-deep .sortable-ghost {
+  .drag-handle {
+    display: none;
+  }
+
+  .content-element {
+    max-height: 9.375rem;
+    background: #f4f5f5;
+
+    & > * {
+      visibility: hidden;
+    }
+  }
+}
+
+::v-deep .sortable-drag .content-element {
+  max-height: auto;
+  background: #fff;
+}
+
 </style>

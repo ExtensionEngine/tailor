@@ -1,5 +1,5 @@
 <template>
-  <tailor-dialog v-model="show" header-icon="mdi-alert">
+  <tailor-dialog v-model="show" @click:outside="close" header-icon="mdi-alert">
     <template v-slot:header>{{ context.title }}</template>
     <template v-slot:body>
       <div class="body-1 primary--text text--darken-2 text-left">
@@ -15,6 +15,7 @@
 
 <script>
 import { focus } from 'vue-focus';
+import invoke from 'lodash/invoke';
 import { mapChannels } from '@/plugins/radio';
 import TailorDialog from '@/components/common/TailorDialog';
 
@@ -33,8 +34,10 @@ export default {
     open(context) {
       this.context = context;
       this.show = true;
+      invoke(this.context, 'onOpen');
     },
     close() {
+      invoke(this.context, 'onClose');
       this.show = false;
       this.context = createContext();
     },

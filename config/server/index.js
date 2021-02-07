@@ -1,10 +1,12 @@
 'use strict';
 
 const auth = require('./auth');
+const consumer = require('./consumer');
 const isLocalhost = require('is-localhost');
 const mail = require('./mail');
 const parse = require('url-parse');
 const storage = require('./storage');
+const tce = require('./tce');
 
 const hostname = resolveHostname();
 const protocol = resolveProtocol(hostname);
@@ -20,7 +22,9 @@ module.exports = {
   auth,
   mail,
   storage,
-  previewUrl
+  previewUrl,
+  consumer,
+  tce
 };
 
 // Legacy config support

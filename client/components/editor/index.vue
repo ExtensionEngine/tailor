@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import ActivityContent from './ActivityContent';
 import get from 'lodash/get';
 import { getElementId } from 'tce-core/utils';
@@ -48,10 +48,15 @@ export default {
     ...mapGetters('editor', ['activity', 'contentContainers', 'rootContainerGroups']),
     ...mapGetters('repository', ['repository', 'outlineActivities']),
     ...mapGetters('repository/userTracking', ['getActiveUsers']),
+    ...mapState('editor', ['showPublishDiff']),
     activeUsers: vm => vm.getActiveUsers('activity', vm.activityId)
   },
   methods: {
+    ...mapMutations('editor', ['togglePublishDiff']),
     ...mapActions('repository', ['initialize']),
+    closePublishDiff() {
+      this.togglePublishDiff(false);
+    },
     selectElement(element) {
       this.selectedElement = element;
       const selectedElementId = getElementId(element);
@@ -61,6 +66,17 @@ export default {
       this.$router.replace({ query });
     }
   },
+  provide() {
+    const $editorState = {};
+    Object.defineProperties($editorState, {
+      isPublishDiff: {
+        get: () => this.showPublishDiff,
+        enumerable: true
+      }
+    });
+    return { $editorState };
+  },
+  watch: { activityId: 'closePublishDiff' },
   async created() {
     const { repositoryId: currentRepositoryId, repository: storeRepository } = this;
     const repositoryLoaded = !!storeRepository;
@@ -69,6 +85,9 @@ export default {
       await this.initialize(currentRepositoryId);
     }
     this.isLoading = false;
+  },
+  beforeDestroy() {
+    this.closePublishDiff();
   },
   components: {
     ActivityContent,
@@ -83,7 +102,7 @@ $sidebar-width: 25rem;
 
 .editor-content-container {
   display: flex;
-  height: calc(100% - 3.125rem);
+  height: calc(100% - 3.5rem);
 
   .sidebar {
     flex-basis: $sidebar-width;

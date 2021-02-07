@@ -1,12 +1,20 @@
 <template>
   <div
     @click="onSelect"
-    :class="{
+    :class="[element.changeSincePublish, {
       selected: activeUsers.length,
       focused: isFocused,
+      diff: $editorState.isPublishDiff,
       frame
-    }"
+    }]"
     class="content-element">
+    <div
+      :class="{ visible: $editorState.isPublishDiff && element.changeSincePublish }"
+      class="header d-flex">
+      <publish-diff-chip
+        :change-type="element.changeSincePublish"
+        class="ml-auto " />
+    </div>
     <active-users :users="activeUsers" :size="20" class="active-users" />
     <component
       :is="componentName"
@@ -47,10 +55,11 @@ import { getComponentName, getElementId } from './utils';
 import ActiveUsers from 'tce-core/ActiveUsers';
 import Discussion from './ElementDiscussion';
 import { mapChannels } from '@/plugins/radio';
+import PublishDiffChip from './PublishDiffChip';
 
 export default {
   name: 'content-element',
-  inject: ['$getCurrentUser'],
+  inject: ['$getCurrentUser', '$editorState'],
   inheritAttrs: false,
   props: {
     element: { type: Object, required: true },
@@ -79,7 +88,7 @@ export default {
   },
   methods: {
     onSelect(e) {
-      if (this.isDisabled || e.component) return;
+      if (this.isDisabled || this.$editorState.isPublishDiff || e.component) return;
       this.focus();
       e.component = { name: 'content-element', data: this.element };
     },
@@ -120,7 +129,7 @@ export default {
   provide() {
     return { $elementBus: this.elementBus };
   },
-  components: { ActiveUsers, Discussion }
+  components: { ActiveUsers, Discussion, PublishDiffChip }
 };
 </script>
 
@@ -164,7 +173,7 @@ export default {
 
 .frame {
   padding: 10px 20px;
-  border: 1px solid #e1e1e1;
+  box-shadow: 0 0 0 1px #e1e1e1;
 }
 
 .element-actions {
@@ -200,4 +209,29 @@ export default {
   bottom: -0.125rem;
   left: 0;
 }
+
+.header {
+  width: 100%;
+  max-height: 0;
+
+  &.visible {
+    max-height: unset;
+    padding: 0 0 0.5rem;
+  }
+}
+
+.diff {
+  &.new {
+    @include highlight(var(--v-success-lighten2));
+  }
+
+  &.changed, &.removed {
+    @include highlight(var(--v-secondary-lighten4));
+  }
+
+  .element-actions {
+    display: none;
+  }
+}
+
 </style>

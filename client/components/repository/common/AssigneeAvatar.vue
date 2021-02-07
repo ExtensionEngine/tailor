@@ -1,5 +1,5 @@
 <template functional>
-  <v-tooltip open-delay="500" bottom>
+  <v-tooltip :disabled="!props.showTooltip" open-delay="500" bottom>
     <template #activator="{ on }">
       <v-avatar
         v-on="{...on, ...listeners}"
@@ -20,7 +20,8 @@ export default {
   props: {
     imgUrl: { type: String, default: null },
     label: { type: String, default: 'Unassigned' },
-    small: { type: Boolean, default: false }
+    small: { type: Boolean, default: false },
+    showTooltip: { type: Boolean, default: false }
   }
 };
 </script>

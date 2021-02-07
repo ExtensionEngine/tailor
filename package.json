@@ -42,8 +42,8 @@
     "@ungap/global-this": "^0.4.0",
     "JSONStream": "^1.3.5",
     "auto-bind": "^3.0.0",
-    "aws-sdk": "^2.610.0",
-    "axios": "^0.19.2",
+    "aws-sdk": "^2.814.0",
+    "axios": "^0.21.1",
     "bcrypt": "^5.0.0",
     "blob-util": "^2.0.2",
     "bluebird": "^3.7.2",
@@ -52,7 +52,7 @@
     "bootswatch": "^3.3.7",
     "boxen": "^4.1.0",
     "bunyan": "^1.8.13",
-    "change-case": "^3.1.0",
+    "change-case": "^4.1.1",
     "cheerio": "^1.0.0-rc.3",
     "consolidate": "^0.16.0",
     "cookie-parser": "^1.4.5",
@@ -126,6 +126,7 @@
     "semver": "^6.3.0",
     "sequelize": "^6.3.0",
     "sequelize-replace-enum-postgres": "^1.5.0",
+    "simple-oauth2": "^4.2.0",
     "snyk": "^1.425.4",
     "strip-json-comments": "^3.0.1",
     "tar-fs": "^2.1.0",
@@ -145,7 +146,7 @@
     "vue-quill-editor": "^2.3.3",
     "vue-router": "^3.1.5",
     "vue-timeago": "^5.1.2",
-    "vuedraggable": "^2.23.2",
+    "vuedraggable": "^2.24.3",
     "vuetify": "^2.2.20",
     "vuex": "^3.1.1",
     "vuex-persist": "^2.2.0",
@@ -195,7 +196,7 @@
     "vue-template-compiler": "^2.6.11"
   },
   "engines": {
-    "node": ">= 10.17.0",
+    "node": ">= 12.13.0",
     "npm": ">= 6.11.0",
     "postgres": ">= 9.4"
   }

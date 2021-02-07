@@ -2,7 +2,11 @@
   <li
     @mouseenter="hover = true"
     @mouseleave="hover = false"
-    :class="{ hover }"
+    :class="[assessment.changeSincePublish, {
+      hover,
+      expanded,
+      diff: $editorState.isPublishDiff
+    }]"
     class="list-group-item assessment-item elevation-1">
     <span v-if="draggable" class="drag-handle">
       <v-icon>mdi-drag-vertical</v-icon>
@@ -12,6 +16,7 @@
       @save="save"
       @delete="$emit('delete')"
       :element="assessment"
+      :is-disabled="isDisabled"
       class="question-container">
       <template v-slot:default="{ isEditing }">
         <div class="px-6 d-flex justify-end">
@@ -36,8 +41,13 @@
         {{ elementConfig.subtype }}
       </v-chip>
       <span class="question">{{ question | truncate(50) }}</span>
+      <publish-diff-chip
+        v-if="$editorState.isPublishDiff && assessment.changeSincePublish"
+        :change-type="assessment.changeSincePublish" />
       <v-btn
+        v-else
         @click.stop="$emit('delete')"
+        :class="{ disabled: isDisabled }"
         color="primary"
         icon
         class="delete">
@@ -51,6 +61,7 @@
 import cloneDeep from 'lodash/cloneDeep';
 import filter from 'lodash/filter';
 import map from 'lodash/map';
+import PublishDiffChip from './PublishDiffChip';
 
 const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
 const blankRegex = /(@blank)/g;
@@ -60,11 +71,12 @@ const getTextAssets = item => filter(item, it => TEXT_CONTAINERS.includes(it.typ
 
 export default {
   name: 'assessment-item',
-  inject: ['$teRegistry'],
+  inject: ['$teRegistry', '$editorState'],
   props: {
     assessment: { type: Object, required: true },
     expanded: { type: Boolean, default: false },
-    draggable: { type: Boolean, default: false }
+    draggable: { type: Boolean, default: false },
+    isDisabled: { type: Boolean, default: false }
   },
   data() {
     return { hover: false };
@@ -85,7 +97,8 @@ export default {
       Object.assign(assessment.data, data);
       this.$emit('save', assessment);
     }
-  }
+  },
+  components: { PublishDiffChip }
 };
 </script>
 
@@ -139,12 +152,28 @@ export default {
     opacity: 0;
   }
 
-  &.hover:not(.sortable-chosen) .delete {
+  &.hover:not(.sortable-chosen) .delete:not(.disabled) {
     opacity: 1;
   }
 }
 
 .question-container {
   margin: 0 !important;
+}
+
+.diff {
+  border: none;
+
+  &.expanded {
+    border-radius: 4px;
+  }
+
+  &.new {
+    @include highlight(var(--v-success-lighten2));
+  }
+
+  &.changed, &.removed {
+    @include highlight(var(--v-secondary-lighten4));
+  }
 }
 </style>

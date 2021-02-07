@@ -28,9 +28,9 @@
     <h3>Question group {{ position | toLetter }}</h3>
     <h4>Introduction</h4>
     <group-introduction
-      @saveElement="$emit('saveElement', $event)"
-      @reorderElement="$emit('reorderElement', $event)"
-      @deleteElement="$emit('deleteElement', $event)"
+      @save:element="$emit('save:element', $event)"
+      @reorder:element="$emit('reorder:element', $event)"
+      @delete:element="$emit('delete:element', $event)"
       :group="group"
       :elements="elements" />
     <h4>Questions</h4>
@@ -38,8 +38,8 @@
       Click the button below to Create first Assessment.
     </div>
     <element-list
-      @add="addAssessment"
-      @update="$emit('reorderElement', $event)"
+      @add="addAssessments"
+      @update="$emit('reorder:element', $event)"
       :elements="assessments"
       :activity="group"
       :supported-types="['ASSESSMENT']">
@@ -93,7 +93,7 @@ export default {
     },
     assessments() {
       const { savedAssessments: saved, unsavedAssessments: unsaved } = this;
-      return [...saved, ...Object.values(unsaved)];
+      return sortBy([...saved, ...Object.values(unsaved)], 'position');
     },
     hasAssessments() {
       return !isEmpty(this.assessments);
@@ -106,17 +106,18 @@ export default {
     }
   },
   methods: {
-    addAssessment(assessment) {
-      Object.assign(assessment, { uid: uuid() });
-      this.$set(this.unsavedAssessments, assessment.uid, assessment);
+    addAssessments(assessments) {
+      assessments.forEach(it => {
+        const uid = uuid();
+        this.$set(this.unsavedAssessments, uid, { ...it, uid });
+      });
     },
     saveAssessment(assessment) {
-      if (assessment.id) return this.$emit('updateElement', assessment);
-      this.$emit('saveElement', assessment);
+      this.$emit(assessment.id ? 'update:element' : 'save:element', assessment);
     },
     deleteAssessment(assessment) {
       if (!assessment.id) return this.clearUnsavedAssessments([assessment]);
-      this.$emit('deleteElement', assessment);
+      this.$emit('delete:element', assessment);
     },
     clearUnsavedAssessments(assessments) {
       const ids = assessments.map(it => it.uid);

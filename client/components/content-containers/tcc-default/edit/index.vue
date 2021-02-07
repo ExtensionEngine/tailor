@@ -1,7 +1,13 @@
 <template>
   <v-sheet class="content-container mb-5 elevation-1">
     <div class="d-flex justify-end">
-      <v-btn @click="$emit('delete')" color="pink" text>Delete {{ name }}</v-btn>
+      <v-btn
+        v-if="!isDisabled"
+        @click="$emit('delete')"
+        color="pink"
+        text>
+        Delete {{ name }}
+      </v-btn>
     </div>
     <v-alert
       :value="!containerElements.length"
@@ -17,24 +23,28 @@
       :activity="container"
       :supported-types="types"
       :layout="layout"
+      :is-disabled="isDisabled"
       class="element-list">
       <template v-slot:list-item="{ element, isDragged, position }">
-        <inline-activator @click.native="showElementDrawer(position - 1)" />
+        <inline-activator
+          @click="showElementDrawer(position)"
+          :disabled="isDisabled" />
         <contained-content
           @save="saveElement(element, 'data', $event)"
           @save:meta="saveElement(element, 'meta', $event)"
-          @delete="$emit('deleteElement', element)"
-          v-bind="{ element, isDragged, setWidth: false }"
+          @delete="$emit('delete:element', element)"
+          v-bind="{ element, isDragged, isDisabled, setWidth: false }"
           show-discussion />
       </template>
       <template v-slot:list-add="{ position: lastPosition, ...slotProps }">
         <div class="add-element-container mt-5">
           <add-element
-            @add="addElement($event, lastPosition)"
+            @add="$emit('save:element', $event)"
             @hidden="onHiddenElementDrawer"
             v-bind="slotProps"
+            :items="containerElements"
             :position="Math.min(insertPosition, lastPosition)"
-            :show="isElementDrawerVisible"
+            :show="!isDisabled && isElementDrawerVisible"
             icon="mdi-toy-brick-plus"
             large />
         </div>
@@ -49,10 +59,7 @@ import ContainedContent from 'tce-core/ContainedContent';
 import ElementList from 'tce-core/ElementList';
 import filter from 'lodash/filter';
 import InlineActivator from 'tce-core/AddElement/InlineActivator';
-import InsertLocation from '@/utils/InsertLocation';
 import sortBy from 'lodash/sortBy';
-
-const { ADD_AFTER } = InsertLocation;
 
 export default {
   name: 'tcc-default',
@@ -61,7 +68,8 @@ export default {
     container: { type: Object, required: true },
     elements: { type: Object, required: true },
     types: { type: Array, default: null },
-    layout: { type: Boolean, default: true }
+    layout: { type: Boolean, default: true },
+    isDisabled: { type: Boolean, default: false }
   },
   data: () => ({
     insertPosition: Infinity,
@@ -75,7 +83,7 @@ export default {
   },
   methods: {
     reorder({ newPosition }) {
-      this.$emit('reorderElement', { items: this.containerElements, newPosition });
+      this.$emit('reorder:element', { items: this.containerElements, newPosition });
     },
     showElementDrawer(position) {
       this.insertPosition = position;
@@ -85,18 +93,8 @@ export default {
       this.isElementDrawerVisible = false;
       this.insertPosition = Infinity;
     },
-    addElement(element, lastPosition) {
-      if (element.position === lastPosition) {
-        return this.$emit('saveElement', element);
-      }
-      const items = this.containerElements;
-      const { position: newPosition } = element;
-      const isFirstChild = newPosition === -1;
-      const context = { items, newPosition, isFirstChild, action: ADD_AFTER };
-      this.$emit('insertElement', { element, context });
-    },
     saveElement(element, key, data) {
-      this.$emit('saveElement', {
+      this.$emit('save:element', {
         ...(element),
         [key]: data
       });

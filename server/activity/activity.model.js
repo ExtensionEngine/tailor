@@ -2,11 +2,13 @@
 
 const {
   getSiblingTypes,
-  isOutlineActivity
+  isOutlineActivity,
+  isTrackedInWorkflow
 } = require('../../config/shared/activities');
 const { Model, Op } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
 const { Activity: Events } = require('../../common/sse');
+const { getDefaultActivityStatus } = require('../../config/shared/workflow');
 const hooks = require('./hooks');
 const isEmpty = require('lodash/isEmpty');
 const map = require('lodash/map');
@@ -15,7 +17,7 @@ const Promise = require('bluebird');
 
 class Activity extends Model {
   static fields(DataTypes) {
-    const { STRING, DOUBLE, JSONB, BOOLEAN, DATE, UUID, UUIDV4 } = DataTypes;
+    const { STRING, DOUBLE, JSONB, BOOLEAN, DATE, UUID, UUIDV4, VIRTUAL } = DataTypes;
     return {
       uid: {
         type: UUID,
@@ -42,6 +44,13 @@ class Activity extends Model {
         defaultValue: false,
         allowNull: false
       },
+      isTrackedInWorkflow: {
+        type: VIRTUAL,
+        get() {
+          const type = this.get('type');
+          return type && isTrackedInWorkflow(type);
+        }
+      },
       publishedAt: {
         type: DATE,
         field: 'published_at'
@@ -65,7 +74,30 @@ class Activity extends Model {
     };
   }
 
-  static associate({ ContentElement, Comment, Repository, Task }) {
+  static async create(data, opts) {
+    return this.sequelize.transaction(async transaction => {
+      const activity = await super.create(data, { ...opts, transaction });
+      if (activity.isTrackedInWorkflow) {
+        const defaultStatus = getDefaultActivityStatus(activity.type);
+        await activity.createStatus(defaultStatus, { transaction });
+      }
+      return activity;
+    }, { transaction: opts.transaction });
+  }
+
+  static async bulkCreate(data, opts) {
+    return this.sequelize.transaction(async transaction => {
+      const activities = await super.bulkCreate(data, { ...opts, transaction });
+      const statusData = activities
+        .filter(it => it.isTrackedInWorkflow)
+        .map(getDefaultStatus);
+      const ActivityStatus = this.sequelize.model('ActivityStatus');
+      await ActivityStatus.bulkCreate(statusData, { transaction });
+      return activities;
+    }, { transaction: opts.transaction });
+  }
+
+  static associate({ ActivityStatus, ContentElement, Comment, Repository }) {
     this.hasMany(ContentElement, {
       foreignKey: { name: 'activityId', field: 'activity_id' }
     });
@@ -83,7 +115,8 @@ class Activity extends Model {
       as: 'children',
       foreignKey: { name: 'parentId', field: 'parent_id' }
     });
-    this.hasMany(Task, {
+    this.hasMany(ActivityStatus, {
+      as: 'status',
       foreignKey: { name: 'activityId', field: 'activity_id' }
     });
   }
@@ -92,9 +125,12 @@ class Activity extends Model {
     hooks.add(this, Hooks, models);
   }
 
-  static scopes() {
+  static scopes({ ActivityStatus }) {
     const notNull = { [Op.ne]: null };
     return {
+      defaultScope: {
+        include: [{ model: ActivityStatus, as: 'status' }]
+      },
       withReferences(relationships = []) {
         const or = relationships.map(type => ({ [`refs.${type}`]: notNull }));
         return { where: { [Op.or]: or } };
@@ -178,7 +214,7 @@ class Activity extends Model {
     const { attributes } = options;
     const node = !isEmpty(attributes) ? pick(this, attributes) : this;
     nodes.push(node);
-    return Promise.resolve(this.getChildren({ attributes }))
+    return Promise.resolve(this.getChildren(options))
       .map(it => it.descendants(options, nodes, leaves))
       .then(children => {
         if (!isEmpty(children)) return { nodes, leaves };
@@ -241,6 +277,11 @@ function removeAll(Model, where = {}, options = {}) {
   const { soft, transaction } = options;
   if (!soft) return Model.destroy({ where });
   return Model.update({ detached: true }, { where, transaction });
+}
+
+function getDefaultStatus({ id, type }) {
+  const defaultStatus = getDefaultActivityStatus(type);
+  return { ...defaultStatus, activityId: id };
 }
 
 module.exports = Activity;

@@ -8,6 +8,7 @@ const {
   updateRepositoryCatalog
 } = require('./helpers');
 const PromiseQueue = require('promise-queue');
+const webhook = require('../webhookProvider');
 
 class PublishingService {
   constructor() {
@@ -15,7 +16,12 @@ class PublishingService {
   }
 
   publishActivity(activity) {
-    return this.queue.add(() => publishActivity(activity));
+    const publish = () => publishActivity(activity)
+      .then(data => {
+        if (webhook.isConnected) webhook.send(data);
+        return data;
+      });
+    return this.queue.add(publish);
   }
 
   publishRepoDetails(repository) {

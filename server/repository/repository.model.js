@@ -51,8 +51,8 @@ class Repository extends Model {
 
   static associate(db) {
     const {
-      Activity, Comment, RepositoryUser, Revision, ContentElement, User, Tag,
-      RepositoryTag, Task
+      Activity, Comment, RepositoryUser, Revision,
+      ContentElement, User, Tag, RepositoryTag
     } = db;
     this.hasMany(Activity, {
       foreignKey: { name: 'repositoryId', field: 'repository_id' }
@@ -70,9 +70,6 @@ class Repository extends Model {
       foreignKey: { name: 'repositoryId', field: 'repository_id' }
     });
     this.hasMany(RepositoryTag, {
-      foreignKey: { name: 'repositoryId', field: 'repository_id' }
-    });
-    this.hasMany(Task, {
       foreignKey: { name: 'repositoryId', field: 'repository_id' }
     });
     this.belongsToMany(Tag, {

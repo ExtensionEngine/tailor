@@ -3,7 +3,7 @@
     <template v-slot:activator="{ on }">
       <v-btn
         v-on="on"
-        :disabled="!elements.length"
+        :disabled="isDisabled || !elements.length"
         color="blue-grey lighten-4"
         class="my-3">
         {{ label }}
@@ -33,6 +33,7 @@ export default {
   name: 'tce-modal-preview',
   props: {
     label: { type: String, default: 'Show dialog' },
+    isDisabled: { type: Boolean, default: false },
     elements: { type: Array, default: () => [] }
   },
   data() {

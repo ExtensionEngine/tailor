@@ -12,22 +12,23 @@
       :is="containerName"
       v-for="(container, index) in containerGroup"
       :key="container.uid || container.id"
-      @addElement="addElement"
-      @updateElement="updateElement"
-      @saveElement="saveContentElement"
-      @deleteElement="requestElementDeletion"
-      @insertElement="insertElement"
-      @reorderElement="reorderContentElements"
-      @addSubcontainer="save"
-      @updateSubcontainer="update"
-      @deleteSubcontainer="requestContainerDeletion"
+      v-on="deprecatedListeners"
+      @add:subcontainer="save"
+      @update:subcontainer="update"
+      @delete:subcontainer="requestContainerDeletion"
+      @add:element="addElement"
+      @save:element="saveContentElements"
+      @update:element="updateElement"
+      @reorder:element="reorderContentElements"
+      @delete:element="requestElementDeletion"
       @delete="requestContainerDeletion(container)"
       :name="name"
       :container="container"
-      :activities="activities"
+      :activities="processedActivities"
       :elements="processedElements"
       :tes="elements"
       :position="index"
+      :is-disabled="showPublishDiff"
       v-bind="$attrs" />
     <div v-if="addBtnEnabled">
       <v-btn @click="addContainer" color="blue-grey darken-3" text class="mt-4">
@@ -42,20 +43,45 @@
 import { getContainerName, getElementId } from 'tce-core/utils';
 import { mapActions, mapState } from 'vuex';
 import capitalize from 'lodash/capitalize';
+import castArray from 'lodash/castArray';
+import deprecation from '@/components/common/mixins/deprecation';
 import get from 'lodash/get';
 import { getContainerTemplateId } from 'shared/activities';
 import isEmpty from 'lodash/isEmpty';
 import { mapRequests } from '@/plugins/radio';
+import mapValues from 'lodash/mapValues';
 import maxBy from 'lodash/maxBy';
+import pluralize from 'pluralize';
+import Promise from 'bluebird';
 import throttle from 'lodash/throttle';
+
+const DEPRECATED_LISTENERS = {
+  addSubcontainer: { action: 'save' },
+  updateSubcontainer: { action: 'update' },
+  deleteSubcontainer: { action: 'requestContainerDeletion' },
+  addElement: { action: 'addElement' },
+  saveElement: { action: 'saveContentElements' },
+  insertElement: {
+    action: 'saveContentElements',
+    newEvent: 'save:element',
+    adaptArgs: ({ element, context }) => [{
+      ...element, position: context.newPosition
+    }]
+  },
+  updateElement: { action: 'updateElement' },
+  reorderElement: { action: 'reorderContentElements' },
+  deleteElement: { action: 'requestElementDeletion' }
+};
 
 export default {
   name: 'content-containers',
+  mixins: [deprecation],
   inheritAttrs: false,
   inject: ['$ccRegistry'],
   props: {
     containerGroup: { type: Array, default: () => ({}) },
     processedElements: { type: Object, required: true },
+    processedActivities: { type: Object, required: true },
     type: { type: String, required: true },
     templateId: { type: String, default: null },
     parentId: { type: Number, required: true },
@@ -65,14 +91,22 @@ export default {
     displayHeading: { type: Boolean, default: false }
   },
   computed: {
-    ...mapState('repository/activities', { activities: 'items' }),
     ...mapState('repository/contentElements', { elements: 'items' }),
+    ...mapState('editor', ['showPublishDiff']),
+    deprecatedListeners() {
+      return mapValues(DEPRECATED_LISTENERS, ({ action, ...config }, listener) => {
+        return this.deprecateEvent(action, { oldEvent: listener, ...config });
+      });
+    },
     containerName() {
       const id = getContainerTemplateId(this);
       return getContainerName(this.$ccRegistry.get(id) ? id : 'DEFAULT');
     },
     name: vm => vm.label.toLowerCase(),
-    addBtnEnabled: vm => !(!vm.multiple && vm.containerGroup.length),
+    addBtnEnabled() {
+      const isMultipleOrEmpty = this.multiple || !this.containerGroup.length;
+      return !this.showPublishDiff && isMultipleOrEmpty;
+    },
     nextPosition() {
       const last = get(maxBy(this.containerGroup, 'position'), 'position', 0);
       return last + 1;
@@ -86,23 +120,33 @@ export default {
       saveElement: 'save',
       updateElement: 'update',
       deleteElement: 'remove',
-      insertElement: 'insert',
       reorderElements: 'reorder'
     }),
     addContainer() {
       const { type, parentId, nextPosition: position } = this;
       this.save({ type, parentId, position });
     },
-    saveContentElement(element) {
-      return this.saveElement(element).then(() => {
-        this.$radio.channel(`element:${getElementId(element)}`).emit('saved');
-        this.showNotification();
-      });
+    saveContentElements(elements) {
+      // TODO: implement endpoint to save multiple elements at once
+      const contentElements = castArray(elements);
+      return Promise.map(contentElements, element => this.persistElement(element))
+        .then(() => {
+          const message = `${pluralize('Element', contentElements.length)} saved`;
+          this.showNotification(message);
+        });
+    },
+    persistElement(element) {
+      const elementChannel = this.$radio.channel(`element:${getElementId(element)}`);
+      return this.saveElement(element)
+        .then(() => elementChannel.emit('saved'))
+        .catch(err => {
+          elementChannel.emit('error', err);
+          return Promise.reject(err);
+        });
     },
     reorderContentElements({ newPosition, items }) {
       const element = items[newPosition];
-      const isFirstChild = newPosition === 0;
-      const context = { items, newPosition, isFirstChild };
+      const context = { items, newPosition };
       this.reorderElements({ element, context });
     },
     requestDeletion(content, action, name, onDelete = () => null) {
@@ -119,8 +163,8 @@ export default {
       const onDelete = () => this.$emit('focusoutElement');
       this.requestDeletion(element, 'deleteElement', 'element', onDelete);
     },
-    showNotification: throttle(function () {
-      this.$snackbar.show('Element saved');
+    showNotification: throttle(function (message) {
+      this.$snackbar.show(message);
     }, 4000)
   },
   created() {

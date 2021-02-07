@@ -1,7 +1,9 @@
 <template>
   <v-menu
     v-model="isVisible"
+    @click.native.stop
     :close-on-content-click="false"
+    :close-on-click="!isConfirmationActive"
     min-width="300"
     transition="slide-y-transition"
     left offset-y attach>
@@ -25,7 +27,10 @@
       @save="save"
       @update="save"
       @remove="editorBus.emit(events.REMOVE, $event)"
-      v-bind="{ comments, user }"
+      @seen="setLastSeen"
+      @resolve="resolve"
+      v-bind="{ comments, unseenComments, hasUnresolvedComments, user }"
+      :confirmation-active.sync="isConfirmationActive"
       class="pa-2" />
   </v-menu>
 </template>
@@ -60,20 +65,24 @@ export default {
     id: { type: Number, default: null },
     uid: { type: String, required: true },
     comments: { type: Array, required: true },
+    hasUnresolvedComments: { type: Boolean, default: false },
     lastSeen: { type: Number, required: true },
     user: { type: Object, required: true }
   },
-  data: () => ({ isVisible: false }),
+  data: () => ({
+    isVisible: false,
+    isConfirmationActive: false
+  }),
   computed: {
     ...mapChannels({ editorBus: 'editor' }),
     events: () => DiscussionEvent,
     lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime(),
     unseenComments() {
       const { comments, user, lastSeen } = this;
-      return comments.filter(it => (
-        it.author.id !== user.id &&
-        new Date(it.createdAt).getTime() > lastSeen
-      ));
+      return comments.filter(it => {
+        const createdAt = new Date(it.createdAt).getTime();
+        return it.author.id !== user.id && createdAt > lastSeen;
+      });
     },
     activator() {
       const { comments, unseenComments } = this;
@@ -85,27 +94,22 @@ export default {
   },
   methods: {
     save(data) {
-      const { editorBus, user: author, id: elementId } = this;
-      return editorBus.emit(DiscussionEvent.SAVE, {
+      const { user: author, id: elementId, hasUnresolvedComments } = this;
+      return this.editorBus.emit(DiscussionEvent.SAVE, {
         ...data,
         author,
-        contentElementId: elementId
+        contentElementId: elementId,
+        hasUnresolvedComments
       });
     },
     setLastSeen(timeout) {
-      const { uid: elementUid, lastCommentAt } = this;
+      const { uid: elementUid, lastCommentAt, events } = this;
       const options = { elementUid, lastCommentAt, timeout };
-      this.editorBus.emit(DiscussionEvent.SET_LAST_SEEN, options);
-    }
-  },
-  watch: {
-    isVisible(val) {
-      if (!val || !this.lastCommentAt) return;
-      this.setLastSeen(1000);
+      this.editorBus.emit(events.SET_LAST_SEEN, options);
     },
-    comments(val, oldVal) {
-      if (!this.isVisible || val === oldVal) return;
-      this.setLastSeen(2000);
+    resolve({ id, resolvedAt } = {}) {
+      const { id: contentElementId, events } = this;
+      this.editorBus.emit(events.RESOLVE, { id, contentElementId, resolvedAt });
     }
   },
   components: { Discussion }
@@ -113,11 +117,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.v-menu__content {
+::v-deep .v-menu__content {
   background: #fff;
 
-  ::v-deep .embedded-discussion {
+  .embedded-discussion {
     text-align: left;
+  }
+
+  .comment .author {
+    font-size: 0.875rem;
   }
 }
 

@@ -15,15 +15,18 @@
         :key="it.uid"
         @selected="toggleSelect(it)"
         @save="saveAssessment"
-        @delete="$emit('deleteElement', it)"
+        @delete="$emit('delete:element', it)"
         :assessment="it"
-        :expanded="isSelected(it)" />
+        :expanded="isSelected(it)"
+        :is-disabled="isDisabled" />
     </ul>
     <add-element
-      @add="addAssessment"
+      v-if="!isDisabled"
+      @add="addAssessments"
+      :items="assessments"
       :include="['ASSESSMENT']"
       :activity="container"
-      :position="nextPosition"
+      :position="assessments.length"
       :layout="false"
       large
       label="Add assessment" />
@@ -34,7 +37,6 @@
 import AddElement from 'tce-core/AddElement';
 import AssessmentItem from 'tce-core/AssessmentItem';
 import filter from 'lodash/filter';
-import last from 'lodash/last';
 import sortBy from 'lodash/sortBy';
 import uuid from '@/utils/uuid';
 
@@ -42,7 +44,8 @@ export default {
   name: 'assessment-pool',
   props: {
     container: { type: Object, required: true },
-    elements: { type: Object, required: true }
+    elements: { type: Object, required: true },
+    isDisabled: { type: Boolean, default: false }
   },
   data: () => ({
     selected: [],
@@ -54,27 +57,25 @@ export default {
       const assessments = filter(this.elements, { activityId });
       return sortBy(assessments, 'position');
     },
-    nextPosition() {
-      const lastItem = last(this.assessments);
-      return lastItem ? lastItem.position + 1 : 1;
-    },
     hasAssessments: vm => vm.assessments.length
   },
   methods: {
-    addAssessment(assessment) {
-      const uid = uuid();
-      this.$emit('addElement', { ...assessment, uid });
-      this.selected.push(uid);
+    addAssessments(assessments) {
+      assessments.forEach(it => {
+        const uid = uuid();
+        this.$emit('add:element', { ...it, uid });
+        this.selected.push(uid);
+      });
     },
     saveAssessment(assessment) {
-      const event = assessment.id ? 'updateElement' : 'saveElement';
+      const event = assessment.id ? 'update:element' : 'save:element';
       return this.$emit(event, assessment);
     },
     toggleSelect(assessment) {
       const { question } = assessment.data;
       const hasQuestion = question && question.length;
       if (this.isSelected(assessment) && !hasQuestion) {
-        this.$emit('deleteElement', assessment);
+        this.$emit('delete:element', assessment);
       } else if (this.isSelected(assessment)) {
         this.selected.splice(this.selected.indexOf(assessment.uid), 1);
       } else {

@@ -1,0 +1,13 @@
+Tailor
+=================================================
+
+You've been assigned to the {{label}}: "{{data.name}}"
+
+View the {{label}} status by visiting the link:
+
+{{{href}}}
+
+Or copy and paste this URL into your browser.
+
+
+-------------------------------------------------

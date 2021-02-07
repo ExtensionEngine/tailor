@@ -6,6 +6,7 @@ const forEach = require('lodash/forEach');
 const get = require('lodash/get');
 const hash = require('hash-obj');
 const { isOutlineActivity } = require('../../config/shared/activities');
+const Promise = require('bluebird');
 const { resolveStatics } = require('../shared/storage/helpers');
 const sse = require('../shared/sse');
 
@@ -48,12 +49,15 @@ function add(ContentElement, Hooks, Models) {
   async function sseDelete(_, element) {
     await element.reload({ paranoid: false });
     sse.channel(element.repositoryId).send(Events.Delete, element);
+    const { Comment } = Models;
+    const where = { contentElementId: element.id };
+    return Comment.update({ activityId: null }, { where, returning: true });
   }
 
   function customElementHook(hookType, element) {
     const elementHookTypes = elementHookMappings[hookType];
     if (!elementHookTypes) return;
-    return elementHookTypes
+    return Promise.resolve(elementHookTypes)
       .map(hook => elementRegistry.getHook(element.type, hook))
       .filter(Boolean)
       .reduce((result, hook) => hook(result), element);

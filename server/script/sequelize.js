@@ -49,8 +49,8 @@ function getOptions(argv) {
   }, {});
 }
 
-function reduce(obj, callback, initalValue) {
+function reduce(obj, callback, initialValue) {
   return Object.keys(obj).reduce((acc, key) => {
     return callback(acc, obj[key], key);
-  }, initalValue);
+  }, initialValue);
 }
