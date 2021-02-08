@@ -122,6 +122,11 @@ export default {
       this.isTruncated = clientWidth < scrollWidth;
     }
   },
+  watch: {
+    '$vuetify.breakpoint.width'() {
+      this.detectTruncation();
+    }
+  },
   mounted() {
     this.$nextTick(() => this.detectTruncation());
   },
