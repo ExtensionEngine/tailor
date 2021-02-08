@@ -51,7 +51,6 @@ import { mapRequests } from '@/plugins/radio';
 import optionsMixin from './common';
 import sortBy from 'lodash/sortBy';
 
-const TREE_VIEW_ROUTE = 'tree-view';
 const { ADD_AFTER, ADD_BEFORE, ADD_INTO } = InsertLocation;
 
 export default {
@@ -124,8 +123,7 @@ export default {
       this.action = action;
     },
     delete() {
-      const { activity, $route: { name: routeName } } = this;
-      const isTreeView = routeName === TREE_VIEW_ROUTE;
+      const { activity, $route: { graph } } = this;
       const action = () => {
         const rootFilter = it => !it.parentId && (it.id !== activity.id);
         // Focus parent or first root node
@@ -135,7 +133,7 @@ export default {
         this.remove(this.activity);
         if (focusNode) this.selectActivity(focusNode.id);
       };
-      const name = `${isTreeView ? `${activity.id}: ` : ''}${activity.data.name}`;
+      const name = `${graph ? `${activity.id}: ` : ''}${activity.data.name}`;
       this.showConfirmationModal({
         title: 'Delete item?',
         message: `Are you sure you want to delete ${name}?`,

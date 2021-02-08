@@ -9,7 +9,8 @@
           :search="search"
           :is-flat="isFlat"
           class="ml-1" />
-        <template v-if="!search">
+        <tree-view v-if="isGraphView" class="tree-view" />
+        <template v-else-if="!search">
           <draggable
             @update="data => reorder(data, rootActivities)"
             :list="rootActivities"
@@ -61,6 +62,7 @@ import SearchResult from './SearchResult';
 import selectActivity from '@/components/repository/common/selectActivity';
 import Sidebar from '../common/Sidebar';
 import StructureToolbar from './Toolbar';
+import TreeView from './TreeView';
 
 export default {
   mixins: [reorderMixin, selectActivity],
@@ -71,6 +73,7 @@ export default {
   computed: {
     ...mapGetters('repository', ['structure', 'outlineActivities']),
     hasActivities: vm => !!vm.rootActivities.length,
+    isGraphView: vm => vm.$route.query.graph,
     isFlat() {
       const types = map(filter(this.structure, it => !it.rootLevel), 'type');
       if (!types.length) return false;
@@ -120,7 +123,8 @@ export default {
     OutlineFooter,
     SearchResult,
     Sidebar,
-    StructureToolbar
+    StructureToolbar,
+    TreeView
   }
 };
 </script>
@@ -132,6 +136,11 @@ export default {
   .v-progress-circular {
     margin-top: 7.5rem;
   }
+}
+
+.tree-view {
+  height: 100%;
+  width: 100%;
 }
 
 .structure-container {
