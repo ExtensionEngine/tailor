@@ -17,9 +17,14 @@
       text>
       Toggle all
     </v-btn>
-    <v-btn @click="toggleGraphView" :input-value="isGraphView" icon>
-      <v-icon>mdi-graph-outline</v-icon>
-    </v-btn>
+    <v-tooltip open-delay="800" bottom>
+      <template #activator="{ on }">
+        <v-btn v-on="on" @click="toggleGraphView" :input-value="isGraphView" icon>
+          <v-icon>mdi-graph-outline</v-icon>
+        </v-btn>
+      </template>
+      View graph
+    </v-tooltip>
   </v-toolbar>
 </template>
 
