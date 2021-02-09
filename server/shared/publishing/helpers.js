@@ -100,8 +100,7 @@ function unpublishActivity(repository, activity) {
     return Promise
       .map(deleted, it => {
         const baseUrl = getBaseUrl(repository.id, it.id);
-        const filePaths = getContainerFilePaths(baseUrl, it.contentContainers);
-
+        const filePaths = getContainersFilePaths(baseUrl, it.contentContainers);
         return storage.deleteFiles(filePaths);
       })
       .then(() => {
@@ -136,9 +135,10 @@ async function fetchActivityContent(activity, signed = false) {
 }
 
 function publishContent(activity) {
-  return publishContainers(activity)
-    .then(containers => unpublishDeletedContainers(activity, containers))
-    .then(containers => ({ containers }));
+  return publishContainers(activity).then(async containers => {
+    await unpublishDeletedContainers(activity, containers);
+    return { containers };
+  });
 }
 
 function publishContainers(parent) {
@@ -195,16 +195,15 @@ async function fetchCustomContainers(parent, config) {
   }, []);
 }
 
-async function unpublishDeletedContainers(parent, containers) {
+function unpublishDeletedContainers(parent, containers) {
   const baseUrl = getBaseUrl(parent.repositoryId, parent.id);
-
-  const filePaths = getContainerFilePaths(baseUrl, containers);
-  const publishedFilePaths = await storage.listFiles(baseUrl);
-
-  const redundantFilePaths = difference(publishedFilePaths, filePaths);
-  if (redundantFilePaths.length) await storage.deleteFiles(redundantFilePaths);
-
-  return containers;
+  const filePaths = getContainersFilePaths(baseUrl, containers);
+  return storage
+    .listFiles(baseUrl)
+    .then(publishedFilePaths => {
+      const redundantFilePaths = difference(publishedFilePaths, filePaths);
+      if (redundantFilePaths.length) return storage.deleteFiles(redundantFilePaths);
+    });
 }
 
 function resolveContainer(container) {
@@ -278,7 +277,7 @@ function defaultSummaryBuilder({ id, uid, type, publishedAs, elements = [] }) {
   return { id, uid, type, publishedAs, elementCount: elements.length };
 }
 
-function getContainerFilePaths(baseUrl, containers = []) {
+function getContainersFilePaths(baseUrl, containers = []) {
   return containers.map(it => `${baseUrl}/${it.id}.${it.publishedAs}.json`);
 }
 
