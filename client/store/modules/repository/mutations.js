@@ -14,7 +14,7 @@ export const toggleActivity = (state, { uid, expanded }) => {
 
 export const expandParents = (state, parents) => {
   const expanded = transform(parents, (acc, it) => (acc[it.uid] = true), {});
-  state.outline.expanded = expanded;
+  state.outline.expanded = { ...state.outline.expanded, ...expanded };
 };
 
 export const toggleActivities = (state, outline) => {
