@@ -94,7 +94,7 @@ export default {
     const { repositoryId } = this;
     await this.initialize(repositoryId);
     this.showLoader = false;
-    if (!this.activities.length || this.selectActivity) return;
+    if (!this.activities.length || this.selectedActivity) return;
     const rootActivities = filter(this.activities, { parentId: null });
     const [activity] = sortBy(rootActivities, 'position');
     this.selectActivity(activity.id);
