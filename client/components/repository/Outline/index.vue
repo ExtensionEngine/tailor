@@ -9,7 +9,11 @@
           :search="search"
           :is-flat="isFlat"
           class="ml-1" />
-        <tree-view v-if="isGraphView" class="tree-view" />
+        <tree-view
+          v-if="isGraphView"
+          :structure="structure"
+          :outline-activities="outlineActivities"
+          class="tree-view" />
         <template v-else-if="!search">
           <draggable
             @update="data => reorder(data, rootActivities)"
@@ -112,7 +116,8 @@ export default {
   watch: {
     showLoader(val) {
       const { selectedActivity: activity, rootActivities } = this;
-      if (!val && activity && (rootActivities[0].id !== activity.id)) {
+      const isFirstActivity = rootActivities[0].id === activity.id;
+      if (!val && activity && !isFirstActivity && !this.isGraphView) {
         this.scrollToActivity(this.selectedActivity, 200);
       }
     }

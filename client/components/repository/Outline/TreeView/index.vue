@@ -25,6 +25,10 @@ const graphOptions = {
 export default {
   name: 'tree-view',
   mixins: [selectActivity],
+  props: {
+    structure: { type: Array, default: () => [] },
+    outlineActivities: { type: Array, default: () => [] }
+  },
   data() {
     return {
       graphOptions,
@@ -32,10 +36,8 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('repository', ['repository', 'structure', 'outlineActivities']),
+    ...mapGetters('repository', ['repository']),
     graphData() {
-      // TODO: Make sure repository is always available!
-      if (!this.outlineActivities) return {};
       // Render graph only for persisted activities
       const savedActivities = this.outlineActivities.filter(it => it.id);
       const repositoryTree = tree(sortBy(savedActivities, 'id'), this.structure);
