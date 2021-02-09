@@ -81,21 +81,23 @@ export default {
   },
   methods: mapActions('repository', ['initialize', 'expandParents']),
   watch: {
-    selectedActivity(val) {
-      if (val) this.lastSelectedActivity = val;
+    selectedActivity: {
+      handler(val) {
+        if (!val) return;
+        this.lastSelectedActivity = val;
+        this.expandParents(val);
+      },
+      immediate: true
     }
   },
   async created() {
     const { repositoryId } = this;
     await this.initialize(repositoryId);
     this.showLoader = false;
-    if (!this.activities.length) return;
-    if (!this.selectedActivity) {
-      const rootActivities = filter(this.activities, { parentId: null });
-      const [activity] = sortBy(rootActivities, 'position');
-      this.selectActivity(activity.id);
-    }
-    this.expandParents(this.selectedActivity);
+    if (!this.activities.length || this.selectActivity) return;
+    const rootActivities = filter(this.activities, { parentId: null });
+    const [activity] = sortBy(rootActivities, 'position');
+    this.selectActivity(activity.id);
   },
   components: { ActiveUsers }
 };
