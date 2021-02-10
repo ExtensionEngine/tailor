@@ -2,7 +2,7 @@
   <div class="structure-page">
     <v-progress-circular v-if="showLoader" color="primary" indeterminate />
     <div v-else class="structure-container">
-      <div ref="structure" class="structure">
+      <div ref="structure" class="structure d-flex flex-column justify-start">
         <structure-toolbar
           v-if="hasActivities"
           @search="search = $event"
@@ -10,7 +10,8 @@
           :search="search"
           :is-flat="isFlat"
           :is-graph-view="isGraphView"
-          class="ml-1" />
+          :class="{ 'align-self-end': isGraphView }"
+          class="ml-1 flex-grow-0" />
         <tree-view
           v-if="isGraphView"
           :structure="structure"
@@ -150,11 +151,6 @@ export default {
   }
 }
 
-.tree-view {
-  width: 100%;
-  height: 100%;
-}
-
 .structure-container {
   position: relative;
   height: 100%;
@@ -162,21 +158,29 @@ export default {
 }
 
 .structure {
+  position: relative;
   width: 100%;
   height: 100%;
-  float: left;
   padding: 3.125rem 5.625rem 0 3.75rem;
   overflow-y: scroll;
   overflow-y: overlay;
 
   ::v-deep {
+    .v-toolbar__content {
+      padding: 0;
+    }
+
     > :last-child {
       margin-bottom: 7.5rem;
     }
   }
 }
 
-.structure ::v-deep .v-toolbar__content {
-  padding: 0;
+.tree-view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 </style>

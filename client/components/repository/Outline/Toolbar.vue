@@ -47,7 +47,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.toolbar ::v-deep .v-toolbar__content > .v-btn.v-btn--icon:last-child {
-  margin-right: 0;
+.toolbar {
+  z-index: 1;
+
+  ::v-deep .v-toolbar__content > .v-btn.v-btn--icon:last-child {
+    margin-right: 0;
+  }
 }
 </style>
