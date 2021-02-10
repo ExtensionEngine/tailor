@@ -123,7 +123,8 @@ export default {
       this.action = action;
     },
     delete() {
-      const { activity, $route: { graph } } = this;
+      const { activity, $route } = this;
+      const { graph } = $route.query;
       const action = () => {
         const rootFilter = it => !it.parentId && (it.id !== activity.id);
         // Focus parent or first root node
