@@ -159,7 +159,6 @@ export default {
 
 .structure {
   position: relative;
-  width: 100%;
   height: 100%;
   padding: 3.125rem 5.625rem 0 3.75rem;
   overflow-y: scroll;
