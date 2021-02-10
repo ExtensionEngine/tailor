@@ -7,6 +7,7 @@
       class="heading elevation-2">
       <v-chip
         color="primary lighten-3"
+        text-color="black"
         small
         class="readonly ml-1 px-7 body-2">
         Profile
