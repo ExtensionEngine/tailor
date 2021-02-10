@@ -134,7 +134,7 @@ export default {
         this.remove(this.activity);
         if (focusNode) this.selectActivity(focusNode.id);
       };
-      const name = `${graph ? `${activity.id}: ` : ''}${activity.data.name}`;
+      const name = `${graph ? `${activity.shortId}: ` : ''}${activity.data.name}`;
       this.showConfirmationModal({
         title: 'Delete item?',
         message: `Are you sure you want to delete ${name}?`,
