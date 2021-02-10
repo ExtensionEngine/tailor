@@ -33,7 +33,7 @@
       v-if="!isDisabled && (hasItems || isFocused)"
       @click="add"
       :class="{ 'mt-0': !hasItems && isFocused }"
-      color="blue-grey darken-3"
+      color="primary darken-3"
       text
       class="my-6">
       <v-icon class="mr-2">mdi-tab-plus</v-icon>

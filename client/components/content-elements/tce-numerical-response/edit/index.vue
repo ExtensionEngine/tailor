@@ -9,7 +9,7 @@
           :disabled="disabled"
           :error-messages="prefixErrors(idx)"
           placeholder="Prefix..."
-          color="blue-grey darken-3"
+          color="primary darken-3"
           filled />
       </v-col>
       <v-col :cols="canRemoveAnswer ? 4 : 6" :md="canRemoveAnswer ? 5 : 6">
@@ -19,7 +19,7 @@
           :error-messages="correctErrors(idx)"
           :disabled="disabled"
           placeholder="Correct value..."
-          color="blue-grey darken-3"
+          color="primary darken-3"
           filled />
       </v-col>
       <v-col cols="3">
@@ -29,7 +29,7 @@
           :disabled="disabled"
           :error-messages="suffixErrors(idx)"
           placeholder="Suffix..."
-          color="blue-grey darken-3"
+          color="primary darken-3"
           filled />
       </v-col>
       <v-col v-if="canRemoveAnswer" cols="2" md="1" class="mt-3 pl-1">

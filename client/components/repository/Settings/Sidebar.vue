@@ -3,15 +3,15 @@
     :value="true"
     stateless
     class="transparent">
-    <v-list class="blue-grey--text text--darken-4 text-left">
+    <v-list class="primary--text text--darken-4 text-left">
       <v-list-item
         v-for="({ name, label, icon }) in routes"
         :key="name"
         :to="{ name }"
-        active-class="blue-grey lighten-5"
+        active-class="primary lighten-5"
         exact ripple>
         <v-list-item-action>
-          <v-icon color="blue-grey darken-3">mdi-{{ icon }}</v-icon>
+          <v-icon color="primary darken-3">mdi-{{ icon }}</v-icon>
         </v-list-item-action>
         <v-list-item-title>{{ label }}</v-list-item-title>
       </v-list-item>
@@ -25,10 +25,10 @@
           v-for="({ label, name, icon, color }) in actions"
           :key="name"
           @click="$emit('action', name)"
-          :color="color ? color : 'blue-grey darken-3'"
+          :color="color ? color : 'primary darken-3'"
           ripple>
           <v-list-item-action class="pl-1">
-            <v-icon :color="color ? color : 'primary'">
+            <v-icon :color="color ? color : 'primary darken-2'">
               mdi-{{ icon }}
             </v-icon>
           </v-list-item-action>

@@ -21,7 +21,7 @@
       @input="$emit('input', $event)"
       @change="showDatePicker = false"
       :value="value | formatDate('YYYY-MM-DD')"
-      color="primary"
+      color="primary darken-2"
       no-title />
   </v-menu>
 </template>

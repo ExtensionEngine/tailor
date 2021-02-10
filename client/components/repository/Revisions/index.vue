@@ -11,7 +11,7 @@
     <infinite-loading @infinite="fetchRevisions">
       <span slot="spinner">
         <div class="col-lg-12 loader-wrapper">
-          <v-progress-circular color="primary" indeterminate />
+          <v-progress-circular color="primary darken-2" indeterminate />
         </div>
       </span>
       <span slot="no-results">No changes recorded.</span>

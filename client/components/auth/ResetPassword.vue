@@ -46,7 +46,7 @@
       </validation-provider>
       <v-btn
         type="submit"
-        color="blue-grey darken-4"
+        color="primary darken-4"
         rounded block dark
         class="my-1">
         Change password

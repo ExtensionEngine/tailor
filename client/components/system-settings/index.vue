@@ -3,10 +3,10 @@
     <v-toolbar
       height="42"
       absolute
-      color="blue-grey darken-3"
+      color="primary darken-3"
       class="heading elevation-2">
       <v-chip
-        color="blue-grey lighten-3"
+        color="primary lighten-3"
         small
         class="readonly ml-1 px-8 body-2">
         Admin

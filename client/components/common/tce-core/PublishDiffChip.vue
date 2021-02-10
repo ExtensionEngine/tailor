@@ -2,7 +2,7 @@
   <v-chip
     v-if="changeType"
     :text-color="changeType === 'new' ? 'success' : 'secondary'"
-    color="blue-grey lighten-5"
+    color="primary lighten-5"
     small round
     class="readonly font-weight-medium text-capitalize">
     {{ changeType }}

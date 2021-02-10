@@ -5,7 +5,7 @@
         <v-btn
           v-on="on"
           :loading="isPublishing"
-          color="primary darken-1"
+          color="primary darken-3"
           text
           class="px-1">
           <v-icon class="pr-1">mdi-publish</v-icon>Publish

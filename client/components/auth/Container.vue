@@ -3,7 +3,7 @@
     <div class="auth-panel-container">
       <v-sheet elevation="0" rounded class="auth-panel">
         <div class="auth-header py-9">
-          <v-avatar size="88" color="blue-grey darken-4" class="elevation-4">
+          <v-avatar size="88" color="primary darken-4" class="elevation-4">
             <div class="pt-1">
               <img :src="logo" alt="Logo" class="logo">
             </div>

@@ -7,7 +7,7 @@
     <template v-slot:activator="{ on }">
       <v-btn
         v-on="on"
-        color="primary darken-1"
+        color="primary darken-3"
         text>
         <v-icon class="mr-2">mdi-account-plus</v-icon>Add User
       </v-btn>
@@ -52,7 +52,7 @@
           <v-btn
             :disabled="isSaving"
             type="submit"
-            color="blue-grey darken-4"
+            color="primary darken-4"
             text>
             Add
           </v-btn>

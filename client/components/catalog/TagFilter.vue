@@ -10,7 +10,7 @@
         open-delay="800"
         top>
         <template v-slot:activator="{ on: tooltip }">
-          <v-btn v-on="{ ...menu, ...tooltip }" color="primary lighten-4" icon>
+          <v-btn v-on="{ ...menu, ...tooltip }" color="primary lighten-2" icon>
             <v-icon>mdi-tag-outline</v-icon>
           </v-btn>
         </template>
@@ -19,7 +19,7 @@
     </template>
     <v-sheet
       tile
-      class="pa-3 blue-grey darken-4">
+      class="pa-3 primary darken-4">
       <v-text-field
         v-model="search"
         label="Filter tags..."

@@ -1,7 +1,7 @@
 <template>
   <div class="text-center">
     <v-dialog :value="show" :width="width" persistent>
-      <v-card color="blue-grey darken-3" dark>
+      <v-card color="primary darken-3" dark>
         <v-card-text>
           {{ label }}
           <v-progress-linear :value="status" color="white" class="mb-0" />

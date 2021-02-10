@@ -5,12 +5,12 @@
         v-on="{...on, ...listeners}"
         :size="props.small ? 24 : 34"
         :class="[data.staticClass, data.class]"
-        color="blue-grey lighten-4">
+        color="primary lighten-4">
         <img v-if="props.imgUrl" :src="props.imgUrl">
         <v-icon
           v-else
           :size="props.small ? 16 : 24"
-          color="blue-grey darken-3">
+          color="primary darken-3">
           mdi-account
         </v-icon>
       </v-avatar>

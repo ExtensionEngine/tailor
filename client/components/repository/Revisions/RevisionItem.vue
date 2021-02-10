@@ -5,7 +5,7 @@
       :style="{ cursor: isContentElement ? 'pointer' : 'auto' }"
       :class="{ expanded, expandable: isContentElement }"
       class="revision">
-      <v-avatar size="42" color="blue-grey darken-4">
+      <v-avatar size="42" color="primary darken-4">
         <span :style="{ color }" class="headline">{{ acronym }}</span>
       </v-avatar>
       <div class="content ml-3">

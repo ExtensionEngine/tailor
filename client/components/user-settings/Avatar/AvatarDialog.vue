@@ -16,7 +16,7 @@
     </template>
     <template v-slot:actions>
       <v-btn @click="close" text>Cancel</v-btn>
-      <v-btn @click="confirm" color="blue-grey darken-4" text>
+      <v-btn @click="confirm" color="primary darken-4" text>
         Update
       </v-btn>
     </template>

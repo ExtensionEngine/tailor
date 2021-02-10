@@ -5,10 +5,10 @@
         v-for="({ name, label, icon }) in routes"
         :key="name"
         :to="{ name }"
-        color="blue-grey darken-4"
+        color="primary darken-4"
         exact ripple>
         <v-list-item-action class="pl-1">
-          <v-icon color="blue-grey darken-3">mdi-{{ icon }}</v-icon>
+          <v-icon color="primary darken-3">mdi-{{ icon }}</v-icon>
         </v-list-item-action>
         <v-list-item-title>{{ label }}</v-list-item-title>
       </v-list-item>

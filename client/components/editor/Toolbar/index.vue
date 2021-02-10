@@ -3,7 +3,7 @@
     <div
       v-show="activity"
       :class="[showPublishDiff ? 'darken-4' : 'darken-3']"
-      class="activity-toolbar blue-grey">
+      class="activity-toolbar primary">
       <activity-actions class="d-flex flex-grow-0" />
       <h1 class="pt-2 headline text-truncate">
         <span>{{ config.label }}</span>
@@ -15,7 +15,7 @@
           <span class="px-2 grey--text">|</span>
           <span class="white--text">comparing with published</span>
           <span class="px-2 grey--text">@</span>
-          <v-chip color="readonly blue-grey lighten-4" small label>
+          <v-chip color="readonly primary lighten-4" small label>
             {{ activity.publishedAt | formatDate }}
           </v-chip>
         </template>

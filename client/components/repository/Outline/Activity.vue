@@ -17,7 +17,7 @@
           @click.stop="toggle()"
           icon
           class="my-auto">
-          <v-icon size="30" color="blue-grey darken-3">mdi-{{ icon }}</v-icon>
+          <v-icon size="30" color="primary darken-3">mdi-{{ icon }}</v-icon>
         </v-btn>
         <div class="activity-name h5 my-auto text-truncate">{{ data.name }}</div>
         <div v-show="isHighlighted" class="actions my-auto">
@@ -31,7 +31,7 @@
                 v-show="hasSubtypes"
                 v-on="on"
                 @click="toggle()"
-                color="blue-grey darken-4"
+                color="primary darken-4"
                 icon
                 class="my-auto mx-0">
                 <v-icon>mdi-chevron-{{ isExpanded ? 'up' : 'down' }}</v-icon>

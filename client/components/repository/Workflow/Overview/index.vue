@@ -5,7 +5,7 @@
     :items="items"
     item-class="class"
     disable-pagination hide-default-footer
-    class="overview blue-grey lighten-5">
+    class="overview primary lighten-5">
     <template #item.name="item">
       <overview-name v-bind="item" />
     </template>

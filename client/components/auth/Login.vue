@@ -58,7 +58,7 @@
         <v-spacer />
         <v-btn
           type="submit"
-          color="blue-grey darken-4"
+          color="primary darken-4"
           block dark rounded depressed>
           Log in
         </v-btn>

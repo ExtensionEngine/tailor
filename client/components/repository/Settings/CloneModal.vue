@@ -38,7 +38,7 @@
           <v-btn
             :loading="inProgress"
             type="submit"
-            color="blue-grey darken-4"
+            color="primary darken-4"
             text>
             Clone
           </v-btn>

@@ -1,6 +1,6 @@
 <template>
   <div class="structure-page">
-    <v-progress-circular v-if="showLoader" color="primary" indeterminate />
+    <v-progress-circular v-if="showLoader" color="primary darken-2" indeterminate />
     <div v-else class="structure-container">
       <div ref="structure" class="structure">
         <structure-toolbar
@@ -35,7 +35,7 @@
             :is-selected="selectedActivity.id === activity.id" />
           <v-alert
             :value="!filteredActivities.length"
-            color="blue-grey darken-2"
+            color="primary darken-2"
             icon="mdi-magnify"
             prominent text
             class="mt-5">

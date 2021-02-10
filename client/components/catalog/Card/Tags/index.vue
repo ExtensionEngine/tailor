@@ -5,7 +5,7 @@
         v-for="{ id, name, truncatedName } in tags"
         :key="id"
         @click:close="showDeleteConfirmation(id, name)"
-        color="blue-grey lighten-4"
+        color="primary lighten-4"
         label light small close
         class="mr-2 mb-1">
         <v-tooltip
@@ -21,7 +21,7 @@
     </div>
     <v-tooltip v-if="!exceededTagLimit" open-delay="400" bottom>
       <template v-slot:activator="{ on }">
-        <v-btn v-on="on" @click="showTagDialog = true" color="blue-grey lighten-3" icon>
+        <v-btn v-on="on" @click="showTagDialog = true" color="primary lighten-3" icon>
           <v-icon dense>mdi-tag-plus</v-icon>
         </v-btn>
       </template>

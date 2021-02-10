@@ -7,7 +7,7 @@
         @click="reinvite"
         :loading="isReinviting"
         :disabled="isReinviting"
-        color="primary darken-2"
+        color="primary darken-4"
         text
         class="d-block ml-auto mb-4">
         Reinvite
@@ -70,7 +70,7 @@
           <v-btn
             :disabled="invalid || pristine"
             type="submit"
-            color="blue-grey darken-4"
+            color="primary darken-4"
             text>
             Save
           </v-btn>

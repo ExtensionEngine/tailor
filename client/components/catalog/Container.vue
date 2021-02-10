@@ -14,7 +14,7 @@
               <v-btn
                 v-on="on"
                 @click="onFilterChange(togglePinned)"
-                :color="showPinned ? 'lime accent-3' : 'primary lighten-4'"
+                :color="showPinned ? 'lime accent-3' : 'primary lighten-2'"
                 icon
                 class="my-1">
                 <v-icon>mdi-pin</v-icon>
@@ -43,12 +43,12 @@
       </v-row>
       <infinite-loading ref="loader" @infinite="load">
         <div slot="spinner" class="spinner">
-          <v-progress-circular color="primary" indeterminate />
+          <v-progress-circular color="primary darken-2" indeterminate />
         </div>
         <div slot="no-results" class="no-results subheading">
           <v-alert
             :value="!loading"
-            color="blue-grey lighten-4"
+            color="primary lighten-4"
             icon="mdi-cloud-search-outline"
             outlined>
             {{ noRepositoriesMessage }}

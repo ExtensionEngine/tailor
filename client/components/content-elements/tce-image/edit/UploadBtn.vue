@@ -1,7 +1,7 @@
 <template>
   <v-btn
     @click="onClick"
-    color="primary darken-3"
+    color="primary darken-4"
     text
     class="text-uppercase">
     <v-icon color="secondary darken-1" class="mr-2">mdi-cloud-upload-outline</v-icon>
