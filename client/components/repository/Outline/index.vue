@@ -164,19 +164,23 @@ export default {
 .structure {
   width: 100%;
   height: 100%;
+  padding: 3.125rem 0 0;
   float: left;
-  padding: 3.125rem 5.625rem 0 3.75rem;
   overflow-y: scroll;
   overflow-y: overlay;
 
   ::v-deep {
+    > :not(.tree-view) {
+      padding: 0 5.625rem 0 3.75rem;
+    }
+
     > :last-child {
       margin-bottom: 7.5rem;
     }
-  }
-}
 
-.structure ::v-deep .v-toolbar__content {
-  padding: 0;
+    .v-toolbar__content {
+      padding: 0;
+    }
+  }
 }
 </style>
