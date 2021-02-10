@@ -1,17 +1,82 @@
 <template>
-  <div>
-    <div class="d-flex justify-space-between align-center">
-      <h5>Status</h5>
-    </div>
-    <status-card v-bind="$attrs" />
-  </div>
+  <v-hover v-slot="{ hover }">
+    <v-card
+      :to="route"
+      :color="hover ? '#dde3e6' : 'blue-grey lighten-5'"
+      flat
+      class="pa-2">
+      <div class="d-flex align-center mt-auto">
+        <v-tooltip open-delay="500" bottom>
+          <template #activator="{ on }">
+            <v-chip
+              v-on="on"
+              :color="statusConfig.color"
+              label dark small
+              class="mr-2 readonly text-uppercase">
+              {{ statusConfig.label }}
+            </v-chip>
+          </template>
+          Status
+        </v-tooltip>
+        <v-tooltip open-delay="500" bottom>
+          <template #activator="{ on }">
+            <v-icon v-on="on" class="priority-icon mx-3">
+              {{ `$vuetify.icons.${priorityConfig.icon}` }}
+            </v-icon>
+          </template>
+          {{ priorityConfig.label }} priority
+        </v-tooltip>
+        <assignee-avatar
+          v-bind="status.assignee"
+          show-tooltip small
+          class="mx-3" />
+        <v-tooltip v-if="status.dueDate" open-delay="500" bottom>
+          <template #activator="{ on }">
+            <label-chip v-on="on" class="ml-1 px-1">
+              {{ status.dueDate | formatDate('MM/DD/YY') }}
+            </label-chip>
+          </template>
+          Due date
+        </v-tooltip>
+        <v-spacer />
+        <v-icon v-show="hover" color="blue-grey darken-5" dense class="mr-1">
+          mdi-arrow-right
+        </v-icon>
+      </div>
+    </v-card>
+  </v-hover>
 </template>
 
 <script>
-import StatusCard from './Card';
+import AssigneeAvatar from '@/components/repository/common/AssigneeAvatar';
+import find from 'lodash/find';
+import { getLevel } from 'shared/activities';
+import { getPriority } from 'shared/workflow';
+import LabelChip from '@/components/repository/common/LabelChip';
+import { mapGetters } from 'vuex';
 
 export default {
-  name: 'sidebar-activity-status',
-  components: { StatusCard }
+  name: 'activity-status-card',
+  props: {
+    id: { type: Number, default: null },
+    shortId: { type: String, required: true },
+    name: { type: String, required: true },
+    type: { type: String, required: true },
+    status: { type: Object, required: true }
+  },
+  computed: {
+    ...mapGetters('repository', ['workflow']),
+    activityConfig: vm => getLevel(vm.type),
+    statusConfig: vm => find(vm.workflow.statuses, { id: vm.status.status }),
+    priorityConfig: vm => getPriority(vm.status.priority),
+    route: vm => ({ name: 'progress', query: vm.$route.query })
+  },
+  components: { LabelChip, AssigneeAvatar }
 };
 </script>
+
+<style lang="scss" scoped>
+.priority-icon {
+  width: 0.875rem;
+}
+</style>

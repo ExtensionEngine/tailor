@@ -40,6 +40,11 @@
         Copy link
       </v-btn>
     </div>
+    <activity-status
+      v-if="activity.isTrackedInWorkflow"
+      v-bind="activity"
+      :name="activity.data.name"
+      class="mt-4 mb-2" />
     <div class="meta-elements">
       <meta-input
         v-for="it in metadata"
@@ -47,11 +52,6 @@
         @update="updateActivity"
         :meta="it" />
     </div>
-    <activity-status
-      v-if="activity.isTrackedInWorkflow"
-      v-bind="activity"
-      :name="activity.data.name"
-      class="mb-12" />
     <div>
       <relationship
         v-for="relationship in config.relationships"
