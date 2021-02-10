@@ -1,7 +1,7 @@
 <template>
   <v-toolbar color="transparent" flat dense class="toolbar">
     <v-text-field
-      v-if="!isGraphView"
+      v-if="!isGraph"
       @input="$emit('search', $event)"
       @click:clear="$emit('search', '')"
       :value="search"
@@ -10,7 +10,7 @@
       hide-details clearable />
     <v-spacer />
     <v-btn
-      v-if="!isFlat && !isGraphView"
+      v-if="!isFlat && !isGraph"
       @click="toggleActivities"
       :disabled="!!search"
       color="grey darken-4"
@@ -22,7 +22,7 @@
         <v-btn
           v-on="on"
           @click="$emit('toggle:graph')"
-          :input-value="isGraphView"
+          :input-value="isGraph"
           icon>
           <v-icon>mdi-graph-outline</v-icon>
         </v-btn>
@@ -40,7 +40,7 @@ export default {
   props: {
     search: { type: String, default: '' },
     isFlat: { type: Boolean, default: false },
-    isGraphView: { type: Boolean, default: false }
+    isGraph: { type: Boolean, default: false }
   },
   methods: mapActions('repository', ['toggleActivities'])
 };

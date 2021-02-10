@@ -9,11 +9,11 @@
           @toggle:graph="toggleGraphView"
           :search="search"
           :is-flat="isFlat"
-          :is-graph-view="isGraphView"
-          :class="{ 'align-self-end': isGraphView }"
+          :is-graph="showGraph"
+          :class="{ 'align-self-end': showGraph }"
           class="ml-1 flex-grow-0" />
         <tree-view
-          v-if="isGraphView"
+          v-if="showGraph"
           :structure="structure"
           :outline-activities="outlineActivities"
           class="tree-view" />
@@ -80,7 +80,7 @@ export default {
   computed: {
     ...mapGetters('repository', ['structure', 'outlineActivities']),
     hasActivities: vm => !!vm.rootActivities.length,
-    isGraphView: vm => Boolean(vm.$route.query.graph),
+    showGraph: vm => Boolean(vm.$route.query.graph),
     isFlat() {
       const types = map(filter(this.structure, it => !it.rootLevel), 'type');
       if (!types.length) return false;
@@ -117,7 +117,7 @@ export default {
     },
     toggleGraphView() {
       const { graph, ...query } = this.$route.query;
-      if (this.isGraphView) return this.$router.push({ query });
+      if (this.showGraph) return this.$router.push({ query });
       this.$router.push({ query: { ...query, graph: true } });
     }
   },
@@ -125,7 +125,7 @@ export default {
     showLoader(val) {
       const { selectedActivity: activity, rootActivities } = this;
       const isFirstActivity = activity && rootActivities[0].id === activity.id;
-      if (!val && activity && !isFirstActivity && !this.isGraphView) {
+      if (!val && activity && !isFirstActivity && !this.showGraph) {
         this.scrollToActivity(this.selectedActivity, 200);
       }
     }
