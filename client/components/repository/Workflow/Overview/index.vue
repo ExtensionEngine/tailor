@@ -106,7 +106,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$row-background: #cfd8dc;
+$row-background: var(--v-primary-lighten4);
 
 .overview ::v-deep {
   .column-name {
@@ -118,7 +118,7 @@ $row-background: #cfd8dc;
   }
 
   tr:hover {
-    background: darken($row-background, 2) !important;
+    background: $row-background !important;
 
     &:not(.selected) {
       cursor: pointer;
