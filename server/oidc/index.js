@@ -2,6 +2,7 @@
 
 const { authenticate, logout } = require('../shared/auth');
 const { BAD_REQUEST } = require('http-status-codes');
+const get = require('lodash/get');
 const { errors: OIDCError } = require('openid-client');
 const path = require('path');
 const router = require('express').Router();
@@ -31,7 +32,8 @@ const getSilentAuthParams = req => {
   const strategy = req.passport.strategy('oidc');
   const callbackUri = new URL(strategy.options.callbackURL);
   callbackUri.searchParams.set('silent', 'true');
-  return { redirect_uri: callbackUri.href };
+  const idToken = get(req.authData, 'oidc.tokenSet.id_token');
+  return { redirect_uri: callbackUri.href, id_token_hint: idToken };
 };
 
 const isOIDCError = err => OIDCErrors.some(Ctor => err instanceof Ctor);
