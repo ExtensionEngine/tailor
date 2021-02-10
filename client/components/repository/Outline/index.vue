@@ -6,8 +6,10 @@
         <structure-toolbar
           v-if="hasActivities"
           @search="search = $event"
+          @toggle:graph="toggleGraphView"
           :search="search"
           :is-flat="isFlat"
+          :is-graph-view="isGraphView"
           class="ml-1" />
         <tree-view
           v-if="isGraphView"
@@ -77,7 +79,7 @@ export default {
   computed: {
     ...mapGetters('repository', ['structure', 'outlineActivities']),
     hasActivities: vm => !!vm.rootActivities.length,
-    isGraphView: vm => vm.$route.query.graph,
+    isGraphView: vm => Boolean(vm.$route.query.graph),
     isFlat() {
       const types = map(filter(this.structure, it => !it.rootLevel), 'type');
       if (!types.length) return false;
@@ -111,6 +113,11 @@ export default {
         const element = this.$refs.structure.querySelector(elementId);
         element.scrollIntoView();
       }, timeout);
+    },
+    toggleGraphView() {
+      const { graph, ...query } = this.$route.query;
+      if (this.isGraphView) return this.$router.push({ query });
+      this.$router.push({ query: { ...query, graph: true } });
     }
   },
   watch: {

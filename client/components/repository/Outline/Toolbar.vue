@@ -21,7 +21,7 @@
       <template #activator="{ on }">
         <v-btn
           v-on="on"
-          @click="toggleGraphView"
+          @click="$emit('toggle:graph')"
           :input-value="isGraphView"
           icon>
           <v-icon>mdi-graph-outline</v-icon>
@@ -39,18 +39,9 @@ export default {
   name: 'repository-structure-toolbar',
   props: {
     search: { type: String, default: '' },
-    isFlat: { type: Boolean, default: false }
+    isFlat: { type: Boolean, default: false },
+    isGraphView: { type: Boolean, default: false }
   },
-  computed: {
-    isGraphView: vm => vm.$route.query.graph
-  },
-  methods: {
-    ...mapActions('repository', ['toggleActivities']),
-    toggleGraphView() {
-      const { graph, ...query } = this.$route.query;
-      if (this.isGraphView) return this.$router.push({ query });
-      this.$router.push({ query: { ...query, graph: true } });
-    }
-  }
+  methods: mapActions('repository', ['toggleActivities'])
 };
 </script>
