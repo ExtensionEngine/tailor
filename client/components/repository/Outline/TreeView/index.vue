@@ -3,7 +3,8 @@
     @node:select="onNodeSelect"
     v-bind="graphOptions"
     :data="graphData"
-    :selected-node-id="selectedActivity && selectedActivity.id" />
+    :selected-node-id="selectedActivity && selectedActivity.id"
+    class="tree" />
 </template>
 
 <script>
