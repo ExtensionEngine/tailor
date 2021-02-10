@@ -54,7 +54,7 @@ export default {
 
 <style lang="scss" scoped>
 .header {
-  padding: 1rem;
+  padding: 1rem 1rem 0;
 }
 
 .options-container {

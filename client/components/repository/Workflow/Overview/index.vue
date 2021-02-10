@@ -106,6 +106,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$row-background: #cfd8dc;
+
 .overview ::v-deep {
   .column-name {
     max-width: 17.75rem;
@@ -115,12 +117,16 @@ export default {
     max-width: 11.5rem;
   }
 
-  tr:hover:not(.selected) {
-    cursor: pointer;
+  tr:hover {
+    background: darken($row-background, 2) !important;
+
+    &:not(.selected) {
+      cursor: pointer;
+    }
   }
 
   .selected {
-    background: #eceff1;
+    background: $row-background;
   }
 }
 </style>
