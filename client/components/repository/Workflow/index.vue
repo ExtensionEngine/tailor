@@ -1,5 +1,5 @@
 <template>
-  <div class="workflow d-flex flex-column grey lighten-4 pt-3 py-5">
+  <div class="workflow d-flex flex-column pt-3 pb-5 px-2">
     <v-progress-circular
       v-if="showLoader"
       color="primary"
