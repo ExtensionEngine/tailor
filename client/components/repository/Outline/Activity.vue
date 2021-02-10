@@ -136,7 +136,6 @@ $background-color:  #eceff1;
   border-radius: 2px;
   background-color: $background-color;
   cursor: pointer;
-  opacity: 0.9;
   border-left-width: 4px;
   border-left-style: solid;
   transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -151,10 +150,10 @@ $background-color:  #eceff1;
 
   &.highlighted {
     opacity: 1;
-    background-color: darken($background-color, 5);
+    background-color: darken($background-color, 7);
 
     .activity-name {
-      color: #333;
+      color: #111;
     }
   }
 
