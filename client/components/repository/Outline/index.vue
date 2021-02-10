@@ -116,7 +116,7 @@ export default {
   watch: {
     showLoader(val) {
       const { selectedActivity: activity, rootActivities } = this;
-      const isFirstActivity = rootActivities[0].id === activity.id;
+      const isFirstActivity = activity && rootActivities[0].id === activity.id;
       if (!val && activity && !isFirstActivity && !this.isGraphView) {
         this.scrollToActivity(this.selectedActivity, 200);
       }
