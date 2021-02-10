@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar color="transparent" flat dense>
+  <v-toolbar color="transparent" flat dense class="toolbar">
     <v-text-field
       v-if="!isGraphView"
       @input="$emit('search', $event)"
@@ -45,3 +45,9 @@ export default {
   methods: mapActions('repository', ['toggleActivities'])
 };
 </script>
+
+<style lang="scss" scoped>
+.toolbar ::v-deep .v-toolbar__content > .v-btn.v-btn--icon:last-child {
+  margin-right: 0;
+}
+</style>
