@@ -11,5 +11,6 @@ $font-family-primary: Poppins, Helvetica, Arial, sans-serif;
 $font-family-secondary: Roboto, Helvetica, Arial, sans-serif;
 
 @mixin highlight($color) {
+  border: none;
   box-shadow: 0 0 0 2px $color !important;
 }
