@@ -20,7 +20,6 @@ import RepoUserManagement from './components/repository/Settings/UserManagement'
 import ResetPassword from './components/auth/ResetPassword';
 import SystemSettings from './components/system-settings';
 import SystemUserManagement from './components/system-settings/UserManagement';
-import TreeView from './components/repository/TreeView';
 import UserSettings from './components/user-settings';
 import Workflow from './components/repository/Workflow';
 
@@ -67,10 +66,6 @@ const options = {
       path: 'revisions',
       name: 'revisions',
       component: RepositoryRevisions
-    }, {
-      path: 'tree-view',
-      name: 'tree-view',
-      component: TreeView
     }]
   }, {
     path: '/repository/:repositoryId/editor/:activityId',
