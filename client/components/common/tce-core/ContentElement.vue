@@ -139,6 +139,7 @@ export default {
   $accent-2: #ff4081;
 
   position: relative;
+  border: 1px solid transparent;
 
   &::after {
     $width: 0.125rem;
@@ -173,7 +174,7 @@ export default {
 
 .frame {
   padding: 10px 20px;
-  box-shadow: 0 0 0 1px #e1e1e1;
+  border: 1px solid #e1e1e1;
 }
 
 .element-actions {
