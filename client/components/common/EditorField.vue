@@ -100,7 +100,7 @@ export default {
     cursor: inherit;
 
     &::before {
-      box-shadow: inset 0 0 0 2px var(--v-primary-base);
+      box-shadow: inset 0 0 0 2px var(--v-primary-darken2);
     }
 
     .ql-editor {

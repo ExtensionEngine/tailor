@@ -6,7 +6,7 @@
       :ripple="false"
       elevation="0"
       rounded="0"
-      class="my-5 py-1 blue-grey lighten-5 text-left">
+      class="my-5 py-1 primary lighten-5 text-left">
       <v-card-subtitle class="pb-1 d-flex align-center">
         <v-chip
           :color="color"
@@ -15,7 +15,7 @@
           {{ typeLabel }}
         </v-chip>
         <v-chip
-          color="blue-grey darken-2"
+          color="primary darken-2"
           label small dark
           class="readonly px-4 subtitle-2">
           {{ activity.shortId }}

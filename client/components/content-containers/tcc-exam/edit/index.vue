@@ -39,7 +39,7 @@
       <v-btn
         @click.stop="createGroup"
         :disabled="!container.id"
-        color="primary"
+        color="primary darken-2"
         outlined
         class="my-5">
         <v-icon class="pr-2">mdi-file-tree</v-icon>

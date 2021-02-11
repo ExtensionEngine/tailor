@@ -3,7 +3,7 @@
     ref="activityContent"
     @mousedown="mousedownCaptured = true"
     @click="onClick"
-    class="activity-content blue-grey lighten-5">
+    class="activity-content primary lighten-5">
     <div class="content-containers-wrapper">
       <content-loader v-if="isLoading" class="loader" />
       <publish-diff-provider

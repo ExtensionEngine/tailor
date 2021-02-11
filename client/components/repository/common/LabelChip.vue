@@ -1,9 +1,10 @@
 <template>
   <v-chip
     v-on="$listeners"
-    color="blue-grey lighten-5"
+    color="primary lighten-5"
+    text-color="black"
     label small
-    class="readonly flex-shrink-0 caption text-uppercase">
+    class="flex-shrink-0 caption text-uppercase readonly">
     <slot></slot>
   </v-chip>
 </template>

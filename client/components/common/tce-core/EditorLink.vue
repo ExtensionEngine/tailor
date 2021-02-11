@@ -7,7 +7,7 @@
             v-on="on"
             @click="navigate"
             v-bind="$attrs"
-            :color="isExactActive ? 'teal accent-4' : 'blue-grey'"
+            :color="isExactActive ? 'teal accent-4' : 'primary'"
             text x-small>
             {{ label }}
             <slot name="icon">

@@ -17,7 +17,7 @@
     <template v-slot:body>
       <v-tabs
         v-model="selectedTab"
-        background-color="primary darken-1"
+        background-color="primary darken-3"
         slider-color="secondary lighten-2"
         slider-size="3"
         dark grow>
@@ -105,7 +105,7 @@
           <v-btn
             :loading="showLoader"
             type="submit"
-            color="blue-grey darken-4"
+            color="primary darken-4"
             text
             class="px-1">
             Create

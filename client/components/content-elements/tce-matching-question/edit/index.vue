@@ -9,7 +9,7 @@
           :error-messages="headingErrors('premise')"
           :disabled="disabled"
           placeholder="Premise heading..."
-          color="blue-grey darken-3"
+          color="primary darken-3"
           filled />
       </v-col>
       <v-col cols="4" offset="2">
@@ -19,7 +19,7 @@
           :error-messages="headingErrors('response')"
           :disabled="disabled"
           placeholder="Response heading..."
-          color="blue-grey darken-3"
+          color="primary darken-3"
           filled />
       </v-col>
     </v-row>
@@ -31,7 +31,7 @@
           :error-messages="answerErrors(premiseKey, 'premises')"
           :disabled="disabled"
           placeholder="Premise value..."
-          color="blue-grey darken-3"
+          color="primary darken-3"
           filled />
       </v-col>
       <v-col cols="2" class="text-center">
@@ -44,7 +44,7 @@
           :error-messages="answerErrors(responseKey, 'responses')"
           :disabled="disabled"
           placeholder="Response value..."
-          color="blue-grey darken-3"
+          color="primary darken-3"
           filled />
       </v-col>
       <v-col cols="1">
@@ -62,7 +62,7 @@
       <v-btn
         v-if="isEditing && pairsCount < 10"
         @click="addItems"
-        color="blue-grey darken-4"
+        color="primary darken-4"
         text
         class="px-2">
         <v-icon class="mr-2">mdi-plus</v-icon>

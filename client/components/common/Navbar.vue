@@ -1,6 +1,6 @@
 <template>
   <v-app-bar
-    color="blue-grey darken-3"
+    color="primary darken-3"
     app fixed dense
     class="elevation-0">
     <router-link :to="{ name: 'catalog' }" tag="a" class="app-brand">
@@ -16,7 +16,7 @@
         v-for="({ name, to, icon }) in routes"
         :key="name"
         :to="to"
-        color="blue-grey lighten-4"
+        color="primary lighten-4"
         active-class="secondary--text"
         exact text>
         <v-icon v-if="icon" class="pr-1">mdi-{{ icon }}</v-icon>

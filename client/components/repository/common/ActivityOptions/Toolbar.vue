@@ -8,7 +8,7 @@
         <v-btn
           v-on="on"
           @click.stop="it.action()"
-          color="blue-grey darken-4"
+          color="primary darken-4"
           icon
           class="mr-2">
           <v-icon :size="it.iconSize || 21">{{ it.icon }}</v-icon>

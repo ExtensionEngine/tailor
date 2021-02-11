@@ -28,13 +28,13 @@
         <v-btn
           v-if="hasContentContainers(item.type)"
           @click="$emit('selected', item)"
-          color="primary"
+          color="primary darken-2"
           outlined small>
           View elements
         </v-btn>
       </template>
     </v-treeview>
-    <v-alert :value="!!noResultsMessage" color="primary" dark>
+    <v-alert :value="!!noResultsMessage" color="primary darken-2" dark>
       {{ noResultsMessage }}
     </v-alert>
   </div>

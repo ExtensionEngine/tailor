@@ -1,7 +1,7 @@
 <template>
   <v-card class="tce-question-container my-2 grey lighten-5">
     <v-toolbar
-      color="blue-grey darken-3"
+      color="primary darken-3"
       height="36"
       dark
       class="mb-5 px-0 elevation-2 text-left">

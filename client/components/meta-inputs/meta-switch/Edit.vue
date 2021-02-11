@@ -5,7 +5,7 @@
       :input-value="meta.value"
       :name="meta.key"
       :label="meta.label"
-      color="primary lighten-1"
+      color="primary darken-1"
       hide-details />
   </div>
 </template>

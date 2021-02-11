@@ -6,7 +6,7 @@
           <template v-slot:activator="{ on: tooltip }">
             <v-btn
               v-on="{ ...menu, ...tooltip }"
-              color="primary lighten-4"
+              color="primary lighten-2"
               icon
               class="my-1">
               <v-icon>mdi-sort</v-icon>
@@ -30,7 +30,7 @@
         <v-btn
           v-on="on"
           @click="toggleOrder"
-          color="primary lighten-4"
+          color="primary lighten-2"
           icon
           class="my-1">
           <v-icon>

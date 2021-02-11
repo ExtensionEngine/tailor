@@ -35,7 +35,7 @@
     </tce-question-container>
     <div v-else @click="$emit('selected')" class="minimized">
       <v-chip
-        color="blue-grey darken-3"
+        color="primary darken-3"
         label dark small
         class="readonly">
         {{ elementConfig.subtype }}
@@ -48,7 +48,7 @@
         v-else
         @click.stop="$emit('delete')"
         :class="{ disabled: isDisabled }"
-        color="primary"
+        color="primary darken-2"
         icon
         class="delete">
         <v-icon>mdi-close</v-icon>

@@ -1,6 +1,6 @@
 <template>
   <v-expansion-panel>
-    <v-expansion-panel-header color="blue-grey lighten-4">
+    <v-expansion-panel-header color="primary lighten-4">
       <v-text-field
         v-if="isEditingHeader"
         v-model="header"
@@ -37,10 +37,10 @@
         </div>
       </template>
     </v-expansion-panel-header>
-    <v-expansion-panel-content color="blue-grey lighten-5" eager>
+    <v-expansion-panel-content color="primary lighten-5" eager>
       <v-alert
         v-if="!hasElements && !isDisabled"
-        color="blue-grey darken-2"
+        color="primary darken-2"
         icon="mdi-information-variant"
         text prominent
         class="mt-6">

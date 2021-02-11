@@ -5,10 +5,10 @@
         <v-btn
           v-on="on"
           :loading="isPublishing"
-          color="primary darken-1"
+          color="grey darken-3"
           text
           class="px-1">
-          <v-icon class="pr-1">mdi-publish</v-icon>Publish
+          <v-icon class="mr-2">mdi-cloud-upload-outline</v-icon>Publish
         </v-btn>
       </template>
       <v-list dense class="text-left">

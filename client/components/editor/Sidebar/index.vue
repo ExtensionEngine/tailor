@@ -26,7 +26,7 @@
     <template v-slot:append>
       <v-tabs
         :value="selectedTabIndex"
-        background-color="blue-grey darken-4"
+        background-color="primary darken-4"
         icons-and-text fixed-tabs dark>
         <v-tabs-slider />
         <v-tab

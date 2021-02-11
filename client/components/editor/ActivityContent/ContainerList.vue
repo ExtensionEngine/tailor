@@ -3,7 +3,7 @@
     <h2 v-if="displayHeading" class="headline">{{ name | capitalize }}</h2>
     <v-alert
       :value="!containerGroup.length"
-      color="blue-grey darken-4"
+      color="primary darken-4"
       icon="mdi-information-variant"
       prominent text>
       Click the button below to create first {{ name | capitalize }}.
@@ -31,7 +31,7 @@
       :is-disabled="showPublishDiff"
       v-bind="$attrs" />
     <div v-if="addBtnEnabled">
-      <v-btn @click="addContainer" color="blue-grey darken-3" text class="mt-4">
+      <v-btn @click="addContainer" color="primary darken-3" text class="mt-4">
         <v-icon class="pr-2">mdi-plus</v-icon>
         Create {{ name }}
       </v-btn>

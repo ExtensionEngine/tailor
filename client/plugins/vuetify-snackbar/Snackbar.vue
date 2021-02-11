@@ -15,7 +15,7 @@
 <script>
 const initialData = () => ({
   message: '',
-  color: 'blue-grey darken-4',
+  color: 'primary darken-4',
   timeout: 2500,
   right: true
 });

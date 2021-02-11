@@ -49,12 +49,12 @@ const getActivatorOptions = unseenComments => ({
   },
   preview: {
     icon: 'mdi-comment-text-multiple-outline',
-    color: 'blue-grey darken-4',
+    color: 'primary darken-4',
     tooltip: 'View comments'
   },
   post: {
     icon: 'mdi-message-plus-outline',
-    color: 'blue-grey darken-4',
+    color: 'primary darken-4',
     tooltip: 'Post a comment'
   }
 });

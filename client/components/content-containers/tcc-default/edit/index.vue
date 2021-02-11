@@ -11,7 +11,7 @@
     </div>
     <v-alert
       :value="!containerElements.length"
-      color="blue-grey darken-3"
+      color="primary darken-3"
       icon="mdi-information-variant"
       text prominent
       class="my-5 mx-3">

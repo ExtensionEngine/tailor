@@ -5,7 +5,7 @@
     :items="items"
     item-class="class"
     disable-pagination hide-default-footer
-    class="overview">
+    class="overview primary lighten-5">
     <template #item.name="item">
       <overview-name v-bind="item" />
     </template>
@@ -106,6 +106,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$row-background: var(--v-primary-lighten4);
+
 .overview ::v-deep {
   .column-name {
     max-width: 17.75rem;
@@ -115,12 +117,16 @@ export default {
     max-width: 11.5rem;
   }
 
-  tr:hover:not(.selected) {
-    cursor: pointer;
+  tr:hover {
+    background: $row-background !important;
+
+    &:not(.selected) {
+      cursor: pointer;
+    }
   }
 
   .selected {
-    background: #eceff1;
+    background: $row-background;
   }
 }
 </style>

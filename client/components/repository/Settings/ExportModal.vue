@@ -9,7 +9,7 @@
       <v-btn
         @click="exportRepository"
         :disabled="!jobId"
-        color="blue-grey darken-3"
+        color="primary darken-3"
         text>
         Download
       </v-btn>

@@ -1,8 +1,8 @@
 <template>
   <div class="repo-container">
-    <div class="repo-toolbar blue-grey darken-3 elevation-2">
+    <div class="repo-toolbar primary darken-3 elevation-2">
       <v-tabs
-        background-color="blue-grey darken-3"
+        background-color="primary darken-3"
         slider-color="grey lighten-2"
         slider-size="3"
         height="60"
