@@ -10,16 +10,19 @@
         Show {{ showAll ? 'less' : 'more' }}
       </v-btn>
     </div>
-    <div v-if="showHeading" class="header grey--text text--darken-3">
-      <v-icon color="grey darken-2" class="pr-1">mdi-forum-outline</v-icon>
+    <div v-if="showHeading" class="header d-flex grey--text text--darken-3">
+      <v-icon color="grey darken-3" class="mr-2">
+        mdi-forum-outline
+      </v-icon>
       Comments
     </div>
     <v-alert
       v-if="!commentsCount && showNotifications"
       color="primary lighten-5"
       icon="mdi-chat"
-      prominent>
-      Be the First to Comment!
+      prominent
+      class="alert">
+      <span class="pa-2">Be the First to Comment!</span>
     </v-alert>
     <discussion-thread
       v-if="thread.length"
@@ -165,6 +168,10 @@ export default {
 
   .comment-editor {
     margin: 0 0.25rem 0 0.25rem;
+  }
+
+  .alert ::v-deep .v-icon {
+    color: var(--v-primary-darken3) !important;
   }
 }
 </style>

@@ -1,5 +1,9 @@
 <template>
-  <div class="activity-discussion">
+  <v-sheet
+    :color="panel ? 'blue-grey lighten-5' : 'transparent'"
+    :elevation="panel ? 2 : 0"
+    outlined rounded
+    class="activity-discussion my-2 mx-1 py-2 px-4">
     <discussion
       @save="saveComment"
       @update="saveComment"
@@ -8,7 +12,7 @@
       @unresolve="updateResolvement"
       v-bind="{ comments, unseenComments, showHeading, user, scrollTarget: 'editor' }"
       show-notifications is-activity-thread />
-  </div>
+  </v-sheet>
 </template>
 
 <script>
@@ -21,6 +25,7 @@ export default {
   name: 'activity-discussion',
   props: {
     activity: { type: Object, required: true },
+    panel: { type: Boolean, default: false },
     showHeading: { type: Boolean, default: false }
   },
   computed: {
@@ -55,11 +60,3 @@ export default {
   components: { Discussion }
 };
 </script>
-
-<style lang="scss" scoped>
-.activity-discussion {
-  margin: 1rem 0 1.75rem;
-  padding: 0.375rem 1rem;
-  border: 1px solid #bbb;
-}
-</style>
