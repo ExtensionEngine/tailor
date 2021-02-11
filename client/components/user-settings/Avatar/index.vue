@@ -15,7 +15,7 @@
       </template>
       <v-btn
         @click="selectAvatar"
-        color="blue-grey darken-3"
+        color="primary darken-3"
         fab dark small>
         <v-icon>mdi-upload</v-icon>
       </v-btn>

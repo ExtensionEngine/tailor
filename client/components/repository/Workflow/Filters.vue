@@ -4,6 +4,7 @@
       @input="updateFilter('searchText', $event)"
       :value="searchText"
       prepend-inner-icon="mdi-magnify"
+      name="Search"
       placeholder="Search by ID or name"
       clearable
       class="search-field" />

@@ -1,7 +1,7 @@
 <template>
   <v-alert
     v-if="!activities.length"
-    color="primary"
+    color="primary darken-2"
     dark
     class="mx-3">
     Selected {{ schemaName }} is empty.
@@ -29,7 +29,7 @@
         </v-icon>
       </template>
     </v-treeview>
-    <v-alert :value="!hasSearchResults" color="primary" dark>
+    <v-alert :value="!hasSearchResults" color="primary darken-2" dark>
       No matches found.
     </v-alert>
   </div>

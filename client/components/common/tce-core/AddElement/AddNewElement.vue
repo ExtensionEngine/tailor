@@ -1,13 +1,13 @@
 <template>
   <v-bottom-sheet v-on="$listeners" v-bind="$attrs" max-width="1240" inset>
     <div class="element-container">
-      <v-toolbar color="blue-grey darken-4" dense class="mb-2 elevation-1">
+      <v-toolbar color="primary darken-4" dense class="mb-2 elevation-1">
         <slot name="header"></slot>
       </v-toolbar>
       <div
         v-for="group in library"
         :key="group.name">
-        <div class="group-heading blue-grey--text text--darken-4">
+        <div class="group-heading primary--text text--darken-4">
           <span>{{ group.name }}</span>
         </div>
         <div class="group-elements">

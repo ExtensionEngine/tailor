@@ -6,7 +6,7 @@
         :loading="publishing"
         text small
         class="float-right">
-        <v-icon class="pr-1">mdi-publish</v-icon>
+        <v-icon class="mr-2">mdi-cloud-upload-outline</v-icon>
         Publish info
       </v-btn>
     </div>

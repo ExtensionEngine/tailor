@@ -23,7 +23,7 @@
             icon />
         </td>
         <td class="actions">
-          <v-btn color="primary" icon small class="mb-2">
+          <v-btn color="primary darken-2" icon small class="mb-2">
             <v-icon @click="remove(item)">mdi-delete</v-icon>
           </v-btn>
         </td>

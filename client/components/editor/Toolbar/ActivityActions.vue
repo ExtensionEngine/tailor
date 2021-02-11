@@ -4,7 +4,7 @@
       <v-tooltip
         v-for="({ title, icon, action, active, disabled }) in actions"
         :key="title"
-        color="blue-grey darken-3"
+        color="primary darken-3"
         bottom>
         <template v-slot:activator="{ on }">
           <v-btn
@@ -64,7 +64,7 @@ export default {
       if (!this.isAdmin && !this.isRepositoryAdmin) return items;
       return items.concat({
         title: 'Publish',
-        icon: 'upload',
+        icon: 'cloud-upload-outline',
         action: () => this.confirmPublishing()
       });
     }

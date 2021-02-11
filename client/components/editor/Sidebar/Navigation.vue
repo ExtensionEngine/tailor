@@ -5,7 +5,7 @@
         <v-text-field
           v-model="search"
           label="Search..."
-          :background-color="hover ? 'blue-grey lighten-3' : 'blue-grey lighten-4'"
+          :background-color="hover ? 'primary lighten-3' : 'primary lighten-4'"
           clear-icon="mdi-close"
           prepend-inner-icon="mdi-magnify"
           solo clearable hide-details
@@ -28,7 +28,7 @@
           <span class="text-truncate">{{ name }}</span>
           <v-icon
             v-if="selectable"
-            color="blue-grey darken-4"
+            color="primary darken-4"
             class="ml-2 mr-3 open-icon">
             mdi-page-next-outline
           </v-icon>
@@ -37,7 +37,7 @@
     </v-treeview>
     <v-alert
       :value="!hasSearchResults"
-      color="primary"
+      color="primary darken-2"
       text>
       No matches found.
     </v-alert>

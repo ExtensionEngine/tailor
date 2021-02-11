@@ -8,7 +8,7 @@
         :value="answer"
         :disabled="answerDisabled"
         :label="getLabel(answer)"
-        :color="answerDisabled ? 'grey' : 'blue-grey darken-3'"
+        :color="answerDisabled ? 'grey' : 'primary darken-3'"
         :off-icon="isGraded ? 'mdi-circle-outline' : 'mdi-circle'"
         class="answer pl-3" />
     </v-radio-group>

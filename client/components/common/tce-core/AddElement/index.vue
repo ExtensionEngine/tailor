@@ -4,7 +4,7 @@
       <v-btn
         v-if="large"
         @click.stop="showElementPicker"
-        color="blue-grey darken-3"
+        color="primary darken-3"
         text
         class="mt-3 mb-4">
         <v-icon class="pr-2">{{ icon }}</v-icon>{{ label }}
@@ -12,7 +12,7 @@
       <v-btn
         v-else
         @click.stop="showElementPicker"
-        color="blue-grey darken-3"
+        color="primary darken-3"
         icon text>
         <v-icon>{{ icon }}</v-icon>
       </v-btn>
@@ -37,7 +37,7 @@
           <template v-if="layout">
             <v-btn-toggle
               v-model="elementWidth"
-              active-class="blue-grey darken-2"
+              active-class="primary darken-2"
               background-color="transparent"
               dark tile borderless mandatory>
               <v-btn :value="100" icon>

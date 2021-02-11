@@ -7,7 +7,7 @@
       <slot :name="slot" v-bind="scope"></slot>
     </template>
     <v-card>
-      <v-card-title primary-title class="dialog-title primary darken-1">
+      <v-card-title primary-title class="dialog-title primary darken-3">
         <v-avatar
           v-if="headerIcon"
           color="secondary"

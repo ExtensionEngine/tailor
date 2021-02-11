@@ -31,7 +31,7 @@
         <v-btn
           :disabled="showMessage"
           type="submit"
-          color="blue-grey darken-4"
+          color="primary darken-4"
           block depressed rounded dark>
           Send reset email
         </v-btn>

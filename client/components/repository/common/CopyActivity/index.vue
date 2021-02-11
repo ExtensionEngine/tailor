@@ -17,7 +17,7 @@
         <div class="subtitle-1 text-center mb-2">
           Copying {{ selectedActivities.length }} items...
         </div>
-        <v-progress-linear color="primary" indeterminate />
+        <v-progress-linear color="primary darken-2" indeterminate />
       </div>
       <v-combobox
         @input="selectRepository"

@@ -6,7 +6,7 @@
       :value="correct"
       :disabled="answerDisabled"
       :error-messages="correctErrors"
-      color="blue-grey darken-3"
+      color="primary darken-3"
       filled clearable auto-grow />
   </div>
 </template>

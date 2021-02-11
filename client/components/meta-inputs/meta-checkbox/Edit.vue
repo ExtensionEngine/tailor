@@ -6,7 +6,7 @@
       :input-value="meta.value"
       :name="meta.key"
       :label="meta.description"
-      color="primary"
+      color="primary darken-2"
       class="mt-1" />
   </div>
 </template>

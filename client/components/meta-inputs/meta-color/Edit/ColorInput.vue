@@ -19,7 +19,7 @@
       <v-card-actions>
         <v-spacer />
         <v-btn @click="menu = false" small text>Cancel</v-btn>
-        <v-btn @click="submit" small text color="primary">Submit</v-btn>
+        <v-btn @click="submit" small text color="primary darken-2">Submit</v-btn>
       </v-card-actions>
     </v-card>
   </v-menu>

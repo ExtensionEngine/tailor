@@ -2,7 +2,7 @@
   <tailor-dialog v-model="show" @click:outside="close" header-icon="mdi-alert">
     <template v-slot:header>{{ context.title }}</template>
     <template v-slot:body>
-      <div class="body-1 primary--text text--darken-2 text-left">
+      <div class="body-1 primary--text text--darken-4 text-left">
         {{ context.message }}
       </div>
     </template>

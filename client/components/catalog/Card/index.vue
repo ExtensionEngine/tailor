@@ -2,7 +2,7 @@
   <v-hover v-slot:default="{ hover: isCardHovered }">
     <v-card
       :elevation="isCardHovered ? 20 : 1"
-      color="blue-grey darken-4"
+      color="primary darken-4"
       dark
       class="repository-card">
       <div @click="navigateTo()" class="card-body">
@@ -25,7 +25,7 @@
               <v-btn
                 v-on="on"
                 @click.stop="navigateTo('repository-info')"
-                color="blue-grey darken-1"
+                color="primary darken-1"
                 icon
                 class="repo-info mr-2">
                 <v-icon>mdi-settings</v-icon>
@@ -34,10 +34,10 @@
             Open settings
           </v-tooltip>
         </div>
-        <v-card-title class="pt-2 blue-grey--text text--lighten-4 text-break">
+        <v-card-title class="pt-2 primary--text text--lighten-4 text-break">
           {{ name | truncate($vuetify.breakpoint.lg ? 60 : 40) }}
         </v-card-title>
-        <div class="d-flex justify-start px-4 blue-grey--text text--lighten-4">
+        <div class="d-flex justify-start px-4 primary--text text--lighten-4">
           <v-avatar size="38">
             <img :src="lastActivity.user.imgUrl">
           </v-avatar>
@@ -59,7 +59,7 @@
             <v-btn
               v-on="on"
               @click.stop="pin({ id: repository.id, pin: !isPinned })"
-              :color="isPinned ? 'lime accent-4': 'blue-grey lighten-3'"
+              :color="isPinned ? 'lime accent-4': 'primary lighten-3'"
               icon
               class="mr-1">
               <v-icon :class="{ 'mdi-rotate-45': isPinned }">mdi-pin</v-icon>

@@ -19,7 +19,7 @@
       @input="$emit('change', $event);"
       @change="showDialog = false"
       :value="value | formatDate('HH:mm')"
-      color="primary"
+      color="primary darken-2"
       full-width no-title />
   </v-menu>
 </template>

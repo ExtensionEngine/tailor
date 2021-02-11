@@ -4,7 +4,7 @@
     class="transparent grey--text text--darken-4">
     <v-avatar
       :size="dense ? 40 : 60"
-      :color="isDisabled ? 'grey darken-3' : 'blue-grey darken-4'">
+      :color="isDisabled ? 'grey darken-3' : 'primary darken-4'">
       <v-icon
         :size="iconSize"
         :color="isFocused ? activeColor : '#fff'">
@@ -26,7 +26,7 @@
         <v-icon
           v-if="activeIcon"
           size="20"
-          color="blue-grey darken-4">
+          color="primary darken-4">
           {{ activeIcon }}
         </v-icon>
       </template>

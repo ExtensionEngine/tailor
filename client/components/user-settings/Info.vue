@@ -49,7 +49,7 @@
       <v-btn
         :disabled="invalid || !hasChanges"
         type="submit"
-        color="blue-grey darken-4"
+        color="primary darken-4"
         text>
         Update
       </v-btn>

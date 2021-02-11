@@ -14,7 +14,7 @@
     <v-btn
       v-else
       @click="$emit('edit')"
-      color="blue-grey darken-4"
+      color="primary darken-4"
       text large>
       Edit
     </v-btn>

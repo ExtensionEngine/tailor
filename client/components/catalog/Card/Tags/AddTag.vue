@@ -28,7 +28,7 @@
         </validation-provider>
         <div class="d-flex justify-end">
           <v-btn @click="hide" text>Cancel</v-btn>
-          <v-btn type="submit" color="blue-grey darken-4" text>
+          <v-btn type="submit" color="primary darken-4" text>
             Save
           </v-btn>
         </div>

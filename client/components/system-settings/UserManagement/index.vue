@@ -4,7 +4,7 @@
       <v-spacer />
       <v-btn
         @click.stop="showUserDialog()"
-        color="blue-grey darken-4"
+        color="primary darken-4"
         text
         class="px-1">
         <v-icon class="pr-2">mdi-account-multiple-plus</v-icon>
@@ -16,7 +16,7 @@
         <v-switch
           v-model="showArchived"
           label="Archived"
-          color="blue-grey darken-3"
+          color="primary darken-3"
           hide-details />
       </v-col>
       <v-col>
@@ -51,14 +51,14 @@
           <td class="text-no-wrap text-center">
             <v-btn
               @click="showUserDialog(item)"
-              color="blue-grey darken-3"
+              color="primary darken-3"
               small icon>
               <v-icon>mdi-pencil</v-icon>
             </v-btn>
             <v-btn
               @click="archiveOrRestore(item)"
               :disabled="user.id === item.id"
-              color="blue-grey darken-3"
+              color="primary darken-3"
               small icon>
               <v-icon>
                 mdi-account-{{ item.deletedAt ? 'convert' : 'off' }}

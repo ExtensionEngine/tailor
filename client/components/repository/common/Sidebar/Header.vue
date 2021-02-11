@@ -6,10 +6,10 @@
     <v-btn
       v-show="isEditable"
       @click.stop="edit"
-      color="primary darken-1"
+      color="primary darken-3"
       text
       class="px-1 btn-open">
-      <v-icon class="pr-1">mdi-page-next-outline</v-icon>
+      <v-icon class="mr-2">mdi-page-next-outline</v-icon>
       Open
     </v-btn>
     <publishing
@@ -54,7 +54,7 @@ export default {
 
 <style lang="scss" scoped>
 .header {
-  padding: 1rem;
+  padding: 1rem 1rem 0;
 }
 
 .options-container {

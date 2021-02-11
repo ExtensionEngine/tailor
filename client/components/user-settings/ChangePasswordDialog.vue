@@ -3,7 +3,7 @@
     <template v-slot:activator="{ on }">
       <v-btn
         v-on="on"
-        color="primary darken-1"
+        color="primary darken-3"
         text>
         <v-icon small class="mr-1">mdi-lock</v-icon>Change Password
       </v-btn>
@@ -66,7 +66,7 @@
           <v-btn
             :disabled="pristine || invalid"
             type="submit"
-            color="blue-grey darken-4"
+            color="primary darken-4"
             text>
             Update
           </v-btn>

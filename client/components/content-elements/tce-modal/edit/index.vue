@@ -10,11 +10,11 @@
         Use toolbar to toggle between edit and preview state
       </span>
     </v-toolbar>
-    <div class="px-8 py-3 blue-grey lighten-5">
+    <div class="px-8 py-3 primary lighten-5">
       <template v-if="!isDisabled && isEditing">
         <v-alert
           v-if="!hasElements"
-          color="blue-grey darken-2"
+          color="primary darken-2"
           icon="mdi-information-variant"
           text prominent
           class="mt-6">

@@ -13,10 +13,10 @@
       open-all open-on-click
       class="pt-3">
       <template v-slot:prepend="{ item, open }">
-        <v-icon color="blue-grey darken-3">
+        <v-icon color="primary darken-3">
           {{ open ? 'mdi-folder-open' : 'mdi-folder' }}
         </v-icon>
-        <v-icon v-if="item.recursive" color="primary darken-2">mdi-replay</v-icon>
+        <v-icon v-if="item.recursive" color="primary darken-4">mdi-replay</v-icon>
       </template>
     </v-treeview>
   </div>
