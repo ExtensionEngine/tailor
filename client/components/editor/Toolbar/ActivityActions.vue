@@ -64,7 +64,7 @@ export default {
       if (!this.isAdmin && !this.isRepositoryAdmin) return items;
       return items.concat({
         title: 'Publish',
-        icon: 'upload',
+        icon: 'cloud-upload-outline',
         action: () => this.confirmPublishing()
       });
     }

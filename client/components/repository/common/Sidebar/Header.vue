@@ -9,7 +9,7 @@
       color="primary darken-3"
       text
       class="px-1 btn-open">
-      <v-icon class="pr-1">mdi-page-next-outline</v-icon>
+      <v-icon class="mr-2">mdi-page-next-outline</v-icon>
       Open
     </v-btn>
     <publishing
