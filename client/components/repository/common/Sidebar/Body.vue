@@ -1,31 +1,29 @@
 <template>
   <div class="body">
-    <v-chip
-      :color="config.color"
-      label dark small
-      class="readonly body-label">
-      {{ config.label.toUpperCase() }}
-    </v-chip>
-    <v-tooltip open-delay="500" bottom>
-      <template v-slot:activator="{ on }">
-        <label-chip v-on="on" class="body-label">
-          {{ activity.shortId }}
-        </label-chip>
-      </template>
-      {{ config.label }} ID
-    </v-tooltip>
-    <div class="mt-1 mb-2">
+    <v-sheet color="transparent" class="d-flex my-5 pa-1 align-center">
+      <div class="d-flex body-2 font-weight-bold">
+        <v-icon :color="config.color" size="21" class="mr-1">mdi-label</v-icon>
+        <span>{{ config.label.toUpperCase() }}</span>
+      </div>
+      <v-divider vertical class="my-2 mx-3 grey darken-2" />
+      <v-tooltip open-delay="500" bottom>
+        <template v-slot:activator="{ on }">
+          <label-chip v-on="on">{{ activity.shortId }}</label-chip>
+        </template>
+        {{ config.label }} ID
+      </v-tooltip>
+      <v-spacer />
       <v-btn
         v-clipboard:copy="activity.shortId"
         v-clipboard:success="() => {
           $snackbar.show('ID copied to the clipboard', { immediate: true })
         }"
         v-clipboard:error="() => $snackbar.show('Not able to copy the ID')"
-        color="blue-grey darken-3"
-        text small
-        class="px-1 mr-2">
-        <v-icon dense class="pr-2">mdi-identifier</v-icon>
-        Copy id
+        color="primary darken-4"
+        text x-small
+        class="mr-2 px-0">
+        <v-icon small class="mr-1">mdi-content-copy</v-icon>
+        <v-icon dense>mdi-identifier</v-icon>
       </v-btn>
       <v-btn
         v-clipboard:copy="activityUrl"
@@ -33,18 +31,18 @@
           $snackbar.show('Link copied to the clipboard', { immediate: true })
         }"
         v-clipboard:error="() => $snackbar.show('Not able to copy the link')"
-        color="blue-grey darken-3"
+        color="primary darken-4"
         text small
-        class="px-1">
-        <v-icon class="pr-2">mdi-link</v-icon>
-        Copy link
+        class="px-0">
+        <v-icon small class="mr-1">mdi-content-copy</v-icon>
+        <v-icon dense>mdi-link</v-icon>
       </v-btn>
-    </div>
+    </v-sheet>
     <activity-status
       v-if="activity.isTrackedInWorkflow"
       v-bind="activity"
       :name="activity.data.name"
-      class="mt-4 mb-2" />
+      class="mt-6 mb-3" />
     <div class="meta-elements">
       <meta-input
         v-for="it in metadata"
@@ -106,11 +104,6 @@ export default {
 .body {
   position: relative;
   padding: 0.375rem 1rem;
-}
-
-.body-label {
-  margin: 0.25rem 0.25rem 1.25rem;
-  font-weight: 500;
 }
 
 .meta-elements {
