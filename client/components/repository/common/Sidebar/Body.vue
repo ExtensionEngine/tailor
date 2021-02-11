@@ -1,6 +1,6 @@
 <template>
   <div class="body">
-    <v-sheet color="transparent" class="d-flex my-5 pa-1 align-center">
+    <v-sheet color="transparent" class="d-flex align-center my-5 pa-1">
       <div class="d-flex body-2 font-weight-bold">
         <v-icon :color="config.color" size="21" class="mr-1">mdi-label</v-icon>
         <span>{{ config.label.toUpperCase() }}</span>
@@ -32,7 +32,7 @@
         }"
         v-clipboard:error="() => $snackbar.show('Not able to copy the link')"
         color="primary darken-4"
-        text small
+        text x-small
         class="px-0">
         <v-icon small class="mr-1">mdi-content-copy</v-icon>
         <v-icon dense>mdi-link</v-icon>
@@ -41,7 +41,6 @@
     <activity-status
       v-if="activity.isTrackedInWorkflow"
       v-bind="activity"
-      :name="activity.data.name"
       class="mt-6 mb-3" />
     <div class="meta-elements">
       <meta-input

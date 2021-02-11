@@ -57,7 +57,6 @@ export default {
   props: {
     id: { type: Number, default: null },
     shortId: { type: String, required: true },
-    name: { type: String, required: true },
     type: { type: String, required: true },
     status: { type: Object, required: true }
   },
