@@ -2,22 +2,25 @@
   <v-hover v-slot="{ hover }">
     <v-card
       :to="route"
-      :color="hover ? '#dde3e6' : 'blue-grey lighten-5'"
+      :color="hover ? 'primary lighten-4' : 'primary lighten-5'"
       flat
       class="pa-2">
       <div class="d-flex align-center mt-auto">
         <v-tooltip open-delay="500" bottom>
           <template #activator="{ on }">
-            <v-chip
+            <span
               v-on="on"
-              :color="statusConfig.color"
-              label dark small
-              class="mr-2 readonly text-uppercase">
-              {{ statusConfig.label }}
-            </v-chip>
+              class="d-flex align-center mr-2 body-2 text-uppercase font-weight-bold">
+              <v-icon :color="statusConfig.color" small class="mr-1">mdi-circle</v-icon>
+              <span>{{ statusConfig.label }}</span>
+            </span>
           </template>
           Status
         </v-tooltip>
+        <assignee-avatar
+          v-bind="status.assignee"
+          show-tooltip small
+          class="mx-3" />
         <v-tooltip open-delay="500" bottom>
           <template #activator="{ on }">
             <v-icon v-on="on" class="priority-icon mx-3">
@@ -26,10 +29,6 @@
           </template>
           {{ priorityConfig.label }} priority
         </v-tooltip>
-        <assignee-avatar
-          v-bind="status.assignee"
-          show-tooltip small
-          class="mx-3" />
         <v-tooltip v-if="status.dueDate" open-delay="500" bottom>
           <template #activator="{ on }">
             <label-chip v-on="on" class="ml-1 px-1">
@@ -39,9 +38,7 @@
           Due date
         </v-tooltip>
         <v-spacer />
-        <v-icon v-show="hover" color="blue-grey darken-5" dense class="mr-1">
-          mdi-arrow-right
-        </v-icon>
+        <v-icon dense>mdi-arrow-right</v-icon>
       </div>
     </v-card>
   </v-hover>

@@ -2,7 +2,7 @@
   <v-hover v-slot="{ hover }">
     <v-card
       :to="route"
-      :color="hover ? 'blue-grey lighten-4' : 'blue-grey lighten-5'"
+      :color="hover ? 'primary lighten-4' : 'primary lighten-5'"
       flat
       class="card d-flex align-center pa-2">
       <v-icon :color="color">mdi-label</v-icon>
