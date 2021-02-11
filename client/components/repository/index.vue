@@ -56,7 +56,7 @@ export default {
       const hasActivities = get(this.activities, 'length');
       const activityId = get(this.lastSelectedActivity, 'id');
       const query = { ...this.$route.query, activityId };
-      return [
+      const items = [
         { name: 'Structure', route: 'repository', icon: 'file-tree' },
         hasActivities && this.hasWorkflow && {
           name: 'Progress',
@@ -69,7 +69,8 @@ export default {
           route: 'repository-info',
           icon: 'settings-outline'
         }
-      ]
+      ];
+      return items
         .filter(Boolean)
         .map(tab => ({ ...tab, query }));
     }
