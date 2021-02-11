@@ -5,9 +5,9 @@
     class="transparent">
     <v-list class="blue-grey--text text--darken-4 text-left">
       <v-list-item
-        v-for="({ name, label, icon }) in routes"
+        v-for="({ name, label, icon, query }) in routes"
         :key="name"
-        :to="{ name }"
+        :to="{ name, query }"
         active-class="blue-grey lighten-5"
         exact ripple>
         <v-list-item-action>
@@ -43,10 +43,11 @@
 export default {
   computed: {
     routes() {
+      const { query } = this.$route;
       return [
         { label: 'General', name: 'repository-info', icon: 'wrench' },
         { label: 'People', name: 'user-management', icon: 'account' }
-      ];
+      ].map(route => ({ ...route, query }));
     },
     actions() {
       return [

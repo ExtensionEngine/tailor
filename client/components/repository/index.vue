@@ -57,12 +57,11 @@ export default {
       const activityId = get(this.lastSelectedActivity, 'id');
       const query = { ...this.$route.query, activityId };
       return [
-        { name: 'Structure', route: 'repository', icon: 'file-tree', query },
+        { name: 'Structure', route: 'repository', icon: 'file-tree' },
         hasActivities && this.hasWorkflow && {
           name: 'Progress',
           route: 'progress',
-          icon: 'chart-timeline-variant',
-          query
+          icon: 'chart-timeline-variant'
         },
         hasActivities && { name: 'History', route: 'revisions', icon: 'history' },
         (this.isAdmin || this.isRepositoryAdmin) && {
@@ -70,7 +69,9 @@ export default {
           route: 'repository-info',
           icon: 'settings-outline'
         }
-      ].filter(Boolean);
+      ]
+        .filter(Boolean)
+        .map(tab => ({ ...tab, query }));
     }
   },
   methods: mapActions('repository', ['initialize', 'expandParents']),
