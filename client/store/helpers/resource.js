@@ -60,7 +60,9 @@ export default class Resource {
    * Retrieves model by id.
    */
   getById(id) {
-    return this.get(id).then(extractData);
+    return this.get(id)
+      .then(extractData)
+      .then(item => this.processEntries([item]) && item);
   }
 
   /**
