@@ -4,11 +4,21 @@
       :elevation="isCardHovered ? 20 : 1"
       color="primary darken-4"
       dark
-      class="repository-card">
+      class="repository-card d-flex flex-column justify-space-between text-left">
       <div @click="navigateTo()" class="card-body">
-        <v-chip :color="repository.data.color" x-small class="readonly ml-4 px-1" />
-        <span class="schema-name">{{ schema }}</span>
-        <div class="controls float-right">
+        <div class="d-flex align-center ml-4">
+          <v-chip :color="repository.data.color" x-small class="readonly px-1" />
+          <v-tooltip :disabled="!isTruncated" open-delay="300" top>
+            <template v-slot:activator="{ on }">
+              <span
+                ref="schemaName"
+                v-on="on"
+                class="schema-name flex-grow-1 text-truncate text-uppercase mx-2">
+                {{ schema }}
+              </span>
+            </template>
+            {{ schema }}
+          </v-tooltip>
           <v-tooltip open-delay="100" top>
             <template v-slot:activator="{ on }">
               <span v-on="on">
@@ -88,6 +98,7 @@ export default {
   props: {
     repository: { type: Object, required: true }
   },
+  data: () => ({ isTruncated: false }),
   computed: {
     name: ({ repository }) => repository.name,
     description: ({ repository }) => repository.description,
@@ -105,7 +116,19 @@ export default {
         name,
         params: { repositoryId: this.repository.id }
       });
+    },
+    detectTruncation() {
+      const { clientWidth, scrollWidth } = this.$refs.schemaName;
+      this.isTruncated = clientWidth < scrollWidth;
     }
+  },
+  watch: {
+    '$vuetify.breakpoint.width'() {
+      this.detectTruncation();
+    }
+  },
+  mounted() {
+    this.$nextTick(() => this.detectTruncation());
   },
   components: { Tags }
 };
@@ -113,11 +136,7 @@ export default {
 
 <style lang="scss" scoped>
 .repository-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   height: 14.75rem;
-  text-align: left;
   transition: all 0.3s ease;
   cursor: pointer;
 
@@ -133,22 +152,15 @@ export default {
 .card-body {
   padding: 0.625rem 0 0;
 
-  .v-card__title {
-    line-height: 1.75rem;
-  }
-
   .schema-name {
-    padding: 0 0 0 0.25rem;
     color: #fafafa;
     font-size: 0.75rem;
     font-weight: 500;
     letter-spacing: 1px;
-    text-transform: uppercase;
   }
 
-  .controls {
-    display: flex;
-    align-items: center;
+  .v-card__title {
+    line-height: 1.75rem;
   }
 
   .v-avatar {
