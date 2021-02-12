@@ -112,6 +112,11 @@ export default {
       this.editorBus.emit(events.RESOLVE, { id, contentElementId, resolvedAt });
     }
   },
+  watch: {
+    isVisible(val) {
+      this.$emit(val ? 'open' : 'close');
+    }
+  },
   components: { Discussion }
 };
 </script>
