@@ -1,12 +1,12 @@
 <template>
   <div class="tags-container">
-    <div class="tag-list">
+    <div class="tag-list d-flex align-center">
       <v-chip
         v-for="{ id, name, truncatedName } in tags"
         :key="id"
         @click:close="showDeleteConfirmation(id, name)"
-        color="primary lighten-4"
-        label light small close
+        color="primary darken-1"
+        label close small
         class="mr-2 mb-1">
         <v-tooltip
           :disabled="name.length === truncatedName.length"
@@ -21,7 +21,11 @@
     </div>
     <v-tooltip v-if="!exceededTagLimit" open-delay="400" bottom>
       <template v-slot:activator="{ on }">
-        <v-btn v-on="on" @click="showTagDialog = true" color="primary lighten-3" icon>
+        <v-btn
+          v-on="on"
+          @click="showTagDialog = true"
+          color="primary lighten-3"
+          icon>
           <v-icon dense>mdi-tag-plus</v-icon>
         </v-btn>
       </template>
