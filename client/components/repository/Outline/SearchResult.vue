@@ -21,7 +21,7 @@
           {{ activity.shortId }}
         </v-chip>
       </v-card-subtitle>
-      <v-card-title class="py-1 headline text-truncate">
+      <v-card-title class="py-1 headline">
         {{ activity.data.name }}
       </v-card-title>
       <v-card-actions class="py-1">
