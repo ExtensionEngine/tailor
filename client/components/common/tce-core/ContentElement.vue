@@ -59,7 +59,10 @@ import PublishDiffChip from './PublishDiffChip';
 
 export default {
   name: 'content-element',
-  inject: ['$getCurrentUser', '$editorState'],
+  inject: {
+    $getCurrentUser: {},
+    $editorState: { default: {} }
+  },
   inheritAttrs: false,
   props: {
     element: { type: Object, required: true },
