@@ -1,14 +1,26 @@
 <template>
   <v-hover v-slot:default="{ hover: isCardHovered }">
     <v-card
-      :elevation="isCardHovered ? 20 : 1"
+      @click="navigateTo()"
+      :elevation="isCardHovered ? 24 : 1"
+      :ripple="false"
       color="primary darken-4"
       dark
-      class="repository-card">
+      class="repository-card d-flex flex-column justify-space-between text-left">
       <div @click="navigateTo()" class="card-body">
-        <v-chip :color="repository.data.color" x-small class="readonly ml-4 px-1" />
-        <span class="schema-name">{{ schema }}</span>
-        <div class="controls float-right">
+        <div class="d-flex align-center ml-4">
+          <v-chip :color="repository.data.color" x-small class="readonly px-1" />
+          <v-tooltip :disabled="!isSchemaTruncated" open-delay="300" top>
+            <template v-slot:activator="{ on }">
+              <span
+                ref="schemaName"
+                v-on="on"
+                class="schema-name flex-grow-1 mx-2 text-truncate text-uppercase">
+                {{ schema }}
+              </span>
+            </template>
+            {{ schema }}
+          </v-tooltip>
           <v-tooltip open-delay="100" top>
             <template v-slot:activator="{ on }">
               <span v-on="on">
@@ -34,7 +46,7 @@
             Open settings
           </v-tooltip>
         </div>
-        <v-card-title class="pt-2 primary--text text--lighten-4 text-break">
+        <v-card-title class="pt-0 primary--text text--lighten-4 text-break">
           {{ name | truncate($vuetify.breakpoint.lg ? 60 : 40) }}
         </v-card-title>
         <div class="d-flex justify-start px-4 primary--text text--lighten-4">
@@ -88,6 +100,7 @@ export default {
   props: {
     repository: { type: Object, required: true }
   },
+  data: () => ({ isSchemaTruncated: false }),
   computed: {
     name: ({ repository }) => repository.name,
     description: ({ repository }) => repository.description,
@@ -105,7 +118,19 @@ export default {
         name,
         params: { repositoryId: this.repository.id }
       });
+    },
+    detectSchemaTruncation() {
+      const { clientWidth, scrollWidth } = this.$refs.schemaName;
+      this.isSchemaTruncated = clientWidth < scrollWidth;
     }
+  },
+  watch: {
+    '$vuetify.breakpoint.width'() {
+      this.detectSchemaTruncation();
+    }
+  },
+  mounted() {
+    this.$nextTick(() => this.detectSchemaTruncation());
   },
   components: { Tags }
 };
@@ -113,42 +138,27 @@ export default {
 
 <style lang="scss" scoped>
 .repository-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   height: 14.75rem;
-  text-align: left;
   transition: all 0.3s ease;
   cursor: pointer;
 
   @media (max-width: 1263px) {
     height: 17.25rem;
   }
-
-  &:hover {
-    transform: translateY(-0.25rem);
-  }
 }
 
 .card-body {
-  padding: 0.625rem 0 0;
-
-  .v-card__title {
-    line-height: 1.75rem;
-  }
+  padding: 0.375rem 0 0;
 
   .schema-name {
-    padding: 0 0 0 0.25rem;
     color: #fafafa;
     font-size: 0.75rem;
     font-weight: 500;
     letter-spacing: 1px;
-    text-transform: uppercase;
   }
 
-  .controls {
-    display: flex;
-    align-items: center;
+  .v-card__title {
+    line-height: 1.75rem;
   }
 
   .v-avatar {

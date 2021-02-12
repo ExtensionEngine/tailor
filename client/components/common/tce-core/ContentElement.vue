@@ -28,7 +28,11 @@
       <div
         v-if="showDiscussion"
         :class="{ 'is-visible': isHighlighted || hasComments }">
-        <discussion v-bind="element" :user="currentUser" />
+        <discussion
+          @open="focus"
+          @close="isFocused = false"
+          v-bind="element"
+          :user="currentUser" />
       </div>
       <div
         v-if="!parent"
@@ -59,7 +63,10 @@ import PublishDiffChip from './PublishDiffChip';
 
 export default {
   name: 'content-element',
-  inject: ['$getCurrentUser', '$editorState'],
+  inject: {
+    $getCurrentUser: {},
+    $editorState: { default: {} }
+  },
   inheritAttrs: false,
   props: {
     element: { type: Object, required: true },

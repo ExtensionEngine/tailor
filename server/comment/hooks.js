@@ -36,7 +36,7 @@ exports.add = (Comment, Hooks, db) => {
   });
 
   Comment.addHook(Hooks.afterBulkUpdate, async ({ where }) => {
-    const comments = await Comment.findAll({ where });
+    const comments = await Comment.findAll({ where, paranoid: false });
     comments.forEach(comment => {
       sse.channel(comment.repositoryId).send(Events.Update, comment);
     });
