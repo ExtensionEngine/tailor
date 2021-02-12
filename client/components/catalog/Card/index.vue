@@ -8,12 +8,12 @@
       <div @click="navigateTo()" class="card-body">
         <div class="d-flex align-center ml-4">
           <v-chip :color="repository.data.color" x-small class="readonly px-1" />
-          <v-tooltip :disabled="!isTruncated" open-delay="300" top>
+          <v-tooltip :disabled="!isSchemaTruncated" open-delay="300" top>
             <template v-slot:activator="{ on }">
               <span
                 ref="schemaName"
                 v-on="on"
-                class="schema-name flex-grow-1 text-truncate text-uppercase mx-2">
+                class="schema-name flex-grow-1 mx-2 text-truncate text-uppercase">
                 {{ schema }}
               </span>
             </template>
@@ -98,7 +98,7 @@ export default {
   props: {
     repository: { type: Object, required: true }
   },
-  data: () => ({ isTruncated: false }),
+  data: () => ({ isSchemaTruncated: false }),
   computed: {
     name: ({ repository }) => repository.name,
     description: ({ repository }) => repository.description,
@@ -117,18 +117,18 @@ export default {
         params: { repositoryId: this.repository.id }
       });
     },
-    detectTruncation() {
+    detectSchemaTruncation() {
       const { clientWidth, scrollWidth } = this.$refs.schemaName;
-      this.isTruncated = clientWidth < scrollWidth;
+      this.isSchemaTruncated = clientWidth < scrollWidth;
     }
   },
   watch: {
     '$vuetify.breakpoint.width'() {
-      this.detectTruncation();
+      this.detectSchemaTruncation();
     }
   },
   mounted() {
-    this.$nextTick(() => this.detectTruncation());
+    this.$nextTick(() => this.detectSchemaTruncation());
   },
   components: { Tags }
 };
