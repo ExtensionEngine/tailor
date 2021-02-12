@@ -1,7 +1,9 @@
 <template>
   <v-hover v-slot:default="{ hover: isCardHovered }">
     <v-card
+      @click="navigateTo()"
       :elevation="isCardHovered ? 24 : 1"
+      :ripple="false"
       color="primary darken-4"
       dark
       class="repository-card d-flex flex-column justify-space-between text-left">

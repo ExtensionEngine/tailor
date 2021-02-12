@@ -23,7 +23,7 @@
       <template v-slot:activator="{ on }">
         <v-btn
           v-on="on"
-          @click="showTagDialog = true"
+          @click.stop="showTagDialog = true"
           color="primary lighten-3"
           icon>
           <v-icon dense>mdi-tag-plus</v-icon>
