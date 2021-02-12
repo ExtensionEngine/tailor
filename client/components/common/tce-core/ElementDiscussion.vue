@@ -114,10 +114,7 @@ export default {
   },
   watch: {
     isVisible(val) {
-      const { elementId } = this.$route.query;
-      if (!val || elementId === this.uid) return;
-      const query = { elementId: this.uid };
-      this.$router.push({ query });
+      this.$emit(val ? 'open' : 'close');
     }
   },
   components: { Discussion }
