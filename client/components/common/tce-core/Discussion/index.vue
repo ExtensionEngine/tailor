@@ -19,10 +19,12 @@
     <v-alert
       v-if="!commentsCount && showNotifications"
       color="primary lighten-5"
-      icon="mdi-chat"
+      icon="mdi-keyboard-outline"
       prominent
       class="alert">
-      <span class="pa-2">Be the First to Comment!</span>
+      <span class="px-1 subtitle-2">
+        Be the First to Comment!
+      </span>
     </v-alert>
     <discussion-thread
       v-if="thread.length"
@@ -171,7 +173,7 @@ export default {
   }
 
   .alert ::v-deep .v-icon {
-    color: var(--v-primary-darken3) !important;
+    color: var(--v-primary-darken2) !important;
   }
 }
 </style>

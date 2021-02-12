@@ -1,9 +1,9 @@
 <template>
   <v-sheet
     :color="panel ? 'blue-grey lighten-5' : 'transparent'"
-    :elevation="panel ? 2 : 0"
+    :elevation="panel ? 1 : 0"
     outlined rounded
-    class="activity-discussion my-2 mx-1 py-2 px-4">
+    class="activity-discussion mt-2 mb-5 mx-1 py-2 px-4">
     <discussion
       @save="saveComment"
       @update="saveComment"
