@@ -1,6 +1,7 @@
 'use strict';
 
 const head = require('lodash/head');
+const Promise = require('bluebird');
 
 exports.up = async qi => {
   const comments = await getComments(qi);
@@ -25,9 +26,9 @@ async function getComments({ sequelize }) {
 }
 
 function updateColumnValues(comments, { sequelize }) {
-  return Promise.all(comments.map(({ id, updatedAt }) => {
+  return Promise.each(comments, ({ id, updatedAt }) => {
     const sql = 'UPDATE comment SET edited_at = :updatedAt WHERE id = :id';
     const replacements = { id, updatedAt };
     return sequelize.query(sql, { replacements });
-  }));
+  });
 }
