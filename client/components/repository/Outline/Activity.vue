@@ -9,6 +9,7 @@
         :class="{
           selected: isSelected,
           highlighted: isHovered || isSelected,
+          parent: hasSubtypes
         }"
         :style="{ 'border-left-color': color }"
         class="activity">
@@ -141,7 +142,7 @@ $background-color:  #eceff1;
   transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
 
   &-name {
-    padding: 0.125rem 0.375rem 0;
+    padding: 0.125rem 0.75rem 0 0.375rem;
     color: #222;
     font-size: 1rem !important;
     font-weight: 400 !important;
@@ -151,6 +152,10 @@ $background-color:  #eceff1;
   &.highlighted {
     opacity: 1;
     background-color: darken($background-color, 7);
+
+    &.parent {
+      padding-right: 1.25rem;
+    }
 
     .activity-name {
       color: #111;

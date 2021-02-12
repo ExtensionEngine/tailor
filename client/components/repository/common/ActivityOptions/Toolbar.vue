@@ -1,5 +1,5 @@
 <template>
-  <div class="activity-options-container">
+  <div class="activity-options-container d-flex">
     <v-tooltip
       v-for="it in options"
       :key="it.name"
