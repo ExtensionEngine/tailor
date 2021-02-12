@@ -57,12 +57,12 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
 import Activity from './Activity';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import map from 'lodash/map';
+import { mapGetters } from 'vuex';
 import OutlineFooter from './OutlineFooter';
 import reorderMixin from './reorderMixin';
 import SearchResult from './SearchResult';
@@ -101,11 +101,9 @@ export default {
     }
   },
   methods: {
-    ...mapActions('repository', ['expandParents']),
     goTo(activity) {
       this.search = '';
       this.selectActivity(activity.id);
-      this.expandParents(activity);
       this.scrollToActivity(activity);
     },
     scrollToActivity(activity, timeout = 500) {
