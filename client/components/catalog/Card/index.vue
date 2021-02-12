@@ -44,7 +44,7 @@
             Open settings
           </v-tooltip>
         </div>
-        <v-card-title class="pt-2 primary--text text--lighten-4 text-break">
+        <v-card-title class="pt-0 primary--text text--lighten-4 text-break">
           {{ name | truncate($vuetify.breakpoint.lg ? 60 : 40) }}
         </v-card-title>
         <div class="d-flex justify-start px-4 primary--text text--lighten-4">
@@ -150,7 +150,7 @@ export default {
 }
 
 .card-body {
-  padding: 0.625rem 0 0;
+  padding: 0.375rem 0 0;
 
   .schema-name {
     color: #fafafa;
