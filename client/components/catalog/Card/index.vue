@@ -1,7 +1,7 @@
 <template>
   <v-hover v-slot:default="{ hover: isCardHovered }">
     <v-card
-      :elevation="isCardHovered ? 20 : 1"
+      :elevation="isCardHovered ? 24 : 1"
       color="primary darken-4"
       dark
       class="repository-card d-flex flex-column justify-space-between text-left">
@@ -142,10 +142,6 @@ export default {
 
   @media (max-width: 1263px) {
     height: 17.25rem;
-  }
-
-  &:hover {
-    transform: translateY(-0.25rem);
   }
 }
 
