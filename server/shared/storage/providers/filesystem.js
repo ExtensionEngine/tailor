@@ -75,8 +75,17 @@ class FilesystemStorage {
     return fs.unlinkAsync(this.path(key));
   }
 
-  listFiles(options = {}) {
-    return fs.readdirAsync(this.root, options);
+  deleteFiles(keys) {
+    return Promise.map(keys, key => this.deleteFile(key));
+  }
+
+  listFiles(key, options = {}) {
+    return fs.readdirAsync(this.path(key), options)
+      .map(fileName => `${key}/${fileName}`)
+      .catch(err => {
+        if (isNotFound(err)) return null;
+        return Promise.reject(err);
+      });
   }
 
   fileExists(key) {

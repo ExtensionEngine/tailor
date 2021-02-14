@@ -30,6 +30,10 @@ class Storage {
     return this.provider.deleteFile(key, options);
   }
 
+  deleteFiles(keys, options = {}) {
+    return this.provider.deleteFiles(keys, options);
+  }
+
   listFiles(options = {}) {
     return this.provider.listFiles(options);
   }

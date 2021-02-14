@@ -95,10 +95,20 @@ class Amazon {
     return this.client.deleteObject(params).promise();
   }
 
+  // API docs: https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#deleteObjects-property
+  deleteFiles(keys, options = {}) {
+    const objects = keys.map(key => ({ Key: key }));
+    const params = Object.assign(options, { Bucket: this.bucket, Delete: { Objects: objects } });
+    return this.client.deleteObjects(params).promise();
+  }
+
   // API docs: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#listObjects-property
-  listFiles(options = {}) {
-    const params = Object.assign(options, { Bucket: this.bucket });
-    return this.client.listObjects(params).promise();
+  listFiles(key, options = {}) {
+    const params = Object.assign(options, { Bucket: this.bucket, Prefix: key });
+    return this.client
+      .listObjectsV2(params)
+      .promise()
+      .then(({ Contents: files }) => files.map(file => file.Key));
   }
 
   // API docs: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#headObject-property
