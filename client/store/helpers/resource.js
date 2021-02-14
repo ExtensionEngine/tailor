@@ -60,7 +60,9 @@ export default class Resource {
    * Retrieves model by id.
    */
   getById(id) {
-    return this.get(id).then(extractData);
+    return this.get(id)
+      .then(extractData)
+      .then(item => this.processEntries([item]) && item);
   }
 
   /**
@@ -86,7 +88,7 @@ export default class Resource {
    * @param {object} changes - Key-value collection of properties to update.
    */
   update(uid, changes) {
-    const id = this.mappings[uid];
+    const id = changes.id || this.mappings[uid];
     return this.patch(id, changes).then(extractData);
   }
 
