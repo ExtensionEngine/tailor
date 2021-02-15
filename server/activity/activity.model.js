@@ -75,18 +75,20 @@ class Activity extends Model {
   }
 
   static async create(data, opts) {
-    return this.sequelize.transaction(async transaction => {
+    return this.sequelize.transaction(async t => {
+      const transaction = opts.transaction || t;
       const activity = await super.create(data, { ...opts, transaction });
       if (activity.isTrackedInWorkflow) {
         const defaultStatus = getDefaultActivityStatus(activity.type);
         await activity.createStatus(defaultStatus, { transaction });
       }
       return activity;
-    }, { transaction: opts.transaction });
+    });
   }
 
   static async bulkCreate(data, opts) {
-    return this.sequelize.transaction(async transaction => {
+    return this.sequelize.transaction(async t => {
+      const transaction = opts.transaction || t;
       const activities = await super.bulkCreate(data, { ...opts, transaction });
       const statusData = activities
         .filter(it => it.isTrackedInWorkflow)
@@ -94,7 +96,7 @@ class Activity extends Model {
       const ActivityStatus = this.sequelize.model('ActivityStatus');
       await ActivityStatus.bulkCreate(statusData, { transaction });
       return activities;
-    }, { transaction: opts.transaction });
+    });
   }
 
   static associate({ ActivityStatus, ContentElement, Comment, Repository }) {
