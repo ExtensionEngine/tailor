@@ -6,7 +6,7 @@
     <div
       v-for="container in processedContainers"
       :key="container.id"
-      class="content-container">
+      class="content-container d-flex flex-wrap">
       <content-element
         v-for="element in container.elements"
         :key="element.id"

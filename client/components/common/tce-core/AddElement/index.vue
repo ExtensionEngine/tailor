@@ -34,28 +34,26 @@
         :library="library"
         :allowed-types="allowedTypes">
         <template v-slot:header>
-          <template v-if="layout">
+          <div v-if="layout" class="mr-6">
+            <div class="pb-1 caption text-left">Element width</div>
             <v-btn-toggle
               v-model="elementWidth"
-              active-class="primary darken-2"
-              background-color="transparent"
-              dark tile borderless mandatory>
-              <v-btn :value="100" icon>
+              color="secondary accent-2"
+              mandatory>
+              <v-btn :value="100" height="38" icon>
                 <v-icon>mdi-square-outline</v-icon>
               </v-btn>
-              <v-btn :value="50" icon>
+              <v-btn :value="50" height="38" icon>
                 <v-icon>mdi-select-compare</v-icon>
               </v-btn>
             </v-btn-toggle>
-            <v-divider vertical class="mr-3" />
-            <div class="width-label px-1 subtitle-1 grey--text text--lighten-4">
-              Element width
-              <span class="pl-1">{{ elementWidth }}</span>%
-            </div>
-          </template>
-          <v-spacer />
-          <v-btn @click="showElementBrowser = !showElementBrowser" dark text>
-            <v-icon class="mr-2">mdi-content-copy</v-icon>
+          </div>
+          <v-btn
+            @click="showElementBrowser = !showElementBrowser"
+            color="primary darken-3"
+            depressed
+            class="mt-6">
+            <v-icon dense class="mr-2">mdi-content-copy</v-icon>
             Copy existing
           </v-btn>
         </template>

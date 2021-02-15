@@ -20,14 +20,12 @@
           :selected-elements="selection.elements" />
       </template>
       <template v-else>
-        <v-btn
-          v-if="toggleButton"
-          @click="toggleSelectAll"
-          outlined
-          class="float-right mr-4 mb-2">
-          <v-icon class="mr-2">mdi-{{ toggleButton.icon }}</v-icon>
-          {{ toggleButton.label }}
-        </v-btn>
+        <div v-if="toggleButton" class="d-flex justify-end mb-2 px-4">
+          <v-btn @click="toggleSelectAll" outlined>
+            <v-icon class="mr-2">mdi-{{ toggleButton.icon }}</v-icon>
+            {{ toggleButton.label }}
+          </v-btn>
+        </div>
         <v-progress-circular v-if="loadingContent" indeterminate class="mt-5" />
         <content-preview
           v-else
@@ -46,10 +44,10 @@
         @click="deselectActivity"
         text outlined
         class="mr-2">
-        <v-icon>mdi-arrow-left</v-icon> Back
+        <v-icon dense class="mr-2">mdi-arrow-left</v-icon>Back
       </v-btn>
       <v-btn @click="close" text class="ml-1">Cancel</v-btn>
-      <v-btn @click="save" color="secondary" text>{{ submitLabel }}</v-btn>
+      <v-btn @click="save" text class="mr-2">{{ submitLabel }}</v-btn>
     </template>
   </tailor-dialog>
 </template>
