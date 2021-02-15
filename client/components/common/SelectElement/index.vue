@@ -46,7 +46,7 @@
         @click="deselectActivity"
         text outlined
         class="mr-2">
-        <v-icon>mdi-arrow-left</v-icon> Back
+        <v-icon dense class="mr-2">mdi-arrow-left</v-icon>Back
       </v-btn>
       <v-btn @click="close" text class="ml-1">Cancel</v-btn>
       <v-btn @click="save" text class="mr-2">{{ submitLabel }}</v-btn>

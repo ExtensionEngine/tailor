@@ -20,7 +20,7 @@
               v-on="on"
               @click.stop="$emit('element:open', element.uid)"
               :class="{ visible: hover }"
-              color="pink lighten-1"
+              color="secondary lighten-1"
               fab depressed x-small dark
               class="open-element-button">
               <v-icon dense dark>mdi-open-in-new</v-icon>
@@ -72,7 +72,7 @@ export default {
 
 .content-element {
   flex: 1 0;
-  margin: 0.375rem 0 0 0.25rem;
+  margin: 0.4375rem 0 0 0.25rem;
   box-shadow: none;
   border: 1px solid #e1e1e1;
 
