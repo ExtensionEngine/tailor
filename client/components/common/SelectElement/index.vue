@@ -20,14 +20,16 @@
           :selected-elements="selection.elements" />
       </template>
       <template v-else>
-        <v-btn
-          v-if="toggleButton"
-          @click="toggleSelectAll"
-          outlined
-          class="float-right mr-4 mb-2">
-          <v-icon class="mr-2">mdi-{{ toggleButton.icon }}</v-icon>
-          {{ toggleButton.label }}
-        </v-btn>
+        <div class="d-flex justify-end">
+          <v-btn
+            v-if="toggleButton"
+            @click="toggleSelectAll"
+            outlined
+            class="mr-4 mb-2">
+            <v-icon class="mr-2">mdi-{{ toggleButton.icon }}</v-icon>
+            {{ toggleButton.label }}
+          </v-btn>
+        </div>
         <v-progress-circular v-if="loadingContent" indeterminate class="mt-5" />
         <content-preview
           v-else

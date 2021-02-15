@@ -63,7 +63,7 @@ export default {
 .element-preview-container {
   display: flex;
   position: relative;
-  margin: 1rem 0;
+  margin: 0.25rem 0;
 
   .v-input {
     margin: 0;
