@@ -66,8 +66,8 @@ export default {
   margin: 0 2.5rem 0.375rem;
   padding-top: 0.5rem;
   font-size: 0.875rem;
-  line-height: 1rem;
   font-weight: 500;
+  line-height: 1rem;
   text-align: left;
 }
 
