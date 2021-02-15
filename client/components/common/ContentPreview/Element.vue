@@ -1,5 +1,5 @@
 <template>
-  <div :class="elementWidth" class="element-preview-container">
+  <div :class="elementWidth" class="element-preview-container float-none">
     <v-checkbox
       v-if="selectable"
       @click="toggleSelection"
@@ -20,10 +20,10 @@
               v-on="on"
               @click.stop="$emit('element:open', element.uid)"
               :class="{ visible: hover }"
-              color="secondary lighten-1"
-              fab depressed x-small dark
+              color="blue-grey darken-4"
+              fab depressed x-small
               class="open-element-button">
-              <v-icon dense dark>mdi-open-in-new</v-icon>
+              <v-icon color="secondary lighten-4" dense>mdi-open-in-new</v-icon>
             </v-btn>
           </template>
           <span>Open in editor</span>
