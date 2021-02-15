@@ -34,7 +34,7 @@
         :library="library"
         :allowed-types="allowedTypes">
         <template v-slot:header>
-          <div v-if="layout" class="ml-10">
+          <div v-if="layout" class="mr-6">
             <div class="pb-1 caption text-left">Element width</div>
             <v-btn-toggle
               v-model="elementWidth"
@@ -52,7 +52,7 @@
             @click="showElementBrowser = !showElementBrowser"
             color="primary darken-3"
             depressed
-            class="ml-6 mt-6">
+            class="mt-6">
             <v-icon dense class="mr-2">mdi-content-copy</v-icon>
             Copy existing
           </v-btn>

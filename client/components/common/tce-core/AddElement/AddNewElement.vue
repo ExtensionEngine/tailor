@@ -5,7 +5,7 @@
     max-width="1240"
     inset>
     <div class="element-container grey lighten-5">
-      <div class="d-flex align-center py-4">
+      <div class="d-flex align-center py-4 px-10">
         <slot name="header"></slot>
       </div>
       <div
@@ -55,7 +55,7 @@ export default {
 
 <style lang="scss" scoped>
 .element-container {
-  min-height: 25rem;
+  min-height: 20rem;
   padding: 0 0 1.875rem;
   border-top-left-radius: 0.5rem;
   border-top-right-radius: 0.5rem;
