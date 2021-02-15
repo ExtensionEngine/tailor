@@ -49,7 +49,7 @@
         <v-icon>mdi-arrow-left</v-icon> Back
       </v-btn>
       <v-btn @click="close" text class="ml-1">Cancel</v-btn>
-      <v-btn @click="save" color="secondary" text>{{ submitLabel }}</v-btn>
+      <v-btn @click="save" text class="mr-2">{{ submitLabel }}</v-btn>
     </template>
   </tailor-dialog>
 </template>

@@ -38,7 +38,7 @@
             <div class="pb-1 caption text-left">Element width</div>
             <v-btn-toggle
               v-model="elementWidth"
-              color="blue-grey darken-4"
+              color="secondary accent-2"
               mandatory>
               <v-btn :value="100" height="38" icon>
                 <v-icon>mdi-square-outline</v-icon>

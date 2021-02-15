@@ -4,7 +4,8 @@
       v-if="selectable"
       @click="toggleSelection"
       :input-value="isSelected"
-      :disabled="disabled" />
+      :disabled="disabled"
+      color="primary darken-4" />
     <v-hover v-slot:default="{ hover }">
       <div class="element-wrapper flex-grow-1">
         <content-element
@@ -19,10 +20,10 @@
               v-on="on"
               @click.stop="$emit('element:open', element.uid)"
               :class="{ visible: hover }"
-              color="pink darken-1"
-              fab small dark
+              color="pink lighten-1"
+              fab depressed x-small dark
               class="open-element-button">
-              <v-icon small dark>mdi-open-in-new</v-icon>
+              <v-icon dense dark>mdi-open-in-new</v-icon>
             </v-btn>
           </template>
           <span>Open in editor</span>
@@ -71,6 +72,7 @@ export default {
 
 .content-element {
   flex: 1 0;
+  margin: 0.375rem 0 0 0.25rem;
   box-shadow: none;
   border: 1px solid #e1e1e1;
 
@@ -102,9 +104,9 @@ export default {
 
 .open-element-button {
   position: absolute;
-  top: 0.5rem;
-  right: -1.25rem;
-  transition: opacity 0.5s;
+  top: 0;
+  right: -1rem;
+  transition: opacity 0.4s;
 
   &:not(.visible) {
     opacity: 0;
