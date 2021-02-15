@@ -20,9 +20,8 @@
           :selected-elements="selection.elements" />
       </template>
       <template v-else>
-        <div class="d-flex justify-end">
+        <div v-if="toggleButton" class="d-flex justify-end">
           <v-btn
-            v-if="toggleButton"
             @click="toggleSelectAll"
             outlined
             class="mr-4 mb-2">
