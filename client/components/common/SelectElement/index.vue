@@ -20,11 +20,8 @@
           :selected-elements="selection.elements" />
       </template>
       <template v-else>
-        <div v-if="toggleButton" class="d-flex justify-end">
-          <v-btn
-            @click="toggleSelectAll"
-            outlined
-            class="mr-4 mb-2">
+        <div v-if="toggleButton" class="d-flex justify-end mb-2 px-4">
+          <v-btn @click="toggleSelectAll" outlined>
             <v-icon class="mr-2">mdi-{{ toggleButton.icon }}</v-icon>
             {{ toggleButton.label }}
           </v-btn>
