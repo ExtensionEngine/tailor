@@ -1,5 +1,5 @@
 <template>
-  <div :class="elementWidth" class="element-preview-container float-none">
+  <div :class="elementWidth" class="element-preview-container">
     <v-checkbox
       v-if="selectable"
       @click="toggleSelection"
@@ -105,7 +105,7 @@ export default {
 .open-element-button {
   position: absolute;
   top: 0;
-  right: -1rem;
+  right: -0.75rem;
   transition: opacity 0.4s;
 
   &:not(.visible) {
