@@ -4,8 +4,8 @@
     :class="{ disabled: props.disabled }"
     class="inline-activator">
     <hr>
-    <v-avatar color="teal accent-4" size="22">
-      <v-icon dark>mdi-plus</v-icon>
+    <v-avatar size="20" color="primary darken-4">
+      <v-icon size="16" dark>mdi-plus</v-icon>
     </v-avatar>
     <hr>
   </button>
@@ -46,7 +46,7 @@ export default {
     flex: 1;
     display: inline-flex;
     margin: 0;
-    border-top: 0.0625rem dashed #1de9b6;
+    border-top: 0.0625rem dashed var(--v-primary-darken3);
   }
 
   &:hover, &:focus {
