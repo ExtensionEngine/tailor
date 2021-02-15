@@ -1,15 +1,17 @@
 <template>
-  <v-bottom-sheet v-on="$listeners" v-bind="$attrs" max-width="1240" inset>
-    <div class="element-container">
-      <v-toolbar color="primary darken-4" dense class="mb-2 elevation-1">
+  <v-bottom-sheet
+    v-on="$listeners"
+    v-bind="$attrs"
+    max-width="1240"
+    inset>
+    <div class="element-container grey lighten-5">
+      <div class="d-flex align-center py-4">
         <slot name="header"></slot>
-      </v-toolbar>
+      </div>
       <div
         v-for="group in library"
         :key="group.name">
-        <div class="group-heading primary--text text--darken-4">
-          <span>{{ group.name }}</span>
-        </div>
+        <div class="group-heading grey--text text--darken-4">{{ group.name }}</div>
         <div class="group-elements">
           <v-hover
             v-for="element in group.elements"
@@ -18,10 +20,15 @@
             <v-btn
               @click.stop="$emit('add', [element])"
               :disabled="!isAllowed(element.type)"
-              :color="hover ? 'secondary' : '#333'"
+              :color="hover ? 'secondary accent-2' : 'blue-grey darken-4'"
               text
               class="add-element">
-              <v-icon v-if="element.ui.icon">{{ element.ui.icon }}</v-icon>
+              <v-icon
+                v-if="element.ui.icon"
+                size="26"
+                color="primary darken-3">
+                {{ element.ui.icon }}
+              </v-icon>
               <span class="button-text body-2">{{ element.name }}</span>
             </v-btn>
           </v-hover>
@@ -50,33 +57,25 @@ export default {
 .element-container {
   min-height: 25rem;
   padding: 0 0 1.875rem;
-  background: #fff;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+  overflow: hidden;
 }
 
 .group-heading {
   margin: 0 2.5rem 0.375rem;
-  padding-top: 1.25rem;
-  font-size: 1rem;
+  padding-top: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1rem;
   font-weight: 500;
-  line-height: 1.75;
   text-align: left;
-
-  .v-icon, span {
-    line-height: 1.75;
-    vertical-align: middle;
-  }
-
-  .v-icon {
-    margin-right: 0.375rem;
-    color: #546e7a;
-  }
 }
 
 .group-elements {
   display: flex;
+  flex-wrap: wrap;
   width: 100%;
   padding: 0 1.875rem;
-  flex-wrap: wrap;
 }
 
 .add-element {
@@ -85,13 +84,12 @@ export default {
   height: auto !important;
   min-height: 4.375rem;
   padding: 0 !important;
-  border: 1px solid transparent;
   white-space: normal;
 
   ::v-deep .v-btn__content {
     flex: 1 1 100%;
-    padding: 0.375rem;
     flex-direction: column;
+    padding: 0.375rem;
     text-transform: none;
   }
 
@@ -102,21 +100,6 @@ export default {
 
   .button-text {
     margin: 0.625rem 0;
-  }
-
-  &:enabled:hover {
-    background: #fcfcfc;
-    border: 1px solid #888;
-  }
-}
-
-.v-toolbar {
-  .v-divider {
-    align-self: auto;
-  }
-
-  .width-label {
-    min-width: 11.25rem;
   }
 }
 </style>
