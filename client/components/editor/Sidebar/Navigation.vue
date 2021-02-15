@@ -25,7 +25,9 @@
           @click.stop="navigateTo(id)"
           :class="{ selectable, selected: isSelected(id) }"
           class="tree-node pl-2">
-          <span class="text-truncate">{{ name }}</span>
+          <span class="primary--text text--darken-4 text-truncate">
+            {{ name }}
+          </span>
           <v-icon
             v-if="selectable"
             color="primary darken-4"
