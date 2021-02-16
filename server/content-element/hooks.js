@@ -61,7 +61,7 @@ function add(ContentElement, Hooks, Models) {
     return Promise.resolve(elementHookTypes)
       .map(hook => elementRegistry.getHook(element.type, hook))
       .filter(Boolean)
-      .reduce((result, hook) => hook(result, options.context), element);
+      .reduce((result, hook) => hook(result, options), element);
   }
 
   function processAssets(hookType, element) {

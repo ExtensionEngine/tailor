@@ -38,7 +38,7 @@ class ElementsRegistry extends BaseRegistry {
     const elementHooks = this._hooks[type];
     if (!elementHooks || !elementHooks[hook]) return;
     const services = { config, storage, storageProxy };
-    return (element, context) => elementHooks[hook](element, services, context);
+    return (element, options) => elementHooks[hook](element, services, options);
   }
 
   buildStaticsHandler() {
