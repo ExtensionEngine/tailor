@@ -44,11 +44,12 @@ module.exports = {
   }],
   WORKFLOWS: [{
     id: 'EXAMPLE_WORKFLOW',
+    dueDateWarningThreshold: { days: 2 },
     statuses: [
-      { id: 'TODO', label: 'Todo' },
-      { id: 'IN_PROGRESS', label: 'In progress' },
-      { id: 'REVIEW', label: 'Review' },
-      { id: 'DONE', label: 'Done' }
+      { id: 'TODO', label: 'Todo', color: '#0388a6', default: true },
+      { id: 'IN_PROGRESS', label: 'In progress', color: '#0396a6' },
+      { id: 'REVIEW', label: 'Review', color: '#48d9d9' },
+      { id: 'DONE', label: 'Done', color: '#f24949' }
     ]
   }]
 };
