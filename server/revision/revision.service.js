@@ -2,6 +2,7 @@
 
 const { Revision, Sequelize } = require('../shared/database');
 const map = require('lodash/map');
+const Promise = require('bluebird');
 const { resolveStatics } = require('../shared/storage/helpers');
 
 const { Op } = Sequelize;
@@ -17,7 +18,7 @@ async function getEntityRemovesSinceMoment(activity, timestamp) {
   };
   const where = { ...whereRemovedAfter, state: whereCreatedBefore };
   return getRemovesGroupedByEntity(map(nodes, 'id'), where)
-    .then(removesByEntity => Promise.all(removesByEntity.map(resolveStaticsForEach)))
+    .then(removesByEntity => Promise.map(removesByEntity, resolveStaticsForEach))
     .then(([activities, elements]) => ({ activities, elements }));
 }
 
@@ -68,9 +69,9 @@ function getRemovesGroupedByEntity(ids, where) {
 }
 
 function resolveStaticsForEach(revisions) {
-  return Promise.all(revisions.map(async revision => {
+  return Promise.map(revisions, async revision => {
     const state = await resolveStatics(revision.state);
     revision.state = state;
     return revision;
-  }));
+  });
 }
