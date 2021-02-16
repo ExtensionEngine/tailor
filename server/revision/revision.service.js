@@ -2,6 +2,7 @@
 
 const { Revision, Sequelize } = require('../shared/database');
 const map = require('lodash/map');
+const { resolveStatics } = require('../shared/storage/helpers');
 
 const { Op } = Sequelize;
 
@@ -14,32 +15,33 @@ async function getEntityRemovesSinceMoment(activity, timestamp) {
   const whereCreatedBefore = {
     createdAt: { [Op.lt]: timestamp }
   };
-  const hasNodeId = { [Op.in]: map(nodes, 'id') };
-  const [activities, elements] = await Promise.all([
+  const inNodeIds = { [Op.in]: map(nodes, 'id') };
+  const removesByEntity = await Promise.all([
     Revision.findAll({
       where: {
         ...whereRemovedAfter,
         entity: 'ACTIVITY',
-        state: { ...whereCreatedBefore, id: hasNodeId }
+        state: { ...whereCreatedBefore, id: inNodeIds }
       }
     }),
     Revision.findAll({
       where: {
         ...whereRemovedAfter,
         entity: 'CONTENT_ELEMENT',
-        state: { ...whereCreatedBefore, activityId: hasNodeId }
+        state: { ...whereCreatedBefore, activityId: inNodeIds }
       }
     })
   ]);
+  const [activities, elements] = await Promise.all(removesByEntity.map(resolveEach));
   return { activities, elements };
 }
 
-function getLastState(ids, activityIds, beforeTimestamp) {
+async function getLastState(ids, activityIds, beforeTimestamp) {
   const whereCreateOrUpdate = {
     operation: { [Op.or]: ['CREATE', 'UPDATE'] }
   };
   const whereBefore = { createdAt: { [Op.lt]: beforeTimestamp } };
-  return Revision.scope('lastByEntity').findAll({
+  const revisions = await Revision.scope('lastByEntity').findAll({
     where: {
       ...whereCreateOrUpdate,
       ...whereBefore,
@@ -52,6 +54,15 @@ function getLastState(ids, activityIds, beforeTimestamp) {
       }
     }
   });
+  return resolveEach(revisions);
 }
 
 module.exports = { getEntityRemovesSinceMoment, getLastState };
+
+function resolveEach(revisions) {
+  return Promise.all(revisions.map(async revision => {
+    const state = await resolveStatics(revision.state);
+    revision.state = state;
+    return revision;
+  }));
+}
