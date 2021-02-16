@@ -75,26 +75,28 @@ class Activity extends Model {
   }
 
   static async create(data, opts) {
-    return this.sequelize.transaction(async transaction => {
-      const activity = await super.create(data, { ...opts, transaction });
-      if (activity.isTrackedInWorkflow) {
-        const defaultStatus = getDefaultActivityStatus(activity.type);
-        await activity.createStatus(defaultStatus, { transaction });
-      }
-      return activity;
-    }, { transaction: opts.transaction });
+    return this.sequelize.transaction({ transaction: opts.transaction },
+      async transaction => {
+        const activity = await super.create(data, { ...opts, transaction });
+        if (activity.isTrackedInWorkflow) {
+          const defaultStatus = getDefaultActivityStatus(activity.type);
+          await activity.createStatus(defaultStatus, { transaction });
+        }
+        return activity;
+      });
   }
 
   static async bulkCreate(data, opts) {
-    return this.sequelize.transaction(async transaction => {
-      const activities = await super.bulkCreate(data, { ...opts, transaction });
-      const statusData = activities
-        .filter(it => it.isTrackedInWorkflow)
-        .map(getDefaultStatus);
-      const ActivityStatus = this.sequelize.model('ActivityStatus');
-      await ActivityStatus.bulkCreate(statusData, { transaction });
-      return activities;
-    }, { transaction: opts.transaction });
+    return this.sequelize.transaction({ transaction: opts.transaction },
+      async transaction => {
+        const activities = await super.bulkCreate(data, { ...opts, transaction });
+        const statusData = activities
+          .filter(it => it.isTrackedInWorkflow)
+          .map(getDefaultStatus);
+        const ActivityStatus = this.sequelize.model('ActivityStatus');
+        await ActivityStatus.bulkCreate(statusData, { transaction });
+        return activities;
+      });
   }
 
   static associate({ ActivityStatus, ContentElement, Comment, Repository }) {
