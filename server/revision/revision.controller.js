@@ -30,12 +30,12 @@ async function getStateAtMoment({ query }, res) {
   return res.json({ data: { ...removes, elements } });
 }
 
-function resolve({ revision }, res) {
+function get({ revision }, res) {
   return res.json(revision);
 }
 
 module.exports = {
   index,
   getStateAtMoment,
-  resolve
+  get
 };

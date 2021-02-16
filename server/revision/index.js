@@ -18,7 +18,7 @@ const defaultListQuery = {
 router
   .get('/time-travel', processQuery({ elementIds: [] }), ctrl.getStateAtMoment)
   .get('/', processListQuery(defaultListQuery), ctrl.index)
-  .get('/:revisionId', ctrl.resolve);
+  .get('/:revisionId', ctrl.get);
 
 function getRevision(req, _res, next, revisionId) {
   const id = parseInt(revisionId, 10);
