@@ -21,25 +21,29 @@ async function getEntityRemovesSinceMoment(activity, timestamp) {
     .then(([activities, elements]) => ({ activities, elements }));
 }
 
-async function getLastState(ids, activityIds, beforeTimestamp) {
+function getLastState(ids, activityIds, beforeTimestamp) {
   const whereCreateOrUpdate = {
     operation: { [Op.or]: ['CREATE', 'UPDATE'] }
   };
   const whereBefore = { createdAt: { [Op.lt]: beforeTimestamp } };
-  const revisions = await Revision.scope('lastByEntity').findAll({
-    where: {
-      ...whereCreateOrUpdate,
-      ...whereBefore,
-      state: {
-        [Op.or]: [{
-          id: { [Op.in]: ids }
-        }, {
-          activityId: { [Op.in]: activityIds }
-        }]
-      }
+  const whereInElementOrActivityIds = {
+    state: {
+      [Op.or]: [{
+        id: { [Op.in]: ids }
+      }, {
+        activityId: { [Op.in]: activityIds }
+      }]
     }
-  });
-  return resolveStaticsForEach(revisions);
+  };
+  return Revision.scope('lastByEntity')
+    .findAll({
+      where: {
+        ...whereCreateOrUpdate,
+        ...whereBefore,
+        ...whereInElementOrActivityIds
+      }
+    })
+    .then(resolveStaticsForEach);
 }
 
 module.exports = { getEntityRemovesSinceMoment, getLastState };
