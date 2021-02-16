@@ -3,7 +3,6 @@
 const { Activity, Revision, User } = require('../shared/database');
 const { getEntityRemovesSinceMoment, getLastState } = require('./revision.service.js');
 const map = require('lodash/map');
-const { resolveStatics } = require('../shared/storage/helpers');
 
 function index({ repository, query, opts }, res) {
   const { entity, entityId } = query;
