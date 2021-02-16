@@ -32,10 +32,7 @@ async function getStateAtMoment({ query }, res) {
 }
 
 function resolve({ revision }, res) {
-  return resolveStatics(revision.state).then(state => {
-    revision.state = state;
-    return res.json(revision);
-  });
+  return res.json(revision);
 }
 
 module.exports = {

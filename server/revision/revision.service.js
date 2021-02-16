@@ -2,8 +2,6 @@
 
 const { Revision, Sequelize } = require('../shared/database');
 const map = require('lodash/map');
-const Promise = require('bluebird');
-const { resolveStatics } = require('../shared/storage/helpers');
 
 const { Op } = Sequelize;
 
@@ -18,7 +16,6 @@ async function getEntityRemovesSinceMoment(activity, timestamp) {
   };
   const where = { ...whereRemovedAfter, state: whereCreatedBefore };
   return getRemovesGroupedByEntity(map(nodes, 'id'), where)
-    .then(removesByEntity => Promise.map(removesByEntity, resolveStaticsForEach))
     .then(([activities, elements]) => ({ activities, elements }));
 }
 
@@ -36,29 +33,27 @@ function getLastState(ids, activityIds, beforeTimestamp) {
       }]
     }
   };
-  return Revision.scope('lastByEntity')
-    .findAll({
-      where: {
-        ...whereCreateOrUpdate,
-        ...whereBefore,
-        ...whereInElementOrActivityIds
-      }
-    })
-    .then(resolveStaticsForEach);
+  return Revision.scope('lastByEntity').fetch({
+    where: {
+      ...whereCreateOrUpdate,
+      ...whereBefore,
+      ...whereInElementOrActivityIds
+    }
+  });
 }
 
 module.exports = { getEntityRemovesSinceMoment, getLastState };
 
 function getRemovesGroupedByEntity(ids, where) {
   return Promise.all([
-    Revision.findAll({
+    Revision.fetch({
       where: {
         ...where,
         entity: 'ACTIVITY',
         state: { ...where.state, id: { [Op.in]: ids } }
       }
     }),
-    Revision.findAll({
+    Revision.fetch({
       where: {
         ...where,
         entity: 'CONTENT_ELEMENT',
@@ -66,12 +61,4 @@ function getRemovesGroupedByEntity(ids, where) {
       }
     })
   ]);
-}
-
-function resolveStaticsForEach(revisions) {
-  return Promise.map(revisions, async revision => {
-    const state = await resolveStatics(revision.state);
-    revision.state = state;
-    return revision;
-  });
 }

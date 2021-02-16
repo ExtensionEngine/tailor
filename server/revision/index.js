@@ -21,8 +21,9 @@ router
   .get('/:revisionId', ctrl.resolve);
 
 function getRevision(req, _res, next, revisionId) {
+  const id = parseInt(revisionId, 10);
   const include = [{ model: User, attributes: ['id', 'email'] }];
-  return Revision.findByPk(revisionId, { include })
+  return Revision.fetch(id, { include })
     .then(revision => revision || createError(NOT_FOUND, 'Revision not found'))
     .then(revision => {
       req.revision = revision;
