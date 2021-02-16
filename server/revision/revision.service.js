@@ -15,25 +15,10 @@ async function getEntityRemovesSinceMoment(activity, timestamp) {
   const whereCreatedBefore = {
     createdAt: { [Op.lt]: timestamp }
   };
-  const inNodeIds = { [Op.in]: map(nodes, 'id') };
-  const removesByEntity = await Promise.all([
-    Revision.findAll({
-      where: {
-        ...whereRemovedAfter,
-        entity: 'ACTIVITY',
-        state: { ...whereCreatedBefore, id: inNodeIds }
-      }
-    }),
-    Revision.findAll({
-      where: {
-        ...whereRemovedAfter,
-        entity: 'CONTENT_ELEMENT',
-        state: { ...whereCreatedBefore, activityId: inNodeIds }
-      }
-    })
-  ]);
-  const [activities, elements] = await Promise.all(removesByEntity.map(resolveEach));
-  return { activities, elements };
+  const where = { ...whereRemovedAfter, state: whereCreatedBefore };
+  return getRemovesByEntity(map(nodes, 'id'), where)
+    .then(removesByEntity => Promise.all(removesByEntity.map(resolveStaticsForEach)))
+    .then(([activities, elements]) => ({ activities, elements }));
 }
 
 async function getLastState(ids, activityIds, beforeTimestamp) {
@@ -54,12 +39,31 @@ async function getLastState(ids, activityIds, beforeTimestamp) {
       }
     }
   });
-  return resolveEach(revisions);
+  return resolveStaticsForEach(revisions);
 }
 
 module.exports = { getEntityRemovesSinceMoment, getLastState };
 
-function resolveEach(revisions) {
+function getRemovesByEntity(ids, where) {
+  return Promise.all([
+    Revision.findAll({
+      where: {
+        ...where,
+        entity: 'ACTIVITY',
+        state: { ...where.state, id: { [Op.in]: ids } }
+      }
+    }),
+    Revision.findAll({
+      where: {
+        ...where,
+        entity: 'CONTENT_ELEMENT',
+        state: { ...where.state, activityId: { [Op.in]: ids } }
+      }
+    })
+  ]);
+}
+
+function resolveStaticsForEach(revisions) {
   return Promise.all(revisions.map(async revision => {
     const state = await resolveStatics(revision.state);
     revision.state = state;
