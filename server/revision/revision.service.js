@@ -15,8 +15,7 @@ async function getEntityRemovesSinceMoment(activity, timestamp) {
     createdAt: { [Op.lt]: timestamp }
   };
   const where = { ...whereRemovedAfter, state: whereCreatedBefore };
-  return getRemovesGroupedByEntity(map(nodes, 'id'), where)
-    .then(([activities, elements]) => ({ activities, elements }));
+  return getRemovesGroupedByEntity(map(nodes, 'id'), where);
 }
 
 function getLastState(ids, activityIds, beforeTimestamp) {
@@ -44,8 +43,8 @@ function getLastState(ids, activityIds, beforeTimestamp) {
 
 module.exports = { getEntityRemovesSinceMoment, getLastState };
 
-function getRemovesGroupedByEntity(ids, where) {
-  return Promise.all([
+async function getRemovesGroupedByEntity(ids, where) {
+  const [activities, elements] = await Promise.all([
     Revision.fetch({
       where: {
         ...where,
@@ -61,4 +60,5 @@ function getRemovesGroupedByEntity(ids, where) {
       }
     })
   ]);
+  return { activities, elements };
 }
