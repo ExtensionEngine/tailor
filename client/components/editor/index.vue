@@ -27,6 +27,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import ActivityContent from './ActivityContent';
+import find from 'lodash/find';
 import get from 'lodash/get';
 import { getElementId } from 'tce-core/utils';
 import Sidebar from './Sidebar';
@@ -40,16 +41,18 @@ export default {
     repositoryId: { type: Number, required: true },
     activityId: { type: Number, required: true }
   },
-  data: () => ({
-    isLoading: true,
-    selectedElement: null
-  }),
+  data: () => ({ isLoading: true }),
   computed: {
     ...mapGetters('editor', ['activity', 'contentContainers', 'rootContainerGroups']),
     ...mapGetters('repository', ['repository', 'outlineActivities']),
     ...mapGetters('repository/userTracking', ['getActiveUsers']),
+    ...mapGetters('repository/contentElements', ['elements']),
     ...mapState('editor', ['showPublishDiff']),
-    activeUsers: vm => vm.getActiveUsers('activity', vm.activityId)
+    activeUsers: vm => vm.getActiveUsers('activity', vm.activityId),
+    selectedElement() {
+      const { elementId } = this.$route.query;
+      return find(this.elements, { uid: elementId });
+    }
   },
   methods: {
     ...mapMutations('editor', ['togglePublishDiff']),
@@ -58,7 +61,6 @@ export default {
       this.togglePublishDiff(false);
     },
     selectElement(element) {
-      this.selectedElement = element;
       const selectedElementId = getElementId(element);
       const { elementId: queryElementId, ...query } = this.$route.query;
       if (selectedElementId === queryElementId) return;
