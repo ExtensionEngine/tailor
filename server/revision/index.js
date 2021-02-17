@@ -18,11 +18,12 @@ const defaultListQuery = {
 router
   .get('/time-travel', processQuery({ elementIds: [] }), ctrl.getStateAtMoment)
   .get('/', processListQuery(defaultListQuery), ctrl.index)
-  .get('/:revisionId', ctrl.resolve);
+  .get('/:revisionId', ctrl.get);
 
 function getRevision(req, _res, next, revisionId) {
+  const id = parseInt(revisionId, 10);
   const include = [{ model: User, attributes: ['id', 'email'] }];
-  return Revision.findByPk(revisionId, { include })
+  return Revision.fetch(id, { include })
     .then(revision => revision || createError(NOT_FOUND, 'Revision not found'))
     .then(revision => {
       req.revision = revision;
