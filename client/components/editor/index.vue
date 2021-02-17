@@ -27,7 +27,6 @@
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import ActivityContent from './ActivityContent';
-import find from 'lodash/find';
 import get from 'lodash/get';
 import { getElementId } from 'tce-core/utils';
 import Sidebar from './Sidebar';
@@ -46,12 +45,12 @@ export default {
     ...mapGetters('editor', ['activity', 'contentContainers', 'rootContainerGroups']),
     ...mapGetters('repository', ['repository', 'outlineActivities']),
     ...mapGetters('repository/userTracking', ['getActiveUsers']),
-    ...mapGetters('repository/contentElements', ['elements']),
+    ...mapGetters('repository/contentElements', ['getElementByUid']),
     ...mapState('editor', ['showPublishDiff']),
     activeUsers: vm => vm.getActiveUsers('activity', vm.activityId),
     selectedElement() {
       const { elementId } = this.$route.query;
-      return find(this.elements, { uid: elementId });
+      return this.getElementByUid(elementId);
     }
   },
   methods: {
