@@ -55,13 +55,13 @@ function add(ContentElement, Hooks, Models) {
     return Comment.update({ activityId: null }, options);
   }
 
-  function customElementHook(hookType, element) {
+  function customElementHook(hookType, element, options) {
     const elementHookTypes = elementHookMappings[hookType];
     if (!elementHookTypes) return;
     return Promise.resolve(elementHookTypes)
       .map(hook => elementRegistry.getHook(element.type, hook))
       .filter(Boolean)
-      .reduce((result, hook) => hook(result), element);
+      .reduce((result, hook) => hook(result, options), element);
   }
 
   function processAssets(hookType, element) {
