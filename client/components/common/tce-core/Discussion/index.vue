@@ -41,8 +41,9 @@
       :unseen-count="unseenComments.length"
       :user="user"
       class="mt-2" />
-    <div ref="editor" class="text-right">
+    <div class="text-right">
       <v-textarea
+        ref="editor"
         v-model.trim="comment.content"
         @focus="$emit('seen')"
         :placeholder="commentsCount ? 'Add a comment...' : 'Start the discussion...'"
@@ -76,6 +77,7 @@ export default {
     showNotifications: { type: Boolean, default: false },
     isActivityThread: { type: Boolean, default: false },
     hasUnresolvedComments: { type: Boolean, default: false },
+    isVisible: { type: Boolean, default: false },
     user: { type: Object, required: true }
   },
   data: () => ({
@@ -140,6 +142,15 @@ export default {
   watch: {
     commentsCount() {
       this.$emit('change', this.thread);
+    },
+    isVisible: {
+      immediate: true,
+      handler(val) {
+        if (!val && this.isActivityThread) return;
+        // Focus editor manually with delay to avoid
+        // element focus prioritization (e.g HTML element)
+        setTimeout(() => this.editor.onFocus(), 500);
+      }
     }
   },
   created() {
