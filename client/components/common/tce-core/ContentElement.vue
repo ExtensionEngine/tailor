@@ -52,7 +52,7 @@
 
 <script>
 import { getComponentName, getElementId } from './utils';
-import ActiveUsers from 'tce-core/ActiveUsers';
+import { ActiveUsers } from '@extensionengine/tce-components';
 import Discussion from './ElementDiscussion';
 import { mapChannels } from '@/plugins/radio';
 import PublishDiffChip from './PublishDiffChip';

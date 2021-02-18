@@ -27,7 +27,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import ActiveUsers from 'tce-core/ActiveUsers';
+import { ActiveUsers } from '@extensionengine/tce-components';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
 import selectActivity from '@/components/repository/common/selectActivity';

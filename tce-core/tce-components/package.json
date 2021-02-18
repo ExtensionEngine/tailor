@@ -1,0 +1,59 @@
+{
+  "name": "@extensionengine/tce-components",
+  "version": "0.0.1",
+  "description": "",
+  "keywords": [],
+  "homepage": "",
+  "bugs": {
+    "url": "https://github.com/ExtensionEngine/tailor/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ExtensionEngine/tce-scorm.git"
+  },
+  "license": "MIT",
+  "author": "ExtensionEngine <info@extensionengine.com>",
+  "main": "dist/tce-components.js",
+  "module": "dist/tce-scorm.esm.js",
+  "scripts": {
+    "prebuild": "del-cli dist",
+    "build": "bili",
+    "lint": "npm run lint:js && npm run lint:scss",
+    "lint:js": "eslint --ext .js,.vue .",
+    "lint:scss": "stylelint \"**/*.vue\" \"**/*.scss\""
+  },
+  "dependencies": {
+    "lodash": "^4.17.20"
+  },
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.12.1",
+    "@babel/eslint-plugin": "^7.12.1",
+    "@extensionengine/eslint-config": "^2.0.0",
+    "@extensionengine/stylelint-config": "^1.1.1",
+    "@rollup/plugin-alias": "^3.1.1",
+    "@vue/compiler-sfc": "^3.0.4",
+    "babel-eslint": "^10.1.0",
+    "bili": "^5.0.5",
+    "del-cli": "^3.0.1",
+    "eslint": "^7.15.0",
+    "eslint-config-semistandard": "^15.0.1",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-require-sort": "^1.2.2",
+    "eslint-plugin-standard": "^5.0.0",
+    "eslint-plugin-vue": "^7.2.0",
+    "node-sass": "^5.0.0",
+    "rollup-plugin-copy": "^3.3.0",
+    "rollup-plugin-visualizer": "^4.2.0",
+    "rollup-plugin-vue": "4.3.2",
+    "stylelint": "^13.8.0",
+    "vue-runtime-helpers": "^1.1.2",
+    "vue-template-compiler": "^2.6.12"
+  },
+  "peerDependencies": {
+    "vee-validate": "^3.4.5",
+    "vuetify": "^2.3.21"
+  }
+}
