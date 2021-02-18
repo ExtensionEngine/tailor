@@ -1,10 +1,9 @@
+import { calculatePosition, InsertLocation } from 'tce-utils';
 import { getDescendants as getDeepChildren, getOutlineChildren } from 'utils/activity';
-import { calculatePosition } from 'tce-utils';
 import { Activity as Events } from '@/../common/sse';
 import feed from '../feed';
 import findIndex from 'lodash/findIndex';
 import generateActions from '@/store/helpers/actions';
-import InsertLocation from 'utils/InsertLocation';
 import request from '@/api/request';
 
 const { api, fetch, get, reset, save, setEndpoint, update } = generateActions();

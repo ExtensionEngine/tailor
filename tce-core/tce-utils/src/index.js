@@ -1,3 +1,2 @@
-import * as calculatePosition from './calculatePosition';
-
-export default calculatePosition;
+export * from './calculatePosition';
+export * as InsertLocation from './InsertLocation';
