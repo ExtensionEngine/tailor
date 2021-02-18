@@ -66,7 +66,7 @@
 import AddNewElement from './AddNewElement';
 import filter from 'lodash/filter';
 import flatMap from 'lodash/flatMap';
-import { getPositions } from 'utils/calculatePosition';
+import { getPositions } from 'tce-utils';
 import intersection from 'lodash/intersection';
 import { isQuestion } from '../utils';
 import pick from 'lodash/pick';

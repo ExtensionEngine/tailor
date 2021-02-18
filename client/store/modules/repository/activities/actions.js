@@ -1,5 +1,5 @@
 import { getDescendants as getDeepChildren, getOutlineChildren } from 'utils/activity';
-import calculatePosition from 'utils/calculatePosition';
+import { calculatePosition } from 'tce-utils';
 import { Activity as Events } from '@/../common/sse';
 import feed from '../feed';
 import findIndex from 'lodash/findIndex';

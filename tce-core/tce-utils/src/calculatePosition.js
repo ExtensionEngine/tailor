@@ -41,7 +41,7 @@ export const getPositions = (items, index, count = 1) => {
  * @return {(number|Array)} Single position if `count` is 1 or an array containing
  *     `count` positions.
  */
-export default function ({ newPosition, items, action = REORDER, count = 1 }) {
+export function calculatePosition({ newPosition, items, action = REORDER, count = 1 }) {
   getDeprecationWarning(...arguments);
   const arr = [...items];
   if (action === REORDER) arr.splice(newPosition, count);

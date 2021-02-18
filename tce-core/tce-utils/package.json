@@ -1,0 +1,35 @@
+{
+  "name": "tce-utils",
+  "version": "0.0.1",
+  "description": "Tailor content element utility functions",
+  "main": "dist/tce-utils.js",
+  "module": "dist/tce-utils.esm.js",
+  "scripts": {
+    "prebuild": "del-cli dist",
+    "build": "bili",
+    "lint": "npm run lint:js && npm run lint:scss",
+    "lint:js": "eslint --ext .js,.vue ."
+  },
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.12.16",
+    "@babel/eslint-plugin": "^7.12.13",
+    "@extensionengine/eslint-config": "^2.0.0",
+    "@rollup/plugin-alias": "^3.1.1",
+    "babel-eslint": "^10.1.0",
+    "bili": "^5.0.5",
+    "del-cli": "^3.0.1",
+    "eslint": "^7.20.0",
+    "eslint-config-semistandard": "^15.0.1",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.3.1",
+    "eslint-plugin-require-sort": "^1.2.2",
+    "eslint-plugin-standard": "^5.0.0",
+    "eslint-plugin-vue": "^7.6.0",
+    "rollup-plugin-visualizer": "^4.2.0",
+    "rollup-plugin-vue": "^6.0.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
