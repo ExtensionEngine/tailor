@@ -49,7 +49,7 @@
         :placeholder="commentsCount ? 'Add a comment...' : 'Start the discussion...'"
         rows="3"
         outlined auto-grow clearable counter
-        class="comment-editor" />
+        class="comment-input" />
       <v-btn @click="post" :disabled="isTextEditorEmpty" icon>
         <v-icon>mdi-send</v-icon>
       </v-btn>
@@ -97,7 +97,7 @@ export default {
     hasHiddenComments: vm => vm.commentsShownLimit < vm.commentsCount,
     isTextEditorEmpty: vm => !vm.comment.content?.trim(),
     discussion: vm => vm.$refs.discussion,
-    editor: vm => vm.$refs.commentInput,
+    commentInput: vm => vm.$refs.commentInput,
     showResolveButton: vm => vm.hasUnresolvedComments && !vm.isActivityThread
   },
   methods: {
@@ -149,7 +149,7 @@ export default {
         if (!val && this.isActivityThread) return;
         // Focus editor manually with delay to avoid
         // element focus prioritization (e.g HTML element)
-        setTimeout(() => this.editor.focus(), 500);
+        setTimeout(() => this.commentInput.focus(), 500);
       }
     }
   },
@@ -179,7 +179,7 @@ export default {
     font-weight: 400;
   }
 
-  .comment-editor {
+  .comment-input {
     margin: 0 0.25rem 0 0.25rem;
   }
 
