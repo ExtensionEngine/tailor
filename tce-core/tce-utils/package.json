@@ -1,7 +1,18 @@
 {
-  "name": "tce-utils",
+  "name": "@extensionengine/tce-utils",
   "version": "0.0.1",
   "description": "Tailor content element utility functions",
+  "keywords": [],
+  "homepage": "",
+  "bugs": {
+    "url": "https://github.com/ExtensionEngine/tailor/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ExtensionEngine/tce-scorm.git"
+  },
+  "license": "MIT",
+  "author": "ExtensionEngine <info@extensionengine.com>",
   "main": "dist/tce-utils.js",
   "module": "dist/tce-utils.esm.js",
   "scripts": {
@@ -29,7 +40,5 @@
     "eslint-plugin-vue": "^7.6.0",
     "rollup-plugin-visualizer": "^4.2.0",
     "rollup-plugin-vue": "^6.0.0"
-  },
-  "author": "",
-  "license": "ISC"
+  }
 }

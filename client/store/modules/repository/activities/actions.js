@@ -1,4 +1,4 @@
-import { calculatePosition, InsertLocation } from 'tce-utils';
+import { calculatePosition, InsertLocation } from '@extensionengine/tce-utils';
 import { getDescendants as getDeepChildren, getOutlineChildren } from 'utils/activity';
 import { Activity as Events } from '@/../common/sse';
 import feed from '../feed';

@@ -1,4 +1,4 @@
-import { calculatePosition } from 'tce-utils';
+import { calculatePosition } from '@extensionengine/tce-utils';
 import { ContentElement as Events } from '@/../common/sse';
 import feed from '../feed';
 import generateActions from '@/store/helpers/actions';

@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { calculatePosition } from 'tce-utils';
+import { calculatePosition } from '@extensionengine/tce-utils';
 import cloneDeep from 'lodash/cloneDeep';
 import ContainedContent from './ContainedContent';
 import ElementList from './ElementList';

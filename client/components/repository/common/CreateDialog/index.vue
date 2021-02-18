@@ -42,7 +42,7 @@
 
 <script>
 import { getActivityMetadata } from 'shared/activities';
-import { InsertLocation } from 'tce-utils';
+import { InsertLocation } from '@extensionengine/tce-utils';
 import { mapActions } from 'vuex';
 import MetaInput from 'tce-core/MetaInput';
 import TailorDialog from '@/components/common/TailorDialog';
