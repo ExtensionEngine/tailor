@@ -10,7 +10,8 @@
       @remove="remove"
       @seen="setLastSeenComment"
       @unresolve="updateResolvement"
-      v-bind="{ comments, unseenComments, showHeading, user, scrollTarget: 'editor' }"
+      v-bind="{ comments, unseenComments, showHeading, user }"
+      scroll-target="commentInput"
       show-notifications is-activity-thread />
   </v-sheet>
 </template>

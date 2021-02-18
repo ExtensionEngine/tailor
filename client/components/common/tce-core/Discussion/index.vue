@@ -41,14 +41,15 @@
       :unseen-count="unseenComments.length"
       :user="user"
       class="mt-2" />
-    <div ref="editor" class="text-right">
+    <div class="text-right">
       <v-textarea
+        ref="commentInput"
         v-model.trim="comment.content"
         @focus="$emit('seen')"
         :placeholder="commentsCount ? 'Add a comment...' : 'Start the discussion...'"
         rows="3"
         outlined auto-grow clearable counter
-        class="comment-editor" />
+        class="comment-input" />
       <v-btn @click="post" :disabled="isTextEditorEmpty" icon>
         <v-icon>mdi-send</v-icon>
       </v-btn>
@@ -76,6 +77,7 @@ export default {
     showNotifications: { type: Boolean, default: false },
     isActivityThread: { type: Boolean, default: false },
     hasUnresolvedComments: { type: Boolean, default: false },
+    isVisible: { type: Boolean, default: false },
     user: { type: Object, required: true }
   },
   data: () => ({
@@ -95,7 +97,7 @@ export default {
     hasHiddenComments: vm => vm.commentsShownLimit < vm.commentsCount,
     isTextEditorEmpty: vm => !vm.comment.content?.trim(),
     discussion: vm => vm.$refs.discussion,
-    editor: vm => vm.$refs.editor,
+    commentInput: vm => vm.$refs.commentInput,
     showResolveButton: vm => vm.hasUnresolvedComments && !vm.isActivityThread
   },
   methods: {
@@ -140,6 +142,15 @@ export default {
   watch: {
     commentsCount() {
       this.$emit('change', this.thread);
+    },
+    isVisible: {
+      immediate: true,
+      handler(val) {
+        if (!val && this.isActivityThread) return;
+        // Focus editor manually with delay to avoid
+        // element focus prioritization (e.g HTML element)
+        setTimeout(() => this.commentInput.focus(), 500);
+      }
     }
   },
   created() {
@@ -168,7 +179,7 @@ export default {
     font-weight: 400;
   }
 
-  .comment-editor {
+  .comment-input {
     margin: 0 0.25rem 0 0.25rem;
   }
 

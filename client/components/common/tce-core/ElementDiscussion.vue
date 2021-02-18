@@ -29,7 +29,7 @@
       @remove="editorBus.emit(events.REMOVE, $event)"
       @seen="setLastSeen"
       @resolve="resolve"
-      v-bind="{ comments, unseenComments, hasUnresolvedComments, user }"
+      v-bind="{ comments, unseenComments, hasUnresolvedComments, user, isVisible }"
       :confirmation-active.sync="isConfirmationActive"
       class="pa-2" />
   </v-menu>
