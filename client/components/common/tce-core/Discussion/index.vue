@@ -43,7 +43,7 @@
       class="mt-2" />
     <div class="text-right">
       <v-textarea
-        ref="editor"
+        ref="commentInput"
         v-model.trim="comment.content"
         @focus="$emit('seen')"
         :placeholder="commentsCount ? 'Add a comment...' : 'Start the discussion...'"
@@ -97,7 +97,7 @@ export default {
     hasHiddenComments: vm => vm.commentsShownLimit < vm.commentsCount,
     isTextEditorEmpty: vm => !vm.comment.content?.trim(),
     discussion: vm => vm.$refs.discussion,
-    editor: vm => vm.$refs.editor,
+    editor: vm => vm.$refs.commentInput,
     showResolveButton: vm => vm.hasUnresolvedComments && !vm.isActivityThread
   },
   methods: {
@@ -149,7 +149,7 @@ export default {
         if (!val && this.isActivityThread) return;
         // Focus editor manually with delay to avoid
         // element focus prioritization (e.g HTML element)
-        setTimeout(() => this.editor.onFocus(), 500);
+        setTimeout(() => this.editor.focus(), 500);
       }
     }
   },
