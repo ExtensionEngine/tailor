@@ -16,13 +16,13 @@ var script = {
   props: {
     users: {
       type: Array,
-      default: function _default() {
+      "default": function _default() {
         return [];
       }
     },
     size: {
       type: Number,
-      default: 36
+      "default": 36
     }
   },
   filters: {

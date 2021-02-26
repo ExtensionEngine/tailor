@@ -1,6 +1,6 @@
 {
   "packages": [
-    "tce-core/*"
+    "packages/*"
   ],
   "version": "0.0.0"
 }

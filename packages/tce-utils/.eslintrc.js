@@ -2,7 +2,7 @@
 
 module.exports = {
   root: true,
-  extends: '@extensionengine/base',
+  extends: '@extensionengine/eslint-config/base',
   overrides: [{
     files: ['src/**'],
     parserOptions: {
