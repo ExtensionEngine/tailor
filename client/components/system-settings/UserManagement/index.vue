@@ -80,7 +80,7 @@
 import api from '@/api/user';
 import humanize from 'humanize-string';
 import loader from '@/components/common/loader';
-import { mapRequests } from '@/plugins/radio';
+import { mapRequests } from '@extensionengine/vue-radio';
 import { mapState } from 'vuex';
 import throttle from 'lodash/throttle';
 import UserDialog from './UserDialog';

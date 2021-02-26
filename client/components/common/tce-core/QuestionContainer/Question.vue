@@ -50,7 +50,7 @@ import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
 import { getErrorMessages } from 'utils/assessment';
 import head from 'lodash/head';
-import { mapChannels } from '@/plugins/radio';
+import { mapChannels } from '@extensionengine/vue-radio';
 import pullAt from 'lodash/pullAt';
 import set from 'lodash/set';
 

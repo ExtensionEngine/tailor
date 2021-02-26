@@ -59,7 +59,7 @@
 
 <script>
 import DiscussionThread from './Thread';
-import { mapRequests } from '@/plugins/radio';
+import { mapRequests } from '@extensionengine/vue-radio';
 import orderBy from 'lodash/orderBy';
 import ResolveButton from './ResolveButton';
 

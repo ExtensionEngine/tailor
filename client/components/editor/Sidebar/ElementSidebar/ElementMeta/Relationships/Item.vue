@@ -45,7 +45,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { mapRequests } from '@/plugins/radio';
+import { mapRequests } from '@extensionengine/vue-radio';
 import pluralize from 'pluralize';
 import SelectElement from '@/components/common/SelectElement';
 

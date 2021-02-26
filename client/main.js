@@ -16,7 +16,7 @@ import FileFilter from '@/directives/file-filter';
 import OidcClient from './OidcClient';
 import QuestionContainer from 'tce-core/QuestionContainer';
 import { sync } from 'vuex-router-sync';
-import Radio from '@/plugins/radio';
+import Radio from '@extensionengine/vue-radio';
 import Timeago from 'vue-timeago';
 import Vue from 'vue';
 import VueClipboard from 'vue-clipboard2';

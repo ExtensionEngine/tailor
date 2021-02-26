@@ -72,7 +72,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import Draggable from 'vuedraggable';
 import get from 'lodash/get';
 import { InputError } from 'tce-core';
-import { mapRequests } from '@/plugins/radio';
+import { mapRequests } from '@extensionengine/vue-radio';
 import pluralize from 'pluralize';
 import pullAt from 'lodash/pullAt';
 import reduce from 'lodash/reduce';

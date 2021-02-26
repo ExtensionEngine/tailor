@@ -24,7 +24,7 @@ import { mapActions, mapGetters } from 'vuex';
 import AppFooter from '@/components/common/Footer';
 import CloneModal from './CloneModal';
 import ExportModal from './ExportModal';
-import { mapRequests } from '@/plugins/radio';
+import { mapRequests } from '@extensionengine/vue-radio';
 import ProgressDialog from '@/components/common/ProgressDialog';
 import publishMixin from '@/components/common/mixins/publish';
 import Sidebar from './Sidebar';

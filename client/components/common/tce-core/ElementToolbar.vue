@@ -20,7 +20,7 @@
 import { getElementId, getToolbarName, isQuestion } from './utils';
 import DefaultToolbar from './DefaultToolbar';
 import { mapActions } from 'vuex';
-import { mapChannels } from '@/plugins/radio';
+import { mapChannels } from '@extensionengine/vue-radio';
 import Vue from 'vue';
 
 export default {

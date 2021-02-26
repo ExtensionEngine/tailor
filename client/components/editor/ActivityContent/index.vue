@@ -42,7 +42,7 @@ import get from 'lodash/get';
 import { getSupportedContainers } from 'shared/activities';
 import isEqual from 'lodash/isEqual';
 import loader from '@/components/common/loader';
-import { mapChannels } from '@/plugins/radio';
+import { mapChannels } from '@extensionengine/vue-radio';
 import max from 'lodash/max';
 import PublishDiffProvider from './PublishDiffProvider';
 import throttle from 'lodash/throttle';

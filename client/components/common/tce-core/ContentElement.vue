@@ -54,7 +54,7 @@
 import { getComponentName, getElementId } from './utils';
 import { ActiveUsers } from '@extensionengine/tce-components';
 import Discussion from './ElementDiscussion';
-import { mapChannels } from '@/plugins/radio';
+import { mapChannels } from '@extensionengine/vue-radio';
 import PublishDiffChip from './PublishDiffChip';
 
 export default {

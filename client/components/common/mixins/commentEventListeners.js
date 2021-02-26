@@ -1,6 +1,6 @@
 import { mapActions, mapMutations } from 'vuex';
 import DiscussionEvent from 'tce-core/Events/DiscussionEvent';
-import { mapChannels } from '@/plugins/radio';
+import { mapChannels } from '@extensionengine/vue-radio';
 
 const { SAVE, REMOVE, SET_LAST_SEEN, RESOLVE } = DiscussionEvent;
 

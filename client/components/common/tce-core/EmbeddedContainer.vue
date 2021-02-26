@@ -26,7 +26,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import ContainedContent from './ContainedContent';
 import ElementList from './ElementList';
 import mapKeys from 'lodash/mapKeys';
-import { mapRequests } from '@/plugins/radio';
+import { mapRequests } from '@extensionengine/vue-radio';
 import values from 'lodash/values';
 
 export default {

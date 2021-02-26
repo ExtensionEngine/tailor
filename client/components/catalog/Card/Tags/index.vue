@@ -44,7 +44,7 @@ import clamp from 'lodash/clamp';
 import get from 'lodash/get';
 import map from 'lodash/map';
 import { mapActions } from 'vuex';
-import { mapRequests } from '@/plugins/radio';
+import { mapRequests } from '@extensionengine/vue-radio';
 import truncate from 'lodash/truncate';
 
 const TAG_LIMIT = 3;

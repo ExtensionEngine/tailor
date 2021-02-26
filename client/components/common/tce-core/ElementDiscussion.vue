@@ -39,7 +39,7 @@
 import Discussion from 'tce-core/Discussion';
 import DiscussionEvent from './Events/DiscussionEvent';
 import get from 'lodash/get';
-import { mapChannels } from '@/plugins/radio';
+import { mapChannels } from '@extensionengine/vue-radio';
 
 const getActivatorOptions = unseenComments => ({
   unseen: {

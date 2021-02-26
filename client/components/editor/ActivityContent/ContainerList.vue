@@ -48,7 +48,7 @@ import deprecation from '@/components/common/mixins/deprecation';
 import get from 'lodash/get';
 import { getContainerTemplateId } from 'shared/activities';
 import isEmpty from 'lodash/isEmpty';
-import { mapRequests } from '@/plugins/radio';
+import { mapRequests } from '@extensionengine/vue-radio';
 import mapValues from 'lodash/mapValues';
 import maxBy from 'lodash/maxBy';
 import pluralize from 'pluralize';

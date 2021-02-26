@@ -1,0 +1,42 @@
+{
+  "name": "@extensionengine/vue-radio",
+  "version": "0.0.0",
+  "description": "Vue radio plugin",
+  "author": "ExtensionEngine <info@extensionengine.com>",
+  "homepage": "",
+  "license": "MIT",
+  "main": "dist/vue-radio.js",
+  "module": "dist/vue-radio.esm.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ExtensionEngine/tailor.git"
+  },
+  "scripts": {
+    "prebuild": "del-cli dist",
+    "build": "bili",
+    "lint": "npm run lint:js && npm run lint:scss",
+    "lint:js": "eslint --ext .js,.vue ."
+  },
+  "bugs": {
+    "url": "https://github.com/ExtensionEngine/vue-radio/issues"
+  },
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.13.4",
+    "@babel/eslint-plugin": "^7.13.0",
+    "@extensionengine/eslint-config": "^2.0.0",
+    "@rollup/plugin-alias": "^3.1.2",
+    "@vue/compiler-sfc": "^3.0.6",
+    "bili": "^5.0.5",
+    "eslint": "^7.20.0",
+    "eslint-config-semistandard": "^15.0.1",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.3.1",
+    "eslint-plugin-require-sort": "^1.2.2",
+    "eslint-plugin-standard": "^5.0.0",
+    "eslint-plugin-vue": "^7.6.0",
+    "rollup-plugin-visualizer": "^4.2.0",
+    "rollup-plugin-vue": "^6.0.0"
+  }
+}

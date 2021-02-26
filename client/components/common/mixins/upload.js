@@ -1,7 +1,7 @@
 import downloadMixin from 'utils/downloadMixin';
 import loader from '@/components/common/loader';
 import { mapGetters } from 'vuex';
-import { mapRequests } from '@/plugins/radio';
+import { mapRequests } from '@extensionengine/vue-radio';
 
 export default {
   inject: ['$storageService'],
