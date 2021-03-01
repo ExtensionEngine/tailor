@@ -17,7 +17,7 @@ function getUrl(req, res) {
   return getFileUrl(key).then(url => res.json({ url }));
 }
 
-async function upload({ file, body, user }, res) {
+async function upload({ file, body, user, repository }, res) {
   const { name } = path.parse(file.originalname);
   if (body.unpack) {
     const timestamp = fecha.format(new Date(), 'YYYY-MM-DDTHH:mm:ss');
@@ -25,17 +25,20 @@ async function upload({ file, body, user }, res) {
     const assets = await uploadArchiveContent(file, root);
     return res.json({ root, assets });
   }
-  const asset = await uploadFile(file, name);
+  const asset = await uploadFile(file, name, repository);
   return res.json(asset);
 }
 
 module.exports = { getUrl, upload };
 
-async function uploadFile(file, name) {
+async function uploadFile(file, name, repository) {
   const buffer = await readFile(file);
   const hash = sha256(file.originalname, buffer);
   const extension = path.extname(file.originalname);
-  const key = path.join(config.path, `${hash}___${name}${extension}`);
+  const sufix = `${hash}___${name}${extension}`;
+  const key = repository
+    ? path.join(config.path, `${repository.id}`, sufix)
+    : path.join(config.path, sufix);
   await saveFile(key, buffer, { ContentType: file.mimetype });
   const publicUrl = await getFileUrl(key);
   return { key, publicUrl, url: getStorageUrl(key) };
