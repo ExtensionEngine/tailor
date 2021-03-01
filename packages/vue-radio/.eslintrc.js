@@ -2,11 +2,11 @@
 
 module.exports = {
   root: true,
-  extends: '@extensionengine/eslint-config/base',
+  extends: '@extensionengine/eslint-config',
   overrides: [{
     files: ['src/**'],
     parserOptions: {
-      parser: 'babel-eslint',
+      parser: '@babel/eslint-parser',
       sourceType: 'module'
     }
   }]
