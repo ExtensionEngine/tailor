@@ -21,8 +21,9 @@
     "lint": "eslint --ext .js,.vue ."
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.12.16",
-    "@babel/eslint-plugin": "^7.12.13",
+    "@babel/core": "^7.13.8",
+    "@babel/eslint-parser": "^7.13.8",
+    "@babel/eslint-plugin": "^7.13.0",
     "@extensionengine/eslint-config": "^2.0.0",
     "@rollup/plugin-alias": "^3.1.1",
     "@vue/compiler-sfc": "^3.0.6",

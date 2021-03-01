@@ -21,12 +21,14 @@
     "url": "https://github.com/ExtensionEngine/vue-radio/issues"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.13.4",
+    "@babel/core": "^7.13.8",
+    "@babel/eslint-parser": "^7.13.8",
     "@babel/eslint-plugin": "^7.13.0",
     "@extensionengine/eslint-config": "^2.0.0",
     "@rollup/plugin-alias": "^3.1.2",
     "@vue/compiler-sfc": "^3.0.6",
     "bili": "^5.0.5",
+    "del-cli": "^3.0.1",
     "eslint": "^7.20.0",
     "eslint-config-semistandard": "^15.0.1",
     "eslint-config-standard": "^16.0.2",
