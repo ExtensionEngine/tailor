@@ -1,19 +1,19 @@
 import capitalize from 'lodash/capitalize';
-import styleInject from '../node_modules/style-inject/dist/style-inject.es.js';
+import styleInject from '../../../node_modules/style-inject/dist/style-inject.es.js';
 
 //
-var script = {
+var script$2 = {
   name: 'active-users',
   props: {
     users: {
       type: Array,
-      default: function _default() {
+      "default": function _default() {
         return [];
       }
     },
     size: {
       type: Number,
-      default: 36
+      "default": 36
     }
   },
   filters: {
@@ -21,14 +21,14 @@ var script = {
   }
 };
 
-var css_248z = ".avatar[data-v-15a1beec]{transition:all .2s}.avatar img[data-v-15a1beec]{padding:.125rem}.avatar[data-v-15a1beec]:focus-within,.avatar[data-v-15a1beec]:hover{transform:scale(1.1);z-index:1}.avatar:focus-within img[data-v-15a1beec]:focus,.avatar:hover img[data-v-15a1beec]:focus{outline:0}";
-styleInject(css_248z);
+var css_248z$1 = ".avatar[data-v-15a1beec]{transition:all .2s}.avatar img[data-v-15a1beec]{padding:.125rem}.avatar[data-v-15a1beec]:focus-within,.avatar[data-v-15a1beec]:hover{transform:scale(1.1);z-index:1}.avatar:focus-within img[data-v-15a1beec]:focus,.avatar:hover img[data-v-15a1beec]:focus{outline:0}";
+styleInject(css_248z$1);
 
 /* script */
-var __vue_script__ = script;
+var __vue_script__$2 = script$2;
 /* template */
 
-var __vue_render__ = function __vue_render__() {
+var __vue_render__$2 = function __vue_render__() {
   var _vm = this;
 
   var _h = _vm.$createElement;
@@ -74,19 +74,19 @@ var __vue_render__ = function __vue_render__() {
   }), 1);
 };
 
-var __vue_staticRenderFns__ = [];
+var __vue_staticRenderFns__$2 = [];
 /* style */
 
-var __vue_inject_styles__ = undefined;
+var __vue_inject_styles__$2 = undefined;
 /* scoped */
 
-var __vue_scope_id__ = "data-v-15a1beec";
+var __vue_scope_id__$2 = "data-v-15a1beec";
 /* functional template */
 
-var __vue_is_functional_template__ = false;
+var __vue_is_functional_template__$2 = false;
 /* component normalizer */
 
-function __vue_normalize__(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+function __vue_normalize__$2(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
   var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
   component.__file = "ActiveUsers.vue";
@@ -107,10 +107,10 @@ function __vue_normalize__(template, style, script, scope, functional, moduleIde
 /* style inject SSR */
 
 
-var ActiveUsers = __vue_normalize__({
-  render: __vue_render__,
-  staticRenderFns: __vue_staticRenderFns__
-}, __vue_inject_styles__, __vue_script__, __vue_scope_id__, __vue_is_functional_template__);
+var ActiveUsers = __vue_normalize__$2({
+  render: __vue_render__$2,
+  staticRenderFns: __vue_staticRenderFns__$2
+}, __vue_inject_styles__$2, __vue_script__$2, __vue_scope_id__$2, __vue_is_functional_template__$2);
 
 //
 //
@@ -161,31 +161,31 @@ var script$1 = {
     },
     placeholder: {
       type: String,
-      default: 'Select to edit'
+      "default": 'Select to edit'
     },
     activePlaceholder: {
       type: String,
-      default: 'Use toolbar to edit'
+      "default": 'Use toolbar to edit'
     },
     activeIcon: {
       type: String,
-      default: null
+      "default": null
     },
     activeColor: {
       type: String,
-      default: '#fff'
+      "default": '#fff'
     },
     isDisabled: {
       type: Boolean,
-      default: false
+      "default": false
     },
     isFocused: {
       type: Boolean,
-      default: false
+      "default": false
     },
     dense: {
       type: Boolean,
-      default: false
+      "default": false
     }
   },
   computed: {
@@ -209,7 +209,7 @@ var __vue_render__$1 = function __vue_render__() {
 
   return _c('v-sheet', {
     staticClass: "transparent grey--text text--darken-4",
-    class: _vm.dense ? 'pt-3' : 'pa-12'
+    "class": _vm.dense ? 'pt-3' : 'pa-12'
   }, [_c('v-avatar', {
     attrs: {
       "size": _vm.dense ? 40 : 60,
@@ -222,7 +222,7 @@ var __vue_render__$1 = function __vue_render__() {
     }
   }, [_vm._v("\n      " + _vm._s(_vm.icon) + "\n    ")])], 1), _vm._v(" "), _c('div', {
     staticClass: "grey--text",
-    class: [_vm.isDisabled ? 'text--darken-3' : 'text--darken-4', _vm.dense ? 'my-2 subtitle-2' : 'my-4 headline']
+    "class": [_vm.isDisabled ? 'text--darken-3' : 'text--darken-4', _vm.dense ? 'my-2 subtitle-2' : 'my-4 headline']
   }, [_vm._v("\n    " + _vm._s(_vm.name) + "\n  ")]), _vm._v(" "), !_vm.dense && !_vm.isDisabled ? _c('div', {
     staticClass: "subtitle-1"
   }, [!_vm.isFocused ? [_vm._v(_vm._s(_vm.placeholder))] : [_c('span', [_vm._v(_vm._s(_vm.activePlaceholder))]), _vm._v(" "), _vm.activeIcon ? _c('v-icon', {
@@ -282,24 +282,24 @@ var ElementPlaceholder = __vue_normalize__$1({
 //
 //
 //
-var script$2 = {
+var script = {
   name: 'tce-preview-overlay',
   props: {
     show: {
       type: Boolean,
-      default: false
+      "default": false
     }
   }
 };
 
-var css_248z$1 = ".message[data-v-4e41c6e0]{border-radius:2px;font-size:1.125rem}";
-styleInject(css_248z$1);
+var css_248z = ".message[data-v-4e41c6e0]{border-radius:2px;font-size:1.125rem}";
+styleInject(css_248z);
 
 /* script */
-var __vue_script__$2 = script$2;
+var __vue_script__ = script;
 /* template */
 
-var __vue_render__$2 = function __vue_render__() {
+var __vue_render__ = function __vue_render__() {
   var _vm = this;
 
   var _h = _vm.$createElement;
@@ -317,19 +317,19 @@ var __vue_render__$2 = function __vue_render__() {
   }, [_vm._t("default", [_vm._v("Click to preview")])], 2)]);
 };
 
-var __vue_staticRenderFns__$2 = [];
+var __vue_staticRenderFns__ = [];
 /* style */
 
-var __vue_inject_styles__$2 = undefined;
+var __vue_inject_styles__ = undefined;
 /* scoped */
 
-var __vue_scope_id__$2 = "data-v-4e41c6e0";
+var __vue_scope_id__ = "data-v-4e41c6e0";
 /* functional template */
 
-var __vue_is_functional_template__$2 = false;
+var __vue_is_functional_template__ = false;
 /* component normalizer */
 
-function __vue_normalize__$2(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+function __vue_normalize__(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
   var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
   component.__file = "PreviewOverlay.vue";
@@ -350,9 +350,9 @@ function __vue_normalize__$2(template, style, script, scope, functional, moduleI
 /* style inject SSR */
 
 
-var PreviewOverlay = __vue_normalize__$2({
-  render: __vue_render__$2,
-  staticRenderFns: __vue_staticRenderFns__$2
-}, __vue_inject_styles__$2, __vue_script__$2, __vue_scope_id__$2, __vue_is_functional_template__$2);
+var PreviewOverlay = __vue_normalize__({
+  render: __vue_render__,
+  staticRenderFns: __vue_staticRenderFns__
+}, __vue_inject_styles__, __vue_script__, __vue_scope_id__, __vue_is_functional_template__);
 
 export { ActiveUsers, ElementPlaceholder, PreviewOverlay };

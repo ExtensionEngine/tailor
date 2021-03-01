@@ -5,6 +5,9 @@
   "description": "Content authoring platform",
   "author": "ExtensionEngine <info@extensionengine.com>",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "browserslist": [
     "last 2 versions",
     "ie 11"
@@ -173,6 +176,7 @@
     "@types/eslint": "^7.2.4",
     "@types/poi": "^12.5.0",
     "@types/webpack": "^4.41.0",
+    "bili": "^5.0.5",
     "bunyan-pretty-cli": "^0.2.0",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^6.0.0",
