@@ -1,7 +1,7 @@
 import request from './request';
 
 const urls = {
-  base: '/assets'
+  base: repositoryId => `/repositories/${repositoryId}/assets`
 };
 
 function getUrl(key) {
@@ -9,8 +9,8 @@ function getUrl(key) {
   return request.get(urls.base, { params }).then(res => res.data.url);
 }
 
-function upload(data) {
-  return request.post(urls.base, data).then(res => res.data);
+function upload(repositoryId, data) {
+  return request.post(urls.base(repositoryId), data).then(res => res.data);
 }
 
 export default {
