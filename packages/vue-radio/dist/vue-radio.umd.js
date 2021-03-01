@@ -78,7 +78,7 @@
     if (typeof Proxy === "function") return true;
 
     try {
-      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+      Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
       return true;
     } catch (e) {
       return false;
@@ -371,7 +371,7 @@
       value: function stopReplying(id, listener) {
         var onRequest = this._repliers.get(listener);
 
-        if (onRequest) this._repliers["delete"](onRequest);
+        if (onRequest) this._repliers.delete(onRequest);
         this.off(requestEvent(id), onRequest);
         return this;
       }
@@ -585,11 +585,11 @@
         return channel.replyOnce(id, listener);
       },
       off: function off(event, listener) {
-        cleanup["delete"](listener);
+        cleanup.delete(listener);
         return channel.off(event, listener);
       },
       stopReplying: function stopReplying(id, listener) {
-        cleanup["delete"](listener);
+        cleanup.delete(listener);
         return channel.stopReplying(id, listener);
       }
     };

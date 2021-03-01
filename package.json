@@ -5,9 +5,6 @@
   "description": "Content authoring platform",
   "author": "ExtensionEngine <info@extensionengine.com>",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
   "browserslist": [
     "last 2 versions",
     "ie 11"
@@ -15,8 +12,10 @@
   "scripts": {
     "dev:client": "poi --serve",
     "build": "del-cli node_modules/.cache/vue-loader && poi --prod",
-    "tce-core:build": "lerna run build",
-    "tce-core:bootstrap": "lerna bootstrap",
+    "tce:bootstrap": "lerna bootstrap",
+    "tce:build": "lerna run build",
+    "tce:link": "npm link packages/*",
+    "tce:setup": "npm run tce:bootstrap && npm run tce:build && npm run tce:link",
     "clean": "del-cli dist/* !dist/.gitkeep",
     "webpack:inspect-config": "poi --inspect-webpack",
     "webpack:bundle-report": "poi --prod --bundle-report",
