@@ -18,8 +18,7 @@
   "scripts": {
     "prebuild": "del-cli dist",
     "build": "bili",
-    "lint": "npm run lint:js && npm run lint:scss",
-    "lint:js": "eslint --ext .js,.vue ."
+    "lint": "eslint --ext .js,.vue ."
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.12.16",
