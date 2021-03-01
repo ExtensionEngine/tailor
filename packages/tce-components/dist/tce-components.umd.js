@@ -14,13 +14,13 @@
     props: {
       users: {
         type: Array,
-        "default": function _default() {
+        default: function _default() {
           return [];
         }
       },
       size: {
         type: Number,
-        "default": 36
+        default: 36
       }
     },
     filters: {
@@ -195,31 +195,31 @@
       },
       placeholder: {
         type: String,
-        "default": 'Select to edit'
+        default: 'Select to edit'
       },
       activePlaceholder: {
         type: String,
-        "default": 'Use toolbar to edit'
+        default: 'Use toolbar to edit'
       },
       activeIcon: {
         type: String,
-        "default": null
+        default: null
       },
       activeColor: {
         type: String,
-        "default": '#fff'
+        default: '#fff'
       },
       isDisabled: {
         type: Boolean,
-        "default": false
+        default: false
       },
       isFocused: {
         type: Boolean,
-        "default": false
+        default: false
       },
       dense: {
         type: Boolean,
-        "default": false
+        default: false
       }
     },
     computed: {
@@ -243,7 +243,7 @@
 
     return _c('v-sheet', {
       staticClass: "transparent grey--text text--darken-4",
-      "class": _vm.dense ? 'pt-3' : 'pa-12'
+      class: _vm.dense ? 'pt-3' : 'pa-12'
     }, [_c('v-avatar', {
       attrs: {
         "size": _vm.dense ? 40 : 60,
@@ -256,7 +256,7 @@
       }
     }, [_vm._v("\n      " + _vm._s(_vm.icon) + "\n    ")])], 1), _vm._v(" "), _c('div', {
       staticClass: "grey--text",
-      "class": [_vm.isDisabled ? 'text--darken-3' : 'text--darken-4', _vm.dense ? 'my-2 subtitle-2' : 'my-4 headline']
+      class: [_vm.isDisabled ? 'text--darken-3' : 'text--darken-4', _vm.dense ? 'my-2 subtitle-2' : 'my-4 headline']
     }, [_vm._v("\n    " + _vm._s(_vm.name) + "\n  ")]), _vm._v(" "), !_vm.dense && !_vm.isDisabled ? _c('div', {
       staticClass: "subtitle-1"
     }, [!_vm.isFocused ? [_vm._v(_vm._s(_vm.placeholder))] : [_c('span', [_vm._v(_vm._s(_vm.activePlaceholder))]), _vm._v(" "), _vm.activeIcon ? _c('v-icon', {
@@ -321,7 +321,7 @@
     props: {
       show: {
         type: Boolean,
-        "default": false
+        default: false
       }
     }
   };
