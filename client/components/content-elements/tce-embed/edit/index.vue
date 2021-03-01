@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { ElementPlaceholder } from 'tce-core';
+import { ElementPlaceholder } from '@extensionengine/tce-components';
 import PreviewOverlay from 'tce-core/PreviewOverlay';
 
 export default {

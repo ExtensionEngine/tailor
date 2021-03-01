@@ -146,7 +146,167 @@
     staticRenderFns: __vue_staticRenderFns__
   }, __vue_inject_styles__, __vue_script__, __vue_scope_id__, __vue_is_functional_template__);
 
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  var script$1 = {
+    name: 'element-placeholder',
+    props: {
+      name: {
+        type: String,
+        required: true
+      },
+      icon: {
+        type: String,
+        required: true
+      },
+      placeholder: {
+        type: String,
+        "default": 'Select to edit'
+      },
+      activePlaceholder: {
+        type: String,
+        "default": 'Use toolbar to edit'
+      },
+      activeIcon: {
+        type: String,
+        "default": null
+      },
+      activeColor: {
+        type: String,
+        "default": '#fff'
+      },
+      isDisabled: {
+        type: Boolean,
+        "default": false
+      },
+      isFocused: {
+        type: Boolean,
+        "default": false
+      },
+      dense: {
+        type: Boolean,
+        "default": false
+      }
+    },
+    computed: {
+      iconSize: function iconSize() {
+        if (this.dense) return this.isFocused ? 24 : 20;
+        return this.isFocused ? 38 : 30;
+      }
+    }
+  };
+
+  /* script */
+  var __vue_script__$1 = script$1;
+  /* template */
+
+  var __vue_render__$1 = function __vue_render__() {
+    var _vm = this;
+
+    var _h = _vm.$createElement;
+
+    var _c = _vm._self._c || _h;
+
+    return _c('v-sheet', {
+      staticClass: "transparent grey--text text--darken-4",
+      "class": _vm.dense ? 'pt-3' : 'pa-12'
+    }, [_c('v-avatar', {
+      attrs: {
+        "size": _vm.dense ? 40 : 60,
+        "color": _vm.isDisabled ? 'grey darken-3' : 'primary darken-4'
+      }
+    }, [_c('v-icon', {
+      attrs: {
+        "size": _vm.iconSize,
+        "color": _vm.isFocused ? _vm.activeColor : '#fff'
+      }
+    }, [_vm._v("\n      " + _vm._s(_vm.icon) + "\n    ")])], 1), _vm._v(" "), _c('div', {
+      staticClass: "grey--text",
+      "class": [_vm.isDisabled ? 'text--darken-3' : 'text--darken-4', _vm.dense ? 'my-2 subtitle-2' : 'my-4 headline']
+    }, [_vm._v("\n    " + _vm._s(_vm.name) + "\n  ")]), _vm._v(" "), !_vm.dense && !_vm.isDisabled ? _c('div', {
+      staticClass: "subtitle-1"
+    }, [!_vm.isFocused ? [_vm._v(_vm._s(_vm.placeholder))] : [_c('span', [_vm._v(_vm._s(_vm.activePlaceholder))]), _vm._v(" "), _vm.activeIcon ? _c('v-icon', {
+      attrs: {
+        "size": "20",
+        "color": "primary darken-4"
+      }
+    }, [_vm._v("\n        " + _vm._s(_vm.activeIcon) + "\n      ")]) : _vm._e()]], 2) : _vm._e()], 1);
+  };
+
+  var __vue_staticRenderFns__$1 = [];
+  /* style */
+
+  var __vue_inject_styles__$1 = undefined;
+  /* scoped */
+
+  var __vue_scope_id__$1 = undefined;
+  /* functional template */
+
+  var __vue_is_functional_template__$1 = false;
+  /* component normalizer */
+
+  function __vue_normalize__$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+    var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
+
+    component.__file = "ElementPlaceholder.vue";
+
+    if (!component.render) {
+      component.render = template.render;
+      component.staticRenderFns = template.staticRenderFns;
+      component._compiled = true;
+      if (functional) component.functional = true;
+    }
+
+    component._scopeId = scope;
+
+    return component;
+  }
+  /* style inject */
+
+  /* style inject SSR */
+
+
+  var ElementPlaceholder = __vue_normalize__$1({
+    render: __vue_render__$1,
+    staticRenderFns: __vue_staticRenderFns__$1
+  }, __vue_inject_styles__$1, __vue_script__$1, __vue_scope_id__$1, __vue_is_functional_template__$1);
+
   exports.ActiveUsers = ActiveUsers;
+  exports.ElementPlaceholder = ElementPlaceholder;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 

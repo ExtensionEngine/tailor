@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { ElementPlaceholder } from 'tce-core';
+import { ElementPlaceholder } from '@extensionengine/tce-components';
 import { extname } from 'path';
 import get from 'lodash/get';
 import { PlyrueComponent as Plyrue } from 'plyrue';

@@ -22,7 +22,7 @@
 
 <script>
 import BrightcovePlayer from './Player';
-import { ElementPlaceholder } from 'tce-core';
+import { ElementPlaceholder } from '@extensionengine/tce-components';
 import get from 'lodash/get';
 import PreviewOverlay from 'tce-core/PreviewOverlay';
 
