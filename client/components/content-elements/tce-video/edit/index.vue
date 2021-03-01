@@ -36,11 +36,10 @@
 </template>
 
 <script>
-import { ElementPlaceholder } from '@extensionengine/tce-components';
+import { ElementPlaceholder, PreviewOverlay } from '@extensionengine/tce-components';
 import { extname } from 'path';
 import get from 'lodash/get';
 import { PlyrueComponent as Plyrue } from 'plyrue';
-import PreviewOverlay from 'tce-core/PreviewOverlay';
 
 const { MEDIA_ERR_SRC_NOT_SUPPORTED } = window.MediaError;
 

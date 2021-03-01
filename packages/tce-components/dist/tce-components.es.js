@@ -271,4 +271,88 @@ var ElementPlaceholder = __vue_normalize__$1({
   staticRenderFns: __vue_staticRenderFns__$1
 }, __vue_inject_styles__$1, __vue_script__$1, __vue_scope_id__$1, __vue_is_functional_template__$1);
 
-export { ActiveUsers, ElementPlaceholder };
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var script$2 = {
+  name: 'tce-preview-overlay',
+  props: {
+    show: {
+      type: Boolean,
+      "default": false
+    }
+  }
+};
+
+var css_248z$1 = ".message[data-v-4e41c6e0]{border-radius:2px;font-size:1.125rem}";
+styleInject(css_248z$1);
+
+/* script */
+var __vue_script__$2 = script$2;
+/* template */
+
+var __vue_render__$2 = function __vue_render__() {
+  var _vm = this;
+
+  var _h = _vm.$createElement;
+
+  var _c = _vm._self._c || _h;
+
+  return _c('v-overlay', {
+    attrs: {
+      "value": _vm.show,
+      "opacity": "0.9",
+      "absolute": ""
+    }
+  }, [_c('button', {
+    staticClass: "message pa-2 grey--text text--lighten-2"
+  }, [_vm._t("default", [_vm._v("Click to preview")])], 2)]);
+};
+
+var __vue_staticRenderFns__$2 = [];
+/* style */
+
+var __vue_inject_styles__$2 = undefined;
+/* scoped */
+
+var __vue_scope_id__$2 = "data-v-4e41c6e0";
+/* functional template */
+
+var __vue_is_functional_template__$2 = false;
+/* component normalizer */
+
+function __vue_normalize__$2(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
+
+  component.__file = "PreviewOverlay.vue";
+
+  if (!component.render) {
+    component.render = template.render;
+    component.staticRenderFns = template.staticRenderFns;
+    component._compiled = true;
+    if (functional) component.functional = true;
+  }
+
+  component._scopeId = scope;
+
+  return component;
+}
+/* style inject */
+
+/* style inject SSR */
+
+
+var PreviewOverlay = __vue_normalize__$2({
+  render: __vue_render__$2,
+  staticRenderFns: __vue_staticRenderFns__$2
+}, __vue_inject_styles__$2, __vue_script__$2, __vue_scope_id__$2, __vue_is_functional_template__$2);
+
+export { ActiveUsers, ElementPlaceholder, PreviewOverlay };

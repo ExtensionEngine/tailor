@@ -21,10 +21,9 @@
 </template>
 
 <script>
+import { ElementPlaceholder, PreviewOverlay } from '@extensionengine/tce-components';
 import BrightcovePlayer from './Player';
-import { ElementPlaceholder } from '@extensionengine/tce-components';
 import get from 'lodash/get';
-import PreviewOverlay from 'tce-core/PreviewOverlay';
 
 export default {
   name: 'tce-brightcove-video',
