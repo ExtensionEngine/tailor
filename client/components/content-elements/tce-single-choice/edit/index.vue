@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { defaults, getErrorMessages } from 'utils/assessment';
+import { assessment } from '@extensionengine/tce-utils';
 import cloneDeep from 'lodash/cloneDeep';
 import head from 'lodash/head';
 import { InputError } from 'tce-core';
@@ -61,7 +61,7 @@ const getButtonLabel = isGraded => isGraded ? 'Add answer' : 'Add option';
 
 export default {
   props: {
-    assessment: { type: Object, default: defaults.SC },
+    assessment: { type: Object, default: assessment.defaults.SC },
     errors: { type: Array, default: () => ([]) },
     isEditing: { type: Boolean, default: false },
     isGraded: { type: Boolean, default: false }
@@ -79,7 +79,7 @@ export default {
     placeholder: vm => getPlaceholder(vm.isGraded),
     addButtonLabel: vm => getButtonLabel(vm.isGraded),
     allowRemoval: vm => vm.isEditing && vm.answers.length > MIN_ANSWER_COUNT,
-    correctError: vm => head(getErrorMessages(vm.errors, 'correct'))
+    correctError: vm => head(assessment.getErrorMessages(vm.errors, 'correct'))
   },
   methods: {
     addAnswer() {
@@ -110,7 +110,7 @@ export default {
       this.$emit('update', { answers, correct, feedback });
     },
     answerErrors(idx) {
-      return getErrorMessages(this.errors, `answers[${idx}]`);
+      return assessment.getErrorMessages(this.errors, `answers[${idx}]`);
     },
     update(data) {
       this.$emit('update', data);

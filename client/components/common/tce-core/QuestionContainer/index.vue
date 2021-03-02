@@ -60,10 +60,10 @@
 <script>
 import * as yup from 'yup';
 import { getComponentName, processAnswerType } from '../utils';
+import { assessment } from '@extensionengine/tce-utils';
 import cloneDeep from 'lodash/cloneDeep';
 import Controls from './Controls';
 import Feedback from './Feedback';
-import { getErrorMessages } from 'utils/assessment';
 import isEmpty from 'lodash/isEmpty';
 import omit from 'lodash/omit';
 import Question from './Question';
@@ -94,7 +94,7 @@ export default {
     showFeedback: vm => WITH_FEEDBACK.includes(vm.answerType),
     componentName: vm => resolveComponentName(vm.answerType),
     config: vm => vm.$teRegistry.get(vm.answerType),
-    hintErrors: vm => getErrorMessages(vm.errors, 'hint'),
+    hintErrors: vm => assessment.getErrorMessages(vm.errors, 'hint'),
     schema() {
       const { schema } = this.config;
       return yup.object().shape({

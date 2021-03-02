@@ -44,11 +44,11 @@
 <script>
 import { ContainedContent, InputError } from 'tce-core';
 import AddElement from '../AddElement';
+import { assessment } from '@extensionengine/tce-utils';
 import cloneDeep from 'lodash/cloneDeep';
 import Draggable from 'vuedraggable';
 import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
-import { getErrorMessages } from 'utils/assessment';
 import head from 'lodash/head';
 import { mapChannels } from '@extensionengine/vue-radio';
 import pullAt from 'lodash/pullAt';
@@ -78,7 +78,7 @@ export default {
         this.$emit('update', { question });
       }
     },
-    questionError: vm => head(getErrorMessages(vm.errors, 'question')),
+    questionError: vm => head(assessment.getErrorMessages(vm.errors, 'question')),
     dragOptions: () => DRAG_OPTIONS
   },
   methods: {

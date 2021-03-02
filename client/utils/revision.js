@@ -1,9 +1,9 @@
 import { lower, title as toTitleCase } from 'to-case';
+import { assessment } from '@extensionengine/tce-utils';
 import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
 import isEmpty from 'lodash/isEmpty';
 import reduce from 'lodash/reduce';
-import { typeInfo } from './assessment';
 
 const describe = {
   REPOSITORY: describeRepositoryRevision,
@@ -51,7 +51,9 @@ function describeActivityRevision(rev, activity) {
 
 function describeElementRevision(rev, activity) {
   const { type, data } = rev.state;
-  const title = type === 'ASSESSMENT' ? typeInfo[data.type].title : type;
+  const title = type === 'ASSESSMENT'
+    ? assessment.typeInfo[data.type].title
+    : type;
   const action = getAction(rev.operation);
   const activityText = activity
     ? getContainerContext(activity)

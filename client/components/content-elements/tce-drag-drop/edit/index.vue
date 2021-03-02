@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import { defaults, getErrorMessages } from 'utils/assessment';
+import { assessment } from '@extensionengine/tce-utils';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
 import forEach from 'lodash/forEach';
@@ -84,7 +84,7 @@ import size from 'lodash/size';
 
 export default {
   props: {
-    assessment: { type: Object, default: defaults.DD },
+    assessment: { type: Object, default: assessment.defaults.DD },
     errors: { type: Array, default: () => ([]) },
     isEditing: { type: Boolean, default: false }
   },
@@ -160,7 +160,7 @@ export default {
       this.$emit('update', data);
     },
     errorMessages(key) {
-      return getErrorMessages(this.errors, key);
+      return assessment.getErrorMessages(this.errors, key);
     }
   }
 };

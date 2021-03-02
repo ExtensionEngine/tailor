@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { defaults, getErrorMessages } from 'utils/assessment';
+import { assessment } from '@extensionengine/tce-utils';
 import { capital } from 'to-case';
 
 const getTitle = isGraded => isGraded ? 'Select correct answer' : 'Options';
@@ -24,7 +24,7 @@ const getLabel = answer => capital(answer.toString());
 
 export default {
   props: {
-    assessment: { type: Object, default: defaults.TF },
+    assessment: { type: Object, default: assessment.defaults.TF },
     errors: { type: Array, default: () => ([]) },
     isEditing: { type: Boolean, default: false },
     isGraded: { type: Boolean, default: false }
@@ -36,7 +36,7 @@ export default {
     },
     title: vm => getTitle(vm.isGraded),
     answerDisabled: vm => !vm.isEditing || !vm.isGraded,
-    correctErrors: vm => getErrorMessages(vm.errors, 'correct')
+    correctErrors: vm => assessment.getErrorMessages(vm.errors, 'correct')
   },
   methods: { getLabel }
 };

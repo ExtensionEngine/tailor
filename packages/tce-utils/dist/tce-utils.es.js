@@ -1,3 +1,6 @@
+import cuid from 'cuid';
+import times from 'lodash/times';
+
 function _toConsumableArray(arr) {
   return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
 }
@@ -121,4 +124,157 @@ function calculatePosition(_ref4) {
   return count === 1 ? positions[0] : positions;
 }
 
-export { InsertLocation$1 as InsertLocation, calculatePosition, getPositions };
+var typeInfo = {
+  MC: {
+    type: 'MC',
+    title: 'Multiple choice',
+    class: 'multiple-choice'
+  },
+  SC: {
+    type: 'SC',
+    title: 'Single choice',
+    class: 'single-choice'
+  },
+  TR: {
+    type: 'TR',
+    title: 'Text response',
+    class: 'text-response'
+  },
+  NR: {
+    type: 'NR',
+    title: 'Numerical response',
+    class: 'numerical-response'
+  },
+  TF: {
+    type: 'TF',
+    title: 'True - false',
+    class: 'true-false'
+  },
+  FB: {
+    type: 'FB',
+    title: 'Fill in the blank',
+    class: 'fill-blank'
+  },
+  MQ: {
+    type: 'MQ',
+    title: 'Matching question',
+    class: 'matching-question'
+  },
+  DD: {
+    type: 'DD',
+    title: 'Drag & Drop',
+    class: 'drag-drop'
+  }
+};
+var baseDefaults = {
+  question: [],
+  hint: ''
+};
+var defaults = {
+  MC: function MC() {
+    return Object.assign({
+      type: 'MC'
+    }, baseDefaults, {
+      answers: ['', '', '', ''],
+      correct: []
+    });
+  },
+  NR: function NR() {
+    return Object.assign({
+      type: 'NR'
+    }, baseDefaults, {
+      prefixes: [''],
+      suffixes: [''],
+      correct: ['']
+    });
+  },
+  SC: function SC() {
+    return Object.assign({
+      type: 'SC'
+    }, baseDefaults, {
+      answers: ['', ''],
+      correct: ''
+    });
+  },
+  TR: function TR() {
+    return Object.assign({
+      type: 'TR'
+    }, baseDefaults, {
+      correct: ''
+    });
+  },
+  TF: function TF() {
+    return Object.assign({
+      type: 'TF'
+    }, baseDefaults, {
+      correct: null
+    });
+  },
+  FB: function FB() {
+    return Object.assign({
+      type: 'FB'
+    }, baseDefaults, {
+      correct: []
+    });
+  },
+  MQ: function MQ() {
+    var element = Object.assign({
+      type: 'MQ'
+    }, baseDefaults, {
+      premises: [],
+      responses: [],
+      correct: {},
+      headings: {
+        premise: 'Premise',
+        response: 'Response'
+      }
+    });
+    times(2, function () {
+      var premiseKey = cuid();
+      var responseKey = cuid();
+      element.premises.push({
+        key: premiseKey,
+        value: ''
+      });
+      element.responses.push({
+        key: responseKey,
+        value: ''
+      });
+      element.correct[premiseKey] = responseKey;
+    });
+    return element;
+  },
+  DD: function DD() {
+    var element = Object.assign({
+      type: 'DD'
+    }, baseDefaults, {
+      groups: {},
+      answers: {},
+      correct: {}
+    });
+    times(2, function () {
+      var groupKey = cuid();
+      var answerKey = cuid();
+      element.groups[groupKey] = '';
+      element.answers[answerKey] = '';
+      element.correct[groupKey] = [answerKey];
+    });
+    return element;
+  }
+};
+var getErrorMessages = function getErrorMessages(errors, path) {
+  return errors.filter(function (err) {
+    return err.path.includes(path);
+  }).map(function (err) {
+    return err.message;
+  });
+};
+
+var assessment = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  typeInfo: typeInfo,
+  defaults: defaults,
+  getErrorMessages: getErrorMessages
+});
+
+export { InsertLocation$1 as InsertLocation, assessment, calculatePosition, getPositions };

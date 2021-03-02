@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import { defaults, getErrorMessages } from 'utils/assessment';
+import { assessment } from '@extensionengine/tce-utils';
 import cloneDeep from 'lodash/cloneDeep';
 import Draggable from 'vuedraggable';
 import get from 'lodash/get';
@@ -99,7 +99,7 @@ const getCountInfo = count => `${count} ${pluralize('blank', count)} detected.`;
 
 export default {
   props: {
-    assessment: { type: Object, default: defaults.FB },
+    assessment: { type: Object, default: assessment.defaults.FB },
     errors: { type: Array, default: () => ([]) },
     isEditing: { type: Boolean, default: false },
     isGraded: { type: Boolean, default: false }
@@ -157,7 +157,7 @@ export default {
     },
     answerErrors(groupIndex, answerIndex) {
       const path = `correct[${groupIndex}][${answerIndex}]`;
-      return getErrorMessages(this.errors, path);
+      return assessment.getErrorMessages(this.errors, path);
     }
   },
   watch: {
