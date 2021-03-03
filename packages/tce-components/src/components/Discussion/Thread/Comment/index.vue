@@ -32,8 +32,8 @@
 </template>
 
 <script>
-import CommentHeader from './Header';
-import CommentPreview from './Preview';
+import CommentHeader from './Header.vue';
+import CommentPreview from './Preview.vue';
 
 export default {
   name: 'thread-comment',

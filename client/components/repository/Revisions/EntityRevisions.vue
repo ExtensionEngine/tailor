@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import ContentElement from 'tce-core/ContentElement';
+import { ContentElement } from '@extensionengine/tce-components';
 import contentElementApi from '@/api/contentElement';
 import EntitySidebar from './EntitySidebar';
 import first from 'lodash/first';

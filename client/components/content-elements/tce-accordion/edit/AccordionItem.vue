@@ -57,7 +57,7 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
-import { EmbeddedContainer } from 'tce-core';
+import { EmbeddedContainer } from '@extensionengine/tce-components';
 import forEach from 'lodash/forEach';
 import isEmpty from 'lodash/isEmpty';
 import { mapRequests } from '@extensionengine/vue-radio';

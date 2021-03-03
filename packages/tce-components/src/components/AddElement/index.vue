@@ -63,16 +63,14 @@
 </template>
 
 <script>
-import AddNewElement from './AddNewElement';
+import { getPositions, isQuestion, uuid } from '@extensionengine/tce-utils';
+import AddNewElement from './AddNewElement.vue';
 import filter from 'lodash/filter';
 import flatMap from 'lodash/flatMap';
-import { getPositions } from '@extensionengine/tce-utils';
 import intersection from 'lodash/intersection';
-import { isQuestion } from '../utils';
 import pick from 'lodash/pick';
 import reduce from 'lodash/reduce';
 import reject from 'lodash/reject';
-import uuid from '@/utils/uuid';
 
 const SelectElement = () => import('components/common/SelectElement');
 

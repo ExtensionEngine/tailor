@@ -54,11 +54,13 @@
 </template>
 
 <script>
-import AddElement from 'tce-core/AddElement';
-import ContainedContent from 'tce-core/ContainedContent';
-import ElementList from 'tce-core/ElementList';
+import {
+  AddElement,
+  ContainedContent,
+  ElementList,
+  InlineActivator
+} from '@extensionengine/tce-components';
 import filter from 'lodash/filter';
-import InlineActivator from 'tce-core/AddElement/InlineActivator';
 import sortBy from 'lodash/sortBy';
 
 export default {

@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import EditorLink from 'tce-core/EditorLink';
+import EditorLink from '@/components/EditorLink.vue';
 
 const getOptions = () => ({
   resolve: { action: 'resolve', icon: 'check-box-outline', color: 'teal accent-4' },

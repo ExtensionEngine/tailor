@@ -58,10 +58,10 @@
 </template>
 
 <script>
-import DiscussionThread from './Thread';
+import DiscussionThread from './Thread/index.vue';
 import { mapRequests } from '@extensionengine/vue-radio';
 import orderBy from 'lodash/orderBy';
-import ResolveButton from './ResolveButton';
+import ResolveButton from './ResolveButton.vue';
 
 const initCommentInput = () => ({ content: '' });
 

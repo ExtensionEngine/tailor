@@ -2,11 +2,14 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
+var toCase = require('to-case');
 var cuid = require('cuid');
 var times = require('lodash/times');
+var uuid$1 = require('uuid');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
+var toCase__default = /*#__PURE__*/_interopDefaultLegacy(toCase);
 var cuid__default = /*#__PURE__*/_interopDefaultLegacy(cuid);
 var times__default = /*#__PURE__*/_interopDefaultLegacy(times);
 
@@ -286,7 +289,58 @@ var assessment = /*#__PURE__*/Object.freeze({
   getErrorMessages: getErrorMessages
 });
 
+function uuid () {
+  return uuid$1.v1();
+}
+
+var discussion = {
+  SAVE: 'comment:save',
+  REMOVE: 'comment:remove',
+  SET_LAST_SEEN: 'comment:setLastSeen',
+  RESOLVE: 'element:resolveComments'
+};
+
+var index = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  Discussion: discussion
+});
+
+function getMetaName(type) {
+  return "meta-".concat(toCase__default['default'].slug(type));
+}
+function getContainerName(type) {
+  return "tcc-".concat(toCase__default['default'].slug(type));
+}
+function getComponentName(type) {
+  return "tce-".concat(toCase__default['default'].slug(resolveElementType(type)));
+}
+function processAnswerType(type) {
+  return "answer-".concat(toCase__default['default'].slug(type));
+}
+function isQuestion(type) {
+  return ['QUESTION', 'REFLECTION', 'ASSESSMENT'].includes(type);
+}
+function resolveElementType(type) {
+  return isQuestion(type) ? 'QUESTION-CONTAINER' : type;
+}
+function getToolbarName(type) {
+  return "".concat(toCase__default['default'].slug(type), "-toolbar");
+}
+function getElementId(element) {
+  return element && (element.uid || element.id);
+}
+
+exports.Events = index;
 exports.InsertLocation = InsertLocation$1;
 exports.assessment = assessment;
 exports.calculatePosition = calculatePosition;
+exports.getComponentName = getComponentName;
+exports.getContainerName = getContainerName;
+exports.getElementId = getElementId;
+exports.getMetaName = getMetaName;
 exports.getPositions = getPositions;
+exports.getToolbarName = getToolbarName;
+exports.isQuestion = isQuestion;
+exports.processAnswerType = processAnswerType;
+exports.resolveElementType = resolveElementType;
+exports.uuid = uuid;

@@ -13,7 +13,7 @@
 
 <script>
 import find from 'lodash/find';
-import ThreadComment from './Comment';
+import ThreadComment from './Comment/index.vue';
 
 export default {
   name: 'thread-list',

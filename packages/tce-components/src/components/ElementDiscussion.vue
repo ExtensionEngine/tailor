@@ -36,8 +36,8 @@
 </template>
 
 <script>
-import Discussion from 'tce-core/Discussion';
-import DiscussionEvent from './Events/DiscussionEvent';
+import Discussion from './Discussion/index.vue';
+import { Events } from '@extensionengine/tce-utils';
 import get from 'lodash/get';
 import { mapChannels } from '@extensionengine/vue-radio';
 
@@ -75,7 +75,7 @@ export default {
   }),
   computed: {
     ...mapChannels({ editorBus: 'editor' }),
-    events: () => DiscussionEvent,
+    events: () => Events.Discussion,
     lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime(),
     unseenComments() {
       const { comments, user, lastSeen } = this;
@@ -95,7 +95,7 @@ export default {
   methods: {
     save(data) {
       const { user: author, id: elementId, hasUnresolvedComments } = this;
-      return this.editorBus.emit(DiscussionEvent.SAVE, {
+      return this.editorBus.emit(Events.Discussion.SAVE, {
         ...data,
         author,
         contentElementId: elementId,

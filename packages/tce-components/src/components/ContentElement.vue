@@ -51,11 +51,11 @@
 </template>
 
 <script>
-import { getComponentName, getElementId } from './utils';
-import { ActiveUsers } from '@extensionengine/tce-components';
-import Discussion from './ElementDiscussion';
+import { getComponentName, getElementId } from '@extensionengine/tce-utils';
+import ActiveUsers from './ActiveUsers.vue';
+import Discussion from './ElementDiscussion.vue';
 import { mapChannels } from '@extensionengine/vue-radio';
-import PublishDiffChip from './PublishDiffChip';
+import PublishDiffChip from './PublishDiffChip.vue';
 
 export default {
   name: 'content-element',
@@ -137,6 +137,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../mixins';
+
 .content-element {
   $accent-1: #1de9b6;
   $accent-2: #ff4081;

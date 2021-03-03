@@ -1,8 +1,8 @@
 import { mapActions, mapMutations } from 'vuex';
-import DiscussionEvent from 'tce-core/Events/DiscussionEvent';
+import { Events } from '@extensionengine/tce-utils';
 import { mapChannels } from '@extensionengine/vue-radio';
 
-const { SAVE, REMOVE, SET_LAST_SEEN, RESOLVE } = DiscussionEvent;
+const { SAVE, REMOVE, SET_LAST_SEEN, RESOLVE } = Events.Discussion;
 
 const COMMENT_EVENTS = [
   { event: SAVE, action: 'upsertComment' },

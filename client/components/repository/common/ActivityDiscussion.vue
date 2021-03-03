@@ -17,7 +17,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
-import Discussion from 'tce-core/Discussion';
+import { Discussion } from '@extensionengine/tce-components';
 import get from 'lodash/get';
 import orderBy from 'lodash/orderBy';
 

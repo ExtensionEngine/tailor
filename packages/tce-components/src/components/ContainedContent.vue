@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import ContentElement from './ContentElement';
+import ContentElement from './ContentElement.vue';
 import get from 'lodash/get';
 import throttle from 'lodash/throttle';
 

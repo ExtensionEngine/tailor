@@ -1,7 +1,7 @@
-<template functional>
+<template>
   <button
     v-on="listeners"
-    :class="{ disabled: props.disabled }"
+    :class="{ disabled }"
     class="inline-activator">
     <hr>
     <v-avatar size="20" color="primary darken-4">

@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import ContentElement from '@/components/common/tce-core/ContentElement';
+import ContentElement from '@extensionengine/tce-components';
 import get from 'lodash/get';
 
 export default {

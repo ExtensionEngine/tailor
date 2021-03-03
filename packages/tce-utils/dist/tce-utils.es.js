@@ -1,5 +1,7 @@
+import toCase from 'to-case';
 import cuid from 'cuid';
 import times from 'lodash/times';
+import { v1 } from 'uuid';
 
 function _toConsumableArray(arr) {
   return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
@@ -277,4 +279,45 @@ var assessment = /*#__PURE__*/Object.freeze({
   getErrorMessages: getErrorMessages
 });
 
-export { InsertLocation$1 as InsertLocation, assessment, calculatePosition, getPositions };
+function uuid () {
+  return v1();
+}
+
+var discussion = {
+  SAVE: 'comment:save',
+  REMOVE: 'comment:remove',
+  SET_LAST_SEEN: 'comment:setLastSeen',
+  RESOLVE: 'element:resolveComments'
+};
+
+var index = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  Discussion: discussion
+});
+
+function getMetaName(type) {
+  return "meta-".concat(toCase.slug(type));
+}
+function getContainerName(type) {
+  return "tcc-".concat(toCase.slug(type));
+}
+function getComponentName(type) {
+  return "tce-".concat(toCase.slug(resolveElementType(type)));
+}
+function processAnswerType(type) {
+  return "answer-".concat(toCase.slug(type));
+}
+function isQuestion(type) {
+  return ['QUESTION', 'REFLECTION', 'ASSESSMENT'].includes(type);
+}
+function resolveElementType(type) {
+  return isQuestion(type) ? 'QUESTION-CONTAINER' : type;
+}
+function getToolbarName(type) {
+  return "".concat(toCase.slug(type), "-toolbar");
+}
+function getElementId(element) {
+  return element && (element.uid || element.id);
+}
+
+export { index as Events, InsertLocation$1 as InsertLocation, assessment, calculatePosition, getComponentName, getContainerName, getElementId, getMetaName, getPositions, getToolbarName, isQuestion, processAnswerType, resolveElementType, uuid };

@@ -1,12 +1,12 @@
-<template functional>
-  <div :class="{ resolved: props.isResolved }" class="content">
-    <div v-if="props.isResolved" class="resolvement-options">
+<template>
+  <div :class="{ resolved: isResolved }" class="content">
+    <div v-if="isResolved" class="resolvement-options">
       <span class="font-italic mr-1">Marked as resolved.</span>
       <v-tooltip open-delay="800" right>
         <template v-slot:activator="{ on }">
           <v-btn
             v-on="on"
-            @click="listeners.unresolve"
+            @click="$listeners.unresolve"
             color="secondary"
             text x-small>
             Undo
@@ -15,7 +15,7 @@
         <span>Unresolve comment</span>
       </v-tooltip>
     </div>
-    <pre><span>{{ props.content }}</span><br></pre>
+    <pre><span>{{ content }}</span><br></pre>
   </div>
 </template>
 

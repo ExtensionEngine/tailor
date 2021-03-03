@@ -23,8 +23,8 @@
 <script>
 import { calculatePosition } from '@extensionengine/tce-utils';
 import cloneDeep from 'lodash/cloneDeep';
-import ContainedContent from './ContainedContent';
-import ElementList from './ElementList';
+import ContainedContent from './ContainedContent.vue';
+import ElementList from './ElementList.vue';
 import mapKeys from 'lodash/mapKeys';
 import { mapRequests } from '@extensionengine/vue-radio';
 import values from 'lodash/values';

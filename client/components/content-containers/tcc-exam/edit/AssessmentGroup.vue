@@ -59,7 +59,7 @@
 import AssessmentItem from './Assessment';
 import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
-import { ElementList } from 'tce-core';
+import { ElementList } from '@extensionengine/tce-components';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
@@ -70,7 +70,7 @@ import numberToLetter from 'utils/numberToLetter';
 import pickBy from 'lodash/pickBy';
 import sortBy from 'lodash/sortBy';
 import uniq from 'lodash/uniq';
-import uuid from '@/utils/uuid';
+import { uuid } from '@extensionengine/tce-utils';
 
 export default {
   name: 'assessment-group',

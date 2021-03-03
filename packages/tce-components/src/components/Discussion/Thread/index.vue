@@ -28,8 +28,8 @@
 <script>
 import partition from 'lodash/partition';
 import takeRgt from 'lodash/takeRight';
-import ThreadList from './List';
-import UnseenDivider from './UnseenDivider';
+import ThreadList from './List.vue';
+import UnseenDivider from './UnseenDivider.vue';
 
 export default {
   name: 'discussion-thread',
