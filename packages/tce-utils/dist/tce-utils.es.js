@@ -175,7 +175,7 @@ var defaults = {
     return Object.assign({
       type: 'MC'
     }, baseDefaults, {
-      answers: ['', '', '', ''],
+      answers: ['', '', ''],
       correct: []
     });
   },
