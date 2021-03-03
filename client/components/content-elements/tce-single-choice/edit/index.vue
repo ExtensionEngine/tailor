@@ -49,7 +49,7 @@
 import { assessment } from '@extensionengine/tce-utils';
 import cloneDeep from 'lodash/cloneDeep';
 import head from 'lodash/head';
-import { InputError } from 'tce-core';
+import { InputError } from '@extensionengine/tce-components';
 import range from 'lodash/range';
 import set from 'lodash/set';
 

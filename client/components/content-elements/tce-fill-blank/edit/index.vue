@@ -71,7 +71,7 @@ import { assessment } from '@extensionengine/tce-utils';
 import cloneDeep from 'lodash/cloneDeep';
 import Draggable from 'vuedraggable';
 import get from 'lodash/get';
-import { InputError } from 'tce-core';
+import { InputError } from '@extensionengine/tce-components';
 import { mapRequests } from '@extensionengine/vue-radio';
 import pluralize from 'pluralize';
 import pullAt from 'lodash/pullAt';

@@ -9,7 +9,7 @@
   var capitalize__default = /*#__PURE__*/_interopDefaultLegacy(capitalize);
 
   //
-  var script$2 = {
+  var script$3 = {
     name: 'active-users',
     props: {
       users: {
@@ -57,14 +57,14 @@
     }
   }
 
-  var css_248z$1 = ".avatar[data-v-15a1beec]{transition:all .2s}.avatar img[data-v-15a1beec]{padding:.125rem}.avatar[data-v-15a1beec]:focus-within,.avatar[data-v-15a1beec]:hover{transform:scale(1.1);z-index:1}.avatar:focus-within img[data-v-15a1beec]:focus,.avatar:hover img[data-v-15a1beec]:focus{outline:0}";
-  styleInject(css_248z$1);
+  var css_248z$2 = ".avatar[data-v-15a1beec]{transition:all .2s}.avatar img[data-v-15a1beec]{padding:.125rem}.avatar[data-v-15a1beec]:focus-within,.avatar[data-v-15a1beec]:hover{transform:scale(1.1);z-index:1}.avatar:focus-within img[data-v-15a1beec]:focus,.avatar:hover img[data-v-15a1beec]:focus{outline:0}";
+  styleInject(css_248z$2);
 
   /* script */
-  var __vue_script__$2 = script$2;
+  var __vue_script__$3 = script$3;
   /* template */
 
-  var __vue_render__$2 = function __vue_render__() {
+  var __vue_render__$3 = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -110,19 +110,19 @@
     }), 1);
   };
 
-  var __vue_staticRenderFns__$2 = [];
+  var __vue_staticRenderFns__$3 = [];
   /* style */
 
-  var __vue_inject_styles__$2 = undefined;
+  var __vue_inject_styles__$3 = undefined;
   /* scoped */
 
-  var __vue_scope_id__$2 = "data-v-15a1beec";
+  var __vue_scope_id__$3 = "data-v-15a1beec";
   /* functional template */
 
-  var __vue_is_functional_template__$2 = false;
+  var __vue_is_functional_template__$3 = false;
   /* component normalizer */
 
-  function __vue_normalize__$2(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$3(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "ActiveUsers.vue";
@@ -143,10 +143,10 @@
   /* style inject SSR */
 
 
-  var ActiveUsers = __vue_normalize__$2({
-    render: __vue_render__$2,
-    staticRenderFns: __vue_staticRenderFns__$2
-  }, __vue_inject_styles__$2, __vue_script__$2, __vue_scope_id__$2, __vue_is_functional_template__$2);
+  var ActiveUsers = __vue_normalize__$3({
+    render: __vue_render__$3,
+    staticRenderFns: __vue_staticRenderFns__$3
+  }, __vue_inject_styles__$3, __vue_script__$3, __vue_scope_id__$3, __vue_is_functional_template__$3);
 
   //
   //
@@ -184,7 +184,7 @@
   //
   //
   //
-  var script$1 = {
+  var script$2 = {
     name: 'element-placeholder',
     props: {
       name: {
@@ -233,10 +233,10 @@
   };
 
   /* script */
-  var __vue_script__$1 = script$1;
+  var __vue_script__$2 = script$2;
   /* template */
 
-  var __vue_render__$1 = function __vue_render__() {
+  var __vue_render__$2 = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -269,19 +269,19 @@
     }, [_vm._v("\n        " + _vm._s(_vm.activeIcon) + "\n      ")]) : _vm._e()]], 2) : _vm._e()], 1);
   };
 
-  var __vue_staticRenderFns__$1 = [];
+  var __vue_staticRenderFns__$2 = [];
   /* style */
 
-  var __vue_inject_styles__$1 = undefined;
+  var __vue_inject_styles__$2 = undefined;
   /* scoped */
 
-  var __vue_scope_id__$1 = undefined;
+  var __vue_scope_id__$2 = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$1 = false;
+  var __vue_is_functional_template__$2 = false;
   /* component normalizer */
 
-  function __vue_normalize__$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$2(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "ElementPlaceholder.vue";
@@ -302,10 +302,10 @@
   /* style inject SSR */
 
 
-  var ElementPlaceholder = __vue_normalize__$1({
-    render: __vue_render__$1,
-    staticRenderFns: __vue_staticRenderFns__$1
-  }, __vue_inject_styles__$1, __vue_script__$1, __vue_scope_id__$1, __vue_is_functional_template__$1);
+  var ElementPlaceholder = __vue_normalize__$2({
+    render: __vue_render__$2,
+    staticRenderFns: __vue_staticRenderFns__$2
+  }, __vue_inject_styles__$2, __vue_script__$2, __vue_scope_id__$2, __vue_is_functional_template__$2);
 
   //
   //
@@ -318,7 +318,7 @@
   //
   //
   //
-  var script = {
+  var script$1 = {
     name: 'tce-preview-overlay',
     props: {
       show: {
@@ -328,14 +328,14 @@
     }
   };
 
-  var css_248z = ".message[data-v-4e41c6e0]{border-radius:2px;font-size:1.125rem}";
-  styleInject(css_248z);
+  var css_248z$1 = ".message[data-v-4e41c6e0]{border-radius:2px;font-size:1.125rem}";
+  styleInject(css_248z$1);
 
   /* script */
-  var __vue_script__ = script;
+  var __vue_script__$1 = script$1;
   /* template */
 
-  var __vue_render__ = function __vue_render__() {
+  var __vue_render__$1 = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -353,19 +353,19 @@
     }, [_vm._t("default", [_vm._v("Click to preview")])], 2)]);
   };
 
-  var __vue_staticRenderFns__ = [];
+  var __vue_staticRenderFns__$1 = [];
   /* style */
 
-  var __vue_inject_styles__ = undefined;
+  var __vue_inject_styles__$1 = undefined;
   /* scoped */
 
-  var __vue_scope_id__ = "data-v-4e41c6e0";
+  var __vue_scope_id__$1 = "data-v-4e41c6e0";
   /* functional template */
 
-  var __vue_is_functional_template__ = false;
+  var __vue_is_functional_template__$1 = false;
   /* component normalizer */
 
-  function __vue_normalize__(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "PreviewOverlay.vue";
@@ -386,13 +386,92 @@
   /* style inject SSR */
 
 
-  var PreviewOverlay = __vue_normalize__({
+  var PreviewOverlay = __vue_normalize__$1({
+    render: __vue_render__$1,
+    staticRenderFns: __vue_staticRenderFns__$1
+  }, __vue_inject_styles__$1, __vue_script__$1, __vue_scope_id__$1, __vue_is_functional_template__$1);
+
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  var script = {
+    props: {
+      error: {
+        type: String,
+        default: ''
+      }
+    }
+  };
+
+  var css_248z = ".input-error[data-v-33d55bb8]{color:var(--v-error-base);font-size:.75rem}";
+  styleInject(css_248z);
+
+  /* script */
+  var __vue_script__ = script;
+  /* template */
+
+  var __vue_render__ = function __vue_render__() {
+    var _vm = this;
+
+    var _h = _vm.$createElement;
+
+    var _c = _vm._self._c || _h;
+
+    return _c('transition', {
+      attrs: {
+        "name": "message-transition"
+      }
+    }, [!!_vm.error ? _c('div', {
+      staticClass: "input-error"
+    }, [_vm._v("\n    " + _vm._s(_vm.error) + "\n  ")]) : _vm._e()]);
+  };
+
+  var __vue_staticRenderFns__ = [];
+  /* style */
+
+  var __vue_inject_styles__ = undefined;
+  /* scoped */
+
+  var __vue_scope_id__ = "data-v-33d55bb8";
+  /* functional template */
+
+  var __vue_is_functional_template__ = false;
+  /* component normalizer */
+
+  function __vue_normalize__(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+    var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
+
+    component.__file = "InputError.vue";
+
+    if (!component.render) {
+      component.render = template.render;
+      component.staticRenderFns = template.staticRenderFns;
+      component._compiled = true;
+      if (functional) component.functional = true;
+    }
+
+    component._scopeId = scope;
+
+    return component;
+  }
+  /* style inject */
+
+  /* style inject SSR */
+
+
+  var InputError = __vue_normalize__({
     render: __vue_render__,
     staticRenderFns: __vue_staticRenderFns__
   }, __vue_inject_styles__, __vue_script__, __vue_scope_id__, __vue_is_functional_template__);
 
   exports.ActiveUsers = ActiveUsers;
   exports.ElementPlaceholder = ElementPlaceholder;
+  exports.InputError = InputError;
   exports.PreviewOverlay = PreviewOverlay;
 
   Object.defineProperty(exports, '__esModule', { value: true });

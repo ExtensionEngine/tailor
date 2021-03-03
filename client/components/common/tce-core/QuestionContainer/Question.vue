@@ -42,14 +42,15 @@
 </template>
 
 <script>
-import { ContainedContent, InputError } from 'tce-core';
 import AddElement from '../AddElement';
 import { assessment } from '@extensionengine/tce-utils';
 import cloneDeep from 'lodash/cloneDeep';
+import { ContainedContent } from 'tce-core';
 import Draggable from 'vuedraggable';
 import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
 import head from 'lodash/head';
+import { InputError } from '@extensionengine/tce-components';
 import { mapChannels } from '@extensionengine/vue-radio';
 import pullAt from 'lodash/pullAt';
 import set from 'lodash/set';
