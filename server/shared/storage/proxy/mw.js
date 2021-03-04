@@ -21,9 +21,9 @@ function getFile(req, res, next) {
 
 function setSignedCookies(req, res, next) {
   if (proxy.hasCookies(req.cookies)) return next();
-  // 1 hour in ms
-  const maxAge = 1000 * 60 * 60;
-  const cookies = proxy.getSignedCookies(config.path, maxAge);
+  const maxAge = 1000 * 60 * 60; // 1 hour in ms
+  const resource = `${config.path}/${req.repository.id}`;
+  const cookies = proxy.getSignedCookies(resource, maxAge);
   Object.entries(cookies).forEach(([cookie, value]) => {
     res.cookie(cookie, value, { maxAge, httpOnly: true });
   });
