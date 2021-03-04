@@ -2,7 +2,7 @@
 
 module.exports = {
   provider: process.env.STORAGE_PROVIDER,
-  path: 'repository/assets',
+  path: 'repository',
   protocol: 'storage://',
   amazon: {
     key: process.env.STORAGE_KEY,

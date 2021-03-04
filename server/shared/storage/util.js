@@ -1,5 +1,6 @@
 'use strict';
 
+const config = require('../../../config/server');
 const crypto = require('crypto');
 const fs = require('fs');
 
@@ -14,4 +15,8 @@ function readFile(file) {
   return fs.readFile(file.path);
 }
 
-module.exports = { sha256, readFile };
+function getAssetsPath(repositoryId) {
+  return `${config.storage.path}/${repositoryId}/assets`;
+}
+
+module.exports = { sha256, readFile, getAssetsPath };

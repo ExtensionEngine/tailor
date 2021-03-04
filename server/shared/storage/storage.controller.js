@@ -1,7 +1,7 @@
 'use strict';
 
+const { getAssetsPath, readFile, sha256 } = require('./util');
 const { getFileUrl, saveFile } = require('./');
-const { readFile, sha256 } = require('./util');
 const config = require('../../../config/server').storage;
 const fecha = require('fecha');
 const fromPairs = require('lodash/fromPairs');
@@ -36,9 +36,7 @@ async function uploadFile(file, name, repository) {
   const hash = sha256(file.originalname, buffer);
   const extension = path.extname(file.originalname);
   const sufix = `${hash}___${name}${extension}`;
-  const key = repository
-    ? path.join(config.path, `${repository.id}`, sufix)
-    : path.join(config.path, sufix);
+  const key = path.join(getAssetsPath(repository.id), sufix);
   await saveFile(key, buffer, { ContentType: file.mimetype });
   const publicUrl = await getFileUrl(key);
   return { key, publicUrl, url: getStorageUrl(key) };
