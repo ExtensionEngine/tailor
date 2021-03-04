@@ -203,7 +203,7 @@ function unpublishDeletedContainers(parent, containers) {
   return storage
     .listFiles(baseUrl)
     .then(publishedFilePaths => {
-      publishedFilePaths = difference(publishedFilePaths, [assetsPath]);
+      publishedFilePaths = publishedFilePaths.filter(it => !it.startsWith(assetsPath));
       const redundantFilePaths = difference(publishedFilePaths, filePaths);
       if (redundantFilePaths.length) return storage.deleteFiles(redundantFilePaths);
     });
