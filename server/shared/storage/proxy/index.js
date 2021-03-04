@@ -4,6 +4,10 @@ const autobind = require('auto-bind');
 const { proxy: config } = require('../../../../config/server').storage;
 const path = require('path');
 
+const storageCookies = {
+  REPOSITORY: 'Storage-Repository'
+};
+
 class Proxy {
   constructor(config) {
     this.provider = Proxy.createProvider(config);
@@ -27,16 +31,22 @@ class Proxy {
     return this.isSelfHosted && this.provider.path;
   }
 
-  getSignedCookies(resource, maxAge) {
-    return this.provider.getSignedCookies(resource, maxAge);
+  getSignedCookies(baseUrl, repositoryId, maxAge) {
+    const resource = `${baseUrl}/${repositoryId}`;
+    return {
+      ...this.provider.getSignedCookies(resource, maxAge),
+      [storageCookies.REPOSITORY]: repositoryId
+    };
   }
 
   verifyCookies(cookies, resource) {
     return this.provider.verifyCookies(cookies, resource);
   }
 
-  hasCookies(cookies) {
-    return this.provider.hasCookies(cookies);
+  hasCookies(cookies, repositoryId) {
+    const { REPOSITORY } = storageCookies;
+    const isRepositoryId = cookies[REPOSITORY] === repositoryId.toString();
+    return isRepositoryId && this.provider.hasCookies(cookies);
   }
 
   getFileUrl(key) {
