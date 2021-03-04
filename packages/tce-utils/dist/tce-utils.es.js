@@ -295,6 +295,12 @@ var index = /*#__PURE__*/Object.freeze({
   Discussion: discussion
 });
 
+var publishDiffChangeTypes = {
+  NEW: 'new',
+  CHANGED: 'changed',
+  REMOVED: 'removed'
+};
+
 function getMetaName(type) {
   return "meta-".concat(toCase.slug(type));
 }
@@ -320,4 +326,4 @@ function getElementId(element) {
   return element && (element.uid || element.id);
 }
 
-export { index as Events, InsertLocation$1 as InsertLocation, assessment, calculatePosition, getComponentName, getContainerName, getElementId, getMetaName, getPositions, getToolbarName, isQuestion, processAnswerType, resolveElementType, uuid };
+export { index as Events, InsertLocation$1 as InsertLocation, assessment, calculatePosition, getComponentName, getContainerName, getElementId, getMetaName, getPositions, getToolbarName, isQuestion, processAnswerType, publishDiffChangeTypes, resolveElementType, uuid };

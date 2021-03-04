@@ -10,10 +10,18 @@
 </template>
 
 <script>
+import { publishDiffChangeTypes } from '@extensionengine/tce-utils';
+
 export default {
   name: 'publish-diff-chip',
   props: {
-    changeType: { type: String, default: null }
+    changeType: {
+      validator: function (value) {
+        if (!value) return true;
+        return Object.values(publishDiffChangeTypes).includes(value);
+      },
+      default: null
+    }
   }
 };
 </script>

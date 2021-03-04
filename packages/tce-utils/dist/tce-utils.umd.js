@@ -848,6 +848,12 @@
     Discussion: discussion
   });
 
+  var publishDiffChangeTypes = {
+    NEW: 'new',
+    CHANGED: 'changed',
+    REMOVED: 'removed'
+  };
+
   function getMetaName(type) {
     return "meta-".concat(toCase__default['default'].slug(type));
   }
@@ -885,6 +891,7 @@
   exports.getToolbarName = getToolbarName;
   exports.isQuestion = isQuestion;
   exports.processAnswerType = processAnswerType;
+  exports.publishDiffChangeTypes = publishDiffChangeTypes;
   exports.resolveElementType = resolveElementType;
   exports.uuid = uuid;
 

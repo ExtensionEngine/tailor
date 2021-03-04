@@ -1,6 +1,6 @@
 import capitalize from 'lodash/capitalize';
 import styleInject from '../../../node_modules/style-inject/dist/style-inject.es.js';
-import { isQuestion, getPositions, uuid, Events, getElementId, getComponentName, calculatePosition } from '@extensionengine/tce-utils';
+import { isQuestion, getPositions, uuid, Events, publishDiffChangeTypes, getElementId, getComponentName, calculatePosition } from '@extensionengine/tce-utils';
 import filter from 'lodash/filter';
 import flatMap from 'lodash/flatMap';
 import intersection from 'lodash/intersection';
@@ -2545,21 +2545,14 @@ var Discussion = __vue_normalize__$9({
 }, __vue_inject_styles__$9, __vue_script__$9, __vue_scope_id__$9, __vue_is_functional_template__$9);
 
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 var script$8 = {
   name: 'publish-diff-chip',
   props: {
     changeType: {
-      type: String,
+      validator: function validator(value) {
+        if (!value) return true;
+        return Object.values(publishDiffChangeTypes).includes(value);
+      },
       default: null
     }
   }

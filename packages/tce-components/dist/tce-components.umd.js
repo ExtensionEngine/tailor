@@ -2579,21 +2579,14 @@
   }, __vue_inject_styles__$9, __vue_script__$9, __vue_scope_id__$9, __vue_is_functional_template__$9);
 
   //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
   var script$8 = {
     name: 'publish-diff-chip',
     props: {
       changeType: {
-        type: String,
+        validator: function validator(value) {
+          if (!value) return true;
+          return Object.values(tceUtils.publishDiffChangeTypes).includes(value);
+        },
         default: null
       }
     }

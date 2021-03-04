@@ -5,6 +5,7 @@ export * as InsertLocation from './InsertLocation';
 export * as assessment from './assessment';
 export { default as uuid } from './uuid';
 export * as Events from './events';
+export { default as publishDiffChangeTypes } from './publishDiffChangeTypes';
 
 export function getMetaName(type) {
   return `meta-${toCase.slug(type)}`;
