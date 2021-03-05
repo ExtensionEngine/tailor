@@ -1,6 +1,5 @@
+import { extractData } from './helpers';
 import request from './request';
-
-const extractData = res => res.data.data;
 
 function fetch(params) {
   return request.get('/users', { params }).then(extractData);
