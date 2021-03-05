@@ -3,7 +3,7 @@ import './polyfills';
 import 'bootstrap-sass/assets/javascripts/bootstrap';
 import '@/utils/validation';
 
-import assetsApi from '@/api/asset';
+import { asset as assetApi } from '@extensionengine/tailor-api';
 import ContentPluginRegistry from './content-plugins';
 
 import { formatDate, truncate } from '@/filters';
@@ -65,7 +65,7 @@ Promise.all([getStore(), contentPluginRegistry.initialize()])
       render: h => h(App),
       provide() {
         return {
-          $storageService: assetsApi,
+          $storageService: assetApi,
           $teRegistry: contentPluginRegistry.elementRegistry,
           $ccRegistry: contentPluginRegistry.containerRegistry,
           $getCurrentUser: () => store.state.auth.user

@@ -1,9 +1,11 @@
+import {
+  repository as repositoryApi,
+  tag as tagApi
+} from '@extensionengine/tailor-api';
 import find from 'lodash/find';
 import forEach from 'lodash/forEach';
 import generateActions from '@/store/helpers/actions';
 import getVal from 'lodash/get';
-import repositoryApi from '../../../api/repository';
-import tagApi from '@/api/tag';
 
 const {
   api,

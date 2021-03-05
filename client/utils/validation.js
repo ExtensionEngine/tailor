@@ -4,7 +4,7 @@ import forEach from 'lodash/forEach';
 import isURL from 'validator/lib/isURL';
 import { messages } from 'vee-validate/dist/locale/en.json';
 import some from 'lodash/some';
-import userApi from '@/api/user';
+import { user as userApi } from '@extensionengine/tailor-api';
 
 const nameFormat = {
   validate: value => {

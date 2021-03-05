@@ -117,7 +117,7 @@
 </template>
 
 <script>
-import api from '@/api/repository';
+import { repository as api } from '@extensionengine/tailor-api';
 import loader from '@/components/common/loader';
 import { mapGetters } from 'vuex';
 import { SCHEMAS } from 'shared/activities';

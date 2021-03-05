@@ -20,15 +20,14 @@
 </template>
 
 <script>
+import api from '@extensionengine/tailor-api';
 import { ContentElement } from '@extensionengine/tce-components';
-import contentElementApi from '@/api/contentElement';
 import EntitySidebar from './EntitySidebar';
 import first from 'lodash/first';
 import get from 'lodash/get';
 import includes from 'lodash/includes';
 import pick from 'lodash/pick';
 import Promise from 'bluebird';
-import revisionApi from '@/api/revision';
 
 const WITHOUT_STATICS = [
   'JODIT_HTML', 'BRIGHTCOVE_VIDEO', 'EMBED', 'BREAK', 'HTML'
@@ -53,7 +52,7 @@ export default {
     getRevisions() {
       const { entity, state } = this.revision;
       const params = { entity, entityId: state.id };
-      return revisionApi.fetch(this.repositoryId, params).then(data => {
+      return api.revision.fetch(this.repositoryId, params).then(data => {
         data.forEach(it => {
           if (includes(WITHOUT_STATICS, it.state.type)) it.resolved = true;
         });
@@ -65,7 +64,7 @@ export default {
       this.selectedRevision = revision;
       if (revision.resolved) return;
       this.$set(revision, 'loading', true);
-      return revisionApi.get(this.repositoryId, revision.id).then(data => {
+      return api.revision.get(this.repositoryId, revision.id).then(data => {
         Object.assign(revision, { state: data.state, resolved: true });
         this.$set(this.selectedRevision, revision);
         return Promise.delay(600);
@@ -75,7 +74,7 @@ export default {
       this.$set(revision, 'loading', true);
       const entity = { ...revision.state, paranoid: false };
       const options = pick(entity, ['id', 'repositoryId']);
-      return contentElementApi.patch(options, entity)
+      return api.contentElement.patch(options, entity)
         .then(this.getRevisions)
         .then(revisions => {
           const newRevision = first(revisions);

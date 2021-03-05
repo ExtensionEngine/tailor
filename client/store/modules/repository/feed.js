@@ -1,4 +1,4 @@
-import api from '@/api/feed';
+import { feed as api } from '@extensionengine/tailor-api';
 import SSEConnection from '@/sse';
 import urlJoin from 'url-join';
 

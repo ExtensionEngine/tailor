@@ -15,10 +15,10 @@
 </template>
 
 <script>
+import { repository as api } from '@extensionengine/tailor-api';
 import debounce from 'lodash/debounce';
 import find from 'lodash/find';
 import loader from '@/components/common/loader';
-import repositoryApi from '@/api/repository';
 import sortBy from 'lodash/sortBy';
 
 export default {
@@ -37,7 +37,7 @@ export default {
       }
     },
     fetchRepositories: debounce(loader(function (search) {
-      return repositoryApi.getRepositories({ search }).then(repositories => {
+      return api.getRepositories({ search }).then(repositories => {
         this.repositories = sortBy(repositories, 'name');
       });
     }, 'loading'), 500)

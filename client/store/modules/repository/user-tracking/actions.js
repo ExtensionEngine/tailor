@@ -1,4 +1,4 @@
-import api from '@/api/feed';
+import { feed as api } from '@extensionengine/tailor-api';
 import feed from '../feed';
 import { UserActivity } from '@/../common/sse';
 

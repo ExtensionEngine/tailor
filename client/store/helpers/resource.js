@@ -1,7 +1,6 @@
+import { client, extractData } from '@extensionengine/tailor-api';
 import assign from 'lodash/assign';
-import client from '@/api/request';
 import cloneDeep from 'lodash/cloneDeep';
-import { extractData } from '@/api/helpers';
 import join from 'url-join';
 import omit from 'lodash/omit';
 import Queue from 'promise-queue';

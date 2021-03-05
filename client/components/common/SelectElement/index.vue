@@ -53,8 +53,10 @@
 </template>
 
 <script>
-import activitiesApi from '@/api/activity';
-import contentElementApi from 'client/api/contentElement';
+import {
+  activity as activityApi,
+  contentElement as contentElementApi
+} from '@extensionengine/tailor-api';
 import ContentPreview from '@/components/common/ContentPreview';
 import flatMap from 'lodash/flatMap';
 import { getDescendants as getContainers } from '@/utils/activity';
@@ -177,7 +179,7 @@ export default {
         : await this.fetchActivities(repository);
     },
     fetchActivities: loader(function (repository) {
-      return activitiesApi.getActivities(repository.id);
+      return activityApi.getActivities(repository.id);
     }, 'loadingContent'),
     fetchElements: loader(function (containers) {
       const { id: repositoryId } = this.selection.repository;

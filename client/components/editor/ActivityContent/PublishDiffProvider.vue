@@ -22,7 +22,7 @@ import mapValues from 'lodash/mapValues';
 import merge from 'lodash/merge';
 import omit from 'lodash/omit';
 import reduce from 'lodash/reduce';
-import revisionApi from '@/api/revision';
+import { revision as revisionApi } from '@extensionengine/tailor-api';
 
 const getPublishedState = revisions => revisions.reduce((all, { state }) => ({
   ...all,

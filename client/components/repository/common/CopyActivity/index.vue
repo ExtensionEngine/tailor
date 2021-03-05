@@ -53,8 +53,11 @@
 </template>
 
 <script>
+import {
+  activity as activityApi,
+  repository as repositoryApi
+} from '@extensionengine/tailor-api';
 import { mapActions, mapGetters } from 'vuex';
-import activityApi from 'client/api/activity';
 import debounce from 'lodash/debounce';
 import find from 'lodash/find';
 import head from 'lodash/head';
@@ -63,7 +66,6 @@ import last from 'lodash/last';
 import loader from '@/components/common/loader';
 import pluralize from 'pluralize';
 import Promise from 'bluebird';
-import repositoryApi from 'client/api/repository';
 import RepositoryTree from './RepositoryTree';
 import { SCHEMAS } from 'shared/activities';
 import sortBy from 'lodash/sortBy';

@@ -1,10 +1,10 @@
 import { calculatePosition, InsertLocation } from '@extensionengine/tce-utils';
 import { getDescendants as getDeepChildren, getOutlineChildren } from 'utils/activity';
+import { client } from '@extensionengine/tailor-api';
 import { Activity as Events } from '@/../common/sse';
 import feed from '../feed';
 import findIndex from 'lodash/findIndex';
 import generateActions from '@/store/helpers/actions';
-import request from '@/api/request';
 
 const { api, fetch, get, reset, save, setEndpoint, update } = generateActions();
 const { ADD_INTO } = InsertLocation;
@@ -43,7 +43,7 @@ const publish = ({ commit }, activity) => {
 const clone = ({ commit }, mapping) => {
   const { srcId, srcRepositoryId } = mapping;
   const url = `/repositories/${srcRepositoryId}/activities/${srcId}/clone`;
-  return request.post(url, mapping)
+  return client.post(url, mapping)
     .then(({ data: { data } }) => {
       commit('fetch', api.processEntries(data));
       return data;
