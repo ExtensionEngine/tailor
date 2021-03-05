@@ -6,7 +6,7 @@ const { Authenticator } = require('passport');
 const autobind = require('auto-bind');
 const { auth: config } = require('../../../config/server');
 const { IncomingMessage } = require('http');
-
+const storageProxy = require('../storage/proxy');
 const isFunction = arg => typeof arg === 'function';
 
 class Auth extends Authenticator {
@@ -56,9 +56,11 @@ class Auth extends Authenticator {
   }
 
   logout({ middleware = false } = {}) {
+    const storageCookies = storageProxy.getStorageCookieNames();
     return (_, res, next) => {
       res.clearCookie(config.jwt.cookie.name);
       res.clearCookie('auth');
+      storageCookies.forEach(name => res.clearCookie(name));
       return middleware ? next() : res.end();
     };
   }

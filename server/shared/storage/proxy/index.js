@@ -3,6 +3,7 @@
 const autobind = require('auto-bind');
 const { proxy: config } = require('../../../../config/server').storage;
 const path = require('path');
+const values = require('lodash/values');
 
 const storageCookies = {
   REPOSITORY: 'Storage-Repository'
@@ -51,6 +52,13 @@ class Proxy {
 
   getFileUrl(key) {
     return this.provider.getFileUrl(key);
+  }
+
+  getStorageCookieNames() {
+    return [
+      ...this.provider.getStorageCookieNames(),
+      ...values(storageCookies)
+    ];
   }
 }
 

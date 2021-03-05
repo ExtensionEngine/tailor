@@ -4,10 +4,12 @@ const every = require('lodash/every');
 const { Signer } = require('aws-sdk/clients/cloudfront');
 const urlJoin = require('url-join');
 const { validateConfig } = require('../../validation');
+const values = require('lodash/values');
 const yup = require('yup');
 
 const storageCookies = {
   SIGNATURE: 'CloudFront-Signature',
+  POLICY: 'CloudFront-Policy',
   KEY_PAIR_ID: 'CloudFront-Key-Pair-Id'
 };
 
@@ -47,6 +49,10 @@ class CloudFront {
 
   getFileUrl(key) {
     return urlJoin(this.host, key);
+  }
+
+  getStorageCookieNames() {
+    return values(storageCookies);
   }
 }
 
