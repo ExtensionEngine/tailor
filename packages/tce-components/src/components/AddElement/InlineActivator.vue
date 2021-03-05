@@ -1,6 +1,6 @@
 <template>
   <button
-    v-on="listeners"
+    v-on="$listeners"
     :class="{ disabled }"
     class="inline-activator">
     <hr>

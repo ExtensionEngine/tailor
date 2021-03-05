@@ -3659,7 +3659,7 @@
     }
   };
 
-  var css_248z$2 = ".default-activator-state[data-v-d03c1dc8],.inline-activator[data-v-d03c1dc8],.inline-activator.disabled[data-v-d03c1dc8],.inline-activator.disabled[data-v-d03c1dc8]:hover{padding:0 3.125rem;opacity:0}.inline-activator[data-v-d03c1dc8]{display:flex;align-items:center;width:100%;margin:0;padding:0 3.125rem;opacity:0;transition:opacity .3s,padding .3s}.inline-activator[data-v-d03c1dc8],.inline-activator .v-chip[data-v-d03c1dc8]{cursor:pointer}.inline-activator hr[data-v-d03c1dc8]{flex:1;display:inline-flex;margin:0;border-top:.0625rem dashed var(--v-primary-darken3)}.inline-activator[data-v-d03c1dc8]:focus,.inline-activator[data-v-d03c1dc8]:hover{padding:.75rem 0;opacity:1;outline:0;transition:opacity .3s .25s,padding .3s .1s}.inline-activator.disabled[data-v-d03c1dc8],.inline-activator.disabled[data-v-d03c1dc8]:hover{pointer-events:none}";
+  var css_248z$2 = ".default-activator-state[data-v-32cc672a],.inline-activator[data-v-32cc672a],.inline-activator.disabled[data-v-32cc672a],.inline-activator.disabled[data-v-32cc672a]:hover{padding:0 3.125rem;opacity:0}.inline-activator[data-v-32cc672a]{display:flex;align-items:center;width:100%;margin:0;padding:0 3.125rem;opacity:0;transition:opacity .3s,padding .3s}.inline-activator[data-v-32cc672a],.inline-activator .v-chip[data-v-32cc672a]{cursor:pointer}.inline-activator hr[data-v-32cc672a]{flex:1;display:inline-flex;margin:0;border-top:.0625rem dashed var(--v-primary-darken3)}.inline-activator[data-v-32cc672a]:focus,.inline-activator[data-v-32cc672a]:hover{padding:.75rem 0;opacity:1;outline:0;transition:opacity .3s .25s,padding .3s .1s}.inline-activator.disabled[data-v-32cc672a],.inline-activator.disabled[data-v-32cc672a]:hover{pointer-events:none}";
   styleInject(css_248z$2);
 
   /* script */
@@ -3678,7 +3678,7 @@
       class: {
         disabled: _vm.disabled
       }
-    }, _vm.listeners), [_c('hr'), _vm._v(" "), _c('v-avatar', {
+    }, _vm.$listeners), [_c('hr'), _vm._v(" "), _c('v-avatar', {
       attrs: {
         "size": "20",
         "color": "primary darken-4"
@@ -3697,7 +3697,7 @@
   var __vue_inject_styles__$2 = undefined;
   /* scoped */
 
-  var __vue_scope_id__$2 = "data-v-d03c1dc8";
+  var __vue_scope_id__$2 = "data-v-32cc672a";
   /* functional template */
 
   var __vue_is_functional_template__$2 = false;
