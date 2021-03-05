@@ -22,7 +22,7 @@ async function upload({ file, body, user, repository }, res) {
   if (body.unpack) {
     const timestamp = fecha.format(new Date(), 'YYYY-MM-DDTHH:mm:ss');
     const root = `${timestamp}__${user.id}__${name}`;
-    const assets = await uploadArchiveContent(file, root);
+    const assets = await uploadArchiveContent(file, root, repository);
     return res.json({ root, assets });
   }
   const asset = await uploadFile(file, name, repository);
@@ -42,12 +42,12 @@ async function uploadFile(file, name, repository) {
   return { key, publicUrl, url: getStorageUrl(key) };
 }
 
-async function uploadArchiveContent(archive, name) {
+async function uploadArchiveContent(archive, name, repository) {
   const buffer = await readFile(archive);
   const content = await JSZip.loadAsync(buffer);
   const files = pickBy(content.files, it => !it.dir);
   const keys = await Promise.all(Object.keys(files).map(async src => {
-    const key = path.join(config.path, `${name}/${src}`);
+    const key = path.join(getAssetsPath(repository.id), `${name}/${src}`);
     const file = await content.file(src).async('uint8array');
     const mimeType = mime.lookup(src);
     await saveFile(key, Buffer.from(file), { ContentType: mimeType });
