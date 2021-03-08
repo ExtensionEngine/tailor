@@ -11,7 +11,7 @@
       @seen="setLastSeenComment"
       @unresolve="updateResolvement"
       v-bind="{ comments, unseenComments, showHeading, user }"
-      scroll-target="commentInput"
+      scroll-target="commentEditor"
       show-notifications is-activity-thread />
   </v-sheet>
 </template>

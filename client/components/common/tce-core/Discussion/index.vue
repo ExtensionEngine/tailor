@@ -41,7 +41,7 @@
       :unseen-count="unseenComments.length"
       :user="user"
       class="mt-2" />
-    <div class="text-right">
+    <div ref="commentEditor" class="text-right">
       <v-textarea
         ref="commentInput"
         v-model.trim="comment.content"
@@ -97,7 +97,7 @@ export default {
     hasHiddenComments: vm => vm.commentsShownLimit < vm.commentsCount,
     isTextEditorEmpty: vm => !vm.comment.content?.trim(),
     discussion: vm => vm.$refs.discussion,
-    commentInput: vm => vm.$refs.commentInput,
+    commentEditor: vm => vm.$refs.commentEditor,
     showResolveButton: vm => vm.hasUnresolvedComments && !vm.isActivityThread
   },
   methods: {
@@ -147,9 +147,9 @@ export default {
       immediate: true,
       handler(val) {
         if (!val && this.isActivityThread) return;
-        // Focus editor manually with delay to avoid
+        // Focus comment input manually with delay to avoid
         // element focus prioritization (e.g HTML element)
-        setTimeout(() => this.commentInput.focus(), 500);
+        setTimeout(() => this.$refs.commentInput.focus(), 500);
       }
     }
   },
