@@ -1,12 +1,13 @@
 'use strict';
 
+const config = require('../../config/server/storage');
 const { ContentElement } = require('../shared/database');
 const { getAssetsPath } = require('../shared/storage/util');
 const { Op } = require('sequelize');
 const Promise = require('bluebird');
 const storage = require('../shared/storage');
 
-const regex = /repository\/assets\/(\d*)\/(.*)?/;
+const regex = /repository\/assets\/(\d+)?\/?(.*)?/;
 const types = ['IMAGE', 'VIDEO', 'AUDIO', 'PDF', 'SCORM'];
 
 migrateContentElement()
@@ -37,22 +38,23 @@ async function migrateContentElement() {
   );
 }
 
-function imageMigrationHandler(element) {
-  const { url, repositoryId } = element;
+async function imageMigrationHandler(element) {
+  const { repositoryId, data: { url } } = element;
   if (!url) return;
-  const result = url.match(regex);
-  if (!result) return;
-  const [, id, fileName] = result;
-  const newPath = `${getAssetsPath(repositoryId)}/${id}/${fileName}`;
-  return cpAssets(url, newPath);
+  const assetUrl = url.match(regex);
+  if (!assetUrl) return;
+  const [, id, fileName] = assetUrl;
+  const newKey = `${getAssetsPath(repositoryId)}/${id}/${fileName}`;
+  await cpAssets(url, newKey);
+  return element.update({ ...element, data: { ...element.data, url: newKey } });
 }
 
 function defaultMigrationHandler(element) {}
 
 function scormMigrationHandler(element) {}
 
-function cpAssets(oldPath, newPath) {
-  return storage.copyFile(oldPath, newPath);
+function cpAssets(key, newKey) {
+  return storage.copyFile(key, newKey);
 }
 
 // function migrateRevisions() {}
