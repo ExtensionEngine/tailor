@@ -15,7 +15,11 @@
           <span class="px-2 grey--text">|</span>
           <span class="white--text">comparing with published</span>
           <span class="px-2 grey--text">@</span>
-          <v-chip color="readonly primary lighten-4" small label>
+          <v-chip
+            color="primary lighten-4"
+            text-color="grey darken-4"
+            small label
+            class="readonly">
             {{ activity.publishedAt | formatDate }}
           </v-chip>
         </template>
