@@ -9,7 +9,7 @@ const Promise = require('bluebird');
 const storage = require('../shared/storage');
 
 const regex = /repository\/assets\/(\d+)?\/?(.*)?/;
-const types = ['IMAGE', 'VIDEO', 'AUDIO', 'PDF', 'SCORM'];
+const types = ['IMAGE', 'VIDEO', 'AUDIO', 'PDF'];
 
 migrateContentElement()
   .then(() => {
@@ -21,21 +21,13 @@ migrateContentElement()
     process.exit(1);
   });
 
-const mapTypesToActions = {
-  IMAGE: imageMigrationHandler,
-  VIDEO: defaultMigrationHandler,
-  AUDIO: defaultMigrationHandler,
-  PDF: defaultMigrationHandler,
-  SCORM: scormMigrationHandler
-};
-
 async function migrateContentElement() {
   const contentElements = await ContentElement.findAll({
     where: { type: { [Op.in]: types } }
   });
   return Promise.each(
     contentElements,
-    it => mapTypesToActions[it.type] && mapTypesToActions[it.type](it)
+    el => el.type === 'IMAGE' ? imageMigrationHandler(el) : defaultMigrationHandler(el)
   );
 }
 
@@ -71,8 +63,6 @@ async function defaultMigrationHandler(element) {
     }
   });
 }
-
-function scormMigrationHandler(element) {}
 
 function cpAssets(key, newKey) {
   return storage.copyFile(key, newKey);
