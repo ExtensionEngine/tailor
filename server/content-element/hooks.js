@@ -43,10 +43,8 @@ function add(ContentElement, Hooks, Models) {
   }
 
   function sseUpdate(hookType, element) {
-    const previous = element.previous();
-    if (!previous.detached && element.detached) {
-      return sseDelete(hookType, element);
-    }
+    const isDetached = element.previous('detached') === false && element.detached;
+    if (isDetached) return sseDelete(hookType, element);
     sse.channel(element.repositoryId).send(Events.Update, element);
   }
 
