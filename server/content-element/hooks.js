@@ -42,7 +42,11 @@ function add(ContentElement, Hooks, Models) {
     sse.channel(element.repositoryId).send(Events.Create, element);
   }
 
-  function sseUpdate(_, element) {
+  function sseUpdate(hookType, element) {
+    const previous = element.previous();
+    if (!previous.detached && element.detached) {
+      return sseDelete(hookType, element);
+    }
     sse.channel(element.repositoryId).send(Events.Update, element);
   }
 
