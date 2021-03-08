@@ -2,6 +2,7 @@
 
 const config = require('../../config/server/storage');
 const { ContentElement } = require('../shared/database');
+const get = require('lodash/get');
 const { getAssetsPath } = require('../shared/storage/util');
 const { Op } = require('sequelize');
 const Promise = require('bluebird');
@@ -49,7 +50,27 @@ async function imageMigrationHandler(element) {
   return element.update({ ...element, data: { ...element.data, url: newKey } });
 }
 
-function defaultMigrationHandler(element) {}
+async function defaultMigrationHandler(element) {
+  const { repositoryId, data } = element;
+  const { protocol } = config;
+  const url = get(data, 'assets.url');
+  if (!url) return;
+  const assetUrl = url.substr(protocol.length).match(regex);
+  if (!assetUrl) return;
+  const [key, , fileName] = assetUrl;
+  const newKey = `${getAssetsPath(repositoryId)}/${fileName}`;
+  await cpAssets(key, newKey);
+  return element.update({
+    ...element,
+    data: {
+      ...element.data,
+      assets: {
+        ...element.data.assets,
+        url: `${protocol}${newKey}`
+      }
+    }
+  });
+}
 
 function scormMigrationHandler(element) {}
 
