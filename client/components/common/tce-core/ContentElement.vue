@@ -28,11 +28,7 @@
       <div
         v-if="showDiscussion"
         :class="{ 'is-visible': isHighlighted || hasComments }">
-        <discussion
-          @open="focus"
-          @close="isFocused = false"
-          v-bind="element"
-          :user="currentUser" />
+        <discussion @open="focus" v-bind="element" :user="currentUser" />
       </div>
       <div
         v-if="!parent"
