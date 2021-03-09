@@ -1,7 +1,5 @@
 <p align="center">
-  <a href="#">
-    <img width="100"src="./client/assets/img/default-logo-full.svg">
-  </a>
+  <img width="100"src="./client/assets/img/default-logo-full.svg">
 </p>
 
 # Tailor
