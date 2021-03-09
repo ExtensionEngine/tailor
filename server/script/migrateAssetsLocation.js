@@ -1,7 +1,7 @@
 'use strict';
 
+const { ContentElement, sequelize } = require('../shared/database');
 const cloneDeep = require('lodash/cloneDeep');
-const { ContentElement } = require('../shared/database');
 const get = require('lodash/get');
 const { getAssetsPath } = require('../shared/storage/util');
 const { Op } = require('sequelize');
@@ -31,37 +31,40 @@ const mapTypesToActions = {
 };
 
 async function migrateContentElement() {
+  const transaction = await sequelize.transaction();
   const contentElements = await ContentElement.findAll({
-    where: { type: { [Op.in]: types } }
+    where: { type: { [Op.in]: types } },
+    transaction
   });
-  return Promise.each(
+  await Promise.each(
     contentElements,
-    it => mapTypesToActions[it.type] && mapTypesToActions[it.type](it)
+    it => mapTypesToActions[it.type] && mapTypesToActions[it.type](it, transaction)
   );
+  return transaction.commit();
 }
 
-async function imageMigrationHandler(element) {
+async function imageMigrationHandler(element, transaction) {
   const { repositoryId, data: { url } } = element;
   if (!url) return;
   const { key, newKey } = getKeysFromUrl(url, repositoryId) || {};
   if (!key || !newKey) return;
   await cpAssets(key, newKey);
-  return element.update({ ...element, data: { ...element.data, url: newKey } });
+  return element.update({ data: { ...element.data, url: newKey } }, { transaction });
 }
 
-async function defaultMigrationHandler(element) {
-  const { repositoryId, data } = element;
-  const url = get(data, 'assets.url');
+async function defaultMigrationHandler(element, transaction) {
+  const { repositoryId } = element;
+  const url = get(element, 'data.assets.url');
   if (!url) return;
   const { key, newKey } = getKeysFromUrl(url, repositoryId) || {};
   if (!key || !newKey) return;
   await cpAssets(key, newKey);
-  const newElement = cloneDeep(element);
-  Object.assign(newElement.data.assets, { url: `${protocol}${newKey}` });
-  return element.update(newElement);
+  const data = cloneDeep(element.data);
+  Object.assign(data.assets, { url: `${protocol}${newKey}` });
+  return element.update({ data }, { transaction });
 }
 
-function carouselMigrationHandler(element) {
+function carouselMigrationHandler(element, transaction) {
   const { repositoryId, data: { embeds } } = element;
   return Promise.all(Object.entries(embeds).map(async ([id, el]) => {
     if (el.type !== 'VIDEO') return;
@@ -73,7 +76,6 @@ function carouselMigrationHandler(element) {
     const newElement = cloneDeep(el);
     Object.assign(newElement.data.assets, { url: `${protocol}${newKey}` });
     return element.update({
-      ...element,
       data: {
         ...element.data,
         embeds: {
@@ -81,7 +83,7 @@ function carouselMigrationHandler(element) {
           [id]: newElement
         }
       }
-    });
+    }, { transaction });
   }));
 }
 
