@@ -27,9 +27,9 @@
         <div class="d-flex justify-end">
           <v-btn @click="visible = false" text>Cancel</v-btn>
           <v-btn
-            type="submit"
             :disabled="submitting"
             :loading="submitting"
+            type="submit"
             color="primary darken-4"
             text>
             Create
@@ -71,8 +71,8 @@ export default {
   data() {
     return {
       visible: false,
-      activity: initActivityState(this.repositoryId, this.levels),
-      submitting: false
+      submitting: false,
+      activity: initActivityState(this.repositoryId, this.levels)
     };
   },
   computed: {
@@ -98,9 +98,9 @@ export default {
       const item = await this.save({ ...activity });
       if (anchor && (anchor.id === activity.parentId)) this.$emit('expand', anchor);
       this.$emit('created', item);
+      this.submitting = false;
       this.visible = false;
       this.$router.push({ query: { activityId: item.id } });
-      this.submitting = false;
     }
   },
   watch: {
