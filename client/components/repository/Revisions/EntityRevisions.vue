@@ -106,7 +106,6 @@ export default {
   .preview {
     flex-grow: 1;
     min-width: 300px;
-    min-height: 500px;
     margin-right: 16px;
     text-align: center;
   }
@@ -123,5 +122,11 @@ export default {
   height: 0;
   padding-top: 0;
   padding-bottom: 0;
+}
+
+::v-deep {
+  .content-element.frame {
+    height: 100%;
+  }
 }
 </style>
