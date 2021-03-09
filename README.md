@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="#">
+    <img width="100"src="./client/assets/img/default-logo-full.svg">
+  </a>
+</p>
+
 # Tailor
 
 [![CircleCI build
