@@ -95,12 +95,15 @@ export default {
         activity.parentId = action === ADD_INTO ? anchor.id : anchor.parentId;
       }
       activity.position = await this.calculateInsertPosition({ activity, anchor, action });
-      const item = await this.save({ ...activity });
-      if (anchor && (anchor.id === activity.parentId)) this.$emit('expand', anchor);
-      this.$emit('created', item);
-      this.submitting = false;
-      this.visible = false;
-      this.$router.push({ query: { activityId: item.id } });
+      try {
+        const item = await this.save({ ...activity });
+        if (anchor && (anchor.id === activity.parentId)) this.$emit('expand', anchor);
+        this.$emit('created', item);
+        this.visible = false;
+        this.$router.push({ query: { activityId: item.id } });
+      } finally {
+        this.submitting = false;
+      }
     }
   },
   watch: {
