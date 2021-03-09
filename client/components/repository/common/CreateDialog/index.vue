@@ -26,7 +26,12 @@
           :meta="input" />
         <div class="d-flex justify-end">
           <v-btn @click="visible = false" text>Cancel</v-btn>
-          <v-btn type="submit" color="primary darken-4" text>
+          <v-btn
+            type="submit"
+            :disabled="submitting"
+            :loading="submitting"
+            color="primary darken-4"
+            text>
             Create
           </v-btn>
         </div>
@@ -66,7 +71,8 @@ export default {
   data() {
     return {
       visible: false,
-      activity: initActivityState(this.repositoryId, this.levels)
+      activity: initActivityState(this.repositoryId, this.levels),
+      submitting: false
     };
   },
   computed: {
@@ -83,6 +89,7 @@ export default {
       this.activity.data[key] = val;
     },
     async submit() {
+      this.submitting = true;
       const { activity, anchor, action } = this;
       if (anchor) {
         activity.parentId = action === ADD_INTO ? anchor.id : anchor.parentId;
@@ -93,6 +100,7 @@ export default {
       this.$emit('created', item);
       this.visible = false;
       this.$router.push({ query: { activityId: item.id } });
+      this.submitting = false;
     }
   },
   watch: {
