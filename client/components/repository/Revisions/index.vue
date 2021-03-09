@@ -81,7 +81,6 @@ export default {
   text-align: left;
 
   ul {
-    max-width: 100%;
     padding: 0.5rem;
     list-style-type: none;
 
