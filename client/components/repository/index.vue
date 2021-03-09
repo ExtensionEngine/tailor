@@ -34,6 +34,31 @@ import selectActivity from '@/components/repository/common/selectActivity';
 import sortBy from 'lodash/sortBy';
 import withUserTracking from 'components/common/mixins/userTracking';
 
+const getTabItems = ({ hasWorkflow, isAdmin, isRepositoryAdmin, hasActivities }) => {
+  return [
+    {
+      name: 'Structure',
+      route: 'repository',
+      icon: 'file-tree'
+    },
+    hasActivities && hasWorkflow && {
+      name: 'Progress',
+      route: 'progress',
+      icon: 'chart-timeline-variant'
+    },
+    hasActivities && {
+      name: 'History',
+      route: 'revisions',
+      icon: 'history'
+    },
+    (isAdmin || isRepositoryAdmin) && {
+      name: 'Settings',
+      route: 'repository-info',
+      icon: 'settings-outline'
+    }
+  ];
+};
+
 export default {
   mixins: [selectActivity, withUserTracking],
   props: {
@@ -53,24 +78,14 @@ export default {
       return this.getActiveUsers('repository', this.repositoryId);
     },
     tabs() {
+      const { isAdmin, isRepositoryAdmin, hasWorkflow } = this;
       const hasActivities = get(this.activities, 'length');
       const activityId = get(this.lastSelectedActivity, 'id');
-      const query = { ...this.$route.query, activityId };
-      const items = [
-        { name: 'Structure', route: 'repository', icon: 'file-tree' },
-        hasActivities && this.hasWorkflow && {
-          name: 'Progress',
-          route: 'progress',
-          icon: 'chart-timeline-variant'
-        },
-        hasActivities && { name: 'History', route: 'revisions', icon: 'history' },
-        (this.isAdmin || this.isRepositoryAdmin) && {
-          name: 'Settings',
-          route: 'repository-info',
-          icon: 'settings-outline'
-        }
-      ];
-      return items
+      const query = {
+        ...this.$route.query,
+        ...activityId && { activityId }
+      };
+      return getTabItems({ isAdmin, isRepositoryAdmin, hasWorkflow, hasActivities })
         .filter(Boolean)
         .map(tab => ({ ...tab, query }));
     }
