@@ -26,7 +26,7 @@ import revisionApi from '@/api/revision';
 
 const getPublishedState = revisions => revisions.reduce((all, { state }) => ({
   ...all,
-  [state.uid]: omit(state, ['createdAt', 'updatedAt'])
+  [state.uid]: omit(state, ['detached', 'createdAt', 'updatedAt', 'deletedAt'])
 }), {});
 
 export default {
@@ -68,11 +68,12 @@ export default {
       return isAfter(updatedAt, publishedAt);
     },
     isRemoved(element) {
-      return !this.elements[element.uid];
+      element = this.elements[element.uid];
+      return !element || element.detached;
     },
     getChangeType(element) {
-      if (this.isAdded(element)) return 'new';
       if (this.isRemoved(element)) return 'removed';
+      if (this.isAdded(element)) return 'new';
       if (this.isModified(element)) return 'changed';
       return null;
     },
