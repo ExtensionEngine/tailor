@@ -1,7 +1,6 @@
 'use strict';
 
 const { ContentElement, sequelize } = require('../shared/database');
-const cloneDeep = require('lodash/cloneDeep');
 const get = require('lodash/get');
 const { getAssetsPath } = require('../shared/storage/util');
 const { Op } = require('sequelize');
@@ -59,8 +58,10 @@ async function defaultMigrationHandler(element, transaction) {
   const { key, newKey } = getKeysFromUrl(url, repositoryId) || {};
   if (!key || !newKey) return;
   await cpAssets(key, newKey);
-  const data = cloneDeep(element.data);
-  Object.assign(data.assets, { url: `${protocol}${newKey}` });
+  const data = {
+    ...element.data,
+    assets: { ...element.data.assets, url: `${protocol}${newKey}` }
+  };
   return element.update({ data }, { transaction });
 }
 
@@ -73,8 +74,13 @@ function carouselMigrationHandler(element, transaction) {
     const { key, newKey } = getKeysFromUrl(url, repositoryId) || {};
     if (!key || !newKey) return;
     await cpAssets(key, newKey);
-    const newElement = cloneDeep(el);
-    Object.assign(newElement.data.assets, { url: `${protocol}${newKey}` });
+    const newElement = {
+      ...el,
+      data: {
+        ...el.data,
+        assets: { ...el.data.assets, url: `${protocol}${newKey}` }
+      }
+    };
     return element.update({
       data: {
         ...element.data,
