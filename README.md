@@ -1,6 +1,6 @@
-<p align="center">
+<div align="center">
   <img width="100" src="./client/assets/img/default-logo-full.svg">
-</p>
+</div>
 
 # Tailor
 
