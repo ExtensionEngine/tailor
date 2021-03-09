@@ -1,6 +1,6 @@
 <mj-section>
   <mj-column>
-    <mj-image width="80px" height="80px" src="{{origin}}/assets/img/default-email-logo.svg" />
+    <mj-image width="80px" height="80px" src="{{origin}}/assets/img/default-logo-compact.svg" />
     <mj-text align="center" mj-class="title">
       Tailor
     </mj-text>
