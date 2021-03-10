@@ -62,7 +62,7 @@ function migrateContentElementData(element) {
   return invokeAction(element.type)(element);
 }
 
-function migrateContentElementMeta(element) {
+async function migrateContentElementMeta(element) {
   const { repositoryId } = element;
   const metaInputs = schemasIds
     .map(id => getElementMetadata(id, element))
@@ -71,14 +71,20 @@ function migrateContentElementMeta(element) {
   const fileMetas = flatten(metaInputs)
     .filter(it => it.type === 'FILE')
     .map(it => it.key);
-  const meta = toPairs(element.meta).map(it => {
+  const meta = await Promise.map(toPairs(element.meta), async it => {
     const [id, value] = it;
     if (!fileMetas.includes(id)) return it;
     const { url } = value;
     if (!url) return it;
     const { key, newKey } = getKeysFromUrl(url, repositoryId) || {};
     if (!key || !newKey) return it;
-    return [id, { ...value, key: newKey, url: `${protocol}${newKey}` }];
+    await cpAssets(key, newKey);
+    return [id, {
+      ...value,
+      key: newKey,
+      url: `${protocol}${newKey}`,
+      publicUrl: await storage.getFileUrl(newKey)
+    }];
   });
   return fromPairs(meta);
 }
