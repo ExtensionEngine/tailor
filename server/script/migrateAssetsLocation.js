@@ -46,7 +46,6 @@ migrate()
     process.exit(0);
   })
   .catch(error => {
-    console.log('Error: ', error);
     console.error(error.message);
     process.exit(1);
   });
@@ -132,7 +131,7 @@ async function getNewMeta(fileMetas, meta, repositoryId) {
   const newMeta = await Promise.map(toPairs(meta), async it => {
     const [id, value] = it;
     if (!fileMetas.includes(id)) return it;
-    const { url } = value;
+    const url = get(value, 'url');
     if (!url) return it;
     const { key, newKey } = getKeysFromUrl(url, repositoryId) || {};
     if (!key || !newKey) return it;
