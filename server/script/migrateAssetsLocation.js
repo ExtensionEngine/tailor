@@ -19,6 +19,7 @@ const { Op } = require('sequelize');
 const Promise = require('bluebird');
 const { protocol } = require('../../config/server/storage');
 const storage = require('../shared/storage');
+const storageProxy = require('../shared/storage/proxy');
 const toPairs = require('lodash/toPairs');
 
 const regex = /repository\/assets\/(.*)/;
@@ -39,70 +40,53 @@ const invokeAction = type => (...args) => {
   return isFunction(action) ? action(...args) : defaultAction(...args);
 };
 
-// migrateContentElements()
-//   .then(() => {
-//     console.info('Migrated content elements.');
-//     process.exit(0);
-//   })
-//   .catch(error => {
-//     console.error(error.message);
-//     process.exit(1);
-//   });
-
-// migrateActivities()
-//   .then(() => {
-//     console.info('Migrated activities.');
-//     process.exit(0);
-//   })
-//   .catch(error => {
-//     console.error(error.message);
-//     process.exit(1);
-//   });
-
-migrateRevisions()
+migrate()
   .then(() => {
-    console.info('Migrated revisions.');
+    console.info('Migration script was executed successfully.');
     process.exit(0);
   })
   .catch(error => {
+    console.log('Error: ', error);
     console.error(error.message);
     process.exit(1);
   });
 
-async function migrateActivities() {
+async function migrate() {
   const transaction = await sequelize.transaction();
-  const activities = await Activity.findAll({ transaction });
-  await Promise.each(activities, async it => {
-    const payload = await migrateActivity(it);
-    return it.update(payload, { transaction });
-  });
+  await migrateActivities(transaction);
+  await migrateContentElements(transaction);
+  await migrateRevisions(transaction);
   return transaction.commit();
 }
 
-async function migrateContentElements() {
-  const transaction = await sequelize.transaction();
+async function migrateActivities(transaction) {
+  const activities = await Activity.findAll({ transaction });
+  return Promise.each(activities, async it => {
+    const payload = await migrateActivity(it);
+    return it.update(payload, { transaction });
+  });
+}
+
+async function migrateContentElements(transaction) {
   const contentElements = await ContentElement.findAll({
     where: { type: { [Op.in]: ceTypes } },
     transaction
   });
-  await Promise.each(contentElements, async it => {
+  return Promise.each(contentElements, async it => {
     const payload = await migrateContentElement(it);
     return it.update(payload, { transaction });
   });
-  return transaction.commit();
 }
 
-async function migrateRevisions() {
-  const transaction = await sequelize.transaction();
+async function migrateRevisions(transaction) {
   const revisions = await Revision.findAll({
     where: { entity: { [Op.in]: revisionsTypes } },
     transaction
   });
-  await Promise.each(revisions, async it => {
+  return Promise.each(revisions, async it => {
     const payload = await migrateRevision(it);
     return it.update(payload, { transaction });
   });
-  return transaction.commit();
 }
 
 async function migrateActivity(activity) {
@@ -122,12 +106,9 @@ async function migrateContentElement(element) {
 
 async function migrateRevision(revision) {
   const { entity, state } = revision;
-  let payload;
-  if (entity === 'CONTENT_ELEMENT') {
-    payload = await migrateContentElement(state);
-  } else {
-    payload = await migrateActivity(state);
-  }
+  const payload = entity === 'CONTENT_ELEMENT'
+    ? await migrateContentElement(state)
+    : await migrateActivity(state);
   return { state: { ...state, ...payload } };
 }
 
@@ -160,14 +141,15 @@ async function getNewMeta(fileMetas, meta, repositoryId) {
       ...value,
       key: newKey,
       url: `${protocol}${newKey}`,
-      publicUrl: await storage.getFileUrl(newKey)
+      publicUrl: await storageProxy.getFileUrl(newKey)
     }];
   });
   return fromPairs(newMeta);
 }
 
 async function imageMigrationHandler(element) {
-  const { repositoryId, data: { url } } = element;
+  const { repositoryId, data } = element;
+  const url = get(data, 'url');
   if (!url) return;
   const { key, newKey } = getKeysFromUrl(url, repositoryId) || {};
   if (!key || !newKey) return;
@@ -197,6 +179,7 @@ async function defaultMigrationHandler(element) {
   await cpAssets(key, newKey);
   return {
     ...element.data,
+    url: await storageProxy.getFileUrl(newKey),
     assets: { ...element.data.assets, url: `${protocol}${newKey}` }
   };
 }
