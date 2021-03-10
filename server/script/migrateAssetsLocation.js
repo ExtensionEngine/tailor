@@ -1,7 +1,11 @@
 'use strict';
 
-const { ContentElement, sequelize } = require('../shared/database');
-const { getElementMetadata, SCHEMAS } = require('../../config/shared/activities');
+const { Activity, ContentElement, sequelize } = require('../shared/database');
+const {
+  getActivityMetadata,
+  getElementMetadata,
+  SCHEMAS
+} = require('../../config/shared/activities');
 const flatten = require('lodash/flatten');
 const fromPairs = require('lodash/fromPairs');
 const get = require('lodash/get');
@@ -29,15 +33,35 @@ const invokeAction = type => (...args) => {
   return isFunction(action) ? action(...args) : defaultAction(...args);
 };
 
-migrateContentElements()
+// migrateContentElements()
+//   .then(() => {
+//     console.info('Migrated content elements.');
+//     process.exit(0);
+//   })
+//   .catch(error => {
+//     console.error(error.message);
+//     process.exit(1);
+//   });
+
+migrateActivities()
   .then(() => {
-    console.info('Migrated content elements.');
+    console.info('Migrated activities.');
     process.exit(0);
   })
   .catch(error => {
     console.error(error.message);
     process.exit(1);
   });
+
+async function migrateActivities() {
+  const transaction = await sequelize.transaction();
+  const activities = await Activity.findAll({ transaction });
+  await Promise.each(activities, async it => {
+    const payload = await migrateActivity(it);
+    return it.update(payload, { transaction });
+  });
+  return transaction.commit();
+}
 
 async function migrateContentElements() {
   const transaction = await sequelize.transaction();
@@ -50,6 +74,15 @@ async function migrateContentElements() {
     return it.update(payload, { transaction });
   });
   return transaction.commit();
+}
+
+async function migrateActivity(activity) {
+  const { repositoryId, data: meta } = activity;
+  const fileMetas = getActivityMetadata(activity)
+    .filter(it => it.type === 'FILE')
+    .map(it => it.key);
+  const data = await getNewMeta(fileMetas, meta, repositoryId);
+  return { data };
 }
 
 async function migrateContentElement(element) {
@@ -71,7 +104,11 @@ async function migrateContentElementMeta(element) {
   const fileMetas = flatten(metaInputs)
     .filter(it => it.type === 'FILE')
     .map(it => it.key);
-  const meta = await Promise.map(toPairs(element.meta), async it => {
+  return getNewMeta(fileMetas, element.meta, repositoryId);
+}
+
+async function getNewMeta(fileMetas, meta, repositoryId) {
+  const newMeta = await Promise.map(toPairs(meta), async it => {
     const [id, value] = it;
     if (!fileMetas.includes(id)) return it;
     const { url } = value;
@@ -86,7 +123,7 @@ async function migrateContentElementMeta(element) {
       publicUrl: await storage.getFileUrl(newKey)
     }];
   });
-  return fromPairs(meta);
+  return fromPairs(newMeta);
 }
 
 async function imageMigrationHandler(element) {
