@@ -1,6 +1,11 @@
 'use strict';
 
-const { Activity, ContentElement, sequelize } = require('../shared/database');
+const {
+  Activity,
+  ContentElement,
+  Revision,
+  sequelize
+} = require('../shared/database');
 const {
   getActivityMetadata,
   getElementMetadata,
@@ -17,7 +22,8 @@ const storage = require('../shared/storage');
 const toPairs = require('lodash/toPairs');
 
 const regex = /repository\/assets\/(.*)/;
-const types = ['IMAGE', 'VIDEO', 'AUDIO', 'PDF', 'CAROUSEL'];
+const ceTypes = ['IMAGE', 'VIDEO', 'AUDIO', 'PDF', 'CAROUSEL'];
+const revisionsTypes = ['CONTENT_ELEMENT', 'ACTIVITY'];
 const isFunction = fn => fn && typeof fn === 'function';
 const schemasIds = SCHEMAS.map(it => it.id);
 
@@ -43,9 +49,19 @@ const invokeAction = type => (...args) => {
 //     process.exit(1);
 //   });
 
-migrateActivities()
+// migrateActivities()
+//   .then(() => {
+//     console.info('Migrated activities.');
+//     process.exit(0);
+//   })
+//   .catch(error => {
+//     console.error(error.message);
+//     process.exit(1);
+//   });
+
+migrateRevisions()
   .then(() => {
-    console.info('Migrated activities.');
+    console.info('Migrated revisions.');
     process.exit(0);
   })
   .catch(error => {
@@ -66,11 +82,24 @@ async function migrateActivities() {
 async function migrateContentElements() {
   const transaction = await sequelize.transaction();
   const contentElements = await ContentElement.findAll({
-    where: { type: { [Op.in]: types } },
+    where: { type: { [Op.in]: ceTypes } },
     transaction
   });
   await Promise.each(contentElements, async it => {
     const payload = await migrateContentElement(it);
+    return it.update(payload, { transaction });
+  });
+  return transaction.commit();
+}
+
+async function migrateRevisions() {
+  const transaction = await sequelize.transaction();
+  const revisions = await Revision.findAll({
+    where: { entity: { [Op.in]: revisionsTypes } },
+    transaction
+  });
+  await Promise.each(revisions, async it => {
+    const payload = await migrateRevision(it);
     return it.update(payload, { transaction });
   });
   return transaction.commit();
@@ -89,6 +118,17 @@ async function migrateContentElement(element) {
   const data = await migrateContentElementData(element);
   const meta = await migrateContentElementMeta(element);
   return { data, meta };
+}
+
+async function migrateRevision(revision) {
+  const { entity, state } = revision;
+  let payload;
+  if (entity === 'CONTENT_ELEMENT') {
+    payload = await migrateContentElement(state);
+  } else {
+    payload = await migrateActivity(state);
+  }
+  return { state: { ...state, ...payload } };
 }
 
 function migrateContentElementData(element) {
