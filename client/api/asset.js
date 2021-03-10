@@ -4,9 +4,9 @@ const urls = {
   base: repositoryId => `/repositories/${repositoryId}/assets`
 };
 
-function getUrl(key) {
+function getUrl(repositoryId, key) {
   const params = { key };
-  return request.get(urls.base, { params }).then(res => res.data.url);
+  return request.get(urls.base(repositoryId), { params }).then(res => res.data.url);
 }
 
 function upload(repositoryId, data) {

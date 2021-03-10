@@ -29,7 +29,7 @@ export default {
         });
     }, 'uploading'),
     async downloadFile(key, name) {
-      const url = await this.$storageService.getUrl(key);
+      const url = await this.$storageService.getUrl(this.repositoryId, key);
       return this.download(url, name);
     },
     deleteFile(item) {
