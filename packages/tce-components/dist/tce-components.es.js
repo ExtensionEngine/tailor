@@ -3857,4 +3857,4 @@ var PreviewOverlay = __vue_normalize__({
   staticRenderFns: __vue_staticRenderFns__
 }, __vue_inject_styles__, __vue_script__, __vue_scope_id__, __vue_is_functional_template__);
 
-export { ActiveUsers, AddElement, ContainedContent, Discussion$1 as Discussion, ElementList, ElementPlaceholder, EmbeddedContainer, InlineActivator, InputError, PreviewOverlay, PublishDiffChip };
+export { ActiveUsers, AddElement, ContainedContent, ContentElement, Discussion$1 as Discussion, ElementList, ElementPlaceholder, EmbeddedContainer, InlineActivator, InputError, PreviewOverlay, PublishDiffChip };

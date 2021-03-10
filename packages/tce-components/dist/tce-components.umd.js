@@ -3894,6 +3894,7 @@
   exports.ActiveUsers = ActiveUsers;
   exports.AddElement = AddElement;
   exports.ContainedContent = ContainedContent;
+  exports.ContentElement = ContentElement;
   exports.Discussion = Discussion$1;
   exports.ElementList = ElementList;
   exports.ElementPlaceholder = ElementPlaceholder;
