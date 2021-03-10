@@ -1,16 +1,21 @@
 'use strict';
 
 const { ContentElement, sequelize } = require('../shared/database');
+const { getElementMetadata, SCHEMAS } = require('../../config/shared/activities');
+const flatten = require('lodash/flatten');
+const fromPairs = require('lodash/fromPairs');
 const get = require('lodash/get');
 const { getAssetsPath } = require('../shared/storage/util');
 const { Op } = require('sequelize');
 const Promise = require('bluebird');
 const { protocol } = require('../../config/server/storage');
 const storage = require('../shared/storage');
+const toPairs = require('lodash/toPairs');
 
 const regex = /repository\/assets\/(.*)/;
 const types = ['IMAGE', 'VIDEO', 'AUDIO', 'PDF', 'CAROUSEL'];
 const isFunction = fn => fn && typeof fn === 'function';
+const schemasIds = SCHEMAS.map(it => it.id);
 
 const mapTypesToActions = {
   IMAGE: imageMigrationHandler,
@@ -49,11 +54,33 @@ async function migrateContentElements() {
 
 async function migrateContentElement(element) {
   const data = await migrateContentElementData(element);
-  return { data };
+  const meta = await migrateContentElementMeta(element);
+  return { data, meta };
 }
 
 function migrateContentElementData(element) {
   return invokeAction(element.type)(element);
+}
+
+function migrateContentElementMeta(element) {
+  const { repositoryId } = element;
+  const metaInputs = schemasIds
+    .map(id => getElementMetadata(id, element))
+    .filter(meta => !meta.isEmpty)
+    .map(meta => meta.inputs);
+  const fileMetas = flatten(metaInputs)
+    .filter(it => it.type === 'FILE')
+    .map(it => it.key);
+  const meta = toPairs(element.meta).map(it => {
+    const [id, value] = it;
+    if (!fileMetas.includes(id)) return it;
+    const { url } = value;
+    if (!url) return it;
+    const { key, newKey } = getKeysFromUrl(url, repositoryId) || {};
+    if (!key || !newKey) return it;
+    return [id, { ...value, key: newKey, url: `${protocol}${newKey}` }];
+  });
+  return fromPairs(meta);
 }
 
 async function imageMigrationHandler(element) {
