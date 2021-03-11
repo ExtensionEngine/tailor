@@ -13,18 +13,20 @@
       <status-field-group
         @update="updateStatus"
         v-bind="selectedActivity.status"
-        class="mt-9 mb-12" />
+        class="mt-9 mb-4" />
     </template>
     <section v-else class="placeholder grey--text text--darken-3">
       <h4>Status Sidebar</h4>
       <v-icon>mdi-chevron-left</v-icon>
       <div class="info-content">{{ emptyMessage }}</div>
     </section>
+    <activity-discussion :activity="selectedActivity" panel />
   </v-navigation-drawer>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import ActivityDiscussion from '@/components/repository/common/ActivityDiscussion';
 import SidebarHeader from './Header';
 import StatusFieldGroup from './FieldGroup';
 
@@ -50,7 +52,11 @@ export default {
         .then(() => { this.$snackbar.show('Status saved'); });
     }
   },
-  components: { StatusFieldGroup, SidebarHeader }
+  components: {
+    ActivityDiscussion,
+    StatusFieldGroup,
+    SidebarHeader
+  }
 };
 </script>
 
@@ -60,7 +66,7 @@ export default {
 }
 
 .placeholder {
-  margin-top: 4.375rem;
+  margin: 4.375rem 0 2.5rem 0;
   padding: 0 1rem;
 
   h4 {
