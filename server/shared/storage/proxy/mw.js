@@ -1,6 +1,5 @@
 'use strict';
 
-const config = require('../../../../config/server').storage;
 const { FORBIDDEN } = require('http-status-codes');
 const miss = require('mississippi');
 const path = require('path');
@@ -23,7 +22,7 @@ function setSignedCookies(req, res, next) {
   const repositoryId = req.repository.id;
   if (proxy.hasCookies(req.cookies, repositoryId)) return next();
   const maxAge = 1000 * 60 * 60; // 1 hour in ms
-  const cookies = proxy.getSignedCookies(config.path, repositoryId, maxAge);
+  const cookies = proxy.getSignedCookies(repositoryId, maxAge);
   Object.entries(cookies).forEach(([cookie, value]) => {
     res.cookie(cookie, value, { maxAge, httpOnly: true });
   });

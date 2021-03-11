@@ -32,8 +32,8 @@ class Proxy {
     return this.isSelfHosted && this.provider.path;
   }
 
-  getSignedCookies(baseUrl, repositoryId, maxAge) {
-    const resource = `${baseUrl}/${repositoryId}`;
+  getSignedCookies(repositoryId, maxAge) {
+    const resource = `repository/${repositoryId}`;
     return {
       ...this.provider.getSignedCookies(resource, maxAge),
       [storageCookies.REPOSITORY]: repositoryId
