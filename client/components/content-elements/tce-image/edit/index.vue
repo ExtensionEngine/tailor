@@ -31,7 +31,7 @@
         v-show="!showCropper"
         :src="currentImage"
         :aspect-ratio="aspectRatio"
-        :max-width="maxWidth"
+        :max-width="elementWidth"
         class="mx-auto">
         <template v-slot:placeholder>
           <v-row
@@ -82,12 +82,7 @@ export default {
     isDisabled: { type: Boolean, default: false },
     dense: { type: Boolean, default: false }
   },
-  data: () => ({
-    containerWidth: 0,
-    currentImage: null,
-    persistedImage: null,
-    showCropper: false
-  }),
+  data: () => ({ currentImage: null, persistedImage: null, showCropper: false }),
   computed: {
     showPlaceholder() {
       const imageAvailable = !isEmpty(this.element.data.url);
@@ -95,10 +90,8 @@ export default {
       if (this.$refs.cropper) this.$refs.cropper.destroy();
       return true;
     },
-    elementWidth: ({ containerWidth, element }) => element.data.meta?.width,
-    elementHeight: ({ containerWidth, element }) => element.data.meta?.height,
-    maxWidth: ({ containerWidth, elementWidth }) =>
-      containerWidth > elementWidth ? elementWidth : containerWidth,
+    elementWidth: ({ element }) => element.data.meta?.width,
+    elementHeight: ({ element }) => element.data.meta?.height,
     aspectRatio: ({ elementHeight, elementWidth }) =>
       elementHeight && elementWidth && (elementWidth / elementHeight)
   },
@@ -129,7 +122,6 @@ export default {
     }
   },
   mounted() {
-    this.containerWidth = this.$el.parentElement.offsetWidth;
     this.load(this.element.data.url);
 
     this.$elementBus.on('upload', dataUrl => {
