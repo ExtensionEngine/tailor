@@ -28,15 +28,20 @@ const revisionsTypes = ['CONTENT_ELEMENT', 'ACTIVITY'];
 const isFunction = fn => fn && typeof fn === 'function';
 const schemasIds = SCHEMAS.map(it => it.id);
 
-const mapTypesToActions = {
+const mapTypeToAction = {
   IMAGE: imageMigrationHandler,
   CAROUSEL: carouselMigrationHandler,
   DEFAULT: defaultMigrationHandler
 };
 
+const mapEntityToAction = {
+  CONTENT_ELEMENT: migrateContentElement,
+  ACTIVITY: migrateActivity
+};
+
 const invokeAction = type => (...args) => {
-  const action = mapTypesToActions[type];
-  const defaultAction = mapTypesToActions.DEFAULT;
+  const action = mapTypeToAction[type];
+  const defaultAction = mapTypeToAction.DEFAULT;
   return isFunction(action) ? action(...args) : defaultAction(...args);
 };
 
@@ -105,9 +110,7 @@ async function migrateContentElement(element) {
 
 async function migrateRevision(revision) {
   const { entity, state } = revision;
-  const payload = entity === 'CONTENT_ELEMENT'
-    ? await migrateContentElement(state)
-    : await migrateActivity(state);
+  const payload = await (mapEntityToAction[entity] && mapEntityToAction[entity](state));
   return { state: { ...state, ...payload } };
 }
 
