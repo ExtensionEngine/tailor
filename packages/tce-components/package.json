@@ -9,12 +9,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ExtensionEngine/tce-scorm.git"
+    "url": "git+https://github.com/ExtensionEngine/tailor.git"
   },
   "license": "MIT",
   "author": "ExtensionEngine <info@extensionengine.com>",
   "main": "dist/tce-components.js",
-  "module": "dist/tce-scorm.esm.js",
+  "module": "dist/tce-components.es.js",
   "scripts": {
     "prebuild": "del-cli dist",
     "build": "bili",
