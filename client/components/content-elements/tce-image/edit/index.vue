@@ -31,6 +31,7 @@
         v-show="!showCropper"
         :src="currentImage"
         :aspect-ratio="aspectRatio"
+        :max-width="elementWidth"
         class="mx-auto">
         <template v-slot:placeholder>
           <v-row
@@ -158,6 +159,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.tce-image {
+  max-width: 100%;
+}
+
 .hide-cropper ::v-deep .cropper-container {
   display: none;
 }
