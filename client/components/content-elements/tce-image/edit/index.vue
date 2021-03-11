@@ -159,10 +159,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.tce-image {
-  max-width: 100%;
-}
-
 .hide-cropper ::v-deep .cropper-container {
   display: none;
 }
