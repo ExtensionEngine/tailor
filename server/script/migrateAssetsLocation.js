@@ -138,7 +138,7 @@ async function getNewMeta(fileMetas, meta, repositoryId) {
     if (!url) return it;
     const { key, newKey } = getKeysFromUrl(url, repositoryId) || {};
     if (!key || !newKey) return it;
-    await cpAssets(key, newKey);
+    await storage.copyFile(key, newKey);
     return [id, {
       ...value,
       key: newKey,
@@ -155,7 +155,7 @@ async function imageMigrationHandler(element) {
   if (!url) return data;
   const { key, newKey } = getKeysFromUrl(url, repositoryId) || {};
   if (!key || !newKey) return data;
-  await cpAssets(key, newKey);
+  await storage.copyFile(key, newKey);
   return { ...element.data, url: newKey };
 }
 
@@ -178,7 +178,7 @@ async function defaultMigrationHandler(element) {
   if (!url) return data;
   const { key, newKey } = getKeysFromUrl(url, repositoryId) || {};
   if (!key || !newKey) return data;
-  await cpAssets(key, newKey);
+  await storage.copyFile(key, newKey);
   return {
     ...element.data,
     url: await storageProxy.getFileUrl(newKey),
@@ -193,8 +193,4 @@ function getKeysFromUrl(url, repositoryId) {
   const [key, sufix] = assetUrl;
   const newKey = `${getAssetsPath(repositoryId)}/${sufix}`;
   return { key, newKey };
-}
-
-function cpAssets(key, newKey) {
-  return storage.copyFile(key, newKey);
 }
