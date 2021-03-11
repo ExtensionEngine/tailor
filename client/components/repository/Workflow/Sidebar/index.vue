@@ -43,13 +43,13 @@ export default {
   },
   methods: {
     ...mapActions('repository/activities', ['saveStatus']),
-    updateStatus(key, value) {
+    async updateStatus(key, value) {
       const status = {
         ...this.selectedActivity.status,
         [key]: value || null
       };
-      this.saveStatus({ activity: this.selectedActivity, status })
-        .then(() => { this.$snackbar.show('Status saved'); });
+      await this.saveStatus({ activity: this.selectedActivity, status });
+      this.$snackbar.show('Status saved');
     }
   },
   components: {
