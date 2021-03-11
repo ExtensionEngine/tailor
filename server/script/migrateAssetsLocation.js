@@ -71,6 +71,15 @@ async function migrateActivities(transaction) {
   });
 }
 
+async function migrateActivity(activity) {
+  const { repositoryId, data: meta } = activity;
+  const fileMetas = getActivityMetadata(activity)
+    .filter(it => it.type === 'FILE')
+    .map(it => it.key);
+  const data = await getNewMeta(fileMetas, meta, repositoryId);
+  return { data };
+}
+
 async function migrateContentElements(transaction) {
   const contentElements = await ContentElement.findAll({
     where: { type: { [Op.in]: ceTypes } },
@@ -82,36 +91,10 @@ async function migrateContentElements(transaction) {
   });
 }
 
-async function migrateRevisions(transaction) {
-  const revisions = await Revision.findAll({
-    where: { entity: { [Op.in]: revisionsTypes } },
-    transaction
-  });
-  return Promise.each(revisions, async it => {
-    const payload = await migrateRevision(it);
-    return it.update(payload, { transaction });
-  });
-}
-
-async function migrateActivity(activity) {
-  const { repositoryId, data: meta } = activity;
-  const fileMetas = getActivityMetadata(activity)
-    .filter(it => it.type === 'FILE')
-    .map(it => it.key);
-  const data = await getNewMeta(fileMetas, meta, repositoryId);
-  return { data };
-}
-
 async function migrateContentElement(element) {
   const data = await migrateContentElementData(element);
   const meta = await migrateContentElementMeta(element);
   return { data, meta };
-}
-
-async function migrateRevision(revision) {
-  const { entity, state } = revision;
-  const payload = await (mapEntityToAction[entity] && mapEntityToAction[entity](state));
-  return { state: { ...state, ...payload } };
 }
 
 function migrateContentElementData(element) {
@@ -128,6 +111,23 @@ async function migrateContentElementMeta(element) {
     .filter(it => it.type === 'FILE')
     .map(it => it.key);
   return getNewMeta(fileMetas, element.meta, repositoryId);
+}
+
+async function migrateRevisions(transaction) {
+  const revisions = await Revision.findAll({
+    where: { entity: { [Op.in]: revisionsTypes } },
+    transaction
+  });
+  return Promise.each(revisions, async it => {
+    const payload = await migrateRevision(it);
+    return it.update(payload, { transaction });
+  });
+}
+
+async function migrateRevision(revision) {
+  const { entity, state } = revision;
+  const payload = await (mapEntityToAction[entity] && mapEntityToAction[entity](state));
+  return { state: { ...state, ...payload } };
 }
 
 async function getNewMeta(fileMetas, meta, repositoryId) {
