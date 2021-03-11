@@ -36,7 +36,6 @@ import { mapActions, mapGetters, mapState } from 'vuex';
 import commentEventListeners from 'components/common/mixins/commentEventListeners';
 import ContentContainers from './ContainerList';
 import ContentLoader from './Loader';
-import debounce from 'lodash/debounce';
 import differenceBy from 'lodash/differenceBy';
 import find from 'lodash/find';
 import get from 'lodash/get';
@@ -119,7 +118,7 @@ export default {
       ]);
     }, 'isLoading', 800),
     initElementChangeWatcher() {
-      this.storeUnsubscribe = this.$store.subscribe(debounce((mutation, state) => {
+      this.storeUnsubscribe = this.$store.subscribe(mutation => {
         const { type, payload: element } = mutation;
         const { focusedElement } = this;
         if (!focusedElement || !ELEMENT_MUTATIONS.includes(type)) return;
@@ -133,7 +132,7 @@ export default {
         if (!embed) return;
         const hasParent = !!focusedElement.parent;
         this.focusedElement = { ...embed, parent: hasParent ? element : null };
-      }, 100));
+      });
     },
     initElementFocusListener() {
       this.focusHandler = throttle((element, composite) => {
