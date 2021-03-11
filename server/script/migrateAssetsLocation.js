@@ -149,9 +149,9 @@ async function getNewMeta(fileMetas, meta, repositoryId) {
 async function imageMigrationHandler(element) {
   const { repositoryId, data } = element;
   const url = get(data, 'url');
-  if (!url) return;
+  if (!url) return data;
   const { key, newKey } = getKeysFromUrl(url, repositoryId) || {};
-  if (!key || !newKey) return;
+  if (!key || !newKey) return data;
   await cpAssets(key, newKey);
   return { ...element.data, url: newKey };
 }
@@ -170,11 +170,11 @@ async function carouselMigrationHandler(element) {
 }
 
 async function defaultMigrationHandler(element) {
-  const { repositoryId } = element;
+  const { repositoryId, data } = element;
   const url = get(element, 'data.assets.url');
-  if (!url) return;
+  if (!url) return data;
   const { key, newKey } = getKeysFromUrl(url, repositoryId) || {};
-  if (!key || !newKey) return;
+  if (!key || !newKey) return data;
   await cpAssets(key, newKey);
   return {
     ...element.data,
