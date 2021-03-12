@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import { assessment } from '@extensionengine/tce-utils';
+import { assessment } from '@tailor/utils';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
 import forEach from 'lodash/forEach';

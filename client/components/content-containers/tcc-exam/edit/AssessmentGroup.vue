@@ -70,7 +70,7 @@ import numberToLetter from 'utils/numberToLetter';
 import pickBy from 'lodash/pickBy';
 import sortBy from 'lodash/sortBy';
 import uniq from 'lodash/uniq';
-import { uuid } from '@extensionengine/tce-utils';
+import { uuid } from '@tailor/utils';
 
 export default {
   name: 'assessment-group',

@@ -49,7 +49,7 @@
 import AddElement from './AddElement/index.vue';
 import Draggable from 'vuedraggable';
 import get from 'lodash/get';
-import { getElementId } from '@extensionengine/tce-utils';
+import { getElementId } from '@tailor/utils';
 import { mapChannels } from '@extensionengine/vue-radio';
 
 const CE_FOCUS_EVENT = 'element:focus';

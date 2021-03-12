@@ -1,7 +1,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('to-case'), require('os'), require('crypto'), require('uuid')) :
   typeof define === 'function' && define.amd ? define(['exports', 'to-case', 'os', 'crypto', 'uuid'], factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.TceUtils = {}, global.toCase, global.os, global.crypto, global.uuid$1));
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.TailorUtils = {}, global.toCase, global.os, global.crypto, global.uuid$1));
 }(this, (function (exports, toCase, os, crypto, uuid$1) { 'use strict';
 
   function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }

@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { assessment } from '@extensionengine/tce-utils';
+import { assessment } from '@tailor/utils';
 import cloneDeep from 'lodash/cloneDeep';
 import head from 'lodash/head';
 import { InputError } from '@tailor/components';

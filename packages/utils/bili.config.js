@@ -5,11 +5,11 @@ const path = require('path');
 /** @type {import('bili').Config} */
 module.exports = {
   input: {
-    'tce-utils': 'src/index.js'
+    'tailor-utils': 'src/index.js'
   },
   output: {
     format: ['cjs', 'es', 'umd', 'umd-min'],
-    moduleName: 'TceUtils'
+    moduleName: 'TailorUtils'
   },
   plugins: {
     vue: true,

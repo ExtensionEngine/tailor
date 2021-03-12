@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { getComponentName, getElementId } from '@extensionengine/tce-utils';
+import { getComponentName, getElementId } from '@tailor/utils';
 import ActiveUsers from './ActiveUsers.vue';
 import Discussion from './ElementDiscussion.vue';
 import { mapChannels } from '@extensionengine/vue-radio';

@@ -21,9 +21,11 @@ import map from 'lodash/map';
 import mapValues from 'lodash/mapValues';
 import merge from 'lodash/merge';
 import omit from 'lodash/omit';
+import { publishDiffChangeTypes } from '@tailor/utils';
 import reduce from 'lodash/reduce';
 import { revision as revisionApi } from '@extensionengine/tailor-api';
 
+const { NEW, REMOVED, CHANGED } = publishDiffChangeTypes;
 const getPublishedState = revisions => revisions.reduce((all, { state }) => ({
   ...all,
   [state.uid]: omit(state, ['detached', 'createdAt', 'updatedAt', 'deletedAt'])
@@ -72,9 +74,9 @@ export default {
       return !element || element.detached;
     },
     getChangeType(element) {
-      if (this.isRemoved(element)) return 'removed';
-      if (this.isAdded(element)) return 'new';
-      if (this.isModified(element)) return 'changed';
+      if (this.isRemoved(element)) return REMOVED;
+      if (this.isAdded(element)) return NEW;
+      if (this.isModified(element)) return CHANGED;
       return null;
     },
     addChangeType(element) {

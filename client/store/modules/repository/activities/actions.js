@@ -1,4 +1,4 @@
-import { calculatePosition, InsertLocation } from '@extensionengine/tce-utils';
+import { calculatePosition, InsertLocation } from '@tailor/utils';
 import { getDescendants as getDeepChildren, getOutlineChildren } from 'utils/activity';
 import { client } from '@extensionengine/tailor-api';
 import { Activity as Events } from '@/../common/sse';

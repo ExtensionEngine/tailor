@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { publishDiffChangeTypes } from '@extensionengine/tce-utils';
+import { publishDiffChangeTypes } from '@tailor/utils';
 
 export default {
   name: 'tailor-publish-diff-chip',

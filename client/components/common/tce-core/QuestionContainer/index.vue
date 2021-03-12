@@ -60,7 +60,7 @@
 <script>
 import * as yup from 'yup';
 import { getComponentName, processAnswerType } from '../utils';
-import { assessment } from '@extensionengine/tce-utils';
+import { assessment } from '@tailor/utils';
 import cloneDeep from 'lodash/cloneDeep';
 import Controls from './Controls';
 import Feedback from './Feedback';

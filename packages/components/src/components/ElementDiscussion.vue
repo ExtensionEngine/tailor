@@ -37,7 +37,7 @@
 
 <script>
 import Discussion from './Discussion/index.vue';
-import { Events } from '@extensionengine/tce-utils';
+import { Events } from '@tailor/utils';
 import get from 'lodash/get';
 import { mapChannels } from '@extensionengine/vue-radio';
 

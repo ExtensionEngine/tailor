@@ -23,7 +23,7 @@
 import { ContainedContent, ElementList } from '@tailor/components';
 import cloneDeep from 'lodash/cloneDeep';
 import filter from 'lodash/filter';
-import { isQuestion } from '@extensionengine/tce-utils';
+import { isQuestion } from '@tailor/utils';
 import sortBy from 'lodash/sortBy';
 
 export default {

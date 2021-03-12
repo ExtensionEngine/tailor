@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { assessment } from '@extensionengine/tce-utils';
+import { assessment } from '@tailor/utils';
 import { capital } from 'to-case';
 
 const getTitle = isGraded => isGraded ? 'Select correct answer' : 'Options';

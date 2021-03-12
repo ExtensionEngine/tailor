@@ -1,8 +1,8 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('lodash/capitalize'), require('@extensionengine/tce-utils'), require('lodash/filter'), require('lodash/flatMap'), require('lodash/intersection'), require('lodash/pick'), require('lodash/reduce'), require('lodash/reject'), require('lodash/partition'), require('lodash/takeRight'), require('lodash/find'), require('pluralize'), require('@extensionengine/vue-radio'), require('lodash/orderBy'), require('lodash/get'), require('lodash/throttle'), require('vuedraggable'), require('lodash/cloneDeep'), require('lodash/mapKeys'), require('lodash/values')) :
-  typeof define === 'function' && define.amd ? define(['exports', 'lodash/capitalize', '@extensionengine/tce-utils', 'lodash/filter', 'lodash/flatMap', 'lodash/intersection', 'lodash/pick', 'lodash/reduce', 'lodash/reject', 'lodash/partition', 'lodash/takeRight', 'lodash/find', 'pluralize', '@extensionengine/vue-radio', 'lodash/orderBy', 'lodash/get', 'lodash/throttle', 'vuedraggable', 'lodash/cloneDeep', 'lodash/mapKeys', 'lodash/values'], factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.TailorComponents = {}, global.capitalize, global.tceUtils, global.filter, global.flatMap, global.intersection, global.pick, global.reduce, global.reject, global.partition, global.takeRgt, global.find, global.pluralize, global.vueRadio, global.orderBy, global.get, global.throttle, global.Draggable, global.cloneDeep, global.mapKeys, global.values));
-}(this, (function (exports, capitalize, tceUtils, filter, flatMap, intersection, pick, reduce, reject, partition, takeRgt, find, pluralize, vueRadio, orderBy, get, throttle, Draggable, cloneDeep, mapKeys, values) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('lodash/capitalize'), require('@tailor/utils'), require('lodash/filter'), require('lodash/flatMap'), require('lodash/intersection'), require('lodash/pick'), require('lodash/reduce'), require('lodash/reject'), require('lodash/partition'), require('lodash/takeRight'), require('lodash/find'), require('pluralize'), require('@extensionengine/vue-radio'), require('lodash/orderBy'), require('lodash/get'), require('lodash/throttle'), require('vuedraggable'), require('lodash/cloneDeep'), require('lodash/mapKeys'), require('lodash/values')) :
+  typeof define === 'function' && define.amd ? define(['exports', 'lodash/capitalize', '@tailor/utils', 'lodash/filter', 'lodash/flatMap', 'lodash/intersection', 'lodash/pick', 'lodash/reduce', 'lodash/reject', 'lodash/partition', 'lodash/takeRight', 'lodash/find', 'pluralize', '@extensionengine/vue-radio', 'lodash/orderBy', 'lodash/get', 'lodash/throttle', 'vuedraggable', 'lodash/cloneDeep', 'lodash/mapKeys', 'lodash/values'], factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.TailorComponents = {}, global.capitalize, global.utils, global.filter, global.flatMap, global.intersection, global.pick, global.reduce, global.reject, global.partition, global.takeRgt, global.find, global.pluralize, global.vueRadio, global.orderBy, global.get, global.throttle, global.Draggable, global.cloneDeep, global.mapKeys, global.values));
+}(this, (function (exports, capitalize, utils, filter, flatMap, intersection, pick, reduce, reject, partition, takeRgt, find, pluralize, vueRadio, orderBy, get, throttle, Draggable, cloneDeep, mapKeys, values) { 'use strict';
 
   function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
@@ -354,7 +354,7 @@
       width: LAYOUT.FULL_WIDTH
     };
     var question = [{
-      id: tceUtils.uuid(),
+      id: utils.uuid(),
       data: data,
       type: 'JODIT_HTML',
       embedded: true
@@ -426,7 +426,7 @@
         var _this = this;
 
         var items = filter__default['default'](this.registry, function (it) {
-          return !tceUtils.isQuestion(it.type);
+          return !utils.isQuestion(it.type);
         });
         if (!this.isSubset) return items;
         return filter__default['default'](items, function (it) {
@@ -494,7 +494,7 @@
       addElements: function addElements(elements) {
         var _this2 = this;
 
-        var positions = tceUtils.getPositions(this.items, this.position, elements.length);
+        var positions = utils.getPositions(this.items, this.position, elements.length);
         var items = elements.map(function (it, index) {
           return _this2.buildElement(Object.assign({}, it, {
             position: positions[index]
@@ -525,12 +525,12 @@
           activityId: activity.id
         } // If content element within activity
         : {
-          id: tceUtils.uuid(),
+          id: utils.uuid(),
           embedded: true
         }; // If embed, assign id
 
         Object.assign(element, contextData);
-        if (tceUtils.isQuestion(element.type)) element.data = getQuestionData(element, subtype);
+        if (utils.isQuestion(element.type)) element.data = getQuestionData(element, subtype);
         if (element.type === 'REFLECTION') delete element.data.correct;
         return element;
       },
@@ -2377,7 +2377,7 @@
       editorBus: 'editor'
     }), {
       events: function events() {
-        return tceUtils.Events.Discussion;
+        return utils.Events.Discussion;
       },
       lastCommentAt: function lastCommentAt(vm) {
         return new Date(get__default['default'](vm.comments[0], 'createdAt', 0)).getTime();
@@ -2403,7 +2403,7 @@
         var author = this.user,
             elementId = this.id,
             hasUnresolvedComments = this.hasUnresolvedComments;
-        return this.editorBus.emit(tceUtils.Events.Discussion.SAVE, Object.assign({}, data, {
+        return this.editorBus.emit(utils.Events.Discussion.SAVE, Object.assign({}, data, {
           author: author,
           contentElementId: elementId,
           hasUnresolvedComments: hasUnresolvedComments
@@ -2444,7 +2444,7 @@
     }
   };
 
-  var css_248z$6 = "[data-v-0d39b57b] .v-menu__content{background:#fff}[data-v-0d39b57b] .v-menu__content .embedded-discussion{text-align:left}[data-v-0d39b57b] .v-menu__content .comment .author{font-size:.875rem}.unseen[data-v-0d39b57b]{font-size:.75rem}";
+  var css_248z$6 = "[data-v-7be6d374] .v-menu__content{background:#fff}[data-v-7be6d374] .v-menu__content .embedded-discussion{text-align:left}[data-v-7be6d374] .v-menu__content .comment .author{font-size:.875rem}.unseen[data-v-7be6d374]{font-size:.75rem}";
   styleInject(css_248z$6);
 
   /* script */
@@ -2547,7 +2547,7 @@
   var __vue_inject_styles__$9 = undefined;
   /* scoped */
 
-  var __vue_scope_id__$9 = "data-v-0d39b57b";
+  var __vue_scope_id__$9 = "data-v-7be6d374";
   /* functional template */
 
   var __vue_is_functional_template__$9 = false;
@@ -2586,7 +2586,7 @@
       changeType: {
         validator: function validator(value) {
           if (!value) return true;
-          return Object.values(tceUtils.publishDiffChangeTypes).includes(value);
+          return Object.values(utils.publishDiffChangeTypes).includes(value);
         },
         default: null
       }
@@ -2708,10 +2708,10 @@
       editorBus: 'editor'
     }), {
       id: function id(vm) {
-        return tceUtils.getElementId(vm.element);
+        return utils.getElementId(vm.element);
       },
       componentName: function componentName(vm) {
-        return tceUtils.getComponentName(vm.element.type);
+        return utils.getComponentName(vm.element.type);
       },
       isEmbed: function isEmbed(vm) {
         return !!vm.parent || !vm.element.uid;
@@ -2793,7 +2793,7 @@
         }
       });
       this.editorBus.on('element:focus', function (element) {
-        _this.isFocused = !!element && tceUtils.getElementId(element) === _this.id;
+        _this.isFocused = !!element && utils.getElementId(element) === _this.id;
       });
     },
     provide: function provide() {
@@ -2808,7 +2808,7 @@
     }
   };
 
-  var css_248z$5 = ".content-element[data-v-ce6fcf3e]{position:relative;border:1px solid transparent}.content-element[data-v-ce6fcf3e]::after{content:'';display:none;position:absolute;top:0;right:-.125rem;width:.125rem;height:100%}.content-element.focused[data-v-ce6fcf3e]{border:1px dashed #1de9b6}.content-element.focused[data-v-ce6fcf3e]::after{display:block;background:#1de9b6}.content-element.selected[data-v-ce6fcf3e]{border:1px dashed #ff4081}.content-element.selected[data-v-ce6fcf3e]::after{display:block;background:#ff4081}.frame[data-v-ce6fcf3e]{padding:10px 20px;border:1px solid #e1e1e1}.element-actions[data-v-ce6fcf3e]{display:flex;flex-direction:column;position:absolute;top:-.0625rem;right:-1.25rem;width:1.5rem;height:100%;padding-left:.75rem}.element-actions>*[data-v-ce6fcf3e]{min-height:1.75rem;opacity:0;transition:opacity .1s linear}.element-actions>.is-visible[data-v-ce6fcf3e]{opacity:1;transition:opacity .5s linear}.active-users[data-v-ce6fcf3e]{position:absolute;top:0;left:-1.625rem}.save-indicator[data-v-ce6fcf3e]{position:absolute;bottom:-.125rem;left:0}.header[data-v-ce6fcf3e]{width:100%;max-height:0}.header.visible[data-v-ce6fcf3e]{max-height:unset;padding:0 0 .5rem}.diff.new[data-v-ce6fcf3e]{border:none;box-shadow:0 0 0 2px var(--v-success-lighten2)!important}.diff.changed[data-v-ce6fcf3e],.diff.removed[data-v-ce6fcf3e]{border:none;box-shadow:0 0 0 2px var(--v-secondary-lighten4)!important}.diff .element-actions[data-v-ce6fcf3e]{display:none}";
+  var css_248z$5 = ".content-element[data-v-56cb794a]{position:relative;border:1px solid transparent}.content-element[data-v-56cb794a]::after{content:'';display:none;position:absolute;top:0;right:-.125rem;width:.125rem;height:100%}.content-element.focused[data-v-56cb794a]{border:1px dashed #1de9b6}.content-element.focused[data-v-56cb794a]::after{display:block;background:#1de9b6}.content-element.selected[data-v-56cb794a]{border:1px dashed #ff4081}.content-element.selected[data-v-56cb794a]::after{display:block;background:#ff4081}.frame[data-v-56cb794a]{padding:10px 20px;border:1px solid #e1e1e1}.element-actions[data-v-56cb794a]{display:flex;flex-direction:column;position:absolute;top:-.0625rem;right:-1.25rem;width:1.5rem;height:100%;padding-left:.75rem}.element-actions>*[data-v-56cb794a]{min-height:1.75rem;opacity:0;transition:opacity .1s linear}.element-actions>.is-visible[data-v-56cb794a]{opacity:1;transition:opacity .5s linear}.active-users[data-v-56cb794a]{position:absolute;top:0;left:-1.625rem}.save-indicator[data-v-56cb794a]{position:absolute;bottom:-.125rem;left:0}.header[data-v-56cb794a]{width:100%;max-height:0}.header.visible[data-v-56cb794a]{max-height:unset;padding:0 0 .5rem}.diff.new[data-v-56cb794a]{border:none;box-shadow:0 0 0 2px var(--v-success-lighten2)!important}.diff.changed[data-v-56cb794a],.diff.removed[data-v-56cb794a]{border:none;box-shadow:0 0 0 2px var(--v-secondary-lighten4)!important}.diff .element-actions[data-v-56cb794a]{display:none}";
   styleInject(css_248z$5);
 
   /* script */
@@ -2922,7 +2922,7 @@
   var __vue_inject_styles__$7 = undefined;
   /* scoped */
 
-  var __vue_scope_id__$7 = "data-v-ce6fcf3e";
+  var __vue_scope_id__$7 = "data-v-56cb794a";
   /* functional template */
 
   var __vue_is_functional_template__$7 = false;
@@ -3174,7 +3174,7 @@
     }),
     methods: {
       get: get__default['default'],
-      getElementId: tceUtils.getElementId,
+      getElementId: utils.getElementId,
       onDragStart: function onDragStart(index) {
         this.dragElementIndex = index;
         this.editorChannel.emit(CE_FOCUS_EVENT);
@@ -3198,7 +3198,7 @@
     }
   };
 
-  var css_248z$3 = ".list-group[data-v-26aa1fae]{padding:.625rem 1.5rem}[data-v-26aa1fae] .sortable-ghost .drag-handle{display:none}[data-v-26aa1fae] .sortable-ghost .content-element{max-height:9.375rem;background:#f4f5f5}[data-v-26aa1fae] .sortable-ghost .content-element>*{visibility:hidden}[data-v-26aa1fae] .sortable-drag .content-element{max-height:auto;background:#fff}";
+  var css_248z$3 = ".list-group[data-v-f18f3e56]{padding:.625rem 1.5rem}[data-v-f18f3e56] .sortable-ghost .drag-handle{display:none}[data-v-f18f3e56] .sortable-ghost .content-element{max-height:9.375rem;background:#f4f5f5}[data-v-f18f3e56] .sortable-ghost .content-element>*{visibility:hidden}[data-v-f18f3e56] .sortable-drag .content-element{max-height:auto;background:#fff}";
   styleInject(css_248z$3);
 
   /* script */
@@ -3277,7 +3277,7 @@
   var __vue_inject_styles__$5 = undefined;
   /* scoped */
 
-  var __vue_scope_id__$5 = "data-v-26aa1fae";
+  var __vue_scope_id__$5 = "data-v-f18f3e56";
   /* functional template */
 
   var __vue_is_functional_template__$5 = false;
@@ -3521,7 +3521,7 @@
         };
         var container = cloneDeep__default['default'](this.container);
         var reordered = container.embeds[items[newPosition].id];
-        reordered.position = tceUtils.calculatePosition(context);
+        reordered.position = utils.calculatePosition(context);
         this.$emit('save', container);
       },
       save: function save(item, key, value) {

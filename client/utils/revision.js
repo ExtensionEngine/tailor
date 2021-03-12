@@ -1,5 +1,5 @@
 import { lower, title as toTitleCase } from 'to-case';
-import { assessment } from '@extensionengine/tce-utils';
+import { assessment } from '@tailor/utils';
 import get from 'lodash/get';
 import { getLevel } from '@tailor/config';
 import isEmpty from 'lodash/isEmpty';

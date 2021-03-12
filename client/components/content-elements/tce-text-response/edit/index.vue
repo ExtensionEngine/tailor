@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { assessment } from '@extensionengine/tce-utils';
+import { assessment } from '@tailor/utils';
 
 const getTitle = isGraded => isGraded ? 'Answer' : 'Response';
 

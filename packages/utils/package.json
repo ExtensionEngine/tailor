@@ -1,7 +1,7 @@
 {
-  "name": "@extensionengine/tce-utils",
+  "name": "@tailor/utils",
   "version": "0.0.1",
-  "description": "Tailor content element utility functions",
+  "description": "Tailor utility functions",
   "keywords": [],
   "homepage": "",
   "bugs": {
@@ -13,8 +13,8 @@
   },
   "license": "MIT",
   "author": "ExtensionEngine <info@extensionengine.com>",
-  "main": "dist/tce-utils.js",
-  "module": "dist/tce-utils.esm.js",
+  "main": "dist/tailor-utils.js",
+  "module": "dist/tailor-utils.esm.js",
   "scripts": {
     "prebuild": "del-cli dist",
     "build": "bili",
