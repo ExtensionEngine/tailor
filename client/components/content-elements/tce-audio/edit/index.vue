@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { ElementPlaceholder } from '@extensionengine/tce-components';
+import { ElementPlaceholder } from '@tailor/components';
 import get from 'lodash/get';
 import { PlyrueComponent as Plyrue } from 'plyrue';
 

@@ -59,7 +59,7 @@ import {
   ContainedContent,
   ElementList,
   InlineActivator
-} from '@extensionengine/tce-components';
+} from '@tailor/components';
 import filter from 'lodash/filter';
 import sortBy from 'lodash/sortBy';
 

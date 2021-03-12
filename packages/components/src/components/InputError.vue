@@ -8,6 +8,7 @@
 
 <script>
 export default {
+  name: 'tailor-input-error',
   props: {
     error: { type: String, default: '' }
   }

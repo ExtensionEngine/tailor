@@ -19,7 +19,7 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
-import { EmbeddedContainer } from '@extensionengine/tce-components';
+import { EmbeddedContainer } from '@tailor/components';
 import forEach from 'lodash/forEach';
 import isEmpty from 'lodash/isEmpty';
 

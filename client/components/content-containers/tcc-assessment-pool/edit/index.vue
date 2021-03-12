@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { AddElement } from '@extensionengine/tce-components';
+import { AddElement } from '@tailor/components';
 import AssessmentItem from 'tce-core/AssessmentItem';
 import filter from 'lodash/filter';
 import sortBy from 'lodash/sortBy';

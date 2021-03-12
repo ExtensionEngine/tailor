@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { AddElement, ContainedContent, InputError } from '@extensionengine/tce-components';
+import { AddElement, ContainedContent, InputError } from '@tailor/components';
 import { assessment } from '@extensionengine/tce-utils';
 import cloneDeep from 'lodash/cloneDeep';
 import Draggable from 'vuedraggable';

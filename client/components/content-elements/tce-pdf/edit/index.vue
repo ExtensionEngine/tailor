@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { ElementPlaceholder, PreviewOverlay } from '@extensionengine/tce-components';
+import { ElementPlaceholder, PreviewOverlay } from '@tailor/components';
 import CircularProgress from './CircularProgress';
 import get from 'lodash/get';
 import isIE from 'is-iexplorer';

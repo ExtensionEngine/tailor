@@ -66,7 +66,7 @@ import ResolveButton from './ResolveButton.vue';
 const initCommentInput = () => ({ content: '' });
 
 export default {
-  name: 'embedded-discussion',
+  name: 'tailor-embedded-discussion',
   inheritAttrs: true,
   props: {
     comments: { type: Array, default: () => [] },

@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  name: 'inline-activator',
+  name: 'tailor-inline-activator',
   inheritAttrs: false,
   props: {
     disabled: { type: Boolean, required: false }

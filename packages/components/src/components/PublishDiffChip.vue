@@ -13,7 +13,7 @@
 import { publishDiffChangeTypes } from '@extensionengine/tce-utils';
 
 export default {
-  name: 'publish-diff-chip',
+  name: 'tailor-publish-diff-chip',
   props: {
     changeType: {
       validator: function (value) {

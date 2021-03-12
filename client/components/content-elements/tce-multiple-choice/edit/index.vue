@@ -51,7 +51,7 @@
 import { assessment } from '@extensionengine/tce-utils';
 import cloneDeep from 'lodash/cloneDeep';
 import head from 'lodash/head';
-import { InputError } from '@extensionengine/tce-components';
+import { InputError } from '@tailor/components';
 import range from 'lodash/range';
 import set from 'lodash/set';
 

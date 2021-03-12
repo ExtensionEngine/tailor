@@ -26,7 +26,7 @@
 import capitalize from 'lodash/capitalize';
 
 export default {
-  name: 'active-users',
+  name: 'tailor-active-users',
   props: {
     users: { type: Array, default: () => [] },
     size: { type: Number, default: 36 }

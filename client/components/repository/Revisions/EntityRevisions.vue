@@ -21,7 +21,7 @@
 
 <script>
 import api from '@extensionengine/tailor-api';
-import { ContentElement } from '@extensionengine/tce-components';
+import { ContentElement } from '@tailor/components';
 import EntitySidebar from './EntitySidebar';
 import first from 'lodash/first';
 import get from 'lodash/get';

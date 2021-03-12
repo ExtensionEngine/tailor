@@ -55,7 +55,7 @@ import { mapChannels } from '@extensionengine/vue-radio';
 const CE_FOCUS_EVENT = 'element:focus';
 
 export default {
-  name: 'element-list',
+  name: 'tailor-element-list',
   props: {
     elements: { type: Array, default: () => [] },
     dragOptions: { type: Object, default: () => ({}) },

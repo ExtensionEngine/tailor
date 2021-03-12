@@ -60,7 +60,7 @@ const getActivatorOptions = unseenComments => ({
 });
 
 export default {
-  name: 'element-discussion',
+  name: 'tailor-element-discussion',
   props: {
     id: { type: Number, default: null },
     uid: { type: String, required: true },

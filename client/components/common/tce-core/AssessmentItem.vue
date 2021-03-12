@@ -61,7 +61,7 @@
 import cloneDeep from 'lodash/cloneDeep';
 import filter from 'lodash/filter';
 import map from 'lodash/map';
-import { PublishDiffChip } from '@extensionengine/tce-components';
+import { PublishDiffChip } from '@tailor/components';
 
 const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
 const blankRegex = /(@blank)/g;

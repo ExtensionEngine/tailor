@@ -58,7 +58,7 @@ import { mapChannels } from '@extensionengine/vue-radio';
 import PublishDiffChip from './PublishDiffChip.vue';
 
 export default {
-  name: 'content-element',
+  name: 'tailor-content-element',
   inject: {
     $getCurrentUser: {},
     $editorState: { default: {} }

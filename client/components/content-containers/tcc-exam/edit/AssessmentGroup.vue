@@ -59,7 +59,7 @@
 import AssessmentItem from './Assessment';
 import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
-import { ElementList } from '@extensionengine/tce-components';
+import { ElementList } from '@tailor/components';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
 import { getLevel } from '@tailor/config';

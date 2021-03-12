@@ -1,5 +1,5 @@
 {
-  "name": "@extensionengine/tce-components",
+  "name": "@tailor/components",
   "version": "0.0.1",
   "description": "",
   "keywords": [],
@@ -13,8 +13,8 @@
   },
   "license": "MIT",
   "author": "ExtensionEngine <info@extensionengine.com>",
-  "main": "dist/tce-components.js",
-  "module": "dist/tce-components.es.js",
+  "main": "dist/tailor-components.js",
+  "module": "dist/tailor-components.es.js",
   "scripts": {
     "prebuild": "del-cli dist",
     "build": "bili",

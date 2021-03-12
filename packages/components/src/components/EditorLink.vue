@@ -22,9 +22,10 @@
     </v-tooltip>
   </div>
 </template>
+
 <script>
 export default {
-  name: 'editor-link',
+  name: 'tailor-editor-link',
   props: {
     activityId: { type: Number, required: true },
     elementUid: { type: String, default: null },

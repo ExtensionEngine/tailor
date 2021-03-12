@@ -30,7 +30,7 @@ import { mapRequests } from '@extensionengine/vue-radio';
 import values from 'lodash/values';
 
 export default {
-  name: 'embedded-container',
+  name: 'tailor-embedded-container',
   inheritAttrs: false,
   props: {
     container: { type: Object, required: true },

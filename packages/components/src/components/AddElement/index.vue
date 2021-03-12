@@ -89,7 +89,7 @@ const getQuestionData = (element, type) => {
 };
 
 export default {
-  name: 'add-element',
+  name: 'tailor-add-element',
   inject: ['$teRegistry'],
   props: {
     items: { type: Array, required: true },

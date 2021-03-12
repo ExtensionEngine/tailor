@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  name: 'tce-preview-overlay',
+  name: 'tailor-preview-overlay',
   props: {
     show: { type: Boolean, default: false }
   }

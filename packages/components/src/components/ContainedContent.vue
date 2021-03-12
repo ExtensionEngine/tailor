@@ -25,7 +25,7 @@ import get from 'lodash/get';
 import throttle from 'lodash/throttle';
 
 export default {
-  name: 'contained-content',
+  name: 'tailor-contained-content',
   inheritAttrs: false,
   props: {
     element: { type: Object, required: true },

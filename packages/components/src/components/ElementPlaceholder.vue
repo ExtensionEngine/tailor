@@ -36,7 +36,7 @@
 
 <script>
 export default {
-  name: 'element-placeholder',
+  name: 'tailor-element-placeholder',
   props: {
     name: { type: String, required: true },
     icon: { type: String, required: true },

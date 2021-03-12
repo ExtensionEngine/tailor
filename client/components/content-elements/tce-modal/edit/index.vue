@@ -36,7 +36,7 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
-import { EmbeddedContainer } from '@extensionengine/tce-components';
+import { EmbeddedContainer } from '@tailor/components';
 import Preview from './Preview';
 import values from 'lodash/values';
 
