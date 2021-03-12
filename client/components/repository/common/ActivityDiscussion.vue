@@ -1,5 +1,8 @@
 <template>
-  <v-sheet v-bind="sheetOptions" outlined rounded class="activity-discussion">
+  <v-sheet
+    v-bind="sheetStyles"
+    outlined rounded
+    class="activity-discussion py-2 px-4">
     <discussion
       @save="saveComment"
       @update="saveComment"
@@ -34,7 +37,7 @@ export default {
     },
     unseenComments: vm => vm.getUnseenActivityComments(vm.activity),
     lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime(),
-    sheetOptions: vm => vm.panel
+    sheetStyles: vm => vm.panel
       ? { color: 'blue-grey lighten-5', elevation: 1 }
       : { color: 'transparent', elevation: 0 }
   },
