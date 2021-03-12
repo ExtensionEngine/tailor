@@ -21,14 +21,15 @@ const storage = require('../shared/storage');
 const toPairs = require('lodash/toPairs');
 
 const regex = /repository\/assets\/(.*)/;
-const ceTypes = ['IMAGE', 'VIDEO', 'AUDIO', 'PDF', 'CAROUSEL'];
+const ceTypes = ['IMAGE', 'VIDEO', 'AUDIO', 'PDF', 'CAROUSEL', 'MODAL'];
 const revisionsTypes = ['CONTENT_ELEMENT', 'ACTIVITY'];
 const isFunction = fn => fn && typeof fn === 'function';
 const schemasIds = SCHEMAS.map(it => it.id);
 
 const mapTypeToAction = {
   IMAGE: imageMigrationHandler,
-  CAROUSEL: carouselMigrationHandler,
+  CAROUSEL: embedsMigrationHandler,
+  MODAL: embedsMigrationHandler,
   DEFAULT: defaultMigrationHandler
 };
 
@@ -157,7 +158,7 @@ async function imageMigrationHandler(element) {
   return { ...element.data, url: newKey };
 }
 
-async function carouselMigrationHandler(element) {
+async function embedsMigrationHandler(element) {
   const { repositoryId, data } = element;
   const embeds = await Promise.map(
     Object.entries(data.embeds),
