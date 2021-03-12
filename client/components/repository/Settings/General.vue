@@ -27,7 +27,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import { repository as api } from '@extensionengine/tailor-api';
+import { repository as api } from '@tailor/api';
 import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
 import { getRepositoryMetadata } from '@tailor/config';

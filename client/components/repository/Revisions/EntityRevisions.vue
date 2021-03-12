@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import api from '@extensionengine/tailor-api';
+import api from '@tailor/api';
 import { ContentElement } from '@tailor/components';
 import EntitySidebar from './EntitySidebar';
 import first from 'lodash/first';

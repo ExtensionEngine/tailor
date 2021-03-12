@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { tag as api } from '@extensionengine/tailor-api';
+import { tag as api } from '@tailor/api';
 import differenceBy from 'lodash/differenceBy';
 import map from 'lodash/map';
 import { mapActions } from 'vuex';

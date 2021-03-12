@@ -26,7 +26,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
-import { activity as api } from '@extensionengine/tailor-api';
+import { activity as api } from '@tailor/api';
 import publishMixin from 'components/common/mixins/publish';
 
 export default {

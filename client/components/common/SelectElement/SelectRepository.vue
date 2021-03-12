@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { repository as api } from '@extensionengine/tailor-api';
+import { repository as api } from '@tailor/api';
 import debounce from 'lodash/debounce';
 import find from 'lodash/find';
 import loader from '@/components/common/loader';

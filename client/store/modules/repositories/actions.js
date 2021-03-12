@@ -1,7 +1,7 @@
 import {
   repository as repositoryApi,
   tag as tagApi
-} from '@extensionengine/tailor-api';
+} from '@tailor/api';
 import find from 'lodash/find';
 import forEach from 'lodash/forEach';
 import generateActions from '@/store/helpers/actions';

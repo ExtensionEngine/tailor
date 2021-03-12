@@ -64,7 +64,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import { user as api } from '@extensionengine/tailor-api';
+import { user as api } from '@tailor/api';
 import TailorDialog from '@/components/common/TailorDialog';
 import throttle from 'lodash/throttle';
 

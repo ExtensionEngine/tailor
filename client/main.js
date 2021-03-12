@@ -3,7 +3,7 @@ import './polyfills';
 import 'bootstrap-sass/assets/javascripts/bootstrap';
 import '@/utils/validation';
 
-import { asset as assetApi } from '@extensionengine/tailor-api';
+import { asset as assetApi } from '@tailor/api';
 import ContentPluginRegistry from './content-plugins';
 
 import { formatDate, truncate } from '@/filters';

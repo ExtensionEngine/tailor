@@ -19,7 +19,7 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-import { repository as api } from '@extensionengine/tailor-api';
+import { repository as api } from '@tailor/api';
 import TailorDialog from '@/components/common/TailorDialog';
 
 const STATUS = {

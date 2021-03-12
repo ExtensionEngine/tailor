@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import { user as api } from '@extensionengine/tailor-api';
+import { user as api } from '@tailor/api';
 import cloneDeep from 'lodash/cloneDeep';
 import humanize from 'humanize-string';
 import isEmpty from 'lodash/isEmpty';

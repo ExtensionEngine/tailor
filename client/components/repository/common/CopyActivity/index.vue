@@ -56,7 +56,7 @@
 import {
   activity as activityApi,
   repository as repositoryApi
-} from '@extensionengine/tailor-api';
+} from '@tailor/api';
 import { mapActions, mapGetters } from 'vuex';
 import debounce from 'lodash/debounce';
 import find from 'lodash/find';

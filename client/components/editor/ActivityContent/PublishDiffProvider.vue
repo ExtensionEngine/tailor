@@ -23,7 +23,7 @@ import merge from 'lodash/merge';
 import omit from 'lodash/omit';
 import { publishDiffChangeTypes } from '@tailor/utils';
 import reduce from 'lodash/reduce';
-import { revision as revisionApi } from '@extensionengine/tailor-api';
+import { revision as revisionApi } from '@tailor/api';
 
 const { NEW, REMOVED, CHANGED } = publishDiffChangeTypes;
 const getPublishedState = revisions => revisions.reduce((all, { state }) => ({

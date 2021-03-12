@@ -56,7 +56,7 @@
 import {
   activity as activityApi,
   contentElement as contentElementApi
-} from '@extensionengine/tailor-api';
+} from '@tailor/api';
 import ContentPreview from '@/components/common/ContentPreview';
 import flatMap from 'lodash/flatMap';
 import { getDescendants as getContainers } from '@/utils/activity';

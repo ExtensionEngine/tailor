@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import { user as api } from '@extensionengine/tailor-api';
+import { user as api } from '@tailor/api';
 import humanize from 'humanize-string';
 import loader from '@/components/common/loader';
 import { mapRequests } from '@extensionengine/vue-radio';

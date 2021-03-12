@@ -1,6 +1,6 @@
 import { calculatePosition, InsertLocation } from '@tailor/utils';
 import { getDescendants as getDeepChildren, getOutlineChildren } from 'utils/activity';
-import { client } from '@extensionengine/tailor-api';
+import { client } from '@tailor/api';
 import { Activity as Events } from '@/../common/sse';
 import feed from '../feed';
 import findIndex from 'lodash/findIndex';

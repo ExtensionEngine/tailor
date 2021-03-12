@@ -1,4 +1,4 @@
-import { auth as api } from '@extensionengine/tailor-api';
+import { auth as api } from '@tailor/api';
 
 export const login = ({ commit }, credentials) => {
   return api.login(credentials)
