@@ -1,7 +1,7 @@
 import toCase from 'to-case';
 
 export * from './calculatePosition';
-export * as InsertLocation from './InsertLocation';
+export { default as InsertLocation } from './InsertLocation';
 export * as assessment from './assessment';
 export { default as uuid } from './uuid';
 export * as Events from './events';

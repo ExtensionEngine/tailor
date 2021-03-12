@@ -53,11 +53,6 @@ var InsertLocation = {
   REORDER: 'REORDER'
 };
 
-var InsertLocation$1 = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  'default': InsertLocation
-});
-
 var ADD_AFTER = InsertLocation.ADD_AFTER,
     REORDER = InsertLocation.REORDER;
 
@@ -337,7 +332,7 @@ function getElementId(element) {
 }
 
 exports.Events = index;
-exports.InsertLocation = InsertLocation$1;
+exports.InsertLocation = InsertLocation;
 exports.assessment = assessment;
 exports.calculatePosition = calculatePosition;
 exports.getComponentName = getComponentName;
