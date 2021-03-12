@@ -88,7 +88,7 @@
 <script>
 import first from 'lodash/first';
 import get from 'lodash/get';
-import { getSchema } from 'shared/activities';
+import { getSchema } from '@tailor/config';
 import { mapActions } from 'vuex';
 import Tags from './Tags';
 

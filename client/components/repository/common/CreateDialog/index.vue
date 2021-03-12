@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { getActivityMetadata } from 'shared/activities';
+import { getActivityMetadata } from '@tailor/config';
 import { InsertLocation } from '@extensionengine/tce-utils';
 import { mapActions } from 'vuex';
 import MetaInput from 'tce-core/MetaInput';

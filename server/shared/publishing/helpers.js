@@ -10,7 +10,7 @@ const {
   getLevelRelationships,
   getOutlineLevels,
   getSupportedContainers
-} = require('../../../config/shared/activities');
+} = require('@tailor/config');
 const { containerRegistry } = require('../content-plugins');
 const differenceWith = require('lodash/differenceWith');
 const filter = require('lodash/filter');

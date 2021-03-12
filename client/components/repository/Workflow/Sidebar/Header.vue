@@ -54,7 +54,7 @@
 <script>
 import ActivityCard from './ActivityCard';
 import fecha from 'fecha';
-import { getLevel } from 'shared/activities';
+import { getLevel } from '@tailor/config';
 import isBefore from 'date-fns/isBefore';
 import LabelChip from '@/components/repository/common/LabelChip';
 import { mapGetters } from 'vuex';

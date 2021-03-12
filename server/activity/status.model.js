@@ -3,8 +3,9 @@
 const { Activity: Events } = require('../../common/sse');
 const hooks = require('./status.hooks');
 const { Model } = require('sequelize');
-const { priorities } = require('../../config/shared/workflow');
+const { workflow } = require('@tailor/config');
 
+const { priorities } = workflow;
 const priorityIds = priorities.map(it => it.id);
 
 class ActivityStatus extends Model {

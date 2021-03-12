@@ -1,7 +1,7 @@
 'use strict';
 
 const { Activity, ContentElement, Repository } = require('../../database');
-const { getSchema } = require('../../../../config/shared/activities');
+const { getSchema } = require('@tailor/config');
 const mapKeys = require('lodash/mapKeys');
 const miss = require('mississippi');
 const QueryStream = require('pg-query-stream');

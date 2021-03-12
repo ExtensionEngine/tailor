@@ -47,10 +47,9 @@
 </template>
 
 <script>
+import { getLevel, workflow } from '@tailor/config';
 import AssigneeAvatar from '@/components/repository/common/AssigneeAvatar';
 import find from 'lodash/find';
-import { getLevel } from 'shared/activities';
-import { getPriority } from 'shared/workflow';
 import { mapGetters } from 'vuex';
 import WorkflowDueDate from '@/components/repository/common/WorkflowDueDate';
 
@@ -66,7 +65,7 @@ export default {
     ...mapGetters('repository', ['workflow']),
     activityConfig: vm => getLevel(vm.type),
     statusConfig: vm => find(vm.workflow.statuses, { id: vm.status.status }),
-    priorityConfig: vm => getPriority(vm.status.priority),
+    priorityConfig: vm => workflow.getPriority(vm.status.priority),
     route: vm => ({ name: 'progress', query: vm.$route.query })
   },
   components: { WorkflowDueDate, AssigneeAvatar }

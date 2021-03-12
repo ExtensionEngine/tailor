@@ -3,7 +3,7 @@
 const {
   getOutlineLevels,
   isOutlineActivity
-} = require('../../config/shared/activities');
+} = require('@tailor/config');
 const { Activity } = require('../shared/database');
 const { fetchActivityContent } = require('../shared/publishing/helpers');
 const find = require('lodash/find');

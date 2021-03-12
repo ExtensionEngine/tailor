@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { getLevel, getSchemaId } from 'shared/activities';
+import { getLevel, getSchemaId } from '@tailor/config';
 import { mapActions, mapGetters } from 'vuex';
 import castArray from 'lodash/castArray';
 import cloneDeep from 'lodash/cloneDeep';

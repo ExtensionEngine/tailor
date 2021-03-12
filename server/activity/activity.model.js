@@ -3,17 +3,19 @@
 const {
   getSiblingTypes,
   isOutlineActivity,
-  isTrackedInWorkflow
-} = require('../../config/shared/activities');
+  isTrackedInWorkflow,
+  workflow
+} = require('@tailor/config');
 const { Model, Op } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
 const { Activity: Events } = require('../../common/sse');
-const { getDefaultActivityStatus } = require('../../config/shared/workflow');
 const hooks = require('./hooks');
 const isEmpty = require('lodash/isEmpty');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
+
+const { getDefaultActivityStatus } = workflow;
 
 class Activity extends Model {
   static fields(DataTypes) {

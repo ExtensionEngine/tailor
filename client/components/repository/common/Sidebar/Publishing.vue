@@ -34,7 +34,7 @@
 <script>
 import fecha from 'fecha';
 import { getDescendants } from 'utils/activity';
-import { getLevel } from 'shared/activities';
+import { getLevel } from '@tailor/config';
 import { mapActions } from 'vuex';
 import PublishingBadge from './Badge';
 import publishMixin from 'components/common/mixins/publish';

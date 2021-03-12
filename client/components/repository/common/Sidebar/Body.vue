@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import { getActivityMetadata, getLevel } from 'shared/activities';
+import { getActivityMetadata, getLevel } from '@tailor/config';
 import { mapActions, mapGetters } from 'vuex';
 import ActivityDiscussion from '../ActivityDiscussion';
 import ActivityStatus from './Status';

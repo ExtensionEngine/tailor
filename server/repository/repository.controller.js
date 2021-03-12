@@ -11,7 +11,7 @@ const {
   User
 } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
-const { getSchema } = require('../../config/shared/activities');
+const { getSchema } = require('@tailor/config');
 const getVal = require('lodash/get');
 const map = require('lodash/map');
 const { Op } = require('sequelize');

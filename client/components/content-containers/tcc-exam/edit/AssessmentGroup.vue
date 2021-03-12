@@ -62,7 +62,7 @@ import debounce from 'lodash/debounce';
 import { ElementList } from '@extensionengine/tce-components';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
-import { getLevel } from 'shared/activities';
+import { getLevel } from '@tailor/config';
 import GroupIntroduction from './GroupIntroduction';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';

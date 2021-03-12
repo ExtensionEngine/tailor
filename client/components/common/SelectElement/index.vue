@@ -60,7 +60,7 @@ import {
 import ContentPreview from '@/components/common/ContentPreview';
 import flatMap from 'lodash/flatMap';
 import { getDescendants as getContainers } from '@/utils/activity';
-import { getSupportedContainers } from 'shared/activities';
+import { getSupportedContainers } from '@tailor/config';
 import loader from '@/components/common/loader';
 import map from 'lodash/map';
 import { mapGetters } from 'vuex';

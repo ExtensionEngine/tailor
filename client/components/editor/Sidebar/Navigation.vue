@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { getOutlineLevels, isEditable } from 'shared/activities';
+import { getOutlineLevels, isEditable } from '@tailor/config';
 import { toTreeFormat } from 'utils/activity';
 
 export default {

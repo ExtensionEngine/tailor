@@ -22,7 +22,7 @@
 <script>
 import ActivityOptions from '@/components/repository/common/ActivityOptions/Menu';
 import get from 'lodash/get';
-import { isEditable } from 'shared/activities';
+import { isEditable } from '@tailor/config';
 import { mapGetters } from 'vuex';
 import Publishing from './Publishing';
 

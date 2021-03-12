@@ -1,7 +1,7 @@
 import ComponentRegistry from './ComponentRegistry';
 import containerList from 'shared/core-containers';
 import get from 'lodash/get';
-import { getContainerTemplateId as getId } from 'shared/activities';
+import { getContainerTemplateId as getId } from '@tailor/config';
 import { getContainerName as getName } from 'tce-core/utils';
 import { service as ValidationService } from './validation';
 

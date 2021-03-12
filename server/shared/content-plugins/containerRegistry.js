@@ -2,7 +2,7 @@
 
 const BaseRegistry = require('./BaseRegistry');
 const containerList = require('../../../config/shared/core-containers');
-const { getContainerTemplateId: getId } = require('../../../config/shared/activities');
+const { getContainerTemplateId: getId } = require('@tailor/config');
 
 const EXTENSIONS_LIST = '../../../extensions/content-containers/index';
 

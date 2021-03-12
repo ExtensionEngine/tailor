@@ -67,7 +67,7 @@ import { mapGetters, mapMutations, mapState } from 'vuex';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
-import { isEditable } from 'shared/activities';
+import { isEditable } from '@tailor/config';
 import OptionsMenu from '../common/ActivityOptions/Menu';
 import OptionsToolbar from '../common/ActivityOptions/Toolbar';
 import reorderMixin from './reorderMixin';

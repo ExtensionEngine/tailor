@@ -8,11 +8,12 @@ const get = require('lodash/get');
 const isEmpty = require('lodash/isEmpty');
 const isString = require('lodash/isString');
 const map = require('lodash/map');
-const mergeConfig = require('../utils/mergeConfig');
+const mergeConfig = require('./utils/mergeConfig');
 const parseSchemas = require('./schema-parser');
 const reduce = require('lodash/reduce');
 const union = require('lodash/union');
 const uniq = require('lodash/uniq');
+const workflow = require('./workflow');
 
 /* eslint-disable */
 const defaultConfiguration = require('./activities-rc');
@@ -27,6 +28,7 @@ parseSchemas(SCHEMAS);
 
 module.exports = {
   SCHEMAS,
+  workflow,
   getSchemaId,
   getSchema,
   getLevel: getActivityConfig,

@@ -42,7 +42,7 @@
 
 <script>
 import groupBy from 'lodash/groupBy';
-import { isEditable } from 'shared/activities';
+import { isEditable } from '@tailor/config';
 import map from 'lodash/map';
 import pluralize from 'pluralize';
 import { toTreeFormat } from 'utils/activity';

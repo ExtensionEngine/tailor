@@ -55,7 +55,7 @@ import debounce from 'lodash/debounce';
 import ElementSidebar from './ElementSidebar';
 import get from 'lodash/get';
 import { getElementId } from 'tce-core/utils';
-import { getElementMetadata } from 'shared/activities';
+import { getElementMetadata } from '@tailor/config';
 import { mapGetters } from 'vuex';
 
 export default {

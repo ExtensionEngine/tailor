@@ -2,7 +2,7 @@ import { mapGetters, mapMutations } from 'vuex';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import InsertLocation from '@/utils/InsertLocation';
-import { isEditable } from 'shared/activities';
+import { isEditable } from '@tailor/config';
 import selectActivity from '@/components/repository/common/selectActivity';
 import uniqBy from 'lodash/uniqBy';
 

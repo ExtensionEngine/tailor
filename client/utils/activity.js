@@ -1,7 +1,7 @@
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
-import { getLevel } from 'shared/activities';
+import { getLevel } from '@tailor/config';
 import sortBy from 'lodash/sortBy';
 
 export function isChanged(activity) {

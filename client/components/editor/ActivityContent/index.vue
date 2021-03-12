@@ -39,7 +39,7 @@ import ContentLoader from './Loader';
 import differenceBy from 'lodash/differenceBy';
 import find from 'lodash/find';
 import get from 'lodash/get';
-import { getSupportedContainers } from 'shared/activities';
+import { getSupportedContainers } from '@tailor/config';
 import isEqual from 'lodash/isEqual';
 import loader from '@/components/common/loader';
 import { mapChannels } from '@extensionengine/vue-radio';

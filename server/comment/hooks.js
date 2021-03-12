@@ -1,6 +1,6 @@
 'use strict';
 
-const { getLevel } = require('../../config/shared/activities');
+const { getLevel } = require('@tailor/config');
 const mail = require('../shared/mail');
 const map = require('lodash/map');
 const pick = require('lodash/pick');

@@ -46,7 +46,7 @@ import capitalize from 'lodash/capitalize';
 import castArray from 'lodash/castArray';
 import deprecation from '@/components/common/mixins/deprecation';
 import get from 'lodash/get';
-import { getContainerTemplateId } from 'shared/activities';
+import { getContainerTemplateId } from '@tailor/config';
 import isEmpty from 'lodash/isEmpty';
 import { mapRequests } from '@extensionengine/vue-radio';
 import mapValues from 'lodash/mapValues';

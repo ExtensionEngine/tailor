@@ -120,7 +120,7 @@
 import { repository as api } from '@extensionengine/tailor-api';
 import loader from '@/components/common/loader';
 import { mapGetters } from 'vuex';
-import { SCHEMAS } from 'shared/activities';
+import { SCHEMAS } from '@tailor/config';
 import TailorDialog from '@/components/common/TailorDialog';
 
 const NEW_TAB = 0;

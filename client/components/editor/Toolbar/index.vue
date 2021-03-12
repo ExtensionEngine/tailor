@@ -55,7 +55,7 @@ import { ActiveUsers } from '@extensionengine/tce-components';
 import ActivityActions from './ActivityActions';
 import { ElementToolbar } from 'tce-core';
 import { getElementId } from 'tce-core/utils';
-import { getLevel } from 'shared/activities';
+import { getLevel } from '@tailor/config';
 
 export default {
   name: 'editor-toolbar',

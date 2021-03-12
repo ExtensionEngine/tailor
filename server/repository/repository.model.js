@@ -1,6 +1,6 @@
 'use strict';
 
-const { getRepositoryRelationships, getSchema } = require('../../config/shared/activities');
+const { getRepositoryRelationships, getSchema } = require('@tailor/config');
 const { Model } = require('sequelize');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
