@@ -14,12 +14,10 @@ const {
 const flatten = require('lodash/flatten');
 const fromPairs = require('lodash/fromPairs');
 const get = require('lodash/get');
-const { getAssetsPath } = require('../shared/storage/util');
 const { Op } = require('sequelize');
 const Promise = require('bluebird');
 const { protocol } = require('../../config/server/storage');
 const storage = require('../shared/storage');
-const storageProxy = require('../shared/storage/proxy');
 const toPairs = require('lodash/toPairs');
 
 const regex = /repository\/assets\/(.*)/;
@@ -143,7 +141,7 @@ async function getNewMeta(fileMetas, meta, repositoryId) {
       ...value,
       key: newKey,
       url: `${protocol}${newKey}`,
-      publicUrl: await storageProxy.getFileUrl(newKey)
+      publicUrl: await storage.getFileUrl(newKey)
     }];
   });
   return fromPairs(newMeta);
@@ -181,7 +179,6 @@ async function defaultMigrationHandler(element) {
   await storage.copyFile(key, newKey);
   return {
     ...element.data,
-    url: await storageProxy.getFileUrl(newKey),
     assets: { ...element.data.assets, url: `${protocol}${newKey}` }
   };
 }
@@ -191,6 +188,6 @@ function getKeysFromUrl(url, repositoryId) {
   const assetUrl = url.match(regex);
   if (!assetUrl) return;
   const [key, sufix] = assetUrl;
-  const newKey = `${getAssetsPath(repositoryId)}/${sufix}`;
+  const newKey = `${storage.getAssetsPath(repositoryId)}/${sufix}`;
   return { key, newKey };
 }

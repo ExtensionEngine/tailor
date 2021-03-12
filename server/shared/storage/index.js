@@ -54,6 +54,10 @@ class Storage {
     return this.provider.copyFile(key, newKey, options);
   }
 
+  getAssetsPath(repositoryId) {
+    return `repository/${repositoryId}/${config.path}`;
+  }
+
   static createProvider(options) {
     // Validate provider name.
     const providerName = options.provider;

@@ -2,7 +2,6 @@
 
 const crypto = require('crypto');
 const fs = require('fs');
-const { storage } = require('../../../config/server');
 
 function sha256(...args) {
   const hash = crypto.createHash('sha256');
@@ -15,8 +14,4 @@ function readFile(file) {
   return fs.readFile(file.path);
 }
 
-function getAssetsPath(repositoryId) {
-  return `repository/${repositoryId}/${storage.path}`;
-}
-
-module.exports = { sha256, readFile, getAssetsPath };
+module.exports = { sha256, readFile };

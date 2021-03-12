@@ -17,7 +17,6 @@ const filter = require('lodash/filter');
 const find = require('lodash/find');
 const findIndex = require('lodash/findIndex');
 const get = require('lodash/get');
-const { getAssetsPath } = require('../storage/util');
 const hash = require('hash-obj');
 const keys = require('lodash/keys');
 const map = require('lodash/map');
@@ -199,7 +198,7 @@ async function fetchCustomContainers(parent, config) {
 function unpublishDeletedContainers(parent, containers) {
   const baseUrl = getBaseUrl(parent.repositoryId, parent.id);
   const filePaths = getContainersFilePaths(baseUrl, containers);
-  const assetsPath = getAssetsPath(parent.repositoryId);
+  const assetsPath = storage.getAssetsPath(parent.repositoryId);
   return storage
     .listFiles(baseUrl)
     .then(publishedFilePaths => {

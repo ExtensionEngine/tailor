@@ -1,7 +1,7 @@
 'use strict';
 
-const { getAssetsPath, readFile, sha256 } = require('./util');
-const { getFileUrl, saveFile } = require('./');
+const { getAssetsPath, getFileUrl, saveFile } = require('./');
+const { readFile, sha256 } = require('./util');
 const config = require('../../../config/server').storage;
 const fecha = require('fecha');
 const fromPairs = require('lodash/fromPairs');
