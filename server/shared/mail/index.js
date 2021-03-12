@@ -100,6 +100,7 @@ function sendAssigneeNotification(assignee, activity) {
   const recipients = assignee;
   const data = {
     ...activity,
+    origin,
     href: activityStatusUrl(activity.repositoryId, activity.id)
   };
   const html = renderHtml(path.join(templatesDir, 'assignee.mjml'), data);
