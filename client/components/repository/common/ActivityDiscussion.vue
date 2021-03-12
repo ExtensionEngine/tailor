@@ -1,8 +1,5 @@
 <template>
-  <v-sheet
-    v-bind="sheetOptions"
-    outlined rounded
-    class="activity-discussion mt-2 mb-5 mx-1 py-2 px-4">
+  <v-sheet v-bind="sheetOptions" outlined rounded class="activity-discussion">
     <discussion
       @save="saveComment"
       @update="saveComment"
