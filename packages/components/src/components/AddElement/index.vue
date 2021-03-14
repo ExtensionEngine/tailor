@@ -71,8 +71,7 @@ import intersection from 'lodash/intersection';
 import pick from 'lodash/pick';
 import reduce from 'lodash/reduce';
 import reject from 'lodash/reject';
-
-const SelectElement = () => import('components/common/SelectElement');
+import SelectElement from '../SelectElement/index.vue';
 
 const DEFAULT_ELEMENT_WIDTH = 100;
 const LAYOUT = { HALF_WIDTH: 6, FULL_WIDTH: 12 };

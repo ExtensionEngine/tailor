@@ -5,9 +5,9 @@ const { elementRegistry } = require('../shared/content-plugins');
 const forEach = require('lodash/forEach');
 const get = require('lodash/get');
 const hash = require('hash-obj');
-const { isOutlineActivity } = require('@tailor/config');
 const Promise = require('bluebird');
 const { resolveStatics } = require('../shared/storage/helpers');
+const { schema } = require('@tailor/config');
 const sse = require('../shared/sse');
 
 module.exports = { add, applyFetchHooks };
@@ -106,7 +106,7 @@ function applyFetchHooks(element) {
 
 function resolveOutlineActivity(element) {
   return element.getActivity().then(activity => {
-    return activity && isOutlineActivity(activity.type)
+    return activity && schema.isOutlineActivity(activity.type)
       ? activity
       : activity.getOutlineParent();
   });

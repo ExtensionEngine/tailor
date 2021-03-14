@@ -61,7 +61,6 @@
 </template>
 
 <script>
-import { getActivityMetadata, getLevel } from '@tailor/config';
 import { mapActions, mapGetters } from 'vuex';
 import ActivityDiscussion from '../ActivityDiscussion';
 import ActivityStatus from './Status';
@@ -71,6 +70,7 @@ import Relationship from './Relationship';
 
 export default {
   name: 'activity-sidebar-body',
+  inject: ['$schema'],
   props: {
     activity: { type: Object, required: true }
   },
@@ -78,8 +78,8 @@ export default {
     ...mapGetters(['isAdmin']),
     ...mapGetters('repository', ['isRepositoryAdmin']),
     activityUrl: () => window.location.href,
-    config: vm => getLevel(vm.activity.type),
-    metadata: vm => getActivityMetadata(vm.activity)
+    config: vm => vm.$schema.getLevel(vm.activity.type),
+    metadata: vm => vm.$schema.getActivityMetadata(vm.activity)
   },
   methods: {
     ...mapActions('repository/activities', ['update']),

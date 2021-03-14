@@ -54,11 +54,11 @@ import { mapGetters, mapState } from 'vuex';
 import { ActiveUsers } from '@tailor/components';
 import ActivityActions from './ActivityActions';
 import { ElementToolbar } from 'tce-core';
-import { getElementId } from 'tce-core/utils';
-import { getLevel } from '@tailor/config';
+import { getElementId } from '@tailor/utils';
 
 export default {
   name: 'editor-toolbar',
+  inject: ['$schema'],
   props: {
     element: { type: Object, default: null },
     activeUsers: { type: Array, default: () => [] }
@@ -67,7 +67,7 @@ export default {
     ...mapState('editor', ['showPublishDiff']),
     ...mapGetters('editor', ['activity']),
     config() {
-      return getLevel(this.activity.type);
+      return this.$schema.getLevel(this.activity.type);
     }
   },
   methods: {

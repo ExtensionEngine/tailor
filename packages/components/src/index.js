@@ -10,3 +10,4 @@ export { default as InlineActivator } from './components/AddElement/InlineActiva
 export { default as InputError } from './components/InputError.vue';
 export { default as PreviewOverlay } from './components/PreviewOverlay.vue';
 export { default as PublishDiffChip } from './components/PublishDiffChip.vue';
+export { default as SelectElement } from './components/SelectElement/index.vue';

@@ -1,19 +1,28 @@
 import capitalize from 'lodash/capitalize';
 import styleInject from '../../../node_modules/style-inject/dist/style-inject.es.js';
-import { isQuestion, getPositions, uuid, Events, publishDiffChangeTypes, getElementId, getComponentName, calculatePosition } from '@tailor/utils';
+import { toTreeFormat, getDescendants, isQuestion, getPositions, uuid, Events, publishDiffChangeTypes, getElementId, getComponentName, calculatePosition } from '@tailor/utils';
 import filter from 'lodash/filter';
 import flatMap from 'lodash/flatMap';
 import intersection from 'lodash/intersection';
 import pick from 'lodash/pick';
 import reduce from 'lodash/reduce';
 import reject from 'lodash/reject';
+import { repository, activity, contentElement } from '@tailor/api';
+import { ContentElement as ContentElement$2 } from '@tailor/components';
+import get from 'lodash/get';
+import keyBy from 'lodash/keyBy';
+import pMinDelay from 'p-min-delay';
+import map from 'lodash/map';
+import { mapGetters } from 'vuex';
+import groupBy from 'lodash/groupBy';
+import pluralize from 'pluralize';
+import debounce from 'lodash/debounce';
+import find from 'lodash/find';
+import sortBy from 'lodash/sortBy';
 import partition from 'lodash/partition';
 import takeRgt from 'lodash/takeRight';
-import find from 'lodash/find';
-import pluralize from 'pluralize';
 import { mapRequests, mapChannels } from '@extensionengine/vue-radio';
 import orderBy from 'lodash/orderBy';
-import get from 'lodash/get';
 import throttle from 'lodash/throttle';
 import Draggable from 'vuedraggable';
 import cloneDeep from 'lodash/cloneDeep';
@@ -21,7 +30,7 @@ import mapKeys from 'lodash/mapKeys';
 import values from 'lodash/values';
 
 //
-var script$l = {
+var script$r = {
   name: 'tailor-active-users',
   props: {
     users: {
@@ -40,14 +49,14 @@ var script$l = {
   }
 };
 
-var css_248z$f = ".avatar[data-v-33d463d4]{transition:all .2s}.avatar img[data-v-33d463d4]{padding:.125rem}.avatar[data-v-33d463d4]:focus-within,.avatar[data-v-33d463d4]:hover{transform:scale(1.1);z-index:1}.avatar:focus-within img[data-v-33d463d4]:focus,.avatar:hover img[data-v-33d463d4]:focus{outline:0}";
-styleInject(css_248z$f);
+var css_248z$j = ".avatar[data-v-33d463d4]{transition:all .2s}.avatar img[data-v-33d463d4]{padding:.125rem}.avatar[data-v-33d463d4]:focus-within,.avatar[data-v-33d463d4]:hover{transform:scale(1.1);z-index:1}.avatar:focus-within img[data-v-33d463d4]:focus,.avatar:hover img[data-v-33d463d4]:focus{outline:0}";
+styleInject(css_248z$j);
 
 /* script */
-var __vue_script__$l = script$l;
+var __vue_script__$r = script$r;
 /* template */
 
-var __vue_render__$l = function __vue_render__() {
+var __vue_render__$r = function __vue_render__() {
   var _vm = this;
 
   var _h = _vm.$createElement;
@@ -93,19 +102,19 @@ var __vue_render__$l = function __vue_render__() {
   }), 1);
 };
 
-var __vue_staticRenderFns__$l = [];
+var __vue_staticRenderFns__$r = [];
 /* style */
 
-var __vue_inject_styles__$l = undefined;
+var __vue_inject_styles__$r = undefined;
 /* scoped */
 
-var __vue_scope_id__$l = "data-v-33d463d4";
+var __vue_scope_id__$r = "data-v-33d463d4";
 /* functional template */
 
-var __vue_is_functional_template__$l = false;
+var __vue_is_functional_template__$r = false;
 /* component normalizer */
 
-function __vue_normalize__$l(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+function __vue_normalize__$r(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
   var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
   component.__file = "ActiveUsers.vue";
@@ -126,10 +135,10 @@ function __vue_normalize__$l(template, style, script, scope, functional, moduleI
 /* style inject SSR */
 
 
-var ActiveUsers = __vue_normalize__$l({
-  render: __vue_render__$l,
-  staticRenderFns: __vue_staticRenderFns__$l
-}, __vue_inject_styles__$l, __vue_script__$l, __vue_scope_id__$l, __vue_is_functional_template__$l);
+var ActiveUsers = __vue_normalize__$r({
+  render: __vue_render__$r,
+  staticRenderFns: __vue_staticRenderFns__$r
+}, __vue_inject_styles__$r, __vue_script__$r, __vue_scope_id__$r, __vue_is_functional_template__$r);
 
 //
 //
@@ -171,7 +180,7 @@ var ActiveUsers = __vue_normalize__$l({
 //
 //
 //
-var script$k = {
+var script$q = {
   name: 'add-new-element',
   props: {
     library: {
@@ -190,14 +199,14 @@ var script$k = {
   }
 };
 
-var css_248z$e = ".element-container[data-v-5e4d908e]{min-height:20rem;padding:0 0 1.875rem;border-top-left-radius:.5rem;border-top-right-radius:.5rem;overflow:hidden}.group-heading[data-v-5e4d908e]{margin:0 2.5rem .375rem;padding-top:.5rem;font-size:.875rem;font-weight:500;line-height:1rem;text-align:left}.group-elements[data-v-5e4d908e]{display:flex;flex-wrap:wrap;width:100%;padding:0 1.875rem}.add-element[data-v-5e4d908e]{width:8.125rem;min-width:8.125rem;height:auto!important;min-height:4.375rem;padding:0!important;white-space:normal}.add-element[data-v-5e4d908e]  .v-btn__content{flex:1 1 100%;flex-direction:column;padding:.375rem;text-transform:none}.add-element .v-icon[data-v-5e4d908e]{padding:.125rem 0;font-size:1.875rem}.add-element .button-text[data-v-5e4d908e]{margin:.625rem 0}";
-styleInject(css_248z$e);
+var css_248z$i = ".element-container[data-v-5e4d908e]{min-height:20rem;padding:0 0 1.875rem;border-top-left-radius:.5rem;border-top-right-radius:.5rem;overflow:hidden}.group-heading[data-v-5e4d908e]{margin:0 2.5rem .375rem;padding-top:.5rem;font-size:.875rem;font-weight:500;line-height:1rem;text-align:left}.group-elements[data-v-5e4d908e]{display:flex;flex-wrap:wrap;width:100%;padding:0 1.875rem}.add-element[data-v-5e4d908e]{width:8.125rem;min-width:8.125rem;height:auto!important;min-height:4.375rem;padding:0!important;white-space:normal}.add-element[data-v-5e4d908e]  .v-btn__content{flex:1 1 100%;flex-direction:column;padding:.375rem;text-transform:none}.add-element .v-icon[data-v-5e4d908e]{padding:.125rem 0;font-size:1.875rem}.add-element .button-text[data-v-5e4d908e]{margin:.625rem 0}";
+styleInject(css_248z$i);
 
 /* script */
-var __vue_script__$k = script$k;
+var __vue_script__$q = script$q;
 /* template */
 
-var __vue_render__$k = function __vue_render__() {
+var __vue_render__$q = function __vue_render__() {
   var _vm = this;
 
   var _h = _vm.$createElement;
@@ -255,19 +264,19 @@ var __vue_render__$k = function __vue_render__() {
   })], 2)]);
 };
 
-var __vue_staticRenderFns__$k = [];
+var __vue_staticRenderFns__$q = [];
 /* style */
 
-var __vue_inject_styles__$k = undefined;
+var __vue_inject_styles__$q = undefined;
 /* scoped */
 
-var __vue_scope_id__$k = "data-v-5e4d908e";
+var __vue_scope_id__$q = "data-v-5e4d908e";
 /* functional template */
 
-var __vue_is_functional_template__$k = false;
+var __vue_is_functional_template__$q = false;
 /* component normalizer */
 
-function __vue_normalize__$k(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+function __vue_normalize__$q(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
   var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
   component.__file = "AddNewElement.vue";
@@ -288,17 +297,1227 @@ function __vue_normalize__$k(template, style, script, scope, functional, moduleI
 /* style inject SSR */
 
 
-var AddNewElement = __vue_normalize__$k({
+var AddNewElement = __vue_normalize__$q({
+  render: __vue_render__$q,
+  staticRenderFns: __vue_staticRenderFns__$q
+}, __vue_inject_styles__$q, __vue_script__$q, __vue_scope_id__$q, __vue_is_functional_template__$q);
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
+function _slicedToArray(arr, i) {
+  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
+}
+
+function _toConsumableArray(arr) {
+  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
+}
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
+}
+
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+
+function _iterableToArray(iter) {
+  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+}
+
+function _iterableToArrayLimit(arr, i) {
+  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+  var _e = undefined;
+
+  try {
+    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
+  }
+
+  return _arr;
+}
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+
+  return arr2;
+}
+
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+//
+var script$p = {
+  name: 'content-element-preview',
+  props: {
+    element: {
+      type: Object,
+      required: true
+    },
+    selectable: {
+      type: Boolean,
+      default: false
+    },
+    isSelected: {
+      type: Boolean,
+      default: false
+    },
+    selectionDisabled: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+    disabled: function disabled(vm) {
+      return vm.selectionDisabled && !vm.isSelected;
+    },
+    elementWidth: function elementWidth(vm) {
+      return "col-xs-".concat(get(vm.element, 'data.width', 12));
+    }
+  },
+  methods: {
+    toggleSelection: function toggleSelection() {
+      if (!this.selectable || this.disabled) return;
+      this.$emit('toggle');
+    }
+  },
+  components: {
+    ContentElement: ContentElement$2
+  }
+};
+
+var css_248z$h = ".element-preview-container[data-v-249d7ad5]{display:flex;position:relative;margin:.25rem 0}.element-preview-container .v-input[data-v-249d7ad5]{margin:0}.content-element[data-v-249d7ad5]{flex:1 0;margin:.4375rem 0 0 .25rem;box-shadow:none;border:1px solid #e1e1e1}.content-element.selected[data-v-249d7ad5]{border-style:dashed;border-color:#444}.content-element.selected[data-v-249d7ad5]::after{display:none}.element-preview-container[data-v-249d7ad5]  .contained-content{margin:0}.element-preview-container[data-v-249d7ad5]  .contained-content .message span:not(.heading){display:none}.element-preview-container[data-v-249d7ad5]  .contained-content .ql-editor{word-break:break-all}.element-wrapper[data-v-249d7ad5]{position:relative}.open-element-button[data-v-249d7ad5]{position:absolute;top:0;right:-.75rem;transition:opacity .4s}.open-element-button[data-v-249d7ad5]:not(.visible){opacity:0}";
+styleInject(css_248z$h);
+
+/* script */
+var __vue_script__$p = script$p;
+/* template */
+
+var __vue_render__$p = function __vue_render__() {
+  var _vm = this;
+
+  var _h = _vm.$createElement;
+
+  var _c = _vm._self._c || _h;
+
+  return _c('div', {
+    staticClass: "element-preview-container float-none",
+    class: _vm.elementWidth
+  }, [_vm.selectable ? _c('v-checkbox', {
+    attrs: {
+      "input-value": _vm.isSelected,
+      "disabled": _vm.disabled,
+      "color": "primary darken-4"
+    },
+    on: {
+      "click": _vm.toggleSelection
+    }
+  }) : _vm._e(), _vm._v(" "), _c('v-hover', {
+    scopedSlots: _vm._u([{
+      key: "default",
+      fn: function fn(ref) {
+        var hover = ref.hover;
+        return [_c('div', {
+          staticClass: "element-wrapper flex-grow-1"
+        }, [_c('content-element', _vm._b({
+          staticClass: "content-element",
+          class: {
+            selected: _vm.isSelected
+          },
+          attrs: {
+            "element": _vm.element,
+            "set-width": false
+          }
+        }, 'content-element', _vm.$attrs, false)), _vm._v(" "), _c('v-tooltip', {
+          attrs: {
+            "open-delay": "400",
+            "top": ""
+          },
+          scopedSlots: _vm._u([{
+            key: "activator",
+            fn: function fn(ref) {
+              var on = ref.on;
+              return [_c('v-btn', _vm._g({
+                staticClass: "open-element-button",
+                class: {
+                  visible: hover
+                },
+                attrs: {
+                  "color": "blue-grey darken-4",
+                  "fab": "",
+                  "depressed": "",
+                  "x-small": ""
+                },
+                on: {
+                  "click": function click($event) {
+                    $event.stopPropagation();
+                    return _vm.$emit('element:open', _vm.element.uid);
+                  }
+                }
+              }, on), [_c('v-icon', {
+                attrs: {
+                  "color": "secondary lighten-4",
+                  "dense": ""
+                }
+              }, [_vm._v("mdi-open-in-new")])], 1)];
+            }
+          }], null, true)
+        }, [_vm._v(" "), _c('span', [_vm._v("Open in editor")])])], 1)];
+      }
+    }])
+  })], 1);
+};
+
+var __vue_staticRenderFns__$p = [];
+/* style */
+
+var __vue_inject_styles__$p = undefined;
+/* scoped */
+
+var __vue_scope_id__$p = "data-v-249d7ad5";
+/* functional template */
+
+var __vue_is_functional_template__$p = false;
+/* component normalizer */
+
+function __vue_normalize__$p(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
+
+  component.__file = "Element.vue";
+
+  if (!component.render) {
+    component.render = template.render;
+    component.staticRenderFns = template.staticRenderFns;
+    component._compiled = true;
+    if (functional) component.functional = true;
+  }
+
+  component._scopeId = scope;
+
+  return component;
+}
+/* style inject */
+
+/* style inject SSR */
+
+
+var ContentElement$1 = __vue_normalize__$p({
+  render: __vue_render__$p,
+  staticRenderFns: __vue_staticRenderFns__$p
+}, __vue_inject_styles__$p, __vue_script__$p, __vue_scope_id__$p, __vue_is_functional_template__$p);
+
+//
+var script$o = {
+  name: 'content-preview',
+  props: {
+    contentContainers: {
+      type: Array,
+      required: true
+    },
+    selectable: {
+      type: Boolean,
+      default: false
+    },
+    multiple: {
+      type: Boolean,
+      default: true
+    },
+    allowedTypes: {
+      type: Array,
+      default: function _default() {
+        return [];
+      }
+    },
+    selected: {
+      type: Array,
+      default: function _default() {
+        return [];
+      }
+    }
+  },
+  computed: {
+    isSelectionDisabled: function isSelectionDisabled() {
+      return this.selectable && !this.multiple && !!this.selected.length;
+    },
+    selectionMap: function selectionMap(vm) {
+      return keyBy(vm.selected, 'id');
+    },
+    processedContainers: function processedContainers() {
+      var containers = this.contentContainers,
+          allowedTypes = this.allowedTypes;
+      if (!allowedTypes.length) return containers;
+      return containers.map(function (container) {
+        return Object.assign({}, container, {
+          elements: container.elements.filter(function (it) {
+            return allowedTypes.includes(it.type);
+          })
+        });
+      });
+    },
+    elements: function elements() {
+      var containers = this.processedContainers;
+      return containers.reduce(function (acc, it) {
+        return acc.concat(it.elements);
+      }, []);
+    }
+  },
+  components: {
+    ContentElement: ContentElement$1
+  }
+};
+
+var css_248z$g = ".content-preview .v-alert[data-v-2013b96d]{display:flex;align-items:center;justify-content:center;height:19rem}.content-preview .content-container[data-v-2013b96d]:last-child{margin-bottom:.625rem}";
+styleInject(css_248z$g);
+
+/* script */
+var __vue_script__$o = script$o;
+/* template */
+
+var __vue_render__$o = function __vue_render__() {
+  var _vm = this;
+
+  var _h = _vm.$createElement;
+
+  var _c = _vm._self._c || _h;
+
+  return _c('div', {
+    staticClass: "content-preview"
+  }, [!_vm.elements.length ? _c('v-alert', {
+    staticClass: "mx-4",
+    attrs: {
+      "color": "grey darken-4",
+      "text": ""
+    }
+  }, [_vm._v("\n    No available elements.\n  ")]) : _vm._e(), _vm._v(" "), _vm._l(_vm.processedContainers, function (container) {
+    return _c('div', {
+      key: container.id,
+      staticClass: "content-container d-flex flex-wrap"
+    }, _vm._l(container.elements, function (element) {
+      return _c('content-element', {
+        key: element.id,
+        attrs: {
+          "element": element,
+          "selectable": _vm.selectable,
+          "is-selected": !!_vm.selectionMap[element.id],
+          "selection-disabled": _vm.isSelectionDisabled,
+          "is-disabled": ""
+        },
+        on: {
+          "toggle": function toggle($event) {
+            return _vm.$emit('toggle', element);
+          },
+          "element:open": function elementOpen($event) {
+            return _vm.$emit('element:open', $event);
+          }
+        }
+      });
+    }), 1);
+  })], 2);
+};
+
+var __vue_staticRenderFns__$o = [];
+/* style */
+
+var __vue_inject_styles__$o = undefined;
+/* scoped */
+
+var __vue_scope_id__$o = "data-v-2013b96d";
+/* functional template */
+
+var __vue_is_functional_template__$o = false;
+/* component normalizer */
+
+function __vue_normalize__$o(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
+
+  component.__file = "index.vue";
+
+  if (!component.render) {
+    component.render = template.render;
+    component.staticRenderFns = template.staticRenderFns;
+    component._compiled = true;
+    if (functional) component.functional = true;
+  }
+
+  component._scopeId = scope;
+
+  return component;
+}
+/* style inject */
+
+/* style inject SSR */
+
+
+var ContentPreview = __vue_normalize__$o({
+  render: __vue_render__$o,
+  staticRenderFns: __vue_staticRenderFns__$o
+}, __vue_inject_styles__$o, __vue_script__$o, __vue_scope_id__$o, __vue_is_functional_template__$o);
+
+function loader(action, name) {
+  var minDuration = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  return function () {
+    var _this = this;
+
+    this[name] = true;
+    return pMinDelay(Promise.resolve(action.call.apply(action, [this].concat(Array.prototype.slice.call(arguments)))), minDuration).finally(function () {
+      return _this[name] = false;
+    });
+  };
+}
+
+//
+var script$n = {
+  name: 'select-activity',
+  inject: ['$schema'],
+  props: {
+    selectedElements: {
+      type: Array,
+      default: function _default() {
+        return [];
+      }
+    },
+    activities: {
+      type: Array,
+      default: function _default() {
+        return [];
+      }
+    }
+  },
+  data: function data() {
+    return {
+      search: ''
+    };
+  },
+  computed: {
+    groupedSelection: function groupedSelection(vm) {
+      return groupBy(vm.selectedElements, 'outlineId');
+    },
+    expandedActivityIds: function expandedActivityIds(vm) {
+      return map(vm.activities, 'id');
+    },
+    activityTree: function activityTree(vm) {
+      return toTreeFormat(vm.activities, vm.$schema, []);
+    },
+    noResultsMessage: function noResultsMessage() {
+      var activities = this.activities,
+          search = this.search,
+          $refs = this.$refs;
+      if (!activities.length) return 'Empty repository';
+      if (!search || !$refs) return '';
+      var _$refs$treeview = $refs.treeview,
+          excludedItems = _$refs$treeview.excludedItems,
+          nodes = _$refs$treeview.nodes;
+      var hasSearchResults = excludedItems.size !== Object.keys(nodes).length;
+      return !hasSearchResults && 'No matches found';
+    }
+  },
+  methods: {
+    hasContentContainers: function hasContentContainers(type) {
+      return this.$schema.isEditable(type);
+    },
+    getChipLabel: function getChipLabel(_ref) {
+      var length = _ref.length;
+      return "".concat(length, " ").concat(pluralize('element', length), " selected");
+    }
+  }
+};
+
+var css_248z$f = ".treeview[data-v-11dfe634]{max-height:19rem;text-align:left;background-color:#fcfcfc;border:1px solid #eee;overflow-y:scroll}.treeview .v-chip.custom-chip[data-v-11dfe634]{border-radius:12px!important}.treeview[data-v-11dfe634]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__content>*,.treeview[data-v-11dfe634]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__root{cursor:auto}";
+styleInject(css_248z$f);
+
+/* script */
+var __vue_script__$n = script$n;
+/* template */
+
+var __vue_render__$n = function __vue_render__() {
+  var _vm = this;
+
+  var _h = _vm.$createElement;
+
+  var _c = _vm._self._c || _h;
+
+  return _c('div', {
+    staticClass: "mx-3"
+  }, [_c('v-text-field', {
+    attrs: {
+      "disabled": !_vm.activities.length,
+      "placeholder": "Filter items...",
+      "prepend-inner-icon": "mdi-filter-outline",
+      "clear-icon": "mdi-close-circle-outline",
+      "clearable": "",
+      "outlined": ""
+    },
+    model: {
+      value: _vm.search,
+      callback: function callback($$v) {
+        _vm.search = $$v;
+      },
+      expression: "search"
+    }
+  }), _vm._v(" "), _c('v-treeview', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: !_vm.noResultsMessage,
+      expression: "!noResultsMessage"
+    }],
+    ref: "treeview",
+    staticClass: "py-3 px-1 treeview",
+    attrs: {
+      "items": _vm.activityTree,
+      "search": _vm.search,
+      "open": _vm.expandedActivityIds,
+      "transition": "",
+      "open-on-click": ""
+    },
+    scopedSlots: _vm._u([{
+      key: "label",
+      fn: function fn(ref) {
+        var ref_item = ref.item;
+        var id = ref_item.id;
+        var data = ref_item.data;
+        return [_vm._v("\n      " + _vm._s(data.name) + "\n      "), _vm.groupedSelection[id] ? _c('v-chip', {
+          staticClass: "readonly custom-chip",
+          attrs: {
+            "rounded": "",
+            "small": ""
+          }
+        }, [_vm._v("\n        " + _vm._s(_vm.getChipLabel(_vm.groupedSelection[id])) + "\n      ")]) : _vm._e()];
+      }
+    }, {
+      key: "append",
+      fn: function fn(ref) {
+        var item = ref.item;
+        return [_vm.hasContentContainers(item.type) ? _c('v-btn', {
+          attrs: {
+            "color": "primary darken-2",
+            "outlined": "",
+            "small": ""
+          },
+          on: {
+            "click": function click($event) {
+              return _vm.$emit('selected', item);
+            }
+          }
+        }, [_vm._v("\n        View elements\n      ")]) : _vm._e()];
+      }
+    }])
+  }), _vm._v(" "), _c('v-alert', {
+    attrs: {
+      "value": !!_vm.noResultsMessage,
+      "color": "primary darken-2",
+      "dark": ""
+    }
+  }, [_vm._v("\n    " + _vm._s(_vm.noResultsMessage) + "\n  ")])], 1);
+};
+
+var __vue_staticRenderFns__$n = [];
+/* style */
+
+var __vue_inject_styles__$n = undefined;
+/* scoped */
+
+var __vue_scope_id__$n = "data-v-11dfe634";
+/* functional template */
+
+var __vue_is_functional_template__$n = false;
+/* component normalizer */
+
+function __vue_normalize__$n(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
+
+  component.__file = "SelectActivity.vue";
+
+  if (!component.render) {
+    component.render = template.render;
+    component.staticRenderFns = template.staticRenderFns;
+    component._compiled = true;
+    if (functional) component.functional = true;
+  }
+
+  component._scopeId = scope;
+
+  return component;
+}
+/* style inject */
+
+/* style inject SSR */
+
+
+var SelectActivity = __vue_normalize__$n({
+  render: __vue_render__$n,
+  staticRenderFns: __vue_staticRenderFns__$n
+}, __vue_inject_styles__$n, __vue_script__$n, __vue_scope_id__$n, __vue_is_functional_template__$n);
+
+//
+var script$m = {
+  name: 'select-repository',
+  props: {
+    repository: {
+      type: Object,
+      default: null
+    }
+  },
+  data: function data() {
+    return {
+      repositories: [],
+      loading: false
+    };
+  },
+  methods: {
+    selectRepository: function selectRepository(repository) {
+      if (find(this.repositories, {
+        id: repository.id
+      })) {
+        this.$emit('selected', repository);
+      }
+    },
+    fetchRepositories: debounce(loader(function (search) {
+      var _this = this;
+
+      return repository.getRepositories({
+        search: search
+      }).then(function (repositories) {
+        _this.repositories = sortBy(repositories, 'name');
+      });
+    }, 'loading'), 500)
+  },
+  created: function created() {
+    this.fetchRepositories();
+  }
+};
+
+/* script */
+var __vue_script__$m = script$m;
+/* template */
+
+var __vue_render__$m = function __vue_render__() {
+  var _vm = this;
+
+  var _h = _vm.$createElement;
+
+  var _c = _vm._self._c || _h;
+
+  return _c('v-combobox', _vm._b({
+    staticClass: "mx-3",
+    attrs: {
+      "value": _vm.repository,
+      "items": _vm.repositories,
+      "loading": _vm.loading,
+      "item-value": "id",
+      "item-text": "name",
+      "label": "Select repository",
+      "placeholder": "Type to search repositories...",
+      "outlined": "",
+      "return-object": ""
+    },
+    on: {
+      "input": _vm.selectRepository,
+      "update:search-input": _vm.fetchRepositories
+    }
+  }, 'v-combobox', _vm.$attrs, false));
+};
+
+var __vue_staticRenderFns__$m = [];
+/* style */
+
+var __vue_inject_styles__$m = undefined;
+/* scoped */
+
+var __vue_scope_id__$m = undefined;
+/* functional template */
+
+var __vue_is_functional_template__$m = false;
+/* component normalizer */
+
+function __vue_normalize__$m(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
+
+  component.__file = "SelectRepository.vue";
+
+  if (!component.render) {
+    component.render = template.render;
+    component.staticRenderFns = template.staticRenderFns;
+    component._compiled = true;
+    if (functional) component.functional = true;
+  }
+
+  component._scopeId = scope;
+
+  return component;
+}
+/* style inject */
+
+/* style inject SSR */
+
+
+var SelectRepository = __vue_normalize__$m({
+  render: __vue_render__$m,
+  staticRenderFns: __vue_staticRenderFns__$m
+}, __vue_inject_styles__$m, __vue_script__$m, __vue_scope_id__$m, __vue_is_functional_template__$m);
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var script$l = {
+  name: 'tailor-dialog',
+  props: {
+    headerIcon: {
+      type: String,
+      default: null
+    },
+    width: {
+      type: [Number, String],
+      default: 500
+    },
+    paddingless: {
+      type: Boolean,
+      default: false
+    }
+  }
+};
+
+var css_248z$e = ".dialog-title[data-v-b6f646a2]{display:flex;color:#f1f1f1}.dialog-title .text-truncate[data-v-b6f646a2]{flex:1;text-align:left}";
+styleInject(css_248z$e);
+
+/* script */
+var __vue_script__$l = script$l;
+/* template */
+
+var __vue_render__$l = function __vue_render__() {
+  var _vm = this;
+
+  var _h = _vm.$createElement;
+
+  var _c = _vm._self._c || _h;
+
+  return _c('v-dialog', _vm._g(_vm._b({
+    attrs: {
+      "width": _vm.width
+    },
+    scopedSlots: _vm._u([_vm._l(_vm.$scopedSlots, function (_, slot) {
+      return {
+        key: slot,
+        fn: function fn(scope) {
+          return [_vm._t(slot, null, null, scope)];
+        }
+      };
+    })], null, true)
+  }, 'v-dialog', _vm.$attrs, false), _vm.$listeners), [_vm._v(" "), _c('v-card', [_c('v-card-title', {
+    staticClass: "dialog-title primary darken-3",
+    attrs: {
+      "primary-title": ""
+    }
+  }, [_vm.headerIcon ? _c('v-avatar', {
+    staticClass: "mr-3",
+    attrs: {
+      "color": "secondary",
+      "size": "38"
+    }
+  }, [_c('v-icon', {
+    attrs: {
+      "dark": ""
+    }
+  }, [_vm._v(_vm._s(_vm.headerIcon))])], 1) : _vm._e(), _vm._v(" "), _c('div', {
+    staticClass: "text-truncate"
+  }, [_vm._t("header")], 2)], 1), _vm._v(" "), _c('v-card-text', {
+    class: [_vm.paddingless ? 'pa-0' : 'pt-7 px-4 pb-2']
+  }, [_vm._t("body")], 2), _vm._v(" "), _vm.$slots.actions ? _c('v-card-actions', {
+    staticClass: "px-4 pb-3"
+  }, [_c('v-spacer'), _vm._v(" "), _vm._t("actions")], 2) : _vm._e()], 1)], 1);
+};
+
+var __vue_staticRenderFns__$l = [];
+/* style */
+
+var __vue_inject_styles__$l = undefined;
+/* scoped */
+
+var __vue_scope_id__$l = "data-v-b6f646a2";
+/* functional template */
+
+var __vue_is_functional_template__$l = false;
+/* component normalizer */
+
+function __vue_normalize__$l(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
+
+  component.__file = "TailorDialog.vue";
+
+  if (!component.render) {
+    component.render = template.render;
+    component.staticRenderFns = template.staticRenderFns;
+    component._compiled = true;
+    if (functional) component.functional = true;
+  }
+
+  component._scopeId = scope;
+
+  return component;
+}
+/* style inject */
+
+/* style inject SSR */
+
+
+var TailorDialog = __vue_normalize__$l({
+  render: __vue_render__$l,
+  staticRenderFns: __vue_staticRenderFns__$l
+}, __vue_inject_styles__$l, __vue_script__$l, __vue_scope_id__$l, __vue_is_functional_template__$l);
+
+var TOGGLE_BUTTON = {
+  SELECT: {
+    label: 'Select all',
+    icon: 'checkbox-multiple-marked-outline'
+  },
+  DESELECT: {
+    label: 'Deselect all',
+    icon: 'checkbox-multiple-blank-outline'
+  }
+};
+var script$k = {
+  name: 'select-element',
+  inject: ['$schema'],
+  props: {
+    selected: {
+      type: Array,
+      default: function _default() {
+        return [];
+      }
+    },
+    heading: {
+      type: String,
+      required: true
+    },
+    allowedTypes: {
+      type: Array,
+      required: true
+    },
+    multiple: {
+      type: Boolean,
+      default: true
+    },
+    submitLabel: {
+      type: String,
+      default: 'Save'
+    },
+    headerIcon: {
+      type: String,
+      default: 'mdi-toy-brick-plus-outline'
+    },
+    onlyCurrentRepo: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data: function data() {
+    return {
+      items: {
+        activities: [],
+        contentContainers: []
+      },
+      selection: {
+        repository: null,
+        activity: null,
+        elements: []
+      },
+      loadingContent: false
+    };
+  },
+  computed: Object.assign({}, mapGetters('repository', {
+    currentRepository: 'repository',
+    currentActivities: 'activities'
+  }), {
+    allElementsSelected: function allElementsSelected(vm) {
+      return vm.selection.elements.length === vm.elements.length;
+    },
+    rootContainerTypes: function rootContainerTypes() {
+      var _this$selection$activ;
+
+      var type = (_this$selection$activ = this.selection.activity) === null || _this$selection$activ === void 0 ? void 0 : _this$selection$activ.type;
+      return type && this.getContainerTypes(type);
+    },
+    processedContainers: function processedContainers() {
+      var _this = this;
+
+      var activity = this.selection.activity,
+          activities = this.items.activities;
+      if (!activity || !activities.length) return [];
+      var containers = sortBy(activities.filter(this.isRootContainer), [this.getTypePosition, 'position', 'createdAt']);
+      return flatMap(containers, function (it) {
+        return [it].concat(_toConsumableArray(_this.getSubcontainers(it)));
+      });
+    },
+    elements: function elements() {
+      var _this2 = this;
+
+      var elements = flatMap(this.items.contentContainers, 'elements');
+      if (!this.allowedTypes.length) return elements;
+      return elements.filter(function (it) {
+        return _this2.allowedTypes.includes(it.type);
+      });
+    },
+    toggleButton: function toggleButton() {
+      var allElementsSelected = this.allElementsSelected,
+          elements = this.elements,
+          multiple = this.multiple,
+          selection = this.selection;
+      if (!multiple || !selection.activity || !elements.length) return;
+      var SELECT = TOGGLE_BUTTON.SELECT,
+          DESELECT = TOGGLE_BUTTON.DESELECT;
+      return allElementsSelected ? DESELECT : SELECT;
+    }
+  }),
+  methods: {
+    getContainerTypes: function getContainerTypes(type) {
+      return map(this.$schema.getSupportedContainers(type), 'type');
+    },
+    getTypePosition: function getTypePosition(_ref) {
+      var type = _ref.type;
+      return this.rootContainerTypes.indexOf(type);
+    },
+    isRootContainer: function isRootContainer(_ref2) {
+      var parentId = _ref2.parentId,
+          type = _ref2.type;
+      var activity = this.selection.activity,
+          rootContainerTypes = this.rootContainerTypes;
+      return parentId === activity.id && rootContainerTypes.includes(type);
+    },
+    getSubcontainers: function getSubcontainers(container) {
+      var activities = this.items.activities;
+      return sortBy(getDescendants(activities, container), 'position');
+    },
+    showActivityElements: async function showActivityElements(activity) {
+      var _this3 = this;
+
+      this.selection.activity = activity;
+      var processedContainers = this.processedContainers;
+      var elements = await this.fetchElements(processedContainers);
+      this.items.contentContainers = processedContainers.map(function (container) {
+        return _this3.assignElements(container, activity, elements);
+      });
+    },
+    assignElements: function assignElements(container, activity, elements) {
+      var containerElements = elements.filter(function (it) {
+        return it.activityId === container.id;
+      }).map(function (element) {
+        return Object.assign({}, element, {
+          activity: activity
+        });
+      });
+      return Object.assign({}, container, {
+        elements: sortBy(containerElements, 'position')
+      });
+    },
+    toggleElementSelection: function toggleElementSelection(element) {
+      var elements = this.selection.elements;
+      var existing = elements.find(function (it) {
+        return it.id === element.id;
+      });
+      this.selection.elements = existing ? elements.filter(function (it) {
+        return it.id !== element.id;
+      }) : elements.concat(element);
+    },
+    toggleSelectAll: function toggleSelectAll() {
+      this.selection.elements = this.allElementsSelected ? [] : this.elements;
+    },
+    deselectActivity: function deselectActivity() {
+      this.selection.activity = null;
+      this.items.contentContainers = [];
+      this.selection.elements = _toConsumableArray(this.selected);
+    },
+    selectRepository: async function selectRepository(repository) {
+      var currentActivities = this.currentActivities,
+          currentRepository = this.currentRepository;
+      this.selection.repository = repository;
+      this.deselectActivity();
+      this.items.activities = currentRepository.id === repository.id ? currentActivities : await this.fetchActivities(repository);
+    },
+    fetchActivities: loader(function (repository) {
+      return activity.getActivities(repository.id);
+    }, 'loadingContent'),
+    fetchElements: loader(function (containers) {
+      var repositoryId = this.selection.repository.id;
+      var queryOpts = {
+        repositoryId: repositoryId,
+        ids: containers.map(function (it) {
+          return it.id;
+        })
+      };
+      return contentElement.fetch(queryOpts);
+    }, 'loadingContent', 500),
+    save: function save() {
+      this.$emit('selected', _toConsumableArray(this.selection.elements));
+      this.close();
+    },
+    close: function close() {
+      this.$emit('close');
+    },
+    openInEditor: function openInEditor(elementId) {
+      var params = {
+        activityId: this.selection.activity.id,
+        repositoryId: this.selection.repository.id
+      };
+      var route = {
+        name: 'editor',
+        params: params,
+        query: {
+          elementId: elementId
+        }
+      };
+
+      var _this$$router$resolve = this.$router.resolve(route),
+          href = _this$$router$resolve.href;
+
+      window.open(href, '_blank');
+    }
+  },
+  created: function created() {
+    this.selection.elements = _toConsumableArray(this.selected);
+    this.selection.repository = this.currentRepository;
+    this.items.activities = this.currentActivities;
+  },
+  components: {
+    ContentPreview: ContentPreview,
+    SelectActivity: SelectActivity,
+    SelectRepository: SelectRepository,
+    TailorDialog: TailorDialog
+  }
+};
+
+/* script */
+var __vue_script__$k = script$k;
+/* template */
+
+var __vue_render__$k = function __vue_render__() {
+  var _vm = this;
+
+  var _h = _vm.$createElement;
+
+  var _c = _vm._self._c || _h;
+
+  return _c('tailor-dialog', {
+    attrs: {
+      "value": true,
+      "header-icon": _vm.headerIcon,
+      "width": "650",
+      "scrollable": ""
+    },
+    on: {
+      "click:outside": _vm.close
+    },
+    scopedSlots: _vm._u([{
+      key: "header",
+      fn: function fn() {
+        return [_vm._v(_vm._s(_vm.heading))];
+      },
+      proxy: true
+    }, {
+      key: "body",
+      fn: function fn() {
+        return [!_vm.selection.activity ? [_c('select-repository', {
+          attrs: {
+            "repository": _vm.selection.repository,
+            "disabled": _vm.onlyCurrentRepo
+          },
+          on: {
+            "selected": _vm.selectRepository
+          }
+        }), _vm._v(" "), _vm.loadingContent ? _c('v-progress-circular', {
+          staticClass: "mt-5",
+          attrs: {
+            "indeterminate": ""
+          }
+        }) : _c('select-activity', {
+          attrs: {
+            "activities": _vm.items.activities,
+            "selected-elements": _vm.selection.elements
+          },
+          on: {
+            "selected": _vm.showActivityElements
+          }
+        })] : [_vm.toggleButton ? _c('div', {
+          staticClass: "d-flex justify-end mb-2 px-4"
+        }, [_c('v-btn', {
+          attrs: {
+            "outlined": ""
+          },
+          on: {
+            "click": _vm.toggleSelectAll
+          }
+        }, [_c('v-icon', {
+          staticClass: "mr-2"
+        }, [_vm._v("mdi-" + _vm._s(_vm.toggleButton.icon))]), _vm._v("\n          " + _vm._s(_vm.toggleButton.label) + "\n        ")], 1)], 1) : _vm._e(), _vm._v(" "), _vm.loadingContent ? _c('v-progress-circular', {
+          staticClass: "mt-5",
+          attrs: {
+            "indeterminate": ""
+          }
+        }) : _c('content-preview', {
+          attrs: {
+            "content-containers": _vm.items.contentContainers,
+            "selected": _vm.selection.elements,
+            "allowed-types": _vm.allowedTypes,
+            "multiple": _vm.multiple,
+            "selectable": ""
+          },
+          on: {
+            "toggle": _vm.toggleElementSelection,
+            "element:open": _vm.openInEditor
+          }
+        })]];
+      },
+      proxy: true
+    }, {
+      key: "actions",
+      fn: function fn() {
+        return [_vm.selection.activity ? _c('v-btn', {
+          staticClass: "mr-2",
+          attrs: {
+            "text": "",
+            "outlined": ""
+          },
+          on: {
+            "click": _vm.deselectActivity
+          }
+        }, [_c('v-icon', {
+          staticClass: "mr-2",
+          attrs: {
+            "dense": ""
+          }
+        }, [_vm._v("mdi-arrow-left")]), _vm._v("Back\n    ")], 1) : _vm._e(), _vm._v(" "), _c('v-btn', {
+          staticClass: "ml-1",
+          attrs: {
+            "text": ""
+          },
+          on: {
+            "click": _vm.close
+          }
+        }, [_vm._v("Cancel")]), _vm._v(" "), _c('v-btn', {
+          staticClass: "mr-2",
+          attrs: {
+            "text": ""
+          },
+          on: {
+            "click": _vm.save
+          }
+        }, [_vm._v(_vm._s(_vm.submitLabel))])];
+      },
+      proxy: true
+    }])
+  });
+};
+
+var __vue_staticRenderFns__$k = [];
+/* style */
+
+var __vue_inject_styles__$k = undefined;
+/* scoped */
+
+var __vue_scope_id__$k = undefined;
+/* functional template */
+
+var __vue_is_functional_template__$k = false;
+/* component normalizer */
+
+function __vue_normalize__$k(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
+
+  component.__file = "index.vue";
+
+  if (!component.render) {
+    component.render = template.render;
+    component.staticRenderFns = template.staticRenderFns;
+    component._compiled = true;
+    if (functional) component.functional = true;
+  }
+
+  component._scopeId = scope;
+
+  return component;
+}
+/* style inject */
+
+/* style inject SSR */
+
+
+var SelectElement = __vue_normalize__$k({
   render: __vue_render__$k,
   staticRenderFns: __vue_staticRenderFns__$k
 }, __vue_inject_styles__$k, __vue_script__$k, __vue_scope_id__$k, __vue_is_functional_template__$k);
 
 //
-
-var SelectElement = function SelectElement() {
-  return import('components/common/SelectElement');
-};
-
 var DEFAULT_ELEMENT_WIDTH = 100;
 var LAYOUT = {
   HALF_WIDTH: 6,
@@ -683,77 +1902,6 @@ var AddElement = __vue_normalize__$j({
   render: __vue_render__$j,
   staticRenderFns: __vue_staticRenderFns__$j
 }, __vue_inject_styles__$j, __vue_script__$j, __vue_scope_id__$j, __vue_is_functional_template__$j);
-
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-
-  return obj;
-}
-
-function _slicedToArray(arr, i) {
-  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
-}
-
-function _arrayWithHoles(arr) {
-  if (Array.isArray(arr)) return arr;
-}
-
-function _iterableToArrayLimit(arr, i) {
-  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
-  var _arr = [];
-  var _n = true;
-  var _d = false;
-  var _e = undefined;
-
-  try {
-    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-      _arr.push(_s.value);
-
-      if (i && _arr.length === i) break;
-    }
-  } catch (err) {
-    _d = true;
-    _e = err;
-  } finally {
-    try {
-      if (!_n && _i["return"] != null) _i["return"]();
-    } finally {
-      if (_d) throw _e;
-    }
-  }
-
-  return _arr;
-}
-
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
-}
-
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-
-  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
-
-  return arr2;
-}
-
-function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
 
 //
 //
@@ -3859,4 +5007,4 @@ var PreviewOverlay = __vue_normalize__({
   staticRenderFns: __vue_staticRenderFns__
 }, __vue_inject_styles__, __vue_script__, __vue_scope_id__, __vue_is_functional_template__);
 
-export { ActiveUsers, AddElement, ContainedContent, ContentElement, Discussion$1 as Discussion, ElementList, ElementPlaceholder, EmbeddedContainer, InlineActivator, InputError, PreviewOverlay, PublishDiffChip };
+export { ActiveUsers, AddElement, ContainedContent, ContentElement, Discussion$1 as Discussion, ElementList, ElementPlaceholder, EmbeddedContainer, InlineActivator, InputError, PreviewOverlay, PublishDiffChip, SelectElement };

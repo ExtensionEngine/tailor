@@ -57,19 +57,16 @@ import {
   activity as activityApi,
   contentElement as contentElementApi
 } from '@tailor/api';
-import ContentPreview from '@/components/common/ContentPreview';
+import ContentPreview from '../ContentPreview/index.vue';
 import flatMap from 'lodash/flatMap';
-import { getDescendants as getContainers } from '@/utils/activity';
-import { getSupportedContainers } from '@tailor/config';
-import loader from '@/components/common/loader';
+import { getDescendants as getDeepChildren } from '@tailor/utils';
+import loader from '@/loader';
 import map from 'lodash/map';
 import { mapGetters } from 'vuex';
-import SelectActivity from './SelectActivity';
-import SelectRepository from './SelectRepository';
+import SelectActivity from './SelectActivity.vue';
+import SelectRepository from './SelectRepository.vue';
 import sortBy from 'lodash/sortBy';
-import TailorDialog from '@/components/common/TailorDialog';
-
-const getContainerTypes = type => map(getSupportedContainers(type), 'type');
+import TailorDialog from '../TailorDialog.vue';
 
 const TOGGLE_BUTTON = {
   SELECT: { label: 'Select all', icon: 'checkbox-multiple-marked-outline' },
@@ -78,6 +75,7 @@ const TOGGLE_BUTTON = {
 
 export default {
   name: 'select-element',
+  inject: ['$schema'],
   props: {
     selected: { type: Array, default: () => [] },
     heading: { type: String, required: true },
@@ -107,7 +105,7 @@ export default {
     allElementsSelected: vm => vm.selection.elements.length === vm.elements.length,
     rootContainerTypes() {
       const type = this.selection.activity?.type;
-      return type && getContainerTypes(type);
+      return type && this.getContainerTypes(type);
     },
     processedContainers() {
       const { selection: { activity }, items: { activities } } = this;
@@ -130,6 +128,9 @@ export default {
     }
   },
   methods: {
+    getContainerTypes(type) {
+      return map(this.$schema.getSupportedContainers(type), 'type');
+    },
     getTypePosition({ type }) {
       return this.rootContainerTypes.indexOf(type);
     },
@@ -139,7 +140,7 @@ export default {
     },
     getSubcontainers(container) {
       const { items: { activities } } = this;
-      return sortBy(getContainers(activities, container), 'position');
+      return sortBy(getDeepChildren(activities, container), 'position');
     },
     async showActivityElements(activity) {
       this.selection.activity = activity;

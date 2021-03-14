@@ -18,7 +18,7 @@
 import { repository as api } from '@tailor/api';
 import debounce from 'lodash/debounce';
 import find from 'lodash/find';
-import loader from '@/components/common/loader';
+import loader from '@/loader';
 import sortBy from 'lodash/sortBy';
 
 export default {

@@ -30,11 +30,11 @@ import { mapActions, mapGetters } from 'vuex';
 import { repository as api } from '@tailor/api';
 import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
-import { getRepositoryMetadata } from '@tailor/config';
 import Meta from 'tce-core/MetaInput';
 import set from 'lodash/set';
 
 export default {
+  inject: ['$schema'],
   data: () => ({ publishing: false }),
   computed: {
     ...mapGetters('repository', ['repository']),
@@ -53,7 +53,7 @@ export default {
         validate: { required: true, min: 2, max: 2000 }
       }];
     },
-    metadata: vm => getRepositoryMetadata(vm.repository)
+    metadata: vm => vm.$schema.getRepositoryMetadata(vm.repository)
   },
   methods: {
     ...mapActions('repositories', ['update']),

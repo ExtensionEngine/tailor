@@ -42,13 +42,13 @@
 
 <script>
 import groupBy from 'lodash/groupBy';
-import { isEditable } from '@tailor/config';
 import map from 'lodash/map';
 import pluralize from 'pluralize';
-import { toTreeFormat } from 'utils/activity';
+import { toTreeFormat } from '@tailor/utils';
 
 export default {
   name: 'select-activity',
+  inject: ['$schema'],
   props: {
     selectedElements: { type: Array, default: () => [] },
     activities: { type: Array, default: () => [] }
@@ -57,7 +57,7 @@ export default {
   computed: {
     groupedSelection: vm => groupBy(vm.selectedElements, 'outlineId'),
     expandedActivityIds: vm => map(vm.activities, 'id'),
-    activityTree: vm => toTreeFormat(vm.activities, []),
+    activityTree: vm => toTreeFormat(vm.activities, vm.$schema, []),
     noResultsMessage() {
       const { activities, search, $refs } = this;
       if (!activities.length) return 'Empty repository';
@@ -68,7 +68,9 @@ export default {
     }
   },
   methods: {
-    hasContentContainers: isEditable,
+    hasContentContainers(type) {
+      return this.$schema.isEditable(type);
+    },
     getChipLabel({ length }) {
       return `${length} ${pluralize('element', length)} selected`;
     }

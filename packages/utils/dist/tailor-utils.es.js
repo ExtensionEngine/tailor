@@ -1,3 +1,7 @@
+import filter from 'lodash/filter';
+import find from 'lodash/find';
+import get from 'lodash/get';
+import sortBy from 'lodash/sortBy';
 import toCase from 'to-case';
 import cuid from 'cuid';
 import times from 'lodash/times';
@@ -274,10 +278,6 @@ var assessment = /*#__PURE__*/Object.freeze({
   getErrorMessages: getErrorMessages
 });
 
-function uuid () {
-  return v1();
-}
-
 var discussion = {
   SAVE: 'comment:save',
   REMOVE: 'comment:remove',
@@ -295,6 +295,10 @@ var publishDiffChangeTypes = {
   CHANGED: 'changed',
   REMOVED: 'removed'
 };
+
+function uuid () {
+  return v1();
+}
 
 function getMetaName(type) {
   return "meta-".concat(toCase.slug(type));
@@ -320,5 +324,64 @@ function getToolbarName(type) {
 function getElementId(element) {
   return element && (element.uid || element.id);
 }
+function isChanged(activity) {
+  return !activity.publishedAt || new Date(activity.modifiedAt) > new Date(activity.publishedAt);
+}
+function getParent(activities, activity) {
+  var id = get(activity, 'parentId', null);
+  return id && find(activities, {
+    id: id
+  });
+}
+function getChildren(activities, parentId) {
+  return sortBy(filter(activities, {
+    parentId: parentId
+  }), 'position');
+}
+function getDescendants(activities, activity) {
+  var children = filter(activities, {
+    parentId: activity.id
+  });
+  if (!children.length) return [];
 
-export { index as Events, InsertLocation, assessment, calculatePosition, getComponentName, getContainerName, getElementId, getMetaName, getPositions, getToolbarName, isQuestion, processAnswerType, publishDiffChangeTypes, resolveElementType, uuid };
+  var reducer = function reducer(acc, it) {
+    return acc.concat(getDescendants(activities, it));
+  };
+
+  var descendants = children.reduce(reducer, []);
+  return children.concat(descendants);
+}
+function getAncestors(activities, activity) {
+  var parent = find(activities, {
+    id: activity.parentId
+  });
+  if (!parent) return [];
+  var ancestors = getAncestors(activities, parent);
+  return [].concat(_toConsumableArray(ancestors), [parent]);
+}
+function getOutlineChildren(activities, schema, parentId) {
+  var children = getChildren(activities, parentId);
+  if (!parentId || !children.length) return children;
+  var types = schema.getLevel(find(activities, {
+    id: parentId
+  }).type).subLevels;
+  return filter(children, function (it) {
+    return types.includes(it.type);
+  });
+}
+function toTreeFormat(activities, schema, targetLevels) {
+  var parentId = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+  var level = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
+  return getOutlineChildren(activities, schema, parentId).map(function (activity) {
+    return Object.assign({}, activity, {
+      name: activity.data.name,
+      level: level,
+      selectable: !!targetLevels.find(function (it) {
+        return it.type === activity.type;
+      }),
+      children: toTreeFormat(activities, schema, targetLevels, activity.id, level + 1)
+    });
+  });
+}
+
+export { index as Events, InsertLocation, assessment, calculatePosition, getAncestors, getChildren, getComponentName, getContainerName, getDescendants, getElementId, getMetaName, getOutlineChildren, getParent, getPositions, getToolbarName, isChanged, isQuestion, processAnswerType, publishDiffChangeTypes, resolveElementType, toTreeFormat, uuid };

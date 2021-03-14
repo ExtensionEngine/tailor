@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { getElementId } from 'tce-core/utils';
+import { getElementId } from '@tailor/utils';
 import MetaInput from 'tce-core/MetaInput';
 
 export default {

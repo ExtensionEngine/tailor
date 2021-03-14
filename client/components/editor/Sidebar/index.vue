@@ -54,12 +54,12 @@ import ActivityNavigation from './Navigation';
 import debounce from 'lodash/debounce';
 import ElementSidebar from './ElementSidebar';
 import get from 'lodash/get';
-import { getElementId } from 'tce-core/utils';
-import { getElementMetadata } from '@tailor/config';
+import { getElementId } from '@tailor/utils';
 import { mapGetters } from 'vuex';
 
 export default {
   name: 'editor-sidebar',
+  inject: ['$schema'],
   props: {
     repository: { type: Object, required: true },
     activities: { type: Array, required: true },
@@ -90,7 +90,8 @@ export default {
     elementSidebarEnabled: vm => vm.selectedElement && !vm.metadata.isEmpty,
     metadata() {
       const { repository, selectedElement } = this;
-      return getElementMetadata(get(repository, 'schema'), selectedElement);
+      const schemaId = get(repository, 'schema');
+      return this.$schema.getElementMetadata(schemaId, selectedElement);
     }
   },
   methods: { getElementId },

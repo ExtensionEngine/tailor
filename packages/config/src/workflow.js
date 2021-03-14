@@ -12,36 +12,37 @@ const priorities = [
   { id: 'TRIVIAL', label: 'Trivial', icon: 'priorityTrivial' }
 ];
 
-function getWorkflow(id) {
-  return find(WORKFLOWS, { id });
-}
+module.exports = schema => {
+  validateWorkflow(WORKFLOWS);
 
-function getPriority(id) {
-  return find(priorities, { id });
-}
+  return {
+    priorities,
+    getWorkflow,
+    getPriority,
+    getDefaultWorkflowStatus,
+    getDefaultActivityStatus
+  };
 
-function getDefaultWorkflowStatus(id) {
-  const { statuses } = getWorkflow(id);
-  const { id: status } = statuses.find(it => it.default) || statuses[0];
-  const { id: priority } = priorities.find(it => it.default);
-  return { status, priority };
-}
+  function getWorkflow(id) {
+    return find(WORKFLOWS, { id });
+  }
 
-function getDefaultActivityStatus(type) {
-  const { getSchema, getSchemaId } = require('.');
-  const schemaId = getSchemaId(type);
-  if (!schemaId) return;
-  const { workflowId } = getSchema(schemaId);
-  if (!workflowId) return;
-  return getDefaultWorkflowStatus(workflowId);
-}
+  function getPriority(id) {
+    return find(priorities, { id });
+  }
 
-validateWorkflow(WORKFLOWS);
+  function getDefaultWorkflowStatus(id) {
+    const { statuses } = getWorkflow(id);
+    const { id: status } = statuses.find(it => it.default) || statuses[0];
+    const { id: priority } = priorities.find(it => it.default);
+    return { status, priority };
+  }
 
-module.exports = {
-  priorities,
-  getWorkflow,
-  getPriority,
-  getDefaultWorkflowStatus,
-  getDefaultActivityStatus
+  function getDefaultActivityStatus(type) {
+    const schemaId = schema.getSchemaId(type);
+    if (!schemaId) return;
+    const { workflowId } = schema.getSchema(schemaId);
+    if (!workflowId) return;
+    return getDefaultWorkflowStatus(workflowId);
+  }
 };

@@ -47,11 +47,11 @@
 </template>
 
 <script>
-import { getOutlineLevels, isEditable } from '@tailor/config';
-import { toTreeFormat } from 'utils/activity';
+import { toTreeFormat } from '@tailor/utils';
 
 export default {
   name: 'activity-navigation',
+  inject: ['$schema'],
   props: {
     repository: { type: Object, required: true },
     activities: { type: Array, required: true },
@@ -64,12 +64,14 @@ export default {
     };
   },
   computed: {
-    activityTree: vm => toTreeFormat(vm.activities, vm.editableActivityConfigs),
-    activityConfigs: vm => getOutlineLevels(vm.repository.schema),
+    activityConfigs: vm => vm.$schema.getOutlineLevels(vm.repository.schema),
     activityTypes: vm => vm.activityConfigs.map(it => it.type),
     editableTypes: vm => vm.editableActivityConfigs.map(it => it.type),
     editableActivityConfigs() {
-      return this.activityConfigs.filter(it => isEditable(it.type));
+      return this.activityConfigs.filter(it => this.$schema.isEditable(it.type));
+    },
+    activityTree() {
+      return toTreeFormat(this.activities, this.$schema, this.editableActivityConfigs);
     },
     hasSearchResults() {
       if (!this.search || !this.$refs) return true;

@@ -4,6 +4,7 @@ import 'bootstrap-sass/assets/javascripts/bootstrap';
 import '@/utils/validation';
 
 import { asset as assetApi } from '@tailor/api';
+import { schema } from '@tailor/config';
 import ContentPluginRegistry from './content-plugins';
 
 import { formatDate, truncate } from '@/filters';
@@ -68,6 +69,7 @@ Promise.all([getStore(), contentPluginRegistry.initialize()])
           $storageService: assetApi,
           $teRegistry: contentPluginRegistry.elementRegistry,
           $ccRegistry: contentPluginRegistry.containerRegistry,
+          $schema: schema,
           $getCurrentUser: () => store.state.auth.user
         };
       }

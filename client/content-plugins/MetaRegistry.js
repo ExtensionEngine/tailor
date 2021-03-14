@@ -1,5 +1,5 @@
 import ComponentRegistry from './ComponentRegistry';
-import { getMetaName as getName } from 'tce-core/utils';
+import { getMetaName as getName } from '@tailor/utils';
 import inputsList from 'shared/core-meta';
 
 export default Vue => new ComponentRegistry(Vue, {

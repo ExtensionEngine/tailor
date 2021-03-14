@@ -1,9 +1,9 @@
 'use strict';
 
 const forEach = require('lodash/forEach');
-const { getLevel } = require('@tailor/config');
 const mail = require('../shared/mail');
 const { Op } = require('sequelize');
+const { schema } = require('@tailor/config');
 const sse = require('../shared/sse');
 
 exports.add = (ActivityStatus, Hooks, { Activity }) => {
@@ -45,7 +45,7 @@ exports.add = (ActivityStatus, Hooks, { Activity }) => {
 };
 
 async function sendEmailNotification(activity) {
-  const { label } = getLevel(activity.type);
+  const { label } = schema.getLevel(activity.type);
   const [status] = activity.status;
   mail.sendAssigneeNotification(status.assignee.email, {
     ...activity.toJSON(),

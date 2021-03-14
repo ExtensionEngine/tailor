@@ -11,7 +11,6 @@ const {
   User
 } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
-const { getSchema } = require('@tailor/config');
 const getVal = require('lodash/get');
 const map = require('lodash/map');
 const { Op } = require('sequelize');
@@ -20,6 +19,7 @@ const Promise = require('bluebird');
 const publishingService = require('../shared/publishing/publishing.service');
 const { repository: role } = require('../../config/shared').role;
 const sample = require('lodash/sample');
+const { schema } = require('@tailor/config');
 const { snakeCase } = require('change-case');
 const TransferService = require('../shared/transfer/transfer.service');
 
@@ -80,7 +80,7 @@ function index({ query, user, opts }, res) {
 }
 
 async function create({ user, body }, res) {
-  const defaultMeta = getVal(getSchema(body.schema), 'defaultMeta', {});
+  const defaultMeta = getVal(schema.getSchema(body.schema), 'defaultMeta', {});
   const data = { color: sample(DEFAULT_COLORS), ...defaultMeta, ...body.data };
   const repository = await Repository.create({ ...body, data }, {
     isNewRecord: true,

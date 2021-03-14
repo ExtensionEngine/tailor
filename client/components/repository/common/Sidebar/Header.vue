@@ -22,12 +22,12 @@
 <script>
 import ActivityOptions from '@/components/repository/common/ActivityOptions/Menu';
 import get from 'lodash/get';
-import { isEditable } from '@tailor/config';
 import { mapGetters } from 'vuex';
 import Publishing from './Publishing';
 
 export default {
   name: 'activity-sidebar-header',
+  inject: ['$schema'],
   props: {
     activity: { type: Object, required: true }
   },
@@ -36,7 +36,7 @@ export default {
     ...mapGetters('repository', ['outlineActivities', 'isRepositoryAdmin']),
     isEditable() {
       const type = get(this.activity, 'type');
-      return type && isEditable(type);
+      return type && this.$schema.isEditable(type);
     }
   },
   methods: {

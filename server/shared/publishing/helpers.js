@@ -6,11 +6,6 @@ const {
   Sequelize: { Op },
   sequelize
 } = require('../database');
-const {
-  getLevelRelationships,
-  getOutlineLevels,
-  getSupportedContainers
-} = require('@tailor/config');
 const { containerRegistry } = require('../content-plugins');
 const differenceWith = require('lodash/differenceWith');
 const filter = require('lodash/filter');
@@ -25,9 +20,15 @@ const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const reduce = require('lodash/reduce');
 const { resolveStatics } = require('../storage/helpers');
+const { schema } = require('@tailor/config');
 const storage = require('../../repository/storage');
 const without = require('lodash/without');
 
+const {
+  getLevelRelationships,
+  getOutlineLevels,
+  getSupportedContainers
+} = schema;
 const { FLAT_REPO_STRUCTURE } = process.env;
 
 const CC_ATTRS = ['id', 'uid', 'type', 'position', 'createdAt', 'updatedAt'];

@@ -1,7 +1,7 @@
 import {
   getDescendants as getDeepChildren,
   getAncestors as getParents
-} from 'utils/activity';
+} from '@tailor/utils';
 import find from 'lodash/find';
 
 export const activities = state => state.items;

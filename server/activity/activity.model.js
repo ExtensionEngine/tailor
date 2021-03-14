@@ -1,12 +1,7 @@
 'use strict';
 
-const {
-  getSiblingTypes,
-  isOutlineActivity,
-  isTrackedInWorkflow,
-  workflow
-} = require('@tailor/config');
 const { Model, Op } = require('sequelize');
+const { schema, workflow } = require('@tailor/config');
 const calculatePosition = require('../shared/util/calculatePosition');
 const { Activity: Events } = require('../../common/sse');
 const hooks = require('./hooks');
@@ -15,6 +10,7 @@ const map = require('lodash/map');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
 
+const { getSiblingTypes, isOutlineActivity, isTrackedInWorkflow } = schema;
 const { getDefaultActivityStatus } = workflow;
 
 class Activity extends Model {

@@ -8,7 +8,7 @@
 
 <script>
 import get from 'lodash/get';
-import { getMetaName } from 'tce-core/utils';
+import { getMetaName } from '@tailor/utils';
 
 // TODO: Remove deprecated types in v5.0
 const getDeprecationWarning = (deprecatedType, type, config) =>

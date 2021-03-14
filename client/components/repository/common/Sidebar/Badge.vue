@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { getDescendants, getLabel, isChanged } from '@/utils/activity';
+import { getDescendants, isChanged } from '@tailor/utils';
 import countBy from 'lodash/countBy';
 import filter from 'lodash/filter';
 import map from 'lodash/map';
@@ -32,13 +32,14 @@ const getDescendantsInfo = (descendants, count, label) => {
 
 export default {
   name: 'sidebar-badge',
+  inject: ['$schema'],
   props: {
     activity: { type: Object, default: () => ({}) }
   },
   computed: {
     ...mapGetters('repository', { outline: 'outlineActivities' }),
     label() {
-      return getLabel(this.activity);
+      return this.$schema.getActivityLabel(this.activity);
     },
     hasChanges() {
       return isChanged(this.activity);
@@ -54,8 +55,8 @@ export default {
       return getActivityInfo(hasChanges, label);
     },
     descendantsInfo() {
-      const { changedDescendants, label } = this;
-      const labelCountMap = countBy(changedDescendants, getLabel);
+      const { $schema, changedDescendants, label } = this;
+      const labelCountMap = countBy(changedDescendants, $schema.getActivityLabel);
       const descendants = arrayToSentence(map(labelCountMap, getDescriptor));
       return getDescendantsInfo(descendants, changedDescendants.length, label);
     },

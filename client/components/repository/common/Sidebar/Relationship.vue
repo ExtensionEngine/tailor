@@ -24,7 +24,6 @@
 </template>
 
 <script>
-import { getLevel, getSchemaId } from '@tailor/config';
 import { mapActions, mapGetters } from 'vuex';
 import castArray from 'lodash/castArray';
 import cloneDeep from 'lodash/cloneDeep';
@@ -45,6 +44,7 @@ import without from 'lodash/without';
 
 export default {
   name: 'activity-relationship',
+  inject: ['$schema'],
   props: {
     activity: { type: Object, required: true },
     type: { type: String, required: true },
@@ -70,7 +70,7 @@ export default {
         conds.push(it => !includes(lineage, it));
       }
       if (this.allowedTypes.length) {
-        const schemaId = getSchemaId(this.activity.type);
+        const schemaId = this.$schema.getSchemaId(this.activity.type);
         const allowedTypes = this.allowedTypes.map(type => `${schemaId}/${type}`);
         conds.push(({ type }) => includes(allowedTypes, type));
       }
@@ -79,7 +79,7 @@ export default {
     groupedOptions() {
       const grouped = groupBy(this.options, 'type');
       return flatMap(grouped, (it, type) => {
-        const headerLabel = pluralize(getLevel(type).label);
+        const headerLabel = pluralize(this.$schema.getLevel(type).label);
         return concat({ header: headerLabel }, it);
       });
     },

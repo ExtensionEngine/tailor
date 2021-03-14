@@ -54,7 +54,7 @@ import AssessmentGroup from './AssessmentGroup';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
-import { getDescendants as getDeepChildren } from 'utils/activity';
+import { getDescendants as getDeepChildren } from '@tailor/utils';
 import numberToLetter from 'utils/numberToLetter';
 import pluralize from 'pluralize';
 

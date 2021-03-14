@@ -2,8 +2,9 @@
 
 const BaseRegistry = require('./BaseRegistry');
 const containerList = require('../../../config/shared/core-containers');
-const { getContainerTemplateId: getId } = require('@tailor/config');
+const { schema } = require('@tailor/config');
 
+const { getContainerTemplateId: getId } = schema;
 const EXTENSIONS_LIST = '../../../extensions/content-containers/index';
 
 class ContainerRegistry extends BaseRegistry {

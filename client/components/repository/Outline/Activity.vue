@@ -67,7 +67,6 @@ import { mapGetters, mapMutations, mapState } from 'vuex';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
-import { isEditable } from '@tailor/config';
 import OptionsMenu from '../common/ActivityOptions/Menu';
 import OptionsToolbar from '../common/ActivityOptions/Toolbar';
 import reorderMixin from './reorderMixin';
@@ -78,6 +77,7 @@ export default {
   name: 'activity',
   mixins: [reorderMixin, selectActivity],
   inheritAttrs: false,
+  inject: ['$schema'],
   props: {
     /* eslint-disable-next-line vue/prop-name-casing */
     uid: { type: String, required: true },
@@ -96,7 +96,7 @@ export default {
     ...mapState('repository', { outlineState: 'outline' }),
     config: vm => find(vm.structure, { type: vm.type }),
     color: vm => vm.config.color,
-    isEditable: vm => isEditable(vm.type),
+    isEditable: vm => vm.$schema.isEditable(vm.type),
     isSelected: vm => vm.selectedActivity && (vm.selectedActivity.uid === vm.uid),
     isHighlighted: vm => vm.isHovered || vm.isSelected,
     isExpanded: vm => !vm.isCollapsed({ uid: vm.uid }),

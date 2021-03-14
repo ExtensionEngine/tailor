@@ -1,4 +1,7 @@
-import { getOutlineLevels, getSchema, workflow as workflowConfig } from '@tailor/config';
+import {
+  schema as schemaConfig,
+  workflow as workflowConfig
+} from '@tailor/config';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
@@ -7,6 +10,7 @@ import map from 'lodash/map';
 import { role } from 'shared';
 import values from 'lodash/values';
 
+const { getOutlineLevels, getSchema } = schemaConfig;
 const { getDefaultActivityStatus, getWorkflow } = workflowConfig;
 const HASH_ALPHABET = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789';
 const hashids = new Hashids('', 0, HASH_ALPHABET);

@@ -62,7 +62,6 @@ import debounce from 'lodash/debounce';
 import { ElementList } from '@tailor/components';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
-import { getLevel } from '@tailor/config';
 import GroupIntroduction from './GroupIntroduction';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
@@ -74,6 +73,7 @@ import { uuid } from '@tailor/utils';
 
 export default {
   name: 'assessment-group',
+  inject: ['$schema'],
   props: {
     group: { type: Object, required: true },
     elements: { type: Object, required: true },
@@ -101,7 +101,9 @@ export default {
     objectiveLabel() {
       if (isEmpty(this.objectives)) return '';
       const types = uniq(map(this.objectives, 'type'));
-      const label = types.length > 1 ? 'Objective' : getLevel(types[0]).label;
+      const label = types.length > 1
+        ? 'Objective'
+        : this.$schema.getLevel(types[0]).label;
       return `Link ${label}`;
     }
   },

@@ -1,9 +1,11 @@
 import ComponentRegistry from './ComponentRegistry';
 import containerList from 'shared/core-containers';
 import get from 'lodash/get';
-import { getContainerTemplateId as getId } from '@tailor/config';
-import { getContainerName as getName } from 'tce-core/utils';
+import { getContainerName as getName } from '@tailor/utils';
+import { schema } from '@tailor/config';
 import { service as ValidationService } from './validation';
+
+const { getContainerTemplateId: getId } = schema;
 
 const getTemplateMessage = name => `
   For container ${name} using deprecated 'type' identification!

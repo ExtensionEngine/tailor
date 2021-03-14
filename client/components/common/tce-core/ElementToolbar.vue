@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { getElementId, getToolbarName, isQuestion } from './utils';
+import { getElementId, getToolbarName, isQuestion } from '@tailor/utils';
 import DefaultToolbar from './DefaultToolbar';
 import { mapActions } from 'vuex';
 import { mapChannels } from '@extensionengine/vue-radio';

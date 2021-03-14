@@ -1,9 +1,5 @@
 'use strict';
 
-const {
-  getOutlineLevels,
-  isOutlineActivity
-} = require('@tailor/config');
 const { Activity } = require('../shared/database');
 const { fetchActivityContent } = require('../shared/publishing/helpers');
 const find = require('lodash/find');
@@ -12,6 +8,9 @@ const pick = require('lodash/pick');
 const { previewUrl } = require('../../config/server');
 const publishingService = require('../shared/publishing/publishing.service');
 const request = require('axios');
+const { schema } = require('@tailor/config');
+
+const { getOutlineLevels, isOutlineActivity } = schema;
 
 function list({ repository, query, opts }, res) {
   if (!query.detached) opts.where = { detached: false };

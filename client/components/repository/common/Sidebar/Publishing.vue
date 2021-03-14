@@ -33,20 +33,20 @@
 
 <script>
 import fecha from 'fecha';
-import { getDescendants } from 'utils/activity';
-import { getLevel } from '@tailor/config';
+import { getDescendants } from '@tailor/utils';
 import { mapActions } from 'vuex';
 import PublishingBadge from './Badge';
 import publishMixin from 'components/common/mixins/publish';
 
 export default {
+  inject: ['$schema'],
   mixins: [publishMixin],
   props: {
     activity: { type: Object, required: true },
     outlineActivities: { type: Array, required: true }
   },
   computed: {
-    config: vm => getLevel(vm.activity.type),
+    config: vm => vm.$schema.getLevel(vm.activity.type),
     publishedAtMessage() {
       const { publishedAt } = this.activity;
       return publishedAt

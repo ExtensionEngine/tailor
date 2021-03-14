@@ -47,7 +47,7 @@
 import { mapGetters } from 'vuex';
 import { mapRequests } from '@extensionengine/vue-radio';
 import pluralize from 'pluralize';
-import SelectElement from '@/components/common/SelectElement';
+import { SelectElement } from '@tailor/components';
 
 function getTotalsByActivity(activities, relationships) {
   return activities.reduce((acc, { id, data: { name } }) => {

@@ -36,10 +36,11 @@
 </template>
 
 <script>
-import { toTreeFormat } from 'utils/activity';
+import { toTreeFormat } from '@tailor/utils';
 import xorBy from 'lodash/xorBy';
 
 export default {
+  inject: ['$schema'],
   props: {
     schemaName: { type: String, required: true },
     activities: { type: Array, required: true },
@@ -47,7 +48,7 @@ export default {
   },
   data: () => ({ selected: [], search: '' }),
   computed: {
-    activityTree: vm => toTreeFormat(vm.activities, vm.supportedLevels),
+    activityTree: vm => toTreeFormat(vm.activities, vm.$schema, vm.supportedLevels),
     hasSearchResults() {
       if (!this.search || !this.$refs) return true;
       const { excludedItems, nodes } = this.$refs.treeview;

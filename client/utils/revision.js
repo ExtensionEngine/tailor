@@ -1,9 +1,9 @@
 import { lower, title as toTitleCase } from 'to-case';
 import { assessment } from '@tailor/utils';
 import get from 'lodash/get';
-import { getLevel } from '@tailor/config';
 import isEmpty from 'lodash/isEmpty';
 import reduce from 'lodash/reduce';
+import { schema } from '@tailor/config';
 
 const describe = {
   REPOSITORY: describeRepositoryRevision,
@@ -25,7 +25,7 @@ function getAction(operation) {
 
 function getActivityTypeLabel(activity) {
   if (!activity) return '';
-  const activityConfig = getLevel(activity.type);
+  const activityConfig = schema.getLevel(activity.type);
   return !isEmpty(activityConfig)
     ? activityConfig.label
     : toTitleCase(activity.type);
@@ -42,7 +42,7 @@ function describeActivityRevision(rev, activity) {
   const name = get(rev, 'state.data.name', '');
   const typeLabel = getActivityTypeLabel(rev.state);
   const action = getAction(rev.operation);
-  const activityConfig = getLevel(rev.state.type);
+  const activityConfig = schema.getLevel(rev.state.type);
   const containerContext = activityConfig.rootLevel
     ? ''
     : getContainerContext(activity);
@@ -92,7 +92,7 @@ export function getRevisionColor(rev) {
   const DEFAULT_COLOR = '#ccc';
   switch (rev.entity) {
     case 'ACTIVITY': {
-      const config = getLevel(rev.state.type);
+      const config = schema.getLevel(rev.state.type);
       return !isEmpty(config) ? config.color : DEFAULT_COLOR;
     }
     case 'REPOSITORY':
