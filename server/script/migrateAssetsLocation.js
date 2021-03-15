@@ -21,7 +21,7 @@ const storage = require('../shared/storage');
 const toPairs = require('lodash/toPairs');
 
 const regex = /repository\/assets\/(.*)/;
-const ELEMENT_TYPES = ['IMAGE', 'VIDEO', 'AUDIO', 'PDF', 'CAROUSEL', 'MODAL'];
+const ELEMENT_TYPES = ['IMAGE', 'VIDEO', 'AUDIO', 'PDF', 'CAROUSEL', 'MODAL', 'ACCORDION'];
 const REVISION_TYPES = ['CONTENT_ELEMENT', 'ACTIVITY'];
 const isFunction = fn => fn && typeof fn === 'function';
 const schemasIds = SCHEMAS.map(it => it.id);
@@ -30,6 +30,7 @@ const mapTypeToAction = {
   IMAGE: imageMigrationHandler,
   CAROUSEL: embedsMigrationHandler,
   MODAL: embedsMigrationHandler,
+  ACCORDION: embedsMigrationHandler,
   DEFAULT: defaultMigrationHandler
 };
 
