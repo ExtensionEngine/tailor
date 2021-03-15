@@ -160,15 +160,19 @@ async function imageMigrationHandler(element) {
 
 async function embedsMigrationHandler(element) {
   const { repositoryId, data } = element;
-  const embeds = await Promise.map(
-    Object.entries(data.embeds),
+  const embeds = await getMigratedEmbeds(repositoryId, data.embeds);
+  return { ...data, embeds };
+}
+
+function getMigratedEmbeds(repositoryId, embeds) {
+  return Promise.map(
+    Object.entries(embeds),
     async ([id, embed]) => {
       if (embed.type !== 'VIDEO') return [id, embed];
       const data = await defaultMigrationHandler({ repositoryId, ...embed });
       return [id, { ...embed, data }];
-    })
-    .reduce((acc, [id, embed]) => ({ ...acc, [id]: embed }), {});
-  return { ...data, embeds };
+    }
+  ).reduce((acc, [id, embed]) => ({ ...acc, [id]: embed }), {});
 }
 
 async function defaultMigrationHandler(element) {
