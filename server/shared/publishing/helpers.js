@@ -198,7 +198,7 @@ async function fetchCustomContainers(parent, config) {
 function unpublishDeletedContainers(parent, containers) {
   const baseUrl = getBaseUrl(parent.repositoryId, parent.id);
   const filePaths = getContainersFilePaths(baseUrl, containers);
-  const assetsPath = storage.getAssetsPath(parent.repositoryId);
+  const assetsPath = storage.getStoragePath(parent.repositoryId);
   return storage
     .listFiles(baseUrl)
     .then(publishedFilePaths => {

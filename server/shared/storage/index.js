@@ -54,7 +54,7 @@ class Storage {
     return this.provider.copyFile(key, newKey, options);
   }
 
-  getAssetsPath(repositoryId) {
+  getStoragePath(repositoryId) {
     return path.join('repository', `${repositoryId}`, config.path);
   }
 
