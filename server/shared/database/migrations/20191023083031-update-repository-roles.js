@@ -1,5 +1,6 @@
 'use strict';
 
+const Promise = require('bluebird');
 const { default: replaceEnum } = require('sequelize-replace-enum-postgres');
 
 const TABLE_NAME = 'repository_user';
@@ -38,11 +39,10 @@ exports.down = async queryInterface => {
 };
 
 function updateRoles(db, mappings) {
-  return db.transaction(async transaction => {
-    return mappings.forEach(async replacements => {
-      await db.query(
-        'UPDATE "repository_user" SET role=? WHERE role=?',
-        { replacements, transaction });
-    });
-  });
+  return db.transaction(transaction => Promise.map(mappings, doUpdate(transaction)));
+
+  function doUpdate(transaction) {
+    const query = 'UPDATE "repository_user" SET role=? WHERE role=?';
+    return replacements => db.query(query, { replacements, transaction });
+  }
 }
