@@ -13,7 +13,7 @@
       <status-field-group
         @update="updateStatus"
         v-bind="selectedActivity.status"
-        class="mt-9 mb-4" />
+        class="mt-9 mb-2" />
     </template>
     <section v-else class="placeholder grey--text text--darken-3">
       <h4>Status Sidebar</h4>
@@ -62,6 +62,7 @@ export default {
 
 <style lang="scss" scoped>
 .v-navigation-drawer {
+  padding-bottom: 0.375rem;
   text-align: left;
 }
 
