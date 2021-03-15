@@ -21,8 +21,8 @@ const storage = require('../shared/storage');
 const toPairs = require('lodash/toPairs');
 
 const regex = /repository\/assets\/(.*)/;
-const ceTypes = ['IMAGE', 'VIDEO', 'AUDIO', 'PDF', 'CAROUSEL', 'MODAL'];
-const revisionsTypes = ['CONTENT_ELEMENT', 'ACTIVITY'];
+const ELEMENT_TYPES = ['IMAGE', 'VIDEO', 'AUDIO', 'PDF', 'CAROUSEL', 'MODAL'];
+const REVISION_TYPES = ['CONTENT_ELEMENT', 'ACTIVITY'];
 const isFunction = fn => fn && typeof fn === 'function';
 const schemasIds = SCHEMAS.map(it => it.id);
 
@@ -81,7 +81,7 @@ async function migrateActivity(activity) {
 
 async function migrateContentElements(transaction) {
   const contentElements = await ContentElement.findAll({
-    where: { type: { [Op.in]: ceTypes } },
+    where: { type: { [Op.in]: ELEMENT_TYPES } },
     transaction
   });
   return Promise.each(contentElements, async it => {
@@ -114,7 +114,7 @@ async function migrateContentElementMeta(element) {
 
 async function migrateRevisions(transaction) {
   const revisions = await Revision.findAll({
-    where: { entity: { [Op.in]: revisionsTypes } },
+    where: { entity: { [Op.in]: REVISION_TYPES } },
     transaction
   });
   return Promise.each(revisions, async it => {
