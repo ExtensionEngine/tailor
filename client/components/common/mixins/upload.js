@@ -7,9 +7,7 @@ export default {
   inject: ['$storageService'],
   mixins: [downloadMixin],
   data: () => ({ uploading: false }),
-  computed: {
-    ...mapGetters('repository', { repositoryId: 'id' })
-  },
+  computed: mapGetters('repository', { repositoryId: 'id' }),
   methods: {
     ...mapRequests('app', ['showConfirmationModal']),
     createFileForm(e) {
