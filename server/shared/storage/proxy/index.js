@@ -33,7 +33,7 @@ class Proxy {
   }
 
   getSignedCookies(repositoryId, maxAge) {
-    const resource = `repository/${repositoryId}`;
+    const resource = path.join('repository', `${repositoryId}`);
     return {
       ...this.provider.getSignedCookies(resource, maxAge),
       [storageCookies.REPOSITORY]: repositoryId

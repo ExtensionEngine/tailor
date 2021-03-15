@@ -47,7 +47,7 @@ async function uploadArchiveContent(archive, name, repository) {
   const content = await JSZip.loadAsync(buffer);
   const files = pickBy(content.files, it => !it.dir);
   const keys = await Promise.all(Object.keys(files).map(async src => {
-    const key = path.join(getAssetsPath(repository.id), `${name}/${src}`);
+    const key = path.join(getAssetsPath(repository.id), name, src);
     const file = await content.file(src).async('uint8array');
     const mimeType = mime.lookup(src);
     await saveFile(key, Buffer.from(file), { ContentType: mimeType });

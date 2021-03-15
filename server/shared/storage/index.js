@@ -55,7 +55,7 @@ class Storage {
   }
 
   getAssetsPath(repositoryId) {
-    return `repository/${repositoryId}/${config.path}`;
+    return path.join('repository', `${repositoryId}`, config.path);
   }
 
   static createProvider(options) {
