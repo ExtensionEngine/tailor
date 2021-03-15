@@ -31,9 +31,11 @@
         </v-tooltip>
         <v-tooltip v-if="status.dueDate" open-delay="500" bottom>
           <template #activator="{ on }">
-            <label-chip v-on="on" class="ml-1 px-1">
-              {{ status.dueDate | formatDate('MM/DD/YY') }}
-            </label-chip>
+            <activity-due-date
+              v-on="on"
+              :value="status.dueDate"
+              format="MM/DD/YY"
+              class="mx-2 caption" />
           </template>
           Due date
         </v-tooltip>
@@ -45,11 +47,11 @@
 </template>
 
 <script>
+import ActivityDueDate from '@/components/repository/common/DueDate';
 import AssigneeAvatar from '@/components/repository/common/AssigneeAvatar';
 import find from 'lodash/find';
 import { getLevel } from 'shared/activities';
 import { getPriority } from 'shared/workflow';
-import LabelChip from '@/components/repository/common/LabelChip';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -67,7 +69,7 @@ export default {
     priorityConfig: vm => getPriority(vm.status.priority),
     route: vm => ({ name: 'progress', query: vm.$route.query })
   },
-  components: { LabelChip, AssigneeAvatar }
+  components: { ActivityDueDate, AssigneeAvatar }
 };
 </script>
 
