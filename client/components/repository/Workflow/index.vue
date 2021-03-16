@@ -81,7 +81,7 @@ export default {
     },
     statusOptions() {
       const { statuses } = this.workflow;
-      return statuses.map(it => ({ value: it.id, text: it.label }));
+      return statuses.map(it => ({ ...it, value: it.id, text: it.label }));
     }
   },
   methods: {
