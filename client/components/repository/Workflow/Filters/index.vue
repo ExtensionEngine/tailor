@@ -8,24 +8,12 @@
       placeholder="Search by ID or name"
       clearable
       class="search-field" />
-    <v-select
+    <status-filter
       @change="updateFilter('status', $event)"
       :items="statusOptions"
       :value="status"
       placeholder="Filter by status"
-      clearable
-      class="status-field ml-7 mr-3">
-      <template #selection="{ item }">
-        <div class="selection d-flex flex-nowrap">
-          <v-icon :color="item.color" small class="mr-2">mdi-circle</v-icon>
-          <span class="text--default text-truncate">{{ item.text }}</span>
-        </div>
-      </template>
-      <template #item="{ item }">
-        <v-icon :color="item.color" small class="mr-2">mdi-circle</v-icon>
-        <span class="text--default">{{ item.text }}</span>
-      </template>
-    </v-select>
+      class="status-field ml-7 mr-3" />
     <div v-if="assigneeOptions" class="ml-7 mr-3">
       <assignee-avatar
         v-for="{ id, isActive, ...assignee } in assigneeOptions"
@@ -54,6 +42,7 @@
 
 <script>
 import AssigneeAvatar from '@/components/repository/common/AssigneeAvatar';
+import StatusFilter from './Status';
 import xor from 'lodash/xor';
 
 export default {
@@ -76,7 +65,7 @@ export default {
       this.updateFilter('selectedAssigneeIds', xor(this.selectedAssigneeIds, [id]));
     }
   },
-  components: { AssigneeAvatar }
+  components: { AssigneeAvatar, StatusFilter }
 };
 </script>
 
@@ -88,14 +77,6 @@ export default {
 
 .status-field {
   max-width: 14.5rem;
-
-  .selection {
-    max-width: 100%;
-  }
-}
-
-.text--default {
-  color: var(--text-color-default);
 }
 
 .avatar.v-avatar {
