@@ -14,22 +14,15 @@
       :value="status"
       placeholder="Filter by status"
       class="status-field ml-7 mr-3" />
-    <div v-if="assigneeOptions" class="ml-7 mr-3">
-      <assignee-avatar
-        v-for="{ id, isActive, ...assignee } in assigneeOptions"
-        :key="`assignee-${id}`"
-        @click="toggleAssignee(id)"
-        v-bind="assignee"
-        :class="{ active: isActive }"
-        show-tooltip
-        class="avatar" />
-      <assignee-avatar
-        v-if="showUnassigned"
-        @click="updateFilter('unassigned', !unassigned)"
-        :class="{ active: unassigned }"
-        show-tooltip
-        class="avatar" />
-    </div>
+    <assignee-filter
+      v-if="assigneeOptions"
+      @change:assignee="updateFilter('selectedAssigneeIds', $event)"
+      @change:unassigned="updateFilter('unassigned', $event)"
+      :selected="selectedAssigneeIds"
+      :unassigned="unassigned"
+      :options="assigneeOptions"
+      :show-unassigned="showUnassigned"
+      class="ml-7 mr-3" />
     <v-btn
       @click="updateFilter('recentOnly', !recentOnly)"
       :class="{ active: recentOnly }"
@@ -41,9 +34,8 @@
 </template>
 
 <script>
-import AssigneeAvatar from '@/components/repository/common/AssigneeAvatar';
+import AssigneeFilter from './Assignee';
 import StatusFilter from './Status';
-import xor from 'lodash/xor';
 
 export default {
   name: 'workflow-filters',
@@ -51,7 +43,7 @@ export default {
     searchText: { type: String, default: null },
     recentOnly: { type: Boolean, default: false },
     status: { type: String, default: null },
-    selectedAssigneeIds: { type: Array, default: () => ([]) },
+    selectedAssigneeIds: { type: Array, default: () => [] },
     unassigned: { type: Boolean, default: false },
     assigneeOptions: { type: Object, default: () => ({}) },
     statusOptions: { type: Array, default: () => [] },
@@ -60,12 +52,9 @@ export default {
   methods: {
     updateFilter(filter, value) {
       this.$emit(`update:${filter}`, value);
-    },
-    toggleAssignee(id) {
-      this.updateFilter('selectedAssigneeIds', xor(this.selectedAssigneeIds, [id]));
     }
   },
-  components: { AssigneeAvatar, StatusFilter }
+  components: { AssigneeFilter, StatusFilter }
 };
 </script>
 
@@ -77,25 +66,6 @@ export default {
 
 .status-field {
   max-width: 14.5rem;
-}
-
-.avatar.v-avatar {
-  border: 2px solid;
-  border-color: #fff !important;
-
-  &:not(:first-of-type) {
-    margin-left: -0.5rem;
-  }
-
-  &.active {
-    box-shadow: var(--v-secondary-base) 0 0 0 2px;
-  }
-
-  &:hover {
-    transform: scale(1.1);
-    z-index: 1;
-    cursor: pointer;
-  }
 }
 
 .btn-filters {
