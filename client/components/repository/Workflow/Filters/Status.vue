@@ -1,8 +1,5 @@
 <template>
-  <v-select
-    v-on="$listeners"
-    v-bind="$attrs"
-    clearable>
+  <v-select v-on="$listeners" v-bind="$attrs" clearable>
     <template #selection="{ item }">
       <div class="selection d-flex flex-nowrap">
         <v-icon :color="item.color" small class="mr-2">mdi-circle</v-icon>

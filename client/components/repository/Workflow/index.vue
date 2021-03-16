@@ -38,10 +38,10 @@ export default {
   data: () => ({
     filters: {
       searchText: null,
+      status: null,
       selectedAssigneeIds: [],
       unassigned: false,
-      recentOnly: false,
-      status: null
+      recentOnly: false
     }
   }),
   computed: {
@@ -66,9 +66,9 @@ export default {
     filteredActivities() {
       return this.searchableActivities.filter(conforms({
         ...this.isFilteredBySearchText && { searchableText: this.filterBySearchText },
+        ...this.filters.status && { status: this.filterByStatus },
         ...this.isFilteredByAssignee && { status: this.filterByAssignee },
-        ...this.filters.recentOnly && { status: this.filterByRecency },
-        ...this.filters.status && { status: this.filterByStatus }
+        ...this.filters.recentOnly && { status: this.filterByRecency }
       }));
     },
     assignees() {
