@@ -41,7 +41,7 @@
       :unseen-count="unseenComments.length"
       :user="user"
       class="mt-2" />
-    <div ref="commentEditor" class="text-right">
+    <div ref="inputContainer" class="text-right">
       <v-textarea
         ref="commentInput"
         v-model.trim="comment.content"
@@ -96,8 +96,6 @@ export default {
     commentsCount: vm => vm.thread.length,
     hasHiddenComments: vm => vm.commentsShownLimit < vm.commentsCount,
     isTextEditorEmpty: vm => !vm.comment.content?.trim(),
-    discussion: vm => vm.$refs.discussion,
-    commentEditor: vm => vm.$refs.commentEditor,
     showResolveButton: vm => vm.hasUnresolvedComments && !vm.isActivityThread
   },
   methods: {
@@ -115,7 +113,7 @@ export default {
       this.$emit('save', payload);
       // Keep editor/discussion container inside viewport.
       const scrollOptions = { block: 'center', behavior: 'smooth' };
-      this.$nextTick(() => this[scrollTarget].scrollIntoView(scrollOptions));
+      this.$nextTick(() => this.$refs[scrollTarget].scrollIntoView(scrollOptions));
     },
     remove(comment) {
       this.showConfirmationModal({
