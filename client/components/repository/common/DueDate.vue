@@ -61,7 +61,7 @@ export default {
 }
 
 .due-date {
-  @include set-color(#a1a1a1);
+  @include set-color(#606060);
 
   &.elapsed {
     @include set-color(var(--v-error-darken1));
