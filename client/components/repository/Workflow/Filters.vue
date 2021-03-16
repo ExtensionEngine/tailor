@@ -24,6 +24,13 @@
         show-tooltip
         class="avatar" />
     </div>
+    <v-select
+      @change="updateFilter('status', $event)"
+      :items="statusOptions"
+      :value="status"
+      placeholder="Select status"
+      clearable
+      class="status-field ml-7 mr-3" />
     <v-btn
       @click="updateFilter('recentOnly', !recentOnly)"
       :class="{ active: recentOnly }"
@@ -43,9 +50,11 @@ export default {
   props: {
     searchText: { type: String, default: null },
     recentOnly: { type: Boolean, default: false },
+    status: { type: String, default: null },
     selectedAssigneeIds: { type: Array, default: () => ([]) },
     unassigned: { type: Boolean, default: false },
     assigneeOptions: { type: Object, default: () => ({}) },
+    statusOptions: { type: Array, default: () => [] },
     showUnassigned: { type: Boolean, default: false }
   },
   methods: {
@@ -64,6 +73,10 @@ export default {
 .search-field {
   min-width: 14.5rem;
   max-width: 17.5rem;
+}
+
+.status-field {
+  max-width: 11rem;
 }
 
 .avatar.v-avatar {

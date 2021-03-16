@@ -9,6 +9,7 @@
       <workflow-filters
         v-bind.sync="filters"
         :assignee-options="assignees"
+        :status-options="statusOptions"
         :show-unassigned="unassignedActivityExists"
         class="controls mx-4" />
       <workflow-overview :activities="filteredActivities" class="overview mt-3 mx-4" />
@@ -37,13 +38,17 @@ export default {
   data: () => ({
     filters: {
       searchText: null,
-      recentOnly: false,
       selectedAssigneeIds: [],
-      unassigned: false
+      unassigned: false,
+      recentOnly: false,
+      status: null
     }
   }),
   computed: {
-    ...mapGetters('repository', { activities: 'workflowActivities' }),
+    ...mapGetters('repository', {
+      workflow: 'workflow',
+      activities: 'workflowActivities'
+    }),
     unassignedActivityExists: vm => vm.activities.some(it => !it.status.assigneeId),
     searchableActivities() {
       return this.activities.map(it => ({
@@ -60,9 +65,10 @@ export default {
     },
     filteredActivities() {
       return this.searchableActivities.filter(conforms({
-        ...this.filters.recentOnly && { status: this.filterByRecency },
+        ...this.isFilteredBySearchText && { searchableText: this.filterBySearchText },
         ...this.isFilteredByAssignee && { status: this.filterByAssignee },
-        ...this.isFilteredBySearchText && { searchableText: this.filterBySearchText }
+        ...this.filters.recentOnly && { status: this.filterByRecency },
+        ...this.filters.status && { status: this.filterByStatus }
       }));
     },
     assignees() {
@@ -72,6 +78,10 @@ export default {
         const isActive = this.filters.selectedAssigneeIds.includes(assignee.id);
         return { ...all, [assignee.id]: { ...assignee, isActive } };
       }, null);
+    },
+    statusOptions() {
+      const { statuses } = this.workflow;
+      return statuses.map(it => ({ value: it.id, text: it.label }));
     }
   },
   methods: {
@@ -87,6 +97,9 @@ export default {
     },
     filterBySearchText(searchableText) {
       return searchableText.includes(this.filters.searchText.toLowerCase());
+    },
+    filterByStatus({ status }) {
+      return status === this.filters.status;
     },
     getSearchableText({ data, shortId, status }) {
       const { name } = data;
