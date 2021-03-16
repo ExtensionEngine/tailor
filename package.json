@@ -20,7 +20,7 @@
     "lint:scss": "stylelint \"client/**/*.vue\" \"client/**/*.scss\"",
     "lint": "npm run lint:js && npm run lint:scss",
     "dev:server": "nodemon -r ./server/script/preflight ./server | bunyan-pretty",
-    "debug:server": "node --inspect-brk -r ./server/script/preflight ./server",
+    "debug:server": "nodemon --inspect -r ./server/script/preflight ./server",
     "postinstall": "if [ $BUILD_ASSETS ]; then npm run build; fi",
     "db": "node -r ./server/script/preflight ./server/script/sequelize",
     "db:reset": "npm run db drop && npm run db create && npm run db migrate",
