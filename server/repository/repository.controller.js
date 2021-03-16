@@ -59,14 +59,14 @@ const includeRepositoryUser = (user, query) => {
 
 const includeRepositoryTags = query => {
   const include = [{ model: Tag }];
-  return query.tagIds
-    ? [...include, { model: RepositoryTag, where: { tagId: query.tagIds } }]
+  return query.tags
+    ? [...include, { model: RepositoryTag, where: { tagId: query.tags } }]
     : include;
 };
 
 function index({ query, user, opts }, res) {
   if (query.search) opts.where.name = getFilter(query.search);
-  if (query.schema) opts.where.schema = { [Op.eq]: query.schema };
+  if (query.schemas) opts.where.schema = query.schemas;
   if (getVal(opts, 'order.0.0') === 'name') opts.order[0][0] = lowercaseName;
   opts.include = [
     includeLastRevision(),

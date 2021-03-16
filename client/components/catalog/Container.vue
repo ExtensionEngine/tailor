@@ -26,12 +26,16 @@
             @update="onFilterChange(setOrder, $event)"
             :sort-by="sortBy"
             class="pl-2" />
-          <tag-filter @update="onFilterChange(toggleTagFilter, $event)" />
+          <repository-filter
+            v-for="filter in filters"
+            :key="filter.type"
+            @update="onFilterChange(toggleRepositoryFilter, $event)"
+            v-bind="filter" />
         </v-col>
       </v-row>
-      <tag-filter-selection
-        @close="onFilterChange(toggleTagFilter, $event)"
-        @clear:all="onFilterChange(clearTagFilter, $event)" />
+      <repository-filter-selection
+        @close="onFilterChange(toggleRepositoryFilter, $event)"
+        @clear:all="onFilterChange(clearRepositoryFilter, $event)" />
       <v-row>
         <v-col
           v-for="repository in repositories"
@@ -63,16 +67,19 @@
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import AddRepository from './Add';
+import filterConfigs from 'utils/repositoryFilterConfigs';
 import get from 'lodash/get';
 import InfiniteLoading from 'vue-infinite-loading';
 import loader from '@/components/common/loader';
 import RepositoryCard from './Card';
+import RepositoryFilter from './RepositoryFilter';
+import RepositoryFilterSelection from './RepositoryFilterSelection';
+import { SCHEMAS } from 'shared/activities';
 import Search from './Search';
 import SelectOrder from './SelectOrder';
-import TagFilter from './TagFilter';
-import TagFilterSelection from './TagFilterSelection';
 
 export default {
+  name: 'catalog-container',
   data: () => ({ loading: true }),
   computed: {
     ...mapState('repositories', {
@@ -85,6 +92,12 @@ export default {
       queryParams: 'repositoryQueryParams',
       hasMoreResults: 'hasMoreResults'
     }),
+    filters: ({ tags }) => {
+      const { SCHEMA, TAG } = filterConfigs;
+      const filters = [{ ...TAG, values: tags }];
+      if (SCHEMAS.length > 1) filters.push({ ...SCHEMA, values: SCHEMAS });
+      return filters;
+    },
     loader() {
       return get(this.$refs, 'loader.stateChanger', {});
     },
@@ -103,7 +116,7 @@ export default {
     ...mapActions('repositories', ['fetch', 'fetchTags']),
     ...mapMutations('repositories', [
       'togglePinned', 'setSearch', 'setOrder', 'reset', 'resetFilters',
-      'resetPagination', 'toggleTagFilter', 'clearTagFilter'
+      'resetPagination', 'toggleRepositoryFilter', 'clearRepositoryFilter'
     ]),
     load: loader(async function () {
       await this.fetch();
@@ -139,10 +152,10 @@ export default {
     AddRepository,
     InfiniteLoading,
     RepositoryCard,
+    RepositoryFilter,
+    RepositoryFilterSelection,
     Search,
-    SelectOrder,
-    TagFilter,
-    TagFilterSelection
+    SelectOrder
   }
 };
 </script>
