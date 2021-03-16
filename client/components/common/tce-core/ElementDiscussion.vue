@@ -114,7 +114,7 @@ export default {
   },
   watch: {
     isVisible(val) {
-      this.$emit(val ? 'open' : 'close');
+      if (val) this.$emit('open');
     }
   },
   components: { Discussion }

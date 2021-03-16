@@ -1,9 +1,8 @@
 <template>
   <v-sheet
-    :color="panel ? 'blue-grey lighten-5' : 'transparent'"
-    :elevation="panel ? 1 : 0"
+    v-bind="sheetStyles"
     outlined rounded
-    class="activity-discussion mt-2 mb-5 mx-1 py-2 px-4">
+    class="activity-discussion py-2 px-4">
     <discussion
       @save="saveComment"
       @update="saveComment"
@@ -11,7 +10,7 @@
       @seen="setLastSeenComment"
       @unresolve="updateResolvement"
       v-bind="{ comments, unseenComments, showHeading, user }"
-      scroll-target="commentInput"
+      scroll-target="inputContainer"
       show-notifications is-activity-thread />
   </v-sheet>
 </template>
@@ -37,7 +36,10 @@ export default {
       return orderBy(comments, 'createdAt', 'desc');
     },
     unseenComments: vm => vm.getUnseenActivityComments(vm.activity),
-    lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime()
+    lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime(),
+    sheetStyles: vm => vm.panel
+      ? { color: 'blue-grey lighten-5', elevation: 1 }
+      : { color: 'transparent', elevation: 0 }
   },
   methods: {
     ...mapActions('repository/comments', [
