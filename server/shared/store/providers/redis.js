@@ -1,7 +1,6 @@
 'use strict';
 
 const IoRedis = require('ioredis');
-const isNil = require('lodash/isNil');
 const yup = require('yup');
 
 const schema = yup.object().shape({
@@ -22,8 +21,10 @@ class Redis {
   }
 
   set(key, value, ttl) {
-    ttl = !isNil(ttl) ? ttl : this.ttl;
-    return this.client.set(key, JSON.stringify(value), 'EX', ttl);
+    ttl = ttl || this.ttl;
+    const args = [key, JSON.stringify(value)];
+    if (ttl) args.push('EX', ttl);
+    return this.client.set(...args);
   }
 
   get(key) {
