@@ -11,10 +11,10 @@ class Store {
   }
 
   /**
-   * @param {object} options - { ttl }. TTL - time to live measured in seconds
+   * @param {number} ttl - time to live measured in seconds
    */
-  set(key, value, options = {}) {
-    return this.provider.set(key, value, options);
+  set(key, value, ttl) {
+    return this.provider.set(key, value, ttl);
   }
 
   get(key) {

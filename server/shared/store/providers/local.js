@@ -18,8 +18,8 @@ class Local {
     this.client = new LRU({ maxAge: config.maxAge });
   }
 
-  set(key, value, options = {}) {
-    const ttl = !isNil(options.ttl) ? options.ttl * 1000 : this.maxAge;
+  set(key, value, ttl) {
+    ttl = !isNil(ttl) ? ttl * 1000 : this.maxAge;
     return Promise.resolve(this.client.set(key, value, ttl));
   }
 

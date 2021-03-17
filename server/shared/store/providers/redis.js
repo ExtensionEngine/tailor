@@ -22,8 +22,8 @@ class Redis {
     this.client = new IoRedis(ioRedisConfig);
   }
 
-  set(key, value, options = {}) {
-    const ttl = !isNil(options.ttl) ? options.ttl : this.ttl;
+  set(key, value, ttl) {
+    ttl = !isNil(ttl) ? ttl : this.ttl;
     return this.client.set(key, JSON.stringify(value), 'EX', ttl);
   }
 
