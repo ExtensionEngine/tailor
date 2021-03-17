@@ -28,7 +28,7 @@ export const repositoryQueryParams = state => {
   const { search, showPinned, repositoryFilter } = state;
 
   const filters = reduce(repositoryFilter, (acc, { id, type }) => {
-    const filter = filterConfigs[type].label;
+    const filter = filterConfigs[type].queryParam;
     acc[filter] ||= [];
     acc[filter].push(id);
     return acc;
