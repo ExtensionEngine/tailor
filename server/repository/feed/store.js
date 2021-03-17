@@ -1,28 +1,40 @@
 'use strict';
 
-module.exports = new (class extends Map {
-  addContext(user, context) {
-    const record = this._findOrCreate(user);
-    record.contexts.push(context);
-  }
+const Promise = require('bluebird');
+const store = require('../../shared/store');
 
-  removeContext(user, filterFn) {
-    const record = this.get(user.id);
-    if (!record) return;
-    record.contexts = record.contexts.filter(it => !filterFn(it));
-    if (record.contexts.length <= 0) this.delete(user.id);
-  }
+const getKey = id => `active-user-${id}`;
 
-  toJSON() {
-    return Array.from(this.entries())
-      .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
-  }
+async function addContext(user, context) {
+  const key = getKey(user.id);
+  const record = await findOrCreate(user);
+  const contexts = [...record.contexts, context];
+  return store.set(key, { ...record, contexts });
+}
 
-  _findOrCreate(user) {
-    if (!this.has(user.id)) {
-      const connectedAt = new Date();
-      this.set(user.id, { ...user, connectedAt, contexts: [] });
-    }
-    return this.get(user.id);
+async function removeContext(user, filterFn) {
+  const key = getKey(user.id);
+  const record = await store.get(key);
+  if (!record) return;
+  const contexts = record.contexts.filter(it => !filterFn(it));
+  if (contexts.length <= 0) return store.del(key);
+  return store.set(key, { ...record, contexts });
+}
+
+async function getActiveUsers() {
+  const activeUserKeys = await store.keys('active-user-*');
+  return Promise
+    .map(activeUserKeys, key => store.get(key))
+    .reduce((acc, user) => ({ ...acc, [user.id]: user }), {});
+}
+
+async function findOrCreate(user) {
+  const key = getKey(user.id);
+  if (!await store.has(key)) {
+    const connectedAt = new Date();
+    await store.set(key, { ...user, connectedAt, contexts: [] });
   }
-})();
+  return store.get(key);
+}
+
+module.exports = { addContext, removeContext, getActiveUsers };
