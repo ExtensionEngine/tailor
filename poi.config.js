@@ -9,6 +9,7 @@ const {
   NODE_ENV,
   STORAGE_PATH,
   OIDC_ENABLED,
+  OIDC_LOGOUT_ENABLED,
   OIDC_LOGIN_TEXT
 } = process.env;
 const imagesPath = 'assets/img';
@@ -94,6 +95,7 @@ module.exports = {
     API_PATH: '/api',
     ENABLE_DEFAULT_SCHEMA: yn(ENABLE_DEFAULT_SCHEMA),
     OIDC_ENABLED: yn(OIDC_ENABLED),
+    OIDC_LOGOUT_ENABLED: yn(OIDC_LOGOUT_ENABLED),
     OIDC_LOGIN_TEXT
   },
   babel: {

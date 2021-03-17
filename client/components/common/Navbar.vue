@@ -81,7 +81,7 @@ export default {
   methods: {
     ...mapActions({ apiLogout: 'logout' }),
     logout() {
-      if (this.isOidcActive) return this.$oidc.logout();
+      if (this.isOidcActive && this.$oidc.logoutEnabled) return this.$oidc.logout();
       return this.apiLogout()
         .then(() => this.$router.push({ name: 'login' }));
     }
