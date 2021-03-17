@@ -2,7 +2,6 @@
 
 const IoRedis = require('ioredis');
 const isNil = require('lodash/isNil');
-const { validateConfig } = require('../validation');
 const yup = require('yup');
 
 const schema = yup.object().shape({
@@ -14,7 +13,7 @@ const schema = yup.object().shape({
 
 class Redis {
   constructor(config) {
-    config = validateConfig(config, schema);
+    config = schema.validateSync(config, { stripUnknown: true });
     const { host, port, password, ttl } = config;
     const ioRedisConfig = { host, port, password };
     this.name = 'local';

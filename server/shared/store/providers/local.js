@@ -3,7 +3,6 @@
 const isNil = require('lodash/isNil');
 const LRU = require('lru-cache');
 const micromatch = require('micromatch');
-const { validateConfig } = require('../validation');
 const yup = require('yup');
 
 const schema = yup.object().shape({
@@ -12,7 +11,7 @@ const schema = yup.object().shape({
 
 class Local {
   constructor(config) {
-    config = validateConfig(config, schema);
+    config = schema.validateSync(config, { stripUnknown: true });
     this.name = 'local';
     this.maxAge = config.maxAge;
     this.client = new LRU({ maxAge: config.maxAge });
