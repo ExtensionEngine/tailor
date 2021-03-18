@@ -7,6 +7,7 @@ const SILENT_REFRESH_TIMEOUT = 5000;
 class OidcClient {
   constructor() {
     this.enabled = process.env.OIDC_ENABLED;
+    this.logoutEnabled = process.env.OIDC_LOGOUT_ENABLED;
     this.baseUrl = join(process.env.API_PATH, 'oidc');
   }
 
