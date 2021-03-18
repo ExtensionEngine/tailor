@@ -182,9 +182,9 @@ function getRepositoryRelationships(schemaId) {
 }
 
 function getSchemaValidators() {
-  const validators = reduce(SCHEMAS, (acc, it) => {
-    const metas = flatMap(it.structure, 'meta');
-    const rules = map(metas, it => Object.keys(it.validate));
+  const validators = reduce(SCHEMAS, (acc, { structure }) => {
+    const metas = flatMap(structure, 'meta');
+    const rules = map(metas, meta => Object.keys(meta.validate));
     return [...acc, ...rules];
   }, []).flat();
   return uniq(validators);
