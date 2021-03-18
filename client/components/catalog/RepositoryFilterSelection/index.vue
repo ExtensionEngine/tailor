@@ -8,7 +8,8 @@
       :config="configs[filter.type]" />
     <v-btn
       v-show="repositoryFilter.length"
-      @click="$emit('clear:all')" small rounded>
+      @click="$emit('clear:all')"
+      class="mb-1" small rounded>
       Clear all
     </v-btn>
   </v-row>
