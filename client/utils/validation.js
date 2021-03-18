@@ -11,12 +11,15 @@ import {
   numeric,
   required
 } from 'vee-validate/dist/rules';
+import difference from 'lodash/difference';
 import { extend } from 'vee-validate';
 import forEach from 'lodash/forEach';
+import { getSchemaValidators } from 'shared/activities';
 import isURL from 'validator/lib/isURL';
 import { messages } from 'vee-validate/dist/locale/en.json';
 import snakeCase from 'lodash/snakeCase';
 import some from 'lodash/some';
+import transform from 'lodash/transform';
 import userApi from '@/api/user';
 
 const alphanumerical = {
@@ -66,7 +69,23 @@ const rules = {
   url
 };
 
-forEach(rules, (rule, name) => extend(snakeCase(name), {
-  message: messages[name],
-  ...rule
-}));
+processRules(rules).then(registerRules);
+
+async function processRules(rules) {
+  const definedRuleNames = Object.keys(rules).map(it => snakeCase(it));
+  const schemaRuleNames = difference(getSchemaValidators(), definedRuleNames);
+  if (!schemaRuleNames.length) return rules;
+  const allRules = await import('vee-validate/dist/rules');
+  const schemaRules = transform(allRules, (acc, rule, name) => {
+    const isMissingRule = some(schemaRuleNames, it => it === name);
+    if (isMissingRule) acc[name] = rule;
+  }, {});
+  return { ...rules, ...schemaRules };
+}
+
+function registerRules(rules) {
+  return forEach(rules, (rule, name) => extend(snakeCase(name), {
+    message: messages[name],
+    ...rule
+  }));
+}
