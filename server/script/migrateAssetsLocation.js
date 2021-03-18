@@ -3,12 +3,14 @@
 const {
   Activity,
   ContentElement,
+  Repository,
   Revision,
   sequelize
 } = require('../shared/database');
 const {
   getActivityMetadata,
   getElementMetadata,
+  getRepositoryMetadata,
   SCHEMAS
 } = require('../../config/shared/activities');
 const flatten = require('lodash/flatten');
@@ -21,28 +23,13 @@ const storage = require('../shared/storage');
 const toPairs = require('lodash/toPairs');
 
 const regex = /repository\/assets\/(.*)/;
-const ELEMENT_TYPES = ['IMAGE', 'VIDEO', 'AUDIO', 'PDF', 'CAROUSEL', 'MODAL', 'ACCORDION'];
-const REVISION_TYPES = ['CONTENT_ELEMENT', 'ACTIVITY'];
-const isFunction = fn => fn && typeof fn === 'function';
+const REVISION_TYPES = ['REPOSITORY', 'ACTIVITY', 'CONTENT_ELEMENT'];
 const schemasIds = SCHEMAS.map(it => it.id);
 
-const mapTypeToAction = {
-  IMAGE: imageMigrationHandler,
-  CAROUSEL: embedsMigrationHandler,
-  MODAL: embedsMigrationHandler,
-  ACCORDION: embedsMigrationHandler,
-  DEFAULT: defaultMigrationHandler
-};
-
 const mapEntityToAction = {
-  CONTENT_ELEMENT: migrateContentElement,
-  ACTIVITY: migrateActivity
-};
-
-const invokeAction = type => (...args) => {
-  const action = mapTypeToAction[type];
-  const defaultAction = mapTypeToAction.DEFAULT;
-  return isFunction(action) ? action(...args) : defaultAction(...args);
+  REPOSITORY: migrateRepository,
+  ACTIVITY: migrateActivity,
+  CONTENT_ELEMENT: migrateContentElement
 };
 
 migrate()
@@ -57,10 +44,28 @@ migrate()
 
 async function migrate() {
   const transaction = await sequelize.transaction();
+  await migrateRepositories(transaction);
   await migrateActivities(transaction);
   await migrateContentElements(transaction);
   await migrateRevisions(transaction);
   return transaction.commit();
+}
+
+async function migrateRepositories(transaction) {
+  const repositories = await Repository.findAll({ transaction });
+  return Promise.each(repositories, async it => {
+    const payload = await migrateRepository(it);
+    return it.update(payload, { transaction });
+  });
+}
+
+async function migrateRepository(repository) {
+  const { id, data: meta } = repository;
+  const fileMetas = getRepositoryMetadata(repository)
+    .filter(it => it.type === 'FILE')
+    .map(it => it.key);
+  const data = await getNewMeta(fileMetas, meta, id);
+  return { data };
 }
 
 async function migrateActivities(transaction) {
@@ -81,10 +86,7 @@ async function migrateActivity(activity) {
 }
 
 async function migrateContentElements(transaction) {
-  const contentElements = await ContentElement.findAll({
-    where: { type: { [Op.in]: ELEMENT_TYPES } },
-    transaction
-  });
+  const contentElements = await ContentElement.findAll({ transaction });
   return Promise.each(contentElements, async it => {
     const payload = await migrateContentElement(it);
     return it.update(payload, { transaction });
@@ -98,7 +100,11 @@ async function migrateContentElement(element) {
 }
 
 function migrateContentElementData(element) {
-  return invokeAction(element.type)(element);
+  const { type, data } = element;
+  if (type === 'IMAGE') return imageMigrationHandler(element);
+  if (data.embeds) return embedsMigrationHandler(element);
+  if (data.assets) return defaultMigrationHandler(element);
+  return data;
 }
 
 async function migrateContentElementMeta(element) {
@@ -111,23 +117,6 @@ async function migrateContentElementMeta(element) {
     .filter(it => it.type === 'FILE')
     .map(it => it.key);
   return getNewMeta(fileMetas, element.meta, repositoryId);
-}
-
-async function migrateRevisions(transaction) {
-  const revisions = await Revision.findAll({
-    where: { entity: { [Op.in]: REVISION_TYPES } },
-    transaction
-  });
-  return Promise.each(revisions, async it => {
-    const payload = await migrateRevision(it);
-    return it.update(payload, { transaction });
-  });
-}
-
-async function migrateRevision(revision) {
-  const { entity, state } = revision;
-  const payload = await (mapEntityToAction[entity] && mapEntityToAction[entity](state));
-  return { state: { ...state, ...payload } };
 }
 
 async function getNewMeta(fileMetas, meta, repositoryId) {
@@ -169,9 +158,8 @@ function getMigratedEmbeds(repositoryId, embeds) {
   return Promise.map(
     Object.entries(embeds),
     async ([id, embed]) => {
-      if (embed.type !== 'VIDEO') return [id, embed];
-      const data = await defaultMigrationHandler({ repositoryId, ...embed });
-      return [id, { ...embed, data }];
+      const payload = await migrateContentElement({ repositoryId, ...embed });
+      return [id, { ...embed, ...payload }];
     }
   ).reduce((acc, [id, embed]) => ({ ...acc, [id]: embed }), {});
 }
@@ -187,6 +175,23 @@ async function defaultMigrationHandler(element) {
     ...element.data,
     assets: { ...element.data.assets, url: `${protocol}${newKey}` }
   };
+}
+
+async function migrateRevisions(transaction) {
+  const revisions = await Revision.findAll({
+    where: { entity: { [Op.in]: REVISION_TYPES } },
+    transaction
+  });
+  return Promise.each(revisions, async it => {
+    const payload = await migrateRevision(it);
+    return it.update(payload, { transaction });
+  });
+}
+
+async function migrateRevision(revision) {
+  const { entity, state } = revision;
+  const payload = await (mapEntityToAction[entity] && mapEntityToAction[entity](state));
+  return { state: { ...state, ...payload } };
 }
 
 function getKeysFromUrl(url, repositoryId) {
