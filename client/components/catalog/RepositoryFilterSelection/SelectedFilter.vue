@@ -2,7 +2,7 @@
   <v-chip
     @click:close="$emit('close')"
     close
-    class="mx-2">
+    class="mx-2 mb-1">
     <v-icon left>{{ config.icon }}</v-icon>
     {{ name }}
   </v-chip>
