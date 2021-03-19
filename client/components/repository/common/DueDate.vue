@@ -6,14 +6,10 @@
 </template>
 
 <script>
-import compareAsc from 'date-fns/compareAsc';
-import fecha from 'fecha';
+import { isAfterOrEqual, truncateTime } from '@/utils/date';
 import isAfter from 'date-fns/isAfter';
 import { mapGetters } from 'vuex';
 import sub from 'date-fns/sub';
-
-const isAfterOrEqual = (firstDate, secondDate) =>
-  compareAsc(firstDate, secondDate) !== -1;
 
 export default {
   name: 'workflow-due-date',
@@ -26,8 +22,8 @@ export default {
   data: () => ({ now: new Date() }),
   computed: {
     ...mapGetters('repository', ['workflow']),
-    currentDate: vm => vm.truncateTime(new Date()),
-    dueDate: vm => vm.truncateTime(new Date(vm.value)),
+    currentDate: vm => truncateTime(new Date()),
+    dueDate: vm => truncateTime(new Date(vm.value)),
     didWarningThresholdElapse() {
       const { dueDateWarningThreshold } = this.workflow;
       if (!dueDateWarningThreshold) return false;
@@ -38,13 +34,6 @@ export default {
       if (isAfter(this.currentDate, this.dueDate)) return 'elapsed';
       if (this.didWarningThresholdElapse) return 'soon';
       return null;
-    }
-  },
-  methods: {
-    truncateTime(dateTime) {
-      const format = 'YYYY-MM-DD';
-      const date = fecha.format(dateTime, format);
-      return fecha.parse(date, format);
     }
   }
 };
