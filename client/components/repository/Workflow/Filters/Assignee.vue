@@ -44,7 +44,6 @@ export default {
 <style lang="scss" scoped>
 .avatar.v-avatar {
   border: 2px solid;
-  border-color: #fff !important;
 
   &:not(:first-of-type) {
     margin-left: -0.5rem;
