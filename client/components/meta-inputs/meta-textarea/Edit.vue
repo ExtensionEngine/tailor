@@ -29,11 +29,7 @@ export default {
     meta: { type: Object, default: () => ({ value: null }) },
     rows: { type: Number, default: 2 }
   },
-  data() {
-    return {
-      value: this.meta.value
-    };
-  },
+  data: vm => ({ value: vm.meta.value }),
   computed: {
     validationRules: vm => get(vm.meta, 'validate.rules', vm.meta.validate)
   },
@@ -41,8 +37,7 @@ export default {
     lowerCase,
     async onChange() {
       const { valid } = await this.$refs.validator.validate();
-      if (!valid) return;
-      if (this.value === this.meta.value) return;
+      if (!valid || this.value === this.meta.value) return;
       this.$emit('update', this.meta.key, this.value);
     }
   }

@@ -30,12 +30,10 @@ export default {
   props: {
     value: { type: String, required: true }
   },
-  data() {
-    return {
-      menu: false,
-      color: this.value || '#ffffff'
-    };
-  },
+  data: vm => ({
+    menu: false,
+    color: vm.value || '#ffffff'
+  }),
   methods: {
     submit() {
       this.$emit('input', this.color);
@@ -48,12 +46,12 @@ export default {
 <style lang="scss" scoped>
 .preview {
   float: left;
-  margin-right: 10px;
+  margin-right: 0.625rem;
 }
 
 .selected {
-  width: 40px;
-  height: 40px;
+  width: 2.5rem;
+  height: 2.5rem;
   text-align: center;
   border-radius: 50%;
   cursor: pointer;
@@ -61,8 +59,8 @@ export default {
 
   .eyedropper {
     color: #fff;
-    font-size: 18px;
-    line-height: 40px;
+    font-size: 1.125rem;
+    line-height: 2.5rem;
     opacity: 0;
     transition: opacity 0.3s ease;
   }
@@ -73,10 +71,10 @@ export default {
 }
 
 ::v-deep .v-color-picker__edit {
-  margin-top: 16px;
+  margin-top: 1rem;
 
   input {
-    font-size: 14px;
+    font-size: 0.875rem;
   }
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="px-1 pt-0 pb-10">
     <v-switch
-      @change="value => $emit('update', meta.key, value)"
+      @change="$emit('update', meta.key, $event)"
       :input-value="meta.value"
       :name="meta.key"
       :label="meta.label"

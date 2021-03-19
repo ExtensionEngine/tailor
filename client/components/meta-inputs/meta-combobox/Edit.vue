@@ -1,33 +1,44 @@
 <template>
-  <v-combobox
-    @change="$emit('update', meta.key, $event)"
-    :value="meta.value"
-    :name="meta.key"
-    :items="meta.options"
-    :placeholder="meta.placeholder"
-    :label="meta.label"
-    :multiple="meta.multiple"
-    :chips="meta.multiple"
-    item-text="label"
-    item-value="value"
-    deletable-chips
-    outlined />
+  <validation-provider
+    ref="validator"
+    v-slot="{ errors }"
+    :name="meta.label.toLowerCase()"
+    :rules="validationRules"
+    slim>
+    <v-combobox
+      v-model="value"
+      @change="update"
+      :value="meta.value"
+      :name="meta.key"
+      :items="meta.options"
+      :placeholder="meta.placeholder"
+      :label="meta.label"
+      :multiple="meta.multiple"
+      :chips="meta.multiple"
+      :error-messages="errors"
+      item-text="label"
+      item-value="value"
+      deletable-chips clearable outlined />
+  </validation-provider>
 </template>
 
 <script>
-import isObject from 'lodash/isObject';
+import get from 'lodash/get';
 
 export default {
   name: 'meta-combobox',
   props: {
     meta: { type: Object, default: () => ({ value: null }) }
   },
+  data: vm => ({ value: vm.meta.value }),
   computed: {
-    value() {
-      const { meta: { value, options } } = this;
-      const hasPrimitiveOptions = !isObject(options[0]);
-      if (hasPrimitiveOptions) return value;
-      return value.map(val => options.find(it => it.value === val));
+    validationRules: vm => get(vm.meta, 'validate.rules', vm.meta.validate)
+  },
+  methods: {
+    async update(value) {
+      const { valid } = await this.$refs.validator.validate();
+      if (!valid || this.value === this.meta.value) return;
+      this.$emit('update', this.meta.key, value);
     }
   }
 };

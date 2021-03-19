@@ -1,52 +1,57 @@
 <template>
-  <v-select
-    @change="update"
-    :value="meta.value"
-    :name="meta.key"
-    :items="meta.options"
-    :placeholder="meta.placeholder"
-    :label="meta.label"
-    :multiple="meta.multiple"
-    :chips="meta.multiple"
-    :small-chips="!hasImgProp"
-    item-text="label"
-    item-value="value"
-    deletable-chips
-    outlined>
-    <template v-if="hasImgProp" v-slot:item="{ item }">
-      <img v-if="item.img" :src="item.img" :alt="item.label" class="img">
-      <span>{{ item.label }}</span>
-    </template>
-    <template v-if="hasImgProp" v-slot:selection="{ item }">
-      <component :is="meta.multiple ? 'v-chip' : 'div'">
+  <validation-provider
+    ref="validator"
+    v-slot="{ errors }"
+    :name="meta.label.toLowerCase()"
+    :rules="validationRules"
+    slim>
+    <v-select
+      v-model="value"
+      @change="update"
+      :value="meta.value"
+      :name="meta.key"
+      :items="meta.options"
+      :placeholder="meta.placeholder"
+      :label="meta.label"
+      :multiple="meta.multiple"
+      :chips="meta.multiple"
+      :small-chips="!hasImgProp"
+      :error-messages="errors"
+      item-text="label"
+      item-value="value"
+      deletable-chips
+      outlined>
+      <template v-if="hasImgProp" v-slot:item="{ item }">
         <img v-if="item.img" :src="item.img" :alt="item.label" class="img">
         <span>{{ item.label }}</span>
-      </component>
-    </template>
-  </v-select>
+      </template>
+      <template v-if="hasImgProp" v-slot:selection="{ item }">
+        <component :is="meta.multiple ? 'v-chip' : 'div'">
+          <img v-if="item.img" :src="item.img" :alt="item.label" class="img">
+          <span>{{ item.label }}</span>
+        </component>
+      </template>
+    </v-select>
+  </validation-provider>
 </template>
 
 <script>
-import isObject from 'lodash/isObject';
+import get from 'lodash/get';
 
 export default {
   name: 'meta-select',
   props: {
     meta: { type: Object, default: () => ({ value: null }) }
   },
+  data: vm => ({ value: vm.meta.value }),
   computed: {
-    value() {
-      const { meta: { value, options } } = this;
-      const hasPrimitiveOptions = !isObject(options[0]);
-      if (hasPrimitiveOptions) return value;
-      return value.map(val => options.find(it => it.value === val));
-    },
-    hasImgProp() {
-      return this.meta.options.some(it => it.img);
-    }
+    validationRules: vm => get(vm.meta, 'validate.rules', vm.meta.validate),
+    hasImgProp: vm => vm.meta.options.some(it => it.img)
   },
   methods: {
-    update(data) {
+    async update(data) {
+      const { valid } = await this.$refs.validator.validate();
+      if (!valid || this.value === this.meta.value) return;
       return this.$emit('update', this.meta.key, data);
     }
   }
