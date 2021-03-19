@@ -14,7 +14,7 @@ import {
 import difference from 'lodash/difference';
 import { extend } from 'vee-validate';
 import forEach from 'lodash/forEach';
-import { getSchemaValidators } from 'shared/activities';
+import { getMetaValidators } from 'shared/activities';
 import isURL from 'validator/lib/isURL';
 import { messages } from 'vee-validate/dist/locale/en.json';
 import snakeCase from 'lodash/snakeCase';
@@ -73,14 +73,14 @@ processRules(rules).then(registerRules);
 
 async function processRules(rules) {
   const definedRuleNames = Object.keys(rules).map(it => snakeCase(it));
-  const schemaRuleNames = difference(getSchemaValidators(), definedRuleNames);
-  if (!schemaRuleNames.length) return rules;
+  const metaRuleNames = difference(getMetaValidators(), definedRuleNames);
+  if (!metaRuleNames.length) return rules;
   const allRules = await import('vee-validate/dist/rules');
-  const schemaRules = transform(allRules, (acc, rule, name) => {
-    const isMissingRule = some(schemaRuleNames, it => it === name);
+  const metaRules = transform(allRules, (acc, rule, name) => {
+    const isMissingRule = some(metaRuleNames, it => it === name);
     if (isMissingRule) acc[name] = rule;
   }, {});
-  return { ...rules, ...schemaRules };
+  return { ...rules, ...metaRules };
 }
 
 function registerRules(rules) {

@@ -41,7 +41,7 @@ module.exports = {
   getSiblingTypes,
   getSupportedContainers,
   getContainerTemplateId,
-  getSchemaValidators,
+  getMetaValidators,
   hasAssessments: level => getActivityConfig(level).hasAssessments,
   isEditable: activityType => {
     const config = getActivityConfig(activityType);
@@ -181,7 +181,7 @@ function getRepositoryRelationships(schemaId) {
     .reduce((acc, { type }) => union(acc, [type]), []);
 }
 
-function getSchemaValidators() {
+function getMetaValidators() {
   const validators = reduce(SCHEMAS, (acc, { structure }) => {
     const metas = flatMap(structure, 'meta');
     const rules = map(metas, meta => Object.keys(meta.validate));
