@@ -2,7 +2,7 @@
   <validation-provider
     ref="validator"
     v-slot="{ errors }"
-    :name="meta.label.toLowerCase()"
+    :name="lowerCase(meta.label)"
     :rules="validationRules"
     slim>
     <v-select
@@ -37,6 +37,7 @@
 
 <script>
 import get from 'lodash/get';
+import lowerCase from 'lodash/lowerCase';
 
 export default {
   name: 'meta-select',
@@ -49,6 +50,7 @@ export default {
     hasImgProp: vm => vm.meta.options.some(it => it.img)
   },
   methods: {
+    lowerCase,
     async update(data) {
       const { valid } = await this.$refs.validator.validate();
       if (!valid || this.value === this.meta.value) return;

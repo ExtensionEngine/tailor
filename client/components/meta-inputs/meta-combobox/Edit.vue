@@ -2,7 +2,7 @@
   <validation-provider
     ref="validator"
     v-slot="{ errors }"
-    :name="meta.label.toLowerCase()"
+    :name="lowerCase(meta.label)"
     :rules="validationRules"
     slim>
     <v-combobox
@@ -24,6 +24,7 @@
 
 <script>
 import get from 'lodash/get';
+import lowerCase from 'lodash/lowerCase';
 
 export default {
   name: 'meta-combobox',
@@ -35,6 +36,7 @@ export default {
     validationRules: vm => get(vm.meta, 'validate.rules', vm.meta.validate)
   },
   methods: {
+    lowerCase,
     async update(value) {
       const { valid } = await this.$refs.validator.validate();
       if (!valid || this.value === this.meta.value) return;
