@@ -29,7 +29,10 @@ import isObject from 'lodash/isObject';
 import last from 'lodash/last';
 import lowerCase from 'lodash/lowerCase';
 
-const processValue = val => val.map(item => isObject(item) ? item.value : item);
+function processValue(val) {
+  if (!Array.isArray(val)) return val;
+  return val.map(item => isObject(item) ? item.value : item);
+}
 
 export default {
   name: 'meta-combobox',
@@ -44,7 +47,7 @@ export default {
     lowerCase,
     async update(val) {
       const value = processValue(val);
-      const isEmpty = value.length && !last(value).trim();
+      const isEmpty = value?.length && !last(value).trim();
       if (isEmpty) return value.pop();
       const { valid } = await this.$refs.validator.validate();
       if (!valid || isEqual(this.value, this.meta.value)) return;
