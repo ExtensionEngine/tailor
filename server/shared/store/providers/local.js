@@ -11,7 +11,6 @@ const schema = yup.object().shape({
 class Local {
   constructor(config) {
     config = schema.validateSync(config, { stripUnknown: true });
-    this.name = 'local';
     this.ttl = config.ttl;
     this.client = new LRU({ maxAge: this.ttl * 1000 });
   }

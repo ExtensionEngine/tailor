@@ -15,7 +15,6 @@ class Redis {
     config = schema.validateSync(config, { stripUnknown: true });
     const { host, port, password, ttl } = config;
     const ioRedisConfig = { host, port, password };
-    this.name = 'redis';
     this.ttl = ttl;
     this.client = new IoRedis(ioRedisConfig);
   }
