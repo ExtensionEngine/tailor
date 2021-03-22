@@ -20,8 +20,7 @@ class Redis {
     this.client = new IoRedis(ioRedisConfig);
   }
 
-  set(key, value, ttl) {
-    ttl = ttl || this.ttl;
+  set(key, value, ttl = this.ttl) {
     const args = [key, JSON.stringify(value)];
     if (ttl) args.push('EX', ttl);
     return this.client.set(...args);

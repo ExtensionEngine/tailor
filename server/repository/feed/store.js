@@ -12,11 +12,11 @@ async function addContext(user, context) {
   return store.set(key, { ...record, contexts });
 }
 
-async function removeContext(user, filterFn) {
+async function removeContext(user, predicate) {
   const key = getKey(user.id);
   const record = await store.get(key);
   if (!record) return;
-  const contexts = record.contexts.filter(it => !filterFn(it));
+  const contexts = record.contexts.filter(it => !predicate(it));
   if (contexts.length <= 0) return store.delete(key);
   return store.set(key, { ...record, contexts });
 }
@@ -30,7 +30,8 @@ async function getActiveUsers() {
 
 async function findOrCreate(user) {
   const key = getKey(user.id);
-  if (!await store.has(key)) {
+  const hasKey = await store.has(key);
+  if (!hasKey) {
     const connectedAt = new Date();
     await store.set(key, { ...user, connectedAt, contexts: [] });
   }

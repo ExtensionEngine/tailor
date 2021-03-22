@@ -34,12 +34,12 @@ class Store {
   }
 
   static createProvider(options) {
-    const providerName = options.provider;
-    if (!options[providerName]) {
+    const { provider, ttl } = options;
+    const config = options[provider];
+    if (!config) {
       throw new Error('Provider should be defined in config');
     }
-    const config = options[providerName];
-    return loadProvider(providerName).create(config);
+    return loadProvider(provider).create({ ...config, ttl });
   }
 }
 
