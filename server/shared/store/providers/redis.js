@@ -39,7 +39,7 @@ class Redis {
     return this.client.keys(pattern);
   }
 
-  del(key) {
+  delete(key) {
     return this.client.del(key);
   }
 

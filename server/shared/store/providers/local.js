@@ -35,7 +35,7 @@ class Local {
     return Promise.resolve(micromatch(keys, pattern));
   }
 
-  del(key) {
+  delete(key) {
     return Promise.resolve(this.client.del(key));
   }
 

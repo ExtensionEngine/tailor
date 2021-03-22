@@ -17,7 +17,7 @@ async function removeContext(user, filterFn) {
   const record = await store.get(key);
   if (!record) return;
   const contexts = record.contexts.filter(it => !filterFn(it));
-  if (contexts.length <= 0) return store.del(key);
+  if (contexts.length <= 0) return store.delete(key);
   return store.set(key, { ...record, contexts });
 }
 

@@ -29,7 +29,7 @@ class Store {
     return this.provider.keys(pattern);
   }
 
-  del(key) {
+  delete(key) {
     return this.provider.del(key);
   }
 
