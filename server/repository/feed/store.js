@@ -17,12 +17,12 @@ async function removeContext(user, predicate) {
   const record = await store.get(key);
   if (!record) return;
   const contexts = record.contexts.filter(it => !predicate(it));
-  if (contexts.length <= 0) return store.delete(key);
+  if (!contexts.length) return store.delete(key);
   return store.set(key, { ...record, contexts });
 }
 
 async function getActiveUsers() {
-  const activeUserKeys = await store.getKeys('active-user-*');
+  const activeUserKeys = await store.getKeys(getKey('*'));
   return Promise
     .map(activeUserKeys, key => store.get(key))
     .reduce((acc, user) => ({ ...acc, [user.id]: user }), {});
