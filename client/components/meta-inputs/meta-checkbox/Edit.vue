@@ -5,7 +5,6 @@
     :name="meta.label.toLowerCase()"
     :rules="validationRules"
     tag="div"
-    slim
     class="control">
     <div v-if="meta.label" class="control-label">{{ meta.label }}</div>
     <v-checkbox
