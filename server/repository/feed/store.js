@@ -22,7 +22,7 @@ async function removeContext(user, filterFn) {
 }
 
 async function getActiveUsers() {
-  const activeUserKeys = await store.keys('active-user-*');
+  const activeUserKeys = await store.getKeys('active-user-*');
   return Promise
     .map(activeUserKeys, key => store.get(key))
     .reduce((acc, user) => ({ ...acc, [user.id]: user }), {});

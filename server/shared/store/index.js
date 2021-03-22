@@ -25,12 +25,12 @@ class Store {
     return this.provider.has(key);
   }
 
-  keys(pattern = '*') {
-    return this.provider.keys(pattern);
+  getKeys(pattern = '*') {
+    return this.provider.getKeys(pattern);
   }
 
   delete(key) {
-    return this.provider.del(key);
+    return this.provider.delete(key);
   }
 
   static createProvider(options) {

@@ -35,7 +35,7 @@ class Redis {
     return this.client.exists(key);
   }
 
-  keys(pattern = '*') {
+  getKeys(pattern = '*') {
     return this.client.keys(pattern);
   }
 

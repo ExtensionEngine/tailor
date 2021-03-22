@@ -30,7 +30,7 @@ class Local {
     return Promise.resolve(this.client.has(key));
   }
 
-  keys(pattern = '*') {
+  getKeys(pattern = '*') {
     const keys = this.client.keys();
     return Promise.resolve(micromatch(keys, pattern));
   }
