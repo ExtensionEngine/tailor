@@ -3,7 +3,8 @@
 const Promise = require('bluebird');
 const store = require('../../shared/store');
 
-const getKey = id => `active-user-${id}`;
+const ACTIVE_USERS_NAMESPACE = 'active-user-';
+const getKey = id => `${ACTIVE_USERS_NAMESPACE}${id}`;
 
 async function addContext(user, context) {
   const key = getKey(user.id);
@@ -22,8 +23,7 @@ async function removeContext(user, predicate) {
 }
 
 async function getActiveUsers() {
-  const allActiveUserKeys = getKey('*');
-  const activeUserKeys = await store.getKeys(allActiveUserKeys);
+  const activeUserKeys = await store.getKeys(`${ACTIVE_USERS_NAMESPACE}*`);
   return Promise
     .map(activeUserKeys, key => store.get(key))
     .reduce((acc, user) => ({ ...acc, [user.id]: user }), {});
