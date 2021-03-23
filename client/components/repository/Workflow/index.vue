@@ -22,6 +22,7 @@
 import { mapActions, mapGetters } from 'vuex';
 import conforms from 'lodash/conforms';
 import isAfter from 'date-fns/isAfter';
+import overEvery from 'lodash/overEvery';
 import Sidebar from './Sidebar';
 import sub from 'date-fns/sub';
 import WorkflowFilters from './Filters';
@@ -64,11 +65,15 @@ export default {
       return this.filters.searchText?.length > SEARCH_TEXT_LENGTH_THRESHOLD;
     },
     filteredActivities() {
+      const statusFilters = [
+        this.filters.status && this.filterByStatus,
+        this.isFilteredByAssignee && this.filterByAssignee,
+        this.filters.recentOnly && this.filterByRecency
+      ].filter(Boolean);
+
       return this.searchableActivities.filter(conforms({
-        ...this.isFilteredBySearchText && { searchableText: this.filterBySearchText },
-        ...this.filters.status && { status: this.filterByStatus },
-        ...this.isFilteredByAssignee && { status: this.filterByAssignee },
-        ...this.filters.recentOnly && { status: this.filterByRecency }
+        ...statusFilters.length && { status: overEvery(statusFilters) },
+        ...this.isFilteredBySearchText && { searchableText: this.filterBySearchText }
       }));
     },
     assignees() {
