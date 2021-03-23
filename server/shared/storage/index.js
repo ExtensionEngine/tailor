@@ -1,7 +1,6 @@
 'use strict';
 
 const autobind = require('auto-bind');
-const config = require('../../../config/server').storage;
 const path = require('path');
 
 class Storage {
@@ -54,10 +53,6 @@ class Storage {
     return this.provider.copyFile(key, newKey, options);
   }
 
-  getPath(repositoryId) {
-    return path.join('repository', `${repositoryId}`, config.path);
-  }
-
   static createProvider(options) {
     // Validate provider name.
     const providerName = options.provider;
@@ -71,7 +66,7 @@ class Storage {
   }
 }
 
-module.exports = new Storage(config);
+module.exports = Storage;
 
 function loadProvider(name) {
   try {

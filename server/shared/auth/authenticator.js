@@ -6,7 +6,7 @@ const { Authenticator } = require('passport');
 const autobind = require('auto-bind');
 const { auth: config } = require('../../../config/server');
 const { IncomingMessage } = require('http');
-const storageProxy = require('../storage/proxy');
+const storageProxy = require('../../repository/proxy');
 const isFunction = arg => typeof arg === 'function';
 
 class Auth extends Authenticator {

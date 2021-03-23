@@ -1,6 +1,6 @@
 'use strict';
 
-const { getFileUrl, getPath, saveFile } = require('./');
+const { getFileUrl, getPath, saveFile } = require('../../repository/storage');
 const { readFile, sha256 } = require('./util');
 const config = require('../../../config/server').storage;
 const fecha = require('fecha');

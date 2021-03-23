@@ -1,13 +1,7 @@
 'use strict';
 
 const autobind = require('auto-bind');
-const { proxy: config } = require('../../../../config/server').storage;
 const path = require('path');
-const values = require('lodash/values');
-
-const storageCookies = {
-  REPOSITORY: 'Storage-Repository'
-};
 
 class Proxy {
   constructor(config) {
@@ -32,22 +26,16 @@ class Proxy {
     return this.isSelfHosted && this.provider.path;
   }
 
-  getSignedCookies(repositoryId, maxAge) {
-    const resource = path.join('repository', `${repositoryId}`);
-    return {
-      ...this.provider.getSignedCookies(resource, maxAge),
-      [storageCookies.REPOSITORY]: repositoryId
-    };
+  getSignedCookies(resource, maxAge) {
+    return this.provider.getSignedCookies(resource, maxAge);
   }
 
   verifyCookies(cookies, resource) {
     return this.provider.verifyCookies(cookies, resource);
   }
 
-  hasCookies(cookies, repositoryId) {
-    const { REPOSITORY } = storageCookies;
-    const isRepositoryId = cookies[REPOSITORY] === repositoryId.toString();
-    return isRepositoryId && this.provider.hasCookies(cookies);
+  hasCookies(cookies) {
+    return this.provider.hasCookies(cookies);
   }
 
   getFileUrl(key) {
@@ -55,14 +43,11 @@ class Proxy {
   }
 
   getCookieNames() {
-    return [
-      ...this.provider.getCookieNames(),
-      ...values(storageCookies)
-    ];
+    return this.provider.getCookieNames();
   }
 }
 
-module.exports = new Proxy(config);
+module.exports = Proxy;
 
 function loadProvider(name) {
   try {

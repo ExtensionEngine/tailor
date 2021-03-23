@@ -19,7 +19,7 @@ const get = require('lodash/get');
 const { Op } = require('sequelize');
 const Promise = require('bluebird');
 const { protocol } = require('../../config/server/storage');
-const storage = require('../shared/storage');
+const storage = require('../repository/storage');
 const toPairs = require('lodash/toPairs');
 
 const regex = /repository\/assets\/(.*)/;
