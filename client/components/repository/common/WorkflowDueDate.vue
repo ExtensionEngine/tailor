@@ -1,5 +1,6 @@
 <template>
   <div
+    v-on="$listeners"
     :class="{ elapsed, soon: !elapsed && didWarningThresholdElapse }"
     class="due-date d-flex align-center">
     <v-icon v-if="icon" size="16" class="icon mr-1">mdi-clock-outline</v-icon>
