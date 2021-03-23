@@ -56,7 +56,7 @@
         :activity="activity"
         v-bind="relationship" />
     </div>
-    <activity-discussion :activity="activity" panel />
+    <activity-discussion :activity="activity" panel class="mt-2 mb-5 mx-1" />
   </div>
 </template>
 

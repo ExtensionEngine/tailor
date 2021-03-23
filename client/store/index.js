@@ -32,7 +32,7 @@ export default function getStore() {
 }
 
 function hydrateUserStore() {
-  const authRefresh = Vue.oidc.enabled
+  const authRefresh = Vue.oidc.enabled && Vue.oidc.logoutEnabled
     ? Vue.oidc.slientlyRefresh().catch(() => {})
     : Promise.resolve();
 
