@@ -198,14 +198,18 @@ async function fetchCustomContainers(parent, config) {
 function unpublishDeletedContainers(parent, containers) {
   const baseUrl = getBaseUrl(parent.repositoryId, parent.id);
   const filePaths = getContainersFilePaths(baseUrl, containers);
-  const assetsPath = storage.getStoragePath(parent.repositoryId);
+  const assetsPath = storage.getPath(parent.repositoryId);
   return storage
     .listFiles(baseUrl)
     .then(publishedFilePaths => {
-      publishedFilePaths = publishedFilePaths.filter(it => !it.startsWith(assetsPath));
+      publishedFilePaths = removeAssetsFilePath(publishedFilePaths, assetsPath);
       const redundantFilePaths = difference(publishedFilePaths, filePaths);
       if (redundantFilePaths.length) return storage.deleteFiles(redundantFilePaths);
     });
+}
+
+function removeAssetsFilePath(publishedFilePaths, assetsPath) {
+  return publishedFilePaths.filter(it => !it.startsWith(assetsPath));
 }
 
 function resolveContainer(container) {

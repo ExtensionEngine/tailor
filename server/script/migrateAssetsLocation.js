@@ -199,6 +199,6 @@ function getKeysFromUrl(url, repositoryId) {
   const assetUrl = url.match(regex);
   if (!assetUrl) return;
   const [key, sufix] = assetUrl;
-  const newKey = `${storage.getStoragePath(repositoryId)}/${sufix}`;
+  const newKey = `${storage.getPath(repositoryId)}/${sufix}`;
   return { key, newKey };
 }
