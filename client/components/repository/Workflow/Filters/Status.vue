@@ -17,7 +17,7 @@
 export default { name: 'workflow-filters-status' };
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .selection {
   max-width: 100%;
 }
