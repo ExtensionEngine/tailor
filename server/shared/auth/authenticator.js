@@ -56,7 +56,7 @@ class Auth extends Authenticator {
   }
 
   logout({ middleware = false } = {}) {
-    const storageCookies = storageProxy.getStorageCookieNames();
+    const storageCookies = storageProxy.getCookieNames();
     return (_, res, next) => {
       res.clearCookie(config.jwt.cookie.name);
       res.clearCookie('auth');

@@ -4,7 +4,6 @@ const every = require('lodash/every');
 const { Signer } = require('aws-sdk/clients/cloudfront');
 const urlJoin = require('url-join');
 const { validateConfig } = require('../../validation');
-const values = require('lodash/values');
 const yup = require('yup');
 
 const storageCookies = {
@@ -51,8 +50,8 @@ class CloudFront {
     return urlJoin(this.host, key);
   }
 
-  getStorageCookieNames() {
-    return values(storageCookies);
+  getCookieNames() {
+    return Object.values(storageCookies);
   }
 }
 

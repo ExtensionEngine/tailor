@@ -5,7 +5,6 @@ const NodeRSA = require('node-rsa');
 const { origin } = require('../../../../../config/server');
 const urlJoin = require('url-join');
 const { validateConfig } = require('../../validation');
-const values = require('lodash/values');
 const yup = require('yup');
 
 const PROXY_PATH = '/proxy';
@@ -57,8 +56,8 @@ class Local {
     return urlJoin(origin, this.path, key);
   }
 
-  getStorageCookieNames() {
-    return values(storageCookies);
+  getCookieNames() {
+    return Object.values(storageCookies);
   }
 }
 

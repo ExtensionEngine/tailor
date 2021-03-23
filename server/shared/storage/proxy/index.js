@@ -54,9 +54,9 @@ class Proxy {
     return this.provider.getFileUrl(key);
   }
 
-  getStorageCookieNames() {
+  getCookieNames() {
     return [
-      ...this.provider.getStorageCookieNames(),
+      ...this.provider.getCookieNames(),
       ...values(storageCookies)
     ];
   }
