@@ -82,13 +82,13 @@ function updateRepositoryCatalog(repository, publishedAt) {
   });
 }
 
-function publishRepositoryDetails(repository) {
-  return getPublishedStructure(repository).then(async spine => {
-    Object.assign(spine, getRepositoryAttrs(repository));
-    await updatePublishingStatus(repository);
-    return saveSpine(spine)
-      .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt));
-  });
+async function publishRepositoryDetails(repository) {
+  const spine = await getPublishedStructure(repository);
+  Object.assign(spine, getRepositoryAttrs(repository));
+  await updatePublishingStatus(repository);
+  const savedSpine = await saveSpine(spine);
+  await updateRepositoryCatalog(repository, savedSpine.publishedAt);
+  return repository.save();
 }
 
 function unpublishActivity(repository, activity) {
