@@ -1,15 +1,15 @@
 <template>
-  <activity-due-date :value="value" format="mediumDate" icon />
+  <workflow-due-date :value="value" format="mediumDate" icon />
 </template>
 
 <script>
-import ActivityDueDate from '@/components/repository/common/DueDate';
+import WorkflowDueDate from '@/components/repository/common/WorkflowDueDate';
 
 export default {
   name: 'overview-due-date',
   props: {
     value: { type: String, required: true }
   },
-  components: { ActivityDueDate }
+  components: { WorkflowDueDate }
 };
 </script>

@@ -31,7 +31,7 @@
         </v-tooltip>
         <v-tooltip v-if="status.dueDate" open-delay="500" bottom>
           <template #activator="{ on }">
-            <activity-due-date
+            <workflow-due-date
               v-on="on"
               :value="status.dueDate"
               format="MM/DD/YY"
@@ -47,12 +47,12 @@
 </template>
 
 <script>
-import ActivityDueDate from '@/components/repository/common/DueDate';
 import AssigneeAvatar from '@/components/repository/common/AssigneeAvatar';
 import find from 'lodash/find';
 import { getLevel } from 'shared/activities';
 import { getPriority } from 'shared/workflow';
 import { mapGetters } from 'vuex';
+import WorkflowDueDate from '@/components/repository/common/WorkflowDueDate';
 
 export default {
   name: 'activity-status-card',
@@ -69,7 +69,7 @@ export default {
     priorityConfig: vm => getPriority(vm.status.priority),
     route: vm => ({ name: 'progress', query: vm.$route.query })
   },
-  components: { ActivityDueDate, AssigneeAvatar }
+  components: { WorkflowDueDate, AssigneeAvatar }
 };
 </script>
 
