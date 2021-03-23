@@ -182,10 +182,18 @@ function getRepositoryRelationships(schemaId) {
 }
 
 function getMetaValidators() {
-  const validators = reduce(SCHEMAS, (acc, { structure }) => {
-    const metas = flatMap(structure, 'meta');
-    const rules = map(metas, meta => Object.keys(get(meta, 'validate', {})));
-    return [...acc, ...rules];
+  const validators = reduce(SCHEMAS, (acc, schema) => {
+    const { structure, meta: repoMeta } = schema;
+    const repoRules = getRuleNames(repoMeta);
+    const elementMeta = flatMap(schema.elementMeta || schema.tesMeta, 'inputs');
+    const elementRules = getRuleNames(elementMeta);
+    const activityMeta = flatMap(structure, 'meta');
+    const activityRules = getRuleNames(activityMeta);
+    return [...acc, ...repoRules, ...activityRules, ...elementRules];
   }, []).flat();
   return uniq(validators);
+}
+
+function getRuleNames(metas) {
+  return map(metas, meta => Object.keys(get(meta, 'validate', {})));
 }
