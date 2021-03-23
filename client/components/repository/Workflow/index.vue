@@ -9,6 +9,7 @@
       <workflow-filters
         v-bind.sync="filters"
         :assignee-options="assignees"
+        :status-options="statusOptions"
         :show-unassigned="unassignedActivityExists"
         class="controls mx-4" />
       <workflow-overview :activities="filteredActivities" class="overview mt-3 mx-4" />
@@ -21,6 +22,7 @@
 import { mapActions, mapGetters } from 'vuex';
 import conforms from 'lodash/conforms';
 import isAfter from 'date-fns/isAfter';
+import overEvery from 'lodash/overEvery';
 import Sidebar from './Sidebar';
 import sub from 'date-fns/sub';
 import WorkflowFilters from './Filters';
@@ -37,13 +39,17 @@ export default {
   data: () => ({
     filters: {
       searchText: null,
-      recentOnly: false,
+      status: null,
       selectedAssigneeIds: [],
-      unassigned: false
+      unassigned: false,
+      recentOnly: false
     }
   }),
   computed: {
-    ...mapGetters('repository', { activities: 'workflowActivities' }),
+    ...mapGetters('repository', {
+      workflow: 'workflow',
+      activities: 'workflowActivities'
+    }),
     unassignedActivityExists: vm => vm.activities.some(it => !it.status.assigneeId),
     searchableActivities() {
       return this.activities.map(it => ({
@@ -59,9 +65,14 @@ export default {
       return this.filters.searchText?.length > SEARCH_TEXT_LENGTH_THRESHOLD;
     },
     filteredActivities() {
+      const statusFilters = [
+        this.filters.status && this.filterByStatus,
+        this.isFilteredByAssignee && this.filterByAssignee,
+        this.filters.recentOnly && this.filterByRecency
+      ].filter(Boolean);
+
       return this.searchableActivities.filter(conforms({
-        ...this.filters.recentOnly && { status: this.filterByRecency },
-        ...this.isFilteredByAssignee && { status: this.filterByAssignee },
+        ...statusFilters.length && { status: overEvery(statusFilters) },
         ...this.isFilteredBySearchText && { searchableText: this.filterBySearchText }
       }));
     },
@@ -72,6 +83,10 @@ export default {
         const isActive = this.filters.selectedAssigneeIds.includes(assignee.id);
         return { ...all, [assignee.id]: { ...assignee, isActive } };
       }, null);
+    },
+    statusOptions() {
+      const { statuses } = this.workflow;
+      return statuses.map(it => ({ ...it, value: it.id, text: it.label }));
     }
   },
   methods: {
@@ -87,6 +102,9 @@ export default {
     },
     filterBySearchText(searchableText) {
       return searchableText.includes(this.filters.searchText.toLowerCase());
+    },
+    filterByStatus({ status }) {
+      return status === this.filters.status;
     },
     getSearchableText({ data, shortId, status }) {
       const { name } = data;
