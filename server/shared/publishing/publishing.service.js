@@ -15,19 +15,18 @@ class PublishingService {
     this.queue = new PromiseQueue(1, Infinity);
   }
 
-  sendData(data) {
+  async publish(action, payload) {
+    const data = await action(payload);
     if (webhook.isConnected) webhook.send(data);
     return data;
   }
 
   publishActivity(activity) {
-    const publish = () => publishActivity(activity).then(this.sendData);
-    return this.queue.add(publish);
+    return this.queue.add(() => this.publish(publishActivity, activity));
   }
 
   publishRepoDetails(repository) {
-    const publish = () => publishRepositoryDetails(repository).then(this.sendData);
-    return this.queue.add(publish);
+    return this.queue.add(() => this.publish(publishRepositoryDetails, repository));
   }
 
   unpublishActivity(repository, activity) {
