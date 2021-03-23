@@ -65,4 +65,8 @@ html {
   overflow-y: scroll;
   overflow-y: overlay;
 }
+
+.text--default {
+  color: var(--text-color-default);
+}
 </style>
