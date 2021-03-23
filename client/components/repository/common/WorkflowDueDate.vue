@@ -1,5 +1,7 @@
 <template>
-  <div :class="warning" class="due-date d-flex align-center">
+  <div
+    :class="{ elapsed, soon: !elapsed && didWarningThresholdElapse }"
+    class="due-date d-flex align-center">
     <v-icon v-if="icon" size="16" class="icon mr-1">mdi-clock-outline</v-icon>
     <span class="text-no-wrap">{{ value | formatDate(format) }}</span>
   </div>
@@ -24,16 +26,12 @@ export default {
     ...mapGetters('repository', ['workflow']),
     currentDate: vm => truncateTime(new Date()),
     dueDate: vm => truncateTime(new Date(vm.value)),
+    elapsed: vm => isAfter(vm.currentDate, vm.dueDate),
     didWarningThresholdElapse() {
       const { dueDateWarningThreshold } = this.workflow;
       if (!dueDateWarningThreshold) return false;
       const warningStartDate = sub(this.dueDate, dueDateWarningThreshold);
       return isAfterOrEqual(this.currentDate, warningStartDate);
-    },
-    warning() {
-      if (isAfter(this.currentDate, this.dueDate)) return 'elapsed';
-      if (this.didWarningThresholdElapse) return 'soon';
-      return null;
     }
   }
 };
