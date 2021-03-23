@@ -1,25 +1,9 @@
-import {
-  confirmed,
-  email,
-  ext,
-  integer,
-  is_not as isNot,
-  max,
-  max_value as maxValue,
-  min,
-  min_value as minValue,
-  numeric,
-  required
-} from 'vee-validate/dist/rules';
-import difference from 'lodash/difference';
+import * as rules from 'vee-validate/dist/rules';
 import { extend } from 'vee-validate';
 import forEach from 'lodash/forEach';
-import { getMetaValidators } from 'shared/activities';
 import isURL from 'validator/lib/isURL';
 import { messages } from 'vee-validate/dist/locale/en.json';
-import snakeCase from 'lodash/snakeCase';
 import some from 'lodash/some';
-import transform from 'lodash/transform';
 import userApi from '@/api/user';
 
 const alphanumerical = {
@@ -51,41 +35,18 @@ const notWithin = {
   message: 'This {_field_} already exists'
 };
 
-const rules = {
+const configuredRules = {
+  ...rules,
+  url,
   alphanumerical,
-  confirmed,
-  email,
-  ext,
-  integer,
-  isNot: { ...isNot, message: 'The {_field_} is equal to the {other} value' },
-  max,
-  maxValue: { ...maxValue, message: 'The {_field_} must be {max} or less' },
-  min,
-  minValue: { ...minValue, message: 'The {_field_} must be {min} or more' },
-  notWithin,
-  numeric,
-  required,
-  uniqueEmail,
-  url
+  not_within: notWithin,
+  unique_email: uniqueEmail,
+  is_not: { ...rules.is_not, message: 'The {_field_} is equal to the {other} value' },
+  max_value: { ...rules.max_value, message: 'The {_field_} must be {max} or less' },
+  min_value: { ...rules.min_value, message: 'The {_field_} must be {min} or more' }
 };
 
-processRules(rules).then(registerRules);
-
-async function processRules(rules) {
-  const definedRuleNames = Object.keys(rules).map(it => snakeCase(it));
-  const metaRuleNames = difference(getMetaValidators(), definedRuleNames);
-  if (!metaRuleNames.length) return rules;
-  const allRules = await import('vee-validate/dist/rules');
-  const metaRules = transform(allRules, (acc, rule, name) => {
-    const isMissingRule = some(metaRuleNames, it => it === name);
-    if (isMissingRule) acc[name] = rule;
-  }, {});
-  return { ...rules, ...metaRules };
-}
-
-function registerRules(rules) {
-  return forEach(rules, (rule, name) => extend(snakeCase(name), {
-    message: messages[name],
-    ...rule
-  }));
-}
+forEach(configuredRules, (rule, name) => extend(name, {
+  message: messages[name],
+  ...rule
+}));
