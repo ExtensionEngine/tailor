@@ -30,7 +30,7 @@ import last from 'lodash/last';
 import lowerCase from 'lodash/lowerCase';
 
 function processValue(val) {
-  if (!Array.isArray(val)) return val;
+  if (!Array.isArray(val)) return val?.trim();
   return val.map(item => isObject(item) ? item.value : item);
 }
 
