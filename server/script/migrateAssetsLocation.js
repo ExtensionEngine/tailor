@@ -16,6 +16,7 @@ const {
 const flatten = require('lodash/flatten');
 const fromPairs = require('lodash/fromPairs');
 const get = require('lodash/get');
+const Listr = require('listr');
 const { Op } = require('sequelize');
 const Promise = require('bluebird');
 const { protocol } = require('../../config/server/storage');
@@ -33,6 +34,7 @@ const mapEntityToAction = {
 };
 
 migrate()
+  .then(({ transaction }) => transaction.commit())
   .then(() => {
     console.info('Migration script was executed successfully.');
     process.exit(0);
@@ -44,19 +46,43 @@ migrate()
 
 async function migrate() {
   const transaction = await sequelize.transaction();
-  await migrateRepositories(transaction);
-  await migrateActivities(transaction);
-  await migrateContentElements(transaction);
-  await migrateRevisions(transaction);
-  return transaction.commit();
+  const tasks = await getMigrationTasks(transaction);
+  return tasks.run({ transaction });
 }
 
-async function migrateRepositories(transaction) {
+async function getMigrationTasks(transaction) {
   const repositories = await Repository.findAll({ transaction });
-  return Promise.each(repositories, async it => {
-    const payload = await migrateRepository(it);
-    return it.update(payload, { transaction });
-  });
+  const tasks = repositories.map(repository => ({
+    title: `Migrate repository: "${repository.name}"`,
+    task: () => getRepositoryTasks(repository, transaction)
+  }));
+  return new Listr(tasks);
+}
+
+async function getRepositoryTasks(repository, transaction) {
+  return new Listr([
+    {
+      title: 'Migrate repository',
+      task: () => migrateRepositoryAssets(repository, transaction)
+    },
+    {
+      title: 'Migrate activities',
+      task: () => migrateRepositoryActivities(repository.id, transaction)
+    },
+    {
+      title: 'Migrate content elements',
+      task: () => migrateRepositoryContentElements(repository.id, transaction)
+    },
+    {
+      title: 'Migrate revisions',
+      task: () => migrateRepositoryRevisions(repository.id, transaction)
+    }
+  ]);
+}
+
+async function migrateRepositoryAssets(repository, transaction) {
+  const payload = await migrateRepository(repository);
+  return repository.update(payload, { transaction });
 }
 
 async function migrateRepository(repository) {
@@ -68,10 +94,38 @@ async function migrateRepository(repository) {
   return { data };
 }
 
-async function migrateActivities(transaction) {
-  const activities = await Activity.findAll({ transaction });
+async function migrateRepositoryActivities(repositoryId, transaction) {
+  const activities = await Activity.findAll(
+    { where: { repositoryId } },
+    { transaction }
+  );
   return Promise.each(activities, async it => {
     const payload = await migrateActivity(it);
+    return it.update(payload, { transaction });
+  });
+}
+
+async function migrateRepositoryContentElements(repositoryId, transaction) {
+  const contentElements = await ContentElement.findAll(
+    { where: { repositoryId } },
+    { transaction }
+  );
+  return Promise.each(contentElements, async it => {
+    const payload = await migrateContentElement(it);
+    return it.update(payload, { transaction });
+  });
+}
+
+async function migrateRepositoryRevisions(repositoryId, transaction) {
+  const revisions = await Revision.findAll({
+    where: {
+      repositoryId,
+      entity: { [Op.in]: REVISION_TYPES }
+    },
+    transaction
+  });
+  return Promise.each(revisions, async it => {
+    const payload = await migrateRevision(it);
     return it.update(payload, { transaction });
   });
 }
@@ -83,14 +137,6 @@ async function migrateActivity(activity) {
     .map(it => it.key);
   const data = await getNewMeta(fileMetas, meta, repositoryId);
   return { data };
-}
-
-async function migrateContentElements(transaction) {
-  const contentElements = await ContentElement.findAll({ transaction });
-  return Promise.each(contentElements, async it => {
-    const payload = await migrateContentElement(it);
-    return it.update(payload, { transaction });
-  });
 }
 
 async function migrateContentElement(element) {
@@ -175,17 +221,6 @@ async function defaultMigrationHandler(element) {
     ...element.data,
     assets: { ...element.data.assets, url: `${protocol}${newKey}` }
   };
-}
-
-async function migrateRevisions(transaction) {
-  const revisions = await Revision.findAll({
-    where: { entity: { [Op.in]: REVISION_TYPES } },
-    transaction
-  });
-  return Promise.each(revisions, async it => {
-    const payload = await migrateRevision(it);
-    return it.update(payload, { transaction });
-  });
 }
 
 async function migrateRevision(revision) {
