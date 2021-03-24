@@ -25,6 +25,7 @@ const toPairs = require('lodash/toPairs');
 
 const regex = /repository\/assets\/(.*)/;
 const REVISION_TYPES = ['REPOSITORY', 'ACTIVITY', 'CONTENT_ELEMENT'];
+const CHUNK_SIZE = 2000;
 const schemasIds = SCHEMAS.map(it => it.id);
 
 const mapEntityToAction = {
@@ -117,12 +118,24 @@ async function migrateRepositoryContentElements(repositoryId, transaction) {
 }
 
 async function migrateRepositoryRevisions(repositoryId, transaction) {
-  const revisions = await Revision.findAll({
-    where: {
-      repositoryId,
-      entity: { [Op.in]: REVISION_TYPES }
-    },
+  const options = {
+    where: { repositoryId, entity: { [Op.in]: REVISION_TYPES } },
     transaction
+  };
+  const count = await Revision.count(options);
+  const pages = Math.ceil(count / CHUNK_SIZE);
+  return Promise.each(
+    Array.from({ length: pages }, (_, i) => i + 1),
+    page => migrateRevisionsChunk({ page, options, transaction })
+  );
+}
+
+async function migrateRevisionsChunk({ page, options, transaction }) {
+  const offset = (page - 1) * CHUNK_SIZE;
+  const revisions = await Revision.findAll({
+    ...options,
+    offset,
+    limit: CHUNK_SIZE
   });
   return Promise.each(revisions, async it => {
     const payload = await migrateRevision(it);
