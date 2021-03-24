@@ -2,7 +2,7 @@
   <v-tooltip :disabled="!props.showTooltip" open-delay="500" bottom>
     <template #activator="{ on }">
       <v-avatar
-        v-on="{...on, ...listeners}"
+        v-on="{ ...on, ...listeners }"
         :size="props.small ? 24 : 34"
         :class="[data.staticClass, data.class]"
         color="primary lighten-4">
