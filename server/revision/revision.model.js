@@ -1,10 +1,10 @@
 'use strict';
 
 const { Model, Sequelize } = require('sequelize');
+const { applyFetchHooks } = require('../content-element/helpers');
 const hooks = require('./hooks');
 const isNumber = require('lodash/isNumber');
 const Promise = require('bluebird');
-const { resolveStatics } = require('../shared/storage/helpers');
 
 const { literal } = Sequelize;
 
@@ -93,7 +93,7 @@ class Revision extends Model {
   }
 
   async resolveStatics() {
-    const state = await resolveStatics(this.state);
+    const state = await applyFetchHooks(this.state);
     this.state = state;
     return this;
   }
