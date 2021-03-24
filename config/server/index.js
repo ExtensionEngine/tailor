@@ -6,6 +6,7 @@ const isLocalhost = require('is-localhost');
 const mail = require('./mail');
 const parse = require('url-parse');
 const storage = require('./storage');
+const store = require('./store');
 const tce = require('./tce');
 
 const hostname = resolveHostname();
@@ -24,6 +25,7 @@ module.exports = {
   storage,
   previewUrl,
   consumer,
+  store,
   tce
 };
 

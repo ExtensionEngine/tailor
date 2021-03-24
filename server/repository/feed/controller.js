@@ -1,6 +1,6 @@
 'use strict';
 
-const activeUsers = require('./store');
+const { addContext, getActiveUsers, removeContext } = require('./store');
 const isEqual = require('lodash/isEqual');
 const pick = require('lodash/pick');
 const sse = require('../../shared/sse');
@@ -15,29 +15,30 @@ function subscribe({ repository, user }, { sse: connection }) {
   connection.join(repository.id);
 }
 
-function onUnsubscribe(connection, { repository, user }) {
-  activeUsers.removeContext(user, it => it.sseId === connection.id);
+async function onUnsubscribe(connection, { repository, user }) {
+  await removeContext(user, it => it.sseId === connection.id);
   sse.channel(repository.id)
     .send(UserActivity.EndSession, { sseId: connection.id, userId: user.id });
 }
 
-function fetchUserActivities(_req, res) {
-  res.json({ data: { items: activeUsers } });
+async function fetchUserActivities(_req, res) {
+  const items = await getActiveUsers();
+  res.json({ data: { items } });
 }
 
-function addUserActivity({ user, body: { context } }, res) {
+async function addUserActivity({ user, body: { context } }, res) {
   res.end();
   user = pick(user, USER_ATTRS);
-  activeUsers.addContext(user, context);
+  await addContext(user, context);
   sse.channel(context.repositoryId).send(UserActivity.Start, { user, context });
 }
 
-function removeUserActivity({ user, body: { context } }, res) {
+async function removeUserActivity({ user, body: { context } }, res) {
   res.end();
   user = pick(user, USER_ATTRS);
   const { connectedAt, ...targetCtx } = context;
   const compareBy = Object.keys(targetCtx);
-  activeUsers.removeContext(user, it => isEqual(pick(it, compareBy), targetCtx));
+  await removeContext(user, it => isEqual(pick(it, compareBy), targetCtx));
   sse.channel(context.repositoryId).send(UserActivity.End, { user, context });
 }
 
