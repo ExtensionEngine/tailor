@@ -88,7 +88,7 @@ async function publishRepositoryDetails(repository) {
   await updatePublishingStatus(repository);
   const savedSpine = await saveSpine(spine);
   await updateRepositoryCatalog(repository, savedSpine.publishedAt);
-  return repository.save();
+  return repository;
 }
 
 function unpublishActivity(repository, activity) {
