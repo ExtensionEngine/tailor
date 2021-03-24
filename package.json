@@ -130,7 +130,7 @@
     "sequelize": "^6.3.0",
     "sequelize-replace-enum-postgres": "^1.5.0",
     "simple-oauth2": "^4.2.0",
-    "snyk": "^1.425.4",
+    "snyk": "^1.465.0",
     "strip-json-comments": "^3.0.1",
     "tar-fs": "^2.1.0",
     "to-case": "^2.0.0",
@@ -193,7 +193,7 @@
     "sass-loader": "^7.3.1",
     "sequelize-cli": "^6.2.0",
     "sql-log-prettifier": "^0.1.1",
-    "stylelint": "^13.0.0",
+    "stylelint": "^13.8.0",
     "umzug": "^2.2.0",
     "val-loader": "^1.1.1",
     "vue-template-compiler": "^2.6.11"
