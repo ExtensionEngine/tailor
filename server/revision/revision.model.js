@@ -1,7 +1,7 @@
 'use strict';
 
 const { Model, Sequelize } = require('sequelize');
-const { applyFetchHooks } = require('../content-element/helpers');
+const { applyFetchHooks } = require('../content-element/hooks');
 const hooks = require('./hooks');
 const isNumber = require('lodash/isNumber');
 const Promise = require('bluebird');

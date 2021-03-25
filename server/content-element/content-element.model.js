@@ -1,7 +1,6 @@
 'use strict';
 
 const { Model, Op } = require('sequelize');
-const { applyFetchHooks } = require('./helpers.js');
 const calculatePosition = require('../shared/util/calculatePosition');
 const { ContentElement: Events } = require('../../common/sse');
 const hooks = require('./hooks');
@@ -112,8 +111,8 @@ class ContentElement extends Model {
 
   static fetch(opt) {
     return isNumber(opt)
-      ? ContentElement.findByPk(opt).then(it => it && applyFetchHooks(it))
-      : ContentElement.findAll(opt).map(applyFetchHooks);
+      ? ContentElement.findByPk(opt).then(it => it && hooks.applyFetchHooks(it))
+      : ContentElement.findAll(opt).map(hooks.applyFetchHooks);
   }
 
   static cloneElements(src, container, options) {
