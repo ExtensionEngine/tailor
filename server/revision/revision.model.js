@@ -86,13 +86,13 @@ class Revision extends Model {
   static async fetch(query, options) {
     if (isNumber(query)) {
       const revision = await this.findByPk(query, options);
-      return revision.resolveStatics();
+      return revision.applyFetchHooks();
     }
     const revisions = await this.findAll(query);
-    return Promise.map(revisions, it => it.resolveStatics());
+    return Promise.map(revisions, it => it.applyFetchHooks());
   }
 
-  async resolveStatics() {
+  async applyFetchHooks() {
     const state = await applyFetchHooks(this.state);
     this.state = state;
     return this;
