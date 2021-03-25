@@ -12,7 +12,7 @@ const {
   getSupportedContainers
 } = require('../../../config/shared/activities');
 const { containerRegistry } = require('../content-plugins');
-const difference = require('lodash/difference');
+const differenceWith = require('lodash/differenceWith');
 const filter = require('lodash/filter');
 const find = require('lodash/find');
 const findIndex = require('lodash/findIndex');
@@ -35,6 +35,8 @@ const CC_ATTRS = ['id', 'uid', 'type', 'position', 'createdAt', 'updatedAt'];
 function publishActivity(activity) {
   return getStructureData(activity).then(data => {
     const { repository, predecessors, spine } = data;
+    const prevPublishedContainers = spine.structure
+      .reduce((acc, it) => [...acc, ...(it.contentContainers || [])], []);
 
     predecessors.forEach(it => {
       const exists = find(spine.structure, { id: it.id });
@@ -45,6 +47,11 @@ function publishActivity(activity) {
     addToSpine(spine, activity);
 
     return publishContent(activity)
+      .then(async content => {
+        const { containers } = content;
+        await unpublishDeletedContainers(activity, prevPublishedContainers, containers);
+        return content;
+      })
       .then(content => {
         const publishedData = find(spine.structure, { id: activity.id });
         return attachContentSummary(publishedData, content);
@@ -135,10 +142,7 @@ async function fetchActivityContent(activity, signed = false) {
 }
 
 function publishContent(activity) {
-  return publishContainers(activity).then(async containers => {
-    await unpublishDeletedContainers(activity, containers);
-    return { containers };
-  });
+  return publishContainers(activity).then(containers => ({ containers }));
 }
 
 function publishContainers(parent) {
@@ -195,21 +199,12 @@ async function fetchCustomContainers(parent, config) {
   }, []);
 }
 
-function unpublishDeletedContainers(parent, containers) {
+function unpublishDeletedContainers(parent, prevContainers, containers) {
   const baseUrl = getBaseUrl(parent.repositoryId, parent.id);
+  const prevFilePaths = getContainersFilePaths(baseUrl, prevContainers);
   const filePaths = getContainersFilePaths(baseUrl, containers);
-  const assetsPath = storage.getPath(parent.repositoryId);
-  return storage
-    .listFiles(baseUrl)
-    .then(publishedFilePaths => {
-      publishedFilePaths = removeAssetsFilePath(publishedFilePaths, assetsPath);
-      const redundantFilePaths = difference(publishedFilePaths, filePaths);
-      if (redundantFilePaths.length) return storage.deleteFiles(redundantFilePaths);
-    });
-}
-
-function removeAssetsFilePath(publishedFilePaths, assetsPath) {
-  return publishedFilePaths.filter(it => !it.startsWith(assetsPath));
+  const redundantFilePaths = differenceWith(prevFilePaths, filePaths);
+  if (redundantFilePaths.length) return storage.deleteFiles(redundantFilePaths);
 }
 
 function resolveContainer(container) {
