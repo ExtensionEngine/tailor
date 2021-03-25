@@ -37,7 +37,7 @@ export default {
     lowerCase,
     async onChange() {
       const { valid } = await this.$refs.validator.validate();
-      if (!valid || this.value === this.meta.value) return;
+      if (!valid) return;
       this.$emit('update', this.meta.key, this.value);
     }
   }

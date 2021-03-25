@@ -36,7 +36,6 @@
 
 <script>
 import get from 'lodash/get';
-import isEqual from 'lodash/isEqual';
 import lowerCase from 'lodash/lowerCase';
 
 export default {
@@ -53,7 +52,7 @@ export default {
     lowerCase,
     async update(data) {
       const { valid } = await this.$refs.validator.validate();
-      if (!valid || isEqual(this.value, this.meta.value)) return;
+      if (!valid) return;
       return this.$emit('update', this.meta.key, data);
     }
   }

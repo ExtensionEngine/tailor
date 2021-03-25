@@ -23,7 +23,6 @@
 
 <script>
 import get from 'lodash/get';
-import isEqual from 'lodash/isEqual';
 import isObject from 'lodash/isObject';
 import last from 'lodash/last';
 import lowerCase from 'lodash/lowerCase';
@@ -49,7 +48,7 @@ export default {
       const isEmpty = value?.length && !last(value).trim();
       if (isEmpty) return value.pop();
       const { valid } = await this.$refs.validator.validate();
-      if (!valid || isEqual(this.value, this.meta.value)) return;
+      if (!valid) return;
       this.$emit('update', this.meta.key, value);
     }
   }
