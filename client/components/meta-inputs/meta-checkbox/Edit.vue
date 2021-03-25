@@ -10,7 +10,6 @@
     <v-checkbox
       v-model="value"
       @change="update"
-      :input-value="meta.value"
       :name="meta.key"
       :label="meta.description"
       :error-messages="errors"
@@ -20,6 +19,7 @@
 </template>
 
 <script>
+import debounce from 'lodash/debounce';
 import get from 'lodash/get';
 import lowerCase from 'lodash/lowerCase';
 
@@ -34,11 +34,11 @@ export default {
   },
   methods: {
     lowerCase,
-    async update(data) {
+    update: debounce(async function (value) {
       const { valid } = await this.$refs.validator.validate();
-      if (!valid || this.value === this.meta.value) return;
-      return this.$emit('update', this.meta.key, data);
-    }
+      if (!valid) return;
+      this.$emit('update', this.meta.key, value);
+    }, 200)
   }
 };
 </script>

@@ -8,7 +8,6 @@
     <v-combobox
       v-model="value"
       @change="update"
-      :value="meta.value"
       :name="meta.key"
       :items="meta.options"
       :placeholder="meta.placeholder"
