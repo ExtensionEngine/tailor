@@ -44,7 +44,8 @@ export default {
   methods: {
     lowerCase,
     async update(val) {
-      const value = processValue(val);
+      this.value = processValue(val);
+      const { value } = this;
       const isEmpty = value?.length && !last(value).trim();
       if (isEmpty) return value.pop();
       const { valid } = await this.$refs.validator.validate();
