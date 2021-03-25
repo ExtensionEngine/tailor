@@ -172,27 +172,10 @@ function migrateContentElementData(element, schemaFileMeta) {
   return data;
 }
 
-async function migrateFileMeta(repositoryId, metaInputs, metaConfigs) {
-  const repositoryAssetsPath = storage.getPath(repositoryId);
-  const newMeta = await Promise.reduce(metaConfigs, async (acc, metaKey) => {
-    const meta = metaInputs[metaKey];
-    if (!meta) return acc;
-    const url = get(meta, 'url');
-    if (!url) return acc;
-    const { key, newKey } = resolveNewURL(url, repositoryAssetsPath) || {};
-    if (!key || !newKey) return acc;
-    await storage.copyFile(key, newKey);
-    return {
-      ...acc,
-      [metaKey]: {
-        ...meta,
-        key: newKey,
-        url: `${protocol}${newKey}`,
-        publicUrl: await storage.getFileUrl(newKey)
-      }
-    };
-  }, {});
-  return { ...metaInputs, ...newMeta };
+async function migrateContentElementMeta(element, { elementTypeMetaMap }) {
+  const { repositoryId, type } = element;
+  const metaConfigs = get(elementTypeMetaMap, type, []);
+  return migrateFileMeta(repositoryId, element.meta, metaConfigs);
 }
 
 async function migrateRevisionsChunk({ page, options, schemaFileMeta, transaction }) {
@@ -215,12 +198,6 @@ async function migrateRevision(revision, schemaFileMeta) {
     mapEntityToAction[entity](state, schemaFileMeta)
   );
   return { state: { ...state, ...payload } };
-}
-
-async function migrateContentElementMeta(element, { elementTypeMetaMap }) {
-  const { repositoryId, type } = element;
-  const metaConfigs = get(elementTypeMetaMap, type, []);
-  return migrateFileMeta(repositoryId, element.meta, metaConfigs);
 }
 
 async function imageMigrationHandler(element) {
@@ -265,6 +242,29 @@ async function defaultMigrationHandler(element) {
     ...element.data,
     assets: { ...element.data.assets, ...fromPairs(updatedAssets) }
   };
+}
+
+async function migrateFileMeta(repositoryId, metaInputs, metaConfigs) {
+  const repositoryAssetsPath = storage.getPath(repositoryId);
+  const newMeta = await Promise.reduce(metaConfigs, async (acc, metaKey) => {
+    const meta = metaInputs[metaKey];
+    if (!meta) return acc;
+    const url = get(meta, 'url');
+    if (!url) return acc;
+    const { key, newKey } = resolveNewURL(url, repositoryAssetsPath) || {};
+    if (!key || !newKey) return acc;
+    await storage.copyFile(key, newKey);
+    return {
+      ...acc,
+      [metaKey]: {
+        ...meta,
+        key: newKey,
+        url: `${protocol}${newKey}`,
+        publicUrl: await storage.getFileUrl(newKey)
+      }
+    };
+  }, {});
+  return { ...metaInputs, ...newMeta };
 }
 
 function resolveNewURL(assetUrl, targetDir) {
