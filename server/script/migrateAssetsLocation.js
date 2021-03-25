@@ -18,6 +18,7 @@ const fromPairs = require('lodash/fromPairs');
 const get = require('lodash/get');
 const Listr = require('listr');
 const { Op } = require('sequelize');
+const path = require('path');
 const Promise = require('bluebird');
 const { protocol } = require('../../config/server/storage');
 const storage = require('../repository/storage');
@@ -179,12 +180,13 @@ async function migrateContentElementMeta(element) {
 }
 
 async function getNewMeta(fileMetas, meta, repositoryId) {
+  const repositoryAssetsDir = storage.getPath(repositoryId);
   const newMeta = await Promise.map(toPairs(meta), async it => {
     const [id, value] = it;
     if (!fileMetas.includes(id)) return it;
     const url = get(value, 'url');
     if (!url) return it;
-    const { key, newKey } = getKeysFromUrl(url, repositoryId) || {};
+    const { key, newKey } = resolveNewURL(url, repositoryAssetsDir) || {};
     if (!key || !newKey) return it;
     await storage.copyFile(key, newKey);
     return [id, {
@@ -199,9 +201,10 @@ async function getNewMeta(fileMetas, meta, repositoryId) {
 
 async function imageMigrationHandler(element) {
   const { repositoryId, data } = element;
+  const repositoryAssetsDir = storage.getPath(repositoryId);
   const url = get(data, 'url');
   if (!url) return data;
-  const { key, newKey } = getKeysFromUrl(url, repositoryId) || {};
+  const { key, newKey } = resolveNewURL(url, repositoryAssetsDir) || {};
   if (!key || !newKey) return data;
   await storage.copyFile(key, newKey);
   return { ...element.data, url: newKey };
@@ -225,14 +228,18 @@ function getMigratedEmbeds(repositoryId, embeds) {
 
 async function defaultMigrationHandler(element) {
   const { repositoryId, data } = element;
-  const url = get(element, 'data.assets.url');
-  if (!url) return data;
-  const { key, newKey } = getKeysFromUrl(url, repositoryId) || {};
-  if (!key || !newKey) return data;
-  await storage.copyFile(key, newKey);
+  const repositoryAssetsDir = storage.getPath(repositoryId);
+  const updatedAssets = await Promise
+    .filter(toPairs(data.assets), ([_, value]) => value.startsWith(protocol))
+    .map(async ([key, value]) => {
+      const { key: oldKey, newKey } = resolveNewURL(value, repositoryAssetsDir) || {};
+      if (!oldKey || !newKey) return [key, value];
+      await storage.copyFile(oldKey, newKey);
+      return [key, `${protocol}${newKey}`];
+    });
   return {
     ...element.data,
-    assets: { ...element.data.assets, url: `${protocol}${newKey}` }
+    assets: { ...element.data.assets, ...fromPairs(updatedAssets) }
   };
 }
 
@@ -242,11 +249,11 @@ async function migrateRevision(revision) {
   return { state: { ...state, ...payload } };
 }
 
-function getKeysFromUrl(url, repositoryId) {
-  if (url.startsWith(protocol)) url = url.substr(protocol.length);
-  const assetUrl = url.match(regex);
-  if (!assetUrl) return;
-  const [key, sufix] = assetUrl;
-  const newKey = `${storage.getPath(repositoryId)}/${sufix}`;
+function resolveNewURL(assetURL, targetDir) {
+  if (assetURL.startsWith(protocol)) assetURL = assetURL.substr(protocol.length);
+  const result = assetURL.match(regex);
+  if (!result) return;
+  const [key, suffix] = result;
+  const newKey = path.join(targetDir, suffix);
   return { key, newKey };
 }
