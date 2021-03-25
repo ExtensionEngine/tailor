@@ -247,7 +247,7 @@ async function defaultMigrationHandler(element) {
 async function migrateFileMeta(repositoryId, metaInputs, metaConfigs) {
   const repositoryAssetsPath = storage.getPath(repositoryId);
   const newMeta = await Promise.reduce(metaConfigs, async (acc, metaKey) => {
-    const meta = metaInputs[metaKey];
+    const meta = get(metaInputs, metaKey);
     if (!meta) return acc;
     const url = get(meta, 'url');
     if (!url) return acc;
