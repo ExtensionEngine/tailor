@@ -81,8 +81,8 @@ function getFileMetasForSchema(schemaId) {
   const schema = find(SCHEMAS, { id: schemaId });
   return {
     repositoryMeta: getRepositoryMeta(schema),
-    activityMetaByType: getActivityMetaByType(schema),
-    elementMetaByType: getElementMetaByType(schema)
+    metaByActivityType: getMetaByActivityType(schema),
+    metaByElementType: getMetaByElementType(schema)
   };
 }
 
@@ -90,12 +90,12 @@ function getRepositoryMeta({ meta }) {
   return getFileMetaKeys(meta);
 }
 
-function getActivityMetaByType({ structure }) {
+function getMetaByActivityType({ structure }) {
   const metas = structure.map(({ type, meta }) => [type, getFileMetaKeys(meta)]);
   return fromPairs(metas);
 }
 
-function getElementMetaByType({ elementMeta }) {
+function getMetaByElementType({ elementMeta }) {
   const metas = (elementMeta || []).map(({ type, inputs }) => [type, getFileMetaKeys(inputs)]);
   return fromPairs(metas);
 }
@@ -151,9 +151,9 @@ async function migrateRepository(repository, schemaFileMeta) {
   return { data };
 }
 
-async function migrateActivity(activity, { activityMetaByType }) {
+async function migrateActivity(activity, { metaByActivityType }) {
   const { repositoryId, type, data: metaInputs } = activity;
-  const metaConfigs = get(activityMetaByType, type, []);
+  const metaConfigs = get(metaByActivityType, type, []);
   const data = await migrateFileMeta(repositoryId, metaInputs, metaConfigs);
   return { data };
 }
@@ -172,9 +172,9 @@ function migrateContentElementData(element, schemaFileMeta) {
   return data;
 }
 
-async function migrateContentElementMeta(element, { elementMetaByType }) {
+async function migrateContentElementMeta(element, { metaByElementType }) {
   const { repositoryId, type } = element;
-  const metaConfigs = get(elementMetaByType, type, []);
+  const metaConfigs = get(metaByElementType, type, []);
   return migrateFileMeta(repositoryId, element.meta, metaConfigs);
 }
 
