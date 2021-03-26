@@ -18,7 +18,8 @@ export default {
     },
     upload: loader(function (e) {
       this.createFileForm(e);
-      return this.$storageService.upload(this.repositoryId, this.form)
+      const folder = `repository/${this.repositoryId}`;
+      return this.$storageService.upload(folder, this.form)
         .then(data => {
           const { name } = this.form.get('file');
           this.$emit('upload', { ...data, name });

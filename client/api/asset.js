@@ -1,16 +1,17 @@
 import request from './request';
 
 const urls = {
-  base: repositoryId => `/repositories/${repositoryId}/assets`
+  base: 'assets'
 };
 
-function getUrl(repositoryId, key) {
-  const params = { key };
-  return request.get(urls.base(repositoryId), { params }).then(res => res.data.url);
+function getUrl(folder, key) {
+  const params = { key: `${folder}/${key}` };
+  return request.get(urls.base, { params }).then(res => res.data.url);
 }
 
-function upload(repositoryId, data) {
-  return request.post(urls.base(repositoryId), data).then(res => res.data);
+function upload(folder, data) {
+  if (folder) data.append('folder', folder);
+  return request.post(urls.base, data).then(res => res.data);
 }
 
 export default {
