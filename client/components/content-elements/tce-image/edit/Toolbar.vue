@@ -7,6 +7,7 @@
     <v-toolbar-items class="mx-auto">
       <upload-btn
         @change="upload"
+        :folder="`repository/${element.repositoryId}`"
         :label="isUploaded ? 'Upload a new image' : 'Upload image'" />
       <template v-if="isUploaded">
         <v-btn @click="toggleTool('cropper')" text>

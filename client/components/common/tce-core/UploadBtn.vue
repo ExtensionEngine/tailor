@@ -1,5 +1,12 @@
 <template>
-  <div class="file-upload">
+  <upload-provider
+    v-slot="{ uploading, downloadFile, deleteFile }"
+    ref="provider"
+    @upload="$emit('upload', $event)"
+    @uploading="$emit('update:uploading', $event)"
+    @delete="$emit('delete', $event)"
+    :folder="folder"
+    class="file-upload">
     <form @submit.prevent class="upload-form">
       <validation-provider ref="validator" :rules="validate">
         <input
@@ -32,20 +39,20 @@
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </form>
-  </div>
+  </upload-provider>
 </template>
 
 <script>
 import uniqueId from 'lodash/uniqueId';
-import uploadMixin from '@/components/common/mixins/upload';
+import UploadProvider from '@/components/common/mixins/UploadProvider';
 
 export default {
   name: 'upload-btn',
-  mixins: [uploadMixin],
   props: {
     id: { type: String, default: () => uniqueId('file_') },
     fileName: { type: String, default: '' },
     fileKey: { type: String, default: '' },
+    folder: { type: String, default: null },
     validate: { type: Object, default: () => ({ ext: [] }) },
     label: { type: String, default: 'Choose a file' },
     sm: { type: Boolean, default: false }
@@ -53,14 +60,10 @@ export default {
   methods: {
     async validateAndUpload(e) {
       const { valid } = await this.$refs.validator.validate(e);
-      if (valid) this.upload(e);
+      if (valid) this.$refs.provider.uploadFile(e);
     }
   },
-  watch: {
-    uploading(val) {
-      this.$emit('update:uploading', val);
-    }
-  }
+  components: { UploadProvider }
 };
 </script>
 

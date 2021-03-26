@@ -6,6 +6,7 @@
     <v-toolbar-title>PDF Component</v-toolbar-title>
     <input-asset
       @input="save"
+      :folder="`repository/${element.repositoryId}`"
       :url="url"
       :public-url="publicUrl"
       :extensions="['.pdf']"

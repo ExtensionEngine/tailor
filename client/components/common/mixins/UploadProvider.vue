@@ -1,13 +1,21 @@
+<template>
+  <div>
+    <slot v-bind="{ uploading, uploadFile, downloadFile, deleteFile }"></slot>
+  </div>
+</template>
+
+<script>
 import downloadMixin from 'utils/downloadMixin';
 import loader from '@/components/common/loader';
-import { mapGetters } from 'vuex';
 import { mapRequests } from '@/plugins/radio';
 
 export default {
   inject: ['$storageService'],
   mixins: [downloadMixin],
+  props: {
+    folder: { type: String, default: null }
+  },
   data: () => ({ uploading: false }),
-  computed: mapGetters('repository', { repositoryId: 'id' }),
   methods: {
     ...mapRequests('app', ['showConfirmationModal']),
     createFileForm(e) {
@@ -15,11 +23,11 @@ export default {
       const [file] = e.target.files;
       if (!file) return;
       this.form.append('file', file, file.name);
+      if (this.folder) this.form.append('folder', this.folder);
     },
-    upload: loader(function (e) {
+    uploadFile: loader(function (e) {
       this.createFileForm(e);
-      const folder = `repository/${this.repositoryId}`;
-      return this.$storageService.upload(folder, this.form)
+      return this.$storageService.upload(this.form)
         .then(data => {
           const { name } = this.form.get('file');
           this.$emit('upload', { ...data, name });
@@ -38,5 +46,11 @@ export default {
         action: () => this.$emit('delete', item.id, null)
       });
     }
+  },
+  watch: {
+    uploading(val) {
+      this.$emit('uploading', val);
+    }
   }
 };
+</script>;
