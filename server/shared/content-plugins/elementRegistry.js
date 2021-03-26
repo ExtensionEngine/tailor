@@ -8,7 +8,7 @@ const elementsList = require('../../../config/shared/core-elements');
 const hooks = require('./elementHooks');
 const pick = require('lodash/pick');
 const storage = require('../../repository/storage');
-const storageProxy = require('../../repository/proxy');
+const storageProxy = require('../../shared/storage/proxy');
 const toCase = require('to-case');
 
 const EXTENSIONS_LIST = '../../../extensions/content-elements/index';

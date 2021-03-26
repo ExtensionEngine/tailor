@@ -2,6 +2,7 @@
 
 const autobind = require('auto-bind');
 const path = require('path');
+const { proxy: config } = require('../../../../config/server').storage;
 
 class Proxy {
   constructor(config) {
@@ -22,32 +23,40 @@ class Proxy {
     return this.provider.isSelfHosted;
   }
 
+  get config() {
+    return this.provider.config;
+  }
+
   get path() {
     return this.isSelfHosted && this.provider.path;
   }
 
-  getSignedCookies(resource, maxAge) {
-    return this.provider.getSignedCookies(resource, maxAge);
+  get AccessManager() {
+    return this.provider.AccessManager;
   }
 
-  verifyCookies(cookies, resource) {
-    return this.provider.verifyCookies(cookies, resource);
+  getSignedCookies(resource, maxAge, accessManager) {
+    return this.provider.getSignedCookies(resource, maxAge, accessManager);
   }
 
-  hasCookies(cookies) {
-    return this.provider.hasCookies(cookies);
+  verifyCookies(cookies, resource, accessManager) {
+    return this.provider.verifyCookies(cookies, resource, accessManager);
+  }
+
+  hasCookies(cookies, ...params) {
+    return this.provider.hasCookies(cookies, ...params);
   }
 
   getFileUrl(key) {
     return this.provider.getFileUrl(key);
   }
 
-  getCookieNames() {
-    return this.provider.getCookieNames();
+  getCookieNames(accessManager) {
+    return this.provider.getCookieNames(accessManager);
   }
 }
 
-module.exports = Proxy;
+module.exports = new Proxy(config);
 
 function loadProvider(name) {
   try {

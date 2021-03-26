@@ -8,7 +8,7 @@ const helmet = require('helmet');
 const origin = require('./shared/origin');
 const path = require('path');
 const storage = require('./repository/storage');
-const storageProxy = require('./repository/proxy');
+const storageProxy = require('./shared/storage/proxy');
 // eslint-disable-next-line require-sort/require-sort
 require('express-async-errors');
 

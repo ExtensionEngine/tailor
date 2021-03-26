@@ -3,12 +3,13 @@
 const { FORBIDDEN } = require('http-status-codes');
 const miss = require('mississippi');
 const path = require('path');
+const proxy = require('.');
 const router = require('express').Router();
 
-module.exports = (storage, proxy) => {
+module.exports = (storage, proxyAccessManager) => {
   function getFile(req, res, next) {
     const key = req.params[0];
-    const hasValidCookies = proxy.verifyCookies(req.cookies, key);
+    const hasValidCookies = proxy.verifyCookies(req.cookies, key, proxyAccessManager);
     if (!hasValidCookies) return res.status(FORBIDDEN).end();
     res.type(path.extname(key));
     miss.pipe(storage.createReadStream(key), res, err => {
@@ -19,9 +20,9 @@ module.exports = (storage, proxy) => {
 
   function setSignedCookies(req, res, next) {
     const repositoryId = req.repository.id;
-    if (proxy.hasCookies(req.cookies, repositoryId)) return next();
+    if (proxy.hasCookies(req.cookies, repositoryId, proxyAccessManager)) return next();
     const maxAge = 1000 * 60 * 60; // 1 hour in ms
-    const cookies = proxy.getSignedCookies(repositoryId, maxAge);
+    const cookies = proxy.getSignedCookies(repositoryId, maxAge, proxyAccessManager);
     Object.entries(cookies).forEach(([cookie, value]) => {
       res.cookie(cookie, value, { maxAge, httpOnly: true });
     });

@@ -8,11 +8,11 @@ const feed = require('./feed');
 const multer = require('multer');
 const path = require('path');
 const processQuery = require('../shared/util/processListQuery');
-const proxy = require('./proxy');
+const proxyAccessManager = require('./proxy');
 const { Repository } = require('../shared/database');
 const router = require('express').Router();
 const storage = require('./storage');
-const { setSignedCookies } = require('../shared/storage/proxy/mw')(storage, proxy);
+const { setSignedCookies } = require('../shared/storage/proxy/mw')(storage, proxyAccessManager);
 
 /* eslint-disable require-sort/require-sort */
 const activity = require('../activity');
