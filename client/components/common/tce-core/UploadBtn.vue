@@ -44,7 +44,7 @@
 
 <script>
 import uniqueId from 'lodash/uniqueId';
-import UploadProvider from '@/components/common/mixins/UploadProvider';
+import UploadProvider from '@/components/common/UploadProvider';
 
 export default {
   name: 'upload-btn',

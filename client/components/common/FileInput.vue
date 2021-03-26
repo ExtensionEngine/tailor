@@ -42,7 +42,7 @@
 <script>
 import get from 'lodash/get';
 import uniqueId from 'lodash/uniqueId';
-import UploadProvider from '@/components/common/mixins/UploadProvider';
+import UploadProvider from '@/components/common/UploadProvider';
 
 export default {
   name: 'file-input',
