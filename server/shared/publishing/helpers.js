@@ -35,8 +35,8 @@ const CC_ATTRS = ['id', 'uid', 'type', 'position', 'createdAt', 'updatedAt'];
 function publishActivity(activity) {
   return getStructureData(activity).then(data => {
     const { repository, predecessors, spine } = data;
-    const prevPublishedContainers = spine.structure
-      .reduce((acc, it) => [...acc, ...(it.contentContainers || [])], []);
+    const activityStructure = find(spine.structure, { id: activity.id });
+    const prevPublishedContainers = get(activityStructure, 'contentContainers', []);
 
     predecessors.forEach(it => {
       const exists = find(spine.structure, { id: it.id });
