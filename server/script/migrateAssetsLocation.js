@@ -7,8 +7,6 @@ const {
   Revision,
   sequelize
 } = require('../shared/database');
-const find = require('lodash/find');
-const fromPairs = require('lodash/fromPairs');
 const get = require('lodash/get');
 const Listr = require('listr');
 const { Op } = require('sequelize');
@@ -24,224 +22,255 @@ const REVISION_TYPES = ['REPOSITORY', 'ACTIVITY', 'CONTENT_ELEMENT'];
 const CHUNK_SIZE = 2000;
 
 const mapEntityToAction = {
-  REPOSITORY: migrateRepository,
-  ACTIVITY: migrateActivity,
-  CONTENT_ELEMENT: migrateContentElement
+  REPOSITORY: 'migrateRepository',
+  ACTIVITY: 'migrateActivity',
+  CONTENT_ELEMENT: 'migrateContentElement'
 };
 
-migrate()
-  .then(({ transaction }) => transaction.commit())
-  .then(() => {
-    console.info('Migration script was executed successfully.');
-    process.exit(0);
-  })
-  .catch(error => {
-    console.error(error.message);
-    process.exit(1);
-  });
+class Migration {
+  async initialize() {
+    this.transaction = await sequelize.transaction();
+    this.schemasMeta = getFileMetas(SCHEMAS);
+  }
 
-async function migrate() {
-  const transaction = await sequelize.transaction();
-  const tasks = await getMigrationTasks(transaction);
-  return tasks.run({ transaction });
+  async getTasks() {
+    const { schemasMeta, transaction } = this;
+    const repositories = await Repository.findAll({ transaction });
+    const tasks = repositories.map(repository => ({
+      title: `Migrate repository: "${repository.name}"`,
+      task: () => {
+        const schemaMeta = get(schemasMeta, repository.schema);
+        const repositoryMigration = new RepositoryMigration({ repository, schemaMeta, transaction });
+        return repositoryMigration.getTasks();
+      }
+    }));
+    return new Listr(tasks);
+  }
+
+  async run() {
+    const tasks = await this.getTasks();
+    return tasks.run().then(() => this.transaction.commit());
+  }
 }
 
-async function getMigrationTasks(transaction) {
-  const repositories = await Repository.findAll({ transaction });
-  const tasks = repositories.map(repository => ({
-    title: `Migrate repository: "${repository.name}"`,
-    task: () => getRepositoryTasks(repository, transaction)
-  }));
-  return new Listr(tasks);
-}
+class RepositoryMigration {
+  constructor({ repository, schemaMeta, transaction }) {
+    this.repository = repository;
+    this.schemaMeta = schemaMeta;
+    this.transaction = transaction;
+  }
 
-async function getRepositoryTasks(repository, transaction) {
-  const schemaFileMetas = getFileMetasForSchema(repository.schema);
-  return new Listr([
-    {
-      title: 'Migrate repository',
-      task: () => migrateRepositoryAssets(repository, schemaFileMetas, transaction)
-    },
-    {
-      title: 'Migrate activities',
-      task: () => migrateRepositoryActivities(repository.id, schemaFileMetas, transaction)
-    },
-    {
-      title: 'Migrate content elements',
-      task: () => migrateRepositoryContentElements(repository.id, schemaFileMetas, transaction)
-    },
-    {
-      title: 'Migrate revisions',
-      task: () => migrateRepositoryRevisions(repository.id, schemaFileMetas, transaction)
-    }
-  ]);
-}
+  get metaByActivityType() {
+    return this.schemaMeta.metaByActivityType;
+  }
 
-function getFileMetasForSchema(schemaId) {
-  const schema = find(SCHEMAS, { id: schemaId });
-  return {
-    repositoryMeta: getRepositoryMeta(schema),
-    activityMetaByType: getActivityMetaByType(schema),
-    elementMetaByType: getElementMetaByType(schema)
-  };
-}
+  get metaByElementType() {
+    return this.schemaMeta.metaByElementType;
+  }
 
-function getRepositoryMeta({ meta }) {
-  return getFileMetaKeys(meta);
-}
+  get repositoryId() {
+    return this.repository.id;
+  }
 
-function getActivityMetaByType({ structure }) {
-  const metas = structure.map(({ type, meta }) => [type, getFileMetaKeys(meta)]);
-  return fromPairs(metas);
-}
+  getTasks() {
+    return new Listr([
+      {
+        title: 'Migrate repository',
+        task: () => this.migrateRepositoryAssets()
+      },
+      {
+        title: 'Migrate activities',
+        task: () => this.migrateActivities()
+      },
+      {
+        title: 'Migrate revisions',
+        task: () => this.migrateRevisions()
+      },
+      {
+        title: 'Migrate content elements',
+        task: () => this.migrateContentElements()
+      }
+    ]);
+  }
 
-function getElementMetaByType({ elementMeta }) {
-  const metas = (elementMeta || []).map(({ type, inputs }) => [type, getFileMetaKeys(inputs)]);
-  return fromPairs(metas);
-}
+  async migrateRepositoryAssets() {
+    const payload = await this.migrateRepository();
+    return this.repository.update(payload, { transaction: this.transaction });
+  }
 
-function getFileMetaKeys(meta) {
-  return (meta || []).filter(it => it.type === 'FILE').map(it => it.key);
-}
+  async migrateRepository() {
+    const { id, data: metaInputs } = this.repository;
+    const metaConfigs = get(this.schemaMeta, 'repositoryMeta', []);
+    const data = await migrateFileMeta(id, metaInputs, metaConfigs);
+    return { data };
+  }
 
-async function migrateRepositoryAssets(repository, schemaFileMeta, transaction) {
-  const payload = await migrateRepository(repository, schemaFileMeta, transaction);
-  return repository.update(payload, { transaction });
-}
-
-async function migrateRepositoryActivities(repositoryId, schemaFileMeta, transaction) {
-  const activities = await Activity.findAll(
-    { where: { repositoryId } },
-    { transaction }
-  );
-  return Promise.each(activities, async it => {
-    const payload = await migrateActivity(it, schemaFileMeta);
-    return it.update(payload, { transaction });
-  });
-}
-
-async function migrateRepositoryContentElements(repositoryId, schemaFileMeta, transaction) {
-  const contentElements = await ContentElement.findAll(
-    { where: { repositoryId } },
-    { transaction }
-  );
-  return Promise.each(contentElements, async it => {
-    const payload = await migrateContentElement(it, schemaFileMeta);
-    return it.update(payload, { transaction });
-  });
-}
-
-async function migrateRepositoryRevisions(repositoryId, schemaFileMeta, transaction) {
-  const options = {
-    where: { repositoryId, entity: { [Op.in]: REVISION_TYPES } },
-    transaction
-  };
-  const count = await Revision.count(options);
-  const pages = Math.ceil(count / CHUNK_SIZE);
-  return Promise.each(
-    Array.from({ length: pages }, (_, i) => i + 1),
-    page => migrateRevisionsChunk({ page, options, schemaFileMeta, transaction })
-  );
-}
-
-async function migrateRepository(repository, schemaFileMeta) {
-  const { id, data: metaInputs } = repository;
-  const metaConfigs = get(schemaFileMeta, 'repositoryMeta', []);
-  const data = await migrateFileMeta(id, metaInputs, metaConfigs);
-  return { data };
-}
-
-async function migrateActivity(activity, { activityMetaByType }) {
-  const { repositoryId, type, data: metaInputs } = activity;
-  const metaConfigs = get(activityMetaByType, type, []);
-  const data = await migrateFileMeta(repositoryId, metaInputs, metaConfigs);
-  return { data };
-}
-
-async function migrateContentElement(element, schemaFileMeta) {
-  const data = await migrateContentElementData(element, schemaFileMeta);
-  const meta = await migrateContentElementMeta(element, schemaFileMeta);
-  return { data, meta };
-}
-
-function migrateContentElementData(element, schemaFileMeta) {
-  const { type, data } = element;
-  if (type === 'IMAGE') return imageMigrationHandler(element);
-  if (data.embeds) return embedsMigrationHandler(element, schemaFileMeta);
-  if (data.assets) return defaultMigrationHandler(element);
-  return data;
-}
-
-async function migrateContentElementMeta(element, { elementMetaByType }) {
-  const { repositoryId, type } = element;
-  const metaConfigs = get(elementMetaByType, type, []);
-  return migrateFileMeta(repositoryId, element.meta, metaConfigs);
-}
-
-async function migrateRevisionsChunk({ page, options, schemaFileMeta, transaction }) {
-  const offset = (page - 1) * CHUNK_SIZE;
-  const revisions = await Revision.findAll({
-    ...options,
-    offset,
-    limit: CHUNK_SIZE
-  });
-  return Promise.each(revisions, async it => {
-    const payload = await migrateRevision(it, schemaFileMeta);
-    return it.update(payload, { transaction });
-  });
-}
-
-async function migrateRevision(revision, schemaFileMeta) {
-  const { entity, state } = revision;
-  const payload = await (
-    mapEntityToAction[entity] &&
-    mapEntityToAction[entity](state, schemaFileMeta)
-  );
-  return { state: { ...state, ...payload } };
-}
-
-async function imageMigrationHandler(element) {
-  const { repositoryId, data } = element;
-  const repositoryAssetsPath = storage.getPath(repositoryId);
-  const url = get(data, 'url');
-  if (!url) return data;
-  const { key, newKey } = resolveNewURL(url, repositoryAssetsPath) || {};
-  if (!key || !newKey) return data;
-  await storage.copyFile(key, newKey);
-  return { ...element.data, url: newKey };
-}
-
-async function embedsMigrationHandler(element, schemaFileMeta) {
-  const { repositoryId, data } = element;
-  const embeds = await getMigratedEmbeds(repositoryId, data.embeds, schemaFileMeta);
-  return { ...data, embeds };
-}
-
-function getMigratedEmbeds(repositoryId, embeds, schemaFileMeta) {
-  return Promise.map(
-    Object.entries(embeds),
-    async ([id, embed]) => {
-      const payload = await migrateContentElement({ repositoryId, ...embed }, schemaFileMeta);
-      return [id, { ...embed, ...payload }];
-    }
-  ).reduce((acc, [id, embed]) => ({ ...acc, [id]: embed }), {});
-}
-
-async function defaultMigrationHandler(element) {
-  const { repositoryId, data } = element;
-  const repositoryAssetsPath = storage.getPath(repositoryId);
-  const updatedAssets = await Promise
-    .filter(toPairs(data.assets), ([_, value]) => value.startsWith(protocol))
-    .map(async ([key, value]) => {
-      const { key: oldKey, newKey } = resolveNewURL(value, repositoryAssetsPath) || {};
-      if (!oldKey || !newKey) return [key, value];
-      await storage.copyFile(oldKey, newKey);
-      return [key, `${protocol}${newKey}`];
+  async migrateActivities() {
+    const { repositoryId, transaction } = this;
+    const activities = await Activity.findAll(
+      { where: { repositoryId } },
+      { transaction }
+    );
+    return Promise.each(activities, async it => {
+      const payload = await this.migrateActivity(it);
+      return it.update(payload, { transaction });
     });
-  return {
-    ...element.data,
-    assets: { ...element.data.assets, ...fromPairs(updatedAssets) }
-  };
+  }
+
+  async migrateActivity(activity) {
+    const { repositoryId, type, data: metaInputs } = activity;
+    const metaConfigs = get(this.metaByActivityType, type, []);
+    const data = await migrateFileMeta(repositoryId, metaInputs, metaConfigs);
+    return { data };
+  }
+
+  async migrateContentElements() {
+    const { repositoryId, transaction } = this;
+    const contentElements = await ContentElement.findAll(
+      { where: { repositoryId } },
+      { transaction }
+    );
+    return Promise.each(contentElements, async it => {
+      const payload = await this.migrateContentElement(it);
+      return it.update(payload, { transaction });
+    });
+  }
+
+  async migrateContentElement(element) {
+    const data = await this.migrateContentElementData(element);
+    const meta = await this.migrateContentElementMeta(element);
+    return { data, meta };
+  }
+
+  migrateContentElementData(element) {
+    const { type, data } = element;
+    if (type === 'IMAGE') return this.imageMigrationHandler(element);
+    if (data.embeds) return this.embedsMigrationHandler(element);
+    if (data.assets) return this.defaultMigrationHandler(element);
+    return data;
+  }
+
+  async migrateContentElementMeta(element) {
+    const { repositoryId, type } = element;
+    const metaConfigs = get(this.metaByElementType, type, []);
+    return migrateFileMeta(repositoryId, element.meta, metaConfigs);
+  }
+
+  async migrateRevisions() {
+    const { repositoryId, transaction } = this;
+    const options = {
+      where: { repositoryId, entity: { [Op.in]: REVISION_TYPES } },
+      transaction
+    };
+    const count = await Revision.count(options);
+    const pages = Math.ceil(count / CHUNK_SIZE);
+    return Promise.each(
+      Array.from({ length: pages }, (_, i) => i + 1),
+      page => this.migrateRevisionsChunk(page, options)
+    );
+  }
+
+  async migrateRevisionsChunk(page, options) {
+    const offset = (page - 1) * CHUNK_SIZE;
+    const revisions = await Revision.findAll({
+      ...options,
+      offset,
+      limit: CHUNK_SIZE
+    });
+    return Promise.each(revisions, async it => {
+      const payload = await this.migrateRevision(it);
+      return it.update(payload, { transaction: this.transaction });
+    });
+  }
+
+  async migrateRevision(revision) {
+    const { entity, state } = revision;
+    const handler = mapEntityToAction[entity];
+    const payload = await (this[handler] && this[handler](state));
+    return { state: { ...state, ...payload } };
+  }
+
+  async imageMigrationHandler(element) {
+    const { repositoryId, data } = element;
+    const repositoryAssetsPath = storage.getPath(repositoryId);
+    const url = get(data, 'url');
+    if (!url) return data;
+    const { key, newKey } = resolveNewURL(url, repositoryAssetsPath) || {};
+    if (!key || !newKey) return data;
+    await storage.copyFile(key, newKey);
+    return { ...element.data, url: newKey };
+  }
+
+  async embedsMigrationHandler(element) {
+    const { repositoryId, data } = element;
+    const embeds = await this.getMigratedEmbeds(repositoryId, data.embeds);
+    return { ...data, embeds };
+  }
+
+  getMigratedEmbeds(repositoryId, embeds) {
+    return Promise.reduce(Object.entries(embeds), async (acc, [id, embed]) => {
+      const payload = await this.migrateContentElement({ repositoryId, ...embed });
+      return { ...acc, [id]: { ...embed, ...payload } };
+    }, {});
+  }
+
+  async defaultMigrationHandler(element) {
+    const { repositoryId, data } = element;
+    const repositoryAssetsPath = storage.getPath(repositoryId);
+    const updatedAssets = await Promise
+      .filter(toPairs(data.assets), ([_, value]) => value.startsWith(protocol))
+      .reduce(async (acc, [key, value]) => {
+        const { key: oldKey, newKey } = resolveNewURL(value, repositoryAssetsPath) || {};
+        if (!oldKey || !newKey) return { ...acc, [key]: value };
+        await storage.copyFile(oldKey, newKey);
+        return { ...acc, [key]: `${protocol}${newKey}` };
+      }, {});
+    return { ...element.data, assets: { ...element.data.assets, ...updatedAssets } };
+  }
+}
+
+const migration = new Migration();
+migration.initialize().then(() => {
+  migration.run()
+    .then(() => {
+      console.info('Migration script was executed successfully.');
+      process.exit(0);
+    })
+    .catch(error => {
+      console.error(error.message);
+      process.exit(1);
+    });
+});
+
+function getFileMetas(schemas) {
+  return schemas.reduce((acc, { id, meta, structure, elementMeta }) => {
+    return {
+      ...acc,
+      [id]: {
+        repositoryMeta: getFileMetaKeys(meta),
+        metaByActivityType: getMetaByActivityType(structure),
+        metaByElementType: getMetaByElementType(elementMeta)
+      }
+    };
+  }, {});
+}
+
+function getMetaByActivityType(structure = []) {
+  return structure.reduce((acc, { type, meta }) => ({
+    ...acc,
+    [type]: getFileMetaKeys(meta)
+  }), {});
+}
+
+function getMetaByElementType(elementMeta = []) {
+  return elementMeta.reduce((acc, { type, inputs }) => ({
+    ...acc,
+    [type]: getFileMetaKeys(inputs)
+  }), {});
+}
+
+function getFileMetaKeys(meta = []) {
+  return meta.filter(it => it.type === 'FILE').map(it => it.key);
 }
 
 async function migrateFileMeta(repositoryId, metaInputs, metaConfigs) {
