@@ -1,13 +1,13 @@
 'use strict';
 
+const { AccessManagerPrototype, config } = require('../shared/storage/proxy');
 const path = require('path');
-const proxy = require('../shared/storage/proxy');
 
 const storageCookies = {
   REPOSITORY: 'Storage-Repository'
 };
 
-class RepositoryProxyAccessManager extends proxy.AccessManager {
+class RepositoryProxyAccessManager extends AccessManagerPrototype {
   getSignedCookies(repositoryId, maxAge) {
     const resource = path.join('repository', `${repositoryId}`);
     return {
@@ -30,4 +30,4 @@ class RepositoryProxyAccessManager extends proxy.AccessManager {
   }
 }
 
-module.exports = new RepositoryProxyAccessManager(proxy.config);
+module.exports = new RepositoryProxyAccessManager(config);

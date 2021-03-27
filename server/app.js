@@ -41,8 +41,8 @@ app.use(origin());
 app.use(express.static(path.join(__dirname, '../dist/')));
 if (STORAGE_PATH) app.use(express.static(STORAGE_PATH));
 if (storageProxy.isSelfHosted) {
-  const { proxy: middleware } = require('./shared/storage/proxy/mw')(storage, storageProxy);
-  app.use(storageProxy.path, middleware);
+  const { proxy: middleware } = require('./shared/storage/proxy/mw');
+  app.use(storageProxy.path, middleware(storage, storageProxy.accessManager));
 }
 
 // Mount main router.

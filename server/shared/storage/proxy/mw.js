@@ -3,31 +3,32 @@
 const { FORBIDDEN } = require('http-status-codes');
 const miss = require('mississippi');
 const path = require('path');
-const proxy = require('.');
 const router = require('express').Router();
 
-module.exports = (storage, proxyAccessManager) => {
-  function getFile(req, res, next) {
+function proxy(storage, accessManager) {
+  return router.get('/*', (req, res, next) => {
     const key = req.params[0];
-    const hasValidCookies = proxy.verifyCookies(req.cookies, key, proxyAccessManager);
+    const hasValidCookies = accessManager.verifyCookies(req.cookies, key);
     if (!hasValidCookies) return res.status(FORBIDDEN).end();
     res.type(path.extname(key));
     miss.pipe(storage.createReadStream(key), res, err => {
       if (err) return next(err);
       res.end();
     });
-  }
+  });
+}
 
-  function setSignedCookies(req, res, next) {
+function setSignedCookies(accessManager) {
+  return (req, res, next) => {
     const repositoryId = req.repository.id;
-    if (proxy.hasCookies(req.cookies, repositoryId, proxyAccessManager)) return next();
+    if (accessManager.hasCookies(req.cookies, repositoryId)) return next();
     const maxAge = 1000 * 60 * 60; // 1 hour in ms
-    const cookies = proxy.getSignedCookies(repositoryId, maxAge, proxyAccessManager);
+    const cookies = accessManager.getSignedCookies(repositoryId, maxAge);
     Object.entries(cookies).forEach(([cookie, value]) => {
       res.cookie(cookie, value, { maxAge, httpOnly: true });
     });
     next();
-  }
+  };
+}
 
-  return { proxy: router.get('/*', getFile), setSignedCookies };
-};
+module.exports = { proxy, setSignedCookies };

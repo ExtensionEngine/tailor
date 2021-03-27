@@ -13,7 +13,8 @@ class LocalAccessManager {
     this.signer = new NodeRSA(config.privateKey, 'private');
   }
 
-  getSignedCookies(resource, expires) {
+  getSignedCookies(resource, maxAge) {
+    const expires = getExpirationTime(maxAge);
     const signature = this.signer.encrypt({ resource, expires }, 'base64');
     return {
       [storageCookies.SIGNATURE]: signature,
@@ -40,3 +41,8 @@ class LocalAccessManager {
 }
 
 module.exports = LocalAccessManager;
+
+function getExpirationTime(maxAge) {
+  // Expiration unix timestamp in ms
+  return new Date().getTime() + maxAge;
+}

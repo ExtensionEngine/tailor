@@ -31,28 +31,12 @@ class Proxy {
     return this.isSelfHosted && this.provider.path;
   }
 
-  get AccessManager() {
-    return this.provider.AccessManager;
-  }
-
-  getSignedCookies(resource, maxAge, accessManager) {
-    return this.provider.getSignedCookies(resource, maxAge, accessManager);
-  }
-
-  verifyCookies(cookies, resource, accessManager) {
-    return this.provider.verifyCookies(cookies, resource, accessManager);
-  }
-
-  hasCookies(cookies, ...params) {
-    return this.provider.hasCookies(cookies, ...params);
+  get AccessManagerPrototype() {
+    return this.provider.AccessManagerPrototype;
   }
 
   getFileUrl(key) {
     return this.provider.getFileUrl(key);
-  }
-
-  getCookieNames(accessManager) {
-    return this.provider.getCookieNames(accessManager);
   }
 }
 

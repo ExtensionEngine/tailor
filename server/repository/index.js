@@ -12,7 +12,7 @@ const proxyAccessManager = require('./proxy');
 const { Repository } = require('../shared/database');
 const router = require('express').Router();
 const storage = require('./storage');
-const { setSignedCookies } = require('../shared/storage/proxy/mw')(storage, proxyAccessManager);
+const { setSignedCookies } = require('../shared/storage/proxy/mw');
 
 /* eslint-disable require-sort/require-sort */
 const activity = require('../activity');
@@ -30,7 +30,7 @@ router
 
 router
   .param('repositoryId', getRepository)
-  .use('/:repositoryId', hasAccess, setSignedCookies);
+  .use('/:repositoryId', hasAccess, setSignedCookies(proxyAccessManager));
 
 router.route('/')
   .get(processQuery({ limit: 100 }), ctrl.index)
