@@ -37,7 +37,7 @@ class Migration {
     const { schemasMeta, transaction } = this;
     const repositories = await Repository.findAll({ transaction });
     const tasks = repositories.map(repository => ({
-      title: `Migrate repository: "${repository.name}"`,
+      title: `Migrate repository "${repository.name}"`,
       task: () => {
         const schemaMeta = get(schemasMeta, repository.schema);
         const repositoryMigration = new RepositoryMigration({ repository, schemaMeta, transaction });
