@@ -149,9 +149,9 @@ class RepositoryMigration {
   migrateContentElementData(element) {
     const { type, data } = element;
     if (type === 'IMAGE') return this.imageMigrationHandler(element);
-    if (data.embeds) return this.embedsMigrationHandler(element);
-    if (data.assets) return this.defaultMigrationHandler(element);
-    return data;
+    const embeds = data.embeds && this.embedsMigrationHandler(element);
+    const assets = data.assets && this.defaultMigrationHandler(element);
+    return { ...data, ...embeds, ...assets };
   }
 
   async migrateContentElementMeta(element) {
@@ -205,17 +205,13 @@ class RepositoryMigration {
     return { ...element.data, url: newKey };
   }
 
-  async embedsMigrationHandler(element) {
+  embedsMigrationHandler(element) {
     const { repositoryId, data } = element;
-    const embeds = await this.getMigratedEmbeds(repositoryId, data.embeds);
-    return { ...data, embeds };
-  }
-
-  getMigratedEmbeds(repositoryId, embeds) {
-    return Promise.reduce(Object.entries(embeds), async (acc, [id, embed]) => {
+    const embeds = Promise.reduce(Object.entries(data.embeds), async (acc, [id, embed]) => {
       const payload = await this.migrateContentElement({ repositoryId, ...embed });
       return { ...acc, [id]: { ...embed, ...payload } };
     }, {});
+    return { embeds };
   }
 
   async defaultMigrationHandler(element) {
@@ -229,7 +225,7 @@ class RepositoryMigration {
         await storage.copyFile(oldKey, newKey);
         return { ...acc, [key]: `${protocol}${newKey}` };
       }, {});
-    return { ...element.data, assets: { ...element.data.assets, ...updatedAssets } };
+    return { assets: { ...data.assets, ...updatedAssets } };
   }
 }
 
