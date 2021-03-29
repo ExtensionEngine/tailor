@@ -27,30 +27,34 @@ const mapEntityToAction = {
   CONTENT_ELEMENT: 'migrateContentElement'
 };
 
-class Migration {
-  async initialize() {
-    this.transaction = await sequelize.transaction();
-    this.schemasMeta = getFileMetas(SCHEMAS);
-  }
+migrate()
+  .then(() => {
+    console.info('Migration script was executed successfully.');
+    process.exit(0);
+  })
+  .catch(error => {
+    console.error(error.message);
+    process.exit(1);
+  });
 
-  async getTasks() {
-    const { schemasMeta, transaction } = this;
-    const repositories = await Repository.findAll({ transaction });
-    const tasks = repositories.map(repository => ({
-      title: `Migrate repository "${repository.name}"`,
-      task: () => {
-        const schemaMeta = get(schemasMeta, repository.schema);
-        const repositoryMigration = new RepositoryMigration({ repository, schemaMeta, transaction });
-        return repositoryMigration.getTasks();
-      }
-    }));
-    return new Listr(tasks);
-  }
+async function migrate() {
+  const transaction = await sequelize.transaction();
+  const schemasMeta = getFileMetas(SCHEMAS);
+  const tasks = await getTasks(schemasMeta, transaction);
+  return tasks.run().then(() => transaction.commit());
+}
 
-  async run() {
-    const tasks = await this.getTasks();
-    return tasks.run().then(() => this.transaction.commit());
-  }
+async function getTasks(schemasMeta, transaction) {
+  const repositories = await Repository.findAll({ transaction });
+  const tasks = repositories.map(repository => ({
+    title: `Migrate repository "${repository.name}"`,
+    task: () => {
+      const schemaMeta = get(schemasMeta, repository.schema);
+      const repositoryMigration = new RepositoryMigration({ repository, schemaMeta, transaction });
+      return repositoryMigration.getTasks();
+    }
+  }));
+  return new Listr(tasks);
 }
 
 class RepositoryMigration {
@@ -228,18 +232,6 @@ class RepositoryMigration {
     return { ...element.data, assets: { ...element.data.assets, ...updatedAssets } };
   }
 }
-
-const migration = new Migration();
-migration.initialize()
-  .then(() => migration.run())
-  .then(() => {
-    console.info('Migration script was executed successfully.');
-    process.exit(0);
-  })
-  .catch(error => {
-    console.error(error.message);
-    process.exit(1);
-  });
 
 function getFileMetas(schemas) {
   return schemas.reduce((acc, { id, meta, structure, elementMeta }) => {
