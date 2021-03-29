@@ -17,7 +17,7 @@ const config = require('../config/server');
 const logger = require('./shared/logger')();
 const storage = require('./shared/storage')(config.storage);
 serviceProvider.set('storage', storage);
-const storageProxy = require('./shared/storage/proxy')(config.storage.proxy);
+const storageProxy = require('./shared/storage/proxy')(config.storage.proxy, storage);
 serviceProvider.set('storageProxy', storageProxy);
 const router = require('./router');
 /* eslint-enable */

@@ -3,12 +3,11 @@
 const autobind = require('auto-bind');
 const flatMap = require('lodash/flatMap');
 const path = require('path');
-const serviceProvider = require('../../serviceProvider');
 const uniq = require('lodash/uniq');
 
 class Proxy {
-  constructor(config) {
-    this.storage = serviceProvider.get('storage');
+  constructor(config, storage) {
+    this.storage = storage;
     this.provider = Proxy.createProvider(config);
     this.accessManagers = [this.provider.accessManager];
     autobind(this);
@@ -56,7 +55,7 @@ class Proxy {
   }
 }
 
-module.exports = config => new Proxy(config);
+module.exports = (config, storage) => new Proxy(config, storage);
 
 function loadProvider(name) {
   try {
