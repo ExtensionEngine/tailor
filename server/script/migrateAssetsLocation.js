@@ -111,8 +111,10 @@ class RepositoryMigration {
 
   async migrateActivities() {
     const { repositoryId, transaction } = this;
+    const types = Object.keys(this.metaByActivityType);
+    if (!types.length) return;
     const activities = await Activity.findAll(
-      { where: { repositoryId } },
+      { where: { repositoryId, type: types } },
       { transaction }
     );
     return Promise.each(activities, async it => {
@@ -243,17 +245,19 @@ function getFileMetas(schemas) {
 }
 
 function getMetaByActivityType(structure = []) {
-  return structure.reduce((acc, { type, meta }) => ({
-    ...acc,
-    [type]: getFileMetaKeys(meta)
-  }), {});
+  return structure.reduce((acc, { type, meta }) => {
+    const fileMetaKeys = getFileMetaKeys(meta);
+    if (!fileMetaKeys.length) return acc;
+    return { ...acc, [type]: fileMetaKeys };
+  }, {});
 }
 
 function getMetaByElementType(elementMeta = []) {
-  return elementMeta.reduce((acc, { type, inputs }) => ({
-    ...acc,
-    [type]: getFileMetaKeys(inputs)
-  }), {});
+  return elementMeta.reduce((acc, { type, inputs }) => {
+    const fileMetaKeys = getFileMetaKeys(inputs);
+    if (!fileMetaKeys.length) return acc;
+    return { ...acc, [type]: fileMetaKeys };
+  }, {});
 }
 
 function getFileMetaKeys(meta = []) {
