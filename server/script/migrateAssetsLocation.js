@@ -77,24 +77,19 @@ class RepositoryMigration {
   }
 
   getTasks() {
-    return new Listr([
-      {
-        title: 'Migrate repository',
-        task: () => this.migrateRepositoryAssets()
-      },
-      {
-        title: 'Migrate activities',
-        task: () => this.migrateActivities()
-      },
-      {
-        title: 'Migrate revisions',
-        task: () => this.migrateRevisions()
-      },
-      {
-        title: 'Migrate content elements',
-        task: () => this.migrateContentElements()
-      }
-    ]);
+    return new Listr([{
+      title: 'Migrate repository',
+      task: () => this.migrateRepositoryAssets()
+    }, {
+      title: 'Migrate activities',
+      task: () => this.migrateActivities()
+    }, {
+      title: 'Migrate revisions',
+      task: () => this.migrateRevisions()
+    }, {
+      title: 'Migrate content elements',
+      task: () => this.migrateContentElements()
+    }]);
   }
 
   async migrateRepositoryAssets() {
