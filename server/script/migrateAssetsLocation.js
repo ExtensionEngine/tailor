@@ -230,17 +230,16 @@ class RepositoryMigration {
 }
 
 const migration = new Migration();
-migration.initialize().then(() => {
-  migration.run()
-    .then(() => {
-      console.info('Migration script was executed successfully.');
-      process.exit(0);
-    })
-    .catch(error => {
-      console.error(error.message);
-      process.exit(1);
-    });
-});
+migration.initialize()
+  .then(() => migration.run())
+  .then(() => {
+    console.info('Migration script was executed successfully.');
+    process.exit(0);
+  })
+  .catch(error => {
+    console.error(error.message);
+    process.exit(1);
+  });
 
 function getFileMetas(schemas) {
   return schemas.reduce((acc, { id, meta, structure, elementMeta }) => {
