@@ -1,6 +1,6 @@
 'use strict';
 
-const AccessManager = require('./access-manager');
+const AccessManager = require('./AccessManager');
 const { origin } = require('../../../../../../config/server');
 const urlJoin = require('url-join');
 const { validateConfig } = require('../../../validation');
