@@ -49,8 +49,8 @@ async function getTasks(metaBySchemaType, transaction) {
   const tasks = repositories.map(repository => ({
     title: `Migrate repository "${repository.name}"`,
     task: () => {
-      const schemaMeta = metaBySchemaType[repository.schema];
-      const repositoryMigration = new RepositoryMigration({ repository, schemaMeta, transaction });
+      const fileMetaByEntity = metaBySchemaType[repository.schema];
+      const repositoryMigration = new RepositoryMigration({ repository, fileMetaByEntity, transaction });
       return repositoryMigration.getTasks();
     }
   }));
@@ -58,18 +58,18 @@ async function getTasks(metaBySchemaType, transaction) {
 }
 
 class RepositoryMigration {
-  constructor({ repository, schemaMeta, transaction }) {
+  constructor({ repository, fileMetaByEntity, transaction }) {
     this.repository = repository;
-    this.schemaMeta = schemaMeta;
+    this.fileMetaByEntity = fileMetaByEntity;
     this.transaction = transaction;
   }
 
   get metaByActivityType() {
-    return this.schemaMeta.metaByActivityType;
+    return this.fileMetaByEntity.activity;
   }
 
   get metaByElementType() {
-    return this.schemaMeta.metaByElementType;
+    return this.fileMetaByEntity.element;
   }
 
   get repositoryId() {
@@ -99,7 +99,7 @@ class RepositoryMigration {
 
   async migrateRepository() {
     const { id, data: metaInputs } = this.repository;
-    const metaConfigs = get(this.schemaMeta, 'repositoryMeta', []);
+    const metaConfigs = get(this.fileMetaByEntity, 'repository', []);
     const data = await migrateFileMeta(id, metaInputs, metaConfigs);
     return { data };
   }
@@ -231,9 +231,9 @@ function getFileMetas(schemas) {
     return {
       ...acc,
       [id]: {
-        repositoryMeta: getFileMetaKeys(meta),
-        metaByActivityType: getMetaByActivityType(structure),
-        metaByElementType: getMetaByElementType(elementMeta)
+        repository: getFileMetaKeys(meta),
+        activity: getMetaByActivityType(structure),
+        element: getMetaByElementType(elementMeta)
       }
     };
   }, {});
