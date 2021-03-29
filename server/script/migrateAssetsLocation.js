@@ -39,17 +39,17 @@ migrate()
 
 async function migrate() {
   const transaction = await sequelize.transaction();
-  const schemasMeta = getFileMetas(SCHEMAS);
-  const tasks = await getTasks(schemasMeta, transaction);
+  const metaBySchemaType = getFileMetas(SCHEMAS);
+  const tasks = await getTasks(metaBySchemaType, transaction);
   return tasks.run().then(() => transaction.commit());
 }
 
-async function getTasks(schemasMeta, transaction) {
+async function getTasks(metaBySchemaType, transaction) {
   const repositories = await Repository.findAll({ transaction });
   const tasks = repositories.map(repository => ({
     title: `Migrate repository "${repository.name}"`,
     task: () => {
-      const schemaMeta = get(schemasMeta, repository.schema);
+      const schemaMeta = metaBySchemaType[repository.schema];
       const repositoryMigration = new RepositoryMigration({ repository, schemaMeta, transaction });
       return repositoryMigration.getTasks();
     }
