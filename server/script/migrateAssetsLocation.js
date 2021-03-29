@@ -9,7 +9,6 @@ const {
 } = require('../shared/database');
 const get = require('lodash/get');
 const Listr = require('listr');
-const { Op } = require('sequelize');
 const path = require('path');
 const Promise = require('bluebird');
 const { protocol } = require('../../config/server/storage');
@@ -18,13 +17,18 @@ const storage = require('../repository/storage');
 const toPairs = require('lodash/toPairs');
 
 const ASSET_PATH_REGEX = /(?<directory>repository\/assets\/(?<fileName>[^?]*))/;
-const REVISION_TYPES = ['REPOSITORY', 'ACTIVITY', 'CONTENT_ELEMENT'];
 const CHUNK_SIZE = 2000;
 
+const ENTITIES = {
+  REPOSITORY: 'REPOSITORY',
+  ACTIVITY: 'ACTIVITY',
+  CONTENT_ELEMENT: 'CONTENT_ELEMENT'
+};
+
 const mapEntityToAction = {
-  REPOSITORY: 'migrateRepository',
-  ACTIVITY: 'migrateActivity',
-  CONTENT_ELEMENT: 'migrateContentElement'
+  [ENTITIES.REPOSITORY]: 'migrateRepository',
+  [ENTITIES.ACTIVITY]: 'migrateActivity',
+  [ENTITIES.CONTENT_ELEMENT]: 'migrateContentElement'
 };
 
 migrate()
@@ -64,6 +68,10 @@ class RepositoryMigration {
     this.transaction = transaction;
   }
 
+  get repositoryMeta() {
+    return this.fileMetaByEntity.repository;
+  }
+
   get metaByActivityType() {
     return this.fileMetaByEntity.activity;
   }
@@ -84,23 +92,21 @@ class RepositoryMigration {
       title: 'Migrate activities',
       task: () => this.migrateActivities()
     }, {
-      title: 'Migrate revisions',
-      task: () => this.migrateRevisions()
-    }, {
       title: 'Migrate content elements',
       task: () => this.migrateContentElements()
     }]);
   }
 
   async migrateRepositoryAssets() {
+    if (!this.repositoryMeta.length) return;
+    await this.migrateRevisions(ENTITIES.REPOSITORY);
     const payload = await this.migrateRepository();
     return this.repository.update(payload, { transaction: this.transaction });
   }
 
   async migrateRepository() {
     const { id, data: metaInputs } = this.repository;
-    const metaConfigs = get(this.fileMetaByEntity, 'repository', []);
-    const data = await migrateFileMeta(id, metaInputs, metaConfigs);
+    const data = await migrateFileMeta(id, metaInputs, this.repositoryMeta);
     return { data };
   }
 
@@ -108,6 +114,7 @@ class RepositoryMigration {
     const { repositoryId, transaction } = this;
     const types = Object.keys(this.metaByActivityType);
     if (!types.length) return;
+    await this.migrateRevisions(ENTITIES.ACTIVITY);
     const activities = await Activity.findAll(
       { where: { repositoryId, type: types } },
       { transaction }
@@ -127,6 +134,7 @@ class RepositoryMigration {
 
   async migrateContentElements() {
     const { repositoryId, transaction } = this;
+    await this.migrateRevisions(ENTITIES.CONTENT_ELEMENT);
     const contentElements = await ContentElement.findAll(
       { where: { repositoryId } },
       { transaction }
@@ -157,10 +165,10 @@ class RepositoryMigration {
     return migrateFileMeta(repositoryId, element.meta, metaConfigs);
   }
 
-  async migrateRevisions() {
+  async migrateRevisions(entity) {
     const { repositoryId, transaction } = this;
     const options = {
-      where: { repositoryId, entity: { [Op.in]: REVISION_TYPES } },
+      where: { repositoryId, entity },
       transaction
     };
     const count = await Revision.count(options);
