@@ -17,11 +17,12 @@ const config = require('../config/server');
 const logger = require('./shared/logger')();
 const storage = require('./shared/storage')(config.storage);
 serviceProvider.set('storage', storage);
-const storageProxy = require('./shared/storage/proxy')(config.storage.proxy, storage);
+const storageProxy = require('./shared/storage/proxy')(config.storage.proxy);
 serviceProvider.set('storageProxy', storageProxy);
 const router = require('./router');
 /* eslint-enable */
 
+storageProxy.addStorage('repository', storage);
 const { STORAGE_PATH } = process.env;
 
 const app = express();

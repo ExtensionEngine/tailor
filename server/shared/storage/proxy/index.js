@@ -6,8 +6,8 @@ const path = require('path');
 const uniq = require('lodash/uniq');
 
 class Proxy {
-  constructor(config, storage) {
-    this.storage = storage;
+  constructor(config) {
+    this.storages = {};
     this.provider = Proxy.createProvider(config);
     this.accessManagers = [this.provider.accessManager];
     autobind(this);
@@ -30,12 +30,27 @@ class Proxy {
     return this.isSelfHosted && this.provider.path;
   }
 
+  addStorage(path, storage) {
+    const existing = this.storages[path];
+    if (existing) throw new Error(`Storage is already mounted on ${path} path.`);
+    this.storages[path] = storage;
+  }
+
   registerAccessManager(manager) {
     this.accessManagers.push(manager);
   }
 
+  getStorage(key) {
+    const path = Object.keys(this.storages)
+      .sort(compareStringsByLengthDesc)
+      .find(path => key.startsWith(path));
+
+    return path && this.storages[path];
+  }
+
   createReadStream(key) {
-    return this.storage.createReadStream(key);
+    const storage = this.getStorage(key);
+    return storage.createReadStream(key);
   }
 
   getFileUrl(key) {
@@ -64,4 +79,8 @@ function loadProvider(name) {
     if (err.code === 'MODULE_NOT_FOUND') throw new Error('Unsupported proxy provider');
     throw err;
   }
+}
+
+function compareStringsByLengthDesc(fst, sec) {
+  return sec.length - fst.length;
 }
