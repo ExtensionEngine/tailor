@@ -5,7 +5,7 @@
     @upload="$emit('upload', $event)"
     @uploading="$emit('update:uploading', $event)"
     @delete="$emit('delete', $event)"
-    :folder="folder"
+    :repository-id="repositoryId"
     class="file-upload">
     <form @submit.prevent class="upload-form">
       <validation-provider ref="validator" :rules="validate">
@@ -52,7 +52,7 @@ export default {
     id: { type: String, default: () => uniqueId('file_') },
     fileName: { type: String, default: '' },
     fileKey: { type: String, default: '' },
-    folder: { type: String, default: null },
+    repositoryId: { type: Number, default: null },
     validate: { type: Object, default: () => ({ ext: [] }) },
     label: { type: String, default: 'Choose a file' },
     sm: { type: Boolean, default: false }

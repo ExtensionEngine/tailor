@@ -1,13 +1,15 @@
 'use strict';
 
-const { AccessManagerPrototype, config } = require('../shared/storage/proxy');
+const AccessManager = require('../../shared/storage/proxy/AccessManager');
 const path = require('path');
 
-const storageCookies = {
-  REPOSITORY: 'Storage-Repository'
-};
+const storageCookies = { REPOSITORY: 'Storage-Repository' };
 
-class RepositoryProxyAccessManager extends AccessManagerPrototype {
+class RepositoryStorageAccessManager extends AccessManager {
+  get cookies() {
+    return Object.values(storageCookies);
+  }
+
   getSignedCookies(repositoryId, maxAge) {
     const resource = path.join('repository', `${repositoryId}`);
     return {
@@ -21,13 +23,6 @@ class RepositoryProxyAccessManager extends AccessManagerPrototype {
     const isRepositoryId = cookies[REPOSITORY] === repositoryId.toString();
     return isRepositoryId && super.hasCookies(cookies);
   }
-
-  getCookieNames() {
-    return [
-      ...super.getCookieNames(),
-      ...Object.values(storageCookies)
-    ];
-  }
 }
 
-module.exports = new RepositoryProxyAccessManager(config);
+module.exports = new RepositoryStorageAccessManager();

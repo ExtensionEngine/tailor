@@ -5,13 +5,13 @@ const miss = require('mississippi');
 const path = require('path');
 const router = require('express').Router();
 
-function proxy(storage, accessManager) {
+function getFile(proxy) {
   return router.get('/*', (req, res, next) => {
     const key = req.params[0];
-    const hasValidCookies = accessManager.verifyCookies(req.cookies, key);
+    const hasValidCookies = proxy.verifyCookies(req.cookies, key);
     if (!hasValidCookies) return res.status(FORBIDDEN).end();
     res.type(path.extname(key));
-    miss.pipe(storage.createReadStream(key), res, err => {
+    miss.pipe(proxy.createReadStream(key), res, err => {
       if (err) return next(err);
       res.end();
     });
@@ -31,4 +31,4 @@ function setSignedCookies(accessManager) {
   };
 }
 
-module.exports = { proxy, setSignedCookies };
+module.exports = { getFile, setSignedCookies };

@@ -4,7 +4,7 @@
     @upload="$emit('upload', $event)"
     @uploading="$emit('update:uploading', $event)"
     @delete="$emit('delete', $event)"
-    :folder="folder">
+    :repository-id="repositoryId">
     <form @submit.prevent>
       <v-file-input
         v-if="!fileKey"
@@ -50,7 +50,7 @@ export default {
     id: { type: String, default: () => uniqueId('file_') },
     fileKey: { type: String, default: '' },
     fileName: { type: String, default: '' },
-    folder: { type: String, default: null },
+    repositoryId: { type: Number, default: null },
     validate: { type: Object, default: () => ({ ext: [] }) },
     label: { type: String, default: 'File upload' },
     placeholder: { type: String, default: 'Choose a file' },

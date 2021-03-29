@@ -25,7 +25,7 @@ const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const reduce = require('lodash/reduce');
 const { resolveStatics } = require('../storage/helpers');
-const storage = require('../../repository/storage');
+const storage = require('../storage');
 const without = require('lodash/without');
 
 const { FLAT_REPO_STRUCTURE } = process.env;

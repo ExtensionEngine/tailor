@@ -13,6 +13,10 @@ class LocalAccessManager {
     this.signer = new NodeRSA(config.privateKey, 'private');
   }
 
+  get cookies() {
+    return Object.values(storageCookies);
+  }
+
   getSignedCookies(resource, maxAge) {
     const expires = getExpirationTime(maxAge);
     const signature = this.signer.encrypt({ resource, expires }, 'base64');
@@ -33,10 +37,6 @@ class LocalAccessManager {
 
   hasCookies(cookies) {
     return every(storageCookies, cookie => cookies[cookie]);
-  }
-
-  getCookieNames() {
-    return Object.values(storageCookies);
   }
 }
 

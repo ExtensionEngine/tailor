@@ -1,12 +1,16 @@
 'use strict';
 
 const autobind = require('auto-bind');
+const flatMap = require('lodash/flatMap');
 const path = require('path');
-const { proxy: config } = require('../../../../config/server').storage;
+const serviceProvider = require('../../serviceProvider');
+const uniq = require('lodash/uniq');
 
 class Proxy {
   constructor(config) {
+    this.storage = serviceProvider.get('storage');
     this.provider = Proxy.createProvider(config);
+    this.accessManagers = [this.provider.accessManager];
     autobind(this);
   }
 
@@ -23,24 +27,36 @@ class Proxy {
     return this.provider.isSelfHosted;
   }
 
-  get config() {
-    return this.provider.config;
-  }
-
   get path() {
     return this.isSelfHosted && this.provider.path;
   }
 
-  get AccessManagerPrototype() {
-    return this.provider.AccessManagerPrototype;
+  registerAccessManager(manager) {
+    this.accessManagers.push(manager);
+  }
+
+  createReadStream(key) {
+    return this.storage.createReadStream(key);
   }
 
   getFileUrl(key) {
     return this.provider.getFileUrl(key);
   }
+
+  createAccessManager() {
+    return Object.create(this.provider.accessManager);
+  }
+
+  verifyCookies(cookies, key) {
+    return this.provider.accessManager.verifyCookies(cookies, key);
+  }
+
+  getCookieNames() {
+    return uniq(flatMap(this.accessManagers, 'cookies'));
+  }
 }
 
-module.exports = new Proxy(config);
+module.exports = config => new Proxy(config);
 
 function loadProvider(name) {
   try {

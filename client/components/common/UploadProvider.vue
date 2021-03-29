@@ -13,7 +13,7 @@ export default {
   inject: ['$storageService'],
   mixins: [downloadMixin],
   props: {
-    folder: { type: String, default: null }
+    repositoryId: { type: Number, default: null }
   },
   data: () => ({ uploading: false }),
   methods: {
@@ -23,11 +23,14 @@ export default {
       const [file] = e.target.files;
       if (!file) return;
       this.form.append('file', file, file.name);
-      if (this.folder) this.form.append('folder', this.folder);
+    },
+    upload(data) {
+      if (!this.repositoryId) return this.storageService.upload(data);
+      return this.$storageService.uploadRepositoryAsset(this.repositoryId, data);
     },
     uploadFile: loader(function (e) {
       this.createFileForm(e);
-      return this.$storageService.upload(this.form)
+      return this.upload(this.form)
         .then(data => {
           const { name } = this.form.get('file');
           this.$emit('upload', { ...data, name });
@@ -36,7 +39,9 @@ export default {
         });
     }, 'uploading'),
     async downloadFile(key, name) {
-      const url = await this.$storageService.getUrl(this.repositoryId, key);
+      const url = this.repositoryId
+        ? await this.$storageService.getRepositoryAssetUrl(this.repositoryId, key)
+        : await this.$storageService.getUrl(key);
       return this.download(url, name);
     },
     deleteFile(item) {

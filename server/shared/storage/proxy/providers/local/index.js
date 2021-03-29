@@ -14,18 +14,14 @@ const schema = yup.object().shape({
 
 class Local {
   constructor(config) {
-    this.config = validateConfig(config, schema);
-    this.accessManager = new AccessManager(this.config);
+    config = validateConfig(config, schema);
+    this.accessManager = new AccessManager(config);
     this.isSelfHosted = true;
     this.path = PROXY_PATH;
   }
 
   static create(config) {
     return new this(config);
-  }
-
-  get AccessManagerPrototype() {
-    return AccessManager;
   }
 
   getFileUrl(key) {
