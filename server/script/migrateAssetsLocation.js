@@ -148,11 +148,11 @@ class RepositoryMigration {
     return { data, meta };
   }
 
-  migrateContentElementData(element) {
+  async migrateContentElementData(element) {
     const { type, data } = element;
     if (type === 'IMAGE') return this.imageMigrationHandler(element);
-    const embeds = data.embeds && this.embedsMigrationHandler(element);
-    const assets = data.assets && this.defaultMigrationHandler(element);
+    const embeds = data.embeds && (await this.embedsMigrationHandler(element));
+    const assets = data.assets && (await this.defaultMigrationHandler(element));
     return { ...data, ...embeds, ...assets };
   }
 
@@ -207,9 +207,9 @@ class RepositoryMigration {
     return { ...element.data, url: newKey };
   }
 
-  embedsMigrationHandler(element) {
+  async embedsMigrationHandler(element) {
     const { repositoryId, data } = element;
-    const embeds = Promise.reduce(Object.entries(data.embeds), async (acc, [id, embed]) => {
+    const embeds = await Promise.reduce(Object.entries(data.embeds), async (acc, [id, embed]) => {
       const payload = await this.migrateContentElement({ repositoryId, ...embed });
       return { ...acc, [id]: { ...embed, ...payload } };
     }, {});
