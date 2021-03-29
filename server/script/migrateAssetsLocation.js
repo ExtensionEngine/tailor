@@ -17,7 +17,7 @@ const { SCHEMAS } = require('../../config/shared/activities');
 const storage = require('../repository/storage');
 const toPairs = require('lodash/toPairs');
 
-const regex = /repository\/assets\/(.*)/;
+const ASSET_PATH_REGEX = /(?<directory>repository\/assets\/(?<fileName>[^?]*))/;
 const REVISION_TYPES = ['REPOSITORY', 'ACTIVITY', 'CONTENT_ELEMENT'];
 const CHUNK_SIZE = 2000;
 
@@ -298,9 +298,9 @@ async function migrateFileMeta(repositoryId, metaInputs, metaConfigs) {
 
 function resolveNewURL(assetUrl, targetDir) {
   if (assetUrl.startsWith(protocol)) assetUrl = assetUrl.substr(protocol.length);
-  const result = assetUrl.match(regex);
+  const result = assetUrl.match(ASSET_PATH_REGEX);
   if (!result) return;
-  const [key, suffix] = result;
-  const newKey = path.join(targetDir, suffix);
-  return { key, newKey };
+  const { groups: { directory, fileName } } = result;
+  const newKey = path.join(targetDir, fileName);
+  return { key: directory, newKey };
 }
