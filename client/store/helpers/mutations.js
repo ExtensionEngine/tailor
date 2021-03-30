@@ -30,6 +30,10 @@ export const save = (state, model) => {
   Vue.set(state.items, model.uid, model);
 };
 
+export const saveAll = (state, models) => {
+  each(models, it => save(state, it));
+};
+
 export const remove = (state, models) => {
   models.forEach(it => Vue.delete(state.items, it.uid));
 };

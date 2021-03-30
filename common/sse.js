@@ -3,6 +3,7 @@
 const Activity = {
   Create: 'activity:create',
   Update: 'activity:update',
+  BulkUpdate: 'activity:bulk_update',
   Delete: 'activity:delete'
 };
 

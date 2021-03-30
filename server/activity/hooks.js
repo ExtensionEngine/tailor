@@ -12,6 +12,7 @@ function add(Activity, Hooks, Models) {
   const mappings = {
     [Hooks.afterCreate]: [sseCreate, touchRepository, touchOutline],
     [Hooks.afterUpdate]: [sseUpdate, touchRepository, touchOutline],
+    [Hooks.afterBulkUpdate]: [afterTransaction(sseBulkUpdate)],
     [Hooks.afterDestroy]: [sseDelete, touchRepository, touchOutline]
   };
 
@@ -25,6 +26,12 @@ function add(Activity, Hooks, Models) {
 
   function sseUpdate(_, activity) {
     sse.channel(activity.repositoryId).send(Events.Update, activity);
+  }
+
+  async function sseBulkUpdate(_, { where }) {
+    const activities = await Models.Activity.findAll({ where });
+    const [activity] = activities;
+    sse.channel(activity.repositoryId).send(Events.BulkUpdate, activities);
   }
 
   async function sseDelete(_, activity) {
@@ -51,3 +58,8 @@ function add(Activity, Hooks, Models) {
     return outlineActivity && outlineActivity.touch(transaction);
   }
 }
+
+const afterTransaction = method => (type, opts) => {
+  if (!opts.transaction) return method(type, opts);
+  opts.transaction.afterCommit(() => method(type, opts));
+};
