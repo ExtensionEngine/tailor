@@ -3,17 +3,23 @@
 const { getFileUrl, getPath, saveFile } = require('../../repository/storage');
 const { readFile, sha256 } = require('./util');
 const config = require('../../../config/server').storage;
+const { createError } = require('../error/helpers');
 const fecha = require('fecha');
 const fromPairs = require('lodash/fromPairs');
 const JSZip = require('jszip');
 const mime = require('mime-types');
 const path = require('path');
 const pickBy = require('lodash/pickBy');
+const { UNAUTHORIZED } = require('http-status-codes');
 
 const getStorageUrl = key => `${config.protocol}${key}`;
 
 function getUrl(req, res) {
-  const { query: { key } } = req;
+  const { repository, query: { key } } = req;
+  const storageAssetsPath = getPath(repository.id);
+  if (!key.startsWith(storageAssetsPath)) {
+    return createError(UNAUTHORIZED, 'Access restricted');
+  }
   return getFileUrl(key).then(url => res.json({ url }));
 }
 
