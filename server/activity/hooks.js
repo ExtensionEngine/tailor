@@ -1,6 +1,7 @@
 'use strict';
 
 const forEach = require('lodash/forEach');
+const groupBy = require('lodash/groupBy');
 const { isOutlineActivity } = require('../../config/shared/activities');
 const sse = require('../shared/sse');
 
@@ -30,8 +31,10 @@ function add(Activity, Hooks, Models) {
 
   async function sseBulkUpdate(_, { where }) {
     const activities = await Models.Activity.findAll({ where });
-    const [activity] = activities;
-    sse.channel(activity.repositoryId).send(Events.BulkUpdate, activities);
+    const activitiesByRepository = groupBy(activities, 'repositoryId');
+    forEach(activitiesByRepository, (activities, repositoryId) => {
+      sse.channel(repositoryId).send(Events.BulkUpdate, activities);
+    });
   }
 
   async function sseDelete(_, activity) {
