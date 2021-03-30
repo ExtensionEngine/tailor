@@ -36,7 +36,7 @@
     "postshrinkwrap": "rewrite-lockfile package-lock.json"
   },
   "dependencies": {
-    "@extensionengine/tce-jodit": "github:extensionengine/tce-jodit#bd57533",
+    "@extensionengine/tce-jodit": "github:extensionengine/tce-jodit#d99d182",
     "@extensionengine/tce-scorm": "github:ExtensionEngine/tce-scorm#85d39a8d73f303f",
     "@mdi/font": "^4.8.95",
     "@ungap/global-this": "^0.4.0",
