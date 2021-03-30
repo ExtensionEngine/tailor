@@ -245,8 +245,7 @@ class RepositoryMigration {
         [metaKey]: {
           ...meta,
           key: newKey,
-          url: `${protocol}${newKey}`,
-          publicUrl: await storage.getFileUrl(newKey)
+          url: `${protocol}${newKey}`
         }
       };
     }, {});
