@@ -46,15 +46,14 @@ function publishActivity(activity) {
     activity.publishedAt = new Date();
     addToSpine(spine, activity);
 
-    return publishContent(activity)
-      .then(async content => {
-        const { containers } = content;
+    return publishContainers(activity)
+      .then(async containers => {
         await unpublishDeletedContainers(activity, prevPublishedContainers, containers);
-        return content;
+        return containers;
       })
-      .then(content => {
+      .then(containers => {
         const publishedData = find(spine.structure, { id: activity.id });
-        return attachContentSummary(publishedData, content);
+        return attachContainerSummary(publishedData, containers);
       })
       .then(() => saveSpine(spine))
       .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
@@ -141,10 +140,6 @@ async function fetchActivityContent(activity, signed = false) {
   return { containers };
 }
 
-function publishContent(activity) {
-  return publishContainers(activity).then(containers => ({ containers }));
-}
-
 function publishContainers(parent) {
   return fetchContainers(parent)
     .map(async it => {
@@ -203,8 +198,8 @@ function unpublishDeletedContainers(parent, prevContainers, containers) {
   const baseUrl = getBaseUrl(parent.repositoryId, parent.id);
   const prevFilePaths = getContainersFilePaths(baseUrl, prevContainers);
   const filePaths = getContainersFilePaths(baseUrl, containers);
-  const redundantFilePaths = differenceWith(prevFilePaths, filePaths);
-  if (redundantFilePaths.length) return storage.deleteFiles(redundantFilePaths);
+  const deletedContainersFiles = differenceWith(prevFilePaths, filePaths);
+  if (deletedContainersFiles.length) return storage.deleteFiles(deletedContainersFiles);
 }
 
 function resolveContainer(container) {
@@ -263,7 +258,7 @@ function getRepositoryAttrs(repository) {
   return temp;
 }
 
-function attachContentSummary(obj, { containers }) {
+function attachContainerSummary(obj, containers) {
   obj.contentContainers = map(containers, getContainerSummary);
 }
 
