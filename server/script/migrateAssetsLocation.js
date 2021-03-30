@@ -106,9 +106,8 @@ class RepositoryMigration {
   }
 
   async migrateRepository() {
-    const { data: metaInputs } = this.repository;
-    const metaConfigs = this.repositoryMeta;
-    const data = await this.migrateFileMeta(metaInputs, metaConfigs);
+    const { repository, repositoryMeta: metaConfigs } = this;
+    const data = await this.migrateFileMeta(repository.data, metaConfigs);
     return { data };
   }
 
