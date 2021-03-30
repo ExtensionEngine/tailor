@@ -66,6 +66,7 @@ class RepositoryMigration {
     this.repository = repository;
     this.fileMetaByEntity = fileMetaByEntity;
     this.transaction = transaction;
+    this.repositoryAssetsPath = storage.getPath(repository.id);
   }
 
   get repositoryMeta() {
@@ -105,8 +106,9 @@ class RepositoryMigration {
   }
 
   async migrateRepository() {
-    const { id, data: metaInputs } = this.repository;
-    const data = await migrateFileMeta(id, metaInputs, this.repositoryMeta);
+    const { data: metaInputs } = this.repository;
+    const metaConfigs = this.repositoryMeta;
+    const data = await this.migrateFileMeta(metaInputs, metaConfigs);
     return { data };
   }
 
@@ -126,9 +128,9 @@ class RepositoryMigration {
   }
 
   async migrateActivity(activity) {
-    const { repositoryId, type, data: metaInputs } = activity;
+    const { type, data: metaInputs } = activity;
     const metaConfigs = get(this.metaByActivityType, type, []);
-    const data = await migrateFileMeta(repositoryId, metaInputs, metaConfigs);
+    const data = await this.migrateFileMeta(metaInputs, metaConfigs);
     return { data };
   }
 
@@ -160,9 +162,9 @@ class RepositoryMigration {
   }
 
   async migrateContentElementMeta(element) {
-    const { repositoryId, type } = element;
+    const { type, meta: metaInputs } = element;
     const metaConfigs = get(this.metaByElementType, type, []);
-    return migrateFileMeta(repositoryId, element.meta, metaConfigs);
+    return this.migrateFileMeta(metaInputs, metaConfigs);
   }
 
   async migrateRevisions(entity) {
@@ -199,15 +201,13 @@ class RepositoryMigration {
     return { state: { ...state, ...payload } };
   }
 
-  async imageMigrationHandler(element) {
-    const { repositoryId, data } = element;
-    const repositoryAssetsPath = storage.getPath(repositoryId);
+  async imageMigrationHandler({ data }) {
     const url = get(data, 'url');
     if (!url) return data;
-    const { key, newKey } = resolveNewURL(url, repositoryAssetsPath) || {};
+    const { key, newKey } = resolveNewURL(url, this.repositoryAssetsPath) || {};
     if (!key || !newKey) return data;
     await storage.copyFile(key, newKey);
-    return { ...element.data, url: newKey };
+    return { ...data, url: newKey };
   }
 
   async embedsMigrationHandler(element) {
@@ -219,18 +219,38 @@ class RepositoryMigration {
     return { embeds };
   }
 
-  async defaultMigrationHandler(element) {
-    const { repositoryId, data } = element;
-    const repositoryAssetsPath = storage.getPath(repositoryId);
+  async defaultMigrationHandler({ data }) {
     const updatedAssets = await Promise
       .filter(toPairs(data.assets), ([_, value]) => value.startsWith(protocol))
       .reduce(async (acc, [key, value]) => {
-        const { key: oldKey, newKey } = resolveNewURL(value, repositoryAssetsPath) || {};
+        const { key: oldKey, newKey } = resolveNewURL(value, this.repositoryAssetsPath) || {};
         if (!oldKey || !newKey) return { ...acc, [key]: value };
         await storage.copyFile(oldKey, newKey);
         return { ...acc, [key]: `${protocol}${newKey}` };
       }, {});
     return { assets: { ...data.assets, ...updatedAssets } };
+  }
+
+  async migrateFileMeta(metaInputs, metaConfigs) {
+    const newMeta = await Promise.reduce(metaConfigs, async (acc, metaKey) => {
+      const meta = get(metaInputs, metaKey);
+      if (!meta) return acc;
+      const url = get(meta, 'url');
+      if (!url) return acc;
+      const { key, newKey } = resolveNewURL(url, this.repositoryAssetsPath) || {};
+      if (!key || !newKey) return acc;
+      await storage.copyFile(key, newKey);
+      return {
+        ...acc,
+        [metaKey]: {
+          ...meta,
+          key: newKey,
+          url: `${protocol}${newKey}`,
+          publicUrl: await storage.getFileUrl(newKey)
+        }
+      };
+    }, {});
+    return { ...metaInputs, ...newMeta };
   }
 }
 
@@ -265,29 +285,6 @@ function getMetaByElementType(elementMeta = []) {
 
 function getFileMetaKeys(meta = []) {
   return meta.filter(it => it.type === 'FILE').map(it => it.key);
-}
-
-async function migrateFileMeta(repositoryId, metaInputs, metaConfigs) {
-  const repositoryAssetsPath = storage.getPath(repositoryId);
-  const newMeta = await Promise.reduce(metaConfigs, async (acc, metaKey) => {
-    const meta = get(metaInputs, metaKey);
-    if (!meta) return acc;
-    const url = get(meta, 'url');
-    if (!url) return acc;
-    const { key, newKey } = resolveNewURL(url, repositoryAssetsPath) || {};
-    if (!key || !newKey) return acc;
-    await storage.copyFile(key, newKey);
-    return {
-      ...acc,
-      [metaKey]: {
-        ...meta,
-        key: newKey,
-        url: `${protocol}${newKey}`,
-        publicUrl: await storage.getFileUrl(newKey)
-      }
-    };
-  }, {});
-  return { ...metaInputs, ...newMeta };
 }
 
 function resolveNewURL(assetUrl, targetDir) {
