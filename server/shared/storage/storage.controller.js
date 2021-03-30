@@ -16,8 +16,8 @@ const getStorageUrl = key => `${config.protocol}${key}`;
 
 function getUrl(req, res) {
   const { repository, query: { key } } = req;
-  const storageAssetsPath = getPath(repository.id);
-  if (!key.startsWith(storageAssetsPath)) {
+  const repositoryAssetsPath = getPath(repository.id);
+  if (!key.startsWith(repositoryAssetsPath)) {
     return createError(UNAUTHORIZED, 'Access restricted');
   }
   return getFileUrl(key).then(url => res.json({ url }));
