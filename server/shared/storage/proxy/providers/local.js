@@ -55,6 +55,10 @@ class Local {
   getFileUrl(key) {
     return urlJoin(origin, this.path, key);
   }
+
+  getCookieNames() {
+    return Object.values(storageCookies);
+  }
 }
 
 module.exports = { create: Local.create.bind(Local) };

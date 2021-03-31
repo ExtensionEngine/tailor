@@ -4,7 +4,7 @@ const processors = require('./processors');
 const Promise = require('bluebird');
 const resolvers = require('./resolvers');
 const { sequelize } = require('../../database');
-const storage = require('../../storage');
+const storage = require('../../../repository/storage');
 const { useTar } = require('../formats');
 const yup = require('yup');
 

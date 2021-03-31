@@ -278,11 +278,7 @@ class Activity extends Model {
 function removeAll(Model, where = {}, options = {}) {
   const { soft, transaction } = options;
   if (!soft) return Model.destroy({ where });
-  return Model.update({ detached: true }, {
-    where,
-    transaction,
-    individualHooks: true
-  });
+  return Model.update({ detached: true }, { where, transaction });
 }
 
 function getDefaultStatus({ id, type }) {

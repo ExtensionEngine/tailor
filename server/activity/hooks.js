@@ -1,6 +1,7 @@
 'use strict';
 
 const forEach = require('lodash/forEach');
+const groupBy = require('lodash/groupBy');
 const { isOutlineActivity } = require('../../config/shared/activities');
 const sse = require('../shared/sse');
 
@@ -12,6 +13,7 @@ function add(Activity, Hooks, Models) {
   const mappings = {
     [Hooks.afterCreate]: [sseCreate, touchRepository, touchOutline],
     [Hooks.afterUpdate]: [sseUpdate, touchRepository, touchOutline],
+    [Hooks.afterBulkUpdate]: [afterTransaction(sseBulkUpdate)],
     [Hooks.afterDestroy]: [sseDelete, touchRepository, touchOutline]
   };
 
@@ -25,6 +27,14 @@ function add(Activity, Hooks, Models) {
 
   function sseUpdate(_, activity) {
     sse.channel(activity.repositoryId).send(Events.Update, activity);
+  }
+
+  async function sseBulkUpdate(_, { where }) {
+    const activities = await Models.Activity.findAll({ where });
+    const activitiesByRepository = groupBy(activities, 'repositoryId');
+    forEach(activitiesByRepository, (activities, repositoryId) => {
+      sse.channel(repositoryId).send(Events.BulkUpdate, activities);
+    });
   }
 
   async function sseDelete(_, activity) {
@@ -51,3 +61,8 @@ function add(Activity, Hooks, Models) {
     return outlineActivity && outlineActivity.touch(transaction);
   }
 }
+
+const afterTransaction = method => (type, opts) => {
+  if (!opts.transaction) return method(type, opts);
+  opts.transaction.afterCommit(() => method(type, opts));
+};

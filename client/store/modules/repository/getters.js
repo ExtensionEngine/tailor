@@ -60,7 +60,7 @@ export const workflow = (_state, { repository }) => {
 export const hasWorkflow = (_state, { workflow }) => Boolean(workflow);
 
 export const workflowActivities = (_state, { activities }) => {
-  return activities.filter(it => it.isTrackedInWorkflow);
+  return activities.filter(it => !it.detached && it.isTrackedInWorkflow);
 };
 
 export const isCollapsed = state => {
