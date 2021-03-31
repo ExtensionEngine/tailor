@@ -8,6 +8,7 @@ const yup = require('yup');
 
 const storageCookies = {
   SIGNATURE: 'CloudFront-Signature',
+  POLICY: 'CloudFront-Policy',
   KEY_PAIR_ID: 'CloudFront-Key-Pair-Id'
 };
 
@@ -47,6 +48,10 @@ class CloudFront {
 
   getFileUrl(key) {
     return urlJoin(this.host, key);
+  }
+
+  getCookieNames() {
+    return Object.values(storageCookies);
   }
 }
 

@@ -20,7 +20,11 @@
       <v-icon>mdi-chevron-left</v-icon>
       <div class="info-content">{{ emptyMessage }}</div>
     </section>
-    <activity-discussion :activity="selectedActivity" panel class="mt-2 mb-5 mx-1" />
+    <activity-discussion
+      v-if="selectedActivity"
+      :activity="selectedActivity"
+      panel
+      class="mt-2 mb-5 mx-1" />
   </v-navigation-drawer>
 </template>
 

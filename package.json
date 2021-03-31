@@ -31,6 +31,7 @@
     "integration:token": "node -r ./server/script/preflight ./server/script/generateIntegrationToken.js",
     "detachDeletedRepos": "node -r ./server/script/preflight ./server/script/detachDeletedRepos.js",
     "migrateAssessmentPools": "node -r ./server/script/preflight ./server/script/migrateAssessmentPools.js",
+    "migrateAssetsLocation": "node -r ./server/script/preflight ./server/script/migrateAssetsLocation.js",
     "fixRevisionUrls": "node -r ./server/script/preflight ./server/script/fixRevisionUrls.js",
     "start": "node -r ./server/script/preflight ./server",
     "postshrinkwrap": "rewrite-lockfile package-lock.json"
@@ -95,6 +96,7 @@
     "jquery": "^3.5.0",
     "jsonwebtoken": "^8.0.0",
     "jszip": "^3.2.2",
+    "listr": "^0.14.3",
     "loaders.css": "^0.1.2",
     "lodash": "^4.17.21",
     "lru-cache": "^6.0.0",
