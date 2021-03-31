@@ -14,7 +14,7 @@ const plugSSE = ({ commit }) => {
   feed
     .subscribe(Events.Create, item => commit('save', item))
     .subscribe(Events.Update, item => commit('save', item))
-    .subscribe(Events.BulkUpdate, items => commit('saveAll', items))
+    .subscribe(Events.BulkUpdate, items => commit('save', items))
     .subscribe(Events.Delete, item => commit('remove', [item]));
 };
 
