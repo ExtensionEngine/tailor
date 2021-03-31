@@ -14,6 +14,7 @@ const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const randomstring = require('randomstring');
 const { role: roles } = require('../../config/shared');
+const serviceProvider = require('../shared/serviceProvider');
 
 const { user: { ADMIN, USER, INTEGRATION } } = roles;
 const gravatarConfig = { size: 130, default: 'identicon' };
@@ -123,6 +124,9 @@ class User extends Model {
           ? user.encryptPassword()
           : Promise.resolve();
       },
+      [Hooks.afterUpdate](user) {
+        return user.resolveAvatarAsset();
+      },
       [Hooks.beforeBulkCreate](users) {
         const updates = [];
         users.forEach(user => updates.push(user.encryptPassword()));
@@ -209,6 +213,14 @@ class User extends Model {
     const { secret } = config.auth.jwt;
     if (audience === Audience.Scope.Access) return secret;
     return [secret, this.password, this.createdAt.getTime()].join('');
+  }
+
+  resolveAvatarAsset() {
+    const { imgUrl } = this.dataValues;
+    const isAvatarChanged = this.changed('imgUrl') && !imgUrl.startsWith('avatars');
+    if (!isAvatarChanged) return;
+    const storage = serviceProvider.get('avatarsStorage');
+    return this.update({ imgUrl: storage.getFullKey(imgUrl) });
   }
 }
 
