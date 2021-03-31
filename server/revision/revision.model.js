@@ -93,6 +93,7 @@ class Revision extends Model {
   }
 
   async applyFetchHooks() {
+    if (this.entity !== 'CONTENT_ELEMENT') return this;
     const state = await applyFetchHooks(this.state);
     this.state = state;
     return this;
