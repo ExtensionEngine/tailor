@@ -36,11 +36,12 @@ function upload(storage) {
 module.exports = { getUrl, upload };
 
 async function uploadFile(storage, file, name) {
+  const { originalname, mimetype } = file;
   const buffer = await readFile(file);
-  const hash = sha256(file.originalname, buffer);
-  const extension = path.extname(file.originalname);
+  const hash = sha256(originalname, buffer);
+  const extension = path.extname(originalname) || `.${mime.extension(mimetype)}`;
   const key = `${hash}___${name}${extension}`;
-  await storage.saveFile(key, buffer, { ContentType: file.mimetype });
+  await storage.saveFile(key, buffer, { ContentType: mimetype });
   const publicUrl = await storage.getFileUrl(key);
   return { key, publicUrl, url: getStorageUrl(key) };
 }

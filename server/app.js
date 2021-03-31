@@ -16,6 +16,7 @@ const auth = require('./shared/auth');
 const config = require('../config/server');
 const logger = require('./shared/logger')();
 const storage = require('./shared/storage')(config.storage);
+const publicStorage = require('./shared/storage')(config.storage, { isPublic: true });
 serviceProvider.set('storage', storage);
 const storageProxy = require('./shared/storage/proxy')(config.storage.proxy);
 serviceProvider.set('storageProxy', storageProxy);
@@ -23,6 +24,7 @@ const router = require('./router');
 /* eslint-enable */
 
 storageProxy.addStorage('repository', storage);
+storageProxy.addStorage('avatars', publicStorage);
 const { STORAGE_PATH } = process.env;
 
 const app = express();

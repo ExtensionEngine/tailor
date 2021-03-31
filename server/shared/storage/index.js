@@ -4,8 +4,9 @@ const autobind = require('auto-bind');
 const path = require('path');
 
 class Storage {
-  constructor(config) {
+  constructor(config, { isPublic = false } = {}) {
     this.provider = Storage.createProvider(config);
+    this.isPublic = isPublic;
     autobind(this);
   }
 
@@ -66,7 +67,7 @@ class Storage {
   }
 }
 
-module.exports = config => new Storage(config);
+module.exports = (config, options) => new Storage(config, options);
 module.exports.Storage = Storage;
 
 function loadProvider(name) {

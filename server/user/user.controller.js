@@ -4,6 +4,7 @@ const { ACCEPTED, BAD_REQUEST, CONFLICT, NO_CONTENT, NOT_FOUND } = require('http
 const { createError, validationError } = require('../shared/error/helpers');
 const map = require('lodash/map');
 const { Op } = require('sequelize');
+const serviceProvider = require('../shared/serviceProvider');
 const { User } = require('../shared/database');
 
 const createFilter = q => map(['email', 'firstName', 'lastName'],
@@ -49,7 +50,7 @@ function getProfile({ user, authData }, res) {
 
 function updateProfile({ user, body }, res) {
   const { email, firstName, lastName, imgUrl } = body;
-  return user.update({ email, firstName, lastName, imgUrl })
+  return user.update({ email, firstName, lastName, imgUrl: processAvatar(imgUrl) })
     .then(({ profile }) => res.json({ user: profile }))
     .catch(() => validationError(CONFLICT));
 }
@@ -81,3 +82,8 @@ module.exports = {
   changePassword,
   reinvite
 };
+
+function processAvatar(key) {
+  const storage = serviceProvider.get('avatarsStorage');
+  return storage.getFullKey(key);
+}

@@ -9,6 +9,7 @@ const mail = require('../shared/mail');
 const map = require('lodash/map');
 const { Model } = require('sequelize');
 const omit = require('lodash/omit');
+const path = require('path');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const randomstring = require('randomstring');
@@ -70,7 +71,8 @@ class User extends Model {
         field: 'img_url',
         get() {
           const imgUrl = this.getDataValue('imgUrl');
-          return imgUrl || gravatar.url(this.email, gravatarConfig, true /* https */);
+          if (!imgUrl) return gravatar.url(this.email, gravatarConfig, true /* https */);
+          return path.join('proxy', imgUrl);
         }
       },
       profile: {
