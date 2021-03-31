@@ -198,8 +198,8 @@ function unpublishDeletedContainers(parent, prevContainers, containers) {
   const baseUrl = getBaseUrl(parent.repositoryId, parent.id);
   const prevFilePaths = getContainersFilePaths(baseUrl, prevContainers);
   const filePaths = getContainersFilePaths(baseUrl, containers);
-  const deletedContainersFiles = differenceWith(prevFilePaths, filePaths);
-  if (deletedContainersFiles.length) return storage.deleteFiles(deletedContainersFiles);
+  const deletedContainerFiles = differenceWith(prevFilePaths, filePaths);
+  if (deletedContainerFiles.length) return storage.deleteFiles(deletedContainerFiles);
 }
 
 function resolveContainer(container) {
