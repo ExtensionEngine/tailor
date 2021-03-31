@@ -30,14 +30,13 @@ const AVATAR_OPTS = { compressionRate: 0.6, mimetype: 'image/jpeg' };
 
 export default {
   name: 'avatar-dialog',
+  inject: ['$storageService'],
   props: {
     imgUrl: { type: String, required: true }
   },
-  data() {
-    return { isVisible: false };
-  },
+  data: () => ({ isVisible: false }),
   computed: {
-    options: vm => ({
+    options: () => ({
       accept: 'image/*',
       width: 220,
       height: 220
@@ -47,10 +46,13 @@ export default {
     close() {
       this.isVisible = false;
     },
-    confirm() {
+    async confirm() {
       const { mimetype, compressionRate } = AVATAR_OPTS;
-      const imgUrl = this.$refs.croppa.generateDataUrl(mimetype, compressionRate);
-      this.$emit('update', imgUrl);
+      const blob = await this.$refs.croppa.promisedBlob(mimetype, compressionRate);
+      const formData = new FormData();
+      formData.append('file', blob);
+      const { key } = await this.$storageService.uploadAvatar(formData);
+      this.$emit('update', key);
       this.close();
     }
   },
@@ -61,12 +63,11 @@ export default {
 <style lang="scss" scoped>
 $image-border: 8px solid #e3e3e3;
 $image-bg-color: #f5f5f5;
-$image-width: 15rem;
-$image-height: 15rem;
+$image-size: 15rem;
 
 .croppa-container {
-  width: $image-width;
-  height: $image-height;
+  width: $image-size;
+  height: $image-size;
   background-color: $image-bg-color;
   border: $image-border;
   border-radius: 50%;

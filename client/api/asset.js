@@ -2,6 +2,7 @@ import request from './request';
 
 const urls = {
   base: 'assets',
+  avatars: 'users/assets',
   repository: repositoryId => `repositories/${repositoryId}/assets`
 };
 
@@ -25,9 +26,20 @@ function uploadRepositoryAsset(repositoryId, data) {
     .then(res => res.data);
 }
 
+function getAvatarUrl(key) {
+  const params = { key };
+  return request.get(urls.avatars, { params }).then(res => res.data.url);
+}
+
+function uploadAvatar(data) {
+  return request.post(urls.avatars, data).then(res => res.data);
+}
+
 export default {
   getUrl,
   upload,
   getRepositoryAssetUrl,
-  uploadRepositoryAsset
+  uploadRepositoryAsset,
+  getAvatarUrl,
+  uploadAvatar
 };

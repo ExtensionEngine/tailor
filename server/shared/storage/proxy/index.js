@@ -44,7 +44,6 @@ class Proxy {
     const path = Object.keys(this.storages)
       .sort(compareStringsByLengthDesc)
       .find(path => key.startsWith(path));
-
     return path && this.storages[path];
   }
 
@@ -62,7 +61,8 @@ class Proxy {
   }
 
   verifyCookies(cookies, key) {
-    return this.provider.accessManager.verifyCookies(cookies, key);
+    const { isPublic } = this.getStorage(key);
+    return isPublic || this.provider.accessManager.verifyCookies(cookies, key);
   }
 
   getCookieNames() {

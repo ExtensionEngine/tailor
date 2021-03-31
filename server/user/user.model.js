@@ -9,10 +9,12 @@ const mail = require('../shared/mail');
 const map = require('lodash/map');
 const { Model } = require('sequelize');
 const omit = require('lodash/omit');
+const path = require('path');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const randomstring = require('randomstring');
 const { role: roles } = require('../../config/shared');
+const serviceProvider = require('../shared/serviceProvider');
 
 const { user: { ADMIN, USER, INTEGRATION } } = roles;
 const gravatarConfig = { size: 130, default: 'identicon' };
@@ -70,7 +72,8 @@ class User extends Model {
         field: 'img_url',
         get() {
           const imgUrl = this.getDataValue('imgUrl');
-          return imgUrl || gravatar.url(this.email, gravatarConfig, true /* https */);
+          if (!imgUrl) return gravatar.url(this.email, gravatarConfig, true /* https */);
+          return path.join('proxy', imgUrl);
         }
       },
       profile: {
@@ -120,6 +123,9 @@ class User extends Model {
         return user.changed('password')
           ? user.encryptPassword()
           : Promise.resolve();
+      },
+      [Hooks.afterUpdate](user) {
+        return user.resolveAvatarAsset();
       },
       [Hooks.beforeBulkCreate](users) {
         const updates = [];
@@ -207,6 +213,14 @@ class User extends Model {
     const { secret } = config.auth.jwt;
     if (audience === Audience.Scope.Access) return secret;
     return [secret, this.password, this.createdAt.getTime()].join('');
+  }
+
+  resolveAvatarAsset() {
+    const { imgUrl } = this.dataValues;
+    const isAvatarChanged = this.changed('imgUrl') && !imgUrl.startsWith('avatars');
+    if (!isAvatarChanged) return;
+    const storage = serviceProvider.get('avatarsStorage');
+    return this.update({ imgUrl: storage.getFullKey(imgUrl) });
   }
 }
 
