@@ -39,9 +39,9 @@ class PublishingService {
 module.exports = new PublishingService();
 
 function toPublishJob(action, payload) {
-  return () => action(payload)
-    .then(data => {
-      if (webhook.isConnected) webhook.send(data);
-      return data;
-    });
+  return async () => {
+    const data = await action(payload);
+    if (webhook.isConnected) webhook.send(data);
+    return data;
+  };
 }
