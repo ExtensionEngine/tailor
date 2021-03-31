@@ -1,3 +1,4 @@
+import castArray from 'lodash/castArray';
 import each from 'lodash/each';
 import omit from 'lodash/omit';
 import uuid from '@/utils/uuid';
@@ -24,10 +25,12 @@ export const update = (state, model) => {
   Vue.set(state.items, existing.uid, { ...existing, ...omit(model, 'uid') });
 };
 
-export const save = (state, model) => {
-  const existing = state.items[model.uid];
-  if (existing) return update(state, model);
-  Vue.set(state.items, model.uid, model);
+export const save = (state, models) => {
+  castArray(models).forEach(model => {
+    const existing = state.items[model.uid];
+    if (existing) return update(state, model);
+    Vue.set(state.items, model.uid, model);
+  });
 };
 
 export const remove = (state, models) => {

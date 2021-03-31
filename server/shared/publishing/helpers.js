@@ -12,7 +12,7 @@ const {
   getSupportedContainers
 } = require('../../../config/shared/activities');
 const { containerRegistry } = require('../content-plugins');
-const difference = require('lodash/difference');
+const differenceWith = require('lodash/differenceWith');
 const filter = require('lodash/filter');
 const find = require('lodash/find');
 const findIndex = require('lodash/findIndex');
@@ -25,7 +25,7 @@ const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const reduce = require('lodash/reduce');
 const { resolveStatics } = require('../storage/helpers');
-const storage = require('../storage');
+const storage = require('../../repository/storage');
 const without = require('lodash/without');
 
 const { FLAT_REPO_STRUCTURE } = process.env;
@@ -35,6 +35,8 @@ const CC_ATTRS = ['id', 'uid', 'type', 'position', 'createdAt', 'updatedAt'];
 function publishActivity(activity) {
   return getStructureData(activity).then(data => {
     const { repository, predecessors, spine } = data;
+    const activityStructure = find(spine.structure, { id: activity.id });
+    const prevPublishedContainers = get(activityStructure, 'contentContainers', []);
 
     predecessors.forEach(it => {
       const exists = find(spine.structure, { id: it.id });
@@ -44,10 +46,14 @@ function publishActivity(activity) {
     activity.publishedAt = new Date();
     addToSpine(spine, activity);
 
-    return publishContent(activity)
-      .then(content => {
+    return publishContainers(activity)
+      .then(async containers => {
+        await unpublishDeletedContainers(activity, prevPublishedContainers, containers);
+        return containers;
+      })
+      .then(containers => {
         const publishedData = find(spine.structure, { id: activity.id });
-        return attachContentSummary(publishedData, content);
+        return attachContainerSummary(publishedData, containers);
       })
       .then(() => saveSpine(spine))
       .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
@@ -134,13 +140,6 @@ async function fetchActivityContent(activity, signed = false) {
   return { containers };
 }
 
-function publishContent(activity) {
-  return publishContainers(activity).then(async containers => {
-    await unpublishDeletedContainers(activity, containers);
-    return { containers };
-  });
-}
-
 function publishContainers(parent) {
   return fetchContainers(parent)
     .map(async it => {
@@ -195,15 +194,12 @@ async function fetchCustomContainers(parent, config) {
   }, []);
 }
 
-function unpublishDeletedContainers(parent, containers) {
+function unpublishDeletedContainers(parent, prevContainers, containers) {
   const baseUrl = getBaseUrl(parent.repositoryId, parent.id);
+  const prevFilePaths = getContainersFilePaths(baseUrl, prevContainers);
   const filePaths = getContainersFilePaths(baseUrl, containers);
-  return storage
-    .listFiles(baseUrl)
-    .then(publishedFilePaths => {
-      const redundantFilePaths = difference(publishedFilePaths, filePaths);
-      if (redundantFilePaths.length) return storage.deleteFiles(redundantFilePaths);
-    });
+  const deletedContainerFiles = differenceWith(prevFilePaths, filePaths);
+  if (deletedContainerFiles.length) return storage.deleteFiles(deletedContainerFiles);
 }
 
 function resolveContainer(container) {
@@ -262,7 +258,7 @@ function getRepositoryAttrs(repository) {
   return temp;
 }
 
-function attachContentSummary(obj, { containers }) {
+function attachContainerSummary(obj, containers) {
   obj.contentContainers = map(containers, getContainerSummary);
 }
 

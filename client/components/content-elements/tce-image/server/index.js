@@ -8,7 +8,7 @@ const mime = require('mime-types');
 
 const DEFAULT_IMAGE_EXTENSION = 'png';
 
-function processImage(asset, { config, storage }) {
+function processImage(asset, { storage }) {
   const image = asset.data.url;
   const base64Pattern = /^data:image\/(\w+);base64,/;
 
@@ -26,7 +26,8 @@ function processImage(asset, { config, storage }) {
   const extension = image.match(base64Pattern)[1] || DEFAULT_IMAGE_EXTENSION;
   const hashString = `${asset.id}${file}`;
   const hash = crypto.createHash('md5').update(hashString).digest('hex');
-  const key = `${config.storage.path}/${asset.id}/${hash}.${extension}`;
+  const storagePath = storage.getPath(asset.repositoryId);
+  const key = `${storagePath}/${asset.id}/${hash}.${extension}`;
   asset.data.url = key;
   return saveFile(key, file, storage).then(() => asset);
 }
