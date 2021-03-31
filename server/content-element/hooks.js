@@ -97,14 +97,11 @@ function add(ContentElement, Hooks, Models) {
 
 function applyFetchHooks(element) {
   const { AFTER_RETRIEVE, AFTER_LOADED } = elementHooks;
+  const applyHook = (element, hook) => hook(element);
   const hooks = [AFTER_RETRIEVE, AFTER_LOADED]
     .map(hook => elementRegistry.getHook(element.type, hook))
     .filter(Boolean);
   return Promise.reduce([...hooks, resolveStatics], applyHook, element);
-}
-
-function applyHook(element, hook) {
-  return hook(element);
 }
 
 function resolveOutlineActivity(element) {
