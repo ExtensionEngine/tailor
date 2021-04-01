@@ -6,6 +6,14 @@ import { messages } from 'vee-validate/dist/locale/en.json';
 import some from 'lodash/some';
 import userApi from '@/api/user';
 
+const NAME_FORMAT_REGEX = /^[\p{Letter}\s'-.]+$/u;
+
+const nameFormat = {
+  validate: value => NAME_FORMAT_REGEX.test(value),
+  message: `The {_field_} field may only contain alphabetic characters, spaces,
+    dots (.), apostrophes (') and hyphens (-)`
+};
+
 const alphanumerical = {
   validate: value => (/\d/.test(value) && /[a-zA-Z]/.test(value)),
   message: 'The {_field_} field must contain at least 1 letter and 1 numeric value'
@@ -39,6 +47,7 @@ const configuredRules = {
   ...rules,
   url,
   alphanumerical,
+  name_format: nameFormat,
   not_within: notWithin,
   unique_email: uniqueEmail,
   is_not: { ...rules.is_not, message: 'The {_field_} is equal to the {other} value' },
