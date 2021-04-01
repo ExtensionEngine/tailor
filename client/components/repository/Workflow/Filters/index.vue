@@ -8,11 +8,12 @@
       placeholder="Search by ID or name"
       clearable
       class="search-field" />
-    <status-filter
+    <select-status
       @change="updateFilter('status', $event)"
       :items="statusOptions"
       :value="status"
       placeholder="Filter by status"
+      clearable
       class="status-field ml-7 mr-3" />
     <assignee-filter
       v-if="assigneeOptions"
@@ -35,7 +36,7 @@
 
 <script>
 import AssigneeFilter from './Assignee';
-import StatusFilter from './Status';
+import SelectStatus from '../SelectStatus';
 
 export default {
   name: 'workflow-filters',
@@ -54,7 +55,7 @@ export default {
       this.$emit(`update:${filter}`, value);
     }
   },
-  components: { AssigneeFilter, StatusFilter }
+  components: { AssigneeFilter, SelectStatus }
 };
 </script>
 
