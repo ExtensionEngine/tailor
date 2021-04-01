@@ -133,7 +133,7 @@ export default function getRouter() {
 }
 
 function requiresAuth(route) {
-  return !route.matched.some(it => it.meta.auth);
+  return route.matched.some(it => it.meta.auth);
 }
 
 function isAllowed(route, user) {
