@@ -16,8 +16,6 @@
         :items="workflow.statuses"
         :error-messages="errors"
         label="Status"
-        item-value="id"
-        item-text="label"
         outlined
         class="my-2" />
     </validation-provider>
@@ -58,7 +56,7 @@ import DatePicker from '@/components/common/DatePicker';
 import EditorField from '@/components/common/EditorField';
 import { priorities } from 'shared/workflow';
 import SelectPriority from '@/components/repository/common/SelectPriority';
-import SelectStatus from '../Status';
+import SelectStatus from '../SelectStatus';
 
 const defaultPriority = priorities.find(it => it.default);
 

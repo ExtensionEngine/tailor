@@ -12,7 +12,6 @@
       @change="updateFilter('status', $event)"
       :items="statusOptions"
       :value="status"
-      item-text="label"
       placeholder="Filter by status"
       clearable
       class="status-field ml-7 mr-3" />
@@ -37,7 +36,7 @@
 
 <script>
 import AssigneeFilter from './Assignee';
-import StatusFilter from '../Status';
+import StatusFilter from '../SelectStatus';
 
 export default {
   name: 'workflow-filters',

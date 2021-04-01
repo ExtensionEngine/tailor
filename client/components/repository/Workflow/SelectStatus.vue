@@ -1,5 +1,5 @@
 <template>
-  <v-select v-on="$listeners" v-bind="$attrs">
+  <v-select v-on="$listeners" v-bind="{ ...$attrs, itemText, itemValue }">
     <template #selection="{ item }">
       <div class="selection d-flex flex-nowrap">
         <v-icon :color="item.color" small class="mr-2">mdi-circle</v-icon>
@@ -14,7 +14,13 @@
 </template>
 
 <script>
-export default { name: 'workflow-status' };
+export default {
+  name: 'select-workflow-status',
+  props: {
+    itemText: { type: String, default: 'label' },
+    itemValue: { type: String, default: 'id' }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
