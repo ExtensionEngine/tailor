@@ -16,11 +16,11 @@ class PublishingService {
   }
 
   publishActivity(activity) {
-    return this.queue.add(toPublishJob(publishActivity, activity));
+    return this.queue.add(createPublishJob(publishActivity, activity));
   }
 
   publishRepoDetails(repository) {
-    return this.queue.add(toPublishJob(publishRepositoryDetails, repository));
+    return this.queue.add(createPublishJob(publishRepositoryDetails, repository));
   }
 
   unpublishActivity(repository, activity) {
@@ -38,7 +38,7 @@ class PublishingService {
 
 module.exports = new PublishingService();
 
-function toPublishJob(action, payload) {
+function createPublishJob(action, payload) {
   return async () => {
     const data = await action(payload);
     if (webhook.isConnected) webhook.send(data);
