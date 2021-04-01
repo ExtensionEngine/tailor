@@ -96,7 +96,12 @@ export default {
       this.$emit(`update:${key}`, value);
     }
   },
-  components: { DatePicker, EditorField, SelectPriority, SelectStatus }
+  components: {
+    DatePicker,
+    EditorField,
+    SelectPriority,
+    SelectStatus
+  }
 };
 </script>
 
