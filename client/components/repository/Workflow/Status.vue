@@ -1,20 +1,20 @@
 <template>
-  <v-select v-on="$listeners" v-bind="$attrs" clearable>
+  <v-select v-on="$listeners" v-bind="$attrs">
     <template #selection="{ item }">
       <div class="selection d-flex flex-nowrap">
         <v-icon :color="item.color" small class="mr-2">mdi-circle</v-icon>
-        <span class="text--default text-truncate">{{ item.text }}</span>
+        <span class="text--default text-truncate">{{ item.label }}</span>
       </div>
     </template>
     <template #item="{ item }">
       <v-icon :color="item.color" small class="mr-2">mdi-circle</v-icon>
-      <span class="text--default">{{ item.text }}</span>
+      <span class="text--default">{{ item.label }}</span>
     </template>
   </v-select>
 </template>
 
 <script>
-export default { name: 'workflow-filters-status' };
+export default { name: 'workflow-status' };
 </script>
 
 <style lang="scss" scoped>

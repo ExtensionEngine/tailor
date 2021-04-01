@@ -10,7 +10,7 @@
       ref="status"
       :rules="{ required: true }"
       name="status">
-      <v-select
+      <select-status
         @change="update('status', $event)"
         :value="status"
         :items="workflow.statuses"
@@ -58,6 +58,7 @@ import DatePicker from '@/components/common/DatePicker';
 import EditorField from '@/components/common/EditorField';
 import { priorities } from 'shared/workflow';
 import SelectPriority from '@/components/repository/common/SelectPriority';
+import SelectStatus from '../Status';
 
 const defaultPriority = priorities.find(it => it.default);
 
@@ -95,7 +96,7 @@ export default {
       this.$emit(`update:${key}`, value);
     }
   },
-  components: { DatePicker, EditorField, SelectPriority }
+  components: { DatePicker, EditorField, SelectPriority, SelectStatus }
 };
 </script>
 
