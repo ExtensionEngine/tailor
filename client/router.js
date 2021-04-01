@@ -122,15 +122,22 @@ export default function getRouter() {
   router.beforeEach((to, from, next) => {
     const auth = router.app.$store.state.auth;
     if (isAuthRequired(to, auth)) {
-      return next({ path: '/login', query: { redirect: to.fullPath } });
+      const query = { redirect: to.fullPath };
+      return next({ path: '/login', query });
     }
-    return isAllowed(to, auth) ? next() : next({ path: from.fullPath });
+    if (isPublicRoute(to) && auth.user) next({ path: '/' });
+    if (!isAllowed(to, auth)) next({ path: from.fullPath });
+    return next();
   });
   return router;
 }
 
+function isPublicRoute(route) {
+  return !route.matched.some(it => it.meta.auth);
+}
+
 function isAuthRequired(route, { user }) {
-  return route.matched.some(it => it.meta.auth) && !user;
+  return !isPublicRoute(route) && !user;
 }
 
 function isAllowed(route, { user }) {
