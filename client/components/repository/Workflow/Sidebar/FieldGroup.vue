@@ -30,7 +30,22 @@
       placeholder="Click to set assignee"
       item-value="id"
       outlined clearable
-      class="my-2" />
+      class="my-2">
+      <template #selection="{ item }">
+        <div class="selection d-flex align-center flex-nowrap">
+          <v-avatar size="26" class="mr-2">
+            <img :src="item.imgUrl">
+          </v-avatar>
+          <span class="text--default text-truncate">{{ item.label }}</span>
+        </div>
+      </template>
+      <template #item="{ item }">
+        <v-avatar size="26" class="mr-2">
+          <img :src="item.imgUrl">
+        </v-avatar>
+        <span class="text--default">{{ item.label }}</span>
+      </template>
+    </v-select>
     <validation-provider
       v-slot="{ errors }"
       ref="priority"
