@@ -17,8 +17,8 @@
 export default {
   name: 'select-workflow-status',
   props: {
-    itemText: { type: String, default: 'label' },
-    itemValue: { type: String, default: 'id' }
+    itemValue: { type: String, default: 'id' },
+    itemText: { type: String, default: 'label' }
   }
 };
 </script>
