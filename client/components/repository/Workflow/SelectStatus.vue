@@ -3,12 +3,12 @@
     <template #selection="{ item }">
       <div class="selection d-flex flex-nowrap">
         <v-icon :color="item.color" small class="mr-2">mdi-circle</v-icon>
-        <span class="text--default text-truncate">{{ item.label }}</span>
+        <span class="text--default text-truncate">{{ item[itemText] }}</span>
       </div>
     </template>
     <template #item="{ item }">
       <v-icon :color="item.color" small class="mr-2">mdi-circle</v-icon>
-      <span class="text--default">{{ item.label }}</span>
+      <span class="text--default">{{ item[itemText] }}</span>
     </template>
   </v-select>
 </template>
