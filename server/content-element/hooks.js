@@ -10,7 +10,7 @@ const Promise = require('bluebird');
 const { resolveStatics } = require('../shared/storage/helpers');
 const sse = require('../shared/sse');
 
-module.exports = { add };
+module.exports = { add, applyFetchHooks };
 
 function add(ContentElement, Hooks, Models) {
   const { Events } = ContentElement;
@@ -93,6 +93,15 @@ function add(ContentElement, Hooks, Models) {
     const activity = await resolveOutlineActivity(element);
     return activity && activity.touch();
   }
+}
+
+function applyFetchHooks(element) {
+  const { AFTER_RETRIEVE, AFTER_LOADED } = elementHooks;
+  const applyHook = (element, hook) => hook(element);
+  const hooks = [AFTER_RETRIEVE, AFTER_LOADED]
+    .map(hook => elementRegistry.getHook(element.type, hook))
+    .filter(Boolean);
+  return Promise.reduce([...hooks, resolveStatics], applyHook, element);
 }
 
 function resolveOutlineActivity(element) {
