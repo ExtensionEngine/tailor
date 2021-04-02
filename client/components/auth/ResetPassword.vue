@@ -58,6 +58,8 @@
 <script>
 import { mapActions } from 'vuex';
 
+const INVALID_TOKEN_ERROR = 'Reset token is invalid!';
+
 export default {
   data: () => ({
     error: null,
@@ -73,12 +75,16 @@ export default {
       const { token, password } = this;
       return this.resetPassword({ password, token })
         .then(() => this.$router.push('/'))
-        .catch(() => (this.error = 'An error has occurred!'));
+        .catch(() => (this.error = INVALID_TOKEN_ERROR));
     }
   },
   created() {
-    return this.validateResetToken({ token: this.token })
-      .catch(err => err && this.$router.push('/'));
+    const { $router, token } = this;
+    return this.validateResetToken({ token })
+      .catch(() => {
+        this.error = INVALID_TOKEN_ERROR;
+        return setTimeout(() => $router.push('/'), 5000);
+      });
   }
 };
 </script>

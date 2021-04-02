@@ -1,10 +1,7 @@
 'use strict';
 
-const {
-  ACCEPTED, BAD_REQUEST, CONFLICT, FORBIDDEN, NO_CONTENT, NOT_FOUND
-} = require('http-status-codes');
+const { ACCEPTED, BAD_REQUEST, CONFLICT, NO_CONTENT, NOT_FOUND } = require('http-status-codes');
 const { createError, validationError } = require('../shared/error/helpers');
-const jwt = require('jsonwebtoken');
 const map = require('lodash/map');
 const { Op } = require('sequelize');
 const { User } = require('../shared/database');
@@ -73,11 +70,6 @@ function reinvite({ params }, res) {
     .then(() => res.status(ACCEPTED).end());
 }
 
-function validateResetToken({ body }, res) {
-  const decodedData = jwt.decode(body.token);
-  return !decodedData ? createError(FORBIDDEN) : res.sendStatus(NO_CONTENT);
-}
-
 module.exports = {
   list,
   upsert,
@@ -87,6 +79,5 @@ module.exports = {
   getProfile,
   updateProfile,
   changePassword,
-  reinvite,
-  validateResetToken
+  reinvite
 };

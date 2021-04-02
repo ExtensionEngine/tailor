@@ -3,6 +3,7 @@
 const { authenticate, logout } = require('../shared/auth');
 const { authorize } = require('../shared/auth/mw');
 const ctrl = require('./user.controller');
+const { NO_CONTENT } = require('http-status-codes');
 const { processPagination } = require('../shared/database/pagination');
 const router = require('express').Router();
 const { User } = require('../shared/database');
@@ -12,7 +13,7 @@ router
   .post('/login', authenticate('local', { setCookie: true }), ctrl.getProfile)
   .post('/forgot-password', ctrl.forgotPassword)
   .post('/reset-password', authenticate('token'), ctrl.resetPassword)
-  .post('/reset-token-validation', ctrl.validateResetToken)
+  .post('/reset-token-validation', authenticate('token'), (_, res) => res.sendStatus(NO_CONTENT))
   // Protected routes:
   .use(authenticate('jwt'))
   .get('/', authorize(), processPagination(User), ctrl.list)

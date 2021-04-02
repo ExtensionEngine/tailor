@@ -23,7 +23,7 @@ function forgotPassword(email) {
 }
 
 function resetPassword(token, password) {
-  return request.post(urls.resetPassword, { token, password });
+  return request.base.post(urls.resetPassword, { token, password });
 }
 
 function validateResetToken(token = '') {
