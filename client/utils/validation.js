@@ -10,8 +10,8 @@ const nameFormat = {
   validate: value => {
     const unicodeRegex = /^[\p{Letter}\s'-.]+$/u.test(value);
     const isPunctuationStreakRepeated = /['-.]{2,}/.test(value);
-    const hasInvalidBoundaries = /^['-.].*|['.-]$/.test(value);
-    return unicodeRegex && !hasInvalidBoundaries && !isPunctuationStreakRepeated;
+    const hasValidBoundaries = !/^['-.].*|['.-]$/.test(value);
+    return unicodeRegex && hasValidBoundaries && !isPunctuationStreakRepeated;
   },
   message: `The {_field_} field may only contain alphabetic characters, spaces,
     dots (.), apostrophes (') and hyphens (-)`
