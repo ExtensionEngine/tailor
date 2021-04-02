@@ -1,10 +1,6 @@
 <template>
   <div>
-    <v-alert
-      :value="!!error"
-      color="pink lighten-1"
-      text
-      class="mb-5">
+    <v-alert :value="!!error" color="pink lighten-1" text class="mb-5">
       {{ error }}
     </v-alert>
     <validation-observer
@@ -58,13 +54,13 @@
 <script>
 import { mapActions } from 'vuex';
 
-const INVALID_TOKEN_ERROR = 'Reset token is invalid!';
+const INVALID_TOKEN_ERROR = 'Invalid reset token!';
 
 export default {
   data: () => ({
-    error: null,
     password: '',
-    passwordConfirmation: ''
+    passwordConfirmation: '',
+    error: null
   }),
   computed: {
     token: vm => vm.$route.params.token
