@@ -1,20 +1,22 @@
 'use strict';
 
 const { authenticate, logout } = require('../shared/auth');
+const { ACCEPTED } = require('http-status-codes');
 const { authorize } = require('../shared/auth/mw');
 const ctrl = require('./user.controller');
-const { NO_CONTENT } = require('http-status-codes');
 const { processPagination } = require('../shared/database/pagination');
 const router = require('express').Router();
 const { User } = require('../shared/database');
 
+// Public routes:
 router
-  // Public routes:
   .post('/login', authenticate('local', { setCookie: true }), ctrl.getProfile)
   .post('/forgot-password', ctrl.forgotPassword)
   .post('/reset-password', authenticate('token'), ctrl.resetPassword)
-  .post('/reset-token-validation', authenticate('token'), (_, res) => res.sendStatus(NO_CONTENT))
-  // Protected routes:
+  .post('/reset-token-validation', authenticate('token'), (_, res) => res.sendStatus(ACCEPTED));
+
+// Protected routes:
+router
   .use(authenticate('jwt'))
   .get('/', authorize(), processPagination(User), ctrl.list)
   .post('/', authorize(), ctrl.upsert)
