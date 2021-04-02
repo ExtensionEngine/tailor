@@ -12,6 +12,7 @@ router
   .post('/login', authenticate('local', { setCookie: true }), ctrl.getProfile)
   .post('/forgot-password', ctrl.forgotPassword)
   .post('/reset-password', authenticate('token'), ctrl.resetPassword)
+  .post('/reset-token-validation', ctrl.validateResetToken)
   // Protected routes:
   .use(authenticate('jwt'))
   .get('/', authorize(), processPagination(User), ctrl.list)

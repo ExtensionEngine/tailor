@@ -64,14 +64,21 @@ export default {
     password: '',
     passwordConfirmation: ''
   }),
+  computed: {
+    token: vm => vm.$route.params.token
+  },
   methods: {
-    ...mapActions(['resetPassword']),
+    ...mapActions(['resetPassword', 'validateResetToken']),
     submit() {
-      const { token } = this.$route.params;
-      return this.resetPassword({ password: this.password, token })
+      const { token, password } = this;
+      return this.resetPassword({ password, token })
         .then(() => this.$router.push('/'))
         .catch(() => (this.error = 'An error has occurred!'));
     }
+  },
+  created() {
+    return this.validateResetToken({ token: this.token })
+      .catch(err => err && this.$router.push('/'));
   }
 };
 </script>

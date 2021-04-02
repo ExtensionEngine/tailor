@@ -5,6 +5,7 @@ const urls = {
   logout: '/users/logout',
   forgotPassword: '/users/forgot-password',
   resetPassword: '/users/reset-password',
+  validateResetToken: '/users/reset-token-validation',
   profile: '/users/me',
   changePassword: '/users/me/change-password'
 };
@@ -23,6 +24,10 @@ function forgotPassword(email) {
 
 function resetPassword(token, password) {
   return request.post(urls.resetPassword, { token, password });
+}
+
+function validateResetToken(token = '') {
+  return request.base.post(urls.validateResetToken, { token });
 }
 
 function changePassword(currentPassword, newPassword) {
@@ -44,5 +49,6 @@ export default {
   resetPassword,
   getUserInfo,
   updateUserInfo,
-  changePassword
+  changePassword,
+  validateResetToken
 };

@@ -20,6 +20,8 @@ export const resetPassword = (_, { token, password }) => {
   return api.resetPassword(token, password);
 };
 
+export const validateResetToken = (_, { token }) => api.validateResetToken(token);
+
 export const fetchUserInfo = ({ commit }) => {
   return api.getUserInfo()
     .then(({ data: { user, authData } }) => commit('setAuth', { user, authData }))
