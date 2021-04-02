@@ -75,12 +75,9 @@ export default {
     }
   },
   created() {
-    const { $router, token } = this;
+    const { token } = this;
     return this.validateResetToken({ token })
-      .catch(() => {
-        this.error = INVALID_TOKEN_ERROR;
-        return setTimeout(() => $router.push('/'), 5000);
-      });
+      .catch(() => (this.error = INVALID_TOKEN_ERROR));
   }
 };
 </script>
