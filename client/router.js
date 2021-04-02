@@ -121,15 +121,16 @@ export default function getRouter() {
   const router = new Router(options);
   router.beforeEach((to, from, next) => {
     const { user } = router.app.$store.state.auth;
-    if (isAuthRequired(to, user)) {
-      const query = { redirect: to.fullPath };
-      return next({ path: '/login', query });
-    }
-    if (to.name === 'login' && user) next({ path: '/' });
-    if (!isAllowed(to, user)) next({ path: from.fullPath });
-    return next();
+    if (isAuthRequired(to, user)) return redirectToLogin(to, next);
+    if (to.name === 'login' && user) return next({ path: '/' });
+    return !isAllowed(to, user) ? next({ path: from.fullPath }) : next();
   });
   return router;
+}
+
+function redirectToLogin(route, next) {
+  const query = { redirect: route.fullPath };
+  return next({ path: '/login', query });
 }
 
 function isAuthRequired(route, user) {
