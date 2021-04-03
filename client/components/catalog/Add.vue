@@ -163,7 +163,6 @@ export default {
   }),
   computed: {
     ...mapGetters(['isAdmin']),
-    isRepoNameExists: vm => some(vm.repositories, { name: vm.repository.name }),
     isCreate: vm => vm.selectedTab === NEW_TAB,
     schemas: () => SCHEMAS
   },
@@ -200,11 +199,11 @@ export default {
       this.repositories = await api.getRepositories({ fetchAll: true });
       this.repository = resetData();
     },
-    isRepoNameExists(val) {
+    'repository.name'(name) {
+      const isNameExists = some(this.repositories, { name });
       setTimeout(() => {
-        if (!val) return (this.existingRepoWarning = '');
-        this.existingRepoWarning = EXISTING_REPO_WARNING;
-      }, 300);
+        this.existingRepoWarning = isNameExists ? EXISTING_REPO_WARNING : '';
+      }, 200);
     }
   },
   components: { TailorDialog }
