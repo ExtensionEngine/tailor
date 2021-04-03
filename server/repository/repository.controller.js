@@ -64,11 +64,7 @@ const includeRepositoryTags = query => {
     : include;
 };
 
-async function index({ query, user, opts }, res) {
-  if (query.fetchAll) {
-    const data = await Repository.findAll({ attributes: ['name'] });
-    return res.json({ data });
-  }
+function index({ query, user, opts }, res) {
   if (query.search) opts.where.name = getFilter(query.search);
   if (query.schema) opts.where.schema = { [Op.eq]: query.schema };
   if (getVal(opts, 'order.0.0') === 'name') opts.order[0][0] = lowercaseName;
@@ -77,9 +73,9 @@ async function index({ query, user, opts }, res) {
     includeRepositoryUser(user, query),
     ...includeRepositoryTags(query)
   ];
-  const repositories = user.isAdmin()
-    ? Repository.findAll(opts)
-    : user.getRepositories(opts);
+  const repositories = query.fetchAll
+    ? Repository.findAll({ attributes: ['name'] })
+    : user.isAdmin() ? Repository.findAll(opts) : user.getRepositories(opts);
   return repositories.then(data => res.json({ data }));
 }
 
