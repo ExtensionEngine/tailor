@@ -48,14 +48,15 @@
         Change password
       </v-btn>
       <v-btn v-if="error" :to="{ name: 'login' }" tag="a" text class="mt-7">
-        <v-icon class="pr-2">mdi-arrow-left</v-icon>Back to Login
+        <v-icon class="pr-2">mdi-arrow-left</v-icon>
+        {{ backButtonLabel }}
       </v-btn>
     </validation-observer>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 const INVALID_TOKEN_ERROR = 'Invalid reset token!';
 
@@ -66,7 +67,9 @@ export default {
     error: null
   }),
   computed: {
-    token: vm => vm.$route.params.token
+    ...mapState({ user: state => state.auth.user }),
+    token: vm => vm.$route.params.token,
+    backButtonLabel: vm => `Back to ${vm.user ? 'Catalog' : 'Login'}`
   },
   methods: {
     ...mapActions(['resetPassword', 'validateResetToken']),
