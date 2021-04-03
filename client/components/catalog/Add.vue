@@ -89,17 +89,9 @@
             outlined
             class="required mb-2">
             <template #message="{ message }">
-              <div class="d-flex align-center">
-                <v-icon
-                  v-if="existingRepoWarning"
-                  color="warning"
-                  class="text-body-1 mr-1">
-                  mdi-alert
-                </v-icon>
-                <span :class="errors.length ? 'error--text' : 'warning--text'">
-                  {{ message }}
-                </span>
-              </div>
+              <span :class="errors.length ? 'error--text' : 'warning--text'">
+                {{ message }}
+              </span>
             </template>
           </v-text-field>
         </validation-provider>
@@ -141,7 +133,7 @@ import TailorDialog from '@/components/common/TailorDialog';
 
 const NEW_TAB = 0;
 
-const EXISTING_REPO_MESSAGE = 'Warning: a Repository with that name already exists.';
+const EXISTING_REPO_MESSAGE = '⚠️ Warning: a Repository with that name already exists.';
 
 const resetData = () => ({
   schema: SCHEMAS[0].id,
