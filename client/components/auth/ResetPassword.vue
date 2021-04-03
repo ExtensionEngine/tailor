@@ -47,6 +47,9 @@
         class="my-1">
         Change password
       </v-btn>
+      <v-btn v-if="error" :to="{ name: 'login' }" tag="a" text class="mt-7">
+        <v-icon class="pr-2">mdi-arrow-left</v-icon>Back to Login
+      </v-btn>
     </validation-observer>
   </div>
 </template>
