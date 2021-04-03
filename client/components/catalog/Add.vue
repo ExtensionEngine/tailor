@@ -141,7 +141,7 @@ import TailorDialog from '@/components/common/TailorDialog';
 
 const NEW_TAB = 0;
 
-const EXISTING_REPO_WARNING = 'Warning: a Repository with that name already exists.';
+const EXISTING_REPO_MESSAGE = 'Warning: a Repository with that name already exists.';
 
 const resetData = () => ({
   schema: SCHEMAS[0].id,
@@ -202,7 +202,7 @@ export default {
     'repository.name'(name) {
       const isNameExists = some(this.repositories, { name });
       setTimeout(() => {
-        this.existingRepoWarning = isNameExists ? EXISTING_REPO_WARNING : '';
+        this.existingRepoWarning = isNameExists ? EXISTING_REPO_MESSAGE : '';
       }, 200);
     }
   },
