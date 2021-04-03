@@ -64,7 +64,11 @@ const includeRepositoryTags = query => {
     : include;
 };
 
-function index({ query, user, opts }, res) {
+async function index({ query, user, opts }, res) {
+  if (query.fetchAll) {
+    const data = await Repository.findAll({ attributes: ['name'] });
+    return res.json({ data });
+  }
   if (query.search) opts.where.name = getFilter(query.search);
   if (query.schema) opts.where.schema = { [Op.eq]: query.schema };
   if (getVal(opts, 'order.0.0') === 'name') opts.order[0][0] = lowercaseName;

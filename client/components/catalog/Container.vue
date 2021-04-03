@@ -85,12 +85,8 @@ export default {
       queryParams: 'repositoryQueryParams',
       hasMoreResults: 'hasMoreResults'
     }),
-    loader() {
-      return get(this.$refs, 'loader.stateChanger', {});
-    },
-    hasRepositories() {
-      return !!this.repositories.length;
-    },
+    loader: vm => get(vm.$refs, 'loader.stateChanger', {}),
+    hasRepositories: vm => !!vm.repositories.length,
     noRepositoriesMessage() {
       if (this.loading) return;
       if (this.hasRepositories) return;

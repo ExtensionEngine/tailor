@@ -39,7 +39,7 @@
           class="mb-12">
           {{ serverError }}
         </v-alert>
-        <v-tabs-items v-model="selectedTab">
+        <v-tabs-items v-model="selectedTab" class="mb-2">
           <v-tab-item key="schema">
             <validation-provider
               v-slot="{ errors }"
@@ -82,11 +82,26 @@
           <v-text-field
             v-model.trim="repository.name"
             :error-messages="errors"
+            :messages="existingRepoWarning"
             name="repositoryName"
             label="Name"
             placeholder="Enter name..."
             outlined
-            class="required" />
+            class="required mb-2">
+            <template #message="{ message }">
+              <div class="d-flex align-center">
+                <v-icon
+                  v-if="existingRepoWarning"
+                  color="warning"
+                  class="text-body-1 mr-1">
+                  mdi-alert
+                </v-icon>
+                <span :class="errors.length ? 'error--text' : 'warning--text'">
+                  {{ message }}
+                </span>
+              </div>
+            </template>
+          </v-text-field>
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
@@ -121,9 +136,12 @@ import api from '@/api/repository';
 import loader from '@/components/common/loader';
 import { mapGetters } from 'vuex';
 import { SCHEMAS } from 'shared/activities';
+import some from 'lodash/some';
 import TailorDialog from '@/components/common/TailorDialog';
 
 const NEW_TAB = 0;
+
+const EXISTING_REPO_WARNING = 'Warning: a Repository with that name already exists.';
 
 const resetData = () => ({
   schema: SCHEMAS[0].id,
@@ -135,14 +153,17 @@ export default {
   name: 'create-repository',
   data: () => ({
     repository: resetData(),
+    repositories: [],
     archive: null,
     selectedTab: NEW_TAB,
     isVisible: false,
     showLoader: false,
-    serverError: ''
+    serverError: '',
+    existingRepoWarning: ''
   }),
   computed: {
     ...mapGetters(['isAdmin']),
+    isRepoNameExists: vm => some(vm.repositories, { name: vm.repository.name }),
     isCreate: vm => vm.selectedTab === NEW_TAB,
     schemas: () => SCHEMAS
   },
@@ -170,12 +191,20 @@ export default {
       this.isVisible = false;
       this.archive = null;
       this.serverError = '';
+      this.existingRepoWarning = '';
     }
   },
   watch: {
-    isVisible(val) {
+    async isVisible(val) {
       if (!val) return setTimeout(() => this.$refs.form.reset(), 60);
+      this.repositories = await api.getRepositories({ fetchAll: true });
       this.repository = resetData();
+    },
+    isRepoNameExists(val) {
+      setTimeout(() => {
+        if (!val) return (this.existingRepoWarning = '');
+        this.existingRepoWarning = EXISTING_REPO_WARNING;
+      }, 300);
     }
   },
   components: { TailorDialog }
