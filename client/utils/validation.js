@@ -8,10 +8,10 @@ import userApi from '@/api/user';
 
 const nameFormat = {
   validate: value => {
-    const unicodeRegex = /^[\p{Letter}\s'-.]+$/u.test(value);
+    const hasValidUnicodeLetters = /^[\p{Letter}\s'-.]+$/u.test(value);
     const hasPunctuationStreak = /['-.]{2,}/.test(value);
     const hasValidBoundaries = !/^['-.].*|['.-]$/.test(value);
-    return unicodeRegex && hasValidBoundaries && !hasPunctuationStreak;
+    return hasValidUnicodeLetters && hasValidBoundaries && !hasPunctuationStreak;
   },
   message: `The {_field_} field may only contain alphabetic characters, spaces,
     dots (.), apostrophes (') and hyphens (-)`
