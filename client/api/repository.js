@@ -3,6 +3,7 @@ import request from './request';
 
 const urls = {
   root: '/repositories',
+  names: () => `${urls.root}/names`,
   import: () => `${urls.root}/import`,
   resource: id => `${urls.root}/${id}`,
   publish: id => `${urls.resource(id)}/publish`,
@@ -22,6 +23,10 @@ function get(repositoryId, params) {
 
 function getRepositories(params) {
   return request.get(urls.root, { params }).then(extractData);
+}
+
+function getRepositoryNames(params = {}) {
+  return request.get(urls.names(), { params }).then(extractData);
 }
 
 function getUsers(repositoryId, params) {
@@ -81,5 +86,6 @@ export default {
   removeTag,
   initiateExportJob,
   exportRepository,
-  importRepository
+  importRepository,
+  getRepositoryNames
 };

@@ -73,9 +73,9 @@ function index({ query, user, opts }, res) {
     includeRepositoryUser(user, query),
     ...includeRepositoryTags(query)
   ];
-  const repositories = query.getAllNames
-    ? Repository.findAll({ attributes: ['name'] })
-    : user.isAdmin() ? Repository.findAll(opts) : user.getRepositories(opts);
+  const repositories = user.isAdmin()
+    ? Repository.findAll(opts)
+    : user.getRepositories(opts);
   return repositories.then(data => res.json({ data }));
 }
 
@@ -225,6 +225,12 @@ function importRepository({ body, file, user }, res) {
     });
 }
 
+async function getRepositoryNames({ query }, res) {
+  const where = query.repositoryId ? { [Op.not]: { id: query.repositoryId } } : {};
+  const repositories = await Repository.findAll({ where, attributes: ['name'] });
+  return res.json({ data: repositories });
+}
+
 module.exports = {
   index,
   create,
@@ -241,5 +247,6 @@ module.exports = {
   removeUser,
   publishRepoInfo,
   addTag,
-  removeTag
+  removeTag,
+  getRepositoryNames
 };

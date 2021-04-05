@@ -27,7 +27,8 @@ const storageRouter = require('../shared/storage/storage.router');
 const upload = multer({ storage: multer.diskStorage({}) });
 
 router
-  .post('/import', authorize(), upload.single('archive'), ctrl.import);
+  .post('/import', authorize(), upload.single('archive'), ctrl.import)
+  .get('/names', ctrl.getRepositoryNames);
 
 router
   .param('repositoryId', getRepository)

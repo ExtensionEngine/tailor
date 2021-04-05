@@ -58,7 +58,8 @@ export default {
       label: 'Description',
       validate: { required: true, min: 2, max: 2000 }
     }],
-    metadata: vm => getRepositoryMetadata(vm.repository)
+    metadata: vm => getRepositoryMetadata(vm.repository),
+    repositoryId: vm => vm.$route.params.repositoryId
   },
   methods: {
     ...mapActions('repositories', ['update']),
@@ -70,12 +71,13 @@ export default {
     },
     async publish() {
       this.publishing = true;
-      await api.publishRepositoryMeta(this.$route.params.repositoryId);
+      await api.publishRepositoryMeta(this.repositoryId);
       this.publishing = false;
     }
   },
   async created() {
-    this.repoNames = await api.getRepositories({ getAllNames: true });
+    const { repositoryId } = this;
+    this.repoNames = await api.getRepositoryNames({ repositoryId });
   },
   components: { MetaInput: Meta }
 };
