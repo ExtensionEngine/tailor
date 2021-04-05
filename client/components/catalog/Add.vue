@@ -145,7 +145,7 @@ export default {
   name: 'create-repository',
   data: () => ({
     repository: resetData(),
-    repositories: [],
+    repositoryNames: [],
     archive: null,
     selectedTab: NEW_TAB,
     isVisible: false,
@@ -188,11 +188,11 @@ export default {
   watch: {
     async isVisible(val) {
       if (!val) return setTimeout(() => this.$refs.form.reset(), 60);
-      this.repositories = await api.getRepositoryNames();
+      this.repositoryNames = await api.getRepositoryNames();
       this.repository = resetData();
     },
     'repository.name'(name) {
-      const isNameExists = some(this.repositories, { name });
+      const isNameExists = some(this.repositoryNames, { name });
       setTimeout(() => {
         this.existingRepoWarning = isNameExists ? EXISTING_REPO_MESSAGE : '';
       }, 200);

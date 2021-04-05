@@ -40,16 +40,22 @@ const EXISTING_REPO_MESSAGE = '⚠️ Warning: a Repository with that name alrea
 export default {
   data: () => ({
     publishing: false,
-    repoNames: []
+    repositoryNames: []
   }),
   computed: {
     ...mapGetters('repository', ['repository']),
-    requiredData: ({ repository, repoNames }) => [{
+    repositoryId: vm => vm.$route.params.repositoryId,
+    metadata: vm => getRepositoryMetadata(vm.repository),
+    existingRepoWarning() {
+      const { repositoryNames, repository: { name } } = this;
+      return some(repositoryNames, { name }) ? EXISTING_REPO_MESSAGE : '';
+    },
+    requiredData: ({ repository, existingRepoWarning }) => [{
       key: 'name',
       value: repository.name,
       type: 'TEXTAREA',
       label: 'Name',
-      messages: some(repoNames, { name: repository.name }) ? EXISTING_REPO_MESSAGE : '',
+      messages: existingRepoWarning,
       validate: { required: true, min: 2, max: 250 }
     }, {
       key: 'description',
@@ -57,9 +63,7 @@ export default {
       type: 'TEXTAREA',
       label: 'Description',
       validate: { required: true, min: 2, max: 2000 }
-    }],
-    metadata: vm => getRepositoryMetadata(vm.repository),
-    repositoryId: vm => vm.$route.params.repositoryId
+    }]
   },
   methods: {
     ...mapActions('repositories', ['update']),
@@ -77,7 +81,7 @@ export default {
   },
   async created() {
     const { repositoryId } = this;
-    this.repoNames = await api.getRepositoryNames({ repositoryId });
+    this.repositoryNames = await api.getRepositoryNames({ repositoryId });
   },
   components: { MetaInput: Meta }
 };
