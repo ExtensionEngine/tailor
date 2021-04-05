@@ -33,26 +33,31 @@ import find from 'lodash/find';
 import { getRepositoryMetadata } from 'shared/activities';
 import Meta from 'tce-core/MetaInput';
 import set from 'lodash/set';
+import some from 'lodash/some';
+
+const EXISTING_REPO_MESSAGE = '⚠️ Warning: a Repository with that name already exists.';
 
 export default {
-  data: () => ({ publishing: false }),
+  data: () => ({
+    publishing: false,
+    repoNames: []
+  }),
   computed: {
     ...mapGetters('repository', ['repository']),
-    requiredData() {
-      return [{
-        key: 'name',
-        value: this.repository.name,
-        type: 'TEXTAREA',
-        label: 'Name',
-        validate: { required: true, min: 2, max: 250 }
-      }, {
-        key: 'description',
-        value: this.repository.description,
-        type: 'TEXTAREA',
-        label: 'Description',
-        validate: { required: true, min: 2, max: 2000 }
-      }];
-    },
+    requiredData: ({ repository, repoNames }) => [{
+      key: 'name',
+      value: repository.name,
+      type: 'TEXTAREA',
+      label: 'Name',
+      messages: some(repoNames, { name: repository.name }) ? EXISTING_REPO_MESSAGE : '',
+      validate: { required: true, min: 2, max: 250 }
+    }, {
+      key: 'description',
+      value: repository.description,
+      type: 'TEXTAREA',
+      label: 'Description',
+      validate: { required: true, min: 2, max: 2000 }
+    }],
     metadata: vm => getRepositoryMetadata(vm.repository)
   },
   methods: {
@@ -63,11 +68,14 @@ export default {
       await this.update(set(data, key, value));
       this.$snackbar.show('Saved', { class: 'mb-12' });
     },
-    publish() {
+    async publish() {
       this.publishing = true;
-      return api.publishRepositoryMeta(this.$route.params.repositoryId)
-        .then(() => (this.publishing = false));
+      await api.publishRepositoryMeta(this.$route.params.repositoryId);
+      this.publishing = false;
     }
+  },
+  async created() {
+    this.repoNames = await api.getRepositories({ getAllNames: true });
   },
   components: { MetaInput: Meta }
 };

@@ -188,7 +188,7 @@ export default {
   watch: {
     async isVisible(val) {
       if (!val) return setTimeout(() => this.$refs.form.reset(), 60);
-      this.repositories = await api.getRepositories({ fetchAll: true });
+      this.repositories = await api.getRepositories({ getAllNames: true });
       this.repository = resetData();
     },
     'repository.name'(name) {

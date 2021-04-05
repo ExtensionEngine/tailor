@@ -12,10 +12,16 @@
       :label="meta.label"
       :placeholder="meta.placeholder"
       :error-messages="errors"
+      :messages="meta.messages"
       :rows="rows"
-      auto-grow
-      outlined
-      class="my-2" />
+      auto-grow outlined
+      class="my-2">
+      <template #message="{ message }">
+        <span :class="errors.length ? 'error--text' : 'warning--text'">
+          {{ message }}
+        </span>
+      </template>
+    </v-textarea>
   </validation-provider>
 </template>
 
@@ -29,11 +35,7 @@ export default {
     meta: { type: Object, default: () => ({ value: null }) },
     rows: { type: Number, default: 2 }
   },
-  data() {
-    return {
-      value: this.meta.value
-    };
-  },
+  data: vm => ({ value: vm.meta.value }),
   computed: {
     validationRules: vm => get(vm.meta, 'validate.rules', vm.meta.validate)
   },
