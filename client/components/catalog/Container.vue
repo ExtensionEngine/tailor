@@ -68,6 +68,7 @@
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import AddRepository from './Add';
 import filterConfigs from './repositoryFilterConfigs';
+import find from 'lodash/find';
 import get from 'lodash/get';
 import InfiniteLoading from 'vue-infinite-loading';
 import loader from '@/components/common/loader';
