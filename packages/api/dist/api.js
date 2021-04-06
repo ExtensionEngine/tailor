@@ -189,22 +189,24 @@ var activity = {
 };
 
 var urls$6 = {
-  base: '/assets'
+  base: function base(repositoryId) {
+    return "/repositories/".concat(repositoryId, "/assets");
+  }
 };
 
-function getUrl(key) {
+function getUrl(repositoryId, key) {
   var params = {
     key: key
   };
-  return client.get(urls$6.base, {
+  return client.get(urls$6.base(repositoryId), {
     params: params
   }).then(function (res) {
     return res.data.url;
   });
 }
 
-function upload(data) {
-  return client.post(urls$6.base, data).then(function (res) {
+function upload(repositoryId, data) {
+  return client.post(urls$6.base(repositoryId), data).then(function (res) {
     return res.data;
   });
 }
