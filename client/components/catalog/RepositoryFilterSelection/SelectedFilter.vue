@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  name: 'selected-repository-filter',
+  name: 'selected-filter-option',
   inheritAttrs: false,
   props: {
     name: { type: String, required: true },
