@@ -46,7 +46,7 @@ export default {
       const { query } = this.$route;
       return [
         { label: 'General', name: 'repository-info', icon: 'wrench' },
-        { label: 'People', name: 'user-management', icon: 'account' }
+        { label: 'Manage Access', name: 'user-management', icon: 'account' }
       ].map(route => ({ ...route, query }));
     },
     actions() {
@@ -72,8 +72,9 @@ export default {
   background: none !important;
 }
 
-.v-list-item__title {
+.v-list-item .v-list-item__title {
   font-size: 0.875rem;
   font-weight: 500;
+  line-height: 1.3;
 }
 </style>
