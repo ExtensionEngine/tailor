@@ -9,7 +9,8 @@
     <v-btn
       v-show="repositoryFilter.length"
       @click="$emit('clear:all')"
-      class="mb-1" small rounded>
+      small rounded
+      class="mb-1">
       Clear all
     </v-btn>
   </v-row>
