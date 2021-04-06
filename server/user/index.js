@@ -5,14 +5,9 @@ const { ACCEPTED } = require('http-status-codes');
 const { authorize } = require('../shared/auth/mw');
 const ctrl = require('./user.controller');
 const { processPagination } = require('../shared/database/pagination');
-const rateLimit = require('express-rate-limit');
+const { requestLimiter } = require('../shared/middlewares');
 const router = require('express').Router();
 const { User } = require('../shared/database');
-
-const requestLimiter = rateLimit({
-  max: 10,
-  windowMs: 15 * 60 * 1000 // every 15 minutes
-});
 
 // Public routes:
 router
@@ -21,7 +16,7 @@ router
   .post('/reset-password', authenticate('token'), ctrl.resetPassword)
   .post(
     '/reset-token-validation',
-    requestLimiter,
+    requestLimiter(),
     authenticate('token'),
     (_, res) => res.sendStatus(ACCEPTED)
   );
