@@ -55,8 +55,8 @@ import orderBy from 'lodash/orderBy';
 export default {
   name: 'repository-filter',
   props: {
-    values: { type: Array, required: true },
     type: { type: String, required: true },
+    values: { type: Array, required: true },
     label: { type: String, required: true },
     icon: { type: String, required: true }
   },
