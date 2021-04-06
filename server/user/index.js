@@ -5,15 +5,21 @@ const { ACCEPTED } = require('http-status-codes');
 const { authorize } = require('../shared/auth/mw');
 const ctrl = require('./user.controller');
 const { processPagination } = require('../shared/database/pagination');
+const rateLimit = require('express-rate-limit');
 const router = require('express').Router();
 const { User } = require('../shared/database');
+
+const requestLimiter = rateLimit({
+  max: 5,
+  windowMs: 15 * 60 * 1000 // 15 minutes
+});
 
 // Public routes:
 router
   .post('/login', authenticate('local', { setCookie: true }), ctrl.getProfile)
   .post('/forgot-password', ctrl.forgotPassword)
   .post('/reset-password', authenticate('token'), ctrl.resetPassword)
-  .post('/reset-token-validation', authenticate('token'), (_, res) => res.sendStatus(ACCEPTED));
+  .post('/reset-token-validation', requestLimiter, authenticate('token'), (_, res) => res.sendStatus(ACCEPTED));
 
 // Protected routes:
 router
