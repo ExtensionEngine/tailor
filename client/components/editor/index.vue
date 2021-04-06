@@ -46,7 +46,7 @@ export default {
   }),
   computed: {
     ...mapGetters('editor', ['activity', 'contentContainers', 'rootContainerGroups']),
-    ...mapGetters('repository', ['repository', 'outlineActivities']),
+    ...mapGetters('repository', ['repository', 'activities', 'outlineActivities']),
     ...mapGetters('repository/userTracking', ['getActiveUsers']),
     ...mapState('editor', ['showPublishDiff']),
     activeUsers: vm => vm.getActiveUsers('activity', vm.activityId)
@@ -68,13 +68,24 @@ export default {
   },
   provide() {
     const $editorState = {};
+    const $editorContent = {};
     Object.defineProperties($editorState, {
       isPublishDiff: {
         get: () => this.showPublishDiff,
         enumerable: true
       }
     });
-    return { $editorState };
+    Object.defineProperties($editorContent, {
+      repository: {
+        get: () => this.repository,
+        enumerable: true
+      },
+      activities: {
+        get: () => this.activities,
+        enumerable: true
+      }
+    });
+    return { $editorContent, $editorState };
   },
   watch: {
     activityId() {

@@ -62,7 +62,6 @@ import flatMap from 'lodash/flatMap';
 import { getDescendants as getDeepChildren } from '@tailor/utils';
 import loader from '@/loader';
 import map from 'lodash/map';
-import { mapGetters } from 'vuex';
 import SelectActivity from './SelectActivity.vue';
 import SelectRepository from './SelectRepository.vue';
 import sortBy from 'lodash/sortBy';
@@ -75,7 +74,7 @@ const TOGGLE_BUTTON = {
 
 export default {
   name: 'select-element',
-  inject: ['$schema'],
+  inject: ['$schema', '$editorContent'],
   props: {
     selected: { type: Array, default: () => [] },
     heading: { type: String, required: true },
@@ -98,10 +97,8 @@ export default {
     loadingContent: false
   }),
   computed: {
-    ...mapGetters('repository', {
-      currentRepository: 'repository',
-      currentActivities: 'activities'
-    }),
+    currentRepository: vm => vm.$editorContent.repository,
+    currentActivities: vm => vm.$editorContent.activities,
     allElementsSelected: vm => vm.selection.elements.length === vm.elements.length,
     rootContainerTypes() {
       const type = this.selection.activity?.type;
