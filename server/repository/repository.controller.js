@@ -59,8 +59,8 @@ const includeRepositoryUser = (user, query) => {
 
 const includeRepositoryTags = query => {
   const include = [{ model: Tag }];
-  return query.tags
-    ? [...include, { model: RepositoryTag, where: { tagId: query.tags } }]
+  return query.tagIds
+    ? [...include, { model: RepositoryTag, where: { tagId: query.tagIds } }]
     : include;
 };
 

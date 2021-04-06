@@ -2,7 +2,7 @@ export default {
   TAG: {
     type: 'TAG',
     label: 'tags',
-    queryParam: 'tags',
+    queryParam: 'tagIds',
     icon: 'mdi-tag-outline'
   },
   SCHEMA: {
