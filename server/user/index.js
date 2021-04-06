@@ -9,7 +9,7 @@ const rateLimit = require('express-rate-limit');
 const router = require('express').Router();
 const { User } = require('../shared/database');
 
-// Max 5(default) requests allowed every 15 minutes
+// Max 5 (default) requests allowed every 15 minutes
 const requestLimiter = rateLimit({ windowMs: 15 * 60 * 1000 });
 
 // Public routes:
