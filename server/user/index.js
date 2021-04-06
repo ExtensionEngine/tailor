@@ -9,18 +9,22 @@ const rateLimit = require('express-rate-limit');
 const router = require('express').Router();
 const { User } = require('../shared/database');
 
-// Max 5 (default) requests allowed every 15 minutes
-const requestLimiter = rateLimit({ windowMs: 15 * 60 * 1000 });
+const requestLimiter = rateLimit({
+  max: 10,
+  windowMs: 15 * 60 * 1000 // every 15 minutes
+});
 
 // Public routes:
 router
   .post('/login', authenticate('local', { setCookie: true }), ctrl.getProfile)
-  .post('/forgot-password', ctrl.forgotPassword);
-
-router
-  .use('/password', requestLimiter, authenticate('token'))
-  .post('/password/reset', ctrl.resetPassword)
-  .post('/password/token-validation', (_, res) => res.sendStatus(ACCEPTED));
+  .post('/forgot-password', ctrl.forgotPassword)
+  .post('/reset-password', authenticate('token'), ctrl.resetPassword)
+  .post(
+    '/reset-token-validation',
+    requestLimiter,
+    authenticate('token'),
+    (_, res) => res.sendStatus(ACCEPTED)
+  );
 
 // Protected routes:
 router
