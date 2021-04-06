@@ -3,7 +3,7 @@
     @click:close="$emit('close')"
     close
     class="mx-2 mb-1">
-    <v-icon left>{{ config.icon }}</v-icon>
+    <v-icon left>{{ icon }}</v-icon>
     {{ name }}
   </v-chip>
 </template>
@@ -14,7 +14,7 @@ export default {
   inheritAttrs: false,
   props: {
     name: { type: String, required: true },
-    config: { type: Object, required: true }
+    icon: { type: String, required: true }
   }
 };
 </script>

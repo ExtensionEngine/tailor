@@ -5,7 +5,7 @@
       :key="filter.id"
       @close="$emit('close', filter)"
       v-bind="filter"
-      :config="configs[filter.type]" />
+      :icon="configs[filter.type].icon" />
     <v-btn
       v-show="repositoryFilter.length"
       @click="$emit('clear:all')"
