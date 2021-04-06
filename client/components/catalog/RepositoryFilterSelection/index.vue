@@ -18,7 +18,7 @@
 
 <script>
 import filter from 'lodash/filter';
-import filterConfigs from 'utils/repositoryFilterConfigs';
+import filterConfigs from '../repositoryFilterConfigs';
 import flatMap from 'lodash/flatMap';
 import { mapState } from 'vuex';
 import SelectedFilter from './SelectedFilter';

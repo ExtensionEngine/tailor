@@ -1,5 +1,5 @@
 import filter from 'lodash/filter';
-import filterConfigs from 'utils/repositoryFilterConfigs';
+import filterConfigs from '@/components/catalog/repositoryFilterConfigs';
 import forEach from 'lodash/forEach';
 import get from 'lodash/get';
 import isString from 'lodash/isString';
