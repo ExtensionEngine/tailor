@@ -1,7 +1,6 @@
 <template>
   <validation-observer
     ref="form"
-    v-slot="{ invalid }"
     @submit.prevent="$refs.form.handleSubmit(submit)"
     tag="form"
     novalidate
@@ -47,7 +46,7 @@
         Cancel
       </v-btn>
       <v-btn
-        :disabled="invalid || !hasChanges"
+        :disabled="!hasChanges"
         type="submit"
         color="primary darken-4"
         text>
@@ -92,7 +91,7 @@ export default {
     }
   },
   mounted() {
-    return this.resetForm();
+    this.resetForm();
   }
 };
 </script>
