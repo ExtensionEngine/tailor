@@ -1,8 +1,10 @@
 import filter from 'lodash/filter';
+import filterConfigs from '@/components/catalog/repositoryFilterConfigs';
 import forEach from 'lodash/forEach';
 import get from 'lodash/get';
 import isString from 'lodash/isString';
 import orderBy from 'lodash/orderBy';
+import reduce from 'lodash/reduce';
 import { role } from 'shared';
 
 const processSortAttr = val => isString(val) ? val.toLowerCase() : val;
@@ -23,7 +25,14 @@ export const repositories = (state, _getters, _rootState, rootGetters) => {
 
 export const repositoryQueryParams = state => {
   const { pagination, sort } = state.$internals;
-  const { search, showPinned, tagFilter } = state;
+  const { search, showPinned, repositoryFilter } = state;
+
+  const filters = reduce(repositoryFilter, (acc, { id, type }) => {
+    const filter = filterConfigs[type].queryParam;
+    acc[filter] ||= [];
+    acc[filter].push(id);
+    return acc;
+  }, {});
 
   return {
     search,
@@ -31,10 +40,10 @@ export const repositoryQueryParams = state => {
     limit: pagination.limit,
     sortOrder: sort.order,
     sortBy: sort.field,
+    ...filters,
     ...{
       pinned: showPinned || undefined
-    },
-    tagIds: tagFilter.map(({ id }) => id)
+    }
   };
 };
 

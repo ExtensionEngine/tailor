@@ -9,7 +9,7 @@ const state = {
   search: '',
   showPinned: false,
   tags: [],
-  tagFilter: [],
+  repositoryFilter: [],
   $internals: {
     pagination: PAGINATION_DEFAULTS,
     sort: {

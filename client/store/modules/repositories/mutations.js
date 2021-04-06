@@ -58,22 +58,22 @@ const addTag = (state, { tag, repositoryId }) => {
 const removeTag = (state, { tagId, repositoryId }) => {
   const repository = find(state.items, { id: repositoryId });
   repository.tags = repository.tags.filter(it => it.id !== tagId);
-  if (!state.tagFilter.length) return;
-  const hasFilterTag = state.tagFilter.some(item => find(repository.tags, { id: item.id }));
+  if (!state.repositoryFilter.length) return;
+  const hasFilterTag = state.repositoryFilter.some(item => find(repository.tags, { id: item.id }));
   if (!hasFilterTag) state.items = filter(state.items, it => it.id !== repositoryId);
 };
 
-const toggleTagFilter = (state, tag) => {
+const toggleRepositoryFilter = (state, filter) => {
   resetPagination(state);
-  tag.isSelected = !tag.isSelected;
-  state.tagFilter = tag.isSelected
-    ? [...state.tagFilter, tag]
-    : state.tagFilter.filter(it => it.id !== tag.id);
+  filter.isSelected = !filter.isSelected;
+  state.repositoryFilter = filter.isSelected
+    ? [...state.repositoryFilter, filter]
+    : state.repositoryFilter.filter(it => it.id !== filter.id);
 };
 
-const clearTagFilter = state => {
+const clearRepositoryFilter = state => {
   resetPagination(state);
-  state.tagFilter = [];
+  state.repositoryFilter = [];
 };
 
 export {
@@ -83,7 +83,7 @@ export {
   fetchTags,
   remove,
   removeTag,
-  clearTagFilter,
+  clearRepositoryFilter,
   reset,
   resetPagination,
   resetFilters,
@@ -93,6 +93,6 @@ export {
   setPagination,
   setOrder,
   setSearch,
-  toggleTagFilter,
+  toggleRepositoryFilter,
   togglePinned
 };
