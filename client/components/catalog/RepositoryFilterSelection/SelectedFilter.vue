@@ -25,8 +25,8 @@ export default {
 
   // the dense styling gets overruled by the chips styling
   ::v-deep .v-icon.v-icon--left {
-    margin-right: 4px;
-    font-size: 20px !important;
+    margin-right: 0.25rem;
+    font-size: 1.25rem !important;
   }
 }
 </style>
