@@ -17,9 +17,10 @@
 </template>
 
 <script>
+import filter from 'lodash/filter';
 import filterConfigs from 'utils/repositoryFilterConfigs';
+import flatMap from 'lodash/flatMap';
 import { mapState } from 'vuex';
-import reduce from 'lodash/reduce';
 import SelectedFilter from './SelectedFilter';
 
 export default {
@@ -28,10 +29,7 @@ export default {
     ...mapState('repositories', ['repositoryFilter']),
     configs: () => filterConfigs,
     orderedFilters: ({ repositoryFilter }) => {
-      return reduce(filterConfigs, (orderedFilters, { type }) => {
-        const filters = repositoryFilter.filter(it => it.type === type);
-        return [...orderedFilters, ...filters];
-      }, []);
+      return flatMap(filterConfigs, ({ type }) => filter(repositoryFilter, { type }));
     }
   },
   components: {
