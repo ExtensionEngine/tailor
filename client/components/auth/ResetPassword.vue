@@ -41,11 +41,9 @@
           class="required" />
       </validation-provider>
       <v-btn
-        :disabled="!!error"
-        :dark="!error"
         type="submit"
         color="primary darken-4"
-        rounded block
+        rounded block dark
         class="my-1">
         Change password
       </v-btn>
