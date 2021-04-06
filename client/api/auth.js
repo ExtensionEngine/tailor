@@ -6,8 +6,8 @@ const urls = {
   login: () => path.join(urls.root, 'login'),
   logout: () => path.join(urls.root, 'logout'),
   forgotPassword: () => path.join(urls.root, 'forgot-password'),
-  resetPassword: () => path.join(urls.root, 'reset-password'),
-  validateResetToken: () => path.join(urls.root, 'reset-token-validation'),
+  resetPassword: () => path.join(urls.root, 'password', 'reset'),
+  validateResetToken: () => path.join(urls.root, 'password', 'token-validation'),
   profile: () => path.join(urls.root, 'me'),
   changePassword: () => path.join(urls.profile(), 'change-password')
 };
