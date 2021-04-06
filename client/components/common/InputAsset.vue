@@ -80,7 +80,7 @@
 import get from 'lodash/get';
 import last from 'lodash/last';
 import pick from 'lodash/pick';
-import UploadBtn from 'tce-core/UploadBtn';
+import { UploadBtn } from '@tailor/components';
 
 function isUploaded(url) {
   try {

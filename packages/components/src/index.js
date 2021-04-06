@@ -11,3 +11,5 @@ export { default as InputError } from './components/InputError.vue';
 export { default as PreviewOverlay } from './components/PreviewOverlay.vue';
 export { default as PublishDiffChip } from './components/PublishDiffChip.vue';
 export { default as SelectElement } from './components/SelectElement/index.vue';
+export { default as UploadBtn } from './components/UploadBtn.vue';
+export { default as upload } from './upload';

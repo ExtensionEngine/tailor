@@ -35,7 +35,7 @@
 <script>
 import get from 'lodash/get';
 import uniqueId from 'lodash/uniqueId';
-import uploadMixin from '@/components/common/mixins/upload';
+import { upload as uploadMixin } from '@tailor/components';
 
 export default {
   name: 'file-input',

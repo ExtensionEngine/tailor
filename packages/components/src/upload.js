@@ -1,13 +1,16 @@
-import downloadMixin from 'utils/downloadMixin';
-import loader from '@/components/common/loader';
-import { mapGetters } from 'vuex';
+import downloadMixin from './download.js';
+import loader from './loader';
 import { mapRequests } from '@extensionengine/vue-radio';
 
 export default {
-  inject: ['$storageService'],
+  inject: ['$storageService', '$editorContent'],
   mixins: [downloadMixin],
   data: () => ({ uploading: false }),
-  computed: mapGetters('repository', { repositoryId: 'id' }),
+  computed: {
+    repositoryId() {
+      return this.$editorContent.repository.id;
+    }
+  },
   methods: {
     ...mapRequests('app', ['showConfirmationModal']),
     createFileForm(e) {

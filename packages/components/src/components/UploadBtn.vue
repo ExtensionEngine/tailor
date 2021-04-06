@@ -37,7 +37,7 @@
 
 <script>
 import uniqueId from 'lodash/uniqueId';
-import uploadMixin from '@/components/common/mixins/upload';
+import uploadMixin from '../upload';
 
 export default {
   name: 'upload-btn',

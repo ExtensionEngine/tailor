@@ -30,6 +30,7 @@ var Draggable = require('vuedraggable');
 var cloneDeep = require('lodash/cloneDeep');
 var mapKeys = require('lodash/mapKeys');
 var values = require('lodash/values');
+var uniqueId = require('lodash/uniqueId');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
@@ -58,6 +59,7 @@ var Draggable__default = /*#__PURE__*/_interopDefaultLegacy(Draggable);
 var cloneDeep__default = /*#__PURE__*/_interopDefaultLegacy(cloneDeep);
 var mapKeys__default = /*#__PURE__*/_interopDefaultLegacy(mapKeys);
 var values__default = /*#__PURE__*/_interopDefaultLegacy(values);
+var uniqueId__default = /*#__PURE__*/_interopDefaultLegacy(uniqueId);
 
 //
 var script = {
@@ -5032,6 +5034,242 @@ var PreviewOverlay = __vue_normalize__$r({
   staticRenderFns: __vue_staticRenderFns__$r
 }, __vue_inject_styles__$r, __vue_script__$r, __vue_scope_id__$r, __vue_is_functional_template__$r);
 
+var downloadMixin = {
+  methods: {
+    download: function download(url, fileName) {
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      a.target = '_blank';
+      a.click();
+    }
+  }
+};
+
+var uploadMixin = {
+  inject: ['$storageService', '$editorContent'],
+  mixins: [downloadMixin],
+  data: function data() {
+    return {
+      uploading: false
+    };
+  },
+  computed: {
+    repositoryId: function repositoryId() {
+      return this.$editorContent.repository.id;
+    }
+  },
+  methods: Object.assign({}, vueRadio.mapRequests('app', ['showConfirmationModal']), {
+    createFileForm: function createFileForm(e) {
+      this.form = new FormData();
+
+      var _e$target$files = _slicedToArray(e.target.files, 1),
+          file = _e$target$files[0];
+
+      if (!file) return;
+      this.form.append('file', file, file.name);
+    },
+    upload: loader(function (e) {
+      var _this = this;
+
+      this.createFileForm(e);
+      return this.$storageService.upload(this.repositoryId, this.form).then(function (data) {
+        var _this$form$get = _this.form.get('file'),
+            name = _this$form$get.name;
+
+        _this.$emit('upload', Object.assign({}, data, {
+          name: name
+        }));
+      }).catch(function () {
+        _this.error = 'An error has occurred!';
+      });
+    }, 'uploading'),
+    downloadFile: async function downloadFile(key, name) {
+      var url = await this.$storageService.getUrl(this.repositoryId, key);
+      return this.download(url, name);
+    },
+    deleteFile: function deleteFile(item) {
+      var _this2 = this;
+
+      this.showConfirmationModal({
+        title: 'Delete file?',
+        message: "Are you sure you want to remove ".concat(item.fileName, "?"),
+        action: function action() {
+          return _this2.$emit('delete', item.id, null);
+        }
+      });
+    }
+  })
+};
+
+//
+var script$s = {
+  name: 'upload-btn',
+  mixins: [uploadMixin],
+  props: {
+    id: {
+      type: String,
+      default: function _default() {
+        return uniqueId__default['default']('file_');
+      }
+    },
+    fileName: {
+      type: String,
+      default: ''
+    },
+    fileKey: {
+      type: String,
+      default: ''
+    },
+    validate: {
+      type: Object,
+      default: function _default() {
+        return {
+          ext: []
+        };
+      }
+    },
+    label: {
+      type: String,
+      default: 'Choose a file'
+    },
+    sm: {
+      type: Boolean,
+      default: false
+    }
+  },
+  methods: {
+    validateAndUpload: async function validateAndUpload(e) {
+      var _await$this$$refs$val = await this.$refs.validator.validate(e),
+          valid = _await$this$$refs$val.valid;
+
+      if (valid) this.upload(e);
+    }
+  },
+  watch: {
+    uploading: function uploading(val) {
+      this.$emit('update:uploading', val);
+    }
+  }
+};
+
+var css_248z$k = ".file-upload[data-v-1f089141],.upload-form[data-v-1f089141]{display:inline-block}.upload-input[data-v-1f089141]{visibility:hidden;max-width:0;max-height:0}.file-name[data-v-1f089141]{color:#00f;font-size:1rem;text-decoration:underline;cursor:pointer}";
+styleInject__default['default'](css_248z$k);
+
+/* script */
+var __vue_script__$s = script$s;
+/* template */
+
+var __vue_render__$s = function __vue_render__() {
+  var _vm = this;
+
+  var _h = _vm.$createElement;
+
+  var _c = _vm._self._c || _h;
+
+  return _c('div', {
+    staticClass: "file-upload"
+  }, [_c('form', {
+    staticClass: "upload-form",
+    on: {
+      "submit": function submit($event) {
+        $event.preventDefault();
+      }
+    }
+  }, [_c('validation-provider', {
+    ref: "validator",
+    attrs: {
+      "rules": _vm.validate
+    }
+  }, [_c('input', {
+    ref: _vm.id,
+    staticClass: "upload-input",
+    attrs: {
+      "id": _vm.id,
+      "name": _vm.id,
+      "accept": _vm.validate.ext,
+      "type": "file"
+    },
+    on: {
+      "change": _vm.validateAndUpload
+    }
+  })]), _vm._v(" "), !_vm.fileKey ? _c('v-btn', {
+    attrs: {
+      "loading": _vm.uploading,
+      "color": "grey darken-4",
+      "text": ""
+    },
+    on: {
+      "click": function click($event) {
+        return _vm.$refs[_vm.id].click();
+      }
+    }
+  }, [_c('v-icon', {
+    staticClass: "mr-2",
+    attrs: {
+      "color": "secondary"
+    }
+  }, [_vm._v("mdi-cloud-upload-outline")]), _vm._v("\n      " + _vm._s(_vm.label) + "\n    ")], 1) : _c('span', {
+    staticClass: "file-name",
+    on: {
+      "click": function click($event) {
+        return _vm.downloadFile(_vm.fileKey, _vm.fileName);
+      }
+    }
+  }, [_vm._v(_vm._s(_vm.fileName) + "\n    ")]), _vm._v(" "), _vm.fileKey ? _c('v-btn', {
+    attrs: {
+      "icon": "",
+      "small": ""
+    },
+    on: {
+      "click": function click($event) {
+        return _vm.deleteFile({
+          id: _vm.id,
+          fileName: _vm.fileName
+        });
+      }
+    }
+  }, [_c('v-icon', [_vm._v("mdi-delete")])], 1) : _vm._e()], 1)]);
+};
+
+var __vue_staticRenderFns__$s = [];
+/* style */
+
+var __vue_inject_styles__$s = undefined;
+/* scoped */
+
+var __vue_scope_id__$s = "data-v-1f089141";
+/* functional template */
+
+var __vue_is_functional_template__$s = false;
+/* component normalizer */
+
+function __vue_normalize__$s(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
+
+  component.__file = "UploadBtn.vue";
+
+  if (!component.render) {
+    component.render = template.render;
+    component.staticRenderFns = template.staticRenderFns;
+    component._compiled = true;
+    if (functional) component.functional = true;
+  }
+
+  component._scopeId = scope;
+
+  return component;
+}
+/* style inject */
+
+/* style inject SSR */
+
+
+var UploadBtn = __vue_normalize__$s({
+  render: __vue_render__$s,
+  staticRenderFns: __vue_staticRenderFns__$s
+}, __vue_inject_styles__$s, __vue_script__$s, __vue_scope_id__$s, __vue_is_functional_template__$s);
+
 exports.ActiveUsers = ActiveUsers;
 exports.AddElement = AddElement;
 exports.ContainedContent = ContainedContent;
@@ -5045,3 +5283,5 @@ exports.InputError = InputError;
 exports.PreviewOverlay = PreviewOverlay;
 exports.PublishDiffChip = PublishDiffChip;
 exports.SelectElement = SelectElement;
+exports.UploadBtn = UploadBtn;
+exports.upload = uploadMixin;
