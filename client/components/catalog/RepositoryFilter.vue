@@ -47,7 +47,6 @@
 <script>
 import filter from 'lodash/filter';
 import get from 'lodash/get';
-import { mapState } from 'vuex';
 import orderBy from 'lodash/orderBy';
 
 export default {
@@ -59,7 +58,6 @@ export default {
   },
   data: () => ({ search: '' }),
   computed: {
-    ...mapState('repositories', ['repositoryFilter']),
     isVisible: vm => get(vm.$refs.filter, 'isActive', false),
     options: ({ values }) => {
       return orderBy(values, [option => option.name.toLowerCase()], ['asc']);
