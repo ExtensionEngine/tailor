@@ -1,7 +1,7 @@
 'use strict';
 
 const { authenticate, logout } = require('../shared/auth');
-const { requestLimiter, slowDownRequests } = require('../shared/middlewares');
+const { requestLimiter, slowDownRequests } = require('../shared/request/mw');
 const { ACCEPTED } = require('http-status-codes');
 const { authorize } = require('../shared/auth/mw');
 const ctrl = require('./user.controller');
