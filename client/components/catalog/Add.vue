@@ -125,6 +125,7 @@
 
 <script>
 import api from '@/api/repository';
+import debounce from 'lodash/debounce';
 import loader from '@/components/common/loader';
 import { mapGetters } from 'vuex';
 import { SCHEMAS } from 'shared/activities';
@@ -191,12 +192,10 @@ export default {
       this.repositoryNames = await api.getRepositoryNames();
       this.repository = resetData();
     },
-    'repository.name'(name) {
+    'repository.name': debounce(function (name) {
       const isNameExists = some(this.repositoryNames, { name });
-      setTimeout(() => {
-        this.existingRepoWarning = isNameExists ? EXISTING_REPO_MESSAGE : '';
-      }, 200);
-    }
+      this.existingRepoWarning = isNameExists ? EXISTING_REPO_MESSAGE : '';
+    }, 200)
   },
   components: { TailorDialog }
 };
