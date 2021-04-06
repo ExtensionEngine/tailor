@@ -46,16 +46,13 @@
 
 <script>
 import filter from 'lodash/filter';
-import find from 'lodash/find';
 import get from 'lodash/get';
-import map from 'lodash/map';
 import { mapState } from 'vuex';
 import orderBy from 'lodash/orderBy';
 
 export default {
   name: 'repository-filter',
   props: {
-    type: { type: String, required: true },
     values: { type: Array, required: true },
     label: { type: String, required: true },
     icon: { type: String, required: true }
@@ -64,12 +61,8 @@ export default {
   computed: {
     ...mapState('repositories', ['repositoryFilter']),
     isVisible: vm => get(vm.$refs.filter, 'isActive', false),
-    options: ({ values, repositoryFilter, type }) => {
-      const options = map(values, it => {
-        const isSelected = !!find(repositoryFilter, { type, id: it.id });
-        return { ...it, type, isSelected };
-      });
-      return orderBy(options, [option => option.name.toLowerCase()], ['asc']);
+    options: ({ values }) => {
+      return orderBy(values, [option => option.name.toLowerCase()], ['asc']);
     },
     filteredOptions: ({ options, search }) => {
       if (!search) return options;

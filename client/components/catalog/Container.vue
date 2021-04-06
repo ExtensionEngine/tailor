@@ -71,6 +71,7 @@ import filterConfigs from 'utils/repositoryFilterConfigs';
 import get from 'lodash/get';
 import InfiniteLoading from 'vue-infinite-loading';
 import loader from '@/components/common/loader';
+import map from 'lodash/map';
 import RepositoryCard from './Card';
 import RepositoryFilter from './RepositoryFilter';
 import RepositoryFilterSelection from './RepositoryFilterSelection';
@@ -84,6 +85,7 @@ export default {
   computed: {
     ...mapState('repositories', {
       sortBy: state => state.$internals.sort,
+      repositoryFilter: 'repositoryFilter',
       tags: 'tags',
       showPinned: 'showPinned'
     }),
@@ -92,11 +94,19 @@ export default {
       queryParams: 'repositoryQueryParams',
       hasMoreResults: 'hasMoreResults'
     }),
-    filters: ({ tags }) => {
+    filters: ({ tags, repositoryFilter }) => {
       const { SCHEMA, TAG } = filterConfigs;
       const filters = [{ ...TAG, values: tags }];
       if (SCHEMAS.length > 1) filters.push({ ...SCHEMA, values: SCHEMAS });
-      return filters;
+
+      return map(filters, ({ type, values, ...config }) => {
+        values = map(values, it => {
+          const isSelected = !!find(repositoryFilter, { type, id: it.id });
+          return { ...it, type, isSelected };
+        });
+
+        return { type, values, ...config };
+      });
     },
     loader() {
       return get(this.$refs, 'loader.stateChanger', {});
