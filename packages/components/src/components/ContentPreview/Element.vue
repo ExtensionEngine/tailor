@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { ContentElement } from '@tailor/components';
+import ContentElement from '../ContentElement.vue';
 import get from 'lodash/get';
 
 export default {
