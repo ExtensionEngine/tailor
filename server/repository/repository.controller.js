@@ -225,8 +225,8 @@ function importRepository({ body, file, user }, res) {
     });
 }
 
-async function getRepositoryNames({ query }, res) {
-  const where = query.repositoryId ? { [Op.not]: { id: query.repositoryId } } : {};
+async function getRepositoryNames({ query: { repositoryId } }, res) {
+  const where = repositoryId ? { [Op.not]: { id: repositoryId } } : {};
   const repositories = await Repository.findAll({ where, attributes: ['name'] });
   return res.json({ data: repositories });
 }
