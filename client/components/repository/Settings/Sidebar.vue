@@ -46,7 +46,7 @@ export default {
       const { query } = this.$route;
       return [
         { label: 'General', name: 'repository-info', icon: 'wrench' },
-        { label: 'Manage Access', name: 'user-management', icon: 'account' }
+        { label: 'People', name: 'user-management', icon: 'account' }
       ].map(route => ({ ...route, query }));
     },
     actions() {
