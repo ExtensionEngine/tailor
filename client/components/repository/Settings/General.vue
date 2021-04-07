@@ -80,8 +80,8 @@ export default {
     }
   },
   async created() {
-    const { repositoryId } = this;
-    this.repositoryNames = await api.getRepositoryNames({ repositoryId });
+    const params = { getNames: true, repositoryId: this.repositoryId };
+    this.repositoryNames = await api.getRepositories(params);
   },
   components: { MetaInput: Meta }
 };

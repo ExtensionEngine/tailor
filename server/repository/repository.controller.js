@@ -65,17 +65,18 @@ const includeRepositoryTags = query => {
 };
 
 function index({ query, user, opts }, res) {
-  if (query.search) opts.where.name = getFilter(query.search);
-  if (query.schemas) opts.where.schema = query.schemas;
+  const { search, schemas, getNames } = query;
+  if (search) opts.where.name = getFilter(search);
+  if (schemas) opts.where.schema = schemas;
   if (getVal(opts, 'order.0.0') === 'name') opts.order[0][0] = lowercaseName;
   opts.include = [
     includeLastRevision(),
     includeRepositoryUser(user, query),
     ...includeRepositoryTags(query)
   ];
-  const repositories = user.isAdmin()
-    ? Repository.findAll(opts)
-    : user.getRepositories(opts);
+  const repositories = getNames
+    ? getRepositoryNames(query)
+    : user.isAdmin() ? Repository.findAll(opts) : user.getRepositories(opts);
   return repositories.then(data => res.json({ data }));
 }
 
@@ -225,12 +226,6 @@ function importRepository({ body, file, user }, res) {
     });
 }
 
-async function getRepositoryNames({ query: { repositoryId } }, res) {
-  const where = repositoryId ? { [Op.not]: { id: repositoryId } } : {};
-  const repositories = await Repository.findAll({ where, attributes: ['name'] });
-  return res.json({ data: repositories });
-}
-
 module.exports = {
   index,
   create,
@@ -247,6 +242,10 @@ module.exports = {
   removeUser,
   publishRepoInfo,
   addTag,
-  removeTag,
-  getRepositoryNames
+  removeTag
 };
+
+function getRepositoryNames({ repositoryId }) {
+  const where = repositoryId ? { [Op.not]: { id: repositoryId } } : {};
+  return Repository.findAll({ where, attributes: ['name'] });
+}

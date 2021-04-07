@@ -189,7 +189,7 @@ export default {
   watch: {
     async isVisible(val) {
       if (!val) return setTimeout(() => this.$refs.form.reset(), 60);
-      this.repositoryNames = await api.getRepositoryNames();
+      this.repositoryNames = await api.getRepositories({ getNames: true });
       this.repository = resetData();
     },
     'repository.name': debounce(function (name) {
