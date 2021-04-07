@@ -51,7 +51,7 @@
           Change password
         </v-btn>
       </template>
-      <v-btn v-if="error" :to="{ name: 'forgot-password' }" tag="a" text class="mt-7">
+      <v-btn v-if="error" :to="{ name: 'forgot-password' }" tag="a" text class="mt-3">
         <v-icon class="pr-2">mdi-arrow-top-right-thick</v-icon>
         Go to Forgot Password
       </v-btn>
