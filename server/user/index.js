@@ -1,7 +1,6 @@
 'use strict';
 
 const { authenticate, logout } = require('../shared/auth');
-const { requestLimiter, slowDownRequests } = require('../shared/request/mw');
 const { ACCEPTED } = require('http-status-codes');
 const { authorize } = require('../shared/auth/mw');
 const ctrl = require('./user.controller');
@@ -13,13 +12,8 @@ const { User } = require('../shared/database');
 router
   .post('/login', authenticate('local', { setCookie: true }), ctrl.getProfile)
   .post('/forgot-password', ctrl.forgotPassword)
-  .post('/reset-password', slowDownRequests(), authenticate('token'), ctrl.resetPassword)
-  .post(
-    '/reset-token-validation',
-    requestLimiter(),
-    authenticate('token'),
-    (_, res) => res.sendStatus(ACCEPTED)
-  );
+  .post('/reset-password', authenticate('token'), ctrl.resetPassword)
+  .post('/reset-token-validation', authenticate('token'), (_, res) => res.sendStatus(ACCEPTED));
 
 // Protected routes:
 router
