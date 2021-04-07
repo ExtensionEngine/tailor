@@ -62,7 +62,7 @@
 <script>
 import { mapActions } from 'vuex';
 
-const INVALID_TOKEN_ERROR = 'Invalid reset token!';
+const INVALID_TOKEN_ERROR = 'Invalid reset password URL!';
 
 export default {
   data: () => ({
