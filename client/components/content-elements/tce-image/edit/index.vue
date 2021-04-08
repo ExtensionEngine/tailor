@@ -105,10 +105,9 @@ export default {
       this.persistedImage = imageUrl;
       if (imageUrl && this.$refs.cropper) this.$refs.cropper.replace(imageUrl);
     },
-    save(image) {
-      return getImageDimensions(image).then(({ width, height }) => {
-        this.$emit('save', { url: image, meta: { width, height } });
-      });
+    async save(image) {
+      const meta = await getImageDimensions(image);
+      this.$emit('save', { ...this.element.data, url: image, meta });
     }
   },
   watch: {
