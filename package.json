@@ -1,6 +1,6 @@
 {
   "name": "tailor",
-  "version": "5.0.0-beta.1",
+  "version": "5.0.0-rc.1",
   "codename": "twill",
   "description": "Content authoring platform",
   "author": "ExtensionEngine <info@extensionengine.com>",
@@ -37,7 +37,7 @@
     "postshrinkwrap": "rewrite-lockfile package-lock.json"
   },
   "dependencies": {
-    "@extensionengine/tce-jodit": "github:extensionengine/tce-jodit#bd57533",
+    "@extensionengine/tce-jodit": "github:extensionengine/tce-jodit#a60d1cd",
     "@extensionengine/tce-scorm": "github:ExtensionEngine/tce-scorm#85d39a8d73f303f",
     "@mdi/font": "^4.8.95",
     "@ungap/global-this": "^0.4.0",
