@@ -12,7 +12,8 @@
     </div>
     <repository-name-field
       @change="updateKey('name', $event)"
-      v-bind="{ repositoryId, value: repository.name }" />
+      :value="repository.name "
+      :repository-id="repositoryId" />
     <meta-input
       :key="descriptionMeta.key"
       @update="updateKey"
