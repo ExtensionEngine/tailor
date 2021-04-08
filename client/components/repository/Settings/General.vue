@@ -14,7 +14,7 @@
       @change="updateKey('name', $event)"
       :value="repository.name "
       :repository-id="repositoryId"
-      class="my-5" />
+      class="my-3" />
     <meta-input
       :key="descriptionMeta.key"
       @update="updateKey"
