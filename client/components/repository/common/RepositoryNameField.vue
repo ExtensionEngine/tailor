@@ -9,9 +9,9 @@
       v-model.trim="context"
       @change="update"
       v-bind="$attrs"
-      :label="label"
-      :messages="existingRepoWarning"
       :error-messages="errors"
+      :messages="existingRepoWarning"
+      :label="label"
       outlined
       class="required">
       <template #message="{ message }">
@@ -22,7 +22,7 @@
             class="text-body-1 mr-1">
             mdi-alert
           </v-icon>
-          <span :class="errors.length ? 'error--text' : 'warning--text'">
+          <span :class="existingRepoWarning ? 'warning--text' : 'error--text'">
             {{ message }}
           </span>
         </div>
