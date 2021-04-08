@@ -51,10 +51,10 @@
           Change password
         </v-btn>
       </template>
-      <v-btn v-if="error" :to="{ name: 'forgot-password' }" tag="a" text class="mt-3">
-        <v-icon class="pr-2">mdi-arrow-top-right-thick</v-icon>
-        Go to Forgot Password
-      </v-btn>
+      <router-link v-else :to="{ name: 'forgot-password' }" class="forgot-password">
+        <v-icon>mdi-arrow-top-right-thick</v-icon>
+        Click here to send another reset email.
+      </router-link>
     </validation-observer>
   </div>
 </template>
@@ -96,5 +96,9 @@ export default {
 .v-input ::v-deep label {
   padding-right: 0.25rem;
   background: #ececec;
+}
+
+.forgot-password .v-icon {
+  font-size: 1.25rem;
 }
 </style>
