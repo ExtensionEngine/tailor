@@ -13,7 +13,7 @@
       :messages="existingRepoWarning"
       :error-messages="errors"
       outlined
-      class="required my-2">
+      class="required">
       <template #message="{ message }">
         <div class="d-flex align-center">
           <v-icon

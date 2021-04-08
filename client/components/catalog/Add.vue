@@ -78,7 +78,8 @@
         <repository-name-field
           v-model="repository.name"
           name="repositoryName"
-          placeholder="Enter name..." />
+          placeholder="Enter name..."
+          class="my-2" />
         <validation-provider
           v-slot="{ errors }"
           name="description"
