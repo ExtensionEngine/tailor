@@ -12,9 +12,7 @@
     </div>
     <repository-name-field
       @change="updateKey('name', $event)"
-      :repository-id="repositoryId"
-      :value="repository.name"
-      name="repositoryName" />
+      v-bind="{ repositoryId, value: repository.name }" />
     <meta-input
       :key="descriptionMeta.key"
       @update="updateKey"
@@ -43,7 +41,7 @@ export default {
   data: () => ({ publishing: false }),
   computed: {
     ...mapGetters('repository', ['repository']),
-    repositoryId: vm => vm.$route.params.repositoryId,
+    repositoryId: vm => parseInt(vm.$route.params.repositoryId, 10),
     metadata: vm => getRepositoryMetadata(vm.repository),
     descriptionMeta: ({ repository }) => ({
       key: 'description',
