@@ -120,20 +120,24 @@ const options = {
 export default function getRouter() {
   const router = new Router(options);
   router.beforeEach((to, from, next) => {
-    const auth = router.app.$store.state.auth;
-    if (isAuthRequired(to, auth)) {
-      return next({ path: '/login', query: { redirect: to.fullPath } });
-    }
-    return isAllowed(to, auth) ? next() : next({ path: from.fullPath });
+    const { user } = router.app.$store.state.auth;
+    if (isAuthRequired(to) && !user) return redirectToLogin(to, next);
+    if (to.name === 'login' && user) return next({ path: '/' });
+    return isAllowed(to, user) ? next() : next({ path: from.fullPath });
   });
   return router;
 }
 
-function isAuthRequired(route, { user }) {
-  return route.matched.some(it => it.meta.auth) && !user;
+function redirectToLogin(route, next) {
+  const query = { redirect: route.fullPath };
+  return next({ path: '/login', query });
 }
 
-function isAllowed(route, { user }) {
+function isAuthRequired(route) {
+  return route.matched.some(it => it.meta.auth);
+}
+
+function isAllowed(route, user) {
   const { meta = {} } = route.matched.find(({ meta = {} }) => meta.allowed) || {};
   return !meta.allowed || meta.allowed.includes(user.role);
 }

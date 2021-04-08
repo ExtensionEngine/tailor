@@ -6,10 +6,13 @@ import { messages } from 'vee-validate/dist/locale/en.json';
 import some from 'lodash/some';
 import userApi from '@/api/user';
 
-const NAME_FORMAT_REGEX = /^[\p{Letter}\s'-.]+$/u;
-
 const nameFormat = {
-  validate: value => NAME_FORMAT_REGEX.test(value),
+  validate: value => {
+    const hasValidUnicodeLetters = /^[\p{Letter}\s'-.]+$/u.test(value);
+    const hasPunctuationStreak = /['-.]{2,}/.test(value);
+    const hasValidBoundaries = !/^['-.].*|['.-]$/.test(value);
+    return hasValidUnicodeLetters && hasValidBoundaries && !hasPunctuationStreak;
+  },
   message: `The {_field_} field may only contain alphabetic characters, spaces,
     dots (.), apostrophes (') and hyphens (-)`
 };
