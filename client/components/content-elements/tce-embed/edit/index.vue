@@ -49,7 +49,9 @@ export default {
     }
   },
   mounted() {
-    this.$elementBus.on('save', data => this.$emit('save', data));
+    this.$elementBus.on('save', data => {
+      this.$emit('save', { ...this.element.data, ...data });
+    });
   },
   components: {
     ElementPlaceholder,
