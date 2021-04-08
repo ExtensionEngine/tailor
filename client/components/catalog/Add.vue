@@ -79,7 +79,7 @@
           v-model="repository.name"
           name="repositoryName"
           placeholder="Enter name..."
-          class="my-2" />
+          class="mb-2" />
         <validation-provider
           v-slot="{ errors }"
           name="description"
