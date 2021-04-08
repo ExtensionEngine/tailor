@@ -12,16 +12,9 @@
       :label="meta.label"
       :placeholder="meta.placeholder"
       :error-messages="errors"
-      :messages="meta.messages"
       :rows="rows"
       auto-grow outlined
-      class="my-2">
-      <template #message="{ message }">
-        <span :class="errors.length ? 'error--text' : 'warning--text'">
-          {{ message }}
-        </span>
-      </template>
-    </v-textarea>
+      class="my-2" />
   </validation-provider>
 </template>
 
