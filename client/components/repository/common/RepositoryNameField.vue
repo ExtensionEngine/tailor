@@ -43,9 +43,9 @@ export default {
   name: 'repository-name-field',
   model: { event: 'change' },
   props: {
-    repositoryId: { type: Number, default: null },
-    value: { type: String, default: null },
+    value: { type: String, default: '' },
     label: { type: String, default: 'Name' },
+    repositoryId: { type: Number, default: null },
     validationRules: { type: [String, Object], default: 'required|min:2|max:250' }
   },
   data: () => ({
