@@ -41,6 +41,7 @@ const EXISTING_REPO_MESSAGE = 'Warning: a Repository with that name already exis
 
 export default {
   name: 'repository-name-field',
+  model: { event: 'change' },
   props: {
     repositoryId: { type: Number, default: null },
     value: { type: String, default: null },

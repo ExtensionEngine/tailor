@@ -76,8 +76,7 @@
           </v-tab-item>
         </v-tabs-items>
         <repository-name-field
-          @change="repository.name = $event"
-          :value="repository.name"
+          v-model="repository.name"
           name="repositoryName"
           placeholder="Enter name..." />
         <validation-provider
