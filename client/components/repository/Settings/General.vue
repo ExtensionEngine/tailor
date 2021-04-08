@@ -10,11 +10,15 @@
         Publish info
       </v-btn>
     </div>
+    <repository-name-field
+      @change="updateKey('name', $event)"
+      :repository-id="repositoryId"
+      :value="repository.name"
+      name="repositoryName" />
     <meta-input
-      v-for="it in requiredData"
-      :key="it.key"
+      :key="descriptionMeta.key"
       @update="updateKey"
-      :meta="it"
+      :meta="descriptionMeta"
       class="meta-input" />
     <meta-input
       v-for="it in metadata"
@@ -32,38 +36,22 @@ import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
 import { getRepositoryMetadata } from 'shared/activities';
 import Meta from 'tce-core/MetaInput';
+import RepositoryNameField from '../common/RepositoryNameField';
 import set from 'lodash/set';
-import some from 'lodash/some';
-
-const EXISTING_REPO_MESSAGE = '⚠️ Warning: a Repository with that name already exists.';
 
 export default {
-  data: () => ({
-    publishing: false,
-    repositoryNames: []
-  }),
+  data: () => ({ publishing: false }),
   computed: {
     ...mapGetters('repository', ['repository']),
     repositoryId: vm => vm.$route.params.repositoryId,
     metadata: vm => getRepositoryMetadata(vm.repository),
-    existingRepoWarning() {
-      const { repositoryNames, repository: { name } } = this;
-      return some(repositoryNames, { name }) ? EXISTING_REPO_MESSAGE : '';
-    },
-    requiredData: ({ repository, existingRepoWarning }) => [{
-      key: 'name',
-      value: repository.name,
-      type: 'TEXTAREA',
-      label: 'Name',
-      messages: existingRepoWarning,
-      validate: { required: true, min: 2, max: 250 }
-    }, {
+    descriptionMeta: ({ repository }) => ({
       key: 'description',
       value: repository.description,
       type: 'TEXTAREA',
       label: 'Description',
       validate: { required: true, min: 2, max: 2000 }
-    }]
+    })
   },
   methods: {
     ...mapActions('repositories', ['update']),
@@ -79,36 +67,33 @@ export default {
       this.publishing = false;
     }
   },
-  async created() {
-    const params = { getNames: true, repositoryId: this.repositoryId };
-    this.repositoryNames = await api.getRepositories(params);
-  },
-  components: { MetaInput: Meta }
+  components: {
+    MetaInput: Meta,
+    RepositoryNameField
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .settings {
-  padding: 30px;
+  padding: 1.875rem;
   text-align: left;
 
   .meta-input {
-    margin: 20px 0;
+    margin: 1.25rem 0;
   }
 }
 
 .actions {
-  min-height: 36px;
+  min-height: 2.25rem;
 
   .btn {
-    padding: 8px 12px;
+    padding: 0.5rem 0.75rem;
   }
 }
 
-.picker {
-  ::v-deep .actions {
-    margin: 20px 0 0;
-    text-align: left;
-  }
+.picker ::v-deep .actions {
+  margin: 1.25rem 0 0;
+  text-align: left;
 }
 </style>

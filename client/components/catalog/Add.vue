@@ -75,26 +75,11 @@
             </validation-provider>
           </v-tab-item>
         </v-tabs-items>
-        <validation-provider
-          v-slot="{ errors }"
-          name="name"
-          rules="required|min:2|max:250">
-          <v-text-field
-            v-model.trim="repository.name"
-            :error-messages="errors"
-            :messages="existingRepoWarning"
-            name="repositoryName"
-            label="Name"
-            placeholder="Enter name..."
-            outlined
-            class="required mb-2">
-            <template #message="{ message }">
-              <span :class="errors.length ? 'error--text' : 'warning--text'">
-                {{ message }}
-              </span>
-            </template>
-          </v-text-field>
-        </validation-provider>
+        <repository-name-field
+          @change="repository.name = $event"
+          :value="repository.name"
+          name="repositoryName"
+          placeholder="Enter name..." />
         <validation-provider
           v-slot="{ errors }"
           name="description"
@@ -125,16 +110,13 @@
 
 <script>
 import api from '@/api/repository';
-import debounce from 'lodash/debounce';
 import loader from '@/components/common/loader';
 import { mapGetters } from 'vuex';
+import RepositoryNameField from '../repository/common/RepositoryNameField';
 import { SCHEMAS } from 'shared/activities';
-import some from 'lodash/some';
 import TailorDialog from '@/components/common/TailorDialog';
 
 const NEW_TAB = 0;
-
-const EXISTING_REPO_MESSAGE = '⚠️ Warning: a Repository with that name already exists.';
 
 const resetData = () => ({
   schema: SCHEMAS[0].id,
@@ -146,13 +128,11 @@ export default {
   name: 'create-repository',
   data: () => ({
     repository: resetData(),
-    repositoryNames: [],
     archive: null,
     selectedTab: NEW_TAB,
     isVisible: false,
     showLoader: false,
-    serverError: '',
-    existingRepoWarning: ''
+    serverError: ''
   }),
   computed: {
     ...mapGetters(['isAdmin']),
@@ -183,21 +163,15 @@ export default {
       this.isVisible = false;
       this.archive = null;
       this.serverError = '';
-      this.existingRepoWarning = '';
     }
   },
   watch: {
-    async isVisible(val) {
+    isVisible(val) {
       if (!val) return setTimeout(() => this.$refs.form.reset(), 60);
-      this.repositoryNames = await api.getRepositories({ getNames: true });
       this.repository = resetData();
-    },
-    'repository.name': debounce(function (name) {
-      const isNameExists = some(this.repositoryNames, { name });
-      this.existingRepoWarning = isNameExists ? EXISTING_REPO_MESSAGE : '';
-    }, 200)
+    }
   },
-  components: { TailorDialog }
+  components: { RepositoryNameField, TailorDialog }
 };
 </script>
 
