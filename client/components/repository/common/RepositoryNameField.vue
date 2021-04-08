@@ -15,17 +15,11 @@
       outlined
       class="required">
       <template #message="{ message }">
-        <div class="d-flex align-center">
-          <v-icon
-            v-if="existingRepoWarning"
-            color="warning"
-            class="text-body-1 mr-1">
-            mdi-alert
-          </v-icon>
-          <span :class="existingRepoWarning ? 'warning--text' : 'error--text'">
-            {{ message }}
-          </span>
+        <div v-if="existingRepoWarning" class="d-flex align-center">
+          <v-icon color="warning" class="text-body-1 mr-1">mdi-alert</v-icon>
+          <span class="warning--text">{{ message }}</span>
         </div>
+        <span v-else>{{ message }}</span>
       </template>
     </v-text-field>
   </validation-provider>
