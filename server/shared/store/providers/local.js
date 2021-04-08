@@ -12,7 +12,7 @@ class Local {
   constructor(config) {
     config = schema.validateSync(config, { stripUnknown: true });
     this.ttl = config.ttl;
-    this.client = new LRU({ maxAge: this.ttl * 1000 });
+    this.client = new LRU();
   }
 
   set(key, value, ttl = this.ttl) {
@@ -28,6 +28,7 @@ class Local {
   }
 
   getKeys(pattern = '*') {
+    this.client.prune();
     const keys = this.client.keys();
     return Promise.resolve(micromatch(keys, pattern));
   }
