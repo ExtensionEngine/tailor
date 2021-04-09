@@ -1,0 +1,22 @@
+{
+  "name": "tailor-automation",
+  "version": "1.0.0",
+  "description": "Automation part for Tailor",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cy:open": "npx cypress open"
+  },
+  "author": "ExtensionEngine <info@extensionengine.com>",
+  "license": "MIT",
+  "dependencies": {
+    "cypress": "^7.0.1"
+  },
+  "devDependencies": {
+    "cypress-xpath": "^1.6.2",
+    "eslint": "^7.23.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-cypress": "^2.11.2",
+    "eslint-plugin-import": "^2.22.1"
+  }
+}
