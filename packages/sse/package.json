@@ -1,0 +1,25 @@
+{
+  "name": "@extensionengine/sse",
+  "version": "0.0.1",
+  "description": "SSE lib",
+  "keywords": [
+    "SSE"
+  ],
+  "author": "Ivo Kovacevic <ikovacevic96k@gmail.com>",
+  "homepage": "https://github.com/ExtensionEngine/tailor#readme",
+  "license": "ISC",
+  "main": "lib/sse.js",
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ExtensionEngine/tailor.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/ExtensionEngine/tailor/issues"
+  }
+}
