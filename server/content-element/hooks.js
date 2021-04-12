@@ -8,7 +8,7 @@ const hash = require('hash-obj');
 const { isOutlineActivity } = require('../../config/shared/activities');
 const Promise = require('bluebird');
 const { resolveStatics } = require('../shared/storage/helpers');
-const sse = require('../shared/sse');
+const sse = require('@extensionengine/sse');
 
 module.exports = { add, applyFetchHooks };
 

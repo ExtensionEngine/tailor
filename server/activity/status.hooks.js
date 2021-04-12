@@ -4,7 +4,7 @@ const forEach = require('lodash/forEach');
 const { getLevel } = require('../../config/shared/activities');
 const mail = require('../shared/mail');
 const { Op } = require('sequelize');
-const sse = require('../shared/sse');
+const sse = require('@extensionengine/sse');
 
 exports.add = (ActivityStatus, Hooks, { Activity }) => {
   const { Events } = ActivityStatus;

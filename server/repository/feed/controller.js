@@ -3,7 +3,7 @@
 const { addContext, getActiveUsers, removeContext } = require('./store');
 const isEqual = require('lodash/isEqual');
 const pick = require('lodash/pick');
-const sse = require('../../shared/sse');
+const sse = require('@extensionengine/sse');
 const { UserActivity } = require('../../../common/sse');
 
 const USER_ATTRS = [
