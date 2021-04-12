@@ -84,7 +84,8 @@ export default {
     },
     save() {
       if (!this.hasChanges) return;
-      this.$emit('save', { content: this.content });
+      const { content, element } = this;
+      this.$emit('save', { ...element.data, content });
     }
   },
   watch: {

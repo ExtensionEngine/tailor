@@ -13,8 +13,7 @@ const nameFormat = {
     const hasValidBoundaries = !/^['-.].*|['.-]$/.test(value);
     return hasValidUnicodeLetters && hasValidBoundaries && !hasPunctuationStreak;
   },
-  message: `The {_field_} field may only contain alphabetic characters, spaces,
-    dots (.), apostrophes (') and hyphens (-)`
+  message: 'The {_field_} field is not valid'
 };
 
 const alphanumerical = {
