@@ -1,30 +1,32 @@
 'use strict';
 
 const Promise = require('bluebird');
-const store = require('../../shared/store');
+const Tapster = require('@extensionengine/tapster');
+const { provider, ...options } = require('../../../config/server').store;
 
-const ACTIVE_USERS_NAMESPACE = 'active-user-';
-const EXPIRE_TIME = 40; // in seconds
-const getKey = id => `${ACTIVE_USERS_NAMESPACE}${id}`;
+const store = new Tapster({
+  ...options[provider],
+  store: provider,
+  namespace: 'active-users',
+  ttl: 40
+});
 
 async function addContext(user, context) {
-  const key = getKey(user.id);
   const record = await findOrCreate(user);
   const contexts = [...record.contexts, context];
-  return store.set(key, { ...record, contexts }, EXPIRE_TIME);
+  return store.set(user.id, { ...record, contexts });
 }
 
 async function removeContext(user, predicate) {
-  const key = getKey(user.id);
-  const record = await store.get(key);
+  const record = await store.get(user.id);
   if (!record) return;
   const contexts = record.contexts.filter(it => !predicate(it));
-  if (!contexts.length) return store.delete(key);
-  return store.set(key, { ...record, contexts }, EXPIRE_TIME);
+  if (!contexts.length) return store.delete(user.id);
+  return store.set(user.id, { ...record, contexts });
 }
 
 async function getActiveUsers() {
-  const activeUserKeys = await store.getKeys(`${ACTIVE_USERS_NAMESPACE}*`);
+  const activeUserKeys = await store.getKeys();
   return Promise
     .map(activeUserKeys, key => store.get(key))
     .filter(Boolean)
@@ -32,13 +34,12 @@ async function getActiveUsers() {
 }
 
 async function findOrCreate(user) {
-  const key = getKey(user.id);
-  const hasKey = await store.has(key);
+  const hasKey = await store.has(user.id);
   if (!hasKey) {
     const connectedAt = new Date();
-    await store.set(key, { ...user, connectedAt, contexts: [] }, EXPIRE_TIME);
+    await store.set(user.id, { ...user, connectedAt, contexts: [] });
   }
-  return store.get(key);
+  return store.get(user.id);
 }
 
 module.exports = { addContext, removeContext, getActiveUsers };
