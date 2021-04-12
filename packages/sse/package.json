@@ -5,21 +5,35 @@
   "keywords": [
     "SSE"
   ],
-  "author": "Ivo Kovacevic <ikovacevic96k@gmail.com>",
   "homepage": "https://github.com/ExtensionEngine/tailor#readme",
-  "license": "ISC",
-  "main": "lib/sse.js",
-  "files": [
-    "lib"
-  ],
+  "bugs": {
+    "url": "https://github.com/ExtensionEngine/tailor/issues"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ExtensionEngine/tailor.git"
   },
-  "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
+  "license": "ISC",
+  "author": "ExtensionEngine <info@extensionengine.com>",
+  "main": "lib/index.js",
+  "files": [
+    "lib"
+  ],
+  "dependencies": {
+    "cuid": "^2.1.8",
+    "debug": "^4.3.1"
   },
-  "bugs": {
-    "url": "https://github.com/ExtensionEngine/tailor/issues"
+  "devDependencies": {
+    "@extensionengine/eslint-config": "^2.0.0",
+    "@types/eslint": "^7.2.6",
+    "eslint": "^7.19.0",
+    "eslint-config-semistandard": "^15.0.1",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-require-sort": "^1.2.2",
+    "eslint-plugin-standard": "^5.0.0",
+    "eslint-plugin-vue": "^7.5.0"
   }
 }
