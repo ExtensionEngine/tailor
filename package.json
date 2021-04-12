@@ -14,6 +14,7 @@
     "build": "del-cli node_modules/.cache/vue-loader && poi --prod",
     "clean": "del-cli dist/* !dist/.gitkeep",
     "cy:open": "npx cypress open",
+    "cy:run": "npx cypress run",
     "webpack:inspect-config": "poi --inspect-webpack",
     "webpack:bundle-report": "poi --prod --bundle-report",
     "webpack:stats": "poi --prod --print-stats",
