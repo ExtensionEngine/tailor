@@ -76,7 +76,12 @@ export default {
     });
     return { $editorState };
   },
-  watch: { activityId: 'closePublishDiff' },
+  watch: {
+    activityId() {
+      this.selectedElement = null;
+      this.closePublishDiff();
+    }
+  },
   async created() {
     const { repositoryId: currentRepositoryId, repository: storeRepository } = this;
     const repositoryLoaded = !!storeRepository;
