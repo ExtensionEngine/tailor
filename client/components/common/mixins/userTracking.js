@@ -10,7 +10,7 @@ const trackedRoutes = {
 };
 
 export default {
-  data: () => ({ interval: null }),
+  data: () => ({ heartbeat: null }),
   computed: {
     ...mapState('repository', ['sseId']),
     trackingParams: vm => pickBy({
@@ -34,14 +34,14 @@ export default {
       handler(val, prevVal = {}) {
         if (!val.sseId || isEqual(val, prevVal)) return;
         if (prevVal.sseId) this.reportActivityEnd(prevVal);
-        clearInterval(this.interval);
+        clearInterval(this.heartbeat);
         this.reportActivityStart(val);
-        this.interval = setInterval(() => this.reportActivityStart(val), PING_INTERVAL);
+        this.heartbeat = setInterval(() => this.reportActivityStart(val), PING_INTERVAL);
       }
     }
   },
   beforeRouteLeave(to, _from, next) {
-    clearInterval(this.interval);
+    clearInterval(this.heartbeat);
     this.reportActivityEnd(this.trackingParams);
     if (!has(trackedRoutes, to.name)) this.resetRepositoryStore();
     next();
