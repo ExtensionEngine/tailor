@@ -4,63 +4,64 @@
       {{ error }}
     </v-alert>
     <v-progress-circular v-if="isLoading" color="primary darken-2" indeterminate />
+    <router-link
+      v-else-if="error"
+      :to="{ name: 'forgot-password' }"
+      class="forgot-password">
+      <v-icon>mdi-arrow-top-right-thick</v-icon>
+      Click here to send another reset email.
+    </router-link>
     <validation-observer
       v-else
       ref="form"
       @submit.prevent="$refs.form.handleSubmit(submit)"
       tag="form"
       novalidate>
-      <template v-if="!error">
-        <validation-provider
-          v-slot="{ errors }"
-          vid="password"
+      <validation-provider
+        v-slot="{ errors }"
+        vid="password"
+        name="password"
+        rules="required|alphanumerical|min:6">
+        <v-text-field
+          v-model="password"
+          :error-messages="errors"
+          type="password"
           name="password"
-          rules="required|alphanumerical|min:6">
-          <v-text-field
-            v-model="password"
-            :error-messages="errors"
-            type="password"
-            name="password"
-            label="Password"
-            placeholder="Password"
-            prepend-inner-icon="mdi-lock"
-            outlined
-            class="required mb-1" />
-        </validation-provider>
-        <validation-provider
-          v-slot="{ errors }"
-          vid="passwordConfirmation"
-          name="password"
-          rules="required|confirmed:password">
-          <v-text-field
-            v-model="passwordConfirmation"
-            :error-messages="errors"
-            type="password"
-            name="passwordConfirmation"
-            label="Re-enter password"
-            placeholder="Password confirmation"
-            prepend-inner-icon="mdi-lock-outline"
-            outlined
-            class="required" />
-        </validation-provider>
-        <v-btn
-          type="submit"
-          color="primary darken-4"
-          rounded block dark
-          class="my-1">
-          Change password
-        </v-btn>
-      </template>
-      <router-link v-else :to="{ name: 'forgot-password' }" class="forgot-password">
-        <v-icon>mdi-arrow-top-right-thick</v-icon>
-        Click here to send another reset email.
-      </router-link>
+          label="Password"
+          placeholder="Password"
+          prepend-inner-icon="mdi-lock"
+          outlined
+          class="required mb-1" />
+      </validation-provider>
+      <validation-provider
+        v-slot="{ errors }"
+        vid="passwordConfirmation"
+        name="password"
+        rules="required|confirmed:password">
+        <v-text-field
+          v-model="passwordConfirmation"
+          :error-messages="errors"
+          type="password"
+          name="passwordConfirmation"
+          label="Re-enter password"
+          placeholder="Password confirmation"
+          prepend-inner-icon="mdi-lock-outline"
+          outlined
+          class="required" />
+      </validation-provider>
+      <v-btn
+        type="submit"
+        color="primary darken-4"
+        rounded block dark
+        class="my-1">
+        Change password
+      </v-btn>
     </validation-observer>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import api from '@/api/auth';
 
 const INVALID_TOKEN_ERROR = 'Invalid reset password URL!';
 
@@ -75,17 +76,15 @@ export default {
     token: vm => vm.$route.params.token
   },
   methods: {
-    ...mapActions(['resetPassword', 'validateResetToken']),
     submit() {
       const { token, password } = this;
-      return this.resetPassword({ password, token })
+      return api.resetPassword(token, password)
         .then(() => this.$router.push('/'))
         .catch(() => (this.error = INVALID_TOKEN_ERROR));
     }
   },
   created() {
-    const { token } = this;
-    return this.validateResetToken({ token })
+    return api.validateResetToken(this.token)
       .catch(() => (this.error = INVALID_TOKEN_ERROR))
       .finally(() => (this.isLoading = false));
   }

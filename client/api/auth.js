@@ -7,7 +7,7 @@ const urls = {
   logout: () => path.join(urls.root, 'logout'),
   forgotPassword: () => path.join(urls.root, 'forgot-password'),
   resetPassword: () => path.join(urls.root, 'reset-password'),
-  validateResetToken: () => path.join(urls.root, 'reset-token-validation'),
+  validateResetToken: () => path.join(urls.resetPassword(), 'token-status'),
   profile: () => path.join(urls.root, 'me'),
   changePassword: () => path.join(urls.profile(), 'change-password')
 };
