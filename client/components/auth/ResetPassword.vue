@@ -4,11 +4,8 @@
       {{ error }}
     </v-alert>
     <v-progress-circular v-if="isLoading" color="primary darken-2" indeterminate />
-    <router-link
-      v-else-if="error"
-      :to="{ name: 'forgot-password' }"
-      class="forgot-password">
-      <v-icon>mdi-arrow-top-right-thick</v-icon>
+    <router-link v-else-if="error" :to="{ name: 'forgot-password' }">
+      <v-icon size="20">mdi-arrow-top-right-thick</v-icon>
       Click here to send another reset email.
     </router-link>
     <validation-observer
@@ -63,8 +60,6 @@
 <script>
 import api from '@/api/auth';
 
-const INVALID_TOKEN_ERROR = 'Invalid reset password URL!';
-
 export default {
   data: () => ({
     password: '',
@@ -76,16 +71,15 @@ export default {
     token: vm => vm.$route.params.token
   },
   methods: {
-    submit() {
+    async submit() {
       const { token, password } = this;
-      return api.resetPassword(token, password)
-        .then(() => this.$router.push('/'))
-        .catch(() => (this.error = INVALID_TOKEN_ERROR));
+      await api.resetPassword(token, password);
+      this.$router.push('/');
     }
   },
   created() {
     return api.validateResetToken(this.token)
-      .catch(() => (this.error = INVALID_TOKEN_ERROR))
+      .catch(() => (this.error = 'Invalid reset password URL!'))
       .finally(() => (this.isLoading = false));
   }
 };
@@ -95,9 +89,5 @@ export default {
 .v-input ::v-deep label {
   padding-right: 0.25rem;
   background: #ececec;
-}
-
-.forgot-password .v-icon {
-  font-size: 1.25rem;
 }
 </style>
