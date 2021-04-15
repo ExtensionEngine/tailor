@@ -1,14 +1,11 @@
 'use strict';
 
-const { AFTER_LOADED, AFTER_RETRIEVE } = require('../shared/content-plugins/elementHooks');
 const { Model, Op } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
-const { elementRegistry } = require('../shared/content-plugins');
 const { ContentElement: Events } = require('../../common/sse');
 const hooks = require('./hooks');
 const isNumber = require('lodash/isNumber');
 const pick = require('lodash/pick');
-const { resolveStatics } = require('../shared/storage/helpers');
 
 class ContentElement extends Model {
   static fields(DataTypes) {
@@ -114,8 +111,8 @@ class ContentElement extends Model {
 
   static fetch(opt) {
     return isNumber(opt)
-      ? ContentElement.findByPk(opt).then(it => it && applyFetchHooks(it))
-      : ContentElement.findAll(opt).map(applyFetchHooks);
+      ? ContentElement.findByPk(opt).then(it => it && hooks.applyFetchHooks(it))
+      : ContentElement.findAll(opt).map(hooks.applyFetchHooks);
   }
 
   static cloneElements(src, container, options) {
@@ -173,11 +170,3 @@ class ContentElement extends Model {
 }
 
 module.exports = ContentElement;
-
-function applyFetchHooks(element) {
-  const hooks = [AFTER_RETRIEVE, AFTER_LOADED]
-    .map(hook => elementRegistry.getHook(element.type, hook))
-    .filter(Boolean);
-  return [...hooks, resolveStatics]
-    .reduce((result, hook) => hook(result), element);
-}

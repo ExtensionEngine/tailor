@@ -1,23 +1,20 @@
-import {
-  confirmed,
-  email,
-  ext,
-  integer,
-  is_not as isNot,
-  max,
-  max_value as maxValue,
-  min,
-  min_value as minValue,
-  numeric,
-  required
-} from 'vee-validate/dist/rules';
+import * as rules from 'vee-validate/dist/rules';
 import { extend } from 'vee-validate';
 import forEach from 'lodash/forEach';
 import isURL from 'validator/lib/isURL';
 import { messages } from 'vee-validate/dist/locale/en.json';
-import snakeCase from 'lodash/snakeCase';
 import some from 'lodash/some';
 import userApi from '@/api/user';
+
+const nameFormat = {
+  validate: value => {
+    const hasValidUnicodeLetters = /^[\p{Letter}\s'-.]+$/u.test(value);
+    const hasPunctuationStreak = /['-.]{2,}/.test(value);
+    const hasValidBoundaries = !/^['-.].*|['.-]$/.test(value);
+    return hasValidUnicodeLetters && hasValidBoundaries && !hasPunctuationStreak;
+  },
+  message: 'The {_field_} field is not valid'
+};
 
 const alphanumerical = {
   validate: value => (/\d/.test(value) && /[a-zA-Z]/.test(value)),
@@ -48,25 +45,19 @@ const notWithin = {
   message: 'This {_field_} already exists'
 };
 
-const rules = {
+const configuredRules = {
+  ...rules,
+  url,
   alphanumerical,
-  confirmed,
-  email,
-  ext,
-  integer,
-  isNot: { ...isNot, message: 'The {_field_} is equal to the {other} value' },
-  max,
-  maxValue: { ...maxValue, message: 'The {_field_} must be {max} or less' },
-  min,
-  minValue: { ...minValue, message: 'The {_field_} must be {min} or more' },
-  notWithin,
-  numeric,
-  required,
-  uniqueEmail,
-  url
+  name_format: nameFormat,
+  not_within: notWithin,
+  unique_email: uniqueEmail,
+  is_not: { ...rules.is_not, message: 'The {_field_} is equal to the {other} value' },
+  max_value: { ...rules.max_value, message: 'The {_field_} must be {max} or less' },
+  min_value: { ...rules.min_value, message: 'The {_field_} must be {min} or more' }
 };
 
-forEach(rules, (rule, name) => extend(snakeCase(name), {
+forEach(configuredRules, (rule, name) => extend(name, {
   message: messages[name],
   ...rule
 }));
