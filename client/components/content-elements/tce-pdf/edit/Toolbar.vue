@@ -4,7 +4,7 @@
     color="transparent"
     class="tce-pdf-toolbar elevation-0">
     <v-toolbar-title>PDF Component</v-toolbar-title>
-    <input-asset
+    <asset-input
       @input="save"
       :url="url"
       :public-url="publicUrl"
@@ -15,9 +15,9 @@
 </template>
 
 <script>
+import { AssetInput } from '@tailor/components';
 import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
-import { InputAsset } from '@tailor/components';
 import set from 'lodash/set';
 
 export default {
@@ -37,7 +37,7 @@ export default {
       this.$elementBus.emit('save', element);
     }
   },
-  components: { InputAsset }
+  components: { AssetInput }
 };
 </script>
 

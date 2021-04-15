@@ -91,7 +91,7 @@ function isUploaded(url) {
 }
 
 export default {
-  name: 'tailor-input-asset',
+  name: 'tailor-asset-input',
   props: {
     url: { type: String, default: null },
     publicUrl: { type: String, default: null },

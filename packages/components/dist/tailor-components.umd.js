@@ -1,8 +1,8 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('lodash/capitalize'), require('@tailor/utils'), require('lodash/filter'), require('lodash/flatMap'), require('lodash/intersection'), require('lodash/pick'), require('lodash/reduce'), require('lodash/reject'), require('@tailor/api'), require('lodash/partition'), require('lodash/takeRight'), require('lodash/find'), require('pluralize'), require('@extensionengine/vue-radio'), require('lodash/orderBy'), require('lodash/get'), require('lodash/keyBy'), require('lodash/map'), require('lodash/groupBy'), require('lodash/debounce'), require('lodash/sortBy'), require('lodash/throttle'), require('vuedraggable'), require('lodash/cloneDeep'), require('lodash/mapKeys'), require('lodash/values'), require('lodash/last'), require('lodash/uniqueId')) :
-  typeof define === 'function' && define.amd ? define(['exports', 'lodash/capitalize', '@tailor/utils', 'lodash/filter', 'lodash/flatMap', 'lodash/intersection', 'lodash/pick', 'lodash/reduce', 'lodash/reject', '@tailor/api', 'lodash/partition', 'lodash/takeRight', 'lodash/find', 'pluralize', '@extensionengine/vue-radio', 'lodash/orderBy', 'lodash/get', 'lodash/keyBy', 'lodash/map', 'lodash/groupBy', 'lodash/debounce', 'lodash/sortBy', 'lodash/throttle', 'vuedraggable', 'lodash/cloneDeep', 'lodash/mapKeys', 'lodash/values', 'lodash/last', 'lodash/uniqueId'], factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.TailorComponents = {}, global.capitalize, global.utils, global.filter, global.flatMap, global.intersection, global.pick, global.reduce, global.reject, global.api, global.partition, global.takeRgt, global.find, global.pluralize, global.vueRadio, global.orderBy, global.get, global.keyBy, global.map, global.groupBy, global.debounce, global.sortBy, global.throttle, global.Draggable, global.cloneDeep, global.mapKeys, global.values, global.last, global.uniqueId));
-}(this, (function (exports, capitalize, utils, filter, flatMap, intersection, pick, reduce, reject, api, partition, takeRgt, find, pluralize, vueRadio, orderBy, get, keyBy, map, groupBy, debounce, sortBy, throttle, Draggable, cloneDeep, mapKeys, values, last, uniqueId) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('lodash/capitalize'), require('@tailor/utils'), require('lodash/filter'), require('lodash/flatMap'), require('lodash/intersection'), require('lodash/pick'), require('lodash/reduce'), require('lodash/reject'), require('@tailor/api'), require('lodash/partition'), require('lodash/takeRight'), require('lodash/find'), require('pluralize'), require('@extensionengine/vue-radio'), require('lodash/orderBy'), require('lodash/get'), require('lodash/keyBy'), require('lodash/map'), require('lodash/groupBy'), require('lodash/debounce'), require('lodash/sortBy'), require('lodash/last'), require('lodash/uniqueId'), require('lodash/throttle'), require('vuedraggable'), require('lodash/cloneDeep'), require('lodash/mapKeys'), require('lodash/values')) :
+  typeof define === 'function' && define.amd ? define(['exports', 'lodash/capitalize', '@tailor/utils', 'lodash/filter', 'lodash/flatMap', 'lodash/intersection', 'lodash/pick', 'lodash/reduce', 'lodash/reject', '@tailor/api', 'lodash/partition', 'lodash/takeRight', 'lodash/find', 'pluralize', '@extensionengine/vue-radio', 'lodash/orderBy', 'lodash/get', 'lodash/keyBy', 'lodash/map', 'lodash/groupBy', 'lodash/debounce', 'lodash/sortBy', 'lodash/last', 'lodash/uniqueId', 'lodash/throttle', 'vuedraggable', 'lodash/cloneDeep', 'lodash/mapKeys', 'lodash/values'], factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.TailorComponents = {}, global.capitalize, global.utils, global.filter, global.flatMap, global.intersection, global.pick, global.reduce, global.reject, global.api, global.partition, global.takeRgt, global.find, global.pluralize, global.vueRadio, global.orderBy, global.get, global.keyBy, global.map, global.groupBy, global.debounce, global.sortBy, global.last, global.uniqueId, global.throttle, global.Draggable, global.cloneDeep, global.mapKeys, global.values));
+}(this, (function (exports, capitalize, utils, filter, flatMap, intersection, pick, reduce, reject, api, partition, takeRgt, find, pluralize, vueRadio, orderBy, get, keyBy, map, groupBy, debounce, sortBy, last, uniqueId, throttle, Draggable, cloneDeep, mapKeys, values) { 'use strict';
 
   function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
@@ -24,13 +24,13 @@
   var groupBy__default = /*#__PURE__*/_interopDefaultLegacy(groupBy);
   var debounce__default = /*#__PURE__*/_interopDefaultLegacy(debounce);
   var sortBy__default = /*#__PURE__*/_interopDefaultLegacy(sortBy);
+  var last__default = /*#__PURE__*/_interopDefaultLegacy(last);
+  var uniqueId__default = /*#__PURE__*/_interopDefaultLegacy(uniqueId);
   var throttle__default = /*#__PURE__*/_interopDefaultLegacy(throttle);
   var Draggable__default = /*#__PURE__*/_interopDefaultLegacy(Draggable);
   var cloneDeep__default = /*#__PURE__*/_interopDefaultLegacy(cloneDeep);
   var mapKeys__default = /*#__PURE__*/_interopDefaultLegacy(mapKeys);
   var values__default = /*#__PURE__*/_interopDefaultLegacy(values);
-  var last__default = /*#__PURE__*/_interopDefaultLegacy(last);
-  var uniqueId__default = /*#__PURE__*/_interopDefaultLegacy(uniqueId);
 
   //
   var script = {
@@ -5629,68 +5629,122 @@
     staticRenderFns: __vue_staticRenderFns__$k
   }, __vue_inject_styles__$k, __vue_script__$k, __vue_scope_id__$k, __vue_is_functional_template__$k);
 
-  //
-  var script$l = {
-    name: 'tailor-contained-content',
-    inheritAttrs: false,
-    props: {
-      element: {
-        type: Object,
-        required: true
-      },
-      isDisabled: {
-        type: Boolean,
-        default: false
-      },
-      isDragged: {
-        type: Boolean,
-        default: false
-      },
-      setWidth: {
-        type: Boolean,
-        default: true
-      },
-      dense: {
-        type: Boolean,
-        default: false
+  var downloadMixin = {
+    methods: {
+      download: function download(url, fileName) {
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        a.target = '_blank';
+        a.click();
       }
-    },
+    }
+  };
+
+  var uploadMixin = {
+    inject: ['$storageService', '$editorContent'],
+    mixins: [downloadMixin],
     data: function data() {
       return {
-        isHovered: false
+        uploading: false
       };
     },
     computed: {
-      bindings: function bindings() {
-        var element = this.element,
-            isDisabled = this.isDisabled,
-            isDragged = this.isDragged,
-            isHovered = this.isHovered,
-            dense = this.dense,
-            attrs = this.$attrs;
-        return Object.assign({
-          element: element,
-          isDisabled: isDisabled,
-          isDragged: isDragged,
-          isHovered: isHovered,
-          dense: dense
-        }, attrs);
+      repositoryId: function repositoryId() {
+        return this.$editorContent.repository.id;
+      }
+    },
+    methods: Object.assign({}, vueRadio.mapRequests('app', ['showConfirmationModal']), {
+      createFileForm: function createFileForm(e) {
+        this.form = new FormData();
+
+        var _e$target$files = _slicedToArray(e.target.files, 1),
+            file = _e$target$files[0];
+
+        if (!file) return;
+        this.form.append('file', file, file.name);
       },
-      widthClass: function widthClass() {
-        var element = this.element,
-            setWidth = this.setWidth;
-        return setWidth ? "col-xs-".concat(get__default['default'](element, 'data.width', 12)) : '';
+      upload: loader(function (e) {
+        var _this = this;
+
+        this.createFileForm(e);
+        return this.$storageService.upload(this.repositoryId, this.form).then(function (data) {
+          var _this$form$get = _this.form.get('file'),
+              name = _this$form$get.name;
+
+          _this.$emit('upload', Object.assign({}, data, {
+            name: name
+          }));
+        }).catch(function () {
+          _this.error = 'An error has occurred!';
+        });
+      }, 'uploading'),
+      downloadFile: async function downloadFile(key, name) {
+        var url = await this.$storageService.getUrl(this.repositoryId, key);
+        return this.download(url, name);
+      },
+      deleteFile: function deleteFile(item) {
+        var _this2 = this;
+
+        this.showConfirmationModal({
+          title: 'Delete file?',
+          message: "Are you sure you want to remove ".concat(item.fileName, "?"),
+          action: function action() {
+            return _this2.$emit('delete', item.id, null);
+          }
+        });
+      }
+    })
+  };
+
+  //
+  var script$l = {
+    name: 'upload-btn',
+    mixins: [uploadMixin],
+    props: {
+      id: {
+        type: String,
+        default: function _default() {
+          return uniqueId__default['default']('file_');
+        }
+      },
+      fileName: {
+        type: String,
+        default: ''
+      },
+      fileKey: {
+        type: String,
+        default: ''
+      },
+      validate: {
+        type: Object,
+        default: function _default() {
+          return {
+            ext: []
+          };
+        }
+      },
+      label: {
+        type: String,
+        default: 'Choose a file'
+      },
+      sm: {
+        type: Boolean,
+        default: false
       }
     },
     methods: {
-      scrollContainer: throttle__default['default'](function (e) {
-        var scrollUp = e.y < 200;
-        var scrollDown = e.y > window.innerHeight - 200;
-        if (scrollUp || scrollDown) window.scrollBy(0, scrollUp ? -30 : 30);
-      }, 20)
+      validateAndUpload: async function validateAndUpload(e) {
+        var _await$this$$refs$val = await this.$refs.validator.validate(e),
+            valid = _await$this$$refs$val.valid;
+
+        if (valid) this.upload(e);
+      }
     },
-    components: {
-      ContentElement: ContentElement
+    watch: {
+      uploading: function uploading(val) {
+        this.$emit('update:uploading', val);
+      }
     }
   };
 
@@ -5706,46 +5760,68 @@
     var _c = _vm._self._c || _h;
 
     return _c('div', {
-      staticClass: "contained-content",
-      class: [_vm.widthClass, {
-        disabled: _vm.isDisabled,
-        hovered: _vm.isHovered
-      }],
+      staticClass: "file-upload"
+    }, [_c('form', {
+      staticClass: "upload-form",
       on: {
-        "mouseover": function mouseover($event) {
-          _vm.isHovered = true;
-        },
-        "mouseleave": function mouseleave($event) {
-          _vm.isHovered = false;
-        },
-        "dragstart": function dragstart($event) {
-          return _vm.$emit('dragstart');
-        },
-        "dragend": function dragend($event) {
-          return _vm.$emit('dragend');
-        },
-        "dragover": _vm.scrollContainer
-      }
-    }, [!_vm.isDisabled ? _c('span', {
-      staticClass: "drag-handle"
-    }, [_c('span', {
-      staticClass: "mdi mdi-drag-vertical"
-    })]) : _vm._e(), _vm._v(" "), _c('content-element', _vm._b({
-      on: {
-        "add": function add($event) {
-          return _vm.$emit('add', $event);
-        },
-        "save": function save($event) {
-          return _vm.$emit('save', $event);
-        },
-        "save:meta": function saveMeta($event) {
-          return _vm.$emit('save:meta', $event);
-        },
-        "delete": function _delete($event) {
-          return _vm.$emit('delete');
+        "submit": function submit($event) {
+          $event.preventDefault();
         }
       }
-    }, 'content-element', _vm.bindings, false))], 1);
+    }, [_c('validation-provider', {
+      ref: "validator",
+      attrs: {
+        "rules": _vm.validate
+      }
+    }, [_c('input', {
+      ref: _vm.id,
+      staticClass: "upload-input",
+      attrs: {
+        "id": _vm.id,
+        "name": _vm.id,
+        "accept": _vm.validate.ext,
+        "type": "file"
+      },
+      on: {
+        "change": _vm.validateAndUpload
+      }
+    })]), _vm._v(" "), !_vm.fileKey ? _c('v-btn', {
+      attrs: {
+        "loading": _vm.uploading,
+        "color": "grey darken-4",
+        "text": ""
+      },
+      on: {
+        "click": function click($event) {
+          return _vm.$refs[_vm.id].click();
+        }
+      }
+    }, [_c('v-icon', {
+      staticClass: "mr-2",
+      attrs: {
+        "color": "secondary"
+      }
+    }, [_vm._v("mdi-cloud-upload-outline")]), _vm._v("\n      " + _vm._s(_vm.label) + "\n    ")], 1) : _c('span', {
+      staticClass: "file-name",
+      on: {
+        "click": function click($event) {
+          return _vm.downloadFile(_vm.fileKey, _vm.fileName);
+        }
+      }
+    }, [_vm._v(_vm._s(_vm.fileName) + "\n    ")]), _vm._v(" "), _vm.fileKey ? _c('v-btn', {
+      attrs: {
+        "icon": "",
+        "small": ""
+      },
+      on: {
+        "click": function click($event) {
+          return _vm.deleteFile({
+            id: _vm.id,
+            fileName: _vm.fileName
+          });
+        }
+      }
+    }, [_c('v-icon', [_vm._v("mdi-delete")])], 1) : _vm._e()], 1)]);
   };
 
   var __vue_staticRenderFns__$l = [];
@@ -5753,8 +5829,8 @@
 
   var __vue_inject_styles__$l = function __vue_inject_styles__(inject) {
     if (!inject) return;
-    inject("data-v-cb586726_0", {
-      source: ".drag-handle[data-v-cb586726]{position:absolute;left:-3px;z-index:2;width:26px;opacity:0}.drag-handle .mdi[data-v-cb586726]{color:#888;font-size:28px}.hovered .drag-handle[data-v-cb586726]{opacity:1;transition:opacity .6s ease-in-out;cursor:pointer}.disabled .drag-handle[data-v-cb586726]{display:none}.contained-content[data-v-cb586726]{position:relative;margin:7px 0;padding:0}",
+    inject("data-v-1f089141_0", {
+      source: ".file-upload[data-v-1f089141],.upload-form[data-v-1f089141]{display:inline-block}.upload-input[data-v-1f089141]{visibility:hidden;max-width:0;max-height:0}.file-name[data-v-1f089141]{color:#00f;font-size:1rem;text-decoration:underline;cursor:pointer}",
       map: undefined,
       media: undefined
     });
@@ -5762,7 +5838,7 @@
   /* scoped */
 
 
-  var __vue_scope_id__$l = "data-v-cb586726";
+  var __vue_scope_id__$l = "data-v-1f089141";
   /* module identifier */
 
   var __vue_module_identifier__$f = undefined;
@@ -5774,7 +5850,7 @@
   function __vue_normalize__$l(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
-    component.__file = "ContainedContent.vue";
+    component.__file = "UploadBtn.vue";
 
     if (!component.render) {
       component.render = template.render;
@@ -5880,1150 +5956,10 @@
   /* style inject SSR */
 
 
-  var ContainedContent = __vue_normalize__$l({
+  var UploadBtn = __vue_normalize__$l({
     render: __vue_render__$l,
     staticRenderFns: __vue_staticRenderFns__$l
   }, __vue_inject_styles__$l, __vue_script__$l, __vue_scope_id__$l, __vue_is_functional_template__$l, __vue_module_identifier__$f, __vue_create_injector__$f);
-
-  //
-  var CE_FOCUS_EVENT = 'element:focus';
-  var script$m = {
-    name: 'tailor-element-list',
-    props: {
-      elements: {
-        type: Array,
-        default: function _default() {
-          return [];
-        }
-      },
-      dragOptions: {
-        type: Object,
-        default: function _default() {
-          return {};
-        }
-      },
-      supportedTypes: {
-        type: Array,
-        default: null
-      },
-      activity: {
-        type: Object,
-        default: null
-      },
-      layout: {
-        type: Boolean,
-        default: false
-      },
-      isDisabled: {
-        type: Boolean,
-        default: false
-      },
-      enableAdd: {
-        type: Boolean,
-        default: true
-      },
-      addElementOptions: {
-        type: Object,
-        default: function _default() {
-          return {};
-        }
-      }
-    },
-    data: function data() {
-      return {
-        dragElementIndex: null
-      };
-    },
-    computed: Object.assign({}, vueRadio.mapChannels({
-      editorChannel: 'editor'
-    }), {
-      options: function options(vm) {
-        return Object.assign({}, vm.dragOptions, {
-          handle: '.drag-handle'
-        });
-      }
-    }),
-    methods: {
-      get: get__default['default'],
-      getElementId: utils.getElementId,
-      onDragStart: function onDragStart(index) {
-        this.dragElementIndex = index;
-        this.editorChannel.emit(CE_FOCUS_EVENT);
-      },
-      onDragEnd: function onDragEnd(element) {
-        this.dragElementIndex = -1;
-        this.editorChannel.emit(CE_FOCUS_EVENT, element);
-      },
-      reorder: function reorder(_ref) {
-        var newPosition = _ref.newIndex;
-        var items = this.elements;
-        this.$emit('update', {
-          newPosition: newPosition,
-          items: items
-        });
-      }
-    },
-    components: {
-      AddElement: AddElement,
-      Draggable: Draggable__default['default']
-    }
-  };
-
-  /* script */
-  var __vue_script__$m = script$m;
-  /* template */
-
-  var __vue_render__$m = function __vue_render__() {
-    var _vm = this;
-
-    var _h = _vm.$createElement;
-
-    var _c = _vm._self._c || _h;
-
-    return _c('div', {
-      staticClass: "list-group"
-    }, [_c('draggable', _vm._b({
-      staticClass: "row",
-      attrs: {
-        "list": _vm.elements,
-        "disabled": _vm.isDisabled
-      },
-      on: {
-        "start": function start($event) {
-          _vm.dragElementIndex = $event.oldIndex;
-        },
-        "end": function end($event) {
-          _vm.dragElementIndex = -1;
-        },
-        "update": _vm.reorder
-      }
-    }, 'draggable', _vm.options, false), _vm._l(_vm.elements, function (element, index) {
-      return _c('div', {
-        key: _vm.getElementId(element),
-        staticClass: "pr-5",
-        class: "col-xs-" + _vm.get(element, 'data.width', 12),
-        on: {
-          "dragstart": function dragstart($event) {
-            return _vm.onDragStart(index);
-          },
-          "dragend": function dragend($event) {
-            return _vm.onDragEnd(element);
-          }
-        }
-      }, [_vm._t("list-item", null, {
-        "element": element,
-        "isDragged": _vm.dragElementIndex === index,
-        "position": index
-      })], 2);
-    }), 0), _vm._v(" "), _vm.enableAdd && !_vm.isDisabled ? [_vm._t("list-add", [_c('add-element', {
-      staticClass: "mt-1",
-      attrs: {
-        "items": _vm.elements,
-        "include": _vm.supportedTypes,
-        "activity": _vm.activity,
-        "label": _vm.addElementOptions.label,
-        "large": _vm.addElementOptions.large,
-        "position": _vm.elements.length,
-        "layout": _vm.layout
-      },
-      on: {
-        "add": function add($event) {
-          return _vm.$emit('add', $event);
-        }
-      }
-    })], {
-      "include": _vm.supportedTypes,
-      "activity": _vm.activity,
-      "position": _vm.elements.length,
-      "layout": _vm.layout
-    })] : _vm._e()], 2);
-  };
-
-  var __vue_staticRenderFns__$m = [];
-  /* style */
-
-  var __vue_inject_styles__$m = function __vue_inject_styles__(inject) {
-    if (!inject) return;
-    inject("data-v-f18f3e56_0", {
-      source: ".list-group[data-v-f18f3e56]{padding:.625rem 1.5rem}[data-v-f18f3e56] .sortable-ghost .drag-handle{display:none}[data-v-f18f3e56] .sortable-ghost .content-element{max-height:9.375rem;background:#f4f5f5}[data-v-f18f3e56] .sortable-ghost .content-element>*{visibility:hidden}[data-v-f18f3e56] .sortable-drag .content-element{max-height:auto;background:#fff}",
-      map: undefined,
-      media: undefined
-    });
-  };
-  /* scoped */
-
-
-  var __vue_scope_id__$m = "data-v-f18f3e56";
-  /* module identifier */
-
-  var __vue_module_identifier__$g = undefined;
-  /* functional template */
-
-  var __vue_is_functional_template__$m = false;
-  /* component normalizer */
-
-  function __vue_normalize__$m(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
-    var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
-
-    component.__file = "ElementList.vue";
-
-    if (!component.render) {
-      component.render = template.render;
-      component.staticRenderFns = template.staticRenderFns;
-      component._compiled = true;
-      if (functional) component.functional = true;
-    }
-
-    component._scopeId = scope;
-
-    {
-      var hook;
-
-      if (style) {
-        hook = function hook(context) {
-          style.call(this, createInjector(context));
-        };
-      }
-
-      if (hook !== undefined) {
-        if (component.functional) {
-          // register for functional component in vue file
-          var originalRender = component.render;
-
-          component.render = function renderWithStyleInjection(h, context) {
-            hook.call(context);
-            return originalRender(h, context);
-          };
-        } else {
-          // inject component registration as beforeCreate hook
-          var existing = component.beforeCreate;
-          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
-        }
-      }
-    }
-
-    return component;
-  }
-  /* style inject */
-
-
-  function __vue_create_injector__$g() {
-    var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$g.styles || (__vue_create_injector__$g.styles = {});
-    var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
-    return function addStyle(id, css) {
-      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
-
-      var group = isOldIE ? css.media || 'default' : id;
-      var style = styles[group] || (styles[group] = {
-        ids: [],
-        parts: [],
-        element: undefined
-      });
-
-      if (!style.ids.includes(id)) {
-        var code = css.source;
-        var index = style.ids.length;
-        style.ids.push(id);
-
-        if (css.map) {
-          // https://developer.chrome.com/devtools/docs/javascript-debugging
-          // this makes source maps inside style tags work properly in Chrome
-          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
-
-          code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
-        }
-
-        if (isOldIE) {
-          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
-        }
-
-        if (!style.element) {
-          var el = style.element = document.createElement('style');
-          el.type = 'text/css';
-          if (css.media) el.setAttribute('media', css.media);
-
-          if (isOldIE) {
-            el.setAttribute('data-group', group);
-            el.setAttribute('data-next-index', '0');
-          }
-
-          head.appendChild(el);
-        }
-
-        if (isOldIE) {
-          index = parseInt(style.element.getAttribute('data-next-index'));
-          style.element.setAttribute('data-next-index', index + 1);
-        }
-
-        if (style.element.styleSheet) {
-          style.parts.push(code);
-          style.element.styleSheet.cssText = style.parts.filter(Boolean).join('\n');
-        } else {
-          var textNode = document.createTextNode(code);
-          var nodes = style.element.childNodes;
-          if (nodes[index]) style.element.removeChild(nodes[index]);
-          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
-        }
-      }
-    };
-  }
-  /* style inject SSR */
-
-
-  var ElementList = __vue_normalize__$m({
-    render: __vue_render__$m,
-    staticRenderFns: __vue_staticRenderFns__$m
-  }, __vue_inject_styles__$m, __vue_script__$m, __vue_scope_id__$m, __vue_is_functional_template__$m, __vue_module_identifier__$g, __vue_create_injector__$g);
-
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  var script$n = {
-    name: 'tailor-element-placeholder',
-    props: {
-      name: {
-        type: String,
-        required: true
-      },
-      icon: {
-        type: String,
-        required: true
-      },
-      placeholder: {
-        type: String,
-        default: 'Select to edit'
-      },
-      activePlaceholder: {
-        type: String,
-        default: 'Use toolbar to edit'
-      },
-      activeIcon: {
-        type: String,
-        default: null
-      },
-      activeColor: {
-        type: String,
-        default: '#fff'
-      },
-      isDisabled: {
-        type: Boolean,
-        default: false
-      },
-      isFocused: {
-        type: Boolean,
-        default: false
-      },
-      dense: {
-        type: Boolean,
-        default: false
-      }
-    },
-    computed: {
-      iconSize: function iconSize() {
-        if (this.dense) return this.isFocused ? 24 : 20;
-        return this.isFocused ? 38 : 30;
-      }
-    }
-  };
-
-  /* script */
-  var __vue_script__$n = script$n;
-  /* template */
-
-  var __vue_render__$n = function __vue_render__() {
-    var _vm = this;
-
-    var _h = _vm.$createElement;
-
-    var _c = _vm._self._c || _h;
-
-    return _c('v-sheet', {
-      staticClass: "transparent grey--text text--darken-4",
-      class: _vm.dense ? 'pt-3' : 'pa-12'
-    }, [_c('v-avatar', {
-      attrs: {
-        "size": _vm.dense ? 40 : 60,
-        "color": _vm.isDisabled ? 'grey darken-3' : 'primary darken-4'
-      }
-    }, [_c('v-icon', {
-      attrs: {
-        "size": _vm.iconSize,
-        "color": _vm.isFocused ? _vm.activeColor : '#fff'
-      }
-    }, [_vm._v("\n      " + _vm._s(_vm.icon) + "\n    ")])], 1), _vm._v(" "), _c('div', {
-      staticClass: "grey--text",
-      class: [_vm.isDisabled ? 'text--darken-3' : 'text--darken-4', _vm.dense ? 'my-2 subtitle-2' : 'my-4 headline']
-    }, [_vm._v("\n    " + _vm._s(_vm.name) + "\n  ")]), _vm._v(" "), !_vm.dense && !_vm.isDisabled ? _c('div', {
-      staticClass: "subtitle-1"
-    }, [!_vm.isFocused ? [_vm._v(_vm._s(_vm.placeholder))] : [_c('span', [_vm._v(_vm._s(_vm.activePlaceholder))]), _vm._v(" "), _vm.activeIcon ? _c('v-icon', {
-      attrs: {
-        "size": "20",
-        "color": "primary darken-4"
-      }
-    }, [_vm._v("\n        " + _vm._s(_vm.activeIcon) + "\n      ")]) : _vm._e()]], 2) : _vm._e()], 1);
-  };
-
-  var __vue_staticRenderFns__$n = [];
-  /* style */
-
-  var __vue_inject_styles__$n = undefined;
-  /* scoped */
-
-  var __vue_scope_id__$n = undefined;
-  /* functional template */
-
-  var __vue_is_functional_template__$n = false;
-  /* component normalizer */
-
-  function __vue_normalize__$n(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
-    var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
-
-    component.__file = "ElementPlaceholder.vue";
-
-    if (!component.render) {
-      component.render = template.render;
-      component.staticRenderFns = template.staticRenderFns;
-      component._compiled = true;
-      if (functional) component.functional = true;
-    }
-
-    component._scopeId = scope;
-
-    return component;
-  }
-  /* style inject */
-
-  /* style inject SSR */
-
-
-  var ElementPlaceholder = __vue_normalize__$n({
-    render: __vue_render__$n,
-    staticRenderFns: __vue_staticRenderFns__$n
-  }, __vue_inject_styles__$n, __vue_script__$n, __vue_scope_id__$n, __vue_is_functional_template__$n);
-
-  var script$o = {
-    name: 'tailor-embedded-container',
-    inheritAttrs: false,
-    props: {
-      container: {
-        type: Object,
-        required: true
-      },
-      types: {
-        type: Array,
-        default: function _default() {
-          return ['JODIT_HTML', 'IMAGE', 'HTML', 'VIDEO'];
-        }
-      },
-      isDisabled: {
-        type: Boolean,
-        default: false
-      },
-      addElementOptions: {
-        type: Object,
-        default: function _default() {
-          return {};
-        }
-      },
-      enableAdd: {
-        type: Boolean,
-        default: true
-      }
-    },
-    computed: {
-      embeds: function embeds() {
-        var items = this.container.embeds;
-        return items ? values__default['default'](items).sort(function (a, b) {
-          return a.position - b.position;
-        }) : [];
-      }
-    },
-    methods: Object.assign({}, vueRadio.mapRequests('app', ['showConfirmationModal']), {
-      addItems: function addItems(items) {
-        items = Array.isArray(items) ? items : [items];
-        var container = cloneDeep__default['default'](this.container);
-        container.embeds = Object.assign({}, container.embeds, mapKeys__default['default'](items, 'id'));
-        this.$emit('save', container);
-      },
-      reorderItem: function reorderItem(_ref) {
-        var newPosition = _ref.newPosition,
-            items = _ref.items;
-        var context = {
-          items: items,
-          newPosition: newPosition
-        };
-        var container = cloneDeep__default['default'](this.container);
-        var reordered = container.embeds[items[newPosition].id];
-        reordered.position = utils.calculatePosition(context);
-        this.$emit('save', container);
-      },
-      save: function save(item, key, value) {
-        var container = cloneDeep__default['default'](this.container);
-        container.embeds[item.id] = Object.assign({}, item, _defineProperty({}, key, value));
-        this.$emit('save', container);
-      },
-      requestDeleteConfirmation: function requestDeleteConfirmation(element) {
-        var _this = this;
-
-        this.showConfirmationModal({
-          title: 'Delete element?',
-          message: 'Are you sure you want to delete element?',
-          action: function action() {
-            return _this.$emit('delete', element);
-          }
-        });
-      }
-    }),
-    components: {
-      ContainedContent: ContainedContent,
-      ElementList: ElementList
-    }
-  };
-
-  /* script */
-  var __vue_script__$o = script$o;
-  /* template */
-
-  var __vue_render__$o = function __vue_render__() {
-    var _vm = this;
-
-    var _h = _vm.$createElement;
-
-    var _c = _vm._self._c || _h;
-
-    return _c('element-list', {
-      attrs: {
-        "add-element-options": _vm.addElementOptions,
-        "elements": _vm.embeds,
-        "supported-types": _vm.types,
-        "enable-add": !_vm.isDisabled && _vm.enableAdd
-      },
-      on: {
-        "add": _vm.addItems,
-        "update": _vm.reorderItem
-      },
-      scopedSlots: _vm._u([{
-        key: "list-item",
-        fn: function fn(ref) {
-          var element = ref.element;
-          var isDragged = ref.isDragged;
-          return [_c('contained-content', _vm._b({
-            staticClass: "my-2",
-            attrs: {
-              "element": element,
-              "is-dragged": isDragged,
-              "is-disabled": _vm.isDisabled
-            },
-            on: {
-              "save": function save($event) {
-                return _vm.save(element, 'data', $event);
-              },
-              "save:meta": function saveMeta($event) {
-                return _vm.save(element, 'meta', $event);
-              },
-              "delete": function _delete($event) {
-                return _vm.requestDeleteConfirmation(element);
-              }
-            }
-          }, 'contained-content', _vm.$attrs, false))];
-        }
-      }])
-    });
-  };
-
-  var __vue_staticRenderFns__$o = [];
-  /* style */
-
-  var __vue_inject_styles__$o = undefined;
-  /* scoped */
-
-  var __vue_scope_id__$o = undefined;
-  /* functional template */
-
-  var __vue_is_functional_template__$o = false;
-  /* component normalizer */
-
-  function __vue_normalize__$o(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
-    var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
-
-    component.__file = "EmbeddedContainer.vue";
-
-    if (!component.render) {
-      component.render = template.render;
-      component.staticRenderFns = template.staticRenderFns;
-      component._compiled = true;
-      if (functional) component.functional = true;
-    }
-
-    component._scopeId = scope;
-
-    return component;
-  }
-  /* style inject */
-
-  /* style inject SSR */
-
-
-  var EmbeddedContainer = __vue_normalize__$o({
-    render: __vue_render__$o,
-    staticRenderFns: __vue_staticRenderFns__$o
-  }, __vue_inject_styles__$o, __vue_script__$o, __vue_scope_id__$o, __vue_is_functional_template__$o);
-
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  var script$p = {
-    name: 'tailor-inline-activator',
-    inheritAttrs: false,
-    props: {
-      disabled: {
-        type: Boolean,
-        required: false
-      }
-    }
-  };
-
-  /* script */
-  var __vue_script__$p = script$p;
-  /* template */
-
-  var __vue_render__$p = function __vue_render__() {
-    var _vm = this;
-
-    var _h = _vm.$createElement;
-
-    var _c = _vm._self._c || _h;
-
-    return _c('button', _vm._g({
-      staticClass: "inline-activator",
-      class: {
-        disabled: _vm.disabled
-      }
-    }, _vm.$listeners), [_c('hr'), _vm._v(" "), _c('v-avatar', {
-      attrs: {
-        "size": "20",
-        "color": "primary darken-4"
-      }
-    }, [_c('v-icon', {
-      attrs: {
-        "size": "16",
-        "dark": ""
-      }
-    }, [_vm._v("mdi-plus")])], 1), _vm._v(" "), _c('hr')], 1);
-  };
-
-  var __vue_staticRenderFns__$p = [];
-  /* style */
-
-  var __vue_inject_styles__$p = function __vue_inject_styles__(inject) {
-    if (!inject) return;
-    inject("data-v-64eb8c58_0", {
-      source: ".default-activator-state[data-v-64eb8c58],.inline-activator[data-v-64eb8c58],.inline-activator.disabled[data-v-64eb8c58],.inline-activator.disabled[data-v-64eb8c58]:hover{padding:0 3.125rem;opacity:0}.inline-activator[data-v-64eb8c58]{display:flex;align-items:center;width:100%;margin:0;padding:0 3.125rem;opacity:0;transition:opacity .3s,padding .3s}.inline-activator[data-v-64eb8c58],.inline-activator .v-chip[data-v-64eb8c58]{cursor:pointer}.inline-activator hr[data-v-64eb8c58]{flex:1;display:inline-flex;margin:0;border-top:.0625rem dashed var(--v-primary-darken3)}.inline-activator[data-v-64eb8c58]:focus,.inline-activator[data-v-64eb8c58]:hover{padding:.75rem 0;opacity:1;outline:0;transition:opacity .3s .25s,padding .3s .1s}.inline-activator.disabled[data-v-64eb8c58],.inline-activator.disabled[data-v-64eb8c58]:hover{pointer-events:none}",
-      map: undefined,
-      media: undefined
-    });
-  };
-  /* scoped */
-
-
-  var __vue_scope_id__$p = "data-v-64eb8c58";
-  /* module identifier */
-
-  var __vue_module_identifier__$h = undefined;
-  /* functional template */
-
-  var __vue_is_functional_template__$p = false;
-  /* component normalizer */
-
-  function __vue_normalize__$p(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
-    var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
-
-    component.__file = "InlineActivator.vue";
-
-    if (!component.render) {
-      component.render = template.render;
-      component.staticRenderFns = template.staticRenderFns;
-      component._compiled = true;
-      if (functional) component.functional = true;
-    }
-
-    component._scopeId = scope;
-
-    {
-      var hook;
-
-      if (style) {
-        hook = function hook(context) {
-          style.call(this, createInjector(context));
-        };
-      }
-
-      if (hook !== undefined) {
-        if (component.functional) {
-          // register for functional component in vue file
-          var originalRender = component.render;
-
-          component.render = function renderWithStyleInjection(h, context) {
-            hook.call(context);
-            return originalRender(h, context);
-          };
-        } else {
-          // inject component registration as beforeCreate hook
-          var existing = component.beforeCreate;
-          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
-        }
-      }
-    }
-
-    return component;
-  }
-  /* style inject */
-
-
-  function __vue_create_injector__$h() {
-    var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$h.styles || (__vue_create_injector__$h.styles = {});
-    var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
-    return function addStyle(id, css) {
-      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
-
-      var group = isOldIE ? css.media || 'default' : id;
-      var style = styles[group] || (styles[group] = {
-        ids: [],
-        parts: [],
-        element: undefined
-      });
-
-      if (!style.ids.includes(id)) {
-        var code = css.source;
-        var index = style.ids.length;
-        style.ids.push(id);
-
-        if (css.map) {
-          // https://developer.chrome.com/devtools/docs/javascript-debugging
-          // this makes source maps inside style tags work properly in Chrome
-          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
-
-          code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
-        }
-
-        if (isOldIE) {
-          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
-        }
-
-        if (!style.element) {
-          var el = style.element = document.createElement('style');
-          el.type = 'text/css';
-          if (css.media) el.setAttribute('media', css.media);
-
-          if (isOldIE) {
-            el.setAttribute('data-group', group);
-            el.setAttribute('data-next-index', '0');
-          }
-
-          head.appendChild(el);
-        }
-
-        if (isOldIE) {
-          index = parseInt(style.element.getAttribute('data-next-index'));
-          style.element.setAttribute('data-next-index', index + 1);
-        }
-
-        if (style.element.styleSheet) {
-          style.parts.push(code);
-          style.element.styleSheet.cssText = style.parts.filter(Boolean).join('\n');
-        } else {
-          var textNode = document.createTextNode(code);
-          var nodes = style.element.childNodes;
-          if (nodes[index]) style.element.removeChild(nodes[index]);
-          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
-        }
-      }
-    };
-  }
-  /* style inject SSR */
-
-
-  var InlineActivator = __vue_normalize__$p({
-    render: __vue_render__$p,
-    staticRenderFns: __vue_staticRenderFns__$p
-  }, __vue_inject_styles__$p, __vue_script__$p, __vue_scope_id__$p, __vue_is_functional_template__$p, __vue_module_identifier__$h, __vue_create_injector__$h);
-
-  var downloadMixin = {
-    methods: {
-      download: function download(url, fileName) {
-        var a = document.createElement('a');
-        a.href = url;
-        a.download = fileName;
-        a.target = '_blank';
-        a.click();
-      }
-    }
-  };
-
-  var uploadMixin = {
-    inject: ['$storageService', '$editorContent'],
-    mixins: [downloadMixin],
-    data: function data() {
-      return {
-        uploading: false
-      };
-    },
-    computed: {
-      repositoryId: function repositoryId() {
-        return this.$editorContent.repository.id;
-      }
-    },
-    methods: Object.assign({}, vueRadio.mapRequests('app', ['showConfirmationModal']), {
-      createFileForm: function createFileForm(e) {
-        this.form = new FormData();
-
-        var _e$target$files = _slicedToArray(e.target.files, 1),
-            file = _e$target$files[0];
-
-        if (!file) return;
-        this.form.append('file', file, file.name);
-      },
-      upload: loader(function (e) {
-        var _this = this;
-
-        this.createFileForm(e);
-        return this.$storageService.upload(this.repositoryId, this.form).then(function (data) {
-          var _this$form$get = _this.form.get('file'),
-              name = _this$form$get.name;
-
-          _this.$emit('upload', Object.assign({}, data, {
-            name: name
-          }));
-        }).catch(function () {
-          _this.error = 'An error has occurred!';
-        });
-      }, 'uploading'),
-      downloadFile: async function downloadFile(key, name) {
-        var url = await this.$storageService.getUrl(this.repositoryId, key);
-        return this.download(url, name);
-      },
-      deleteFile: function deleteFile(item) {
-        var _this2 = this;
-
-        this.showConfirmationModal({
-          title: 'Delete file?',
-          message: "Are you sure you want to remove ".concat(item.fileName, "?"),
-          action: function action() {
-            return _this2.$emit('delete', item.id, null);
-          }
-        });
-      }
-    })
-  };
-
-  //
-  var script$q = {
-    name: 'upload-btn',
-    mixins: [uploadMixin],
-    props: {
-      id: {
-        type: String,
-        default: function _default() {
-          return uniqueId__default['default']('file_');
-        }
-      },
-      fileName: {
-        type: String,
-        default: ''
-      },
-      fileKey: {
-        type: String,
-        default: ''
-      },
-      validate: {
-        type: Object,
-        default: function _default() {
-          return {
-            ext: []
-          };
-        }
-      },
-      label: {
-        type: String,
-        default: 'Choose a file'
-      },
-      sm: {
-        type: Boolean,
-        default: false
-      }
-    },
-    methods: {
-      validateAndUpload: async function validateAndUpload(e) {
-        var _await$this$$refs$val = await this.$refs.validator.validate(e),
-            valid = _await$this$$refs$val.valid;
-
-        if (valid) this.upload(e);
-      }
-    },
-    watch: {
-      uploading: function uploading(val) {
-        this.$emit('update:uploading', val);
-      }
-    }
-  };
-
-  /* script */
-  var __vue_script__$q = script$q;
-  /* template */
-
-  var __vue_render__$q = function __vue_render__() {
-    var _vm = this;
-
-    var _h = _vm.$createElement;
-
-    var _c = _vm._self._c || _h;
-
-    return _c('div', {
-      staticClass: "file-upload"
-    }, [_c('form', {
-      staticClass: "upload-form",
-      on: {
-        "submit": function submit($event) {
-          $event.preventDefault();
-        }
-      }
-    }, [_c('validation-provider', {
-      ref: "validator",
-      attrs: {
-        "rules": _vm.validate
-      }
-    }, [_c('input', {
-      ref: _vm.id,
-      staticClass: "upload-input",
-      attrs: {
-        "id": _vm.id,
-        "name": _vm.id,
-        "accept": _vm.validate.ext,
-        "type": "file"
-      },
-      on: {
-        "change": _vm.validateAndUpload
-      }
-    })]), _vm._v(" "), !_vm.fileKey ? _c('v-btn', {
-      attrs: {
-        "loading": _vm.uploading,
-        "color": "grey darken-4",
-        "text": ""
-      },
-      on: {
-        "click": function click($event) {
-          return _vm.$refs[_vm.id].click();
-        }
-      }
-    }, [_c('v-icon', {
-      staticClass: "mr-2",
-      attrs: {
-        "color": "secondary"
-      }
-    }, [_vm._v("mdi-cloud-upload-outline")]), _vm._v("\n      " + _vm._s(_vm.label) + "\n    ")], 1) : _c('span', {
-      staticClass: "file-name",
-      on: {
-        "click": function click($event) {
-          return _vm.downloadFile(_vm.fileKey, _vm.fileName);
-        }
-      }
-    }, [_vm._v(_vm._s(_vm.fileName) + "\n    ")]), _vm._v(" "), _vm.fileKey ? _c('v-btn', {
-      attrs: {
-        "icon": "",
-        "small": ""
-      },
-      on: {
-        "click": function click($event) {
-          return _vm.deleteFile({
-            id: _vm.id,
-            fileName: _vm.fileName
-          });
-        }
-      }
-    }, [_c('v-icon', [_vm._v("mdi-delete")])], 1) : _vm._e()], 1)]);
-  };
-
-  var __vue_staticRenderFns__$q = [];
-  /* style */
-
-  var __vue_inject_styles__$q = function __vue_inject_styles__(inject) {
-    if (!inject) return;
-    inject("data-v-1f089141_0", {
-      source: ".file-upload[data-v-1f089141],.upload-form[data-v-1f089141]{display:inline-block}.upload-input[data-v-1f089141]{visibility:hidden;max-width:0;max-height:0}.file-name[data-v-1f089141]{color:#00f;font-size:1rem;text-decoration:underline;cursor:pointer}",
-      map: undefined,
-      media: undefined
-    });
-  };
-  /* scoped */
-
-
-  var __vue_scope_id__$q = "data-v-1f089141";
-  /* module identifier */
-
-  var __vue_module_identifier__$i = undefined;
-  /* functional template */
-
-  var __vue_is_functional_template__$q = false;
-  /* component normalizer */
-
-  function __vue_normalize__$q(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
-    var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
-
-    component.__file = "UploadBtn.vue";
-
-    if (!component.render) {
-      component.render = template.render;
-      component.staticRenderFns = template.staticRenderFns;
-      component._compiled = true;
-      if (functional) component.functional = true;
-    }
-
-    component._scopeId = scope;
-
-    {
-      var hook;
-
-      if (style) {
-        hook = function hook(context) {
-          style.call(this, createInjector(context));
-        };
-      }
-
-      if (hook !== undefined) {
-        if (component.functional) {
-          // register for functional component in vue file
-          var originalRender = component.render;
-
-          component.render = function renderWithStyleInjection(h, context) {
-            hook.call(context);
-            return originalRender(h, context);
-          };
-        } else {
-          // inject component registration as beforeCreate hook
-          var existing = component.beforeCreate;
-          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
-        }
-      }
-    }
-
-    return component;
-  }
-  /* style inject */
-
-
-  function __vue_create_injector__$i() {
-    var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$i.styles || (__vue_create_injector__$i.styles = {});
-    var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
-    return function addStyle(id, css) {
-      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
-
-      var group = isOldIE ? css.media || 'default' : id;
-      var style = styles[group] || (styles[group] = {
-        ids: [],
-        parts: [],
-        element: undefined
-      });
-
-      if (!style.ids.includes(id)) {
-        var code = css.source;
-        var index = style.ids.length;
-        style.ids.push(id);
-
-        if (css.map) {
-          // https://developer.chrome.com/devtools/docs/javascript-debugging
-          // this makes source maps inside style tags work properly in Chrome
-          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
-
-          code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
-        }
-
-        if (isOldIE) {
-          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
-        }
-
-        if (!style.element) {
-          var el = style.element = document.createElement('style');
-          el.type = 'text/css';
-          if (css.media) el.setAttribute('media', css.media);
-
-          if (isOldIE) {
-            el.setAttribute('data-group', group);
-            el.setAttribute('data-next-index', '0');
-          }
-
-          head.appendChild(el);
-        }
-
-        if (isOldIE) {
-          index = parseInt(style.element.getAttribute('data-next-index'));
-          style.element.setAttribute('data-next-index', index + 1);
-        }
-
-        if (style.element.styleSheet) {
-          style.parts.push(code);
-          style.element.styleSheet.cssText = style.parts.filter(Boolean).join('\n');
-        } else {
-          var textNode = document.createTextNode(code);
-          var nodes = style.element.childNodes;
-          if (nodes[index]) style.element.removeChild(nodes[index]);
-          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
-        }
-      }
-    };
-  }
-  /* style inject SSR */
-
-
-  var UploadBtn = __vue_normalize__$q({
-    render: __vue_render__$q,
-    staticRenderFns: __vue_staticRenderFns__$q
-  }, __vue_inject_styles__$q, __vue_script__$q, __vue_scope_id__$q, __vue_is_functional_template__$q, __vue_module_identifier__$i, __vue_create_injector__$i);
 
   //
 
@@ -7035,8 +5971,8 @@
     }
   }
 
-  var script$r = {
-    name: 'tailor-input-asset',
+  var script$m = {
+    name: 'tailor-asset-input',
     props: {
       url: {
         type: String,
@@ -7112,10 +6048,10 @@
   };
 
   /* script */
-  var __vue_script__$r = script$r;
+  var __vue_script__$m = script$m;
   /* template */
 
-  var __vue_render__$r = function __vue_render__() {
+  var __vue_render__$m = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -7243,13 +6179,13 @@
     }, [_vm._v("\n      Cancel\n    ")]) : _vm._e()]], 2);
   };
 
-  var __vue_staticRenderFns__$r = [];
+  var __vue_staticRenderFns__$m = [];
   /* style */
 
-  var __vue_inject_styles__$r = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$m = function __vue_inject_styles__(inject) {
     if (!inject) return;
-    inject("data-v-6cc584d4_0", {
-      source: ".v-text-field[data-v-6cc584d4]{min-width:21.875rem;margin:.5rem .75rem 0 1.75rem}.action[data-v-6cc584d4]  .v-btn__content{min-width:4rem!important}.upload-btn[data-v-6cc584d4]  .v-btn{height:100%}.upload-btn[data-v-6cc584d4]  .v-btn .v-btn__content{padding:1.5rem 0}",
+    inject("data-v-00f47ac8_0", {
+      source: ".v-text-field[data-v-00f47ac8]{min-width:21.875rem;margin:.5rem .75rem 0 1.75rem}.action[data-v-00f47ac8]  .v-btn__content{min-width:4rem!important}.upload-btn[data-v-00f47ac8]  .v-btn{height:100%}.upload-btn[data-v-00f47ac8]  .v-btn .v-btn__content{padding:1.5rem 0}",
       map: undefined,
       media: undefined
     });
@@ -7257,7 +6193,1071 @@
   /* scoped */
 
 
-  var __vue_scope_id__$r = "data-v-6cc584d4";
+  var __vue_scope_id__$m = "data-v-00f47ac8";
+  /* module identifier */
+
+  var __vue_module_identifier__$g = undefined;
+  /* functional template */
+
+  var __vue_is_functional_template__$m = false;
+  /* component normalizer */
+
+  function __vue_normalize__$m(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+    var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
+
+    component.__file = "AssetInput.vue";
+
+    if (!component.render) {
+      component.render = template.render;
+      component.staticRenderFns = template.staticRenderFns;
+      component._compiled = true;
+      if (functional) component.functional = true;
+    }
+
+    component._scopeId = scope;
+
+    {
+      var hook;
+
+      if (style) {
+        hook = function hook(context) {
+          style.call(this, createInjector(context));
+        };
+      }
+
+      if (hook !== undefined) {
+        if (component.functional) {
+          // register for functional component in vue file
+          var originalRender = component.render;
+
+          component.render = function renderWithStyleInjection(h, context) {
+            hook.call(context);
+            return originalRender(h, context);
+          };
+        } else {
+          // inject component registration as beforeCreate hook
+          var existing = component.beforeCreate;
+          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+        }
+      }
+    }
+
+    return component;
+  }
+  /* style inject */
+
+
+  function __vue_create_injector__$g() {
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var styles = __vue_create_injector__$g.styles || (__vue_create_injector__$g.styles = {});
+    var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+    return function addStyle(id, css) {
+      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
+
+      var group = isOldIE ? css.media || 'default' : id;
+      var style = styles[group] || (styles[group] = {
+        ids: [],
+        parts: [],
+        element: undefined
+      });
+
+      if (!style.ids.includes(id)) {
+        var code = css.source;
+        var index = style.ids.length;
+        style.ids.push(id);
+
+        if (css.map) {
+          // https://developer.chrome.com/devtools/docs/javascript-debugging
+          // this makes source maps inside style tags work properly in Chrome
+          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
+
+          code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
+        }
+
+        if (isOldIE) {
+          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+        }
+
+        if (!style.element) {
+          var el = style.element = document.createElement('style');
+          el.type = 'text/css';
+          if (css.media) el.setAttribute('media', css.media);
+
+          if (isOldIE) {
+            el.setAttribute('data-group', group);
+            el.setAttribute('data-next-index', '0');
+          }
+
+          head.appendChild(el);
+        }
+
+        if (isOldIE) {
+          index = parseInt(style.element.getAttribute('data-next-index'));
+          style.element.setAttribute('data-next-index', index + 1);
+        }
+
+        if (style.element.styleSheet) {
+          style.parts.push(code);
+          style.element.styleSheet.cssText = style.parts.filter(Boolean).join('\n');
+        } else {
+          var textNode = document.createTextNode(code);
+          var nodes = style.element.childNodes;
+          if (nodes[index]) style.element.removeChild(nodes[index]);
+          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
+        }
+      }
+    };
+  }
+  /* style inject SSR */
+
+
+  var AssetInput = __vue_normalize__$m({
+    render: __vue_render__$m,
+    staticRenderFns: __vue_staticRenderFns__$m
+  }, __vue_inject_styles__$m, __vue_script__$m, __vue_scope_id__$m, __vue_is_functional_template__$m, __vue_module_identifier__$g, __vue_create_injector__$g);
+
+  //
+  var script$n = {
+    name: 'tailor-contained-content',
+    inheritAttrs: false,
+    props: {
+      element: {
+        type: Object,
+        required: true
+      },
+      isDisabled: {
+        type: Boolean,
+        default: false
+      },
+      isDragged: {
+        type: Boolean,
+        default: false
+      },
+      setWidth: {
+        type: Boolean,
+        default: true
+      },
+      dense: {
+        type: Boolean,
+        default: false
+      }
+    },
+    data: function data() {
+      return {
+        isHovered: false
+      };
+    },
+    computed: {
+      bindings: function bindings() {
+        var element = this.element,
+            isDisabled = this.isDisabled,
+            isDragged = this.isDragged,
+            isHovered = this.isHovered,
+            dense = this.dense,
+            attrs = this.$attrs;
+        return Object.assign({
+          element: element,
+          isDisabled: isDisabled,
+          isDragged: isDragged,
+          isHovered: isHovered,
+          dense: dense
+        }, attrs);
+      },
+      widthClass: function widthClass() {
+        var element = this.element,
+            setWidth = this.setWidth;
+        return setWidth ? "col-xs-".concat(get__default['default'](element, 'data.width', 12)) : '';
+      }
+    },
+    methods: {
+      scrollContainer: throttle__default['default'](function (e) {
+        var scrollUp = e.y < 200;
+        var scrollDown = e.y > window.innerHeight - 200;
+        if (scrollUp || scrollDown) window.scrollBy(0, scrollUp ? -30 : 30);
+      }, 20)
+    },
+    components: {
+      ContentElement: ContentElement
+    }
+  };
+
+  /* script */
+  var __vue_script__$n = script$n;
+  /* template */
+
+  var __vue_render__$n = function __vue_render__() {
+    var _vm = this;
+
+    var _h = _vm.$createElement;
+
+    var _c = _vm._self._c || _h;
+
+    return _c('div', {
+      staticClass: "contained-content",
+      class: [_vm.widthClass, {
+        disabled: _vm.isDisabled,
+        hovered: _vm.isHovered
+      }],
+      on: {
+        "mouseover": function mouseover($event) {
+          _vm.isHovered = true;
+        },
+        "mouseleave": function mouseleave($event) {
+          _vm.isHovered = false;
+        },
+        "dragstart": function dragstart($event) {
+          return _vm.$emit('dragstart');
+        },
+        "dragend": function dragend($event) {
+          return _vm.$emit('dragend');
+        },
+        "dragover": _vm.scrollContainer
+      }
+    }, [!_vm.isDisabled ? _c('span', {
+      staticClass: "drag-handle"
+    }, [_c('span', {
+      staticClass: "mdi mdi-drag-vertical"
+    })]) : _vm._e(), _vm._v(" "), _c('content-element', _vm._b({
+      on: {
+        "add": function add($event) {
+          return _vm.$emit('add', $event);
+        },
+        "save": function save($event) {
+          return _vm.$emit('save', $event);
+        },
+        "save:meta": function saveMeta($event) {
+          return _vm.$emit('save:meta', $event);
+        },
+        "delete": function _delete($event) {
+          return _vm.$emit('delete');
+        }
+      }
+    }, 'content-element', _vm.bindings, false))], 1);
+  };
+
+  var __vue_staticRenderFns__$n = [];
+  /* style */
+
+  var __vue_inject_styles__$n = function __vue_inject_styles__(inject) {
+    if (!inject) return;
+    inject("data-v-cb586726_0", {
+      source: ".drag-handle[data-v-cb586726]{position:absolute;left:-3px;z-index:2;width:26px;opacity:0}.drag-handle .mdi[data-v-cb586726]{color:#888;font-size:28px}.hovered .drag-handle[data-v-cb586726]{opacity:1;transition:opacity .6s ease-in-out;cursor:pointer}.disabled .drag-handle[data-v-cb586726]{display:none}.contained-content[data-v-cb586726]{position:relative;margin:7px 0;padding:0}",
+      map: undefined,
+      media: undefined
+    });
+  };
+  /* scoped */
+
+
+  var __vue_scope_id__$n = "data-v-cb586726";
+  /* module identifier */
+
+  var __vue_module_identifier__$h = undefined;
+  /* functional template */
+
+  var __vue_is_functional_template__$n = false;
+  /* component normalizer */
+
+  function __vue_normalize__$n(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+    var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
+
+    component.__file = "ContainedContent.vue";
+
+    if (!component.render) {
+      component.render = template.render;
+      component.staticRenderFns = template.staticRenderFns;
+      component._compiled = true;
+      if (functional) component.functional = true;
+    }
+
+    component._scopeId = scope;
+
+    {
+      var hook;
+
+      if (style) {
+        hook = function hook(context) {
+          style.call(this, createInjector(context));
+        };
+      }
+
+      if (hook !== undefined) {
+        if (component.functional) {
+          // register for functional component in vue file
+          var originalRender = component.render;
+
+          component.render = function renderWithStyleInjection(h, context) {
+            hook.call(context);
+            return originalRender(h, context);
+          };
+        } else {
+          // inject component registration as beforeCreate hook
+          var existing = component.beforeCreate;
+          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+        }
+      }
+    }
+
+    return component;
+  }
+  /* style inject */
+
+
+  function __vue_create_injector__$h() {
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var styles = __vue_create_injector__$h.styles || (__vue_create_injector__$h.styles = {});
+    var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+    return function addStyle(id, css) {
+      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
+
+      var group = isOldIE ? css.media || 'default' : id;
+      var style = styles[group] || (styles[group] = {
+        ids: [],
+        parts: [],
+        element: undefined
+      });
+
+      if (!style.ids.includes(id)) {
+        var code = css.source;
+        var index = style.ids.length;
+        style.ids.push(id);
+
+        if (css.map) {
+          // https://developer.chrome.com/devtools/docs/javascript-debugging
+          // this makes source maps inside style tags work properly in Chrome
+          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
+
+          code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
+        }
+
+        if (isOldIE) {
+          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+        }
+
+        if (!style.element) {
+          var el = style.element = document.createElement('style');
+          el.type = 'text/css';
+          if (css.media) el.setAttribute('media', css.media);
+
+          if (isOldIE) {
+            el.setAttribute('data-group', group);
+            el.setAttribute('data-next-index', '0');
+          }
+
+          head.appendChild(el);
+        }
+
+        if (isOldIE) {
+          index = parseInt(style.element.getAttribute('data-next-index'));
+          style.element.setAttribute('data-next-index', index + 1);
+        }
+
+        if (style.element.styleSheet) {
+          style.parts.push(code);
+          style.element.styleSheet.cssText = style.parts.filter(Boolean).join('\n');
+        } else {
+          var textNode = document.createTextNode(code);
+          var nodes = style.element.childNodes;
+          if (nodes[index]) style.element.removeChild(nodes[index]);
+          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
+        }
+      }
+    };
+  }
+  /* style inject SSR */
+
+
+  var ContainedContent = __vue_normalize__$n({
+    render: __vue_render__$n,
+    staticRenderFns: __vue_staticRenderFns__$n
+  }, __vue_inject_styles__$n, __vue_script__$n, __vue_scope_id__$n, __vue_is_functional_template__$n, __vue_module_identifier__$h, __vue_create_injector__$h);
+
+  //
+  var CE_FOCUS_EVENT = 'element:focus';
+  var script$o = {
+    name: 'tailor-element-list',
+    props: {
+      elements: {
+        type: Array,
+        default: function _default() {
+          return [];
+        }
+      },
+      dragOptions: {
+        type: Object,
+        default: function _default() {
+          return {};
+        }
+      },
+      supportedTypes: {
+        type: Array,
+        default: null
+      },
+      activity: {
+        type: Object,
+        default: null
+      },
+      layout: {
+        type: Boolean,
+        default: false
+      },
+      isDisabled: {
+        type: Boolean,
+        default: false
+      },
+      enableAdd: {
+        type: Boolean,
+        default: true
+      },
+      addElementOptions: {
+        type: Object,
+        default: function _default() {
+          return {};
+        }
+      }
+    },
+    data: function data() {
+      return {
+        dragElementIndex: null
+      };
+    },
+    computed: Object.assign({}, vueRadio.mapChannels({
+      editorChannel: 'editor'
+    }), {
+      options: function options(vm) {
+        return Object.assign({}, vm.dragOptions, {
+          handle: '.drag-handle'
+        });
+      }
+    }),
+    methods: {
+      get: get__default['default'],
+      getElementId: utils.getElementId,
+      onDragStart: function onDragStart(index) {
+        this.dragElementIndex = index;
+        this.editorChannel.emit(CE_FOCUS_EVENT);
+      },
+      onDragEnd: function onDragEnd(element) {
+        this.dragElementIndex = -1;
+        this.editorChannel.emit(CE_FOCUS_EVENT, element);
+      },
+      reorder: function reorder(_ref) {
+        var newPosition = _ref.newIndex;
+        var items = this.elements;
+        this.$emit('update', {
+          newPosition: newPosition,
+          items: items
+        });
+      }
+    },
+    components: {
+      AddElement: AddElement,
+      Draggable: Draggable__default['default']
+    }
+  };
+
+  /* script */
+  var __vue_script__$o = script$o;
+  /* template */
+
+  var __vue_render__$o = function __vue_render__() {
+    var _vm = this;
+
+    var _h = _vm.$createElement;
+
+    var _c = _vm._self._c || _h;
+
+    return _c('div', {
+      staticClass: "list-group"
+    }, [_c('draggable', _vm._b({
+      staticClass: "row",
+      attrs: {
+        "list": _vm.elements,
+        "disabled": _vm.isDisabled
+      },
+      on: {
+        "start": function start($event) {
+          _vm.dragElementIndex = $event.oldIndex;
+        },
+        "end": function end($event) {
+          _vm.dragElementIndex = -1;
+        },
+        "update": _vm.reorder
+      }
+    }, 'draggable', _vm.options, false), _vm._l(_vm.elements, function (element, index) {
+      return _c('div', {
+        key: _vm.getElementId(element),
+        staticClass: "pr-5",
+        class: "col-xs-" + _vm.get(element, 'data.width', 12),
+        on: {
+          "dragstart": function dragstart($event) {
+            return _vm.onDragStart(index);
+          },
+          "dragend": function dragend($event) {
+            return _vm.onDragEnd(element);
+          }
+        }
+      }, [_vm._t("list-item", null, {
+        "element": element,
+        "isDragged": _vm.dragElementIndex === index,
+        "position": index
+      })], 2);
+    }), 0), _vm._v(" "), _vm.enableAdd && !_vm.isDisabled ? [_vm._t("list-add", [_c('add-element', {
+      staticClass: "mt-1",
+      attrs: {
+        "items": _vm.elements,
+        "include": _vm.supportedTypes,
+        "activity": _vm.activity,
+        "label": _vm.addElementOptions.label,
+        "large": _vm.addElementOptions.large,
+        "position": _vm.elements.length,
+        "layout": _vm.layout
+      },
+      on: {
+        "add": function add($event) {
+          return _vm.$emit('add', $event);
+        }
+      }
+    })], {
+      "include": _vm.supportedTypes,
+      "activity": _vm.activity,
+      "position": _vm.elements.length,
+      "layout": _vm.layout
+    })] : _vm._e()], 2);
+  };
+
+  var __vue_staticRenderFns__$o = [];
+  /* style */
+
+  var __vue_inject_styles__$o = function __vue_inject_styles__(inject) {
+    if (!inject) return;
+    inject("data-v-f18f3e56_0", {
+      source: ".list-group[data-v-f18f3e56]{padding:.625rem 1.5rem}[data-v-f18f3e56] .sortable-ghost .drag-handle{display:none}[data-v-f18f3e56] .sortable-ghost .content-element{max-height:9.375rem;background:#f4f5f5}[data-v-f18f3e56] .sortable-ghost .content-element>*{visibility:hidden}[data-v-f18f3e56] .sortable-drag .content-element{max-height:auto;background:#fff}",
+      map: undefined,
+      media: undefined
+    });
+  };
+  /* scoped */
+
+
+  var __vue_scope_id__$o = "data-v-f18f3e56";
+  /* module identifier */
+
+  var __vue_module_identifier__$i = undefined;
+  /* functional template */
+
+  var __vue_is_functional_template__$o = false;
+  /* component normalizer */
+
+  function __vue_normalize__$o(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+    var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
+
+    component.__file = "ElementList.vue";
+
+    if (!component.render) {
+      component.render = template.render;
+      component.staticRenderFns = template.staticRenderFns;
+      component._compiled = true;
+      if (functional) component.functional = true;
+    }
+
+    component._scopeId = scope;
+
+    {
+      var hook;
+
+      if (style) {
+        hook = function hook(context) {
+          style.call(this, createInjector(context));
+        };
+      }
+
+      if (hook !== undefined) {
+        if (component.functional) {
+          // register for functional component in vue file
+          var originalRender = component.render;
+
+          component.render = function renderWithStyleInjection(h, context) {
+            hook.call(context);
+            return originalRender(h, context);
+          };
+        } else {
+          // inject component registration as beforeCreate hook
+          var existing = component.beforeCreate;
+          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+        }
+      }
+    }
+
+    return component;
+  }
+  /* style inject */
+
+
+  function __vue_create_injector__$i() {
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var styles = __vue_create_injector__$i.styles || (__vue_create_injector__$i.styles = {});
+    var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+    return function addStyle(id, css) {
+      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
+
+      var group = isOldIE ? css.media || 'default' : id;
+      var style = styles[group] || (styles[group] = {
+        ids: [],
+        parts: [],
+        element: undefined
+      });
+
+      if (!style.ids.includes(id)) {
+        var code = css.source;
+        var index = style.ids.length;
+        style.ids.push(id);
+
+        if (css.map) {
+          // https://developer.chrome.com/devtools/docs/javascript-debugging
+          // this makes source maps inside style tags work properly in Chrome
+          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
+
+          code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
+        }
+
+        if (isOldIE) {
+          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+        }
+
+        if (!style.element) {
+          var el = style.element = document.createElement('style');
+          el.type = 'text/css';
+          if (css.media) el.setAttribute('media', css.media);
+
+          if (isOldIE) {
+            el.setAttribute('data-group', group);
+            el.setAttribute('data-next-index', '0');
+          }
+
+          head.appendChild(el);
+        }
+
+        if (isOldIE) {
+          index = parseInt(style.element.getAttribute('data-next-index'));
+          style.element.setAttribute('data-next-index', index + 1);
+        }
+
+        if (style.element.styleSheet) {
+          style.parts.push(code);
+          style.element.styleSheet.cssText = style.parts.filter(Boolean).join('\n');
+        } else {
+          var textNode = document.createTextNode(code);
+          var nodes = style.element.childNodes;
+          if (nodes[index]) style.element.removeChild(nodes[index]);
+          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
+        }
+      }
+    };
+  }
+  /* style inject SSR */
+
+
+  var ElementList = __vue_normalize__$o({
+    render: __vue_render__$o,
+    staticRenderFns: __vue_staticRenderFns__$o
+  }, __vue_inject_styles__$o, __vue_script__$o, __vue_scope_id__$o, __vue_is_functional_template__$o, __vue_module_identifier__$i, __vue_create_injector__$i);
+
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  var script$p = {
+    name: 'tailor-element-placeholder',
+    props: {
+      name: {
+        type: String,
+        required: true
+      },
+      icon: {
+        type: String,
+        required: true
+      },
+      placeholder: {
+        type: String,
+        default: 'Select to edit'
+      },
+      activePlaceholder: {
+        type: String,
+        default: 'Use toolbar to edit'
+      },
+      activeIcon: {
+        type: String,
+        default: null
+      },
+      activeColor: {
+        type: String,
+        default: '#fff'
+      },
+      isDisabled: {
+        type: Boolean,
+        default: false
+      },
+      isFocused: {
+        type: Boolean,
+        default: false
+      },
+      dense: {
+        type: Boolean,
+        default: false
+      }
+    },
+    computed: {
+      iconSize: function iconSize() {
+        if (this.dense) return this.isFocused ? 24 : 20;
+        return this.isFocused ? 38 : 30;
+      }
+    }
+  };
+
+  /* script */
+  var __vue_script__$p = script$p;
+  /* template */
+
+  var __vue_render__$p = function __vue_render__() {
+    var _vm = this;
+
+    var _h = _vm.$createElement;
+
+    var _c = _vm._self._c || _h;
+
+    return _c('v-sheet', {
+      staticClass: "transparent grey--text text--darken-4",
+      class: _vm.dense ? 'pt-3' : 'pa-12'
+    }, [_c('v-avatar', {
+      attrs: {
+        "size": _vm.dense ? 40 : 60,
+        "color": _vm.isDisabled ? 'grey darken-3' : 'primary darken-4'
+      }
+    }, [_c('v-icon', {
+      attrs: {
+        "size": _vm.iconSize,
+        "color": _vm.isFocused ? _vm.activeColor : '#fff'
+      }
+    }, [_vm._v("\n      " + _vm._s(_vm.icon) + "\n    ")])], 1), _vm._v(" "), _c('div', {
+      staticClass: "grey--text",
+      class: [_vm.isDisabled ? 'text--darken-3' : 'text--darken-4', _vm.dense ? 'my-2 subtitle-2' : 'my-4 headline']
+    }, [_vm._v("\n    " + _vm._s(_vm.name) + "\n  ")]), _vm._v(" "), !_vm.dense && !_vm.isDisabled ? _c('div', {
+      staticClass: "subtitle-1"
+    }, [!_vm.isFocused ? [_vm._v(_vm._s(_vm.placeholder))] : [_c('span', [_vm._v(_vm._s(_vm.activePlaceholder))]), _vm._v(" "), _vm.activeIcon ? _c('v-icon', {
+      attrs: {
+        "size": "20",
+        "color": "primary darken-4"
+      }
+    }, [_vm._v("\n        " + _vm._s(_vm.activeIcon) + "\n      ")]) : _vm._e()]], 2) : _vm._e()], 1);
+  };
+
+  var __vue_staticRenderFns__$p = [];
+  /* style */
+
+  var __vue_inject_styles__$p = undefined;
+  /* scoped */
+
+  var __vue_scope_id__$p = undefined;
+  /* functional template */
+
+  var __vue_is_functional_template__$p = false;
+  /* component normalizer */
+
+  function __vue_normalize__$p(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+    var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
+
+    component.__file = "ElementPlaceholder.vue";
+
+    if (!component.render) {
+      component.render = template.render;
+      component.staticRenderFns = template.staticRenderFns;
+      component._compiled = true;
+      if (functional) component.functional = true;
+    }
+
+    component._scopeId = scope;
+
+    return component;
+  }
+  /* style inject */
+
+  /* style inject SSR */
+
+
+  var ElementPlaceholder = __vue_normalize__$p({
+    render: __vue_render__$p,
+    staticRenderFns: __vue_staticRenderFns__$p
+  }, __vue_inject_styles__$p, __vue_script__$p, __vue_scope_id__$p, __vue_is_functional_template__$p);
+
+  var script$q = {
+    name: 'tailor-embedded-container',
+    inheritAttrs: false,
+    props: {
+      container: {
+        type: Object,
+        required: true
+      },
+      types: {
+        type: Array,
+        default: function _default() {
+          return ['JODIT_HTML', 'IMAGE', 'HTML', 'VIDEO'];
+        }
+      },
+      isDisabled: {
+        type: Boolean,
+        default: false
+      },
+      addElementOptions: {
+        type: Object,
+        default: function _default() {
+          return {};
+        }
+      },
+      enableAdd: {
+        type: Boolean,
+        default: true
+      }
+    },
+    computed: {
+      embeds: function embeds() {
+        var items = this.container.embeds;
+        return items ? values__default['default'](items).sort(function (a, b) {
+          return a.position - b.position;
+        }) : [];
+      }
+    },
+    methods: Object.assign({}, vueRadio.mapRequests('app', ['showConfirmationModal']), {
+      addItems: function addItems(items) {
+        items = Array.isArray(items) ? items : [items];
+        var container = cloneDeep__default['default'](this.container);
+        container.embeds = Object.assign({}, container.embeds, mapKeys__default['default'](items, 'id'));
+        this.$emit('save', container);
+      },
+      reorderItem: function reorderItem(_ref) {
+        var newPosition = _ref.newPosition,
+            items = _ref.items;
+        var context = {
+          items: items,
+          newPosition: newPosition
+        };
+        var container = cloneDeep__default['default'](this.container);
+        var reordered = container.embeds[items[newPosition].id];
+        reordered.position = utils.calculatePosition(context);
+        this.$emit('save', container);
+      },
+      save: function save(item, key, value) {
+        var container = cloneDeep__default['default'](this.container);
+        container.embeds[item.id] = Object.assign({}, item, _defineProperty({}, key, value));
+        this.$emit('save', container);
+      },
+      requestDeleteConfirmation: function requestDeleteConfirmation(element) {
+        var _this = this;
+
+        this.showConfirmationModal({
+          title: 'Delete element?',
+          message: 'Are you sure you want to delete element?',
+          action: function action() {
+            return _this.$emit('delete', element);
+          }
+        });
+      }
+    }),
+    components: {
+      ContainedContent: ContainedContent,
+      ElementList: ElementList
+    }
+  };
+
+  /* script */
+  var __vue_script__$q = script$q;
+  /* template */
+
+  var __vue_render__$q = function __vue_render__() {
+    var _vm = this;
+
+    var _h = _vm.$createElement;
+
+    var _c = _vm._self._c || _h;
+
+    return _c('element-list', {
+      attrs: {
+        "add-element-options": _vm.addElementOptions,
+        "elements": _vm.embeds,
+        "supported-types": _vm.types,
+        "enable-add": !_vm.isDisabled && _vm.enableAdd
+      },
+      on: {
+        "add": _vm.addItems,
+        "update": _vm.reorderItem
+      },
+      scopedSlots: _vm._u([{
+        key: "list-item",
+        fn: function fn(ref) {
+          var element = ref.element;
+          var isDragged = ref.isDragged;
+          return [_c('contained-content', _vm._b({
+            staticClass: "my-2",
+            attrs: {
+              "element": element,
+              "is-dragged": isDragged,
+              "is-disabled": _vm.isDisabled
+            },
+            on: {
+              "save": function save($event) {
+                return _vm.save(element, 'data', $event);
+              },
+              "save:meta": function saveMeta($event) {
+                return _vm.save(element, 'meta', $event);
+              },
+              "delete": function _delete($event) {
+                return _vm.requestDeleteConfirmation(element);
+              }
+            }
+          }, 'contained-content', _vm.$attrs, false))];
+        }
+      }])
+    });
+  };
+
+  var __vue_staticRenderFns__$q = [];
+  /* style */
+
+  var __vue_inject_styles__$q = undefined;
+  /* scoped */
+
+  var __vue_scope_id__$q = undefined;
+  /* functional template */
+
+  var __vue_is_functional_template__$q = false;
+  /* component normalizer */
+
+  function __vue_normalize__$q(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+    var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
+
+    component.__file = "EmbeddedContainer.vue";
+
+    if (!component.render) {
+      component.render = template.render;
+      component.staticRenderFns = template.staticRenderFns;
+      component._compiled = true;
+      if (functional) component.functional = true;
+    }
+
+    component._scopeId = scope;
+
+    return component;
+  }
+  /* style inject */
+
+  /* style inject SSR */
+
+
+  var EmbeddedContainer = __vue_normalize__$q({
+    render: __vue_render__$q,
+    staticRenderFns: __vue_staticRenderFns__$q
+  }, __vue_inject_styles__$q, __vue_script__$q, __vue_scope_id__$q, __vue_is_functional_template__$q);
+
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  var script$r = {
+    name: 'tailor-inline-activator',
+    inheritAttrs: false,
+    props: {
+      disabled: {
+        type: Boolean,
+        required: false
+      }
+    }
+  };
+
+  /* script */
+  var __vue_script__$r = script$r;
+  /* template */
+
+  var __vue_render__$r = function __vue_render__() {
+    var _vm = this;
+
+    var _h = _vm.$createElement;
+
+    var _c = _vm._self._c || _h;
+
+    return _c('button', _vm._g({
+      staticClass: "inline-activator",
+      class: {
+        disabled: _vm.disabled
+      }
+    }, _vm.$listeners), [_c('hr'), _vm._v(" "), _c('v-avatar', {
+      attrs: {
+        "size": "20",
+        "color": "primary darken-4"
+      }
+    }, [_c('v-icon', {
+      attrs: {
+        "size": "16",
+        "dark": ""
+      }
+    }, [_vm._v("mdi-plus")])], 1), _vm._v(" "), _c('hr')], 1);
+  };
+
+  var __vue_staticRenderFns__$r = [];
+  /* style */
+
+  var __vue_inject_styles__$r = function __vue_inject_styles__(inject) {
+    if (!inject) return;
+    inject("data-v-64eb8c58_0", {
+      source: ".default-activator-state[data-v-64eb8c58],.inline-activator[data-v-64eb8c58],.inline-activator.disabled[data-v-64eb8c58],.inline-activator.disabled[data-v-64eb8c58]:hover{padding:0 3.125rem;opacity:0}.inline-activator[data-v-64eb8c58]{display:flex;align-items:center;width:100%;margin:0;padding:0 3.125rem;opacity:0;transition:opacity .3s,padding .3s}.inline-activator[data-v-64eb8c58],.inline-activator .v-chip[data-v-64eb8c58]{cursor:pointer}.inline-activator hr[data-v-64eb8c58]{flex:1;display:inline-flex;margin:0;border-top:.0625rem dashed var(--v-primary-darken3)}.inline-activator[data-v-64eb8c58]:focus,.inline-activator[data-v-64eb8c58]:hover{padding:.75rem 0;opacity:1;outline:0;transition:opacity .3s .25s,padding .3s .1s}.inline-activator.disabled[data-v-64eb8c58],.inline-activator.disabled[data-v-64eb8c58]:hover{pointer-events:none}",
+      map: undefined,
+      media: undefined
+    });
+  };
+  /* scoped */
+
+
+  var __vue_scope_id__$r = "data-v-64eb8c58";
   /* module identifier */
 
   var __vue_module_identifier__$j = undefined;
@@ -7269,7 +7269,7 @@
   function __vue_normalize__$r(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
-    component.__file = "InputAsset.vue";
+    component.__file = "InlineActivator.vue";
 
     if (!component.render) {
       component.render = template.render;
@@ -7375,7 +7375,7 @@
   /* style inject SSR */
 
 
-  var InputAsset = __vue_normalize__$r({
+  var InlineActivator = __vue_normalize__$r({
     render: __vue_render__$r,
     staticRenderFns: __vue_staticRenderFns__$r
   }, __vue_inject_styles__$r, __vue_script__$r, __vue_scope_id__$r, __vue_is_functional_template__$r, __vue_module_identifier__$j, __vue_create_injector__$j);
@@ -7737,6 +7737,7 @@
 
   exports.ActiveUsers = ActiveUsers;
   exports.AddElement = AddElement;
+  exports.AssetInput = AssetInput;
   exports.ContainedContent = ContainedContent;
   exports.ContentElement = ContentElement;
   exports.Discussion = Discussion;
@@ -7744,7 +7745,6 @@
   exports.ElementPlaceholder = ElementPlaceholder;
   exports.EmbeddedContainer = EmbeddedContainer;
   exports.InlineActivator = InlineActivator;
-  exports.InputAsset = InputAsset;
   exports.InputError = InputError;
   exports.PreviewOverlay = PreviewOverlay;
   exports.PublishDiffChip = PublishDiffChip;
