@@ -52,36 +52,6 @@
     }
   };
 
-  function styleInject(css, ref) {
-    if ( ref === void 0 ) ref = {};
-    var insertAt = ref.insertAt;
-
-    if (!css || typeof document === 'undefined') { return; }
-
-    var head = document.head || document.getElementsByTagName('head')[0];
-    var style = document.createElement('style');
-    style.type = 'text/css';
-
-    if (insertAt === 'top') {
-      if (head.firstChild) {
-        head.insertBefore(style, head.firstChild);
-      } else {
-        head.appendChild(style);
-      }
-    } else {
-      head.appendChild(style);
-    }
-
-    if (style.styleSheet) {
-      style.styleSheet.cssText = css;
-    } else {
-      style.appendChild(document.createTextNode(css));
-    }
-  }
-
-  var css_248z = ".avatar[data-v-33d463d4]{transition:all .2s}.avatar img[data-v-33d463d4]{padding:.125rem}.avatar[data-v-33d463d4]:focus-within,.avatar[data-v-33d463d4]:hover{transform:scale(1.1);z-index:1}.avatar:focus-within img[data-v-33d463d4]:focus,.avatar:hover img[data-v-33d463d4]:focus{outline:0}";
-  styleInject(css_248z);
-
   /* script */
   var __vue_script__ = script;
   /* template */
@@ -135,10 +105,21 @@
   var __vue_staticRenderFns__ = [];
   /* style */
 
-  var __vue_inject_styles__ = undefined;
+  var __vue_inject_styles__ = function __vue_inject_styles__(inject) {
+    if (!inject) return;
+    inject("data-v-33d463d4_0", {
+      source: ".avatar[data-v-33d463d4]{transition:all .2s}.avatar img[data-v-33d463d4]{padding:.125rem}.avatar[data-v-33d463d4]:focus-within,.avatar[data-v-33d463d4]:hover{transform:scale(1.1);z-index:1}.avatar:focus-within img[data-v-33d463d4]:focus,.avatar:hover img[data-v-33d463d4]:focus{outline:0}",
+      map: undefined,
+      media: undefined
+    });
+  };
   /* scoped */
 
+
   var __vue_scope_id__ = "data-v-33d463d4";
+  /* module identifier */
+
+  var __vue_module_identifier__ = undefined;
   /* functional template */
 
   var __vue_is_functional_template__ = false;
@@ -158,17 +139,105 @@
 
     component._scopeId = scope;
 
+    {
+      var hook;
+
+      if (style) {
+        hook = function hook(context) {
+          style.call(this, createInjector(context));
+        };
+      }
+
+      if (hook !== undefined) {
+        if (component.functional) {
+          // register for functional component in vue file
+          var originalRender = component.render;
+
+          component.render = function renderWithStyleInjection(h, context) {
+            hook.call(context);
+            return originalRender(h, context);
+          };
+        } else {
+          // inject component registration as beforeCreate hook
+          var existing = component.beforeCreate;
+          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+        }
+      }
+    }
+
     return component;
   }
   /* style inject */
 
+
+  function __vue_create_injector__() {
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var styles = __vue_create_injector__.styles || (__vue_create_injector__.styles = {});
+    var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+    return function addStyle(id, css) {
+      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
+
+      var group = isOldIE ? css.media || 'default' : id;
+      var style = styles[group] || (styles[group] = {
+        ids: [],
+        parts: [],
+        element: undefined
+      });
+
+      if (!style.ids.includes(id)) {
+        var code = css.source;
+        var index = style.ids.length;
+        style.ids.push(id);
+
+        if (css.map) {
+          // https://developer.chrome.com/devtools/docs/javascript-debugging
+          // this makes source maps inside style tags work properly in Chrome
+          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
+
+          code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
+        }
+
+        if (isOldIE) {
+          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+        }
+
+        if (!style.element) {
+          var el = style.element = document.createElement('style');
+          el.type = 'text/css';
+          if (css.media) el.setAttribute('media', css.media);
+
+          if (isOldIE) {
+            el.setAttribute('data-group', group);
+            el.setAttribute('data-next-index', '0');
+          }
+
+          head.appendChild(el);
+        }
+
+        if (isOldIE) {
+          index = parseInt(style.element.getAttribute('data-next-index'));
+          style.element.setAttribute('data-next-index', index + 1);
+        }
+
+        if (style.element.styleSheet) {
+          style.parts.push(code);
+          style.element.styleSheet.cssText = style.parts.filter(Boolean).join('\n');
+        } else {
+          var textNode = document.createTextNode(code);
+          var nodes = style.element.childNodes;
+          if (nodes[index]) style.element.removeChild(nodes[index]);
+          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
+        }
+      }
+    };
+  }
   /* style inject SSR */
 
 
   var ActiveUsers = __vue_normalize__({
     render: __vue_render__,
     staticRenderFns: __vue_staticRenderFns__
-  }, __vue_inject_styles__, __vue_script__, __vue_scope_id__, __vue_is_functional_template__);
+  }, __vue_inject_styles__, __vue_script__, __vue_scope_id__, __vue_is_functional_template__, __vue_module_identifier__, __vue_create_injector__);
 
   //
   //
@@ -228,9 +297,6 @@
       }
     }
   };
-
-  var css_248z$1 = ".element-container[data-v-5e4d908e]{min-height:20rem;padding:0 0 1.875rem;border-top-left-radius:.5rem;border-top-right-radius:.5rem;overflow:hidden}.group-heading[data-v-5e4d908e]{margin:0 2.5rem .375rem;padding-top:.5rem;font-size:.875rem;font-weight:500;line-height:1rem;text-align:left}.group-elements[data-v-5e4d908e]{display:flex;flex-wrap:wrap;width:100%;padding:0 1.875rem}.add-element[data-v-5e4d908e]{width:8.125rem;min-width:8.125rem;height:auto!important;min-height:4.375rem;padding:0!important;white-space:normal}.add-element[data-v-5e4d908e]  .v-btn__content{flex:1 1 100%;flex-direction:column;padding:.375rem;text-transform:none}.add-element .v-icon[data-v-5e4d908e]{padding:.125rem 0;font-size:1.875rem}.add-element .button-text[data-v-5e4d908e]{margin:.625rem 0}";
-  styleInject(css_248z$1);
 
   /* script */
   var __vue_script__$1 = script$1;
@@ -297,10 +363,21 @@
   var __vue_staticRenderFns__$1 = [];
   /* style */
 
-  var __vue_inject_styles__$1 = undefined;
+  var __vue_inject_styles__$1 = function __vue_inject_styles__(inject) {
+    if (!inject) return;
+    inject("data-v-5e4d908e_0", {
+      source: ".element-container[data-v-5e4d908e]{min-height:20rem;padding:0 0 1.875rem;border-top-left-radius:.5rem;border-top-right-radius:.5rem;overflow:hidden}.group-heading[data-v-5e4d908e]{margin:0 2.5rem .375rem;padding-top:.5rem;font-size:.875rem;font-weight:500;line-height:1rem;text-align:left}.group-elements[data-v-5e4d908e]{display:flex;flex-wrap:wrap;width:100%;padding:0 1.875rem}.add-element[data-v-5e4d908e]{width:8.125rem;min-width:8.125rem;height:auto!important;min-height:4.375rem;padding:0!important;white-space:normal}.add-element[data-v-5e4d908e]  .v-btn__content{flex:1 1 100%;flex-direction:column;padding:.375rem;text-transform:none}.add-element .v-icon[data-v-5e4d908e]{padding:.125rem 0;font-size:1.875rem}.add-element .button-text[data-v-5e4d908e]{margin:.625rem 0}",
+      map: undefined,
+      media: undefined
+    });
+  };
   /* scoped */
 
+
   var __vue_scope_id__$1 = "data-v-5e4d908e";
+  /* module identifier */
+
+  var __vue_module_identifier__$1 = undefined;
   /* functional template */
 
   var __vue_is_functional_template__$1 = false;
@@ -320,17 +397,105 @@
 
     component._scopeId = scope;
 
+    {
+      var hook;
+
+      if (style) {
+        hook = function hook(context) {
+          style.call(this, createInjector(context));
+        };
+      }
+
+      if (hook !== undefined) {
+        if (component.functional) {
+          // register for functional component in vue file
+          var originalRender = component.render;
+
+          component.render = function renderWithStyleInjection(h, context) {
+            hook.call(context);
+            return originalRender(h, context);
+          };
+        } else {
+          // inject component registration as beforeCreate hook
+          var existing = component.beforeCreate;
+          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+        }
+      }
+    }
+
     return component;
   }
   /* style inject */
 
+
+  function __vue_create_injector__$1() {
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var styles = __vue_create_injector__$1.styles || (__vue_create_injector__$1.styles = {});
+    var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+    return function addStyle(id, css) {
+      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
+
+      var group = isOldIE ? css.media || 'default' : id;
+      var style = styles[group] || (styles[group] = {
+        ids: [],
+        parts: [],
+        element: undefined
+      });
+
+      if (!style.ids.includes(id)) {
+        var code = css.source;
+        var index = style.ids.length;
+        style.ids.push(id);
+
+        if (css.map) {
+          // https://developer.chrome.com/devtools/docs/javascript-debugging
+          // this makes source maps inside style tags work properly in Chrome
+          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
+
+          code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
+        }
+
+        if (isOldIE) {
+          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+        }
+
+        if (!style.element) {
+          var el = style.element = document.createElement('style');
+          el.type = 'text/css';
+          if (css.media) el.setAttribute('media', css.media);
+
+          if (isOldIE) {
+            el.setAttribute('data-group', group);
+            el.setAttribute('data-next-index', '0');
+          }
+
+          head.appendChild(el);
+        }
+
+        if (isOldIE) {
+          index = parseInt(style.element.getAttribute('data-next-index'));
+          style.element.setAttribute('data-next-index', index + 1);
+        }
+
+        if (style.element.styleSheet) {
+          style.parts.push(code);
+          style.element.styleSheet.cssText = style.parts.filter(Boolean).join('\n');
+        } else {
+          var textNode = document.createTextNode(code);
+          var nodes = style.element.childNodes;
+          if (nodes[index]) style.element.removeChild(nodes[index]);
+          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
+        }
+      }
+    };
+  }
   /* style inject SSR */
 
 
   var AddNewElement = __vue_normalize__$1({
     render: __vue_render__$1,
     staticRenderFns: __vue_staticRenderFns__$1
-  }, __vue_inject_styles__$1, __vue_script__$1, __vue_scope_id__$1, __vue_is_functional_template__$1);
+  }, __vue_inject_styles__$1, __vue_script__$1, __vue_scope_id__$1, __vue_is_functional_template__$1, __vue_module_identifier__$1, __vue_create_injector__$1);
 
   function _defineProperty(obj, key, value) {
     if (key in obj) {
@@ -645,9 +810,6 @@
     }
   };
 
-  var css_248z$2 = ".header[data-v-a1e0c4e8]{display:flex;align-items:flex-start}.header .comment-avatar[data-v-a1e0c4e8]{margin:.375rem .375rem 0 0}.header .info-container[data-v-a1e0c4e8]{display:flex;flex-direction:column;flex:0 100%;max-width:calc(100% - 8rem);margin-left:.125rem}.header .info-container .author[data-v-a1e0c4e8]{display:inline-block;max-width:75%;color:#000;font-size:1rem}.header .info-container .edited[data-v-a1e0c4e8],.header .info-container .time[data-v-a1e0c4e8]{color:#888;font-size:.75rem}.header .info-container hr.v-divider--vertical[data-v-a1e0c4e8]{margin:.25rem .125rem .125rem .625rem}.header .info-container[data-v-a1e0c4e8]  .editor-link{display:inline-flex;align-self:flex-end}.header .actions[data-v-a1e0c4e8]{margin-left:auto}";
-  styleInject(css_248z$2);
-
   /* script */
   var __vue_script__$3 = script$3;
   /* template */
@@ -748,10 +910,21 @@
   var __vue_staticRenderFns__$3 = [];
   /* style */
 
-  var __vue_inject_styles__$3 = undefined;
+  var __vue_inject_styles__$3 = function __vue_inject_styles__(inject) {
+    if (!inject) return;
+    inject("data-v-a1e0c4e8_0", {
+      source: ".header[data-v-a1e0c4e8]{display:flex;align-items:flex-start}.header .comment-avatar[data-v-a1e0c4e8]{margin:.375rem .375rem 0 0}.header .info-container[data-v-a1e0c4e8]{display:flex;flex-direction:column;flex:0 100%;max-width:calc(100% - 8rem);margin-left:.125rem}.header .info-container .author[data-v-a1e0c4e8]{display:inline-block;max-width:75%;color:#000;font-size:1rem}.header .info-container .edited[data-v-a1e0c4e8],.header .info-container .time[data-v-a1e0c4e8]{color:#888;font-size:.75rem}.header .info-container hr.v-divider--vertical[data-v-a1e0c4e8]{margin:.25rem .125rem .125rem .625rem}.header .info-container[data-v-a1e0c4e8]  .editor-link{display:inline-flex;align-self:flex-end}.header .actions[data-v-a1e0c4e8]{margin-left:auto}",
+      map: undefined,
+      media: undefined
+    });
+  };
   /* scoped */
 
+
   var __vue_scope_id__$3 = "data-v-a1e0c4e8";
+  /* module identifier */
+
+  var __vue_module_identifier__$2 = undefined;
   /* functional template */
 
   var __vue_is_functional_template__$3 = false;
@@ -771,17 +944,105 @@
 
     component._scopeId = scope;
 
+    {
+      var hook;
+
+      if (style) {
+        hook = function hook(context) {
+          style.call(this, createInjector(context));
+        };
+      }
+
+      if (hook !== undefined) {
+        if (component.functional) {
+          // register for functional component in vue file
+          var originalRender = component.render;
+
+          component.render = function renderWithStyleInjection(h, context) {
+            hook.call(context);
+            return originalRender(h, context);
+          };
+        } else {
+          // inject component registration as beforeCreate hook
+          var existing = component.beforeCreate;
+          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+        }
+      }
+    }
+
     return component;
   }
   /* style inject */
 
+
+  function __vue_create_injector__$2() {
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var styles = __vue_create_injector__$2.styles || (__vue_create_injector__$2.styles = {});
+    var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+    return function addStyle(id, css) {
+      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
+
+      var group = isOldIE ? css.media || 'default' : id;
+      var style = styles[group] || (styles[group] = {
+        ids: [],
+        parts: [],
+        element: undefined
+      });
+
+      if (!style.ids.includes(id)) {
+        var code = css.source;
+        var index = style.ids.length;
+        style.ids.push(id);
+
+        if (css.map) {
+          // https://developer.chrome.com/devtools/docs/javascript-debugging
+          // this makes source maps inside style tags work properly in Chrome
+          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
+
+          code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
+        }
+
+        if (isOldIE) {
+          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+        }
+
+        if (!style.element) {
+          var el = style.element = document.createElement('style');
+          el.type = 'text/css';
+          if (css.media) el.setAttribute('media', css.media);
+
+          if (isOldIE) {
+            el.setAttribute('data-group', group);
+            el.setAttribute('data-next-index', '0');
+          }
+
+          head.appendChild(el);
+        }
+
+        if (isOldIE) {
+          index = parseInt(style.element.getAttribute('data-next-index'));
+          style.element.setAttribute('data-next-index', index + 1);
+        }
+
+        if (style.element.styleSheet) {
+          style.parts.push(code);
+          style.element.styleSheet.cssText = style.parts.filter(Boolean).join('\n');
+        } else {
+          var textNode = document.createTextNode(code);
+          var nodes = style.element.childNodes;
+          if (nodes[index]) style.element.removeChild(nodes[index]);
+          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
+        }
+      }
+    };
+  }
   /* style inject SSR */
 
 
   var CommentHeader = __vue_normalize__$3({
     render: __vue_render__$3,
     staticRenderFns: __vue_staticRenderFns__$3
-  }, __vue_inject_styles__$3, __vue_script__$3, __vue_scope_id__$3, __vue_is_functional_template__$3);
+  }, __vue_inject_styles__$3, __vue_script__$3, __vue_scope_id__$3, __vue_is_functional_template__$3, __vue_module_identifier__$2, __vue_create_injector__$2);
 
   //
   //
@@ -817,9 +1078,6 @@
       }
     }
   };
-
-  var css_248z$3 = ".content[data-v-3d625308]{margin-top:.375rem}.content pre[data-v-3d625308]{height:100%;margin:0;padding:0 .25rem .5rem 0;font:inherit;white-space:pre-wrap;word-break:break-all;word-wrap:break-word;overflow-wrap:break-word;background:inherit;border:none;overflow:hidden}.content.resolved[data-v-3d625308]{opacity:.7}.content.resolved .resolvement-options[data-v-3d625308]{display:flex;align-items:center;margin-bottom:.25rem;font-size:.75rem}";
-  styleInject(css_248z$3);
 
   /* script */
   var __vue_script__$4 = script$4;
@@ -868,10 +1126,21 @@
   var __vue_staticRenderFns__$4 = [];
   /* style */
 
-  var __vue_inject_styles__$4 = undefined;
+  var __vue_inject_styles__$4 = function __vue_inject_styles__(inject) {
+    if (!inject) return;
+    inject("data-v-3d625308_0", {
+      source: ".content[data-v-3d625308]{margin-top:.375rem}.content pre[data-v-3d625308]{height:100%;margin:0;padding:0 .25rem .5rem 0;font:inherit;white-space:pre-wrap;word-break:break-all;word-wrap:break-word;overflow-wrap:break-word;background:inherit;border:none;overflow:hidden}.content.resolved[data-v-3d625308]{opacity:.7}.content.resolved .resolvement-options[data-v-3d625308]{display:flex;align-items:center;margin-bottom:.25rem;font-size:.75rem}",
+      map: undefined,
+      media: undefined
+    });
+  };
   /* scoped */
 
+
   var __vue_scope_id__$4 = "data-v-3d625308";
+  /* module identifier */
+
+  var __vue_module_identifier__$3 = undefined;
   /* functional template */
 
   var __vue_is_functional_template__$4 = false;
@@ -891,17 +1160,105 @@
 
     component._scopeId = scope;
 
+    {
+      var hook;
+
+      if (style) {
+        hook = function hook(context) {
+          style.call(this, createInjector(context));
+        };
+      }
+
+      if (hook !== undefined) {
+        if (component.functional) {
+          // register for functional component in vue file
+          var originalRender = component.render;
+
+          component.render = function renderWithStyleInjection(h, context) {
+            hook.call(context);
+            return originalRender(h, context);
+          };
+        } else {
+          // inject component registration as beforeCreate hook
+          var existing = component.beforeCreate;
+          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+        }
+      }
+    }
+
     return component;
   }
   /* style inject */
 
+
+  function __vue_create_injector__$3() {
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var styles = __vue_create_injector__$3.styles || (__vue_create_injector__$3.styles = {});
+    var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+    return function addStyle(id, css) {
+      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
+
+      var group = isOldIE ? css.media || 'default' : id;
+      var style = styles[group] || (styles[group] = {
+        ids: [],
+        parts: [],
+        element: undefined
+      });
+
+      if (!style.ids.includes(id)) {
+        var code = css.source;
+        var index = style.ids.length;
+        style.ids.push(id);
+
+        if (css.map) {
+          // https://developer.chrome.com/devtools/docs/javascript-debugging
+          // this makes source maps inside style tags work properly in Chrome
+          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
+
+          code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
+        }
+
+        if (isOldIE) {
+          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+        }
+
+        if (!style.element) {
+          var el = style.element = document.createElement('style');
+          el.type = 'text/css';
+          if (css.media) el.setAttribute('media', css.media);
+
+          if (isOldIE) {
+            el.setAttribute('data-group', group);
+            el.setAttribute('data-next-index', '0');
+          }
+
+          head.appendChild(el);
+        }
+
+        if (isOldIE) {
+          index = parseInt(style.element.getAttribute('data-next-index'));
+          style.element.setAttribute('data-next-index', index + 1);
+        }
+
+        if (style.element.styleSheet) {
+          style.parts.push(code);
+          style.element.styleSheet.cssText = style.parts.filter(Boolean).join('\n');
+        } else {
+          var textNode = document.createTextNode(code);
+          var nodes = style.element.childNodes;
+          if (nodes[index]) style.element.removeChild(nodes[index]);
+          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
+        }
+      }
+    };
+  }
   /* style inject SSR */
 
 
   var CommentPreview = __vue_normalize__$4({
     render: __vue_render__$4,
     staticRenderFns: __vue_staticRenderFns__$4
-  }, __vue_inject_styles__$4, __vue_script__$4, __vue_scope_id__$4, __vue_is_functional_template__$4);
+  }, __vue_inject_styles__$4, __vue_script__$4, __vue_scope_id__$4, __vue_is_functional_template__$4, __vue_module_identifier__$3, __vue_create_injector__$3);
 
   //
   var script$5 = {
@@ -966,9 +1323,6 @@
       CommentPreview: CommentPreview
     }
   };
-
-  var css_248z$4 = ".comment[data-v-3d04e7dc]{display:flex;flex-direction:column;font-family:Roboto,Arial,sans-serif}.comment-body[data-v-3d04e7dc]{flex:1;padding:0 .25rem 0 2.625rem}.comment-editor.v-textarea[data-v-3d04e7dc]{margin:.75rem 0 0 0}.comment-editor.v-textarea[data-v-3d04e7dc]  .v-input__slot{width:auto}";
-  styleInject(css_248z$4);
 
   /* script */
   var __vue_script__$5 = script$5;
@@ -1052,10 +1406,21 @@
   var __vue_staticRenderFns__$5 = [];
   /* style */
 
-  var __vue_inject_styles__$5 = undefined;
+  var __vue_inject_styles__$5 = function __vue_inject_styles__(inject) {
+    if (!inject) return;
+    inject("data-v-3d04e7dc_0", {
+      source: ".comment[data-v-3d04e7dc]{display:flex;flex-direction:column;font-family:Roboto,Arial,sans-serif}.comment-body[data-v-3d04e7dc]{flex:1;padding:0 .25rem 0 2.625rem}.comment-editor.v-textarea[data-v-3d04e7dc]{margin:.75rem 0 0 0}.comment-editor.v-textarea[data-v-3d04e7dc]  .v-input__slot{width:auto}",
+      map: undefined,
+      media: undefined
+    });
+  };
   /* scoped */
 
+
   var __vue_scope_id__$5 = "data-v-3d04e7dc";
+  /* module identifier */
+
+  var __vue_module_identifier__$4 = undefined;
   /* functional template */
 
   var __vue_is_functional_template__$5 = false;
@@ -1075,17 +1440,105 @@
 
     component._scopeId = scope;
 
+    {
+      var hook;
+
+      if (style) {
+        hook = function hook(context) {
+          style.call(this, createInjector(context));
+        };
+      }
+
+      if (hook !== undefined) {
+        if (component.functional) {
+          // register for functional component in vue file
+          var originalRender = component.render;
+
+          component.render = function renderWithStyleInjection(h, context) {
+            hook.call(context);
+            return originalRender(h, context);
+          };
+        } else {
+          // inject component registration as beforeCreate hook
+          var existing = component.beforeCreate;
+          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+        }
+      }
+    }
+
     return component;
   }
   /* style inject */
 
+
+  function __vue_create_injector__$4() {
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var styles = __vue_create_injector__$4.styles || (__vue_create_injector__$4.styles = {});
+    var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+    return function addStyle(id, css) {
+      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
+
+      var group = isOldIE ? css.media || 'default' : id;
+      var style = styles[group] || (styles[group] = {
+        ids: [],
+        parts: [],
+        element: undefined
+      });
+
+      if (!style.ids.includes(id)) {
+        var code = css.source;
+        var index = style.ids.length;
+        style.ids.push(id);
+
+        if (css.map) {
+          // https://developer.chrome.com/devtools/docs/javascript-debugging
+          // this makes source maps inside style tags work properly in Chrome
+          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
+
+          code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
+        }
+
+        if (isOldIE) {
+          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+        }
+
+        if (!style.element) {
+          var el = style.element = document.createElement('style');
+          el.type = 'text/css';
+          if (css.media) el.setAttribute('media', css.media);
+
+          if (isOldIE) {
+            el.setAttribute('data-group', group);
+            el.setAttribute('data-next-index', '0');
+          }
+
+          head.appendChild(el);
+        }
+
+        if (isOldIE) {
+          index = parseInt(style.element.getAttribute('data-next-index'));
+          style.element.setAttribute('data-next-index', index + 1);
+        }
+
+        if (style.element.styleSheet) {
+          style.parts.push(code);
+          style.element.styleSheet.cssText = style.parts.filter(Boolean).join('\n');
+        } else {
+          var textNode = document.createTextNode(code);
+          var nodes = style.element.childNodes;
+          if (nodes[index]) style.element.removeChild(nodes[index]);
+          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
+        }
+      }
+    };
+  }
   /* style inject SSR */
 
 
   var ThreadComment = __vue_normalize__$5({
     render: __vue_render__$5,
     staticRenderFns: __vue_staticRenderFns__$5
-  }, __vue_inject_styles__$5, __vue_script__$5, __vue_scope_id__$5, __vue_is_functional_template__$5);
+  }, __vue_inject_styles__$5, __vue_script__$5, __vue_scope_id__$5, __vue_is_functional_template__$5, __vue_module_identifier__$4, __vue_create_injector__$4);
 
   //
   var script$6 = {
@@ -1127,9 +1580,6 @@
     }
   };
 
-  var css_248z$5 = ".thread-list[data-v-b5620cec]{margin:0;padding:0;list-style:none}.thread-list .thread-list-item .v-divider[data-v-b5620cec]{margin:0 .25rem 1rem .25rem}.thread-list .thread-list-item:first-child .v-divider[data-v-b5620cec]{display:none}";
-  styleInject(css_248z$5);
-
   /* script */
   var __vue_script__$6 = script$6;
   /* template */
@@ -1163,10 +1613,21 @@
   var __vue_staticRenderFns__$6 = [];
   /* style */
 
-  var __vue_inject_styles__$6 = undefined;
+  var __vue_inject_styles__$6 = function __vue_inject_styles__(inject) {
+    if (!inject) return;
+    inject("data-v-b5620cec_0", {
+      source: ".thread-list[data-v-b5620cec]{margin:0;padding:0;list-style:none}.thread-list .thread-list-item .v-divider[data-v-b5620cec]{margin:0 .25rem 1rem .25rem}.thread-list .thread-list-item:first-child .v-divider[data-v-b5620cec]{display:none}",
+      map: undefined,
+      media: undefined
+    });
+  };
   /* scoped */
 
+
   var __vue_scope_id__$6 = "data-v-b5620cec";
+  /* module identifier */
+
+  var __vue_module_identifier__$5 = undefined;
   /* functional template */
 
   var __vue_is_functional_template__$6 = false;
@@ -1186,17 +1647,105 @@
 
     component._scopeId = scope;
 
+    {
+      var hook;
+
+      if (style) {
+        hook = function hook(context) {
+          style.call(this, createInjector(context));
+        };
+      }
+
+      if (hook !== undefined) {
+        if (component.functional) {
+          // register for functional component in vue file
+          var originalRender = component.render;
+
+          component.render = function renderWithStyleInjection(h, context) {
+            hook.call(context);
+            return originalRender(h, context);
+          };
+        } else {
+          // inject component registration as beforeCreate hook
+          var existing = component.beforeCreate;
+          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+        }
+      }
+    }
+
     return component;
   }
   /* style inject */
 
+
+  function __vue_create_injector__$5() {
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var styles = __vue_create_injector__$5.styles || (__vue_create_injector__$5.styles = {});
+    var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+    return function addStyle(id, css) {
+      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
+
+      var group = isOldIE ? css.media || 'default' : id;
+      var style = styles[group] || (styles[group] = {
+        ids: [],
+        parts: [],
+        element: undefined
+      });
+
+      if (!style.ids.includes(id)) {
+        var code = css.source;
+        var index = style.ids.length;
+        style.ids.push(id);
+
+        if (css.map) {
+          // https://developer.chrome.com/devtools/docs/javascript-debugging
+          // this makes source maps inside style tags work properly in Chrome
+          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
+
+          code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
+        }
+
+        if (isOldIE) {
+          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+        }
+
+        if (!style.element) {
+          var el = style.element = document.createElement('style');
+          el.type = 'text/css';
+          if (css.media) el.setAttribute('media', css.media);
+
+          if (isOldIE) {
+            el.setAttribute('data-group', group);
+            el.setAttribute('data-next-index', '0');
+          }
+
+          head.appendChild(el);
+        }
+
+        if (isOldIE) {
+          index = parseInt(style.element.getAttribute('data-next-index'));
+          style.element.setAttribute('data-next-index', index + 1);
+        }
+
+        if (style.element.styleSheet) {
+          style.parts.push(code);
+          style.element.styleSheet.cssText = style.parts.filter(Boolean).join('\n');
+        } else {
+          var textNode = document.createTextNode(code);
+          var nodes = style.element.childNodes;
+          if (nodes[index]) style.element.removeChild(nodes[index]);
+          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
+        }
+      }
+    };
+  }
   /* style inject SSR */
 
 
   var ThreadList = __vue_normalize__$6({
     render: __vue_render__$6,
     staticRenderFns: __vue_staticRenderFns__$6
-  }, __vue_inject_styles__$6, __vue_script__$6, __vue_scope_id__$6, __vue_is_functional_template__$6);
+  }, __vue_inject_styles__$6, __vue_script__$6, __vue_scope_id__$6, __vue_is_functional_template__$6, __vue_module_identifier__$5, __vue_create_injector__$5);
 
   //
   var script$7 = {
@@ -1214,9 +1763,6 @@
       }
     }
   };
-
-  var css_248z$6 = ".unseen-divider[data-v-221b9d72]{text-align:center}.unseen-divider .v-divider[data-v-221b9d72]{margin:1rem 0 .25rem}.unseen-divider[data-v-221b9d72]  .v-chip.v-chip--outlined.v-chip{margin:-1.5rem 0 .5rem 0;border-radius:1rem!important;background-color:#fafafa!important}.unseen-divider[data-v-221b9d72]  .v-chip.v-chip--outlined.v-chip .v-chip__content .v-chip__close{margin-top:.125rem;font-size:.75rem!important}";
-  styleInject(css_248z$6);
 
   /* script */
   var __vue_script__$7 = script$7;
@@ -1260,10 +1806,21 @@
   var __vue_staticRenderFns__$7 = [];
   /* style */
 
-  var __vue_inject_styles__$7 = undefined;
+  var __vue_inject_styles__$7 = function __vue_inject_styles__(inject) {
+    if (!inject) return;
+    inject("data-v-221b9d72_0", {
+      source: ".unseen-divider[data-v-221b9d72]{text-align:center}.unseen-divider .v-divider[data-v-221b9d72]{margin:1rem 0 .25rem}.unseen-divider[data-v-221b9d72]  .v-chip.v-chip--outlined.v-chip{margin:-1.5rem 0 .5rem 0;border-radius:1rem!important;background-color:#fafafa!important}.unseen-divider[data-v-221b9d72]  .v-chip.v-chip--outlined.v-chip .v-chip__content .v-chip__close{margin-top:.125rem;font-size:.75rem!important}",
+      map: undefined,
+      media: undefined
+    });
+  };
   /* scoped */
 
+
   var __vue_scope_id__$7 = "data-v-221b9d72";
+  /* module identifier */
+
+  var __vue_module_identifier__$6 = undefined;
   /* functional template */
 
   var __vue_is_functional_template__$7 = false;
@@ -1283,17 +1840,105 @@
 
     component._scopeId = scope;
 
+    {
+      var hook;
+
+      if (style) {
+        hook = function hook(context) {
+          style.call(this, createInjector(context));
+        };
+      }
+
+      if (hook !== undefined) {
+        if (component.functional) {
+          // register for functional component in vue file
+          var originalRender = component.render;
+
+          component.render = function renderWithStyleInjection(h, context) {
+            hook.call(context);
+            return originalRender(h, context);
+          };
+        } else {
+          // inject component registration as beforeCreate hook
+          var existing = component.beforeCreate;
+          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+        }
+      }
+    }
+
     return component;
   }
   /* style inject */
 
+
+  function __vue_create_injector__$6() {
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var styles = __vue_create_injector__$6.styles || (__vue_create_injector__$6.styles = {});
+    var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+    return function addStyle(id, css) {
+      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
+
+      var group = isOldIE ? css.media || 'default' : id;
+      var style = styles[group] || (styles[group] = {
+        ids: [],
+        parts: [],
+        element: undefined
+      });
+
+      if (!style.ids.includes(id)) {
+        var code = css.source;
+        var index = style.ids.length;
+        style.ids.push(id);
+
+        if (css.map) {
+          // https://developer.chrome.com/devtools/docs/javascript-debugging
+          // this makes source maps inside style tags work properly in Chrome
+          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
+
+          code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
+        }
+
+        if (isOldIE) {
+          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+        }
+
+        if (!style.element) {
+          var el = style.element = document.createElement('style');
+          el.type = 'text/css';
+          if (css.media) el.setAttribute('media', css.media);
+
+          if (isOldIE) {
+            el.setAttribute('data-group', group);
+            el.setAttribute('data-next-index', '0');
+          }
+
+          head.appendChild(el);
+        }
+
+        if (isOldIE) {
+          index = parseInt(style.element.getAttribute('data-next-index'));
+          style.element.setAttribute('data-next-index', index + 1);
+        }
+
+        if (style.element.styleSheet) {
+          style.parts.push(code);
+          style.element.styleSheet.cssText = style.parts.filter(Boolean).join('\n');
+        } else {
+          var textNode = document.createTextNode(code);
+          var nodes = style.element.childNodes;
+          if (nodes[index]) style.element.removeChild(nodes[index]);
+          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
+        }
+      }
+    };
+  }
   /* style inject SSR */
 
 
   var UnseenDivider = __vue_normalize__$7({
     render: __vue_render__$7,
     staticRenderFns: __vue_staticRenderFns__$7
-  }, __vue_inject_styles__$7, __vue_script__$7, __vue_scope_id__$7, __vue_is_functional_template__$7);
+  }, __vue_inject_styles__$7, __vue_script__$7, __vue_scope_id__$7, __vue_is_functional_template__$7, __vue_module_identifier__$6, __vue_create_injector__$6);
 
   var script$8 = {
     name: 'discussion-thread',
@@ -1389,9 +2034,6 @@
     }
   };
 
-  var css_248z$7 = ".discussion-thread[data-v-c6af8436]{width:100%}.discussion-thread.scroll-container[data-v-c6af8436]{max-height:31.25rem;overflow-y:scroll;overflow-x:hidden;padding-right:1.5rem;box-sizing:content-box}.discussion-thread .fade-enter-active[data-v-c6af8436],.discussion-thread .fade-leave-active[data-v-c6af8436]{transition:opacity .5s}.discussion-thread .fade-enter[data-v-c6af8436],.discussion-thread .fade-leave-to[data-v-c6af8436]{opacity:0}";
-  styleInject(css_248z$7);
-
   /* script */
   var __vue_script__$8 = script$8;
   /* template */
@@ -1466,10 +2108,21 @@
   var __vue_staticRenderFns__$8 = [];
   /* style */
 
-  var __vue_inject_styles__$8 = undefined;
+  var __vue_inject_styles__$8 = function __vue_inject_styles__(inject) {
+    if (!inject) return;
+    inject("data-v-c6af8436_0", {
+      source: ".discussion-thread[data-v-c6af8436]{width:100%}.discussion-thread.scroll-container[data-v-c6af8436]{max-height:31.25rem;overflow-y:scroll;overflow-x:hidden;padding-right:1.5rem;box-sizing:content-box}.discussion-thread .fade-enter-active[data-v-c6af8436],.discussion-thread .fade-leave-active[data-v-c6af8436]{transition:opacity .5s}.discussion-thread .fade-enter[data-v-c6af8436],.discussion-thread .fade-leave-to[data-v-c6af8436]{opacity:0}",
+      map: undefined,
+      media: undefined
+    });
+  };
   /* scoped */
 
+
   var __vue_scope_id__$8 = "data-v-c6af8436";
+  /* module identifier */
+
+  var __vue_module_identifier__$7 = undefined;
   /* functional template */
 
   var __vue_is_functional_template__$8 = false;
@@ -1489,17 +2142,105 @@
 
     component._scopeId = scope;
 
+    {
+      var hook;
+
+      if (style) {
+        hook = function hook(context) {
+          style.call(this, createInjector(context));
+        };
+      }
+
+      if (hook !== undefined) {
+        if (component.functional) {
+          // register for functional component in vue file
+          var originalRender = component.render;
+
+          component.render = function renderWithStyleInjection(h, context) {
+            hook.call(context);
+            return originalRender(h, context);
+          };
+        } else {
+          // inject component registration as beforeCreate hook
+          var existing = component.beforeCreate;
+          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+        }
+      }
+    }
+
     return component;
   }
   /* style inject */
 
+
+  function __vue_create_injector__$7() {
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var styles = __vue_create_injector__$7.styles || (__vue_create_injector__$7.styles = {});
+    var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+    return function addStyle(id, css) {
+      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
+
+      var group = isOldIE ? css.media || 'default' : id;
+      var style = styles[group] || (styles[group] = {
+        ids: [],
+        parts: [],
+        element: undefined
+      });
+
+      if (!style.ids.includes(id)) {
+        var code = css.source;
+        var index = style.ids.length;
+        style.ids.push(id);
+
+        if (css.map) {
+          // https://developer.chrome.com/devtools/docs/javascript-debugging
+          // this makes source maps inside style tags work properly in Chrome
+          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
+
+          code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
+        }
+
+        if (isOldIE) {
+          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+        }
+
+        if (!style.element) {
+          var el = style.element = document.createElement('style');
+          el.type = 'text/css';
+          if (css.media) el.setAttribute('media', css.media);
+
+          if (isOldIE) {
+            el.setAttribute('data-group', group);
+            el.setAttribute('data-next-index', '0');
+          }
+
+          head.appendChild(el);
+        }
+
+        if (isOldIE) {
+          index = parseInt(style.element.getAttribute('data-next-index'));
+          style.element.setAttribute('data-next-index', index + 1);
+        }
+
+        if (style.element.styleSheet) {
+          style.parts.push(code);
+          style.element.styleSheet.cssText = style.parts.filter(Boolean).join('\n');
+        } else {
+          var textNode = document.createTextNode(code);
+          var nodes = style.element.childNodes;
+          if (nodes[index]) style.element.removeChild(nodes[index]);
+          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
+        }
+      }
+    };
+  }
   /* style inject SSR */
 
 
   var DiscussionThread = __vue_normalize__$8({
     render: __vue_render__$8,
     staticRenderFns: __vue_staticRenderFns__$8
-  }, __vue_inject_styles__$8, __vue_script__$8, __vue_scope_id__$8, __vue_is_functional_template__$8);
+  }, __vue_inject_styles__$8, __vue_script__$8, __vue_scope_id__$8, __vue_is_functional_template__$8, __vue_module_identifier__$7, __vue_create_injector__$7);
 
   //
   //
@@ -1787,9 +2528,6 @@
     }
   };
 
-  var css_248z$8 = ".embedded-discussion[data-v-5744b719]{font-family:Roboto,Arial,sans-serif}.embedded-discussion .resolve-btn-container[data-v-5744b719]{display:flex;justify-content:flex-end;margin:.5rem 0 0 0}.embedded-discussion .header[data-v-5744b719]{margin:.875rem 0 1.625rem 0;font-size:1.125rem;font-weight:400}.embedded-discussion .comment-input[data-v-5744b719]{margin:0 .25rem 0 .25rem}.embedded-discussion .alert[data-v-5744b719]  .v-icon{color:var(--v-primary-darken2)!important}";
-  styleInject(css_248z$8);
-
   /* script */
   var __vue_script__$a = script$a;
   /* template */
@@ -1907,10 +2645,21 @@
   var __vue_staticRenderFns__$a = [];
   /* style */
 
-  var __vue_inject_styles__$a = undefined;
+  var __vue_inject_styles__$a = function __vue_inject_styles__(inject) {
+    if (!inject) return;
+    inject("data-v-5744b719_0", {
+      source: ".embedded-discussion[data-v-5744b719]{font-family:Roboto,Arial,sans-serif}.embedded-discussion .resolve-btn-container[data-v-5744b719]{display:flex;justify-content:flex-end;margin:.5rem 0 0 0}.embedded-discussion .header[data-v-5744b719]{margin:.875rem 0 1.625rem 0;font-size:1.125rem;font-weight:400}.embedded-discussion .comment-input[data-v-5744b719]{margin:0 .25rem 0 .25rem}.embedded-discussion .alert[data-v-5744b719]  .v-icon{color:var(--v-primary-darken2)!important}",
+      map: undefined,
+      media: undefined
+    });
+  };
   /* scoped */
 
+
   var __vue_scope_id__$a = "data-v-5744b719";
+  /* module identifier */
+
+  var __vue_module_identifier__$8 = undefined;
   /* functional template */
 
   var __vue_is_functional_template__$a = false;
@@ -1930,17 +2679,105 @@
 
     component._scopeId = scope;
 
+    {
+      var hook;
+
+      if (style) {
+        hook = function hook(context) {
+          style.call(this, createInjector(context));
+        };
+      }
+
+      if (hook !== undefined) {
+        if (component.functional) {
+          // register for functional component in vue file
+          var originalRender = component.render;
+
+          component.render = function renderWithStyleInjection(h, context) {
+            hook.call(context);
+            return originalRender(h, context);
+          };
+        } else {
+          // inject component registration as beforeCreate hook
+          var existing = component.beforeCreate;
+          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+        }
+      }
+    }
+
     return component;
   }
   /* style inject */
 
+
+  function __vue_create_injector__$8() {
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var styles = __vue_create_injector__$8.styles || (__vue_create_injector__$8.styles = {});
+    var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+    return function addStyle(id, css) {
+      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
+
+      var group = isOldIE ? css.media || 'default' : id;
+      var style = styles[group] || (styles[group] = {
+        ids: [],
+        parts: [],
+        element: undefined
+      });
+
+      if (!style.ids.includes(id)) {
+        var code = css.source;
+        var index = style.ids.length;
+        style.ids.push(id);
+
+        if (css.map) {
+          // https://developer.chrome.com/devtools/docs/javascript-debugging
+          // this makes source maps inside style tags work properly in Chrome
+          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
+
+          code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
+        }
+
+        if (isOldIE) {
+          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+        }
+
+        if (!style.element) {
+          var el = style.element = document.createElement('style');
+          el.type = 'text/css';
+          if (css.media) el.setAttribute('media', css.media);
+
+          if (isOldIE) {
+            el.setAttribute('data-group', group);
+            el.setAttribute('data-next-index', '0');
+          }
+
+          head.appendChild(el);
+        }
+
+        if (isOldIE) {
+          index = parseInt(style.element.getAttribute('data-next-index'));
+          style.element.setAttribute('data-next-index', index + 1);
+        }
+
+        if (style.element.styleSheet) {
+          style.parts.push(code);
+          style.element.styleSheet.cssText = style.parts.filter(Boolean).join('\n');
+        } else {
+          var textNode = document.createTextNode(code);
+          var nodes = style.element.childNodes;
+          if (nodes[index]) style.element.removeChild(nodes[index]);
+          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
+        }
+      }
+    };
+  }
   /* style inject SSR */
 
 
   var Discussion = __vue_normalize__$a({
     render: __vue_render__$a,
     staticRenderFns: __vue_staticRenderFns__$a
-  }, __vue_inject_styles__$a, __vue_script__$a, __vue_scope_id__$a, __vue_is_functional_template__$a);
+  }, __vue_inject_styles__$a, __vue_script__$a, __vue_scope_id__$a, __vue_is_functional_template__$a, __vue_module_identifier__$8, __vue_create_injector__$8);
 
   //
 
@@ -2069,9 +2906,6 @@
     }
   };
 
-  var css_248z$9 = "[data-v-382b8ce9] .v-menu__content{background:#fff}[data-v-382b8ce9] .v-menu__content .embedded-discussion{text-align:left}[data-v-382b8ce9] .v-menu__content .comment .author{font-size:.875rem}.unseen[data-v-382b8ce9]{font-size:.75rem}";
-  styleInject(css_248z$9);
-
   /* script */
   var __vue_script__$b = script$b;
   /* template */
@@ -2169,10 +3003,21 @@
   var __vue_staticRenderFns__$b = [];
   /* style */
 
-  var __vue_inject_styles__$b = undefined;
+  var __vue_inject_styles__$b = function __vue_inject_styles__(inject) {
+    if (!inject) return;
+    inject("data-v-382b8ce9_0", {
+      source: "[data-v-382b8ce9] .v-menu__content{background:#fff}[data-v-382b8ce9] .v-menu__content .embedded-discussion{text-align:left}[data-v-382b8ce9] .v-menu__content .comment .author{font-size:.875rem}.unseen[data-v-382b8ce9]{font-size:.75rem}",
+      map: undefined,
+      media: undefined
+    });
+  };
   /* scoped */
 
+
   var __vue_scope_id__$b = "data-v-382b8ce9";
+  /* module identifier */
+
+  var __vue_module_identifier__$9 = undefined;
   /* functional template */
 
   var __vue_is_functional_template__$b = false;
@@ -2192,17 +3037,105 @@
 
     component._scopeId = scope;
 
+    {
+      var hook;
+
+      if (style) {
+        hook = function hook(context) {
+          style.call(this, createInjector(context));
+        };
+      }
+
+      if (hook !== undefined) {
+        if (component.functional) {
+          // register for functional component in vue file
+          var originalRender = component.render;
+
+          component.render = function renderWithStyleInjection(h, context) {
+            hook.call(context);
+            return originalRender(h, context);
+          };
+        } else {
+          // inject component registration as beforeCreate hook
+          var existing = component.beforeCreate;
+          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+        }
+      }
+    }
+
     return component;
   }
   /* style inject */
 
+
+  function __vue_create_injector__$9() {
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var styles = __vue_create_injector__$9.styles || (__vue_create_injector__$9.styles = {});
+    var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+    return function addStyle(id, css) {
+      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
+
+      var group = isOldIE ? css.media || 'default' : id;
+      var style = styles[group] || (styles[group] = {
+        ids: [],
+        parts: [],
+        element: undefined
+      });
+
+      if (!style.ids.includes(id)) {
+        var code = css.source;
+        var index = style.ids.length;
+        style.ids.push(id);
+
+        if (css.map) {
+          // https://developer.chrome.com/devtools/docs/javascript-debugging
+          // this makes source maps inside style tags work properly in Chrome
+          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
+
+          code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
+        }
+
+        if (isOldIE) {
+          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+        }
+
+        if (!style.element) {
+          var el = style.element = document.createElement('style');
+          el.type = 'text/css';
+          if (css.media) el.setAttribute('media', css.media);
+
+          if (isOldIE) {
+            el.setAttribute('data-group', group);
+            el.setAttribute('data-next-index', '0');
+          }
+
+          head.appendChild(el);
+        }
+
+        if (isOldIE) {
+          index = parseInt(style.element.getAttribute('data-next-index'));
+          style.element.setAttribute('data-next-index', index + 1);
+        }
+
+        if (style.element.styleSheet) {
+          style.parts.push(code);
+          style.element.styleSheet.cssText = style.parts.filter(Boolean).join('\n');
+        } else {
+          var textNode = document.createTextNode(code);
+          var nodes = style.element.childNodes;
+          if (nodes[index]) style.element.removeChild(nodes[index]);
+          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
+        }
+      }
+    };
+  }
   /* style inject SSR */
 
 
   var Discussion$1 = __vue_normalize__$b({
     render: __vue_render__$b,
     staticRenderFns: __vue_staticRenderFns__$b
-  }, __vue_inject_styles__$b, __vue_script__$b, __vue_scope_id__$b, __vue_is_functional_template__$b);
+  }, __vue_inject_styles__$b, __vue_script__$b, __vue_scope_id__$b, __vue_is_functional_template__$b, __vue_module_identifier__$9, __vue_create_injector__$9);
 
   //
   var script$c = {
@@ -2433,9 +3366,6 @@
     }
   };
 
-  var css_248z$a = ".content-element[data-v-74c5ccda]{position:relative;border:1px solid transparent}.content-element[data-v-74c5ccda]::after{content:'';display:none;position:absolute;top:0;right:-.125rem;width:.125rem;height:100%}.content-element.focused[data-v-74c5ccda]{border:1px dashed #1de9b6}.content-element.focused[data-v-74c5ccda]::after{display:block;background:#1de9b6}.content-element.selected[data-v-74c5ccda]{border:1px dashed #ff4081}.content-element.selected[data-v-74c5ccda]::after{display:block;background:#ff4081}.frame[data-v-74c5ccda]{padding:10px 20px;border:1px solid #e1e1e1}.element-actions[data-v-74c5ccda]{display:flex;flex-direction:column;position:absolute;top:-.0625rem;right:-1.25rem;width:1.5rem;height:100%;padding-left:.75rem}.element-actions>*[data-v-74c5ccda]{min-height:1.75rem;opacity:0;transition:opacity .1s linear}.element-actions>.is-visible[data-v-74c5ccda]{opacity:1;transition:opacity .5s linear}.active-users[data-v-74c5ccda]{position:absolute;top:0;left:-1.625rem}.save-indicator[data-v-74c5ccda]{position:absolute;bottom:-.125rem;left:0}.header[data-v-74c5ccda]{width:100%;max-height:0}.header.visible[data-v-74c5ccda]{max-height:unset;padding:0 0 .5rem}.diff.new[data-v-74c5ccda]{border:none;box-shadow:0 0 0 2px var(--v-success-lighten2)!important}.diff.changed[data-v-74c5ccda],.diff.removed[data-v-74c5ccda]{border:none;box-shadow:0 0 0 2px var(--v-secondary-lighten4)!important}.diff .element-actions[data-v-74c5ccda]{display:none}";
-  styleInject(css_248z$a);
-
   /* script */
   var __vue_script__$d = script$d;
   /* template */
@@ -2541,10 +3471,21 @@
   var __vue_staticRenderFns__$d = [];
   /* style */
 
-  var __vue_inject_styles__$d = undefined;
+  var __vue_inject_styles__$d = function __vue_inject_styles__(inject) {
+    if (!inject) return;
+    inject("data-v-74c5ccda_0", {
+      source: ".content-element[data-v-74c5ccda]{position:relative;border:1px solid transparent}.content-element[data-v-74c5ccda]::after{content:'';display:none;position:absolute;top:0;right:-.125rem;width:.125rem;height:100%}.content-element.focused[data-v-74c5ccda]{border:1px dashed #1de9b6}.content-element.focused[data-v-74c5ccda]::after{display:block;background:#1de9b6}.content-element.selected[data-v-74c5ccda]{border:1px dashed #ff4081}.content-element.selected[data-v-74c5ccda]::after{display:block;background:#ff4081}.frame[data-v-74c5ccda]{padding:10px 20px;border:1px solid #e1e1e1}.element-actions[data-v-74c5ccda]{display:flex;flex-direction:column;position:absolute;top:-.0625rem;right:-1.25rem;width:1.5rem;height:100%;padding-left:.75rem}.element-actions>*[data-v-74c5ccda]{min-height:1.75rem;opacity:0;transition:opacity .1s linear}.element-actions>.is-visible[data-v-74c5ccda]{opacity:1;transition:opacity .5s linear}.active-users[data-v-74c5ccda]{position:absolute;top:0;left:-1.625rem}.save-indicator[data-v-74c5ccda]{position:absolute;bottom:-.125rem;left:0}.header[data-v-74c5ccda]{width:100%;max-height:0}.header.visible[data-v-74c5ccda]{max-height:unset;padding:0 0 .5rem}.diff.new[data-v-74c5ccda]{border:none;box-shadow:0 0 0 2px var(--v-success-lighten2)!important}.diff.changed[data-v-74c5ccda],.diff.removed[data-v-74c5ccda]{border:none;box-shadow:0 0 0 2px var(--v-secondary-lighten4)!important}.diff .element-actions[data-v-74c5ccda]{display:none}",
+      map: undefined,
+      media: undefined
+    });
+  };
   /* scoped */
 
+
   var __vue_scope_id__$d = "data-v-74c5ccda";
+  /* module identifier */
+
+  var __vue_module_identifier__$a = undefined;
   /* functional template */
 
   var __vue_is_functional_template__$d = false;
@@ -2564,17 +3505,105 @@
 
     component._scopeId = scope;
 
+    {
+      var hook;
+
+      if (style) {
+        hook = function hook(context) {
+          style.call(this, createInjector(context));
+        };
+      }
+
+      if (hook !== undefined) {
+        if (component.functional) {
+          // register for functional component in vue file
+          var originalRender = component.render;
+
+          component.render = function renderWithStyleInjection(h, context) {
+            hook.call(context);
+            return originalRender(h, context);
+          };
+        } else {
+          // inject component registration as beforeCreate hook
+          var existing = component.beforeCreate;
+          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+        }
+      }
+    }
+
     return component;
   }
   /* style inject */
 
+
+  function __vue_create_injector__$a() {
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var styles = __vue_create_injector__$a.styles || (__vue_create_injector__$a.styles = {});
+    var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+    return function addStyle(id, css) {
+      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
+
+      var group = isOldIE ? css.media || 'default' : id;
+      var style = styles[group] || (styles[group] = {
+        ids: [],
+        parts: [],
+        element: undefined
+      });
+
+      if (!style.ids.includes(id)) {
+        var code = css.source;
+        var index = style.ids.length;
+        style.ids.push(id);
+
+        if (css.map) {
+          // https://developer.chrome.com/devtools/docs/javascript-debugging
+          // this makes source maps inside style tags work properly in Chrome
+          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
+
+          code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
+        }
+
+        if (isOldIE) {
+          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+        }
+
+        if (!style.element) {
+          var el = style.element = document.createElement('style');
+          el.type = 'text/css';
+          if (css.media) el.setAttribute('media', css.media);
+
+          if (isOldIE) {
+            el.setAttribute('data-group', group);
+            el.setAttribute('data-next-index', '0');
+          }
+
+          head.appendChild(el);
+        }
+
+        if (isOldIE) {
+          index = parseInt(style.element.getAttribute('data-next-index'));
+          style.element.setAttribute('data-next-index', index + 1);
+        }
+
+        if (style.element.styleSheet) {
+          style.parts.push(code);
+          style.element.styleSheet.cssText = style.parts.filter(Boolean).join('\n');
+        } else {
+          var textNode = document.createTextNode(code);
+          var nodes = style.element.childNodes;
+          if (nodes[index]) style.element.removeChild(nodes[index]);
+          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
+        }
+      }
+    };
+  }
   /* style inject SSR */
 
 
   var ContentElement = __vue_normalize__$d({
     render: __vue_render__$d,
     staticRenderFns: __vue_staticRenderFns__$d
-  }, __vue_inject_styles__$d, __vue_script__$d, __vue_scope_id__$d, __vue_is_functional_template__$d);
+  }, __vue_inject_styles__$d, __vue_script__$d, __vue_scope_id__$d, __vue_is_functional_template__$d, __vue_module_identifier__$a, __vue_create_injector__$a);
 
   //
   var script$e = {
@@ -2615,9 +3644,6 @@
       ContentElement: ContentElement
     }
   };
-
-  var css_248z$b = ".element-preview-container[data-v-72d4e8ff]{display:flex;position:relative;margin:.25rem 0}.element-preview-container .v-input[data-v-72d4e8ff]{margin:0}.content-element[data-v-72d4e8ff]{flex:1 0;margin:.4375rem 0 0 .25rem;box-shadow:none;border:1px solid #e1e1e1}.content-element.selected[data-v-72d4e8ff]{border-style:dashed;border-color:#444}.content-element.selected[data-v-72d4e8ff]::after{display:none}.element-preview-container[data-v-72d4e8ff]  .contained-content{margin:0}.element-preview-container[data-v-72d4e8ff]  .contained-content .message span:not(.heading){display:none}.element-preview-container[data-v-72d4e8ff]  .contained-content .ql-editor{word-break:break-all}.element-wrapper[data-v-72d4e8ff]{position:relative}.open-element-button[data-v-72d4e8ff]{position:absolute;top:0;right:-.75rem;transition:opacity .4s}.open-element-button[data-v-72d4e8ff]:not(.visible){opacity:0}";
-  styleInject(css_248z$b);
 
   /* script */
   var __vue_script__$e = script$e;
@@ -2701,10 +3727,21 @@
   var __vue_staticRenderFns__$e = [];
   /* style */
 
-  var __vue_inject_styles__$e = undefined;
+  var __vue_inject_styles__$e = function __vue_inject_styles__(inject) {
+    if (!inject) return;
+    inject("data-v-72d4e8ff_0", {
+      source: ".element-preview-container[data-v-72d4e8ff]{display:flex;position:relative;margin:.25rem 0}.element-preview-container .v-input[data-v-72d4e8ff]{margin:0}.content-element[data-v-72d4e8ff]{flex:1 0;margin:.4375rem 0 0 .25rem;box-shadow:none;border:1px solid #e1e1e1}.content-element.selected[data-v-72d4e8ff]{border-style:dashed;border-color:#444}.content-element.selected[data-v-72d4e8ff]::after{display:none}.element-preview-container[data-v-72d4e8ff]  .contained-content{margin:0}.element-preview-container[data-v-72d4e8ff]  .contained-content .message span:not(.heading){display:none}.element-preview-container[data-v-72d4e8ff]  .contained-content .ql-editor{word-break:break-all}.element-wrapper[data-v-72d4e8ff]{position:relative}.open-element-button[data-v-72d4e8ff]{position:absolute;top:0;right:-.75rem;transition:opacity .4s}.open-element-button[data-v-72d4e8ff]:not(.visible){opacity:0}",
+      map: undefined,
+      media: undefined
+    });
+  };
   /* scoped */
 
+
   var __vue_scope_id__$e = "data-v-72d4e8ff";
+  /* module identifier */
+
+  var __vue_module_identifier__$b = undefined;
   /* functional template */
 
   var __vue_is_functional_template__$e = false;
@@ -2724,17 +3761,105 @@
 
     component._scopeId = scope;
 
+    {
+      var hook;
+
+      if (style) {
+        hook = function hook(context) {
+          style.call(this, createInjector(context));
+        };
+      }
+
+      if (hook !== undefined) {
+        if (component.functional) {
+          // register for functional component in vue file
+          var originalRender = component.render;
+
+          component.render = function renderWithStyleInjection(h, context) {
+            hook.call(context);
+            return originalRender(h, context);
+          };
+        } else {
+          // inject component registration as beforeCreate hook
+          var existing = component.beforeCreate;
+          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+        }
+      }
+    }
+
     return component;
   }
   /* style inject */
 
+
+  function __vue_create_injector__$b() {
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var styles = __vue_create_injector__$b.styles || (__vue_create_injector__$b.styles = {});
+    var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+    return function addStyle(id, css) {
+      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
+
+      var group = isOldIE ? css.media || 'default' : id;
+      var style = styles[group] || (styles[group] = {
+        ids: [],
+        parts: [],
+        element: undefined
+      });
+
+      if (!style.ids.includes(id)) {
+        var code = css.source;
+        var index = style.ids.length;
+        style.ids.push(id);
+
+        if (css.map) {
+          // https://developer.chrome.com/devtools/docs/javascript-debugging
+          // this makes source maps inside style tags work properly in Chrome
+          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
+
+          code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
+        }
+
+        if (isOldIE) {
+          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+        }
+
+        if (!style.element) {
+          var el = style.element = document.createElement('style');
+          el.type = 'text/css';
+          if (css.media) el.setAttribute('media', css.media);
+
+          if (isOldIE) {
+            el.setAttribute('data-group', group);
+            el.setAttribute('data-next-index', '0');
+          }
+
+          head.appendChild(el);
+        }
+
+        if (isOldIE) {
+          index = parseInt(style.element.getAttribute('data-next-index'));
+          style.element.setAttribute('data-next-index', index + 1);
+        }
+
+        if (style.element.styleSheet) {
+          style.parts.push(code);
+          style.element.styleSheet.cssText = style.parts.filter(Boolean).join('\n');
+        } else {
+          var textNode = document.createTextNode(code);
+          var nodes = style.element.childNodes;
+          if (nodes[index]) style.element.removeChild(nodes[index]);
+          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
+        }
+      }
+    };
+  }
   /* style inject SSR */
 
 
   var ContentElement$1 = __vue_normalize__$e({
     render: __vue_render__$e,
     staticRenderFns: __vue_staticRenderFns__$e
-  }, __vue_inject_styles__$e, __vue_script__$e, __vue_scope_id__$e, __vue_is_functional_template__$e);
+  }, __vue_inject_styles__$e, __vue_script__$e, __vue_scope_id__$e, __vue_is_functional_template__$e, __vue_module_identifier__$b, __vue_create_injector__$b);
 
   //
   var script$f = {
@@ -2796,9 +3921,6 @@
     }
   };
 
-  var css_248z$c = ".content-preview .v-alert[data-v-2013b96d]{display:flex;align-items:center;justify-content:center;height:19rem}.content-preview .content-container[data-v-2013b96d]:last-child{margin-bottom:.625rem}";
-  styleInject(css_248z$c);
-
   /* script */
   var __vue_script__$f = script$f;
   /* template */
@@ -2848,10 +3970,21 @@
   var __vue_staticRenderFns__$f = [];
   /* style */
 
-  var __vue_inject_styles__$f = undefined;
+  var __vue_inject_styles__$f = function __vue_inject_styles__(inject) {
+    if (!inject) return;
+    inject("data-v-2013b96d_0", {
+      source: ".content-preview .v-alert[data-v-2013b96d]{display:flex;align-items:center;justify-content:center;height:19rem}.content-preview .content-container[data-v-2013b96d]:last-child{margin-bottom:.625rem}",
+      map: undefined,
+      media: undefined
+    });
+  };
   /* scoped */
 
+
   var __vue_scope_id__$f = "data-v-2013b96d";
+  /* module identifier */
+
+  var __vue_module_identifier__$c = undefined;
   /* functional template */
 
   var __vue_is_functional_template__$f = false;
@@ -2871,17 +4004,105 @@
 
     component._scopeId = scope;
 
+    {
+      var hook;
+
+      if (style) {
+        hook = function hook(context) {
+          style.call(this, createInjector(context));
+        };
+      }
+
+      if (hook !== undefined) {
+        if (component.functional) {
+          // register for functional component in vue file
+          var originalRender = component.render;
+
+          component.render = function renderWithStyleInjection(h, context) {
+            hook.call(context);
+            return originalRender(h, context);
+          };
+        } else {
+          // inject component registration as beforeCreate hook
+          var existing = component.beforeCreate;
+          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+        }
+      }
+    }
+
     return component;
   }
   /* style inject */
 
+
+  function __vue_create_injector__$c() {
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var styles = __vue_create_injector__$c.styles || (__vue_create_injector__$c.styles = {});
+    var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+    return function addStyle(id, css) {
+      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
+
+      var group = isOldIE ? css.media || 'default' : id;
+      var style = styles[group] || (styles[group] = {
+        ids: [],
+        parts: [],
+        element: undefined
+      });
+
+      if (!style.ids.includes(id)) {
+        var code = css.source;
+        var index = style.ids.length;
+        style.ids.push(id);
+
+        if (css.map) {
+          // https://developer.chrome.com/devtools/docs/javascript-debugging
+          // this makes source maps inside style tags work properly in Chrome
+          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
+
+          code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
+        }
+
+        if (isOldIE) {
+          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+        }
+
+        if (!style.element) {
+          var el = style.element = document.createElement('style');
+          el.type = 'text/css';
+          if (css.media) el.setAttribute('media', css.media);
+
+          if (isOldIE) {
+            el.setAttribute('data-group', group);
+            el.setAttribute('data-next-index', '0');
+          }
+
+          head.appendChild(el);
+        }
+
+        if (isOldIE) {
+          index = parseInt(style.element.getAttribute('data-next-index'));
+          style.element.setAttribute('data-next-index', index + 1);
+        }
+
+        if (style.element.styleSheet) {
+          style.parts.push(code);
+          style.element.styleSheet.cssText = style.parts.filter(Boolean).join('\n');
+        } else {
+          var textNode = document.createTextNode(code);
+          var nodes = style.element.childNodes;
+          if (nodes[index]) style.element.removeChild(nodes[index]);
+          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
+        }
+      }
+    };
+  }
   /* style inject SSR */
 
 
   var ContentPreview = __vue_normalize__$f({
     render: __vue_render__$f,
     staticRenderFns: __vue_staticRenderFns__$f
-  }, __vue_inject_styles__$f, __vue_script__$f, __vue_scope_id__$f, __vue_is_functional_template__$f);
+  }, __vue_inject_styles__$f, __vue_script__$f, __vue_scope_id__$f, __vue_is_functional_template__$f, __vue_module_identifier__$c, __vue_create_injector__$c);
 
   var randomInteger = function randomInteger(minimum, maximum) {
     return Math.floor(Math.random() * (maximum - minimum + 1) + minimum);
@@ -3075,9 +4296,6 @@
     }
   };
 
-  var css_248z$d = ".treeview[data-v-11dfe634]{max-height:19rem;text-align:left;background-color:#fcfcfc;border:1px solid #eee;overflow-y:scroll}.treeview .v-chip.custom-chip[data-v-11dfe634]{border-radius:12px!important}.treeview[data-v-11dfe634]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__content>*,.treeview[data-v-11dfe634]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__root{cursor:auto}";
-  styleInject(css_248z$d);
-
   /* script */
   var __vue_script__$g = script$g;
   /* template */
@@ -3167,10 +4385,21 @@
   var __vue_staticRenderFns__$g = [];
   /* style */
 
-  var __vue_inject_styles__$g = undefined;
+  var __vue_inject_styles__$g = function __vue_inject_styles__(inject) {
+    if (!inject) return;
+    inject("data-v-11dfe634_0", {
+      source: ".treeview[data-v-11dfe634]{max-height:19rem;text-align:left;background-color:#fcfcfc;border:1px solid #eee;overflow-y:scroll}.treeview .v-chip.custom-chip[data-v-11dfe634]{border-radius:12px!important}.treeview[data-v-11dfe634]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__content>*,.treeview[data-v-11dfe634]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__root{cursor:auto}",
+      map: undefined,
+      media: undefined
+    });
+  };
   /* scoped */
 
+
   var __vue_scope_id__$g = "data-v-11dfe634";
+  /* module identifier */
+
+  var __vue_module_identifier__$d = undefined;
   /* functional template */
 
   var __vue_is_functional_template__$g = false;
@@ -3190,17 +4419,105 @@
 
     component._scopeId = scope;
 
+    {
+      var hook;
+
+      if (style) {
+        hook = function hook(context) {
+          style.call(this, createInjector(context));
+        };
+      }
+
+      if (hook !== undefined) {
+        if (component.functional) {
+          // register for functional component in vue file
+          var originalRender = component.render;
+
+          component.render = function renderWithStyleInjection(h, context) {
+            hook.call(context);
+            return originalRender(h, context);
+          };
+        } else {
+          // inject component registration as beforeCreate hook
+          var existing = component.beforeCreate;
+          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+        }
+      }
+    }
+
     return component;
   }
   /* style inject */
 
+
+  function __vue_create_injector__$d() {
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var styles = __vue_create_injector__$d.styles || (__vue_create_injector__$d.styles = {});
+    var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+    return function addStyle(id, css) {
+      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
+
+      var group = isOldIE ? css.media || 'default' : id;
+      var style = styles[group] || (styles[group] = {
+        ids: [],
+        parts: [],
+        element: undefined
+      });
+
+      if (!style.ids.includes(id)) {
+        var code = css.source;
+        var index = style.ids.length;
+        style.ids.push(id);
+
+        if (css.map) {
+          // https://developer.chrome.com/devtools/docs/javascript-debugging
+          // this makes source maps inside style tags work properly in Chrome
+          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
+
+          code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
+        }
+
+        if (isOldIE) {
+          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+        }
+
+        if (!style.element) {
+          var el = style.element = document.createElement('style');
+          el.type = 'text/css';
+          if (css.media) el.setAttribute('media', css.media);
+
+          if (isOldIE) {
+            el.setAttribute('data-group', group);
+            el.setAttribute('data-next-index', '0');
+          }
+
+          head.appendChild(el);
+        }
+
+        if (isOldIE) {
+          index = parseInt(style.element.getAttribute('data-next-index'));
+          style.element.setAttribute('data-next-index', index + 1);
+        }
+
+        if (style.element.styleSheet) {
+          style.parts.push(code);
+          style.element.styleSheet.cssText = style.parts.filter(Boolean).join('\n');
+        } else {
+          var textNode = document.createTextNode(code);
+          var nodes = style.element.childNodes;
+          if (nodes[index]) style.element.removeChild(nodes[index]);
+          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
+        }
+      }
+    };
+  }
   /* style inject SSR */
 
 
   var SelectActivity = __vue_normalize__$g({
     render: __vue_render__$g,
     staticRenderFns: __vue_staticRenderFns__$g
-  }, __vue_inject_styles__$g, __vue_script__$g, __vue_scope_id__$g, __vue_is_functional_template__$g);
+  }, __vue_inject_styles__$g, __vue_script__$g, __vue_scope_id__$g, __vue_is_functional_template__$g, __vue_module_identifier__$d, __vue_create_injector__$d);
 
   //
   var script$h = {
@@ -3359,9 +4676,6 @@
     }
   };
 
-  var css_248z$e = ".dialog-title[data-v-b6f646a2]{display:flex;color:#f1f1f1}.dialog-title .text-truncate[data-v-b6f646a2]{flex:1;text-align:left}";
-  styleInject(css_248z$e);
-
   /* script */
   var __vue_script__$i = script$i;
   /* template */
@@ -3412,10 +4726,21 @@
   var __vue_staticRenderFns__$i = [];
   /* style */
 
-  var __vue_inject_styles__$i = undefined;
+  var __vue_inject_styles__$i = function __vue_inject_styles__(inject) {
+    if (!inject) return;
+    inject("data-v-b6f646a2_0", {
+      source: ".dialog-title[data-v-b6f646a2]{display:flex;color:#f1f1f1}.dialog-title .text-truncate[data-v-b6f646a2]{flex:1;text-align:left}",
+      map: undefined,
+      media: undefined
+    });
+  };
   /* scoped */
 
+
   var __vue_scope_id__$i = "data-v-b6f646a2";
+  /* module identifier */
+
+  var __vue_module_identifier__$e = undefined;
   /* functional template */
 
   var __vue_is_functional_template__$i = false;
@@ -3435,17 +4760,105 @@
 
     component._scopeId = scope;
 
+    {
+      var hook;
+
+      if (style) {
+        hook = function hook(context) {
+          style.call(this, createInjector(context));
+        };
+      }
+
+      if (hook !== undefined) {
+        if (component.functional) {
+          // register for functional component in vue file
+          var originalRender = component.render;
+
+          component.render = function renderWithStyleInjection(h, context) {
+            hook.call(context);
+            return originalRender(h, context);
+          };
+        } else {
+          // inject component registration as beforeCreate hook
+          var existing = component.beforeCreate;
+          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+        }
+      }
+    }
+
     return component;
   }
   /* style inject */
 
+
+  function __vue_create_injector__$e() {
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var styles = __vue_create_injector__$e.styles || (__vue_create_injector__$e.styles = {});
+    var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+    return function addStyle(id, css) {
+      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
+
+      var group = isOldIE ? css.media || 'default' : id;
+      var style = styles[group] || (styles[group] = {
+        ids: [],
+        parts: [],
+        element: undefined
+      });
+
+      if (!style.ids.includes(id)) {
+        var code = css.source;
+        var index = style.ids.length;
+        style.ids.push(id);
+
+        if (css.map) {
+          // https://developer.chrome.com/devtools/docs/javascript-debugging
+          // this makes source maps inside style tags work properly in Chrome
+          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
+
+          code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
+        }
+
+        if (isOldIE) {
+          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+        }
+
+        if (!style.element) {
+          var el = style.element = document.createElement('style');
+          el.type = 'text/css';
+          if (css.media) el.setAttribute('media', css.media);
+
+          if (isOldIE) {
+            el.setAttribute('data-group', group);
+            el.setAttribute('data-next-index', '0');
+          }
+
+          head.appendChild(el);
+        }
+
+        if (isOldIE) {
+          index = parseInt(style.element.getAttribute('data-next-index'));
+          style.element.setAttribute('data-next-index', index + 1);
+        }
+
+        if (style.element.styleSheet) {
+          style.parts.push(code);
+          style.element.styleSheet.cssText = style.parts.filter(Boolean).join('\n');
+        } else {
+          var textNode = document.createTextNode(code);
+          var nodes = style.element.childNodes;
+          if (nodes[index]) style.element.removeChild(nodes[index]);
+          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
+        }
+      }
+    };
+  }
   /* style inject SSR */
 
 
   var TailorDialog = __vue_normalize__$i({
     render: __vue_render__$i,
     staticRenderFns: __vue_staticRenderFns__$i
-  }, __vue_inject_styles__$i, __vue_script__$i, __vue_scope_id__$i, __vue_is_functional_template__$i);
+  }, __vue_inject_styles__$i, __vue_script__$i, __vue_scope_id__$i, __vue_is_functional_template__$i, __vue_module_identifier__$e, __vue_create_injector__$e);
 
   var TOGGLE_BUTTON = {
     SELECT: {
@@ -4281,9 +5694,6 @@
     }
   };
 
-  var css_248z$f = ".drag-handle[data-v-cb586726]{position:absolute;left:-3px;z-index:2;width:26px;opacity:0}.drag-handle .mdi[data-v-cb586726]{color:#888;font-size:28px}.hovered .drag-handle[data-v-cb586726]{opacity:1;transition:opacity .6s ease-in-out;cursor:pointer}.disabled .drag-handle[data-v-cb586726]{display:none}.contained-content[data-v-cb586726]{position:relative;margin:7px 0;padding:0}";
-  styleInject(css_248z$f);
-
   /* script */
   var __vue_script__$l = script$l;
   /* template */
@@ -4341,10 +5751,21 @@
   var __vue_staticRenderFns__$l = [];
   /* style */
 
-  var __vue_inject_styles__$l = undefined;
+  var __vue_inject_styles__$l = function __vue_inject_styles__(inject) {
+    if (!inject) return;
+    inject("data-v-cb586726_0", {
+      source: ".drag-handle[data-v-cb586726]{position:absolute;left:-3px;z-index:2;width:26px;opacity:0}.drag-handle .mdi[data-v-cb586726]{color:#888;font-size:28px}.hovered .drag-handle[data-v-cb586726]{opacity:1;transition:opacity .6s ease-in-out;cursor:pointer}.disabled .drag-handle[data-v-cb586726]{display:none}.contained-content[data-v-cb586726]{position:relative;margin:7px 0;padding:0}",
+      map: undefined,
+      media: undefined
+    });
+  };
   /* scoped */
 
+
   var __vue_scope_id__$l = "data-v-cb586726";
+  /* module identifier */
+
+  var __vue_module_identifier__$f = undefined;
   /* functional template */
 
   var __vue_is_functional_template__$l = false;
@@ -4364,17 +5785,105 @@
 
     component._scopeId = scope;
 
+    {
+      var hook;
+
+      if (style) {
+        hook = function hook(context) {
+          style.call(this, createInjector(context));
+        };
+      }
+
+      if (hook !== undefined) {
+        if (component.functional) {
+          // register for functional component in vue file
+          var originalRender = component.render;
+
+          component.render = function renderWithStyleInjection(h, context) {
+            hook.call(context);
+            return originalRender(h, context);
+          };
+        } else {
+          // inject component registration as beforeCreate hook
+          var existing = component.beforeCreate;
+          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+        }
+      }
+    }
+
     return component;
   }
   /* style inject */
 
+
+  function __vue_create_injector__$f() {
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var styles = __vue_create_injector__$f.styles || (__vue_create_injector__$f.styles = {});
+    var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+    return function addStyle(id, css) {
+      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
+
+      var group = isOldIE ? css.media || 'default' : id;
+      var style = styles[group] || (styles[group] = {
+        ids: [],
+        parts: [],
+        element: undefined
+      });
+
+      if (!style.ids.includes(id)) {
+        var code = css.source;
+        var index = style.ids.length;
+        style.ids.push(id);
+
+        if (css.map) {
+          // https://developer.chrome.com/devtools/docs/javascript-debugging
+          // this makes source maps inside style tags work properly in Chrome
+          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
+
+          code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
+        }
+
+        if (isOldIE) {
+          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+        }
+
+        if (!style.element) {
+          var el = style.element = document.createElement('style');
+          el.type = 'text/css';
+          if (css.media) el.setAttribute('media', css.media);
+
+          if (isOldIE) {
+            el.setAttribute('data-group', group);
+            el.setAttribute('data-next-index', '0');
+          }
+
+          head.appendChild(el);
+        }
+
+        if (isOldIE) {
+          index = parseInt(style.element.getAttribute('data-next-index'));
+          style.element.setAttribute('data-next-index', index + 1);
+        }
+
+        if (style.element.styleSheet) {
+          style.parts.push(code);
+          style.element.styleSheet.cssText = style.parts.filter(Boolean).join('\n');
+        } else {
+          var textNode = document.createTextNode(code);
+          var nodes = style.element.childNodes;
+          if (nodes[index]) style.element.removeChild(nodes[index]);
+          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
+        }
+      }
+    };
+  }
   /* style inject SSR */
 
 
   var ContainedContent = __vue_normalize__$l({
     render: __vue_render__$l,
     staticRenderFns: __vue_staticRenderFns__$l
-  }, __vue_inject_styles__$l, __vue_script__$l, __vue_scope_id__$l, __vue_is_functional_template__$l);
+  }, __vue_inject_styles__$l, __vue_script__$l, __vue_scope_id__$l, __vue_is_functional_template__$l, __vue_module_identifier__$f, __vue_create_injector__$f);
 
   //
   var CE_FOCUS_EVENT = 'element:focus';
@@ -4460,9 +5969,6 @@
     }
   };
 
-  var css_248z$g = ".list-group[data-v-f18f3e56]{padding:.625rem 1.5rem}[data-v-f18f3e56] .sortable-ghost .drag-handle{display:none}[data-v-f18f3e56] .sortable-ghost .content-element{max-height:9.375rem;background:#f4f5f5}[data-v-f18f3e56] .sortable-ghost .content-element>*{visibility:hidden}[data-v-f18f3e56] .sortable-drag .content-element{max-height:auto;background:#fff}";
-  styleInject(css_248z$g);
-
   /* script */
   var __vue_script__$m = script$m;
   /* template */
@@ -4536,10 +6042,21 @@
   var __vue_staticRenderFns__$m = [];
   /* style */
 
-  var __vue_inject_styles__$m = undefined;
+  var __vue_inject_styles__$m = function __vue_inject_styles__(inject) {
+    if (!inject) return;
+    inject("data-v-f18f3e56_0", {
+      source: ".list-group[data-v-f18f3e56]{padding:.625rem 1.5rem}[data-v-f18f3e56] .sortable-ghost .drag-handle{display:none}[data-v-f18f3e56] .sortable-ghost .content-element{max-height:9.375rem;background:#f4f5f5}[data-v-f18f3e56] .sortable-ghost .content-element>*{visibility:hidden}[data-v-f18f3e56] .sortable-drag .content-element{max-height:auto;background:#fff}",
+      map: undefined,
+      media: undefined
+    });
+  };
   /* scoped */
 
+
   var __vue_scope_id__$m = "data-v-f18f3e56";
+  /* module identifier */
+
+  var __vue_module_identifier__$g = undefined;
   /* functional template */
 
   var __vue_is_functional_template__$m = false;
@@ -4559,17 +6076,105 @@
 
     component._scopeId = scope;
 
+    {
+      var hook;
+
+      if (style) {
+        hook = function hook(context) {
+          style.call(this, createInjector(context));
+        };
+      }
+
+      if (hook !== undefined) {
+        if (component.functional) {
+          // register for functional component in vue file
+          var originalRender = component.render;
+
+          component.render = function renderWithStyleInjection(h, context) {
+            hook.call(context);
+            return originalRender(h, context);
+          };
+        } else {
+          // inject component registration as beforeCreate hook
+          var existing = component.beforeCreate;
+          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+        }
+      }
+    }
+
     return component;
   }
   /* style inject */
 
+
+  function __vue_create_injector__$g() {
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var styles = __vue_create_injector__$g.styles || (__vue_create_injector__$g.styles = {});
+    var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+    return function addStyle(id, css) {
+      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
+
+      var group = isOldIE ? css.media || 'default' : id;
+      var style = styles[group] || (styles[group] = {
+        ids: [],
+        parts: [],
+        element: undefined
+      });
+
+      if (!style.ids.includes(id)) {
+        var code = css.source;
+        var index = style.ids.length;
+        style.ids.push(id);
+
+        if (css.map) {
+          // https://developer.chrome.com/devtools/docs/javascript-debugging
+          // this makes source maps inside style tags work properly in Chrome
+          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
+
+          code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
+        }
+
+        if (isOldIE) {
+          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+        }
+
+        if (!style.element) {
+          var el = style.element = document.createElement('style');
+          el.type = 'text/css';
+          if (css.media) el.setAttribute('media', css.media);
+
+          if (isOldIE) {
+            el.setAttribute('data-group', group);
+            el.setAttribute('data-next-index', '0');
+          }
+
+          head.appendChild(el);
+        }
+
+        if (isOldIE) {
+          index = parseInt(style.element.getAttribute('data-next-index'));
+          style.element.setAttribute('data-next-index', index + 1);
+        }
+
+        if (style.element.styleSheet) {
+          style.parts.push(code);
+          style.element.styleSheet.cssText = style.parts.filter(Boolean).join('\n');
+        } else {
+          var textNode = document.createTextNode(code);
+          var nodes = style.element.childNodes;
+          if (nodes[index]) style.element.removeChild(nodes[index]);
+          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
+        }
+      }
+    };
+  }
   /* style inject SSR */
 
 
   var ElementList = __vue_normalize__$m({
     render: __vue_render__$m,
     staticRenderFns: __vue_staticRenderFns__$m
-  }, __vue_inject_styles__$m, __vue_script__$m, __vue_scope_id__$m, __vue_is_functional_template__$m);
+  }, __vue_inject_styles__$m, __vue_script__$m, __vue_scope_id__$m, __vue_is_functional_template__$m, __vue_module_identifier__$g, __vue_create_injector__$g);
 
   //
   //
@@ -4922,9 +6527,6 @@
     }
   };
 
-  var css_248z$h = ".default-activator-state[data-v-64eb8c58],.inline-activator[data-v-64eb8c58],.inline-activator.disabled[data-v-64eb8c58],.inline-activator.disabled[data-v-64eb8c58]:hover{padding:0 3.125rem;opacity:0}.inline-activator[data-v-64eb8c58]{display:flex;align-items:center;width:100%;margin:0;padding:0 3.125rem;opacity:0;transition:opacity .3s,padding .3s}.inline-activator[data-v-64eb8c58],.inline-activator .v-chip[data-v-64eb8c58]{cursor:pointer}.inline-activator hr[data-v-64eb8c58]{flex:1;display:inline-flex;margin:0;border-top:.0625rem dashed var(--v-primary-darken3)}.inline-activator[data-v-64eb8c58]:focus,.inline-activator[data-v-64eb8c58]:hover{padding:.75rem 0;opacity:1;outline:0;transition:opacity .3s .25s,padding .3s .1s}.inline-activator.disabled[data-v-64eb8c58],.inline-activator.disabled[data-v-64eb8c58]:hover{pointer-events:none}";
-  styleInject(css_248z$h);
-
   /* script */
   var __vue_script__$p = script$p;
   /* template */
@@ -4957,10 +6559,21 @@
   var __vue_staticRenderFns__$p = [];
   /* style */
 
-  var __vue_inject_styles__$p = undefined;
+  var __vue_inject_styles__$p = function __vue_inject_styles__(inject) {
+    if (!inject) return;
+    inject("data-v-64eb8c58_0", {
+      source: ".default-activator-state[data-v-64eb8c58],.inline-activator[data-v-64eb8c58],.inline-activator.disabled[data-v-64eb8c58],.inline-activator.disabled[data-v-64eb8c58]:hover{padding:0 3.125rem;opacity:0}.inline-activator[data-v-64eb8c58]{display:flex;align-items:center;width:100%;margin:0;padding:0 3.125rem;opacity:0;transition:opacity .3s,padding .3s}.inline-activator[data-v-64eb8c58],.inline-activator .v-chip[data-v-64eb8c58]{cursor:pointer}.inline-activator hr[data-v-64eb8c58]{flex:1;display:inline-flex;margin:0;border-top:.0625rem dashed var(--v-primary-darken3)}.inline-activator[data-v-64eb8c58]:focus,.inline-activator[data-v-64eb8c58]:hover{padding:.75rem 0;opacity:1;outline:0;transition:opacity .3s .25s,padding .3s .1s}.inline-activator.disabled[data-v-64eb8c58],.inline-activator.disabled[data-v-64eb8c58]:hover{pointer-events:none}",
+      map: undefined,
+      media: undefined
+    });
+  };
   /* scoped */
 
+
   var __vue_scope_id__$p = "data-v-64eb8c58";
+  /* module identifier */
+
+  var __vue_module_identifier__$h = undefined;
   /* functional template */
 
   var __vue_is_functional_template__$p = false;
@@ -4980,17 +6593,105 @@
 
     component._scopeId = scope;
 
+    {
+      var hook;
+
+      if (style) {
+        hook = function hook(context) {
+          style.call(this, createInjector(context));
+        };
+      }
+
+      if (hook !== undefined) {
+        if (component.functional) {
+          // register for functional component in vue file
+          var originalRender = component.render;
+
+          component.render = function renderWithStyleInjection(h, context) {
+            hook.call(context);
+            return originalRender(h, context);
+          };
+        } else {
+          // inject component registration as beforeCreate hook
+          var existing = component.beforeCreate;
+          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+        }
+      }
+    }
+
     return component;
   }
   /* style inject */
 
+
+  function __vue_create_injector__$h() {
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var styles = __vue_create_injector__$h.styles || (__vue_create_injector__$h.styles = {});
+    var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+    return function addStyle(id, css) {
+      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
+
+      var group = isOldIE ? css.media || 'default' : id;
+      var style = styles[group] || (styles[group] = {
+        ids: [],
+        parts: [],
+        element: undefined
+      });
+
+      if (!style.ids.includes(id)) {
+        var code = css.source;
+        var index = style.ids.length;
+        style.ids.push(id);
+
+        if (css.map) {
+          // https://developer.chrome.com/devtools/docs/javascript-debugging
+          // this makes source maps inside style tags work properly in Chrome
+          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
+
+          code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
+        }
+
+        if (isOldIE) {
+          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+        }
+
+        if (!style.element) {
+          var el = style.element = document.createElement('style');
+          el.type = 'text/css';
+          if (css.media) el.setAttribute('media', css.media);
+
+          if (isOldIE) {
+            el.setAttribute('data-group', group);
+            el.setAttribute('data-next-index', '0');
+          }
+
+          head.appendChild(el);
+        }
+
+        if (isOldIE) {
+          index = parseInt(style.element.getAttribute('data-next-index'));
+          style.element.setAttribute('data-next-index', index + 1);
+        }
+
+        if (style.element.styleSheet) {
+          style.parts.push(code);
+          style.element.styleSheet.cssText = style.parts.filter(Boolean).join('\n');
+        } else {
+          var textNode = document.createTextNode(code);
+          var nodes = style.element.childNodes;
+          if (nodes[index]) style.element.removeChild(nodes[index]);
+          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
+        }
+      }
+    };
+  }
   /* style inject SSR */
 
 
   var InlineActivator = __vue_normalize__$p({
     render: __vue_render__$p,
     staticRenderFns: __vue_staticRenderFns__$p
-  }, __vue_inject_styles__$p, __vue_script__$p, __vue_scope_id__$p, __vue_is_functional_template__$p);
+  }, __vue_inject_styles__$p, __vue_script__$p, __vue_scope_id__$p, __vue_is_functional_template__$p, __vue_module_identifier__$h, __vue_create_injector__$h);
 
   var downloadMixin = {
     methods: {
@@ -5111,9 +6812,6 @@
     }
   };
 
-  var css_248z$i = ".file-upload[data-v-1f089141],.upload-form[data-v-1f089141]{display:inline-block}.upload-input[data-v-1f089141]{visibility:hidden;max-width:0;max-height:0}.file-name[data-v-1f089141]{color:#00f;font-size:1rem;text-decoration:underline;cursor:pointer}";
-  styleInject(css_248z$i);
-
   /* script */
   var __vue_script__$q = script$q;
   /* template */
@@ -5193,10 +6891,21 @@
   var __vue_staticRenderFns__$q = [];
   /* style */
 
-  var __vue_inject_styles__$q = undefined;
+  var __vue_inject_styles__$q = function __vue_inject_styles__(inject) {
+    if (!inject) return;
+    inject("data-v-1f089141_0", {
+      source: ".file-upload[data-v-1f089141],.upload-form[data-v-1f089141]{display:inline-block}.upload-input[data-v-1f089141]{visibility:hidden;max-width:0;max-height:0}.file-name[data-v-1f089141]{color:#00f;font-size:1rem;text-decoration:underline;cursor:pointer}",
+      map: undefined,
+      media: undefined
+    });
+  };
   /* scoped */
 
+
   var __vue_scope_id__$q = "data-v-1f089141";
+  /* module identifier */
+
+  var __vue_module_identifier__$i = undefined;
   /* functional template */
 
   var __vue_is_functional_template__$q = false;
@@ -5216,17 +6925,105 @@
 
     component._scopeId = scope;
 
+    {
+      var hook;
+
+      if (style) {
+        hook = function hook(context) {
+          style.call(this, createInjector(context));
+        };
+      }
+
+      if (hook !== undefined) {
+        if (component.functional) {
+          // register for functional component in vue file
+          var originalRender = component.render;
+
+          component.render = function renderWithStyleInjection(h, context) {
+            hook.call(context);
+            return originalRender(h, context);
+          };
+        } else {
+          // inject component registration as beforeCreate hook
+          var existing = component.beforeCreate;
+          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+        }
+      }
+    }
+
     return component;
   }
   /* style inject */
 
+
+  function __vue_create_injector__$i() {
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var styles = __vue_create_injector__$i.styles || (__vue_create_injector__$i.styles = {});
+    var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+    return function addStyle(id, css) {
+      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
+
+      var group = isOldIE ? css.media || 'default' : id;
+      var style = styles[group] || (styles[group] = {
+        ids: [],
+        parts: [],
+        element: undefined
+      });
+
+      if (!style.ids.includes(id)) {
+        var code = css.source;
+        var index = style.ids.length;
+        style.ids.push(id);
+
+        if (css.map) {
+          // https://developer.chrome.com/devtools/docs/javascript-debugging
+          // this makes source maps inside style tags work properly in Chrome
+          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
+
+          code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
+        }
+
+        if (isOldIE) {
+          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+        }
+
+        if (!style.element) {
+          var el = style.element = document.createElement('style');
+          el.type = 'text/css';
+          if (css.media) el.setAttribute('media', css.media);
+
+          if (isOldIE) {
+            el.setAttribute('data-group', group);
+            el.setAttribute('data-next-index', '0');
+          }
+
+          head.appendChild(el);
+        }
+
+        if (isOldIE) {
+          index = parseInt(style.element.getAttribute('data-next-index'));
+          style.element.setAttribute('data-next-index', index + 1);
+        }
+
+        if (style.element.styleSheet) {
+          style.parts.push(code);
+          style.element.styleSheet.cssText = style.parts.filter(Boolean).join('\n');
+        } else {
+          var textNode = document.createTextNode(code);
+          var nodes = style.element.childNodes;
+          if (nodes[index]) style.element.removeChild(nodes[index]);
+          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
+        }
+      }
+    };
+  }
   /* style inject SSR */
 
 
   var UploadBtn = __vue_normalize__$q({
     render: __vue_render__$q,
     staticRenderFns: __vue_staticRenderFns__$q
-  }, __vue_inject_styles__$q, __vue_script__$q, __vue_scope_id__$q, __vue_is_functional_template__$q);
+  }, __vue_inject_styles__$q, __vue_script__$q, __vue_scope_id__$q, __vue_is_functional_template__$q, __vue_module_identifier__$i, __vue_create_injector__$i);
 
   //
 
@@ -5313,9 +7110,6 @@
       UploadBtn: UploadBtn
     }
   };
-
-  var css_248z$j = ".v-text-field[data-v-6cc584d4]{min-width:21.875rem;margin:.5rem .75rem 0 1.75rem}.action[data-v-6cc584d4]  .v-btn__content{min-width:4rem!important}.upload-btn[data-v-6cc584d4]  .v-btn{height:100%}.upload-btn[data-v-6cc584d4]  .v-btn .v-btn__content{padding:1.5rem 0}";
-  styleInject(css_248z$j);
 
   /* script */
   var __vue_script__$r = script$r;
@@ -5452,10 +7246,21 @@
   var __vue_staticRenderFns__$r = [];
   /* style */
 
-  var __vue_inject_styles__$r = undefined;
+  var __vue_inject_styles__$r = function __vue_inject_styles__(inject) {
+    if (!inject) return;
+    inject("data-v-6cc584d4_0", {
+      source: ".v-text-field[data-v-6cc584d4]{min-width:21.875rem;margin:.5rem .75rem 0 1.75rem}.action[data-v-6cc584d4]  .v-btn__content{min-width:4rem!important}.upload-btn[data-v-6cc584d4]  .v-btn{height:100%}.upload-btn[data-v-6cc584d4]  .v-btn .v-btn__content{padding:1.5rem 0}",
+      map: undefined,
+      media: undefined
+    });
+  };
   /* scoped */
 
+
   var __vue_scope_id__$r = "data-v-6cc584d4";
+  /* module identifier */
+
+  var __vue_module_identifier__$j = undefined;
   /* functional template */
 
   var __vue_is_functional_template__$r = false;
@@ -5475,17 +7280,105 @@
 
     component._scopeId = scope;
 
+    {
+      var hook;
+
+      if (style) {
+        hook = function hook(context) {
+          style.call(this, createInjector(context));
+        };
+      }
+
+      if (hook !== undefined) {
+        if (component.functional) {
+          // register for functional component in vue file
+          var originalRender = component.render;
+
+          component.render = function renderWithStyleInjection(h, context) {
+            hook.call(context);
+            return originalRender(h, context);
+          };
+        } else {
+          // inject component registration as beforeCreate hook
+          var existing = component.beforeCreate;
+          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+        }
+      }
+    }
+
     return component;
   }
   /* style inject */
 
+
+  function __vue_create_injector__$j() {
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var styles = __vue_create_injector__$j.styles || (__vue_create_injector__$j.styles = {});
+    var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+    return function addStyle(id, css) {
+      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
+
+      var group = isOldIE ? css.media || 'default' : id;
+      var style = styles[group] || (styles[group] = {
+        ids: [],
+        parts: [],
+        element: undefined
+      });
+
+      if (!style.ids.includes(id)) {
+        var code = css.source;
+        var index = style.ids.length;
+        style.ids.push(id);
+
+        if (css.map) {
+          // https://developer.chrome.com/devtools/docs/javascript-debugging
+          // this makes source maps inside style tags work properly in Chrome
+          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
+
+          code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
+        }
+
+        if (isOldIE) {
+          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+        }
+
+        if (!style.element) {
+          var el = style.element = document.createElement('style');
+          el.type = 'text/css';
+          if (css.media) el.setAttribute('media', css.media);
+
+          if (isOldIE) {
+            el.setAttribute('data-group', group);
+            el.setAttribute('data-next-index', '0');
+          }
+
+          head.appendChild(el);
+        }
+
+        if (isOldIE) {
+          index = parseInt(style.element.getAttribute('data-next-index'));
+          style.element.setAttribute('data-next-index', index + 1);
+        }
+
+        if (style.element.styleSheet) {
+          style.parts.push(code);
+          style.element.styleSheet.cssText = style.parts.filter(Boolean).join('\n');
+        } else {
+          var textNode = document.createTextNode(code);
+          var nodes = style.element.childNodes;
+          if (nodes[index]) style.element.removeChild(nodes[index]);
+          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
+        }
+      }
+    };
+  }
   /* style inject SSR */
 
 
   var InputAsset = __vue_normalize__$r({
     render: __vue_render__$r,
     staticRenderFns: __vue_staticRenderFns__$r
-  }, __vue_inject_styles__$r, __vue_script__$r, __vue_scope_id__$r, __vue_is_functional_template__$r);
+  }, __vue_inject_styles__$r, __vue_script__$r, __vue_scope_id__$r, __vue_is_functional_template__$r, __vue_module_identifier__$j, __vue_create_injector__$j);
 
   //
   //
@@ -5504,9 +7397,6 @@
       }
     }
   };
-
-  var css_248z$k = ".input-error[data-v-ff8d03d8]{color:var(--v-error-base);font-size:.75rem}";
-  styleInject(css_248z$k);
 
   /* script */
   var __vue_script__$s = script$s;
@@ -5531,10 +7421,21 @@
   var __vue_staticRenderFns__$s = [];
   /* style */
 
-  var __vue_inject_styles__$s = undefined;
+  var __vue_inject_styles__$s = function __vue_inject_styles__(inject) {
+    if (!inject) return;
+    inject("data-v-ff8d03d8_0", {
+      source: ".input-error[data-v-ff8d03d8]{color:var(--v-error-base);font-size:.75rem}",
+      map: undefined,
+      media: undefined
+    });
+  };
   /* scoped */
 
+
   var __vue_scope_id__$s = "data-v-ff8d03d8";
+  /* module identifier */
+
+  var __vue_module_identifier__$k = undefined;
   /* functional template */
 
   var __vue_is_functional_template__$s = false;
@@ -5554,17 +7455,105 @@
 
     component._scopeId = scope;
 
+    {
+      var hook;
+
+      if (style) {
+        hook = function hook(context) {
+          style.call(this, createInjector(context));
+        };
+      }
+
+      if (hook !== undefined) {
+        if (component.functional) {
+          // register for functional component in vue file
+          var originalRender = component.render;
+
+          component.render = function renderWithStyleInjection(h, context) {
+            hook.call(context);
+            return originalRender(h, context);
+          };
+        } else {
+          // inject component registration as beforeCreate hook
+          var existing = component.beforeCreate;
+          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+        }
+      }
+    }
+
     return component;
   }
   /* style inject */
 
+
+  function __vue_create_injector__$k() {
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var styles = __vue_create_injector__$k.styles || (__vue_create_injector__$k.styles = {});
+    var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+    return function addStyle(id, css) {
+      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
+
+      var group = isOldIE ? css.media || 'default' : id;
+      var style = styles[group] || (styles[group] = {
+        ids: [],
+        parts: [],
+        element: undefined
+      });
+
+      if (!style.ids.includes(id)) {
+        var code = css.source;
+        var index = style.ids.length;
+        style.ids.push(id);
+
+        if (css.map) {
+          // https://developer.chrome.com/devtools/docs/javascript-debugging
+          // this makes source maps inside style tags work properly in Chrome
+          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
+
+          code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
+        }
+
+        if (isOldIE) {
+          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+        }
+
+        if (!style.element) {
+          var el = style.element = document.createElement('style');
+          el.type = 'text/css';
+          if (css.media) el.setAttribute('media', css.media);
+
+          if (isOldIE) {
+            el.setAttribute('data-group', group);
+            el.setAttribute('data-next-index', '0');
+          }
+
+          head.appendChild(el);
+        }
+
+        if (isOldIE) {
+          index = parseInt(style.element.getAttribute('data-next-index'));
+          style.element.setAttribute('data-next-index', index + 1);
+        }
+
+        if (style.element.styleSheet) {
+          style.parts.push(code);
+          style.element.styleSheet.cssText = style.parts.filter(Boolean).join('\n');
+        } else {
+          var textNode = document.createTextNode(code);
+          var nodes = style.element.childNodes;
+          if (nodes[index]) style.element.removeChild(nodes[index]);
+          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
+        }
+      }
+    };
+  }
   /* style inject SSR */
 
 
   var InputError = __vue_normalize__$s({
     render: __vue_render__$s,
     staticRenderFns: __vue_staticRenderFns__$s
-  }, __vue_inject_styles__$s, __vue_script__$s, __vue_scope_id__$s, __vue_is_functional_template__$s);
+  }, __vue_inject_styles__$s, __vue_script__$s, __vue_scope_id__$s, __vue_is_functional_template__$s, __vue_module_identifier__$k, __vue_create_injector__$k);
 
   //
   //
@@ -5586,9 +7575,6 @@
       }
     }
   };
-
-  var css_248z$l = ".message[data-v-20303d2e]{border-radius:2px;font-size:1.125rem}";
-  styleInject(css_248z$l);
 
   /* script */
   var __vue_script__$t = script$t;
@@ -5615,10 +7601,21 @@
   var __vue_staticRenderFns__$t = [];
   /* style */
 
-  var __vue_inject_styles__$t = undefined;
+  var __vue_inject_styles__$t = function __vue_inject_styles__(inject) {
+    if (!inject) return;
+    inject("data-v-20303d2e_0", {
+      source: ".message[data-v-20303d2e]{border-radius:2px;font-size:1.125rem}",
+      map: undefined,
+      media: undefined
+    });
+  };
   /* scoped */
 
+
   var __vue_scope_id__$t = "data-v-20303d2e";
+  /* module identifier */
+
+  var __vue_module_identifier__$l = undefined;
   /* functional template */
 
   var __vue_is_functional_template__$t = false;
@@ -5638,17 +7635,105 @@
 
     component._scopeId = scope;
 
+    {
+      var hook;
+
+      if (style) {
+        hook = function hook(context) {
+          style.call(this, createInjector(context));
+        };
+      }
+
+      if (hook !== undefined) {
+        if (component.functional) {
+          // register for functional component in vue file
+          var originalRender = component.render;
+
+          component.render = function renderWithStyleInjection(h, context) {
+            hook.call(context);
+            return originalRender(h, context);
+          };
+        } else {
+          // inject component registration as beforeCreate hook
+          var existing = component.beforeCreate;
+          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+        }
+      }
+    }
+
     return component;
   }
   /* style inject */
 
+
+  function __vue_create_injector__$l() {
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var styles = __vue_create_injector__$l.styles || (__vue_create_injector__$l.styles = {});
+    var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+    return function addStyle(id, css) {
+      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
+
+      var group = isOldIE ? css.media || 'default' : id;
+      var style = styles[group] || (styles[group] = {
+        ids: [],
+        parts: [],
+        element: undefined
+      });
+
+      if (!style.ids.includes(id)) {
+        var code = css.source;
+        var index = style.ids.length;
+        style.ids.push(id);
+
+        if (css.map) {
+          // https://developer.chrome.com/devtools/docs/javascript-debugging
+          // this makes source maps inside style tags work properly in Chrome
+          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
+
+          code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
+        }
+
+        if (isOldIE) {
+          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+        }
+
+        if (!style.element) {
+          var el = style.element = document.createElement('style');
+          el.type = 'text/css';
+          if (css.media) el.setAttribute('media', css.media);
+
+          if (isOldIE) {
+            el.setAttribute('data-group', group);
+            el.setAttribute('data-next-index', '0');
+          }
+
+          head.appendChild(el);
+        }
+
+        if (isOldIE) {
+          index = parseInt(style.element.getAttribute('data-next-index'));
+          style.element.setAttribute('data-next-index', index + 1);
+        }
+
+        if (style.element.styleSheet) {
+          style.parts.push(code);
+          style.element.styleSheet.cssText = style.parts.filter(Boolean).join('\n');
+        } else {
+          var textNode = document.createTextNode(code);
+          var nodes = style.element.childNodes;
+          if (nodes[index]) style.element.removeChild(nodes[index]);
+          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
+        }
+      }
+    };
+  }
   /* style inject SSR */
 
 
   var PreviewOverlay = __vue_normalize__$t({
     render: __vue_render__$t,
     staticRenderFns: __vue_staticRenderFns__$t
-  }, __vue_inject_styles__$t, __vue_script__$t, __vue_scope_id__$t, __vue_is_functional_template__$t);
+  }, __vue_inject_styles__$t, __vue_script__$t, __vue_scope_id__$t, __vue_is_functional_template__$t, __vue_module_identifier__$l, __vue_create_injector__$l);
 
   exports.ActiveUsers = ActiveUsers;
   exports.AddElement = AddElement;

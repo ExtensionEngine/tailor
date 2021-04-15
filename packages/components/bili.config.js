@@ -14,7 +14,7 @@ module.exports = {
   },
   bundleNodeModules: ['rollup-plugin-vue', 'vue-runtime-helpers'],
   plugins: {
-    vue: true,
+    vue: { css: true },
     babel: {
       sourceMap: true,
       extensions: ['.js', '.vue']
