@@ -1,5 +1,6 @@
 export { default as ActiveUsers } from './components/ActiveUsers.vue';
 export { default as AddElement } from './components/AddElement/index.vue';
+export { default as AssessmentItem } from './components/AssessmentItem.vue';
 export { default as AssetInput } from './components/AssetInput.vue';
 export { default as ContainedContent } from './components/ContainedContent.vue';
 export { default as ContentElement } from './components/ContentElement.vue';

@@ -33,7 +33,10 @@
         </div>
       </template>
     </tce-question-container>
-    <div v-else @click="$emit('selected')" class="minimized">
+    <div
+      v-else
+      @click="$emit('selected')"
+      class="minimized d-flex justify-space-between align-center">
       <v-chip
         color="primary darken-3"
         label dark small
@@ -61,7 +64,7 @@
 import cloneDeep from 'lodash/cloneDeep';
 import filter from 'lodash/filter';
 import map from 'lodash/map';
-import { PublishDiffChip } from '@tailor/components';
+import PublishDiffChip from './PublishDiffChip.vue';
 
 const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
 const blankRegex = /(@blank)/g;
@@ -70,7 +73,7 @@ const htmlRegex = /(<\/?[^>]+(>|$))|&nbsp;/g;
 const getTextAssets = item => filter(item, it => TEXT_CONTAINERS.includes(it.type));
 
 export default {
-  name: 'assessment-item',
+  name: 'tailor-assessment-item',
   inject: ['$teRegistry', '$editorState'],
   props: {
     assessment: { type: Object, required: true },
@@ -103,6 +106,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../mixins';
+
 .assessment-item {
   margin-bottom: 0.625rem;
   padding: 0;
@@ -127,9 +132,6 @@ export default {
   }
 
   .minimized {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     padding: 0.375rem 1.375rem;
     cursor: pointer;
 
