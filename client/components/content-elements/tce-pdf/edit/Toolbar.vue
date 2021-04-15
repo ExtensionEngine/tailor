@@ -17,7 +17,7 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
-import InputAsset from '@/components/common/InputAsset';
+import { InputAsset } from '@tailor/components';
 import set from 'lodash/set';
 
 export default {

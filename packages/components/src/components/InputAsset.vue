@@ -80,7 +80,7 @@
 import get from 'lodash/get';
 import last from 'lodash/last';
 import pick from 'lodash/pick';
-import { UploadBtn } from '@tailor/components';
+import UploadBtn from './UploadBtn.vue';
 
 function isUploaded(url) {
   try {
@@ -91,7 +91,7 @@ function isUploaded(url) {
 }
 
 export default {
-  name: 'input-asset',
+  name: 'tailor-input-asset',
   props: {
     url: { type: String, default: null },
     publicUrl: { type: String, default: null },

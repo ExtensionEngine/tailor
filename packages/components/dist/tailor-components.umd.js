@@ -1,8 +1,8 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('lodash/capitalize'), require('@tailor/utils'), require('lodash/filter'), require('lodash/flatMap'), require('lodash/intersection'), require('lodash/pick'), require('lodash/reduce'), require('lodash/reject'), require('@tailor/api'), require('lodash/partition'), require('lodash/takeRight'), require('lodash/find'), require('pluralize'), require('@extensionengine/vue-radio'), require('lodash/orderBy'), require('lodash/get'), require('lodash/keyBy'), require('lodash/map'), require('lodash/groupBy'), require('lodash/debounce'), require('lodash/sortBy'), require('lodash/throttle'), require('vuedraggable'), require('lodash/cloneDeep'), require('lodash/mapKeys'), require('lodash/values'), require('lodash/uniqueId')) :
-  typeof define === 'function' && define.amd ? define(['exports', 'lodash/capitalize', '@tailor/utils', 'lodash/filter', 'lodash/flatMap', 'lodash/intersection', 'lodash/pick', 'lodash/reduce', 'lodash/reject', '@tailor/api', 'lodash/partition', 'lodash/takeRight', 'lodash/find', 'pluralize', '@extensionengine/vue-radio', 'lodash/orderBy', 'lodash/get', 'lodash/keyBy', 'lodash/map', 'lodash/groupBy', 'lodash/debounce', 'lodash/sortBy', 'lodash/throttle', 'vuedraggable', 'lodash/cloneDeep', 'lodash/mapKeys', 'lodash/values', 'lodash/uniqueId'], factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.TailorComponents = {}, global.capitalize, global.utils, global.filter, global.flatMap, global.intersection, global.pick, global.reduce, global.reject, global.api, global.partition, global.takeRgt, global.find, global.pluralize, global.vueRadio, global.orderBy, global.get, global.keyBy, global.map, global.groupBy, global.debounce, global.sortBy, global.throttle, global.Draggable, global.cloneDeep, global.mapKeys, global.values, global.uniqueId));
-}(this, (function (exports, capitalize, utils, filter, flatMap, intersection, pick, reduce, reject, api, partition, takeRgt, find, pluralize, vueRadio, orderBy, get, keyBy, map, groupBy, debounce, sortBy, throttle, Draggable, cloneDeep, mapKeys, values, uniqueId) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('lodash/capitalize'), require('@tailor/utils'), require('lodash/filter'), require('lodash/flatMap'), require('lodash/intersection'), require('lodash/pick'), require('lodash/reduce'), require('lodash/reject'), require('@tailor/api'), require('lodash/partition'), require('lodash/takeRight'), require('lodash/find'), require('pluralize'), require('@extensionengine/vue-radio'), require('lodash/orderBy'), require('lodash/get'), require('lodash/keyBy'), require('lodash/map'), require('lodash/groupBy'), require('lodash/debounce'), require('lodash/sortBy'), require('lodash/throttle'), require('vuedraggable'), require('lodash/cloneDeep'), require('lodash/mapKeys'), require('lodash/values'), require('lodash/last'), require('lodash/uniqueId')) :
+  typeof define === 'function' && define.amd ? define(['exports', 'lodash/capitalize', '@tailor/utils', 'lodash/filter', 'lodash/flatMap', 'lodash/intersection', 'lodash/pick', 'lodash/reduce', 'lodash/reject', '@tailor/api', 'lodash/partition', 'lodash/takeRight', 'lodash/find', 'pluralize', '@extensionengine/vue-radio', 'lodash/orderBy', 'lodash/get', 'lodash/keyBy', 'lodash/map', 'lodash/groupBy', 'lodash/debounce', 'lodash/sortBy', 'lodash/throttle', 'vuedraggable', 'lodash/cloneDeep', 'lodash/mapKeys', 'lodash/values', 'lodash/last', 'lodash/uniqueId'], factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.TailorComponents = {}, global.capitalize, global.utils, global.filter, global.flatMap, global.intersection, global.pick, global.reduce, global.reject, global.api, global.partition, global.takeRgt, global.find, global.pluralize, global.vueRadio, global.orderBy, global.get, global.keyBy, global.map, global.groupBy, global.debounce, global.sortBy, global.throttle, global.Draggable, global.cloneDeep, global.mapKeys, global.values, global.last, global.uniqueId));
+}(this, (function (exports, capitalize, utils, filter, flatMap, intersection, pick, reduce, reject, api, partition, takeRgt, find, pluralize, vueRadio, orderBy, get, keyBy, map, groupBy, debounce, sortBy, throttle, Draggable, cloneDeep, mapKeys, values, last, uniqueId) { 'use strict';
 
   function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
@@ -29,6 +29,7 @@
   var cloneDeep__default = /*#__PURE__*/_interopDefaultLegacy(cloneDeep);
   var mapKeys__default = /*#__PURE__*/_interopDefaultLegacy(mapKeys);
   var values__default = /*#__PURE__*/_interopDefaultLegacy(values);
+  var last__default = /*#__PURE__*/_interopDefaultLegacy(last);
   var uniqueId__default = /*#__PURE__*/_interopDefaultLegacy(uniqueId);
 
   //
@@ -4991,169 +4992,6 @@
     staticRenderFns: __vue_staticRenderFns__$p
   }, __vue_inject_styles__$p, __vue_script__$p, __vue_scope_id__$p, __vue_is_functional_template__$p);
 
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  var script$q = {
-    name: 'tailor-input-error',
-    props: {
-      error: {
-        type: String,
-        default: ''
-      }
-    }
-  };
-
-  var css_248z$i = ".input-error[data-v-ff8d03d8]{color:var(--v-error-base);font-size:.75rem}";
-  styleInject(css_248z$i);
-
-  /* script */
-  var __vue_script__$q = script$q;
-  /* template */
-
-  var __vue_render__$q = function __vue_render__() {
-    var _vm = this;
-
-    var _h = _vm.$createElement;
-
-    var _c = _vm._self._c || _h;
-
-    return _c('transition', {
-      attrs: {
-        "name": "message-transition"
-      }
-    }, [!!_vm.error ? _c('div', {
-      staticClass: "input-error"
-    }, [_vm._v("\n    " + _vm._s(_vm.error) + "\n  ")]) : _vm._e()]);
-  };
-
-  var __vue_staticRenderFns__$q = [];
-  /* style */
-
-  var __vue_inject_styles__$q = undefined;
-  /* scoped */
-
-  var __vue_scope_id__$q = "data-v-ff8d03d8";
-  /* functional template */
-
-  var __vue_is_functional_template__$q = false;
-  /* component normalizer */
-
-  function __vue_normalize__$q(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
-    var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
-
-    component.__file = "InputError.vue";
-
-    if (!component.render) {
-      component.render = template.render;
-      component.staticRenderFns = template.staticRenderFns;
-      component._compiled = true;
-      if (functional) component.functional = true;
-    }
-
-    component._scopeId = scope;
-
-    return component;
-  }
-  /* style inject */
-
-  /* style inject SSR */
-
-
-  var InputError = __vue_normalize__$q({
-    render: __vue_render__$q,
-    staticRenderFns: __vue_staticRenderFns__$q
-  }, __vue_inject_styles__$q, __vue_script__$q, __vue_scope_id__$q, __vue_is_functional_template__$q);
-
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  var script$r = {
-    name: 'tailor-preview-overlay',
-    props: {
-      show: {
-        type: Boolean,
-        default: false
-      }
-    }
-  };
-
-  var css_248z$j = ".message[data-v-20303d2e]{border-radius:2px;font-size:1.125rem}";
-  styleInject(css_248z$j);
-
-  /* script */
-  var __vue_script__$r = script$r;
-  /* template */
-
-  var __vue_render__$r = function __vue_render__() {
-    var _vm = this;
-
-    var _h = _vm.$createElement;
-
-    var _c = _vm._self._c || _h;
-
-    return _c('v-overlay', {
-      attrs: {
-        "value": _vm.show,
-        "opacity": "0.9",
-        "absolute": ""
-      }
-    }, [_c('button', {
-      staticClass: "message pa-2 grey--text text--lighten-2"
-    }, [_vm._t("default", [_vm._v("Click to preview")])], 2)]);
-  };
-
-  var __vue_staticRenderFns__$r = [];
-  /* style */
-
-  var __vue_inject_styles__$r = undefined;
-  /* scoped */
-
-  var __vue_scope_id__$r = "data-v-20303d2e";
-  /* functional template */
-
-  var __vue_is_functional_template__$r = false;
-  /* component normalizer */
-
-  function __vue_normalize__$r(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
-    var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
-
-    component.__file = "PreviewOverlay.vue";
-
-    if (!component.render) {
-      component.render = template.render;
-      component.staticRenderFns = template.staticRenderFns;
-      component._compiled = true;
-      if (functional) component.functional = true;
-    }
-
-    component._scopeId = scope;
-
-    return component;
-  }
-  /* style inject */
-
-  /* style inject SSR */
-
-
-  var PreviewOverlay = __vue_normalize__$r({
-    render: __vue_render__$r,
-    staticRenderFns: __vue_staticRenderFns__$r
-  }, __vue_inject_styles__$r, __vue_script__$r, __vue_scope_id__$r, __vue_is_functional_template__$r);
-
   var downloadMixin = {
     methods: {
       download: function download(url, fileName) {
@@ -5223,7 +5061,7 @@
   };
 
   //
-  var script$s = {
+  var script$q = {
     name: 'upload-btn',
     mixins: [uploadMixin],
     props: {
@@ -5273,14 +5111,14 @@
     }
   };
 
-  var css_248z$k = ".file-upload[data-v-1f089141],.upload-form[data-v-1f089141]{display:inline-block}.upload-input[data-v-1f089141]{visibility:hidden;max-width:0;max-height:0}.file-name[data-v-1f089141]{color:#00f;font-size:1rem;text-decoration:underline;cursor:pointer}";
-  styleInject(css_248z$k);
+  var css_248z$i = ".file-upload[data-v-1f089141],.upload-form[data-v-1f089141]{display:inline-block}.upload-input[data-v-1f089141]{visibility:hidden;max-width:0;max-height:0}.file-name[data-v-1f089141]{color:#00f;font-size:1rem;text-decoration:underline;cursor:pointer}";
+  styleInject(css_248z$i);
 
   /* script */
-  var __vue_script__$s = script$s;
+  var __vue_script__$q = script$q;
   /* template */
 
-  var __vue_render__$s = function __vue_render__() {
+  var __vue_render__$q = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -5352,19 +5190,19 @@
     }, [_c('v-icon', [_vm._v("mdi-delete")])], 1) : _vm._e()], 1)]);
   };
 
-  var __vue_staticRenderFns__$s = [];
+  var __vue_staticRenderFns__$q = [];
   /* style */
 
-  var __vue_inject_styles__$s = undefined;
+  var __vue_inject_styles__$q = undefined;
   /* scoped */
 
-  var __vue_scope_id__$s = "data-v-1f089141";
+  var __vue_scope_id__$q = "data-v-1f089141";
   /* functional template */
 
-  var __vue_is_functional_template__$s = false;
+  var __vue_is_functional_template__$q = false;
   /* component normalizer */
 
-  function __vue_normalize__$s(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$q(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "UploadBtn.vue";
@@ -5385,10 +5223,432 @@
   /* style inject SSR */
 
 
-  var UploadBtn = __vue_normalize__$s({
+  var UploadBtn = __vue_normalize__$q({
+    render: __vue_render__$q,
+    staticRenderFns: __vue_staticRenderFns__$q
+  }, __vue_inject_styles__$q, __vue_script__$q, __vue_scope_id__$q, __vue_is_functional_template__$q);
+
+  //
+
+  function isUploaded(url) {
+    try {
+      return url && new URL(url).protocol === 'storage:';
+    } catch (e) {
+      return false;
+    }
+  }
+
+  var script$r = {
+    name: 'tailor-input-asset',
+    props: {
+      url: {
+        type: String,
+        default: null
+      },
+      publicUrl: {
+        type: String,
+        default: null
+      },
+      extensions: {
+        type: Array,
+        required: true
+      },
+      allowFileUpload: {
+        type: Boolean,
+        default: true
+      },
+      uploadLabel: {
+        type: String,
+        default: 'Select file'
+      }
+    },
+    data: function data() {
+      var isLinked = !isUploaded(this.url);
+      return {
+        isEditing: !this.url,
+        uploading: false,
+        file: isLinked ? null : pick__default['default'](this, ['url', 'publicUrl']),
+        urlInput: isLinked ? this.url : null
+      };
+    },
+    computed: {
+      hasAsset: function hasAsset(vm) {
+        return vm.file || vm.urlInput;
+      },
+      isLinked: function isLinked(vm) {
+        return !!vm.urlInput;
+      },
+      hasChanges: function hasChanges(vm) {
+        return vm.url !== (vm.isLinked ? vm.urlInput : get__default['default'](vm, 'file.url', null));
+      },
+      fileName: function fileName() {
+        if (!this.file) return null;
+        return last__default['default'](this.file.url.split('___'));
+      }
+    },
+    methods: {
+      save: async function save() {
+        if (this.$refs.provider) {
+          var _await$this$$refs$pro = await this.$refs.provider.validate(),
+              valid = _await$this$$refs$pro.valid;
+
+          if (!valid) return;
+        }
+
+        this.isEditing = false;
+        var payload = this.file || {
+          url: this.urlInput,
+          publicUrl: this.urlInput
+        };
+        this.$emit('input', payload);
+      },
+      cancel: function cancel() {
+        var isLinked = !isUploaded(this.url);
+        this.urlInput = isLinked ? this.url : null;
+        this.file = isLinked ? null : pick__default['default'](this, ['url', 'publicUrl']);
+        this.isEditing = !this.url;
+      }
+    },
+    components: {
+      UploadBtn: UploadBtn
+    }
+  };
+
+  var css_248z$j = ".v-text-field[data-v-6cc584d4]{min-width:21.875rem;margin:.5rem .75rem 0 1.75rem}.action[data-v-6cc584d4]  .v-btn__content{min-width:4rem!important}.upload-btn[data-v-6cc584d4]  .v-btn{height:100%}.upload-btn[data-v-6cc584d4]  .v-btn .v-btn__content{padding:1.5rem 0}";
+  styleInject(css_248z$j);
+
+  /* script */
+  var __vue_script__$r = script$r;
+  /* template */
+
+  var __vue_render__$r = function __vue_render__() {
+    var _vm = this;
+
+    var _h = _vm.$createElement;
+
+    var _c = _vm._self._c || _h;
+
+    return _c('v-toolbar-items', [_vm.url && !_vm.isEditing ? _c('v-btn', {
+      attrs: {
+        "href": _vm.publicUrl || _vm.url,
+        "target": "_blank",
+        "color": "info",
+        "text": ""
+      }
+    }, [_c('v-icon', [_vm._v("mdi-open-in-new")])], 1) : _vm._e(), _vm._v(" "), _vm.allowFileUpload ? _c('upload-btn', {
+      directives: [{
+        name: "show",
+        rawName: "v-show",
+        value: !_vm.file && _vm.isEditing,
+        expression: "!file && isEditing"
+      }],
+      staticClass: "upload-btn",
+      attrs: {
+        "uploading": _vm.uploading,
+        "validate": {
+          ext: _vm.extensions
+        },
+        "confirm-deletion": false,
+        "label": _vm.uploadLabel
+      },
+      on: {
+        "upload": function upload(val) {
+          return (_vm.file = val) && (_vm.urlInput = null);
+        },
+        "update:uploading": function updateUploading($event) {
+          _vm.uploading = $event;
+        }
+      }
+    }) : _vm._e(), _vm._v(" "), _vm.file ? [_vm.isEditing ? _c('v-btn', {
+      attrs: {
+        "color": "red",
+        "text": ""
+      },
+      on: {
+        "click": function click($event) {
+          $event.stopPropagation();
+          _vm.file = null;
+        }
+      }
+    }, [_c('v-icon', [_vm._v("mdi-delete")])], 1) : _vm._e(), _vm._v(" "), _c('v-text-field', {
+      attrs: {
+        "value": _vm.fileName,
+        "readonly": "",
+        "hide-details": "",
+        "filled": ""
+      }
+    })] : _vm._e(), _vm._v(" "), !_vm.uploading && (_vm.urlInput || !_vm.hasAsset) ? _c('validation-provider', {
+      ref: "provider",
+      attrs: {
+        "rules": {
+          url: {
+            protocols: ['http', 'https'],
+            require_protocol: true,
+            require_valid_protocol: true
+          }
+        },
+        "name": "URL"
+      },
+      scopedSlots: _vm._u([{
+        key: "default",
+        fn: function fn(ref) {
+          var errors = ref.errors;
+          return [_c('v-text-field', {
+            attrs: {
+              "error-messages": errors,
+              "disabled": !_vm.isEditing,
+              "placeholder": _vm.allowFileUpload ? 'or paste a URL...' : 'Paste a URL...',
+              "filled": "",
+              "clearable": ""
+            },
+            model: {
+              value: _vm.urlInput,
+              callback: function callback($$v) {
+                _vm.urlInput = $$v;
+              },
+              expression: "urlInput"
+            }
+          })];
+        }
+      }], null, false, 17370557)
+    }) : _vm._e(), _vm._v(" "), !_vm.isEditing ? _c('v-btn', {
+      staticClass: "action",
+      attrs: {
+        "text": ""
+      },
+      on: {
+        "click": function click($event) {
+          $event.stopPropagation();
+          _vm.isEditing = true;
+        }
+      }
+    }, [_vm._v("\n    Edit\n  ")]) : [_vm.hasChanges ? _c('v-btn', {
+      staticClass: "action",
+      attrs: {
+        "disabled": _vm.uploading,
+        "text": ""
+      },
+      on: {
+        "click": function click($event) {
+          $event.stopPropagation();
+          return _vm.save($event);
+        }
+      }
+    }, [_vm._v("\n      Save\n    ")]) : _vm._e(), _vm._v(" "), _vm.hasChanges || _vm.url ? _c('v-btn', {
+      staticClass: "action",
+      attrs: {
+        "disabled": _vm.uploading,
+        "text": ""
+      },
+      on: {
+        "click": function click($event) {
+          $event.stopPropagation();
+          return _vm.cancel($event);
+        }
+      }
+    }, [_vm._v("\n      Cancel\n    ")]) : _vm._e()]], 2);
+  };
+
+  var __vue_staticRenderFns__$r = [];
+  /* style */
+
+  var __vue_inject_styles__$r = undefined;
+  /* scoped */
+
+  var __vue_scope_id__$r = "data-v-6cc584d4";
+  /* functional template */
+
+  var __vue_is_functional_template__$r = false;
+  /* component normalizer */
+
+  function __vue_normalize__$r(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+    var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
+
+    component.__file = "InputAsset.vue";
+
+    if (!component.render) {
+      component.render = template.render;
+      component.staticRenderFns = template.staticRenderFns;
+      component._compiled = true;
+      if (functional) component.functional = true;
+    }
+
+    component._scopeId = scope;
+
+    return component;
+  }
+  /* style inject */
+
+  /* style inject SSR */
+
+
+  var InputAsset = __vue_normalize__$r({
+    render: __vue_render__$r,
+    staticRenderFns: __vue_staticRenderFns__$r
+  }, __vue_inject_styles__$r, __vue_script__$r, __vue_scope_id__$r, __vue_is_functional_template__$r);
+
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  var script$s = {
+    name: 'tailor-input-error',
+    props: {
+      error: {
+        type: String,
+        default: ''
+      }
+    }
+  };
+
+  var css_248z$k = ".input-error[data-v-ff8d03d8]{color:var(--v-error-base);font-size:.75rem}";
+  styleInject(css_248z$k);
+
+  /* script */
+  var __vue_script__$s = script$s;
+  /* template */
+
+  var __vue_render__$s = function __vue_render__() {
+    var _vm = this;
+
+    var _h = _vm.$createElement;
+
+    var _c = _vm._self._c || _h;
+
+    return _c('transition', {
+      attrs: {
+        "name": "message-transition"
+      }
+    }, [!!_vm.error ? _c('div', {
+      staticClass: "input-error"
+    }, [_vm._v("\n    " + _vm._s(_vm.error) + "\n  ")]) : _vm._e()]);
+  };
+
+  var __vue_staticRenderFns__$s = [];
+  /* style */
+
+  var __vue_inject_styles__$s = undefined;
+  /* scoped */
+
+  var __vue_scope_id__$s = "data-v-ff8d03d8";
+  /* functional template */
+
+  var __vue_is_functional_template__$s = false;
+  /* component normalizer */
+
+  function __vue_normalize__$s(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+    var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
+
+    component.__file = "InputError.vue";
+
+    if (!component.render) {
+      component.render = template.render;
+      component.staticRenderFns = template.staticRenderFns;
+      component._compiled = true;
+      if (functional) component.functional = true;
+    }
+
+    component._scopeId = scope;
+
+    return component;
+  }
+  /* style inject */
+
+  /* style inject SSR */
+
+
+  var InputError = __vue_normalize__$s({
     render: __vue_render__$s,
     staticRenderFns: __vue_staticRenderFns__$s
   }, __vue_inject_styles__$s, __vue_script__$s, __vue_scope_id__$s, __vue_is_functional_template__$s);
+
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  var script$t = {
+    name: 'tailor-preview-overlay',
+    props: {
+      show: {
+        type: Boolean,
+        default: false
+      }
+    }
+  };
+
+  var css_248z$l = ".message[data-v-20303d2e]{border-radius:2px;font-size:1.125rem}";
+  styleInject(css_248z$l);
+
+  /* script */
+  var __vue_script__$t = script$t;
+  /* template */
+
+  var __vue_render__$t = function __vue_render__() {
+    var _vm = this;
+
+    var _h = _vm.$createElement;
+
+    var _c = _vm._self._c || _h;
+
+    return _c('v-overlay', {
+      attrs: {
+        "value": _vm.show,
+        "opacity": "0.9",
+        "absolute": ""
+      }
+    }, [_c('button', {
+      staticClass: "message pa-2 grey--text text--lighten-2"
+    }, [_vm._t("default", [_vm._v("Click to preview")])], 2)]);
+  };
+
+  var __vue_staticRenderFns__$t = [];
+  /* style */
+
+  var __vue_inject_styles__$t = undefined;
+  /* scoped */
+
+  var __vue_scope_id__$t = "data-v-20303d2e";
+  /* functional template */
+
+  var __vue_is_functional_template__$t = false;
+  /* component normalizer */
+
+  function __vue_normalize__$t(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+    var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
+
+    component.__file = "PreviewOverlay.vue";
+
+    if (!component.render) {
+      component.render = template.render;
+      component.staticRenderFns = template.staticRenderFns;
+      component._compiled = true;
+      if (functional) component.functional = true;
+    }
+
+    component._scopeId = scope;
+
+    return component;
+  }
+  /* style inject */
+
+  /* style inject SSR */
+
+
+  var PreviewOverlay = __vue_normalize__$t({
+    render: __vue_render__$t,
+    staticRenderFns: __vue_staticRenderFns__$t
+  }, __vue_inject_styles__$t, __vue_script__$t, __vue_scope_id__$t, __vue_is_functional_template__$t);
 
   exports.ActiveUsers = ActiveUsers;
   exports.AddElement = AddElement;
@@ -5399,6 +5659,7 @@
   exports.ElementPlaceholder = ElementPlaceholder;
   exports.EmbeddedContainer = EmbeddedContainer;
   exports.InlineActivator = InlineActivator;
+  exports.InputAsset = InputAsset;
   exports.InputError = InputError;
   exports.PreviewOverlay = PreviewOverlay;
   exports.PublishDiffChip = PublishDiffChip;
