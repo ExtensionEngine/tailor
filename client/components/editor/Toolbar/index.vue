@@ -53,7 +53,7 @@
 import { mapGetters, mapState } from 'vuex';
 import { ActiveUsers } from '@tailor/components';
 import ActivityActions from './ActivityActions';
-import { ElementToolbar } from 'tce-core';
+import ElementToolbar from './ElementToolbar';
 import { getElementId } from '@tailor/utils';
 
 export default {

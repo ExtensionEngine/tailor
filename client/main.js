@@ -15,7 +15,6 @@ import {
 } from 'vee-validate';
 import FileFilter from '@/directives/file-filter';
 import OidcClient from './OidcClient';
-import QuestionContainer from 'tce-core/QuestionContainer';
 import { sync } from 'vuex-router-sync';
 import Radio from '@extensionengine/vue-radio';
 import Timeago from 'vue-timeago';
@@ -29,7 +28,6 @@ import getStore from './store';
 import getRouter from './router';
 import App from './App';
 
-Vue.component('tce-question-container', QuestionContainer);
 Vue.component('ValidationObserver', ValidationObserver);
 Vue.component('ValidationProvider', ValidationProvider);
 setInteractionMode('eager');

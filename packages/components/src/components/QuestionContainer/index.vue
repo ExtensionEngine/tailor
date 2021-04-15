@@ -61,11 +61,11 @@
 import * as yup from 'yup';
 import { assessment, getComponentName, processAnswerType } from '@tailor/utils';
 import cloneDeep from 'lodash/cloneDeep';
-import Controls from './Controls';
-import Feedback from './Feedback';
+import Controls from './Controls.vue';
+import Feedback from './Feedback.vue';
 import isEmpty from 'lodash/isEmpty';
 import omit from 'lodash/omit';
-import Question from './Question';
+import Question from './Question.vue';
 
 const resolveComponentName = type => getComponentName(processAnswerType(type));
 

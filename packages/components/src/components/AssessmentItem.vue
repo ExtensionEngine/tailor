@@ -65,6 +65,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import filter from 'lodash/filter';
 import map from 'lodash/map';
 import PublishDiffChip from './PublishDiffChip.vue';
+import TceQuestionContainer from './QuestionContainer/index.vue';
 
 const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
 const blankRegex = /(@blank)/g;
@@ -101,7 +102,7 @@ export default {
       this.$emit('save', assessment);
     }
   },
-  components: { PublishDiffChip }
+  components: { PublishDiffChip, TceQuestionContainer }
 };
 </script>
 

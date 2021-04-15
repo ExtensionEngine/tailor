@@ -42,13 +42,15 @@
 </template>
 
 <script>
-import { AddElement, ContainedContent, InputError } from '@tailor/components';
+import AddElement from '../AddElement/index.vue';
 import { assessment } from '@tailor/utils';
 import cloneDeep from 'lodash/cloneDeep';
+import ContainedContent from '../ContainedContent.vue';
 import Draggable from 'vuedraggable';
 import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
 import head from 'lodash/head';
+import InputError from '../InputError.vue';
 import { mapChannels } from '@extensionengine/vue-radio';
 import pullAt from 'lodash/pullAt';
 import set from 'lodash/set';

@@ -23,6 +23,7 @@
 
 <script>
 export default {
+  name: 'controls',
   props: {
     isEditing: { type: Boolean, default: false }
   },
