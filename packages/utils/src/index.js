@@ -8,6 +8,7 @@ export * from './calculatePosition';
 export { default as InsertLocation } from './InsertLocation';
 export * as assessment from './assessment';
 export * as Events from './events';
+export { default as numberToLetter } from './numberToLetter';
 export { default as publishDiffChangeTypes } from './publishDiffChangeTypes';
 export { default as uuid } from './uuid';
 

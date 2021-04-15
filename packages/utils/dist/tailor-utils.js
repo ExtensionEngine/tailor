@@ -304,6 +304,26 @@ var index = /*#__PURE__*/Object.freeze({
   Discussion: discussion
 });
 
+var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+var base = alphabet.length;
+function numberToLetter(n) {
+  var digits = [];
+
+  do {
+    var v = n % base;
+    digits.push(v);
+    n = Math.floor(n / base);
+  } while (n-- > 0);
+
+  var chars = [];
+
+  while (digits.length) {
+    chars.push(alphabet[digits.pop()]);
+  }
+
+  return chars.join('');
+}
+
 var publishDiffChangeTypes = {
   NEW: 'new',
   CHANGED: 'changed',
@@ -415,6 +435,7 @@ exports.getPositions = getPositions;
 exports.getToolbarName = getToolbarName;
 exports.isChanged = isChanged;
 exports.isQuestion = isQuestion;
+exports.numberToLetter = numberToLetter;
 exports.processAnswerType = processAnswerType;
 exports.publishDiffChangeTypes = publishDiffChangeTypes;
 exports.resolveElementType = resolveElementType;

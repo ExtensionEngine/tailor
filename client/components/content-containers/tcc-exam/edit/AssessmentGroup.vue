@@ -56,6 +56,7 @@
 </template>
 
 <script>
+import { numberToLetter, uuid } from '@tailor/utils';
 import AssessmentItem from './Assessment';
 import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
@@ -65,11 +66,9 @@ import get from 'lodash/get';
 import GroupIntroduction from './GroupIntroduction';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
-import numberToLetter from 'utils/numberToLetter';
 import pickBy from 'lodash/pickBy';
 import sortBy from 'lodash/sortBy';
 import uniq from 'lodash/uniq';
-import { uuid } from '@tailor/utils';
 
 export default {
   name: 'assessment-group',

@@ -290,6 +290,26 @@ var index = /*#__PURE__*/Object.freeze({
   Discussion: discussion
 });
 
+var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+var base = alphabet.length;
+function numberToLetter(n) {
+  var digits = [];
+
+  do {
+    var v = n % base;
+    digits.push(v);
+    n = Math.floor(n / base);
+  } while (n-- > 0);
+
+  var chars = [];
+
+  while (digits.length) {
+    chars.push(alphabet[digits.pop()]);
+  }
+
+  return chars.join('');
+}
+
 var publishDiffChangeTypes = {
   NEW: 'new',
   CHANGED: 'changed',
@@ -384,4 +404,4 @@ function toTreeFormat(activities, schema, targetLevels) {
   });
 }
 
-export { index as Events, InsertLocation, assessment, calculatePosition, getAncestors, getChildren, getComponentName, getContainerName, getDescendants, getElementId, getMetaName, getOutlineChildren, getParent, getPositions, getToolbarName, isChanged, isQuestion, processAnswerType, publishDiffChangeTypes, resolveElementType, toTreeFormat, uuid };
+export { index as Events, InsertLocation, assessment, calculatePosition, getAncestors, getChildren, getComponentName, getContainerName, getDescendants, getElementId, getMetaName, getOutlineChildren, getParent, getPositions, getToolbarName, isChanged, isQuestion, numberToLetter, processAnswerType, publishDiffChangeTypes, resolveElementType, toTreeFormat, uuid };

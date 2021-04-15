@@ -1,5 +1,5 @@
 import Resource from './resource';
-import uuid from '@/utils/uuid';
+import { uuid } from '@tailor/utils';
 
 export default function ($apiUrl) {
   const api = new Resource($apiUrl);

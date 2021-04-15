@@ -37,7 +37,7 @@
 import { AddElement, AssessmentItem } from '@tailor/components';
 import filter from 'lodash/filter';
 import sortBy from 'lodash/sortBy';
-import uuid from '@/utils/uuid';
+import { uuid } from '@tailor/utils';
 
 export default {
   name: 'assessment-pool',
