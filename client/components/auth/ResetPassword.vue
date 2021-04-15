@@ -60,6 +60,11 @@
 <script>
 import api from '@/api/auth';
 
+const ERRORS = {
+  default: 'An error has occurred!',
+  resetToken: 'Invalid reset password URL!'
+};
+
 export default {
   data: () => ({
     password: '',
@@ -71,15 +76,16 @@ export default {
     token: vm => vm.$route.params.token
   },
   methods: {
-    async submit() {
+    submit() {
       const { token, password } = this;
-      await api.resetPassword(token, password);
-      this.$router.push('/');
+      return this.resetPassword(token, password)
+        .then(() => this.$router.push('/'))
+        .catch(() => (this.error = ERRORS.default));
     }
   },
   created() {
     return api.validateResetToken(this.token)
-      .catch(() => (this.error = 'Invalid reset password URL!'))
+      .catch(() => (this.error = ERRORS.resetToken))
       .finally(() => (this.isLoading = false));
   }
 };
