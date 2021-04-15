@@ -301,3 +301,17 @@ module.exports = ['my-extension-name'];
 
 Note that `module.exports` is an array and you can add as many extensions and just include their folder names in this array to include all of them.
 After installation, the extension is ready for use and should be listed in `tailor.config.js` file.
+
+## CYPRESS TEST
+
+### Run all tests headlessly in the Electron browser
+
+```
+npm run cy:run
+```
+
+### Run tests with the Cypress Test Runner
+
+```
+npm run cy:open
+```
