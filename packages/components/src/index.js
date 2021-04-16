@@ -8,6 +8,7 @@ export { default as Discussion } from './components/Discussion/index.vue';
 export { default as ElementList } from './components/ElementList.vue';
 export { default as ElementPlaceholder } from './components/ElementPlaceholder.vue';
 export { default as EmbeddedContainer } from './components/EmbeddedContainer.vue';
+export { default as FileInput } from './components/FileInput.vue';
 export { default as InlineActivator } from './components/AddElement/InlineActivator.vue';
 export { default as InputError } from './components/InputError.vue';
 export { default as PreviewOverlay } from './components/PreviewOverlay.vue';

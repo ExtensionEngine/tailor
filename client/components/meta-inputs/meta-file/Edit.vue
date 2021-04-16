@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import FileInput from '@/components/common/FileInput';
+import { FileInput } from '@tailor/components';
 import get from 'lodash/get';
 
 export default {
