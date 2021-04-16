@@ -11,12 +11,14 @@
 </template>
 
 <script>
-import { getDescendants, isChanged } from '@tailor/utils';
+import { activity as activityUtils } from '@tailor/utils';
 import countBy from 'lodash/countBy';
 import filter from 'lodash/filter';
 import map from 'lodash/map';
 import { mapGetters } from 'vuex';
 import pluralize from 'pluralize';
+
+const { getDescendants, isChanged } = activityUtils;
 
 const getDescriptor = (count, type) => `${count} ${pluralize(type, count)}`;
 const arrayToSentence = arr => arr.join(', ').replace(/, ([^,]*)$/, ' and $1');

@@ -47,7 +47,9 @@
 </template>
 
 <script>
-import { toTreeFormat } from '@tailor/utils';
+import { activity as activityUtils } from '@tailor/utils';
+
+const { toTreeFormat } = activityUtils;
 
 export default {
   name: 'activity-navigation',

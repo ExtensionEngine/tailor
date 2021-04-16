@@ -32,11 +32,13 @@
 </template>
 
 <script>
+import { activity as activityUtils } from '@tailor/utils';
 import fecha from 'fecha';
-import { getDescendants } from '@tailor/utils';
 import { mapActions } from 'vuex';
 import PublishingBadge from './Badge';
 import publishMixin from 'components/common/mixins/publish';
+
+const { getDescendants } = activityUtils;
 
 export default {
   inject: ['$schema'],

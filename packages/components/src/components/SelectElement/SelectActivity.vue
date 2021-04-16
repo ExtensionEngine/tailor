@@ -41,10 +41,12 @@
 </template>
 
 <script>
+import { activity as activityUtils } from '@tailor/utils';
 import groupBy from 'lodash/groupBy';
 import map from 'lodash/map';
 import pluralize from 'pluralize';
-import { toTreeFormat } from '@tailor/utils';
+
+const { toTreeFormat } = activityUtils;
 
 export default {
   name: 'select-activity',

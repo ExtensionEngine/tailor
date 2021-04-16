@@ -57,9 +57,9 @@ import {
   activity as activityApi,
   contentElement as contentElementApi
 } from '@tailor/api';
+import { activity as activityUtils } from '@tailor/utils';
 import ContentPreview from '../ContentPreview/index.vue';
 import flatMap from 'lodash/flatMap';
-import { getDescendants as getDeepChildren } from '@tailor/utils';
 import loader from '@/loader';
 import map from 'lodash/map';
 import SelectActivity from './SelectActivity.vue';
@@ -67,6 +67,7 @@ import SelectRepository from './SelectRepository.vue';
 import sortBy from 'lodash/sortBy';
 import TailorDialog from '../TailorDialog.vue';
 
+const { getDescendants } = activityUtils;
 const TOGGLE_BUTTON = {
   SELECT: { label: 'Select all', icon: 'checkbox-multiple-marked-outline' },
   DESELECT: { label: 'Deselect all', icon: 'checkbox-multiple-blank-outline' }
@@ -136,7 +137,7 @@ export default {
     },
     getSubcontainers(container) {
       const { items: { activities } } = this;
-      return sortBy(getDeepChildren(activities, container), 'position');
+      return sortBy(getDescendants(activities, container), 'position');
     },
     async showActivityElements(activity) {
       this.selection.activity = activity;

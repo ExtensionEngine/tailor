@@ -50,12 +50,14 @@
 </template>
 
 <script>
-import { getDescendants as getDeepChildren, numberToLetter } from '@tailor/utils';
+import { activity as activityUtils, numberToLetter } from '@tailor/utils';
 import AssessmentGroup from './AssessmentGroup';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import pluralize from 'pluralize';
+
+const { getDescendants } = activityUtils;
 
 export default {
   name: 'exam',
@@ -85,7 +87,7 @@ export default {
       const activity = find(activities, { id: container.parentId });
       const objectiveTypes = get(config, 'objectives');
       if (!objectiveTypes) return [];
-      const children = getDeepChildren(activities, activity);
+      const children = getDescendants(activities, activity);
       return filter(children, it => objectiveTypes.includes(it.type));
     }
   },

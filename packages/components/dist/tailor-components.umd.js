@@ -4264,6 +4264,7 @@
   }
 
   //
+  var toTreeFormat = utils.activity.toTreeFormat;
   var script$g = {
     name: 'select-activity',
     inject: ['$schema'],
@@ -4294,7 +4295,7 @@
         return map__default['default'](vm.activities, 'id');
       },
       activityTree: function activityTree(vm) {
-        return utils.toTreeFormat(vm.activities, vm.$schema, []);
+        return toTreeFormat(vm.activities, vm.$schema, []);
       },
       noResultsMessage: function noResultsMessage() {
         var activities = this.activities,
@@ -4411,8 +4412,8 @@
 
   var __vue_inject_styles__$g = function __vue_inject_styles__(inject) {
     if (!inject) return;
-    inject("data-v-11dfe634_0", {
-      source: ".treeview[data-v-11dfe634]{max-height:19rem;text-align:left;background-color:#fcfcfc;border:1px solid #eee;overflow-y:scroll}.treeview .v-chip.custom-chip[data-v-11dfe634]{border-radius:12px!important}.treeview[data-v-11dfe634]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__content>*,.treeview[data-v-11dfe634]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__root{cursor:auto}",
+    inject("data-v-285b0632_0", {
+      source: ".treeview[data-v-285b0632]{max-height:19rem;text-align:left;background-color:#fcfcfc;border:1px solid #eee;overflow-y:scroll}.treeview .v-chip.custom-chip[data-v-285b0632]{border-radius:12px!important}.treeview[data-v-285b0632]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__content>*,.treeview[data-v-285b0632]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__root{cursor:auto}",
       map: undefined,
       media: undefined
     });
@@ -4420,7 +4421,7 @@
   /* scoped */
 
 
-  var __vue_scope_id__$g = "data-v-11dfe634";
+  var __vue_scope_id__$g = "data-v-285b0632";
   /* module identifier */
 
   var __vue_module_identifier__$d = undefined;
@@ -4884,6 +4885,7 @@
     staticRenderFns: __vue_staticRenderFns__$i
   }, __vue_inject_styles__$i, __vue_script__$i, __vue_scope_id__$i, __vue_is_functional_template__$i, __vue_module_identifier__$e, __vue_create_injector__$e);
 
+  var getDescendants = utils.activity.getDescendants;
   var TOGGLE_BUTTON = {
     SELECT: {
       label: 'Select all',
@@ -5004,7 +5006,7 @@
       },
       getSubcontainers: function getSubcontainers(container) {
         var activities = this.items.activities;
-        return sortBy__default['default'](utils.getDescendants(activities, container), 'position');
+        return sortBy__default['default'](getDescendants(activities, container), 'position');
       },
       showActivityElements: async function showActivityElements(activity) {
         var _this3 = this;
@@ -36175,6 +36177,7 @@
   } //
 
 
+  var toTreeFormat$1 = utils.activity.toTreeFormat;
   var script$g$1 = {
     name: 'select-activity',
     inject: ['$schema'],
@@ -36205,7 +36208,7 @@
         return map__default['default'](vm.activities, 'id');
       },
       activityTree: function activityTree(vm) {
-        return utils.toTreeFormat(vm.activities, vm.$schema, []);
+        return toTreeFormat$1(vm.activities, vm.$schema, []);
       },
       noResultsMessage: function noResultsMessage() {
         var activities = this.activities,
@@ -36322,8 +36325,8 @@
 
   var __vue_inject_styles__$g$1 = function __vue_inject_styles__(inject) {
     if (!inject) return;
-    inject("data-v-11dfe634_0", {
-      source: ".treeview[data-v-11dfe634]{max-height:19rem;text-align:left;background-color:#fcfcfc;border:1px solid #eee;overflow-y:scroll}.treeview .v-chip.custom-chip[data-v-11dfe634]{border-radius:12px!important}.treeview[data-v-11dfe634]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__content>*,.treeview[data-v-11dfe634]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__root{cursor:auto}",
+    inject("data-v-285b0632_0", {
+      source: ".treeview[data-v-285b0632]{max-height:19rem;text-align:left;background-color:#fcfcfc;border:1px solid #eee;overflow-y:scroll}.treeview .v-chip.custom-chip[data-v-285b0632]{border-radius:12px!important}.treeview[data-v-285b0632]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__content>*,.treeview[data-v-285b0632]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__root{cursor:auto}",
       map: undefined,
       media: undefined
     });
@@ -36331,7 +36334,7 @@
   /* scoped */
 
 
-  var __vue_scope_id__$g$1 = "data-v-11dfe634";
+  var __vue_scope_id__$g$1 = "data-v-285b0632";
   /* module identifier */
 
   var __vue_module_identifier__$d$1 = undefined;
@@ -36790,6 +36793,7 @@
     staticRenderFns: __vue_staticRenderFns__$i$1
   }, __vue_inject_styles__$i$1, __vue_script__$i$1, __vue_scope_id__$i$1, __vue_is_functional_template__$i$1, __vue_module_identifier__$e$1, __vue_create_injector__$e$1);
 
+  var getDescendants$1 = utils.activity.getDescendants;
   var TOGGLE_BUTTON$1 = {
     SELECT: {
       label: 'Select all',
@@ -36910,7 +36914,7 @@
       },
       getSubcontainers: function getSubcontainers(container) {
         var activities = this.items.activities;
-        return sortBy__default['default'](utils.getDescendants(activities, container), 'position');
+        return sortBy__default['default'](getDescendants$1(activities, container), 'position');
       },
       showActivityElements: async function showActivityElements(activity) {
         var _this3 = this;

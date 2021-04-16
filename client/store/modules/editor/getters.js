@@ -1,13 +1,15 @@
+import { activity as activityUtils } from '@tailor/utils';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import flatMap from 'lodash/flatMap';
 import get from 'lodash/get';
-import { getDescendants as getDeepChildren } from '@tailor/utils';
 import map from 'lodash/map';
 import reduce from 'lodash/reduce';
 import { schema } from '@tailor/config';
 import uniqBy from 'lodash/uniqBy';
 import without from 'lodash/without';
+
+const { getDescendants } = activityUtils;
 
 export const activity = (_state, _getters, { route, repository }) => {
   const id = parseInt(get(route, 'params.activityId'), 10);
@@ -30,7 +32,7 @@ export const contentContainers = (_state, getters, { repository }) => {
   const activities = repository.activities.items;
   const parents = flatMap(rootContainerGroups);
   return parents.reduce((acc, parent) => {
-    acc.push(parent, ...getDeepChildren(activities, parent));
+    acc.push(parent, ...getDescendants(activities, parent));
     return acc;
   }, []);
 };

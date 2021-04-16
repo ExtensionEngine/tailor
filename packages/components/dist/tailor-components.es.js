@@ -1,12 +1,12 @@
 import capitalize from 'lodash/capitalize';
-import { Events, publishDiffChangeTypes, getElementId, getComponentName, toTreeFormat, getDescendants, isQuestion, getPositions, uuid, assessment, processAnswerType, calculatePosition } from '@tailor/utils';
+import { Events, publishDiffChangeTypes, getElementId, getComponentName, activity, isQuestion, getPositions, uuid, assessment, processAnswerType, calculatePosition } from '@tailor/utils';
 import filter from 'lodash/filter';
 import flatMap from 'lodash/flatMap';
 import intersection from 'lodash/intersection';
 import pick from 'lodash/pick';
 import reduce from 'lodash/reduce';
 import reject from 'lodash/reject';
-import { repository, activity, contentElement } from '@tailor/api';
+import { repository, activity as activity$1, contentElement } from '@tailor/api';
 import partition from 'lodash/partition';
 import takeRgt from 'lodash/takeRight';
 import find from 'lodash/find';
@@ -4124,6 +4124,7 @@ function loader(action, name) {
 }
 
 //
+var toTreeFormat = activity.toTreeFormat;
 var script$g = {
   name: 'select-activity',
   inject: ['$schema'],
@@ -4271,8 +4272,8 @@ var __vue_staticRenderFns__$g = [];
 
 var __vue_inject_styles__$g = function __vue_inject_styles__(inject) {
   if (!inject) return;
-  inject("data-v-11dfe634_0", {
-    source: ".treeview[data-v-11dfe634]{max-height:19rem;text-align:left;background-color:#fcfcfc;border:1px solid #eee;overflow-y:scroll}.treeview .v-chip.custom-chip[data-v-11dfe634]{border-radius:12px!important}.treeview[data-v-11dfe634]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__content>*,.treeview[data-v-11dfe634]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__root{cursor:auto}",
+  inject("data-v-285b0632_0", {
+    source: ".treeview[data-v-285b0632]{max-height:19rem;text-align:left;background-color:#fcfcfc;border:1px solid #eee;overflow-y:scroll}.treeview .v-chip.custom-chip[data-v-285b0632]{border-radius:12px!important}.treeview[data-v-285b0632]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__content>*,.treeview[data-v-285b0632]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__root{cursor:auto}",
     map: undefined,
     media: undefined
   });
@@ -4280,7 +4281,7 @@ var __vue_inject_styles__$g = function __vue_inject_styles__(inject) {
 /* scoped */
 
 
-var __vue_scope_id__$g = "data-v-11dfe634";
+var __vue_scope_id__$g = "data-v-285b0632";
 /* module identifier */
 
 var __vue_module_identifier__$d = undefined;
@@ -4744,6 +4745,7 @@ var TailorDialog = __vue_normalize__$i({
   staticRenderFns: __vue_staticRenderFns__$i
 }, __vue_inject_styles__$i, __vue_script__$i, __vue_scope_id__$i, __vue_is_functional_template__$i, __vue_module_identifier__$e, __vue_create_injector__$e);
 
+var getDescendants = activity.getDescendants;
 var TOGGLE_BUTTON = {
   SELECT: {
     label: 'Select all',
@@ -4912,7 +4914,7 @@ var script$j = {
       this.items.activities = currentRepository.id === repository.id ? currentRepository.activities : await this.fetchActivities(repository);
     },
     fetchActivities: loader(function (repository) {
-      return activity.getActivities(repository.id);
+      return activity$1.getActivities(repository.id);
     }, 'loadingContent'),
     fetchElements: loader(function (containers) {
       var repositoryId = this.selection.repository.id;

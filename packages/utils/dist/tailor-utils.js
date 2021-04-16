@@ -2,22 +2,22 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
+var toCase = require('to-case');
 var filter = require('lodash/filter');
 var find = require('lodash/find');
 var get = require('lodash/get');
 var sortBy = require('lodash/sortBy');
-var toCase = require('to-case');
 var cuid = require('cuid');
 var times = require('lodash/times');
 var uuid$1 = require('uuid');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
+var toCase__default = /*#__PURE__*/_interopDefaultLegacy(toCase);
 var filter__default = /*#__PURE__*/_interopDefaultLegacy(filter);
 var find__default = /*#__PURE__*/_interopDefaultLegacy(find);
 var get__default = /*#__PURE__*/_interopDefaultLegacy(get);
 var sortBy__default = /*#__PURE__*/_interopDefaultLegacy(sortBy);
-var toCase__default = /*#__PURE__*/_interopDefaultLegacy(toCase);
 var cuid__default = /*#__PURE__*/_interopDefaultLegacy(cuid);
 var times__default = /*#__PURE__*/_interopDefaultLegacy(times);
 
@@ -138,6 +138,77 @@ function calculatePosition(_ref4) {
   var positions = getPositions(arr, index, count);
   return count === 1 ? positions[0] : positions;
 }
+
+function isChanged(activity) {
+  return !activity.publishedAt || new Date(activity.modifiedAt) > new Date(activity.publishedAt);
+}
+function getParent(activities, activity) {
+  var id = get__default['default'](activity, 'parentId', null);
+  return id && find__default['default'](activities, {
+    id: id
+  });
+}
+function getChildren(activities, parentId) {
+  return sortBy__default['default'](filter__default['default'](activities, {
+    parentId: parentId
+  }), 'position');
+}
+function getDescendants(activities, activity) {
+  var children = filter__default['default'](activities, {
+    parentId: activity.id
+  });
+  if (!children.length) return [];
+
+  var reducer = function reducer(acc, it) {
+    return acc.concat(getDescendants(activities, it));
+  };
+
+  var descendants = children.reduce(reducer, []);
+  return children.concat(descendants);
+}
+function getAncestors(activities, activity) {
+  var parent = find__default['default'](activities, {
+    id: activity.parentId
+  });
+  if (!parent) return [];
+  var ancestors = getAncestors(activities, parent);
+  return [].concat(_toConsumableArray(ancestors), [parent]);
+}
+function getOutlineChildren(activities, schema, parentId) {
+  var children = getChildren(activities, parentId);
+  if (!parentId || !children.length) return children;
+  var types = schema.getLevel(find__default['default'](activities, {
+    id: parentId
+  }).type).subLevels;
+  return filter__default['default'](children, function (it) {
+    return types.includes(it.type);
+  });
+}
+function toTreeFormat(activities, schema, targetLevels) {
+  var parentId = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+  var level = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
+  return getOutlineChildren(activities, schema, parentId).map(function (activity) {
+    return Object.assign({}, activity, {
+      name: activity.data.name,
+      level: level,
+      selectable: !!targetLevels.find(function (it) {
+        return it.type === activity.type;
+      }),
+      children: toTreeFormat(activities, schema, targetLevels, activity.id, level + 1)
+    });
+  });
+}
+
+var activity = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  isChanged: isChanged,
+  getParent: getParent,
+  getChildren: getChildren,
+  getDescendants: getDescendants,
+  getAncestors: getAncestors,
+  getOutlineChildren: getOutlineChildren,
+  toTreeFormat: toTreeFormat
+});
 
 var typeInfo = {
   MC: {
@@ -358,86 +429,21 @@ function getToolbarName(type) {
 function getElementId(element) {
   return element && (element.uid || element.id);
 }
-function isChanged(activity) {
-  return !activity.publishedAt || new Date(activity.modifiedAt) > new Date(activity.publishedAt);
-}
-function getParent(activities, activity) {
-  var id = get__default['default'](activity, 'parentId', null);
-  return id && find__default['default'](activities, {
-    id: id
-  });
-}
-function getChildren(activities, parentId) {
-  return sortBy__default['default'](filter__default['default'](activities, {
-    parentId: parentId
-  }), 'position');
-}
-function getDescendants(activities, activity) {
-  var children = filter__default['default'](activities, {
-    parentId: activity.id
-  });
-  if (!children.length) return [];
-
-  var reducer = function reducer(acc, it) {
-    return acc.concat(getDescendants(activities, it));
-  };
-
-  var descendants = children.reduce(reducer, []);
-  return children.concat(descendants);
-}
-function getAncestors(activities, activity) {
-  var parent = find__default['default'](activities, {
-    id: activity.parentId
-  });
-  if (!parent) return [];
-  var ancestors = getAncestors(activities, parent);
-  return [].concat(_toConsumableArray(ancestors), [parent]);
-}
-function getOutlineChildren(activities, schema, parentId) {
-  var children = getChildren(activities, parentId);
-  if (!parentId || !children.length) return children;
-  var types = schema.getLevel(find__default['default'](activities, {
-    id: parentId
-  }).type).subLevels;
-  return filter__default['default'](children, function (it) {
-    return types.includes(it.type);
-  });
-}
-function toTreeFormat(activities, schema, targetLevels) {
-  var parentId = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
-  var level = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
-  return getOutlineChildren(activities, schema, parentId).map(function (activity) {
-    return Object.assign({}, activity, {
-      name: activity.data.name,
-      level: level,
-      selectable: !!targetLevels.find(function (it) {
-        return it.type === activity.type;
-      }),
-      children: toTreeFormat(activities, schema, targetLevels, activity.id, level + 1)
-    });
-  });
-}
 
 exports.Events = index;
 exports.InsertLocation = InsertLocation;
+exports.activity = activity;
 exports.assessment = assessment;
 exports.calculatePosition = calculatePosition;
-exports.getAncestors = getAncestors;
-exports.getChildren = getChildren;
 exports.getComponentName = getComponentName;
 exports.getContainerName = getContainerName;
-exports.getDescendants = getDescendants;
 exports.getElementId = getElementId;
 exports.getMetaName = getMetaName;
-exports.getOutlineChildren = getOutlineChildren;
-exports.getParent = getParent;
 exports.getPositions = getPositions;
 exports.getToolbarName = getToolbarName;
-exports.isChanged = isChanged;
 exports.isQuestion = isQuestion;
 exports.numberToLetter = numberToLetter;
 exports.processAnswerType = processAnswerType;
 exports.publishDiffChangeTypes = publishDiffChangeTypes;
 exports.resolveElementType = resolveElementType;
-exports.toTreeFormat = toTreeFormat;
 exports.uuid = uuid;

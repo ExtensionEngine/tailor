@@ -36,8 +36,10 @@
 </template>
 
 <script>
-import { toTreeFormat } from '@tailor/utils';
+import { activity as activityUtils } from '@tailor/utils';
 import xorBy from 'lodash/xorBy';
+
+const { toTreeFormat } = activityUtils;
 
 export default {
   inject: ['$schema'],

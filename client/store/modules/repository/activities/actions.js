@@ -1,7 +1,6 @@
 import {
+  activity as activityUtils,
   calculatePosition,
-  getDescendants as getDeepChildren,
-  getOutlineChildren,
   InsertLocation
 } from '@tailor/utils';
 import { client } from '@tailor/api';
@@ -10,6 +9,7 @@ import feed from '../feed';
 import findIndex from 'lodash/findIndex';
 import generateActions from '@/store/helpers/actions';
 
+const { getDescendants, getOutlineChildren } = activityUtils;
 const { api, fetch, get, reset, save, setEndpoint, update } = generateActions();
 const { ADD_INTO } = InsertLocation;
 
@@ -29,7 +29,7 @@ const reorder = ({ commit }, { activity, context }) => {
 };
 
 const remove = ({ state, commit }, model) => {
-  const descendants = getDeepChildren(state.items, model);
+  const descendants = getDescendants(state.items, model);
   if (!model.id && !model._version) {
     commit('remove', [model]);
     return Promise.resolve(true);
