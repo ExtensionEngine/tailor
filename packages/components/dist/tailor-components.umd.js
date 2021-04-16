@@ -4896,7 +4896,7 @@
   };
   var script$j = {
     name: 'select-element',
-    inject: ['$schema', '$editorContent'],
+    inject: ['$schema', '$repository'],
     props: {
       selected: {
         type: Array,
@@ -4945,10 +4945,7 @@
     },
     computed: {
       currentRepository: function currentRepository(vm) {
-        return vm.$editorContent.repository;
-      },
-      currentActivities: function currentActivities(vm) {
-        return vm.$editorContent.activities;
+        return vm.$repository;
       },
       allElementsSelected: function allElementsSelected(vm) {
         return vm.selection.elements.length === vm.elements.length;
@@ -5049,11 +5046,10 @@
         this.selection.elements = _toConsumableArray(this.selected);
       },
       selectRepository: async function selectRepository(repository) {
-        var currentActivities = this.currentActivities,
-            currentRepository = this.currentRepository;
+        var currentRepository = this.currentRepository;
         this.selection.repository = repository;
         this.deselectActivity();
-        this.items.activities = currentRepository.id === repository.id ? currentActivities : await this.fetchActivities(repository);
+        this.items.activities = currentRepository.id === repository.id ? currentRepository.activities : await this.fetchActivities(repository);
       },
       fetchActivities: loader(function (repository) {
         return api.activity.getActivities(repository.id);
@@ -5097,7 +5093,7 @@
     created: function created() {
       this.selection.elements = _toConsumableArray(this.selected);
       this.selection.repository = this.currentRepository;
-      this.items.activities = this.currentActivities;
+      this.items.activities = this.currentRepository.activities;
     },
     components: {
       ContentPreview: ContentPreview,
@@ -30670,7 +30666,7 @@
   };
 
   var uploadMixin = {
-    inject: ['$storageService', '$editorContent'],
+    inject: ['$storageService', '$repository'],
     mixins: [downloadMixin],
     data: function data() {
       return {
@@ -30679,7 +30675,7 @@
     },
     computed: {
       repositoryId: function repositoryId() {
-        return this.$editorContent.repository.id;
+        return this.$repository.id;
       }
     },
     methods: Object.assign({}, vueRadio.mapRequests('app', ['showConfirmationModal']), {
@@ -36806,7 +36802,7 @@
   };
   var script$j$1 = {
     name: 'select-element',
-    inject: ['$schema', '$editorContent'],
+    inject: ['$schema', '$repository'],
     props: {
       selected: {
         type: Array,
@@ -36855,10 +36851,7 @@
     },
     computed: {
       currentRepository: function currentRepository(vm) {
-        return vm.$editorContent.repository;
-      },
-      currentActivities: function currentActivities(vm) {
-        return vm.$editorContent.activities;
+        return vm.$repository;
       },
       allElementsSelected: function allElementsSelected(vm) {
         return vm.selection.elements.length === vm.elements.length;
@@ -36959,11 +36952,10 @@
         this.selection.elements = _toConsumableArray$1(this.selected);
       },
       selectRepository: async function selectRepository(repository) {
-        var currentActivities = this.currentActivities,
-            currentRepository = this.currentRepository;
+        var currentRepository = this.currentRepository;
         this.selection.repository = repository;
         this.deselectActivity();
-        this.items.activities = currentRepository.id === repository.id ? currentActivities : await this.fetchActivities(repository);
+        this.items.activities = currentRepository.id === repository.id ? currentRepository.activities : await this.fetchActivities(repository);
       },
       fetchActivities: loader$1(function (repository) {
         return api.activity.getActivities(repository.id);
@@ -37007,7 +36999,7 @@
     created: function created() {
       this.selection.elements = _toConsumableArray$1(this.selected);
       this.selection.repository = this.currentRepository;
-      this.items.activities = this.currentActivities;
+      this.items.activities = this.currentRepository.activities;
     },
     components: {
       ContentPreview: ContentPreview$1,
@@ -39310,7 +39302,7 @@
     }
   };
   var uploadMixin$1 = {
-    inject: ['$storageService', '$editorContent'],
+    inject: ['$storageService', '$repository'],
     mixins: [downloadMixin$1],
     data: function data() {
       return {
@@ -39319,7 +39311,7 @@
     },
     computed: {
       repositoryId: function repositoryId() {
-        return this.$editorContent.repository.id;
+        return this.$repository.id;
       }
     },
     methods: Object.assign({}, vueRadio.mapRequests('app', ['showConfirmationModal']), {

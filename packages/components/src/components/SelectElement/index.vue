@@ -74,7 +74,7 @@ const TOGGLE_BUTTON = {
 
 export default {
   name: 'select-element',
-  inject: ['$schema', '$editorContent'],
+  inject: ['$schema', '$repository'],
   props: {
     selected: { type: Array, default: () => [] },
     heading: { type: String, required: true },
@@ -97,8 +97,7 @@ export default {
     loadingContent: false
   }),
   computed: {
-    currentRepository: vm => vm.$editorContent.repository,
-    currentActivities: vm => vm.$editorContent.activities,
+    currentRepository: vm => vm.$repository,
     allElementsSelected: vm => vm.selection.elements.length === vm.elements.length,
     rootContainerTypes() {
       const type = this.selection.activity?.type;
@@ -169,11 +168,11 @@ export default {
       this.selection.elements = [...this.selected];
     },
     async selectRepository(repository) {
-      const { currentActivities, currentRepository } = this;
+      const { currentRepository } = this;
       this.selection.repository = repository;
       this.deselectActivity();
       this.items.activities = currentRepository.id === repository.id
-        ? currentActivities
+        ? currentRepository.activities
         : await this.fetchActivities(repository);
     },
     fetchActivities: loader(function (repository) {
@@ -204,7 +203,7 @@ export default {
   created() {
     this.selection.elements = [...this.selected];
     this.selection.repository = this.currentRepository;
-    this.items.activities = this.currentActivities;
+    this.items.activities = this.currentRepository.activities;
   },
   components: { ContentPreview, SelectActivity, SelectRepository, TailorDialog }
 };

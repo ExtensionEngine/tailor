@@ -3,12 +3,12 @@ import loader from './loader';
 import { mapRequests } from '@extensionengine/vue-radio';
 
 export default {
-  inject: ['$storageService', '$editorContent'],
+  inject: ['$storageService', '$repository'],
   mixins: [downloadMixin],
   data: () => ({ uploading: false }),
   computed: {
     repositoryId() {
-      return this.$editorContent.repository.id;
+      return this.$repository.id;
     }
   },
   methods: {

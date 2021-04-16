@@ -86,18 +86,12 @@ export default {
   },
   methods: mapActions('repository', ['initialize', 'expandParents']),
   provide() {
-    const $editorContent = {};
-    Object.defineProperties($editorContent, {
-      repository: {
-        get: () => this.repository,
-        enumerable: true
-      },
-      activities: {
-        get: () => this.activities,
-        enumerable: true
+    const self = this;
+    return {
+      get $repository() {
+        return { ...self.repository, activities: self.activities };
       }
-    });
-    return { $editorContent };
+    };
   },
   watch: {
     selectedActivity: {
