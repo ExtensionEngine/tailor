@@ -1,13 +1,15 @@
 <template>
   <div>
-    <v-alert
-      :value="!!error"
-      color="pink lighten-1"
-      text
-      class="mb-5">
+    <v-alert :value="!!error" color="pink lighten-1" text class="mb-5">
       {{ error }}
     </v-alert>
+    <v-progress-circular v-if="isLoading" color="primary darken-2" indeterminate />
+    <router-link v-else-if="error" :to="{ name: 'forgot-password' }">
+      <v-icon size="20">mdi-arrow-top-right-thick</v-icon>
+      Click here to send another reset email.
+    </router-link>
     <validation-observer
+      v-else
       ref="form"
       @submit.prevent="$refs.form.handleSubmit(submit)"
       tag="form"
@@ -56,22 +58,35 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import api from '@/api/auth';
+
+const ERRORS = {
+  default: 'An error has occurred!',
+  resetToken: 'Invalid reset password URL!'
+};
 
 export default {
   data: () => ({
-    error: null,
     password: '',
-    passwordConfirmation: ''
+    passwordConfirmation: '',
+    error: null,
+    isLoading: true
   }),
+  computed: {
+    token: vm => vm.$route.params.token
+  },
   methods: {
-    ...mapActions(['resetPassword']),
     submit() {
-      const { token } = this.$route.params;
-      return this.resetPassword({ password: this.password, token })
+      const { token, password } = this;
+      return this.resetPassword(token, password)
         .then(() => this.$router.push('/'))
-        .catch(() => (this.error = 'An error has occurred!'));
+        .catch(() => (this.error = ERRORS.default));
     }
+  },
+  created() {
+    return api.validateResetToken(this.token)
+      .catch(() => (this.error = ERRORS.resetToken))
+      .finally(() => (this.isLoading = false));
   }
 };
 </script>
