@@ -67,7 +67,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import DatePicker from '@/components/common/DatePicker';
+import { DatePicker } from '@tailor/components';
 import EditorField from '@/components/common/EditorField';
 import SelectPriority from '@/components/repository/common/SelectPriority';
 import SelectStatus from '../SelectStatus';

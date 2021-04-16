@@ -4,6 +4,7 @@ export { default as AssessmentItem } from './components/AssessmentItem.vue';
 export { default as AssetInput } from './components/AssetInput.vue';
 export { default as ContainedContent } from './components/ContainedContent.vue';
 export { default as ContentElement } from './components/ContentElement.vue';
+export { default as DatePicker } from './components/DatePicker.vue';
 export { default as Discussion } from './components/Discussion/index.vue';
 export { default as ElementList } from './components/ElementList.vue';
 export { default as ElementPlaceholder } from './components/ElementPlaceholder.vue';

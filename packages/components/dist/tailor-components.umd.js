@@ -31345,8 +31345,171 @@
   }, __vue_inject_styles__$u, __vue_script__$u, __vue_scope_id__$u, __vue_is_functional_template__$u, __vue_module_identifier__$m, __vue_create_injector__$m);
 
   //
-  var CE_FOCUS_EVENT = 'element:focus';
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
   var script$v = {
+    name: 'date-picker',
+    props: {
+      value: {
+        type: [String, Date],
+        default: null
+      },
+      label: {
+        type: String,
+        default: null
+      },
+      clearable: {
+        type: Boolean,
+        default: true
+      },
+      placeholder: {
+        type: String,
+        default: 'Click to set...'
+      }
+    },
+    data: function data() {
+      return {
+        showDatePicker: false
+      };
+    },
+    methods: {
+      clear: function clear() {
+        this.$emit('input', null);
+        this.$refs.textField.blur();
+      }
+    }
+  };
+
+  /* script */
+  var __vue_script__$v = script$v;
+  /* template */
+
+  var __vue_render__$v = function __vue_render__() {
+    var _vm = this;
+
+    var _h = _vm.$createElement;
+
+    var _c = _vm._self._c || _h;
+
+    return _c('v-menu', {
+      attrs: {
+        "close-on-content-click": false,
+        "min-width": "290px",
+        "transition": "scale-transition"
+      },
+      scopedSlots: _vm._u([{
+        key: "activator",
+        fn: function fn(ref) {
+          var on = ref.on;
+          return [_c('v-text-field', _vm._g({
+            ref: "textField",
+            attrs: {
+              "value": _vm._f("formatDate")(_vm.value, 'MMM D, YYYY'),
+              "label": _vm.label,
+              "placeholder": _vm.placeholder,
+              "clearable": _vm.clearable,
+              "outlined": "",
+              "readonly": ""
+            },
+            on: {
+              "click:clear": _vm.clear,
+              "click": function click($event) {
+                _vm.showDatePicker = true;
+              }
+            }
+          }, on))];
+        }
+      }]),
+      model: {
+        value: _vm.showDatePicker,
+        callback: function callback($$v) {
+          _vm.showDatePicker = $$v;
+        },
+        expression: "showDatePicker"
+      }
+    }, [_vm._v(" "), _c('v-date-picker', {
+      attrs: {
+        "value": _vm._f("formatDate")(_vm.value, 'YYYY-MM-DD'),
+        "color": "primary darken-2",
+        "no-title": ""
+      },
+      on: {
+        "input": function input($event) {
+          return _vm.$emit('input', $event);
+        },
+        "change": function change($event) {
+          _vm.showDatePicker = false;
+        }
+      }
+    })], 1);
+  };
+
+  var __vue_staticRenderFns__$v = [];
+  /* style */
+
+  var __vue_inject_styles__$v = undefined;
+  /* scoped */
+
+  var __vue_scope_id__$v = undefined;
+  /* functional template */
+
+  var __vue_is_functional_template__$v = false;
+  /* component normalizer */
+
+  function __vue_normalize__$v(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+    var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
+
+    component.__file = "DatePicker.vue";
+
+    if (!component.render) {
+      component.render = template.render;
+      component.staticRenderFns = template.staticRenderFns;
+      component._compiled = true;
+      if (functional) component.functional = true;
+    }
+
+    component._scopeId = scope;
+
+    return component;
+  }
+  /* style inject */
+
+  /* style inject SSR */
+
+
+  var DatePicker = __vue_normalize__$v({
+    render: __vue_render__$v,
+    staticRenderFns: __vue_staticRenderFns__$v
+  }, __vue_inject_styles__$v, __vue_script__$v, __vue_scope_id__$v, __vue_is_functional_template__$v);
+
+  //
+  var CE_FOCUS_EVENT = 'element:focus';
+  var script$w = {
     name: 'tailor-element-list',
     props: {
       elements: {
@@ -31429,10 +31592,10 @@
   };
 
   /* script */
-  var __vue_script__$v = script$v;
+  var __vue_script__$w = script$w;
   /* template */
 
-  var __vue_render__$v = function __vue_render__() {
+  var __vue_render__$w = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -31498,10 +31661,10 @@
     })] : _vm._e()], 2);
   };
 
-  var __vue_staticRenderFns__$v = [];
+  var __vue_staticRenderFns__$w = [];
   /* style */
 
-  var __vue_inject_styles__$v = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$w = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-f18f3e56_0", {
       source: ".list-group[data-v-f18f3e56]{padding:.625rem 1.5rem}[data-v-f18f3e56] .sortable-ghost .drag-handle{display:none}[data-v-f18f3e56] .sortable-ghost .content-element{max-height:9.375rem;background:#f4f5f5}[data-v-f18f3e56] .sortable-ghost .content-element>*{visibility:hidden}[data-v-f18f3e56] .sortable-drag .content-element{max-height:auto;background:#fff}",
@@ -31512,16 +31675,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$v = "data-v-f18f3e56";
+  var __vue_scope_id__$w = "data-v-f18f3e56";
   /* module identifier */
 
   var __vue_module_identifier__$n = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$v = false;
+  var __vue_is_functional_template__$w = false;
   /* component normalizer */
 
-  function __vue_normalize__$v(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$w(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "ElementList.vue";
@@ -31630,10 +31793,10 @@
   /* style inject SSR */
 
 
-  var ElementList = __vue_normalize__$v({
-    render: __vue_render__$v,
-    staticRenderFns: __vue_staticRenderFns__$v
-  }, __vue_inject_styles__$v, __vue_script__$v, __vue_scope_id__$v, __vue_is_functional_template__$v, __vue_module_identifier__$n, __vue_create_injector__$n);
+  var ElementList = __vue_normalize__$w({
+    render: __vue_render__$w,
+    staticRenderFns: __vue_staticRenderFns__$w
+  }, __vue_inject_styles__$w, __vue_script__$w, __vue_scope_id__$w, __vue_is_functional_template__$w, __vue_module_identifier__$n, __vue_create_injector__$n);
 
   //
   //
@@ -31671,7 +31834,7 @@
   //
   //
   //
-  var script$w = {
+  var script$x = {
     name: 'tailor-element-placeholder',
     props: {
       name: {
@@ -31720,10 +31883,10 @@
   };
 
   /* script */
-  var __vue_script__$w = script$w;
+  var __vue_script__$x = script$x;
   /* template */
 
-  var __vue_render__$w = function __vue_render__() {
+  var __vue_render__$x = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -31756,19 +31919,19 @@
     }, [_vm._v("\n        " + _vm._s(_vm.activeIcon) + "\n      ")]) : _vm._e()]], 2) : _vm._e()], 1);
   };
 
-  var __vue_staticRenderFns__$w = [];
+  var __vue_staticRenderFns__$x = [];
   /* style */
 
-  var __vue_inject_styles__$w = undefined;
+  var __vue_inject_styles__$x = undefined;
   /* scoped */
 
-  var __vue_scope_id__$w = undefined;
+  var __vue_scope_id__$x = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$w = false;
+  var __vue_is_functional_template__$x = false;
   /* component normalizer */
 
-  function __vue_normalize__$w(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$x(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "ElementPlaceholder.vue";
@@ -31789,12 +31952,12 @@
   /* style inject SSR */
 
 
-  var ElementPlaceholder = __vue_normalize__$w({
-    render: __vue_render__$w,
-    staticRenderFns: __vue_staticRenderFns__$w
-  }, __vue_inject_styles__$w, __vue_script__$w, __vue_scope_id__$w, __vue_is_functional_template__$w);
+  var ElementPlaceholder = __vue_normalize__$x({
+    render: __vue_render__$x,
+    staticRenderFns: __vue_staticRenderFns__$x
+  }, __vue_inject_styles__$x, __vue_script__$x, __vue_scope_id__$x, __vue_is_functional_template__$x);
 
-  var script$x = {
+  var script$y = {
     name: 'tailor-embedded-container',
     inheritAttrs: false,
     props: {
@@ -31874,10 +32037,10 @@
   };
 
   /* script */
-  var __vue_script__$x = script$x;
+  var __vue_script__$y = script$y;
   /* template */
 
-  var __vue_render__$x = function __vue_render__() {
+  var __vue_render__$y = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -31924,19 +32087,19 @@
     });
   };
 
-  var __vue_staticRenderFns__$x = [];
+  var __vue_staticRenderFns__$y = [];
   /* style */
 
-  var __vue_inject_styles__$x = undefined;
+  var __vue_inject_styles__$y = undefined;
   /* scoped */
 
-  var __vue_scope_id__$x = undefined;
+  var __vue_scope_id__$y = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$x = false;
+  var __vue_is_functional_template__$y = false;
   /* component normalizer */
 
-  function __vue_normalize__$x(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$y(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "EmbeddedContainer.vue";
@@ -31957,12 +32120,12 @@
   /* style inject SSR */
 
 
-  var EmbeddedContainer = __vue_normalize__$x({
-    render: __vue_render__$x,
-    staticRenderFns: __vue_staticRenderFns__$x
-  }, __vue_inject_styles__$x, __vue_script__$x, __vue_scope_id__$x, __vue_is_functional_template__$x);
+  var EmbeddedContainer = __vue_normalize__$y({
+    render: __vue_render__$y,
+    staticRenderFns: __vue_staticRenderFns__$y
+  }, __vue_inject_styles__$y, __vue_script__$y, __vue_scope_id__$y, __vue_is_functional_template__$y);
 
-  var script$y = {
+  var script$z = {
     name: 'tailor-active-users',
     props: {
       users: {
@@ -31982,10 +32145,10 @@
   };
   /* script */
 
-  var __vue_script__$y = script$y;
+  var __vue_script__$z = script$z;
   /* template */
 
-  var __vue_render__$y = function __vue_render__() {
+  var __vue_render__$z = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -32031,10 +32194,10 @@
     }), 1);
   };
 
-  var __vue_staticRenderFns__$y = [];
+  var __vue_staticRenderFns__$z = [];
   /* style */
 
-  var __vue_inject_styles__$y = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$z = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-33d463d4_0", {
       source: ".avatar[data-v-33d463d4]{transition:all .2s}.avatar img[data-v-33d463d4]{padding:.125rem}.avatar[data-v-33d463d4]:focus-within,.avatar[data-v-33d463d4]:hover{transform:scale(1.1);z-index:1}.avatar:focus-within img[data-v-33d463d4]:focus,.avatar:hover img[data-v-33d463d4]:focus{outline:0}",
@@ -32045,16 +32208,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$y = "data-v-33d463d4";
+  var __vue_scope_id__$z = "data-v-33d463d4";
   /* module identifier */
 
   var __vue_module_identifier__$o = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$y = false;
+  var __vue_is_functional_template__$z = false;
   /* component normalizer */
 
-  function __vue_normalize__$y(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$z(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "ActiveUsers.vue";
@@ -32161,10 +32324,10 @@
   /* style inject SSR */
 
 
-  var ActiveUsers$1 = __vue_normalize__$y({
-    render: __vue_render__$y,
-    staticRenderFns: __vue_staticRenderFns__$y
-  }, __vue_inject_styles__$y, __vue_script__$y, __vue_scope_id__$y, __vue_is_functional_template__$y, __vue_module_identifier__$o, __vue_create_injector__$o); //
+  var ActiveUsers$1 = __vue_normalize__$z({
+    render: __vue_render__$z,
+    staticRenderFns: __vue_staticRenderFns__$z
+  }, __vue_inject_styles__$z, __vue_script__$z, __vue_scope_id__$z, __vue_is_functional_template__$z, __vue_module_identifier__$o, __vue_create_injector__$o); //
   //
   //
   //
@@ -39814,10 +39977,172 @@
     render: __vue_render__$t$1,
     staticRenderFns: __vue_staticRenderFns__$t$1
   }, __vue_inject_styles__$t$1, __vue_script__$t$1, __vue_scope_id__$t$1, __vue_is_functional_template__$t$1, __vue_module_identifier__$l$1, __vue_create_injector__$l$1); //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+
+
+  var script$u$1 = {
+    name: 'date-picker',
+    props: {
+      value: {
+        type: [String, Date],
+        default: null
+      },
+      label: {
+        type: String,
+        default: null
+      },
+      clearable: {
+        type: Boolean,
+        default: true
+      },
+      placeholder: {
+        type: String,
+        default: 'Click to set...'
+      }
+    },
+    data: function data() {
+      return {
+        showDatePicker: false
+      };
+    },
+    methods: {
+      clear: function clear() {
+        this.$emit('input', null);
+        this.$refs.textField.blur();
+      }
+    }
+  };
+  /* script */
+
+  var __vue_script__$u$1 = script$u$1;
+  /* template */
+
+  var __vue_render__$u$1 = function __vue_render__() {
+    var _vm = this;
+
+    var _h = _vm.$createElement;
+
+    var _c = _vm._self._c || _h;
+
+    return _c('v-menu', {
+      attrs: {
+        "close-on-content-click": false,
+        "min-width": "290px",
+        "transition": "scale-transition"
+      },
+      scopedSlots: _vm._u([{
+        key: "activator",
+        fn: function fn(ref) {
+          var on = ref.on;
+          return [_c('v-text-field', _vm._g({
+            ref: "textField",
+            attrs: {
+              "value": _vm._f("formatDate")(_vm.value, 'MMM D, YYYY'),
+              "label": _vm.label,
+              "placeholder": _vm.placeholder,
+              "clearable": _vm.clearable,
+              "outlined": "",
+              "readonly": ""
+            },
+            on: {
+              "click:clear": _vm.clear,
+              "click": function click($event) {
+                _vm.showDatePicker = true;
+              }
+            }
+          }, on))];
+        }
+      }]),
+      model: {
+        value: _vm.showDatePicker,
+        callback: function callback($$v) {
+          _vm.showDatePicker = $$v;
+        },
+        expression: "showDatePicker"
+      }
+    }, [_vm._v(" "), _c('v-date-picker', {
+      attrs: {
+        "value": _vm._f("formatDate")(_vm.value, 'YYYY-MM-DD'),
+        "color": "primary darken-2",
+        "no-title": ""
+      },
+      on: {
+        "input": function input($event) {
+          return _vm.$emit('input', $event);
+        },
+        "change": function change($event) {
+          _vm.showDatePicker = false;
+        }
+      }
+    })], 1);
+  };
+
+  var __vue_staticRenderFns__$u$1 = [];
+  /* style */
+
+  var __vue_inject_styles__$u$1 = undefined;
+  /* scoped */
+
+  var __vue_scope_id__$u$1 = undefined;
+  /* functional template */
+
+  var __vue_is_functional_template__$u$1 = false;
+  /* component normalizer */
+
+  function __vue_normalize__$u$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+    var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
+
+    component.__file = "DatePicker.vue";
+
+    if (!component.render) {
+      component.render = template.render;
+      component.staticRenderFns = template.staticRenderFns;
+      component._compiled = true;
+      if (functional) component.functional = true;
+    }
+
+    component._scopeId = scope;
+    return component;
+  }
+  /* style inject */
+
+  /* style inject SSR */
+
+
+  __vue_normalize__$u$1({
+    render: __vue_render__$u$1,
+    staticRenderFns: __vue_staticRenderFns__$u$1
+  }, __vue_inject_styles__$u$1, __vue_script__$u$1, __vue_scope_id__$u$1, __vue_is_functional_template__$u$1); //
 
 
   var CE_FOCUS_EVENT$1 = 'element:focus';
-  var script$u$1 = {
+  var script$v$1 = {
     name: 'tailor-element-list',
     props: {
       elements: {
@@ -39900,10 +40225,10 @@
   };
   /* script */
 
-  var __vue_script__$u$1 = script$u$1;
+  var __vue_script__$v$1 = script$v$1;
   /* template */
 
-  var __vue_render__$u$1 = function __vue_render__() {
+  var __vue_render__$v$1 = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -39969,10 +40294,10 @@
     })] : _vm._e()], 2);
   };
 
-  var __vue_staticRenderFns__$u$1 = [];
+  var __vue_staticRenderFns__$v$1 = [];
   /* style */
 
-  var __vue_inject_styles__$u$1 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$v$1 = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-f18f3e56_0", {
       source: ".list-group[data-v-f18f3e56]{padding:.625rem 1.5rem}[data-v-f18f3e56] .sortable-ghost .drag-handle{display:none}[data-v-f18f3e56] .sortable-ghost .content-element{max-height:9.375rem;background:#f4f5f5}[data-v-f18f3e56] .sortable-ghost .content-element>*{visibility:hidden}[data-v-f18f3e56] .sortable-drag .content-element{max-height:auto;background:#fff}",
@@ -39983,16 +40308,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$u$1 = "data-v-f18f3e56";
+  var __vue_scope_id__$v$1 = "data-v-f18f3e56";
   /* module identifier */
 
   var __vue_module_identifier__$m$1 = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$u$1 = false;
+  var __vue_is_functional_template__$v$1 = false;
   /* component normalizer */
 
-  function __vue_normalize__$u$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$v$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "ElementList.vue";
@@ -40099,10 +40424,10 @@
   /* style inject SSR */
 
 
-  var ElementList$1 = __vue_normalize__$u$1({
-    render: __vue_render__$u$1,
-    staticRenderFns: __vue_staticRenderFns__$u$1
-  }, __vue_inject_styles__$u$1, __vue_script__$u$1, __vue_scope_id__$u$1, __vue_is_functional_template__$u$1, __vue_module_identifier__$m$1, __vue_create_injector__$m$1); //
+  var ElementList$1 = __vue_normalize__$v$1({
+    render: __vue_render__$v$1,
+    staticRenderFns: __vue_staticRenderFns__$v$1
+  }, __vue_inject_styles__$v$1, __vue_script__$v$1, __vue_scope_id__$v$1, __vue_is_functional_template__$v$1, __vue_module_identifier__$m$1, __vue_create_injector__$m$1); //
   //
   //
   //
@@ -40140,7 +40465,7 @@
   //
 
 
-  var script$v$1 = {
+  var script$w$1 = {
     name: 'tailor-element-placeholder',
     props: {
       name: {
@@ -40189,10 +40514,10 @@
   };
   /* script */
 
-  var __vue_script__$v$1 = script$v$1;
+  var __vue_script__$w$1 = script$w$1;
   /* template */
 
-  var __vue_render__$v$1 = function __vue_render__() {
+  var __vue_render__$w$1 = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -40225,19 +40550,19 @@
     }, [_vm._v("\n        " + _vm._s(_vm.activeIcon) + "\n      ")]) : _vm._e()]], 2) : _vm._e()], 1);
   };
 
-  var __vue_staticRenderFns__$v$1 = [];
+  var __vue_staticRenderFns__$w$1 = [];
   /* style */
 
-  var __vue_inject_styles__$v$1 = undefined;
+  var __vue_inject_styles__$w$1 = undefined;
   /* scoped */
 
-  var __vue_scope_id__$v$1 = undefined;
+  var __vue_scope_id__$w$1 = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$v$1 = false;
+  var __vue_is_functional_template__$w$1 = false;
   /* component normalizer */
 
-  function __vue_normalize__$v$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$w$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "ElementPlaceholder.vue";
@@ -40257,12 +40582,12 @@
   /* style inject SSR */
 
 
-  __vue_normalize__$v$1({
-    render: __vue_render__$v$1,
-    staticRenderFns: __vue_staticRenderFns__$v$1
-  }, __vue_inject_styles__$v$1, __vue_script__$v$1, __vue_scope_id__$v$1, __vue_is_functional_template__$v$1);
+  __vue_normalize__$w$1({
+    render: __vue_render__$w$1,
+    staticRenderFns: __vue_staticRenderFns__$w$1
+  }, __vue_inject_styles__$w$1, __vue_script__$w$1, __vue_scope_id__$w$1, __vue_is_functional_template__$w$1);
 
-  var script$w$1 = {
+  var script$x$1 = {
     name: 'tailor-embedded-container',
     inheritAttrs: false,
     props: {
@@ -40342,10 +40667,10 @@
   };
   /* script */
 
-  var __vue_script__$w$1 = script$w$1;
+  var __vue_script__$x$1 = script$x$1;
   /* template */
 
-  var __vue_render__$w$1 = function __vue_render__() {
+  var __vue_render__$x$1 = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -40392,19 +40717,19 @@
     });
   };
 
-  var __vue_staticRenderFns__$w$1 = [];
+  var __vue_staticRenderFns__$x$1 = [];
   /* style */
 
-  var __vue_inject_styles__$w$1 = undefined;
+  var __vue_inject_styles__$x$1 = undefined;
   /* scoped */
 
-  var __vue_scope_id__$w$1 = undefined;
+  var __vue_scope_id__$x$1 = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$w$1 = false;
+  var __vue_is_functional_template__$x$1 = false;
   /* component normalizer */
 
-  function __vue_normalize__$w$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$x$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "EmbeddedContainer.vue";
@@ -40424,13 +40749,13 @@
   /* style inject SSR */
 
 
-  __vue_normalize__$w$1({
-    render: __vue_render__$w$1,
-    staticRenderFns: __vue_staticRenderFns__$w$1
-  }, __vue_inject_styles__$w$1, __vue_script__$w$1, __vue_scope_id__$w$1, __vue_is_functional_template__$w$1); //
+  __vue_normalize__$x$1({
+    render: __vue_render__$x$1,
+    staticRenderFns: __vue_staticRenderFns__$x$1
+  }, __vue_inject_styles__$x$1, __vue_script__$x$1, __vue_scope_id__$x$1, __vue_is_functional_template__$x$1); //
 
 
-  var script$x$1 = {
+  var script$y$1 = {
     name: 'file-input',
     mixins: [uploadMixin$1],
     props: {
@@ -40487,10 +40812,10 @@
   };
   /* script */
 
-  var __vue_script__$x$1 = script$x$1;
+  var __vue_script__$y$1 = script$y$1;
   /* template */
 
-  var __vue_render__$x$1 = function __vue_render__() {
+  var __vue_render__$y$1 = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -40555,19 +40880,19 @@
     }, [_c('v-icon', [_vm._v("mdi-close")])], 1)], 1)], 1);
   };
 
-  var __vue_staticRenderFns__$x$1 = [];
+  var __vue_staticRenderFns__$y$1 = [];
   /* style */
 
-  var __vue_inject_styles__$x$1 = undefined;
+  var __vue_inject_styles__$y$1 = undefined;
   /* scoped */
 
-  var __vue_scope_id__$x$1 = undefined;
+  var __vue_scope_id__$y$1 = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$x$1 = false;
+  var __vue_is_functional_template__$y$1 = false;
   /* component normalizer */
 
-  function __vue_normalize__$x$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$y$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "FileInput.vue";
@@ -40587,10 +40912,10 @@
   /* style inject SSR */
 
 
-  __vue_normalize__$x$1({
-    render: __vue_render__$x$1,
-    staticRenderFns: __vue_staticRenderFns__$x$1
-  }, __vue_inject_styles__$x$1, __vue_script__$x$1, __vue_scope_id__$x$1, __vue_is_functional_template__$x$1); //
+  __vue_normalize__$y$1({
+    render: __vue_render__$y$1,
+    staticRenderFns: __vue_staticRenderFns__$y$1
+  }, __vue_inject_styles__$y$1, __vue_script__$y$1, __vue_scope_id__$y$1, __vue_is_functional_template__$y$1); //
   //
   //
   //
@@ -40605,7 +40930,7 @@
   //
 
 
-  var script$y$1 = {
+  var script$z$1 = {
     name: 'tailor-inline-activator',
     inheritAttrs: false,
     props: {
@@ -40617,10 +40942,10 @@
   };
   /* script */
 
-  var __vue_script__$y$1 = script$y$1;
+  var __vue_script__$z$1 = script$z$1;
   /* template */
 
-  var __vue_render__$y$1 = function __vue_render__() {
+  var __vue_render__$z$1 = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -40645,10 +40970,10 @@
     }, [_vm._v("mdi-plus")])], 1), _vm._v(" "), _c('hr')], 1);
   };
 
-  var __vue_staticRenderFns__$y$1 = [];
+  var __vue_staticRenderFns__$z$1 = [];
   /* style */
 
-  var __vue_inject_styles__$y$1 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$z$1 = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-64eb8c58_0", {
       source: ".default-activator-state[data-v-64eb8c58],.inline-activator[data-v-64eb8c58],.inline-activator.disabled[data-v-64eb8c58],.inline-activator.disabled[data-v-64eb8c58]:hover{padding:0 3.125rem;opacity:0}.inline-activator[data-v-64eb8c58]{display:flex;align-items:center;width:100%;margin:0;padding:0 3.125rem;opacity:0;transition:opacity .3s,padding .3s}.inline-activator[data-v-64eb8c58],.inline-activator .v-chip[data-v-64eb8c58]{cursor:pointer}.inline-activator hr[data-v-64eb8c58]{flex:1;display:inline-flex;margin:0;border-top:.0625rem dashed var(--v-primary-darken3)}.inline-activator[data-v-64eb8c58]:focus,.inline-activator[data-v-64eb8c58]:hover{padding:.75rem 0;opacity:1;outline:0;transition:opacity .3s .25s,padding .3s .1s}.inline-activator.disabled[data-v-64eb8c58],.inline-activator.disabled[data-v-64eb8c58]:hover{pointer-events:none}",
@@ -40659,16 +40984,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$y$1 = "data-v-64eb8c58";
+  var __vue_scope_id__$z$1 = "data-v-64eb8c58";
   /* module identifier */
 
   var __vue_module_identifier__$n$1 = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$y$1 = false;
+  var __vue_is_functional_template__$z$1 = false;
   /* component normalizer */
 
-  function __vue_normalize__$y$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$z$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "InlineActivator.vue";
@@ -40775,10 +41100,10 @@
   /* style inject SSR */
 
 
-  __vue_normalize__$y$1({
-    render: __vue_render__$y$1,
-    staticRenderFns: __vue_staticRenderFns__$y$1
-  }, __vue_inject_styles__$y$1, __vue_script__$y$1, __vue_scope_id__$y$1, __vue_is_functional_template__$y$1, __vue_module_identifier__$n$1, __vue_create_injector__$n$1); //
+  __vue_normalize__$z$1({
+    render: __vue_render__$z$1,
+    staticRenderFns: __vue_staticRenderFns__$z$1
+  }, __vue_inject_styles__$z$1, __vue_script__$z$1, __vue_scope_id__$z$1, __vue_is_functional_template__$z$1, __vue_module_identifier__$n$1, __vue_create_injector__$n$1); //
   //
   //
   //
@@ -40791,7 +41116,7 @@
   //
 
 
-  var script$z = {
+  var script$A = {
     name: 'tailor-preview-overlay',
     props: {
       show: {
@@ -40802,10 +41127,10 @@
   };
   /* script */
 
-  var __vue_script__$z = script$z;
+  var __vue_script__$A = script$A;
   /* template */
 
-  var __vue_render__$z = function __vue_render__() {
+  var __vue_render__$A = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -40823,10 +41148,10 @@
     }, [_vm._t("default", [_vm._v("Click to preview")])], 2)]);
   };
 
-  var __vue_staticRenderFns__$z = [];
+  var __vue_staticRenderFns__$A = [];
   /* style */
 
-  var __vue_inject_styles__$z = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$A = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-20303d2e_0", {
       source: ".message[data-v-20303d2e]{border-radius:2px;font-size:1.125rem}",
@@ -40837,16 +41162,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$z = "data-v-20303d2e";
+  var __vue_scope_id__$A = "data-v-20303d2e";
   /* module identifier */
 
   var __vue_module_identifier__$o$1 = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$z = false;
+  var __vue_is_functional_template__$A = false;
   /* component normalizer */
 
-  function __vue_normalize__$z(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$A(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "PreviewOverlay.vue";
@@ -40953,13 +41278,13 @@
   /* style inject SSR */
 
 
-  __vue_normalize__$z({
-    render: __vue_render__$z,
-    staticRenderFns: __vue_staticRenderFns__$z
-  }, __vue_inject_styles__$z, __vue_script__$z, __vue_scope_id__$z, __vue_is_functional_template__$z, __vue_module_identifier__$o$1, __vue_create_injector__$o$1);
+  __vue_normalize__$A({
+    render: __vue_render__$A,
+    staticRenderFns: __vue_staticRenderFns__$A
+  }, __vue_inject_styles__$A, __vue_script__$A, __vue_scope_id__$A, __vue_is_functional_template__$A, __vue_module_identifier__$o$1, __vue_create_injector__$o$1);
 
   //
-  var script$A = {
+  var script$B = {
     name: 'file-input',
     mixins: [uploadMixin$1],
     props: {
@@ -41016,10 +41341,10 @@
   };
 
   /* script */
-  var __vue_script__$A = script$A;
+  var __vue_script__$B = script$B;
   /* template */
 
-  var __vue_render__$A = function __vue_render__() {
+  var __vue_render__$B = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -41084,19 +41409,19 @@
     }, [_c('v-icon', [_vm._v("mdi-close")])], 1)], 1)], 1);
   };
 
-  var __vue_staticRenderFns__$A = [];
+  var __vue_staticRenderFns__$B = [];
   /* style */
 
-  var __vue_inject_styles__$A = undefined;
+  var __vue_inject_styles__$B = undefined;
   /* scoped */
 
-  var __vue_scope_id__$A = undefined;
+  var __vue_scope_id__$B = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$A = false;
+  var __vue_is_functional_template__$B = false;
   /* component normalizer */
 
-  function __vue_normalize__$A(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$B(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "FileInput.vue";
@@ -41117,10 +41442,10 @@
   /* style inject SSR */
 
 
-  var FileInput = __vue_normalize__$A({
-    render: __vue_render__$A,
-    staticRenderFns: __vue_staticRenderFns__$A
-  }, __vue_inject_styles__$A, __vue_script__$A, __vue_scope_id__$A, __vue_is_functional_template__$A);
+  var FileInput = __vue_normalize__$B({
+    render: __vue_render__$B,
+    staticRenderFns: __vue_staticRenderFns__$B
+  }, __vue_inject_styles__$B, __vue_script__$B, __vue_scope_id__$B, __vue_is_functional_template__$B);
 
   //
   //
@@ -41135,7 +41460,7 @@
   //
   //
   //
-  var script$B = {
+  var script$C = {
     name: 'tailor-inline-activator',
     inheritAttrs: false,
     props: {
@@ -41147,10 +41472,10 @@
   };
 
   /* script */
-  var __vue_script__$B = script$B;
+  var __vue_script__$C = script$C;
   /* template */
 
-  var __vue_render__$B = function __vue_render__() {
+  var __vue_render__$C = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -41175,10 +41500,10 @@
     }, [_vm._v("mdi-plus")])], 1), _vm._v(" "), _c('hr')], 1);
   };
 
-  var __vue_staticRenderFns__$B = [];
+  var __vue_staticRenderFns__$C = [];
   /* style */
 
-  var __vue_inject_styles__$B = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$C = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-64eb8c58_0", {
       source: ".default-activator-state[data-v-64eb8c58],.inline-activator[data-v-64eb8c58],.inline-activator.disabled[data-v-64eb8c58],.inline-activator.disabled[data-v-64eb8c58]:hover{padding:0 3.125rem;opacity:0}.inline-activator[data-v-64eb8c58]{display:flex;align-items:center;width:100%;margin:0;padding:0 3.125rem;opacity:0;transition:opacity .3s,padding .3s}.inline-activator[data-v-64eb8c58],.inline-activator .v-chip[data-v-64eb8c58]{cursor:pointer}.inline-activator hr[data-v-64eb8c58]{flex:1;display:inline-flex;margin:0;border-top:.0625rem dashed var(--v-primary-darken3)}.inline-activator[data-v-64eb8c58]:focus,.inline-activator[data-v-64eb8c58]:hover{padding:.75rem 0;opacity:1;outline:0;transition:opacity .3s .25s,padding .3s .1s}.inline-activator.disabled[data-v-64eb8c58],.inline-activator.disabled[data-v-64eb8c58]:hover{pointer-events:none}",
@@ -41189,16 +41514,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$B = "data-v-64eb8c58";
+  var __vue_scope_id__$C = "data-v-64eb8c58";
   /* module identifier */
 
   var __vue_module_identifier__$p = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$B = false;
+  var __vue_is_functional_template__$C = false;
   /* component normalizer */
 
-  function __vue_normalize__$B(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$C(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "InlineActivator.vue";
@@ -41307,10 +41632,10 @@
   /* style inject SSR */
 
 
-  var InlineActivator = __vue_normalize__$B({
-    render: __vue_render__$B,
-    staticRenderFns: __vue_staticRenderFns__$B
-  }, __vue_inject_styles__$B, __vue_script__$B, __vue_scope_id__$B, __vue_is_functional_template__$B, __vue_module_identifier__$p, __vue_create_injector__$p);
+  var InlineActivator = __vue_normalize__$C({
+    render: __vue_render__$C,
+    staticRenderFns: __vue_staticRenderFns__$C
+  }, __vue_inject_styles__$C, __vue_script__$C, __vue_scope_id__$C, __vue_is_functional_template__$C, __vue_module_identifier__$p, __vue_create_injector__$p);
 
   //
   //
@@ -41323,7 +41648,7 @@
   //
   //
   //
-  var script$C = {
+  var script$D = {
     name: 'tailor-preview-overlay',
     props: {
       show: {
@@ -41334,10 +41659,10 @@
   };
 
   /* script */
-  var __vue_script__$C = script$C;
+  var __vue_script__$D = script$D;
   /* template */
 
-  var __vue_render__$C = function __vue_render__() {
+  var __vue_render__$D = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -41355,10 +41680,10 @@
     }, [_vm._t("default", [_vm._v("Click to preview")])], 2)]);
   };
 
-  var __vue_staticRenderFns__$C = [];
+  var __vue_staticRenderFns__$D = [];
   /* style */
 
-  var __vue_inject_styles__$C = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$D = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-20303d2e_0", {
       source: ".message[data-v-20303d2e]{border-radius:2px;font-size:1.125rem}",
@@ -41369,16 +41694,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$C = "data-v-20303d2e";
+  var __vue_scope_id__$D = "data-v-20303d2e";
   /* module identifier */
 
   var __vue_module_identifier__$q = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$C = false;
+  var __vue_is_functional_template__$D = false;
   /* component normalizer */
 
-  function __vue_normalize__$C(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$D(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "PreviewOverlay.vue";
@@ -41487,10 +41812,10 @@
   /* style inject SSR */
 
 
-  var PreviewOverlay = __vue_normalize__$C({
-    render: __vue_render__$C,
-    staticRenderFns: __vue_staticRenderFns__$C
-  }, __vue_inject_styles__$C, __vue_script__$C, __vue_scope_id__$C, __vue_is_functional_template__$C, __vue_module_identifier__$q, __vue_create_injector__$q);
+  var PreviewOverlay = __vue_normalize__$D({
+    render: __vue_render__$D,
+    staticRenderFns: __vue_staticRenderFns__$D
+  }, __vue_inject_styles__$D, __vue_script__$D, __vue_scope_id__$D, __vue_is_functional_template__$D, __vue_module_identifier__$q, __vue_create_injector__$q);
 
   exports.ActiveUsers = ActiveUsers;
   exports.AddElement = AddElement;
@@ -41498,6 +41823,7 @@
   exports.AssetInput = AssetInput;
   exports.ContainedContent = ContainedContent;
   exports.ContentElement = ContentElement;
+  exports.DatePicker = DatePicker;
   exports.Discussion = Discussion;
   exports.ElementList = ElementList;
   exports.ElementPlaceholder = ElementPlaceholder;
