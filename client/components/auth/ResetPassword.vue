@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import api from '@/api/auth';
+import { auth as api } from '@tailor/api';
 
 const ERRORS = {
   default: 'An error has occurred!',

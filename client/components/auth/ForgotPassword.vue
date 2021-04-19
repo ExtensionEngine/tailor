@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import api from '@/api/auth';
+import { auth as api } from '@tailor/api';
 import { delay } from 'bluebird';
 
 const getDefaultData = () => ({
