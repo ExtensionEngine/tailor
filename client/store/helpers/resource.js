@@ -1,4 +1,4 @@
-import { client, extractData } from '@tailor/api';
+import { client, extractData } from '@/api';
 import assign from 'lodash/assign';
 import cloneDeep from 'lodash/cloneDeep';
 import join from 'url-join';

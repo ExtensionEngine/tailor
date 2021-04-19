@@ -15,7 +15,6 @@
 </template>
 
 <script>
-import { repository as api } from '@tailor/api';
 import debounce from 'lodash/debounce';
 import find from 'lodash/find';
 import loader from '@/loader';
@@ -26,6 +25,7 @@ export default {
   props: {
     repository: { type: Object, default: null }
   },
+  inject: ['$api'],
   data: () => ({
     repositories: [],
     loading: false
@@ -37,7 +37,7 @@ export default {
       }
     },
     fetchRepositories: debounce(loader(function (search) {
-      return api.getRepositories({ search }).then(repositories => {
+      return this.$api.repository.getRepositories({ search }).then(repositories => {
         this.repositories = sortBy(repositories, 'name');
       });
     }, 'loading'), 500)

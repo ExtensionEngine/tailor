@@ -1,4 +1,4 @@
-import { feed as api } from '@tailor/api';
+import { feed as api } from '@/api';
 import feed from '../feed';
 import { UserActivity } from '@/../common/sse';
 

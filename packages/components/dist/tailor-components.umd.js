@@ -1,8 +1,8 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('lodash/capitalize'), require('@tailor/utils'), require('lodash/filter'), require('lodash/flatMap'), require('lodash/intersection'), require('lodash/pick'), require('lodash/reduce'), require('lodash/reject'), require('@tailor/api'), require('lodash/partition'), require('lodash/takeRight'), require('lodash/find'), require('pluralize'), require('@extensionengine/vue-radio'), require('lodash/orderBy'), require('lodash/get'), require('lodash/keyBy'), require('lodash/map'), require('lodash/groupBy'), require('lodash/debounce'), require('lodash/sortBy'), require('lodash/cloneDeep'), require('lodash/isArray'), require('lodash/some'), require('lodash/isEmpty'), require('lodash/omit'), require('lodash/throttle'), require('vuedraggable'), require('lodash/findIndex'), require('lodash/head'), require('lodash/pullAt'), require('lodash/set'), require('lodash/last'), require('lodash/uniqueId'), require('lodash/mapKeys'), require('lodash/values')) :
-  typeof define === 'function' && define.amd ? define(['exports', 'lodash/capitalize', '@tailor/utils', 'lodash/filter', 'lodash/flatMap', 'lodash/intersection', 'lodash/pick', 'lodash/reduce', 'lodash/reject', '@tailor/api', 'lodash/partition', 'lodash/takeRight', 'lodash/find', 'pluralize', '@extensionengine/vue-radio', 'lodash/orderBy', 'lodash/get', 'lodash/keyBy', 'lodash/map', 'lodash/groupBy', 'lodash/debounce', 'lodash/sortBy', 'lodash/cloneDeep', 'lodash/isArray', 'lodash/some', 'lodash/isEmpty', 'lodash/omit', 'lodash/throttle', 'vuedraggable', 'lodash/findIndex', 'lodash/head', 'lodash/pullAt', 'lodash/set', 'lodash/last', 'lodash/uniqueId', 'lodash/mapKeys', 'lodash/values'], factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.TailorComponents = {}, global.capitalize$1, global.utils, global.filter, global.flatMap, global.intersection, global.pick, global.reduce, global.reject, global.api, global.partition, global.takeRgt, global.find, global.pluralize, global.vueRadio, global.orderBy, global.get$1, global.keyBy, global.map, global.groupBy, global.debounce, global.sortBy, global.cloneDeep, global.isArray$1, global.some, global.isEmpty, global.omit, global.throttle, global.Draggable, global.findIndex$1, global.head, global.pullAt, global.set, global.last, global.uniqueId, global.mapKeys$1, global.values$1));
-}(this, (function (exports, capitalize$1, utils, filter, flatMap, intersection, pick, reduce, reject, api, partition, takeRgt, find, pluralize, vueRadio, orderBy, get$1, keyBy, map, groupBy, debounce, sortBy, cloneDeep, isArray$1, some, isEmpty, omit, throttle, Draggable, findIndex$1, head, pullAt, set, last, uniqueId, mapKeys$1, values$1) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('lodash/capitalize'), require('@tailor/utils'), require('lodash/filter'), require('lodash/flatMap'), require('lodash/intersection'), require('lodash/pick'), require('lodash/reduce'), require('lodash/reject'), require('lodash/partition'), require('lodash/takeRight'), require('lodash/find'), require('pluralize'), require('@extensionengine/vue-radio'), require('lodash/orderBy'), require('lodash/get'), require('lodash/keyBy'), require('lodash/map'), require('lodash/groupBy'), require('lodash/debounce'), require('lodash/sortBy'), require('lodash/cloneDeep'), require('lodash/isArray'), require('lodash/some'), require('lodash/isEmpty'), require('lodash/omit'), require('lodash/throttle'), require('vuedraggable'), require('lodash/findIndex'), require('lodash/head'), require('lodash/pullAt'), require('lodash/set'), require('lodash/last'), require('lodash/uniqueId'), require('lodash/mapKeys'), require('lodash/values')) :
+  typeof define === 'function' && define.amd ? define(['exports', 'lodash/capitalize', '@tailor/utils', 'lodash/filter', 'lodash/flatMap', 'lodash/intersection', 'lodash/pick', 'lodash/reduce', 'lodash/reject', 'lodash/partition', 'lodash/takeRight', 'lodash/find', 'pluralize', '@extensionengine/vue-radio', 'lodash/orderBy', 'lodash/get', 'lodash/keyBy', 'lodash/map', 'lodash/groupBy', 'lodash/debounce', 'lodash/sortBy', 'lodash/cloneDeep', 'lodash/isArray', 'lodash/some', 'lodash/isEmpty', 'lodash/omit', 'lodash/throttle', 'vuedraggable', 'lodash/findIndex', 'lodash/head', 'lodash/pullAt', 'lodash/set', 'lodash/last', 'lodash/uniqueId', 'lodash/mapKeys', 'lodash/values'], factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.TailorComponents = {}, global.capitalize$1, global.utils, global.filter, global.flatMap, global.intersection, global.pick, global.reduce, global.reject, global.partition, global.takeRgt, global.find, global.pluralize, global.vueRadio, global.orderBy, global.get$1, global.keyBy, global.map, global.groupBy, global.debounce, global.sortBy, global.cloneDeep, global.isArray$1, global.some, global.isEmpty, global.omit, global.throttle, global.Draggable, global.findIndex$1, global.head, global.pullAt, global.set, global.last, global.uniqueId, global.mapKeys$1, global.values$1));
+}(this, (function (exports, capitalize$1, utils, filter, flatMap, intersection, pick, reduce, reject, partition, takeRgt, find, pluralize, vueRadio, orderBy, get$1, keyBy, map, groupBy, debounce, sortBy, cloneDeep, isArray$1, some, isEmpty, omit, throttle, Draggable, findIndex$1, head, pullAt, set, last, uniqueId, mapKeys$1, values$1) { 'use strict';
 
   function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
@@ -41,18 +41,18 @@
   var values__default = /*#__PURE__*/_interopDefaultLegacy(values$1);
 
   //
-  var script = {
+  var script$18 = {
     name: 'tailor-active-users',
     props: {
       users: {
         type: Array,
-        default: function _default() {
+        "default": function _default() {
           return [];
         }
       },
       size: {
         type: Number,
-        default: 36
+        "default": 36
       }
     },
     filters: {
@@ -61,10 +61,10 @@
   };
 
   /* script */
-  var __vue_script__ = script;
+  var __vue_script__$18 = script$18;
   /* template */
 
-  var __vue_render__ = function __vue_render__() {
+  var __vue_render__$18 = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -110,10 +110,10 @@
     }), 1);
   };
 
-  var __vue_staticRenderFns__ = [];
+  var __vue_staticRenderFns__$18 = [];
   /* style */
 
-  var __vue_inject_styles__ = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$18 = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-33d463d4_0", {
       source: ".avatar[data-v-33d463d4]{transition:all .2s}.avatar img[data-v-33d463d4]{padding:.125rem}.avatar[data-v-33d463d4]:focus-within,.avatar[data-v-33d463d4]:hover{transform:scale(1.1);z-index:1}.avatar:focus-within img[data-v-33d463d4]:focus,.avatar:hover img[data-v-33d463d4]:focus{outline:0}",
@@ -124,16 +124,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__ = "data-v-33d463d4";
+  var __vue_scope_id__$18 = "data-v-33d463d4";
   /* module identifier */
 
-  var __vue_module_identifier__ = undefined;
+  var __vue_module_identifier__$N = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__ = false;
+  var __vue_is_functional_template__$18 = false;
   /* component normalizer */
 
-  function __vue_normalize__(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$18(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "ActiveUsers.vue";
@@ -178,9 +178,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__() {
+  function __vue_create_injector__$N() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__.styles || (__vue_create_injector__.styles = {});
+    var styles = __vue_create_injector__$N.styles || (__vue_create_injector__$N.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -242,10 +242,10 @@
   /* style inject SSR */
 
 
-  var ActiveUsers = __vue_normalize__({
-    render: __vue_render__,
-    staticRenderFns: __vue_staticRenderFns__
-  }, __vue_inject_styles__, __vue_script__, __vue_scope_id__, __vue_is_functional_template__, __vue_module_identifier__, __vue_create_injector__);
+  var ActiveUsers$1 = __vue_normalize__$18({
+    render: __vue_render__$18,
+    staticRenderFns: __vue_staticRenderFns__$18
+  }, __vue_inject_styles__$18, __vue_script__$18, __vue_scope_id__$18, __vue_is_functional_template__$18, __vue_module_identifier__$N, __vue_create_injector__$N);
 
   //
   //
@@ -287,7 +287,7 @@
   //
   //
   //
-  var script$1 = {
+  var script$17 = {
     name: 'add-new-element',
     props: {
       library: {
@@ -307,10 +307,10 @@
   };
 
   /* script */
-  var __vue_script__$1 = script$1;
+  var __vue_script__$17 = script$17;
   /* template */
 
-  var __vue_render__$1 = function __vue_render__() {
+  var __vue_render__$17 = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -368,10 +368,10 @@
     })], 2)]);
   };
 
-  var __vue_staticRenderFns__$1 = [];
+  var __vue_staticRenderFns__$17 = [];
   /* style */
 
-  var __vue_inject_styles__$1 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$17 = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-5e4d908e_0", {
       source: ".element-container[data-v-5e4d908e]{min-height:20rem;padding:0 0 1.875rem;border-top-left-radius:.5rem;border-top-right-radius:.5rem;overflow:hidden}.group-heading[data-v-5e4d908e]{margin:0 2.5rem .375rem;padding-top:.5rem;font-size:.875rem;font-weight:500;line-height:1rem;text-align:left}.group-elements[data-v-5e4d908e]{display:flex;flex-wrap:wrap;width:100%;padding:0 1.875rem}.add-element[data-v-5e4d908e]{width:8.125rem;min-width:8.125rem;height:auto!important;min-height:4.375rem;padding:0!important;white-space:normal}.add-element[data-v-5e4d908e]  .v-btn__content{flex:1 1 100%;flex-direction:column;padding:.375rem;text-transform:none}.add-element .v-icon[data-v-5e4d908e]{padding:.125rem 0;font-size:1.875rem}.add-element .button-text[data-v-5e4d908e]{margin:.625rem 0}",
@@ -382,16 +382,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$1 = "data-v-5e4d908e";
+  var __vue_scope_id__$17 = "data-v-5e4d908e";
   /* module identifier */
 
-  var __vue_module_identifier__$1 = undefined;
+  var __vue_module_identifier__$M = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$1 = false;
+  var __vue_is_functional_template__$17 = false;
   /* component normalizer */
 
-  function __vue_normalize__$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$17(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "AddNewElement.vue";
@@ -436,9 +436,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$1() {
+  function __vue_create_injector__$M() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$1.styles || (__vue_create_injector__$1.styles = {});
+    var styles = __vue_create_injector__$M.styles || (__vue_create_injector__$M.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -500,10 +500,10 @@
   /* style inject SSR */
 
 
-  var AddNewElement = __vue_normalize__$1({
-    render: __vue_render__$1,
-    staticRenderFns: __vue_staticRenderFns__$1
-  }, __vue_inject_styles__$1, __vue_script__$1, __vue_scope_id__$1, __vue_is_functional_template__$1, __vue_module_identifier__$1, __vue_create_injector__$1);
+  var AddNewElement$1 = __vue_normalize__$17({
+    render: __vue_render__$17,
+    staticRenderFns: __vue_staticRenderFns__$17
+  }, __vue_inject_styles__$17, __vue_script__$17, __vue_scope_id__$17, __vue_is_functional_template__$17, __vue_module_identifier__$M, __vue_create_injector__$M);
 
   function _typeof(obj) {
     "@babel/helpers - typeof";
@@ -521,7 +521,7 @@
     return _typeof(obj);
   }
 
-  function _defineProperty(obj, key, value) {
+  function _defineProperty$1(obj, key, value) {
     if (key in obj) {
       Object.defineProperty(obj, key, {
         value: value,
@@ -536,27 +536,27 @@
     return obj;
   }
 
-  function _slicedToArray(arr, i) {
-    return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
+  function _slicedToArray$1(arr, i) {
+    return _arrayWithHoles$1(arr) || _iterableToArrayLimit$1(arr, i) || _unsupportedIterableToArray$1(arr, i) || _nonIterableRest$1();
   }
 
-  function _toConsumableArray(arr) {
-    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
+  function _toConsumableArray$1(arr) {
+    return _arrayWithoutHoles$1(arr) || _iterableToArray$1(arr) || _unsupportedIterableToArray$1(arr) || _nonIterableSpread$1();
   }
 
-  function _arrayWithoutHoles(arr) {
-    if (Array.isArray(arr)) return _arrayLikeToArray(arr);
+  function _arrayWithoutHoles$1(arr) {
+    if (Array.isArray(arr)) return _arrayLikeToArray$1(arr);
   }
 
-  function _arrayWithHoles(arr) {
+  function _arrayWithHoles$1(arr) {
     if (Array.isArray(arr)) return arr;
   }
 
-  function _iterableToArray(iter) {
+  function _iterableToArray$1(iter) {
     if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
   }
 
-  function _iterableToArrayLimit(arr, i) {
+  function _iterableToArrayLimit$1(arr, i) {
     if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
     var _arr = [];
     var _n = true;
@@ -583,16 +583,16 @@
     return _arr;
   }
 
-  function _unsupportedIterableToArray(o, minLen) {
+  function _unsupportedIterableToArray$1(o, minLen) {
     if (!o) return;
-    if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+    if (typeof o === "string") return _arrayLikeToArray$1(o, minLen);
     var n = Object.prototype.toString.call(o).slice(8, -1);
     if (n === "Object" && o.constructor) n = o.constructor.name;
     if (n === "Map" || n === "Set") return Array.from(o);
-    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$1(o, minLen);
   }
 
-  function _arrayLikeToArray(arr, len) {
+  function _arrayLikeToArray$1(arr, len) {
     if (len == null || len > arr.length) len = arr.length;
 
     for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
@@ -600,11 +600,11 @@
     return arr2;
   }
 
-  function _nonIterableSpread() {
+  function _nonIterableSpread$1() {
     throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
   }
 
-  function _nonIterableRest() {
+  function _nonIterableRest$1() {
     throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
   }
 
@@ -633,7 +633,7 @@
   //
   //
   //
-  var script$2 = {
+  var script$16 = {
     name: 'tailor-editor-link',
     props: {
       activityId: {
@@ -642,7 +642,7 @@
       },
       elementUid: {
         type: String,
-        default: null
+        "default": null
       },
       label: {
         type: String,
@@ -668,10 +668,10 @@
   };
 
   /* script */
-  var __vue_script__$2 = script$2;
+  var __vue_script__$16 = script$16;
   /* template */
 
-  var __vue_render__$2 = function __vue_render__() {
+  var __vue_render__$16 = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -720,19 +720,19 @@
     }, [_vm._v(" "), _vm._t("tooltip", [_c('span', [_vm._v("View element")])])], 2)], 1);
   };
 
-  var __vue_staticRenderFns__$2 = [];
+  var __vue_staticRenderFns__$16 = [];
   /* style */
 
-  var __vue_inject_styles__$2 = undefined;
+  var __vue_inject_styles__$16 = undefined;
   /* scoped */
 
-  var __vue_scope_id__$2 = undefined;
+  var __vue_scope_id__$16 = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$2 = false;
+  var __vue_is_functional_template__$16 = false;
   /* component normalizer */
 
-  function __vue_normalize__$2(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$16(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "EditorLink.vue";
@@ -753,14 +753,14 @@
   /* style inject SSR */
 
 
-  var EditorLink = __vue_normalize__$2({
-    render: __vue_render__$2,
-    staticRenderFns: __vue_staticRenderFns__$2
-  }, __vue_inject_styles__$2, __vue_script__$2, __vue_scope_id__$2, __vue_is_functional_template__$2);
+  var EditorLink$1 = __vue_normalize__$16({
+    render: __vue_render__$16,
+    staticRenderFns: __vue_staticRenderFns__$16
+  }, __vue_inject_styles__$16, __vue_script__$16, __vue_scope_id__$16, __vue_is_functional_template__$16);
 
   //
 
-  var getOptions = function getOptions() {
+  var getOptions$1 = function getOptions() {
     return {
       resolve: {
         action: 'resolve',
@@ -780,7 +780,7 @@
     };
   };
 
-  var script$3 = {
+  var script$15 = {
     name: 'comment-header',
     props: {
       comment: {
@@ -789,15 +789,15 @@
       },
       isActivityThread: {
         type: Boolean,
-        default: false
+        "default": false
       },
       isResolved: {
         type: Boolean,
-        default: false
+        "default": false
       },
       elementLabel: {
         type: String,
-        default: null
+        "default": null
       },
       user: {
         type: Object,
@@ -824,21 +824,21 @@
         return vm.isAuthor && !vm.isDeleted && !vm.isResolved;
       },
       options: function options() {
-        var options = getOptions();
+        var options = getOptions$1();
         if (this.isActivityThread) delete options.resolve;
         return options;
       }
     },
     components: {
-      EditorLink: EditorLink
+      EditorLink: EditorLink$1
     }
   };
 
   /* script */
-  var __vue_script__$3 = script$3;
+  var __vue_script__$15 = script$15;
   /* template */
 
-  var __vue_render__$3 = function __vue_render__() {
+  var __vue_render__$15 = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -931,10 +931,10 @@
     }), 1) : _vm._e()], 1);
   };
 
-  var __vue_staticRenderFns__$3 = [];
+  var __vue_staticRenderFns__$15 = [];
   /* style */
 
-  var __vue_inject_styles__$3 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$15 = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-a1e0c4e8_0", {
       source: ".header[data-v-a1e0c4e8]{display:flex;align-items:flex-start}.header .comment-avatar[data-v-a1e0c4e8]{margin:.375rem .375rem 0 0}.header .info-container[data-v-a1e0c4e8]{display:flex;flex-direction:column;flex:0 100%;max-width:calc(100% - 8rem);margin-left:.125rem}.header .info-container .author[data-v-a1e0c4e8]{display:inline-block;max-width:75%;color:#000;font-size:1rem}.header .info-container .edited[data-v-a1e0c4e8],.header .info-container .time[data-v-a1e0c4e8]{color:#888;font-size:.75rem}.header .info-container hr.v-divider--vertical[data-v-a1e0c4e8]{margin:.25rem .125rem .125rem .625rem}.header .info-container[data-v-a1e0c4e8]  .editor-link{display:inline-flex;align-self:flex-end}.header .actions[data-v-a1e0c4e8]{margin-left:auto}",
@@ -945,16 +945,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$3 = "data-v-a1e0c4e8";
+  var __vue_scope_id__$15 = "data-v-a1e0c4e8";
   /* module identifier */
 
-  var __vue_module_identifier__$2 = undefined;
+  var __vue_module_identifier__$L = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$3 = false;
+  var __vue_is_functional_template__$15 = false;
   /* component normalizer */
 
-  function __vue_normalize__$3(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$15(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "Header.vue";
@@ -999,9 +999,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$2() {
+  function __vue_create_injector__$L() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$2.styles || (__vue_create_injector__$2.styles = {});
+    var styles = __vue_create_injector__$L.styles || (__vue_create_injector__$L.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -1063,10 +1063,10 @@
   /* style inject SSR */
 
 
-  var CommentHeader = __vue_normalize__$3({
-    render: __vue_render__$3,
-    staticRenderFns: __vue_staticRenderFns__$3
-  }, __vue_inject_styles__$3, __vue_script__$3, __vue_scope_id__$3, __vue_is_functional_template__$3, __vue_module_identifier__$2, __vue_create_injector__$2);
+  var CommentHeader$1 = __vue_normalize__$15({
+    render: __vue_render__$15,
+    staticRenderFns: __vue_staticRenderFns__$15
+  }, __vue_inject_styles__$15, __vue_script__$15, __vue_scope_id__$15, __vue_is_functional_template__$15, __vue_module_identifier__$L, __vue_create_injector__$L);
 
   //
   //
@@ -1089,25 +1089,25 @@
   //
   //
   //
-  var script$4 = {
+  var script$14 = {
     name: 'comment-preview',
     props: {
       content: {
         type: String,
-        default: ''
+        "default": ''
       },
       isResolved: {
         type: Boolean,
-        default: false
+        "default": false
       }
     }
   };
 
   /* script */
-  var __vue_script__$4 = script$4;
+  var __vue_script__$14 = script$14;
   /* template */
 
-  var __vue_render__$4 = function __vue_render__() {
+  var __vue_render__$14 = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -1116,7 +1116,7 @@
 
     return _c('div', {
       staticClass: "content",
-      class: {
+      "class": {
         resolved: _vm.isResolved
       }
     }, [_vm.isResolved ? _c('div', {
@@ -1147,10 +1147,10 @@
     }, [_vm._v(" "), _c('span', [_vm._v("Unresolve comment")])])], 1) : _vm._e(), _vm._v(" "), _c('pre', [_c('span', [_vm._v(_vm._s(_vm.content))]), _c('br')])]);
   };
 
-  var __vue_staticRenderFns__$4 = [];
+  var __vue_staticRenderFns__$14 = [];
   /* style */
 
-  var __vue_inject_styles__$4 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$14 = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-3d625308_0", {
       source: ".content[data-v-3d625308]{margin-top:.375rem}.content pre[data-v-3d625308]{height:100%;margin:0;padding:0 .25rem .5rem 0;font:inherit;white-space:pre-wrap;word-break:break-all;word-wrap:break-word;overflow-wrap:break-word;background:inherit;border:none;overflow:hidden}.content.resolved[data-v-3d625308]{opacity:.7}.content.resolved .resolvement-options[data-v-3d625308]{display:flex;align-items:center;margin-bottom:.25rem;font-size:.75rem}",
@@ -1161,16 +1161,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$4 = "data-v-3d625308";
+  var __vue_scope_id__$14 = "data-v-3d625308";
   /* module identifier */
 
-  var __vue_module_identifier__$3 = undefined;
+  var __vue_module_identifier__$K = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$4 = false;
+  var __vue_is_functional_template__$14 = false;
   /* component normalizer */
 
-  function __vue_normalize__$4(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$14(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "Preview.vue";
@@ -1215,9 +1215,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$3() {
+  function __vue_create_injector__$K() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$3.styles || (__vue_create_injector__$3.styles = {});
+    var styles = __vue_create_injector__$K.styles || (__vue_create_injector__$K.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -1279,13 +1279,13 @@
   /* style inject SSR */
 
 
-  var CommentPreview = __vue_normalize__$4({
-    render: __vue_render__$4,
-    staticRenderFns: __vue_staticRenderFns__$4
-  }, __vue_inject_styles__$4, __vue_script__$4, __vue_scope_id__$4, __vue_is_functional_template__$4, __vue_module_identifier__$3, __vue_create_injector__$3);
+  var CommentPreview$1 = __vue_normalize__$14({
+    render: __vue_render__$14,
+    staticRenderFns: __vue_staticRenderFns__$14
+  }, __vue_inject_styles__$14, __vue_script__$14, __vue_scope_id__$14, __vue_is_functional_template__$14, __vue_module_identifier__$K, __vue_create_injector__$K);
 
   //
-  var script$5 = {
+  var script$13 = {
     name: 'thread-comment',
     props: {
       comment: {
@@ -1294,11 +1294,11 @@
       },
       isActivityThread: {
         type: Boolean,
-        default: false
+        "default": false
       },
       elementLabel: {
         type: String,
-        default: null
+        "default": null
       },
       user: {
         type: Object,
@@ -1343,16 +1343,16 @@
       }
     },
     components: {
-      CommentHeader: CommentHeader,
-      CommentPreview: CommentPreview
+      CommentHeader: CommentHeader$1,
+      CommentPreview: CommentPreview$1
     }
   };
 
   /* script */
-  var __vue_script__$5 = script$5;
+  var __vue_script__$13 = script$13;
   /* template */
 
-  var __vue_render__$5 = function __vue_render__() {
+  var __vue_render__$13 = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -1427,10 +1427,10 @@
     }, [_vm._v("mdi-check")]), _vm._v(" Save\n        ")], 1)], 1)]], 2)], 1);
   };
 
-  var __vue_staticRenderFns__$5 = [];
+  var __vue_staticRenderFns__$13 = [];
   /* style */
 
-  var __vue_inject_styles__$5 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$13 = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-3d04e7dc_0", {
       source: ".comment[data-v-3d04e7dc]{display:flex;flex-direction:column;font-family:Roboto,Arial,sans-serif}.comment-body[data-v-3d04e7dc]{flex:1;padding:0 .25rem 0 2.625rem}.comment-editor.v-textarea[data-v-3d04e7dc]{margin:.75rem 0 0 0}.comment-editor.v-textarea[data-v-3d04e7dc]  .v-input__slot{width:auto}",
@@ -1441,16 +1441,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$5 = "data-v-3d04e7dc";
+  var __vue_scope_id__$13 = "data-v-3d04e7dc";
   /* module identifier */
 
-  var __vue_module_identifier__$4 = undefined;
+  var __vue_module_identifier__$J = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$5 = false;
+  var __vue_is_functional_template__$13 = false;
   /* component normalizer */
 
-  function __vue_normalize__$5(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$13(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "index.vue";
@@ -1495,9 +1495,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$4() {
+  function __vue_create_injector__$J() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$4.styles || (__vue_create_injector__$4.styles = {});
+    var styles = __vue_create_injector__$J.styles || (__vue_create_injector__$J.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -1559,29 +1559,29 @@
   /* style inject SSR */
 
 
-  var ThreadComment = __vue_normalize__$5({
-    render: __vue_render__$5,
-    staticRenderFns: __vue_staticRenderFns__$5
-  }, __vue_inject_styles__$5, __vue_script__$5, __vue_scope_id__$5, __vue_is_functional_template__$5, __vue_module_identifier__$4, __vue_create_injector__$4);
+  var ThreadComment$1 = __vue_normalize__$13({
+    render: __vue_render__$13,
+    staticRenderFns: __vue_staticRenderFns__$13
+  }, __vue_inject_styles__$13, __vue_script__$13, __vue_scope_id__$13, __vue_is_functional_template__$13, __vue_module_identifier__$J, __vue_create_injector__$J);
 
   //
-  var script$6 = {
+  var script$12 = {
     name: 'thread-list',
     inject: ['$teRegistry'],
     props: {
       comments: {
         type: Array,
-        default: function _default() {
+        "default": function _default() {
           return [];
         }
       },
       isActivityThread: {
         type: Boolean,
-        default: false
+        "default": false
       },
       elementLabel: {
         type: String,
-        default: null
+        "default": null
       },
       user: {
         type: Object,
@@ -1600,15 +1600,15 @@
       }
     },
     components: {
-      ThreadComment: ThreadComment
+      ThreadComment: ThreadComment$1
     }
   };
 
   /* script */
-  var __vue_script__$6 = script$6;
+  var __vue_script__$12 = script$12;
   /* template */
 
-  var __vue_render__$6 = function __vue_render__() {
+  var __vue_render__$12 = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -1634,10 +1634,10 @@
     }), 0);
   };
 
-  var __vue_staticRenderFns__$6 = [];
+  var __vue_staticRenderFns__$12 = [];
   /* style */
 
-  var __vue_inject_styles__$6 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$12 = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-b5620cec_0", {
       source: ".thread-list[data-v-b5620cec]{margin:0;padding:0;list-style:none}.thread-list .thread-list-item .v-divider[data-v-b5620cec]{margin:0 .25rem 1rem .25rem}.thread-list .thread-list-item:first-child .v-divider[data-v-b5620cec]{display:none}",
@@ -1648,16 +1648,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$6 = "data-v-b5620cec";
+  var __vue_scope_id__$12 = "data-v-b5620cec";
   /* module identifier */
 
-  var __vue_module_identifier__$5 = undefined;
+  var __vue_module_identifier__$I = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$6 = false;
+  var __vue_is_functional_template__$12 = false;
   /* component normalizer */
 
-  function __vue_normalize__$6(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$12(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "List.vue";
@@ -1702,9 +1702,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$5() {
+  function __vue_create_injector__$I() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$5.styles || (__vue_create_injector__$5.styles = {});
+    var styles = __vue_create_injector__$I.styles || (__vue_create_injector__$I.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -1766,13 +1766,13 @@
   /* style inject SSR */
 
 
-  var ThreadList = __vue_normalize__$6({
-    render: __vue_render__$6,
-    staticRenderFns: __vue_staticRenderFns__$6
-  }, __vue_inject_styles__$6, __vue_script__$6, __vue_scope_id__$6, __vue_is_functional_template__$6, __vue_module_identifier__$5, __vue_create_injector__$5);
+  var ThreadList$1 = __vue_normalize__$12({
+    render: __vue_render__$12,
+    staticRenderFns: __vue_staticRenderFns__$12
+  }, __vue_inject_styles__$12, __vue_script__$12, __vue_scope_id__$12, __vue_is_functional_template__$12, __vue_module_identifier__$I, __vue_create_injector__$I);
 
   //
-  var script$7 = {
+  var script$11 = {
     name: 'unseen-divider',
     props: {
       count: {
@@ -1789,10 +1789,10 @@
   };
 
   /* script */
-  var __vue_script__$7 = script$7;
+  var __vue_script__$11 = script$11;
   /* template */
 
-  var __vue_render__$7 = function __vue_render__() {
+  var __vue_render__$11 = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -1827,10 +1827,10 @@
     }, [_vm._v(_vm._s(_vm.unseenCommentsLabel))])], 1)], 1);
   };
 
-  var __vue_staticRenderFns__$7 = [];
+  var __vue_staticRenderFns__$11 = [];
   /* style */
 
-  var __vue_inject_styles__$7 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$11 = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-221b9d72_0", {
       source: ".unseen-divider[data-v-221b9d72]{text-align:center}.unseen-divider .v-divider[data-v-221b9d72]{margin:1rem 0 .25rem}.unseen-divider[data-v-221b9d72]  .v-chip.v-chip--outlined.v-chip{margin:-1.5rem 0 .5rem 0;border-radius:1rem!important;background-color:#fafafa!important}.unseen-divider[data-v-221b9d72]  .v-chip.v-chip--outlined.v-chip .v-chip__content .v-chip__close{margin-top:.125rem;font-size:.75rem!important}",
@@ -1841,16 +1841,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$7 = "data-v-221b9d72";
+  var __vue_scope_id__$11 = "data-v-221b9d72";
   /* module identifier */
 
-  var __vue_module_identifier__$6 = undefined;
+  var __vue_module_identifier__$H = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$7 = false;
+  var __vue_is_functional_template__$11 = false;
   /* component normalizer */
 
-  function __vue_normalize__$7(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$11(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "UnseenDivider.vue";
@@ -1895,9 +1895,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$6() {
+  function __vue_create_injector__$H() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$6.styles || (__vue_create_injector__$6.styles = {});
+    var styles = __vue_create_injector__$H.styles || (__vue_create_injector__$H.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -1959,12 +1959,12 @@
   /* style inject SSR */
 
 
-  var UnseenDivider = __vue_normalize__$7({
-    render: __vue_render__$7,
-    staticRenderFns: __vue_staticRenderFns__$7
-  }, __vue_inject_styles__$7, __vue_script__$7, __vue_scope_id__$7, __vue_is_functional_template__$7, __vue_module_identifier__$6, __vue_create_injector__$6);
+  var UnseenDivider$1 = __vue_normalize__$11({
+    render: __vue_render__$11,
+    staticRenderFns: __vue_staticRenderFns__$11
+  }, __vue_inject_styles__$11, __vue_script__$11, __vue_scope_id__$11, __vue_is_functional_template__$11, __vue_module_identifier__$H, __vue_create_injector__$H);
 
-  var script$8 = {
+  var script$10 = {
     name: 'discussion-thread',
     props: {
       items: {
@@ -1973,15 +1973,15 @@
       },
       showAll: {
         type: Boolean,
-        default: false
+        "default": false
       },
       minDisplayed: {
         type: Number,
-        default: 5
+        "default": 5
       },
       isActivityThread: {
         type: Boolean,
-        default: false
+        "default": false
       },
       unseenCount: {
         type: Number,
@@ -2005,7 +2005,7 @@
         var comments = showAll ? items : takeRgt__default['default'](items, minDisplayed);
 
         var _partition = partition__default['default'](comments, 'unseen'),
-            _partition2 = _slicedToArray(_partition, 2),
+            _partition2 = _slicedToArray$1(_partition, 2),
             unseen = _partition2[0],
             seen = _partition2[1];
 
@@ -2053,16 +2053,16 @@
       }
     },
     components: {
-      UnseenDivider: UnseenDivider,
-      ThreadList: ThreadList
+      UnseenDivider: UnseenDivider$1,
+      ThreadList: ThreadList$1
     }
   };
 
   /* script */
-  var __vue_script__$8 = script$8;
+  var __vue_script__$10 = script$10;
   /* template */
 
-  var __vue_render__$8 = function __vue_render__() {
+  var __vue_render__$10 = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -2077,7 +2077,7 @@
         expression: "onIntersect"
       }],
       staticClass: "discussion-thread",
-      class: {
+      "class": {
         'scroll-container': !_vm.isActivityThread
       }
     }, [_c('thread-list', _vm._b({
@@ -2129,10 +2129,10 @@
     }, false))], 1);
   };
 
-  var __vue_staticRenderFns__$8 = [];
+  var __vue_staticRenderFns__$10 = [];
   /* style */
 
-  var __vue_inject_styles__$8 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$10 = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-c6af8436_0", {
       source: ".discussion-thread[data-v-c6af8436]{width:100%}.discussion-thread.scroll-container[data-v-c6af8436]{max-height:31.25rem;overflow-y:scroll;overflow-x:hidden;padding-right:1.5rem;box-sizing:content-box}.discussion-thread .fade-enter-active[data-v-c6af8436],.discussion-thread .fade-leave-active[data-v-c6af8436]{transition:opacity .5s}.discussion-thread .fade-enter[data-v-c6af8436],.discussion-thread .fade-leave-to[data-v-c6af8436]{opacity:0}",
@@ -2143,16 +2143,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$8 = "data-v-c6af8436";
+  var __vue_scope_id__$10 = "data-v-c6af8436";
   /* module identifier */
 
-  var __vue_module_identifier__$7 = undefined;
+  var __vue_module_identifier__$G = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$8 = false;
+  var __vue_is_functional_template__$10 = false;
   /* component normalizer */
 
-  function __vue_normalize__$8(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$10(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "index.vue";
@@ -2197,9 +2197,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$7() {
+  function __vue_create_injector__$G() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$7.styles || (__vue_create_injector__$7.styles = {});
+    var styles = __vue_create_injector__$G.styles || (__vue_create_injector__$G.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -2261,10 +2261,10 @@
   /* style inject SSR */
 
 
-  var DiscussionThread = __vue_normalize__$8({
-    render: __vue_render__$8,
-    staticRenderFns: __vue_staticRenderFns__$8
-  }, __vue_inject_styles__$8, __vue_script__$8, __vue_scope_id__$8, __vue_is_functional_template__$8, __vue_module_identifier__$7, __vue_create_injector__$7);
+  var DiscussionThread$1 = __vue_normalize__$10({
+    render: __vue_render__$10,
+    staticRenderFns: __vue_staticRenderFns__$10
+  }, __vue_inject_styles__$10, __vue_script__$10, __vue_scope_id__$10, __vue_is_functional_template__$10, __vue_module_identifier__$G, __vue_create_injector__$G);
 
   //
   //
@@ -2286,15 +2286,15 @@
   //
   //
   //
-  var script$9 = {
+  var script$$ = {
     name: 'resolve-comments-btn'
   };
 
   /* script */
-  var __vue_script__$9 = script$9;
+  var __vue_script__$$ = script$$;
   /* template */
 
-  var __vue_render__$9 = function __vue_render__() {
+  var __vue_render__$$ = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -2331,19 +2331,19 @@
     }, [_vm._v(" "), _c('span', [_vm._v("Mark all as resolved and hide discussion")])])], 1);
   };
 
-  var __vue_staticRenderFns__$9 = [];
+  var __vue_staticRenderFns__$$ = [];
   /* style */
 
-  var __vue_inject_styles__$9 = undefined;
+  var __vue_inject_styles__$$ = undefined;
   /* scoped */
 
-  var __vue_scope_id__$9 = undefined;
+  var __vue_scope_id__$$ = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$9 = false;
+  var __vue_is_functional_template__$$ = false;
   /* component normalizer */
 
-  function __vue_normalize__$9(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$$(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "ResolveButton.vue";
@@ -2364,62 +2364,62 @@
   /* style inject SSR */
 
 
-  var ResolveButton = __vue_normalize__$9({
-    render: __vue_render__$9,
-    staticRenderFns: __vue_staticRenderFns__$9
-  }, __vue_inject_styles__$9, __vue_script__$9, __vue_scope_id__$9, __vue_is_functional_template__$9);
+  var ResolveButton$1 = __vue_normalize__$$({
+    render: __vue_render__$$,
+    staticRenderFns: __vue_staticRenderFns__$$
+  }, __vue_inject_styles__$$, __vue_script__$$, __vue_scope_id__$$, __vue_is_functional_template__$$);
 
   //
 
-  var initCommentInput = function initCommentInput() {
+  var initCommentInput$1 = function initCommentInput() {
     return {
       content: ''
     };
   };
 
-  var script$a = {
+  var script$_ = {
     name: 'tailor-embedded-discussion',
     inheritAttrs: true,
     props: {
       comments: {
         type: Array,
-        default: function _default() {
+        "default": function _default() {
           return [];
         }
       },
       unseenComments: {
         type: Array,
-        default: function _default() {
+        "default": function _default() {
           return [];
         }
       },
       commentsShownLimit: {
         type: Number,
-        default: 5
+        "default": 5
       },
       scrollTarget: {
         type: String,
-        default: 'discussion'
+        "default": 'discussion'
       },
       showHeading: {
         type: Boolean,
-        default: false
+        "default": false
       },
       showNotifications: {
         type: Boolean,
-        default: false
+        "default": false
       },
       isActivityThread: {
         type: Boolean,
-        default: false
+        "default": false
       },
       hasUnresolvedComments: {
         type: Boolean,
-        default: false
+        "default": false
       },
       isVisible: {
         type: Boolean,
-        default: false
+        "default": false
       },
       user: {
         type: Object,
@@ -2429,7 +2429,7 @@
     data: function data() {
       return {
         showAll: false,
-        comment: initCommentInput()
+        comment: initCommentInput$1()
       };
     },
     computed: {
@@ -2475,7 +2475,7 @@
           createdAt: Date.now(),
           updatedAt: Date.now()
         };
-        this.comment = initCommentInput();
+        this.comment = initCommentInput$1();
         this.$emit('save', payload); // Keep editor/discussion container inside viewport.
 
         var scrollOptions = {
@@ -2544,19 +2544,19 @@
       }
     },
     created: function created() {
-      this.comment = initCommentInput();
+      this.comment = initCommentInput$1();
     },
     components: {
-      DiscussionThread: DiscussionThread,
-      ResolveButton: ResolveButton
+      DiscussionThread: DiscussionThread$1,
+      ResolveButton: ResolveButton$1
     }
   };
 
   /* script */
-  var __vue_script__$a = script$a;
+  var __vue_script__$_ = script$_;
   /* template */
 
-  var __vue_render__$a = function __vue_render__() {
+  var __vue_render__$_ = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -2571,7 +2571,7 @@
         "click": _vm.resolveAll
       }
     }) : _vm._e(), _vm._v(" "), _c('div', {
-      class: {
+      "class": {
         'pb-7': !_vm.showHeading && _vm.hasHiddenComments
       }
     }, [_vm.hasHiddenComments ? _c('v-btn', {
@@ -2666,10 +2666,10 @@
     }, [_c('v-icon', [_vm._v("mdi-send")])], 1)], 1)], 1);
   };
 
-  var __vue_staticRenderFns__$a = [];
+  var __vue_staticRenderFns__$_ = [];
   /* style */
 
-  var __vue_inject_styles__$a = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$_ = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-5744b719_0", {
       source: ".embedded-discussion[data-v-5744b719]{font-family:Roboto,Arial,sans-serif}.embedded-discussion .resolve-btn-container[data-v-5744b719]{display:flex;justify-content:flex-end;margin:.5rem 0 0 0}.embedded-discussion .header[data-v-5744b719]{margin:.875rem 0 1.625rem 0;font-size:1.125rem;font-weight:400}.embedded-discussion .comment-input[data-v-5744b719]{margin:0 .25rem 0 .25rem}.embedded-discussion .alert[data-v-5744b719]  .v-icon{color:var(--v-primary-darken2)!important}",
@@ -2680,16 +2680,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$a = "data-v-5744b719";
+  var __vue_scope_id__$_ = "data-v-5744b719";
   /* module identifier */
 
-  var __vue_module_identifier__$8 = undefined;
+  var __vue_module_identifier__$F = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$a = false;
+  var __vue_is_functional_template__$_ = false;
   /* component normalizer */
 
-  function __vue_normalize__$a(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$_(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "index.vue";
@@ -2734,9 +2734,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$8() {
+  function __vue_create_injector__$F() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$8.styles || (__vue_create_injector__$8.styles = {});
+    var styles = __vue_create_injector__$F.styles || (__vue_create_injector__$F.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -2798,17 +2798,17 @@
   /* style inject SSR */
 
 
-  var Discussion = __vue_normalize__$a({
-    render: __vue_render__$a,
-    staticRenderFns: __vue_staticRenderFns__$a
-  }, __vue_inject_styles__$a, __vue_script__$a, __vue_scope_id__$a, __vue_is_functional_template__$a, __vue_module_identifier__$8, __vue_create_injector__$8);
+  var Discussion$3 = __vue_normalize__$_({
+    render: __vue_render__$_,
+    staticRenderFns: __vue_staticRenderFns__$_
+  }, __vue_inject_styles__$_, __vue_script__$_, __vue_scope_id__$_, __vue_is_functional_template__$_, __vue_module_identifier__$F, __vue_create_injector__$F);
 
   //
 
-  var getActivatorOptions = function getActivatorOptions(unseenComments) {
+  var getActivatorOptions$1 = function getActivatorOptions(unseenComments) {
     return {
       unseen: {
-        class: 'teal accent-4 white--text',
+        "class": 'teal accent-4 white--text',
         tooltip: 'View new comments',
         text: unseenComments.length
       },
@@ -2825,12 +2825,12 @@
     };
   };
 
-  var script$b = {
+  var script$Z = {
     name: 'tailor-element-discussion',
     props: {
       id: {
         type: Number,
-        default: null
+        "default": null
       },
       uid: {
         type: String,
@@ -2842,7 +2842,7 @@
       },
       hasUnresolvedComments: {
         type: Boolean,
-        default: false
+        "default": false
       },
       lastSeen: {
         type: Number,
@@ -2881,7 +2881,7 @@
         var comments = this.comments,
             unseenComments = this.unseenComments;
         var type = unseenComments.length ? 'unseen' : comments.length ? 'preview' : 'post';
-        return getActivatorOptions(unseenComments)[type];
+        return getActivatorOptions$1(unseenComments)[type];
       }
     }),
     methods: {
@@ -2926,15 +2926,15 @@
       }
     },
     components: {
-      Discussion: Discussion
+      Discussion: Discussion$3
     }
   };
 
   /* script */
-  var __vue_script__$b = script$b;
+  var __vue_script__$Z = script$Z;
   /* template */
 
-  var __vue_render__$b = function __vue_render__() {
+  var __vue_render__$Z = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -2970,7 +2970,7 @@
               fn: function fn(ref) {
                 var tooltip = ref.on;
                 return [_c('v-btn', _vm._g({
-                  class: _vm.activator.class,
+                  "class": _vm.activator["class"],
                   attrs: {
                     "x-small": "",
                     "icon": ""
@@ -3024,10 +3024,10 @@
     }, false))], 1);
   };
 
-  var __vue_staticRenderFns__$b = [];
+  var __vue_staticRenderFns__$Z = [];
   /* style */
 
-  var __vue_inject_styles__$b = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$Z = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-382b8ce9_0", {
       source: "[data-v-382b8ce9] .v-menu__content{background:#fff}[data-v-382b8ce9] .v-menu__content .embedded-discussion{text-align:left}[data-v-382b8ce9] .v-menu__content .comment .author{font-size:.875rem}.unseen[data-v-382b8ce9]{font-size:.75rem}",
@@ -3038,16 +3038,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$b = "data-v-382b8ce9";
+  var __vue_scope_id__$Z = "data-v-382b8ce9";
   /* module identifier */
 
-  var __vue_module_identifier__$9 = undefined;
+  var __vue_module_identifier__$E = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$b = false;
+  var __vue_is_functional_template__$Z = false;
   /* component normalizer */
 
-  function __vue_normalize__$b(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$Z(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "ElementDiscussion.vue";
@@ -3092,9 +3092,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$9() {
+  function __vue_create_injector__$E() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$9.styles || (__vue_create_injector__$9.styles = {});
+    var styles = __vue_create_injector__$E.styles || (__vue_create_injector__$E.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -3156,13 +3156,13 @@
   /* style inject SSR */
 
 
-  var Discussion$1 = __vue_normalize__$b({
-    render: __vue_render__$b,
-    staticRenderFns: __vue_staticRenderFns__$b
-  }, __vue_inject_styles__$b, __vue_script__$b, __vue_scope_id__$b, __vue_is_functional_template__$b, __vue_module_identifier__$9, __vue_create_injector__$9);
+  var Discussion$2 = __vue_normalize__$Z({
+    render: __vue_render__$Z,
+    staticRenderFns: __vue_staticRenderFns__$Z
+  }, __vue_inject_styles__$Z, __vue_script__$Z, __vue_scope_id__$Z, __vue_is_functional_template__$Z, __vue_module_identifier__$E, __vue_create_injector__$E);
 
   //
-  var script$c = {
+  var script$Y = {
     name: 'tailor-publish-diff-chip',
     props: {
       changeType: {
@@ -3170,16 +3170,16 @@
           if (!value) return true;
           return Object.values(utils.publishDiffChangeTypes).includes(value);
         },
-        default: null
+        "default": null
       }
     }
   };
 
   /* script */
-  var __vue_script__$c = script$c;
+  var __vue_script__$Y = script$Y;
   /* template */
 
-  var __vue_render__$c = function __vue_render__() {
+  var __vue_render__$Y = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -3197,19 +3197,19 @@
     }, [_vm._v("\n  " + _vm._s(_vm.changeType) + "\n")]) : _vm._e();
   };
 
-  var __vue_staticRenderFns__$c = [];
+  var __vue_staticRenderFns__$Y = [];
   /* style */
 
-  var __vue_inject_styles__$c = undefined;
+  var __vue_inject_styles__$Y = undefined;
   /* scoped */
 
-  var __vue_scope_id__$c = undefined;
+  var __vue_scope_id__$Y = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$c = false;
+  var __vue_is_functional_template__$Y = false;
   /* component normalizer */
 
-  function __vue_normalize__$c(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$Y(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "PublishDiffChip.vue";
@@ -3230,18 +3230,18 @@
   /* style inject SSR */
 
 
-  var PublishDiffChip = __vue_normalize__$c({
-    render: __vue_render__$c,
-    staticRenderFns: __vue_staticRenderFns__$c
-  }, __vue_inject_styles__$c, __vue_script__$c, __vue_scope_id__$c, __vue_is_functional_template__$c);
+  var PublishDiffChip$1 = __vue_normalize__$Y({
+    render: __vue_render__$Y,
+    staticRenderFns: __vue_staticRenderFns__$Y
+  }, __vue_inject_styles__$Y, __vue_script__$Y, __vue_scope_id__$Y, __vue_is_functional_template__$Y);
 
   //
-  var script$d = {
+  var script$X = {
     name: 'tailor-content-element',
     inject: {
       $getCurrentUser: {},
       $editorState: {
-        default: {}
+        "default": {}
       }
     },
     inheritAttrs: false,
@@ -3252,31 +3252,31 @@
       },
       parent: {
         type: Object,
-        default: null
+        "default": null
       },
       isHovered: {
         type: Boolean,
-        default: false
+        "default": false
       },
       isDragged: {
         type: Boolean,
-        default: false
+        "default": false
       },
       isDisabled: {
         type: Boolean,
-        default: false
+        "default": false
       },
       frame: {
         type: Boolean,
-        default: true
+        "default": true
       },
       dense: {
         type: Boolean,
-        default: false
+        "default": false
       },
       showDiscussion: {
         type: Boolean,
-        default: false
+        "default": false
       }
     },
     data: function data() {
@@ -3384,17 +3384,17 @@
       };
     },
     components: {
-      ActiveUsers: ActiveUsers,
-      Discussion: Discussion$1,
-      PublishDiffChip: PublishDiffChip
+      ActiveUsers: ActiveUsers$1,
+      Discussion: Discussion$2,
+      PublishDiffChip: PublishDiffChip$1
     }
   };
 
   /* script */
-  var __vue_script__$d = script$d;
+  var __vue_script__$X = script$X;
   /* template */
 
-  var __vue_render__$d = function __vue_render__() {
+  var __vue_render__$X = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -3403,7 +3403,7 @@
 
     return _c('div', {
       staticClass: "content-element",
-      class: [_vm.element.changeSincePublish, {
+      "class": [_vm.element.changeSincePublish, {
         selected: _vm.activeUsers.length,
         focused: _vm.isFocused,
         diff: _vm.$editorState.isPublishDiff,
@@ -3414,7 +3414,7 @@
       }
     }, [_c('div', {
       staticClass: "header d-flex",
-      class: {
+      "class": {
         visible: _vm.$editorState.isPublishDiff && _vm.element.changeSincePublish
       }
     }, [_c('publish-diff-chip', {
@@ -3452,7 +3452,7 @@
     }), false)), _vm._v(" "), !_vm.isDisabled ? _c('div', {
       staticClass: "element-actions"
     }, [_vm.showDiscussion ? _c('div', {
-      class: {
+      "class": {
         'is-visible': _vm.isHighlighted || _vm.hasComments
       }
     }, [_c('discussion', _vm._b({
@@ -3463,7 +3463,7 @@
         "open": _vm.focus
       }
     }, 'discussion', _vm.element, false))], 1) : _vm._e(), _vm._v(" "), !_vm.parent ? _c('div', {
-      class: {
+      "class": {
         'is-visible': _vm.isHighlighted
       }
     }, [_c('v-btn', {
@@ -3492,10 +3492,10 @@
     }) : _vm._e()], 1);
   };
 
-  var __vue_staticRenderFns__$d = [];
+  var __vue_staticRenderFns__$X = [];
   /* style */
 
-  var __vue_inject_styles__$d = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$X = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-74c5ccda_0", {
       source: ".content-element[data-v-74c5ccda]{position:relative;border:1px solid transparent}.content-element[data-v-74c5ccda]::after{content:'';display:none;position:absolute;top:0;right:-.125rem;width:.125rem;height:100%}.content-element.focused[data-v-74c5ccda]{border:1px dashed #1de9b6}.content-element.focused[data-v-74c5ccda]::after{display:block;background:#1de9b6}.content-element.selected[data-v-74c5ccda]{border:1px dashed #ff4081}.content-element.selected[data-v-74c5ccda]::after{display:block;background:#ff4081}.frame[data-v-74c5ccda]{padding:10px 20px;border:1px solid #e1e1e1}.element-actions[data-v-74c5ccda]{display:flex;flex-direction:column;position:absolute;top:-.0625rem;right:-1.25rem;width:1.5rem;height:100%;padding-left:.75rem}.element-actions>*[data-v-74c5ccda]{min-height:1.75rem;opacity:0;transition:opacity .1s linear}.element-actions>.is-visible[data-v-74c5ccda]{opacity:1;transition:opacity .5s linear}.active-users[data-v-74c5ccda]{position:absolute;top:0;left:-1.625rem}.save-indicator[data-v-74c5ccda]{position:absolute;bottom:-.125rem;left:0}.header[data-v-74c5ccda]{width:100%;max-height:0}.header.visible[data-v-74c5ccda]{max-height:unset;padding:0 0 .5rem}.diff.new[data-v-74c5ccda]{border:none;box-shadow:0 0 0 2px var(--v-success-lighten2)!important}.diff.changed[data-v-74c5ccda],.diff.removed[data-v-74c5ccda]{border:none;box-shadow:0 0 0 2px var(--v-secondary-lighten4)!important}.diff .element-actions[data-v-74c5ccda]{display:none}",
@@ -3506,16 +3506,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$d = "data-v-74c5ccda";
+  var __vue_scope_id__$X = "data-v-74c5ccda";
   /* module identifier */
 
-  var __vue_module_identifier__$a = undefined;
+  var __vue_module_identifier__$D = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$d = false;
+  var __vue_is_functional_template__$X = false;
   /* component normalizer */
 
-  function __vue_normalize__$d(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$X(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "ContentElement.vue";
@@ -3560,9 +3560,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$a() {
+  function __vue_create_injector__$D() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$a.styles || (__vue_create_injector__$a.styles = {});
+    var styles = __vue_create_injector__$D.styles || (__vue_create_injector__$D.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -3624,13 +3624,13 @@
   /* style inject SSR */
 
 
-  var ContentElement = __vue_normalize__$d({
-    render: __vue_render__$d,
-    staticRenderFns: __vue_staticRenderFns__$d
-  }, __vue_inject_styles__$d, __vue_script__$d, __vue_scope_id__$d, __vue_is_functional_template__$d, __vue_module_identifier__$a, __vue_create_injector__$a);
+  var ContentElement$3 = __vue_normalize__$X({
+    render: __vue_render__$X,
+    staticRenderFns: __vue_staticRenderFns__$X
+  }, __vue_inject_styles__$X, __vue_script__$X, __vue_scope_id__$X, __vue_is_functional_template__$X, __vue_module_identifier__$D, __vue_create_injector__$D);
 
   //
-  var script$e = {
+  var script$W = {
     name: 'content-element-preview',
     props: {
       element: {
@@ -3639,15 +3639,15 @@
       },
       selectable: {
         type: Boolean,
-        default: false
+        "default": false
       },
       isSelected: {
         type: Boolean,
-        default: false
+        "default": false
       },
       selectionDisabled: {
         type: Boolean,
-        default: false
+        "default": false
       }
     },
     computed: {
@@ -3665,15 +3665,15 @@
       }
     },
     components: {
-      ContentElement: ContentElement
+      ContentElement: ContentElement$3
     }
   };
 
   /* script */
-  var __vue_script__$e = script$e;
+  var __vue_script__$W = script$W;
   /* template */
 
-  var __vue_render__$e = function __vue_render__() {
+  var __vue_render__$W = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -3682,7 +3682,7 @@
 
     return _c('div', {
       staticClass: "element-preview-container float-none",
-      class: _vm.elementWidth
+      "class": _vm.elementWidth
     }, [_vm.selectable ? _c('v-checkbox', {
       attrs: {
         "input-value": _vm.isSelected,
@@ -3701,7 +3701,7 @@
             staticClass: "element-wrapper flex-grow-1"
           }, [_c('content-element', _vm._b({
             staticClass: "content-element",
-            class: {
+            "class": {
               selected: _vm.isSelected
             },
             attrs: {
@@ -3719,7 +3719,7 @@
                 var on = ref.on;
                 return [_c('v-btn', _vm._g({
                   staticClass: "open-element-button",
-                  class: {
+                  "class": {
                     visible: hover
                   },
                   attrs: {
@@ -3748,10 +3748,10 @@
     })], 1);
   };
 
-  var __vue_staticRenderFns__$e = [];
+  var __vue_staticRenderFns__$W = [];
   /* style */
 
-  var __vue_inject_styles__$e = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$W = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-72d4e8ff_0", {
       source: ".element-preview-container[data-v-72d4e8ff]{display:flex;position:relative;margin:.25rem 0}.element-preview-container .v-input[data-v-72d4e8ff]{margin:0}.content-element[data-v-72d4e8ff]{flex:1 0;margin:.4375rem 0 0 .25rem;box-shadow:none;border:1px solid #e1e1e1}.content-element.selected[data-v-72d4e8ff]{border-style:dashed;border-color:#444}.content-element.selected[data-v-72d4e8ff]::after{display:none}.element-preview-container[data-v-72d4e8ff]  .contained-content{margin:0}.element-preview-container[data-v-72d4e8ff]  .contained-content .message span:not(.heading){display:none}.element-preview-container[data-v-72d4e8ff]  .contained-content .ql-editor{word-break:break-all}.element-wrapper[data-v-72d4e8ff]{position:relative}.open-element-button[data-v-72d4e8ff]{position:absolute;top:0;right:-.75rem;transition:opacity .4s}.open-element-button[data-v-72d4e8ff]:not(.visible){opacity:0}",
@@ -3762,16 +3762,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$e = "data-v-72d4e8ff";
+  var __vue_scope_id__$W = "data-v-72d4e8ff";
   /* module identifier */
 
-  var __vue_module_identifier__$b = undefined;
+  var __vue_module_identifier__$C = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$e = false;
+  var __vue_is_functional_template__$W = false;
   /* component normalizer */
 
-  function __vue_normalize__$e(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$W(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "Element.vue";
@@ -3816,9 +3816,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$b() {
+  function __vue_create_injector__$C() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$b.styles || (__vue_create_injector__$b.styles = {});
+    var styles = __vue_create_injector__$C.styles || (__vue_create_injector__$C.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -3880,13 +3880,13 @@
   /* style inject SSR */
 
 
-  var ContentElement$1 = __vue_normalize__$e({
-    render: __vue_render__$e,
-    staticRenderFns: __vue_staticRenderFns__$e
-  }, __vue_inject_styles__$e, __vue_script__$e, __vue_scope_id__$e, __vue_is_functional_template__$e, __vue_module_identifier__$b, __vue_create_injector__$b);
+  var ContentElement$2 = __vue_normalize__$W({
+    render: __vue_render__$W,
+    staticRenderFns: __vue_staticRenderFns__$W
+  }, __vue_inject_styles__$W, __vue_script__$W, __vue_scope_id__$W, __vue_is_functional_template__$W, __vue_module_identifier__$C, __vue_create_injector__$C);
 
   //
-  var script$f = {
+  var script$V = {
     name: 'content-preview',
     props: {
       contentContainers: {
@@ -3895,21 +3895,21 @@
       },
       selectable: {
         type: Boolean,
-        default: false
+        "default": false
       },
       multiple: {
         type: Boolean,
-        default: true
+        "default": true
       },
       allowedTypes: {
         type: Array,
-        default: function _default() {
+        "default": function _default() {
           return [];
         }
       },
       selected: {
         type: Array,
-        default: function _default() {
+        "default": function _default() {
           return [];
         }
       }
@@ -3941,15 +3941,15 @@
       }
     },
     components: {
-      ContentElement: ContentElement$1
+      ContentElement: ContentElement$2
     }
   };
 
   /* script */
-  var __vue_script__$f = script$f;
+  var __vue_script__$V = script$V;
   /* template */
 
-  var __vue_render__$f = function __vue_render__() {
+  var __vue_render__$V = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -3991,10 +3991,10 @@
     })], 2);
   };
 
-  var __vue_staticRenderFns__$f = [];
+  var __vue_staticRenderFns__$V = [];
   /* style */
 
-  var __vue_inject_styles__$f = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$V = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-2013b96d_0", {
       source: ".content-preview .v-alert[data-v-2013b96d]{display:flex;align-items:center;justify-content:center;height:19rem}.content-preview .content-container[data-v-2013b96d]:last-child{margin-bottom:.625rem}",
@@ -4005,16 +4005,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$f = "data-v-2013b96d";
+  var __vue_scope_id__$V = "data-v-2013b96d";
   /* module identifier */
 
-  var __vue_module_identifier__$c = undefined;
+  var __vue_module_identifier__$B = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$f = false;
+  var __vue_is_functional_template__$V = false;
   /* component normalizer */
 
-  function __vue_normalize__$f(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$V(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "index.vue";
@@ -4059,9 +4059,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$c() {
+  function __vue_create_injector__$B() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$c.styles || (__vue_create_injector__$c.styles = {});
+    var styles = __vue_create_injector__$B.styles || (__vue_create_injector__$B.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -4123,10 +4123,30 @@
   /* style inject SSR */
 
 
-  var ContentPreview = __vue_normalize__$f({
-    render: __vue_render__$f,
-    staticRenderFns: __vue_staticRenderFns__$f
-  }, __vue_inject_styles__$f, __vue_script__$f, __vue_scope_id__$f, __vue_is_functional_template__$f, __vue_module_identifier__$c, __vue_create_injector__$c);
+  var ContentPreview$1 = __vue_normalize__$V({
+    render: __vue_render__$V,
+    staticRenderFns: __vue_staticRenderFns__$V
+  }, __vue_inject_styles__$V, __vue_script__$V, __vue_scope_id__$V, __vue_is_functional_template__$V, __vue_module_identifier__$B, __vue_create_injector__$B);
+
+  function createCommonjsModule(fn, basedir, module) {
+  	return module = {
+  	  path: basedir,
+  	  exports: {},
+  	  require: function (path, base) {
+        return commonjsRequire(path, (base === undefined || base === null) ? module.path : base);
+      }
+  	}, fn(module, module.exports), module.exports;
+  }
+
+  function getCjsExportFromNamespace (n) {
+  	return n && n['default'] || n;
+  }
+
+  function commonjsRequire () {
+  	throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
+  }
+
+  var delay_1 = createCommonjsModule(function (module) {
 
   var randomInteger = function randomInteger(minimum, maximum) {
     return Math.floor(Math.random() * (maximum - minimum + 1) + minimum);
@@ -4225,10 +4245,14 @@
     return delay;
   };
 
-  var delay_1 = delay; // TODO: Remove this for the next major release
+  module.exports = delay; // TODO: Remove this for the next major release
 
-  var _default = delay;
-  delay_1.default = _default;
+  module.exports["default"] = delay;
+  });
+
+  var pMinDelay_1 = createCommonjsModule(function (module) {
+
+
 
   var pMinDelay = async function pMinDelay(promise, minimumDelay, options) {
     options = Object.assign({
@@ -4237,7 +4261,7 @@
     var promiseError;
 
     if (options.delayRejection) {
-      promise = promise.catch(function (error) {
+      promise = promise["catch"](function (error) {
         promiseError = error;
       });
     }
@@ -4246,38 +4270,38 @@
     return promiseError ? Promise.reject(promiseError) : value[0];
   };
 
-  var pMinDelay_1 = pMinDelay; // TODO: Remove this for the next major release
+  module.exports = pMinDelay; // TODO: Remove this for the next major release
 
-  var _default$1 = pMinDelay;
-  pMinDelay_1.default = _default$1;
+  module.exports["default"] = pMinDelay;
+  });
 
-  function loader(action, name) {
+  function loader$1(action, name) {
     var minDuration = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
     return function () {
       var _this = this;
 
       this[name] = true;
-      return pMinDelay_1(Promise.resolve(action.call.apply(action, [this].concat(Array.prototype.slice.call(arguments)))), minDuration).finally(function () {
+      return pMinDelay_1(Promise.resolve(action.call.apply(action, [this].concat(Array.prototype.slice.call(arguments)))), minDuration)["finally"](function () {
         return _this[name] = false;
       });
     };
   }
 
   //
-  var toTreeFormat = utils.activity.toTreeFormat;
-  var script$g = {
+  var toTreeFormat$1 = utils.activity.toTreeFormat;
+  var script$U = {
     name: 'select-activity',
     inject: ['$schema'],
     props: {
       selectedElements: {
         type: Array,
-        default: function _default() {
+        "default": function _default() {
           return [];
         }
       },
       activities: {
         type: Array,
-        default: function _default() {
+        "default": function _default() {
           return [];
         }
       }
@@ -4295,7 +4319,7 @@
         return map__default['default'](vm.activities, 'id');
       },
       activityTree: function activityTree(vm) {
-        return toTreeFormat(vm.activities, vm.$schema, []);
+        return toTreeFormat$1(vm.activities, vm.$schema, []);
       },
       noResultsMessage: function noResultsMessage() {
         var activities = this.activities,
@@ -4322,10 +4346,10 @@
   };
 
   /* script */
-  var __vue_script__$g = script$g;
+  var __vue_script__$U = script$U;
   /* template */
 
-  var __vue_render__$g = function __vue_render__() {
+  var __vue_render__$U = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -4407,10 +4431,10 @@
     }, [_vm._v("\n    " + _vm._s(_vm.noResultsMessage) + "\n  ")])], 1);
   };
 
-  var __vue_staticRenderFns__$g = [];
+  var __vue_staticRenderFns__$U = [];
   /* style */
 
-  var __vue_inject_styles__$g = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$U = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-285b0632_0", {
       source: ".treeview[data-v-285b0632]{max-height:19rem;text-align:left;background-color:#fcfcfc;border:1px solid #eee;overflow-y:scroll}.treeview .v-chip.custom-chip[data-v-285b0632]{border-radius:12px!important}.treeview[data-v-285b0632]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__content>*,.treeview[data-v-285b0632]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__root{cursor:auto}",
@@ -4421,16 +4445,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$g = "data-v-285b0632";
+  var __vue_scope_id__$U = "data-v-285b0632";
   /* module identifier */
 
-  var __vue_module_identifier__$d = undefined;
+  var __vue_module_identifier__$A = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$g = false;
+  var __vue_is_functional_template__$U = false;
   /* component normalizer */
 
-  function __vue_normalize__$g(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$U(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "SelectActivity.vue";
@@ -4475,9 +4499,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$d() {
+  function __vue_create_injector__$A() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$d.styles || (__vue_create_injector__$d.styles = {});
+    var styles = __vue_create_injector__$A.styles || (__vue_create_injector__$A.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -4539,20 +4563,21 @@
   /* style inject SSR */
 
 
-  var SelectActivity = __vue_normalize__$g({
-    render: __vue_render__$g,
-    staticRenderFns: __vue_staticRenderFns__$g
-  }, __vue_inject_styles__$g, __vue_script__$g, __vue_scope_id__$g, __vue_is_functional_template__$g, __vue_module_identifier__$d, __vue_create_injector__$d);
+  var SelectActivity$1 = __vue_normalize__$U({
+    render: __vue_render__$U,
+    staticRenderFns: __vue_staticRenderFns__$U
+  }, __vue_inject_styles__$U, __vue_script__$U, __vue_scope_id__$U, __vue_is_functional_template__$U, __vue_module_identifier__$A, __vue_create_injector__$A);
 
   //
-  var script$h = {
+  var script$T = {
     name: 'select-repository',
     props: {
       repository: {
         type: Object,
-        default: null
+        "default": null
       }
     },
+    inject: ['$api'],
     data: function data() {
       return {
         repositories: [],
@@ -4567,10 +4592,10 @@
           this.$emit('selected', repository);
         }
       },
-      fetchRepositories: debounce__default['default'](loader(function (search) {
+      fetchRepositories: debounce__default['default'](loader$1(function (search) {
         var _this = this;
 
-        return api.repository.getRepositories({
+        return this.$api.repository.getRepositories({
           search: search
         }).then(function (repositories) {
           _this.repositories = sortBy__default['default'](repositories, 'name');
@@ -4583,10 +4608,10 @@
   };
 
   /* script */
-  var __vue_script__$h = script$h;
+  var __vue_script__$T = script$T;
   /* template */
 
-  var __vue_render__$h = function __vue_render__() {
+  var __vue_render__$T = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -4613,19 +4638,19 @@
     }, 'v-combobox', _vm.$attrs, false));
   };
 
-  var __vue_staticRenderFns__$h = [];
+  var __vue_staticRenderFns__$T = [];
   /* style */
 
-  var __vue_inject_styles__$h = undefined;
+  var __vue_inject_styles__$T = undefined;
   /* scoped */
 
-  var __vue_scope_id__$h = undefined;
+  var __vue_scope_id__$T = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$h = false;
+  var __vue_is_functional_template__$T = false;
   /* component normalizer */
 
-  function __vue_normalize__$h(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$T(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "SelectRepository.vue";
@@ -4646,10 +4671,10 @@
   /* style inject SSR */
 
 
-  var SelectRepository = __vue_normalize__$h({
-    render: __vue_render__$h,
-    staticRenderFns: __vue_staticRenderFns__$h
-  }, __vue_inject_styles__$h, __vue_script__$h, __vue_scope_id__$h, __vue_is_functional_template__$h);
+  var SelectRepository$1 = __vue_normalize__$T({
+    render: __vue_render__$T,
+    staticRenderFns: __vue_staticRenderFns__$T
+  }, __vue_inject_styles__$T, __vue_script__$T, __vue_scope_id__$T, __vue_is_functional_template__$T);
 
   //
   //
@@ -4683,29 +4708,29 @@
   //
   //
   //
-  var script$i = {
+  var script$S = {
     name: 'tailor-dialog',
     props: {
       headerIcon: {
         type: String,
-        default: null
+        "default": null
       },
       width: {
         type: [Number, String],
-        default: 500
+        "default": 500
       },
       paddingless: {
         type: Boolean,
-        default: false
+        "default": false
       }
     }
   };
 
   /* script */
-  var __vue_script__$i = script$i;
+  var __vue_script__$S = script$S;
   /* template */
 
-  var __vue_render__$i = function __vue_render__() {
+  var __vue_render__$S = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -4742,16 +4767,16 @@
     }, [_vm._v(_vm._s(_vm.headerIcon))])], 1) : _vm._e(), _vm._v(" "), _c('div', {
       staticClass: "text-truncate"
     }, [_vm._t("header")], 2)], 1), _vm._v(" "), _c('v-card-text', {
-      class: [_vm.paddingless ? 'pa-0' : 'pt-7 px-4 pb-2']
+      "class": [_vm.paddingless ? 'pa-0' : 'pt-7 px-4 pb-2']
     }, [_vm._t("body")], 2), _vm._v(" "), _vm.$slots.actions ? _c('v-card-actions', {
       staticClass: "px-4 pb-3"
     }, [_c('v-spacer'), _vm._v(" "), _vm._t("actions")], 2) : _vm._e()], 1)], 1);
   };
 
-  var __vue_staticRenderFns__$i = [];
+  var __vue_staticRenderFns__$S = [];
   /* style */
 
-  var __vue_inject_styles__$i = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$S = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-b6f646a2_0", {
       source: ".dialog-title[data-v-b6f646a2]{display:flex;color:#f1f1f1}.dialog-title .text-truncate[data-v-b6f646a2]{flex:1;text-align:left}",
@@ -4762,16 +4787,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$i = "data-v-b6f646a2";
+  var __vue_scope_id__$S = "data-v-b6f646a2";
   /* module identifier */
 
-  var __vue_module_identifier__$e = undefined;
+  var __vue_module_identifier__$z = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$i = false;
+  var __vue_is_functional_template__$S = false;
   /* component normalizer */
 
-  function __vue_normalize__$i(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$S(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "TailorDialog.vue";
@@ -4816,9 +4841,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$e() {
+  function __vue_create_injector__$z() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$e.styles || (__vue_create_injector__$e.styles = {});
+    var styles = __vue_create_injector__$z.styles || (__vue_create_injector__$z.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -4880,13 +4905,13 @@
   /* style inject SSR */
 
 
-  var TailorDialog = __vue_normalize__$i({
-    render: __vue_render__$i,
-    staticRenderFns: __vue_staticRenderFns__$i
-  }, __vue_inject_styles__$i, __vue_script__$i, __vue_scope_id__$i, __vue_is_functional_template__$i, __vue_module_identifier__$e, __vue_create_injector__$e);
+  var TailorDialog$1 = __vue_normalize__$S({
+    render: __vue_render__$S,
+    staticRenderFns: __vue_staticRenderFns__$S
+  }, __vue_inject_styles__$S, __vue_script__$S, __vue_scope_id__$S, __vue_is_functional_template__$S, __vue_module_identifier__$z, __vue_create_injector__$z);
 
-  var getDescendants = utils.activity.getDescendants;
-  var TOGGLE_BUTTON = {
+  var getDescendants$1 = utils.activity.getDescendants;
+  var TOGGLE_BUTTON$1 = {
     SELECT: {
       label: 'Select all',
       icon: 'checkbox-multiple-marked-outline'
@@ -4896,13 +4921,13 @@
       icon: 'checkbox-multiple-blank-outline'
     }
   };
-  var script$j = {
+  var script$R = {
     name: 'select-element',
-    inject: ['$schema', '$repository'],
+    inject: ['$schema', '$repository', '$api'],
     props: {
       selected: {
         type: Array,
-        default: function _default() {
+        "default": function _default() {
           return [];
         }
       },
@@ -4916,19 +4941,19 @@
       },
       multiple: {
         type: Boolean,
-        default: true
+        "default": true
       },
       submitLabel: {
         type: String,
-        default: 'Save'
+        "default": 'Save'
       },
       headerIcon: {
         type: String,
-        default: 'mdi-toy-brick-plus-outline'
+        "default": 'mdi-toy-brick-plus-outline'
       },
       onlyCurrentRepo: {
         type: Boolean,
-        default: false
+        "default": false
       }
     },
     data: function data() {
@@ -4966,7 +4991,7 @@
         if (!activity || !activities.length) return [];
         var containers = sortBy__default['default'](activities.filter(this.isRootContainer), [this.getTypePosition, 'position', 'createdAt']);
         return flatMap__default['default'](containers, function (it) {
-          return [it].concat(_toConsumableArray(_this.getSubcontainers(it)));
+          return [it].concat(_toConsumableArray$1(_this.getSubcontainers(it)));
         });
       },
       elements: function elements() {
@@ -4984,8 +5009,8 @@
             multiple = this.multiple,
             selection = this.selection;
         if (!multiple || !selection.activity || !elements.length) return;
-        var SELECT = TOGGLE_BUTTON.SELECT,
-            DESELECT = TOGGLE_BUTTON.DESELECT;
+        var SELECT = TOGGLE_BUTTON$1.SELECT,
+            DESELECT = TOGGLE_BUTTON$1.DESELECT;
         return allElementsSelected ? DESELECT : SELECT;
       }
     },
@@ -5006,7 +5031,7 @@
       },
       getSubcontainers: function getSubcontainers(container) {
         var activities = this.items.activities;
-        return sortBy__default['default'](getDescendants(activities, container), 'position');
+        return sortBy__default['default'](getDescendants$1(activities, container), 'position');
       },
       showActivityElements: async function showActivityElements(activity) {
         var _this3 = this;
@@ -5045,7 +5070,7 @@
       deselectActivity: function deselectActivity() {
         this.selection.activity = null;
         this.items.contentContainers = [];
-        this.selection.elements = _toConsumableArray(this.selected);
+        this.selection.elements = _toConsumableArray$1(this.selected);
       },
       selectRepository: async function selectRepository(repository) {
         var currentRepository = this.currentRepository;
@@ -5053,10 +5078,10 @@
         this.deselectActivity();
         this.items.activities = currentRepository.id === repository.id ? currentRepository.activities : await this.fetchActivities(repository);
       },
-      fetchActivities: loader(function (repository) {
-        return api.activity.getActivities(repository.id);
+      fetchActivities: loader$1(function (repository) {
+        return this.$api.activity.getActivities(repository.id);
       }, 'loadingContent'),
-      fetchElements: loader(function (containers) {
+      fetchElements: loader$1(function (containers) {
         var repositoryId = this.selection.repository.id;
         var queryOpts = {
           repositoryId: repositoryId,
@@ -5064,10 +5089,10 @@
             return it.id;
           })
         };
-        return api.contentElement.fetch(queryOpts);
+        return this.$api.contentElement.fetch(queryOpts);
       }, 'loadingContent', 500),
       save: function save() {
-        this.$emit('selected', _toConsumableArray(this.selection.elements));
+        this.$emit('selected', _toConsumableArray$1(this.selection.elements));
         this.close();
       },
       close: function close() {
@@ -5093,23 +5118,23 @@
       }
     },
     created: function created() {
-      this.selection.elements = _toConsumableArray(this.selected);
+      this.selection.elements = _toConsumableArray$1(this.selected);
       this.selection.repository = this.currentRepository;
       this.items.activities = this.currentRepository.activities;
     },
     components: {
-      ContentPreview: ContentPreview,
-      SelectActivity: SelectActivity,
-      SelectRepository: SelectRepository,
-      TailorDialog: TailorDialog
+      ContentPreview: ContentPreview$1,
+      SelectActivity: SelectActivity$1,
+      SelectRepository: SelectRepository$1,
+      TailorDialog: TailorDialog$1
     }
   };
 
   /* script */
-  var __vue_script__$j = script$j;
+  var __vue_script__$R = script$R;
   /* template */
 
-  var __vue_render__$j = function __vue_render__() {
+  var __vue_render__$R = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -5227,19 +5252,19 @@
     });
   };
 
-  var __vue_staticRenderFns__$j = [];
+  var __vue_staticRenderFns__$R = [];
   /* style */
 
-  var __vue_inject_styles__$j = undefined;
+  var __vue_inject_styles__$R = undefined;
   /* scoped */
 
-  var __vue_scope_id__$j = undefined;
+  var __vue_scope_id__$R = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$j = false;
+  var __vue_is_functional_template__$R = false;
   /* component normalizer */
 
-  function __vue_normalize__$j(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$R(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "index.vue";
@@ -5260,18 +5285,18 @@
   /* style inject SSR */
 
 
-  var SelectElement = __vue_normalize__$j({
-    render: __vue_render__$j,
-    staticRenderFns: __vue_staticRenderFns__$j
-  }, __vue_inject_styles__$j, __vue_script__$j, __vue_scope_id__$j, __vue_is_functional_template__$j);
+  var SelectElement$1 = __vue_normalize__$R({
+    render: __vue_render__$R,
+    staticRenderFns: __vue_staticRenderFns__$R
+  }, __vue_inject_styles__$R, __vue_script__$R, __vue_scope_id__$R, __vue_is_functional_template__$R);
 
   //
-  var DEFAULT_ELEMENT_WIDTH = 100;
-  var LAYOUT = {
+  var DEFAULT_ELEMENT_WIDTH$1 = 100;
+  var LAYOUT$1 = {
     HALF_WIDTH: 6,
     FULL_WIDTH: 12
   };
-  var ELEMENT_GROUPS = [{
+  var ELEMENT_GROUPS$1 = [{
     name: 'Content Elements',
     icon: 'mdi-set-center'
   }, {
@@ -5282,9 +5307,9 @@
     icon: 'mdi-comment-question-outline'
   }];
 
-  var getQuestionData = function getQuestionData(element, type) {
+  var getQuestionData$1 = function getQuestionData(element, type) {
     var data = {
-      width: LAYOUT.FULL_WIDTH
+      width: LAYOUT$1.FULL_WIDTH
     };
     var question = [{
       id: utils.uuid(),
@@ -5298,7 +5323,7 @@
     }, element.data);
   };
 
-  var script$k = {
+  var script$Q = {
     name: 'tailor-add-element',
     inject: ['$teRegistry'],
     props: {
@@ -5308,41 +5333,41 @@
       },
       activity: {
         type: Object,
-        default: null
+        "default": null
       },
       position: {
         type: Number,
-        default: null
+        "default": null
       },
       layout: {
         type: Boolean,
-        default: true
+        "default": true
       },
       include: {
         type: Array,
-        default: null
+        "default": null
       },
       show: {
         type: Boolean,
-        default: false
+        "default": false
       },
       large: {
         type: Boolean,
-        default: false
+        "default": false
       },
       label: {
         type: String,
-        default: 'Add content'
+        "default": 'Add content'
       },
       icon: {
         type: String,
-        default: 'mdi-plus'
+        "default": 'mdi-plus'
       }
     },
     data: function data() {
       return {
         isVisible: false,
-        elementWidth: DEFAULT_ELEMENT_WIDTH,
+        elementWidth: DEFAULT_ELEMENT_WIDTH$1,
         showElementBrowser: false
       };
     },
@@ -5400,14 +5425,14 @@
       library: function library() {
         var groups = [this.contentElements, this.assessments, this.reflections];
         return reduce__default['default'](groups, function (acc, elements, i) {
-          if (elements.length) acc.push(Object.assign({}, ELEMENT_GROUPS[i], {
+          if (elements.length) acc.push(Object.assign({}, ELEMENT_GROUPS$1[i], {
             elements: elements
           }));
           return acc;
         }, []);
       },
       processedWidth: function processedWidth() {
-        return this.elementWidth === 50 ? LAYOUT.HALF_WIDTH : LAYOUT.FULL_WIDTH;
+        return this.elementWidth === 50 ? LAYOUT$1.HALF_WIDTH : LAYOUT$1.FULL_WIDTH;
       },
       allowedTypes: function allowedTypes() {
         var elementWidth = this.elementWidth,
@@ -5416,7 +5441,7 @@
             library = this.library;
         var elements = flatMap__default['default'](library, 'elements');
         if (!layout) return include || [];
-        var allowedElements = elementWidth === DEFAULT_ELEMENT_WIDTH ? elements : reject__default['default'](elements, 'ui.forceFullWidth');
+        var allowedElements = elementWidth === DEFAULT_ELEMENT_WIDTH$1 ? elements : reject__default['default'](elements, 'ui.forceFullWidth');
         var allowedTypes = allowedElements.map(function (it) {
           return it.type;
         });
@@ -5463,12 +5488,12 @@
         }; // If embed, assign id
 
         Object.assign(element, contextData);
-        if (utils.isQuestion(element.type)) element.data = getQuestionData(element, subtype);
+        if (utils.isQuestion(element.type)) element.data = getQuestionData$1(element, subtype);
         if (element.type === 'REFLECTION') delete element.data.correct;
         return element;
       },
       onHidden: function onHidden() {
-        this.elementWidth = DEFAULT_ELEMENT_WIDTH;
+        this.elementWidth = DEFAULT_ELEMENT_WIDTH$1;
         this.$emit('hidden');
       },
       showElementPicker: function showElementPicker() {
@@ -5484,16 +5509,16 @@
       }
     },
     components: {
-      AddNewElement: AddNewElement,
-      SelectElement: SelectElement
+      AddNewElement: AddNewElement$1,
+      SelectElement: SelectElement$1
     }
   };
 
   /* script */
-  var __vue_script__$k = script$k;
+  var __vue_script__$Q = script$Q;
   /* template */
 
-  var __vue_render__$k = function __vue_render__() {
+  var __vue_render__$Q = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -5613,19 +5638,19 @@
     })] : _vm._e()], 2);
   };
 
-  var __vue_staticRenderFns__$k = [];
+  var __vue_staticRenderFns__$Q = [];
   /* style */
 
-  var __vue_inject_styles__$k = undefined;
+  var __vue_inject_styles__$Q = undefined;
   /* scoped */
 
-  var __vue_scope_id__$k = undefined;
+  var __vue_scope_id__$Q = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$k = false;
+  var __vue_is_functional_template__$Q = false;
   /* component normalizer */
 
-  function __vue_normalize__$k(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$Q(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "index.vue";
@@ -5646,10 +5671,10 @@
   /* style inject SSR */
 
 
-  var AddElement = __vue_normalize__$k({
-    render: __vue_render__$k,
-    staticRenderFns: __vue_staticRenderFns__$k
-  }, __vue_inject_styles__$k, __vue_script__$k, __vue_scope_id__$k, __vue_is_functional_template__$k);
+  var AddElement$1 = __vue_normalize__$Q({
+    render: __vue_render__$Q,
+    staticRenderFns: __vue_staticRenderFns__$Q
+  }, __vue_inject_styles__$Q, __vue_script__$Q, __vue_scope_id__$Q, __vue_is_functional_template__$Q);
 
   function _extends() {
     _extends = Object.assign || function (target) {
@@ -5670,10 +5695,10 @@
   }
 
   /** Used for built-in method references. */
-  var objectProto = Object.prototype;
+  var objectProto$f = Object.prototype;
   /** Used to check objects for own properties. */
 
-  var hasOwnProperty = objectProto.hasOwnProperty;
+  var hasOwnProperty$c = objectProto$f.hasOwnProperty;
   /**
    * The base implementation of `_.has` without support for deep paths.
    *
@@ -5684,7 +5709,7 @@
    */
 
   function baseHas(object, key) {
-    return object != null && hasOwnProperty.call(object, key);
+    return object != null && hasOwnProperty$c.call(object, key);
   }
 
   /**
@@ -5728,20 +5753,20 @@
 
   /** Used for built-in method references. */
 
-  var objectProto$1 = Object.prototype;
+  var objectProto$e = Object.prototype;
   /** Used to check objects for own properties. */
 
-  var hasOwnProperty$1 = objectProto$1.hasOwnProperty;
+  var hasOwnProperty$b = objectProto$e.hasOwnProperty;
   /**
    * Used to resolve the
    * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
    * of values.
    */
 
-  var nativeObjectToString = objectProto$1.toString;
+  var nativeObjectToString$1 = objectProto$e.toString;
   /** Built-in value references. */
 
-  var symToStringTag = _Symbol ? _Symbol.toStringTag : undefined;
+  var symToStringTag$1 = _Symbol ? _Symbol.toStringTag : undefined;
   /**
    * A specialized version of `baseGetTag` which ignores `Symbol.toStringTag` values.
    *
@@ -5751,21 +5776,21 @@
    */
 
   function getRawTag(value) {
-    var isOwn = hasOwnProperty$1.call(value, symToStringTag),
-        tag = value[symToStringTag];
+    var isOwn = hasOwnProperty$b.call(value, symToStringTag$1),
+        tag = value[symToStringTag$1];
 
     try {
-      value[symToStringTag] = undefined;
+      value[symToStringTag$1] = undefined;
       var unmasked = true;
     } catch (e) {}
 
-    var result = nativeObjectToString.call(value);
+    var result = nativeObjectToString$1.call(value);
 
     if (unmasked) {
       if (isOwn) {
-        value[symToStringTag] = tag;
+        value[symToStringTag$1] = tag;
       } else {
-        delete value[symToStringTag];
+        delete value[symToStringTag$1];
       }
     }
 
@@ -5773,14 +5798,14 @@
   }
 
   /** Used for built-in method references. */
-  var objectProto$2 = Object.prototype;
+  var objectProto$d = Object.prototype;
   /**
    * Used to resolve the
    * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
    * of values.
    */
 
-  var nativeObjectToString$1 = objectProto$2.toString;
+  var nativeObjectToString = objectProto$d.toString;
   /**
    * Converts `value` to a string using `Object.prototype.toString`.
    *
@@ -5790,7 +5815,7 @@
    */
 
   function objectToString(value) {
-    return nativeObjectToString$1.call(value);
+    return nativeObjectToString.call(value);
   }
 
   /** `Object#toString` result references. */
@@ -5799,7 +5824,7 @@
       undefinedTag = '[object Undefined]';
   /** Built-in value references. */
 
-  var symToStringTag$1 = _Symbol ? _Symbol.toStringTag : undefined;
+  var symToStringTag = _Symbol ? _Symbol.toStringTag : undefined;
   /**
    * The base implementation of `getTag` without fallbacks for buggy environments.
    *
@@ -5813,7 +5838,7 @@
       return value === undefined ? undefinedTag : nullTag;
     }
 
-    return symToStringTag$1 && symToStringTag$1 in Object(value) ? getRawTag(value) : objectToString(value);
+    return symToStringTag && symToStringTag in Object(value) ? getRawTag(value) : objectToString(value);
   }
 
   /**
@@ -5846,7 +5871,7 @@
 
   /** `Object#toString` result references. */
 
-  var symbolTag = '[object Symbol]';
+  var symbolTag$3 = '[object Symbol]';
   /**
    * Checks if `value` is classified as a `Symbol` primitive or object.
    *
@@ -5866,7 +5891,7 @@
    */
 
   function isSymbol(value) {
-    return _typeof(value) == 'symbol' || isObjectLike(value) && baseGetTag(value) == symbolTag;
+    return _typeof(value) == 'symbol' || isObjectLike(value) && baseGetTag(value) == symbolTag$3;
   }
 
   /** Used to match property names within property paths. */
@@ -5921,7 +5946,7 @@
    * _.isObject(null);
    * // => false
    */
-  function isObject(value) {
+  function isObject$2(value) {
     var type = _typeof(value);
 
     return value != null && (type == 'object' || type == 'function');
@@ -5930,8 +5955,8 @@
   /** `Object#toString` result references. */
 
   var asyncTag = '[object AsyncFunction]',
-      funcTag = '[object Function]',
-      genTag = '[object GeneratorFunction]',
+      funcTag$2 = '[object Function]',
+      genTag$1 = '[object GeneratorFunction]',
       proxyTag = '[object Proxy]';
   /**
    * Checks if `value` is classified as a `Function` object.
@@ -5952,14 +5977,14 @@
    */
 
   function isFunction(value) {
-    if (!isObject(value)) {
+    if (!isObject$2(value)) {
       return false;
     } // The use of `Object#toString` avoids issues with the `typeof` operator
     // in Safari 9 which returns 'object' for typed arrays and other constructors.
 
 
     var tag = baseGetTag(value);
-    return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;
+    return tag == funcTag$2 || tag == genTag$1 || tag == asyncTag || tag == proxyTag;
   }
 
   /** Used to detect overreaching core-js shims. */
@@ -5986,10 +6011,10 @@
   }
 
   /** Used for built-in method references. */
-  var funcProto = Function.prototype;
+  var funcProto$1 = Function.prototype;
   /** Used to resolve the decompiled source of functions. */
 
-  var funcToString = funcProto.toString;
+  var funcToString$1 = funcProto$1.toString;
   /**
    * Converts `func` to its source code.
    *
@@ -6001,7 +6026,7 @@
   function toSource(func) {
     if (func != null) {
       try {
-        return funcToString.call(func);
+        return funcToString$1.call(func);
       } catch (e) {}
 
       try {
@@ -6023,17 +6048,17 @@
   var reIsHostCtor = /^\[object .+?Constructor\]$/;
   /** Used for built-in method references. */
 
-  var funcProto$1 = Function.prototype,
-      objectProto$3 = Object.prototype;
+  var funcProto = Function.prototype,
+      objectProto$c = Object.prototype;
   /** Used to resolve the decompiled source of functions. */
 
-  var funcToString$1 = funcProto$1.toString;
+  var funcToString = funcProto.toString;
   /** Used to check objects for own properties. */
 
-  var hasOwnProperty$2 = objectProto$3.hasOwnProperty;
+  var hasOwnProperty$a = objectProto$c.hasOwnProperty;
   /** Used to detect if a method is native. */
 
-  var reIsNative = RegExp('^' + funcToString$1.call(hasOwnProperty$2).replace(reRegExpChar, '\\$&').replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$');
+  var reIsNative = RegExp('^' + funcToString.call(hasOwnProperty$a).replace(reRegExpChar, '\\$&').replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$');
   /**
    * The base implementation of `_.isNative` without bad shim checks.
    *
@@ -6044,7 +6069,7 @@
    */
 
   function baseIsNative(value) {
-    if (!isObject(value) || isMasked(value)) {
+    if (!isObject$2(value) || isMasked(value)) {
       return false;
     }
 
@@ -6113,13 +6138,13 @@
 
   /** Used to stand-in for `undefined` hash values. */
 
-  var HASH_UNDEFINED = '__lodash_hash_undefined__';
+  var HASH_UNDEFINED$2 = '__lodash_hash_undefined__';
   /** Used for built-in method references. */
 
-  var objectProto$4 = Object.prototype;
+  var objectProto$b = Object.prototype;
   /** Used to check objects for own properties. */
 
-  var hasOwnProperty$3 = objectProto$4.hasOwnProperty;
+  var hasOwnProperty$9 = objectProto$b.hasOwnProperty;
   /**
    * Gets the hash value for `key`.
    *
@@ -6135,18 +6160,18 @@
 
     if (nativeCreate) {
       var result = data[key];
-      return result === HASH_UNDEFINED ? undefined : result;
+      return result === HASH_UNDEFINED$2 ? undefined : result;
     }
 
-    return hasOwnProperty$3.call(data, key) ? data[key] : undefined;
+    return hasOwnProperty$9.call(data, key) ? data[key] : undefined;
   }
 
   /** Used for built-in method references. */
 
-  var objectProto$5 = Object.prototype;
+  var objectProto$a = Object.prototype;
   /** Used to check objects for own properties. */
 
-  var hasOwnProperty$4 = objectProto$5.hasOwnProperty;
+  var hasOwnProperty$8 = objectProto$a.hasOwnProperty;
   /**
    * Checks if a hash value for `key` exists.
    *
@@ -6159,7 +6184,7 @@
 
   function hashHas(key) {
     var data = this.__data__;
-    return nativeCreate ? data[key] !== undefined : hasOwnProperty$4.call(data, key);
+    return nativeCreate ? data[key] !== undefined : hasOwnProperty$8.call(data, key);
   }
 
   /** Used to stand-in for `undefined` hash values. */
@@ -6682,11 +6707,11 @@
 
   /** Used as references for various `Number` constants. */
 
-  var INFINITY = 1 / 0;
+  var INFINITY$1 = 1 / 0;
   /** Used to convert symbols to primitives and strings. */
 
-  var symbolProto = _Symbol ? _Symbol.prototype : undefined,
-      symbolToString = symbolProto ? symbolProto.toString : undefined;
+  var symbolProto$2 = _Symbol ? _Symbol.prototype : undefined,
+      symbolToString$1 = symbolProto$2 ? symbolProto$2.toString : undefined;
   /**
    * The base implementation of `_.toString` which doesn't convert nullish
    * values to empty strings.
@@ -6708,11 +6733,11 @@
     }
 
     if (isSymbol(value)) {
-      return symbolToString ? symbolToString.call(value) : '';
+      return symbolToString$1 ? symbolToString$1.call(value) : '';
     }
 
     var result = value + '';
-    return result == '0' && 1 / value == -INFINITY ? '-0' : result;
+    return result == '0' && 1 / value == -INFINITY$1 ? '-0' : result;
   }
 
   /**
@@ -6737,7 +6762,7 @@
    * // => '1,2,3'
    */
 
-  function toString(value) {
+  function toString$1(value) {
     return value == null ? '' : baseToString(value);
   }
 
@@ -6755,12 +6780,12 @@
       return value;
     }
 
-    return isKey(value, object) ? [value] : stringToPath(toString(value));
+    return isKey(value, object) ? [value] : stringToPath(toString$1(value));
   }
 
   /** `Object#toString` result references. */
 
-  var argsTag = '[object Arguments]';
+  var argsTag$3 = '[object Arguments]';
   /**
    * The base implementation of `_.isArguments`.
    *
@@ -6770,18 +6795,18 @@
    */
 
   function baseIsArguments(value) {
-    return isObjectLike(value) && baseGetTag(value) == argsTag;
+    return isObjectLike(value) && baseGetTag(value) == argsTag$3;
   }
 
   /** Used for built-in method references. */
 
-  var objectProto$6 = Object.prototype;
+  var objectProto$9 = Object.prototype;
   /** Used to check objects for own properties. */
 
-  var hasOwnProperty$5 = objectProto$6.hasOwnProperty;
+  var hasOwnProperty$7 = objectProto$9.hasOwnProperty;
   /** Built-in value references. */
 
-  var propertyIsEnumerable = objectProto$6.propertyIsEnumerable;
+  var propertyIsEnumerable$1 = objectProto$9.propertyIsEnumerable;
   /**
    * Checks if `value` is likely an `arguments` object.
    *
@@ -6804,11 +6829,11 @@
   var isArguments = baseIsArguments(function () {
     return arguments;
   }()) ? baseIsArguments : function (value) {
-    return isObjectLike(value) && hasOwnProperty$5.call(value, 'callee') && !propertyIsEnumerable.call(value, 'callee');
+    return isObjectLike(value) && hasOwnProperty$7.call(value, 'callee') && !propertyIsEnumerable$1.call(value, 'callee');
   };
 
   /** Used as references for various `Number` constants. */
-  var MAX_SAFE_INTEGER = 9007199254740991;
+  var MAX_SAFE_INTEGER$1 = 9007199254740991;
   /** Used to detect unsigned integer values. */
 
   var reIsUint = /^(?:0|[1-9]\d*)$/;
@@ -6824,12 +6849,12 @@
   function isIndex(value, length) {
     var type = _typeof(value);
 
-    length = length == null ? MAX_SAFE_INTEGER : length;
+    length = length == null ? MAX_SAFE_INTEGER$1 : length;
     return !!length && (type == 'number' || type != 'symbol' && reIsUint.test(value)) && value > -1 && value % 1 == 0 && value < length;
   }
 
   /** Used as references for various `Number` constants. */
-  var MAX_SAFE_INTEGER$1 = 9007199254740991;
+  var MAX_SAFE_INTEGER = 9007199254740991;
   /**
    * Checks if `value` is a valid array-like length.
    *
@@ -6858,12 +6883,12 @@
    */
 
   function isLength(value) {
-    return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER$1;
+    return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
   }
 
   /** Used as references for various `Number` constants. */
 
-  var INFINITY$1 = 1 / 0;
+  var INFINITY = 1 / 0;
   /**
    * Converts `value` to a string key if it's not a string or symbol.
    *
@@ -6878,7 +6903,7 @@
     }
 
     var result = value + '';
-    return result == '0' && 1 / value == -INFINITY$1 ? '-0' : result;
+    return result == '0' && 1 / value == -INFINITY ? '-0' : result;
   }
 
   /**
@@ -7111,10 +7136,10 @@
 
   /** Used for built-in method references. */
 
-  var objectProto$7 = Object.prototype;
+  var objectProto$8 = Object.prototype;
   /** Used to check objects for own properties. */
 
-  var hasOwnProperty$6 = objectProto$7.hasOwnProperty;
+  var hasOwnProperty$6 = objectProto$8.hasOwnProperty;
   /**
    * Assigns `value` to `key` of `object` if the existing value is not equivalent
    * using [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
@@ -7208,19 +7233,19 @@
 
   /** Detect free variable `exports`. */
 
-  var freeExports = (typeof exports === "undefined" ? "undefined" : _typeof(exports)) == 'object' && exports && !exports.nodeType && exports;
+  var freeExports$2 = (typeof exports === "undefined" ? "undefined" : _typeof(exports)) == 'object' && exports && !exports.nodeType && exports;
   /** Detect free variable `module`. */
 
-  var freeModule = freeExports && (typeof module === "undefined" ? "undefined" : _typeof(module)) == 'object' && module && !module.nodeType && module;
+  var freeModule$2 = freeExports$2 && (typeof module === "undefined" ? "undefined" : _typeof(module)) == 'object' && module && !module.nodeType && module;
   /** Detect the popular CommonJS extension `module.exports`. */
 
-  var moduleExports = freeModule && freeModule.exports === freeExports;
+  var moduleExports$2 = freeModule$2 && freeModule$2.exports === freeExports$2;
   /** Built-in value references. */
 
-  var Buffer$1 = moduleExports ? root.Buffer : undefined;
+  var Buffer$2 = moduleExports$2 ? root.Buffer : undefined;
   /* Built-in method references for those with the same name as other `lodash` methods. */
 
-  var nativeIsBuffer = Buffer$1 ? Buffer$1.isBuffer : undefined;
+  var nativeIsBuffer = Buffer$2 ? Buffer$2.isBuffer : undefined;
   /**
    * Checks if `value` is a buffer.
    *
@@ -7243,35 +7268,35 @@
 
   /** `Object#toString` result references. */
 
-  var argsTag$1 = '[object Arguments]',
-      arrayTag = '[object Array]',
-      boolTag = '[object Boolean]',
-      dateTag = '[object Date]',
-      errorTag = '[object Error]',
+  var argsTag$2 = '[object Arguments]',
+      arrayTag$2 = '[object Array]',
+      boolTag$3 = '[object Boolean]',
+      dateTag$3 = '[object Date]',
+      errorTag$2 = '[object Error]',
       funcTag$1 = '[object Function]',
-      mapTag = '[object Map]',
-      numberTag = '[object Number]',
-      objectTag = '[object Object]',
-      regexpTag = '[object RegExp]',
-      setTag = '[object Set]',
-      stringTag = '[object String]',
-      weakMapTag = '[object WeakMap]';
-  var arrayBufferTag = '[object ArrayBuffer]',
-      dataViewTag = '[object DataView]',
-      float32Tag = '[object Float32Array]',
-      float64Tag = '[object Float64Array]',
-      int8Tag = '[object Int8Array]',
-      int16Tag = '[object Int16Array]',
-      int32Tag = '[object Int32Array]',
-      uint8Tag = '[object Uint8Array]',
-      uint8ClampedTag = '[object Uint8ClampedArray]',
-      uint16Tag = '[object Uint16Array]',
-      uint32Tag = '[object Uint32Array]';
+      mapTag$6 = '[object Map]',
+      numberTag$3 = '[object Number]',
+      objectTag$3 = '[object Object]',
+      regexpTag$3 = '[object RegExp]',
+      setTag$6 = '[object Set]',
+      stringTag$4 = '[object String]',
+      weakMapTag$2 = '[object WeakMap]';
+  var arrayBufferTag$3 = '[object ArrayBuffer]',
+      dataViewTag$4 = '[object DataView]',
+      float32Tag$2 = '[object Float32Array]',
+      float64Tag$2 = '[object Float64Array]',
+      int8Tag$2 = '[object Int8Array]',
+      int16Tag$2 = '[object Int16Array]',
+      int32Tag$2 = '[object Int32Array]',
+      uint8Tag$2 = '[object Uint8Array]',
+      uint8ClampedTag$2 = '[object Uint8ClampedArray]',
+      uint16Tag$2 = '[object Uint16Array]',
+      uint32Tag$2 = '[object Uint32Array]';
   /** Used to identify `toStringTag` values of typed arrays. */
 
   var typedArrayTags = {};
-  typedArrayTags[float32Tag] = typedArrayTags[float64Tag] = typedArrayTags[int8Tag] = typedArrayTags[int16Tag] = typedArrayTags[int32Tag] = typedArrayTags[uint8Tag] = typedArrayTags[uint8ClampedTag] = typedArrayTags[uint16Tag] = typedArrayTags[uint32Tag] = true;
-  typedArrayTags[argsTag$1] = typedArrayTags[arrayTag] = typedArrayTags[arrayBufferTag] = typedArrayTags[boolTag] = typedArrayTags[dataViewTag] = typedArrayTags[dateTag] = typedArrayTags[errorTag] = typedArrayTags[funcTag$1] = typedArrayTags[mapTag] = typedArrayTags[numberTag] = typedArrayTags[objectTag] = typedArrayTags[regexpTag] = typedArrayTags[setTag] = typedArrayTags[stringTag] = typedArrayTags[weakMapTag] = false;
+  typedArrayTags[float32Tag$2] = typedArrayTags[float64Tag$2] = typedArrayTags[int8Tag$2] = typedArrayTags[int16Tag$2] = typedArrayTags[int32Tag$2] = typedArrayTags[uint8Tag$2] = typedArrayTags[uint8ClampedTag$2] = typedArrayTags[uint16Tag$2] = typedArrayTags[uint32Tag$2] = true;
+  typedArrayTags[argsTag$2] = typedArrayTags[arrayTag$2] = typedArrayTags[arrayBufferTag$3] = typedArrayTags[boolTag$3] = typedArrayTags[dataViewTag$4] = typedArrayTags[dateTag$3] = typedArrayTags[errorTag$2] = typedArrayTags[funcTag$1] = typedArrayTags[mapTag$6] = typedArrayTags[numberTag$3] = typedArrayTags[objectTag$3] = typedArrayTags[regexpTag$3] = typedArrayTags[setTag$6] = typedArrayTags[stringTag$4] = typedArrayTags[weakMapTag$2] = false;
   /**
    * The base implementation of `_.isTypedArray` without Node.js optimizations.
    *
@@ -7350,10 +7375,10 @@
 
   /** Used for built-in method references. */
 
-  var objectProto$8 = Object.prototype;
+  var objectProto$7 = Object.prototype;
   /** Used to check objects for own properties. */
 
-  var hasOwnProperty$7 = objectProto$8.hasOwnProperty;
+  var hasOwnProperty$5 = objectProto$7.hasOwnProperty;
   /**
    * Creates an array of the enumerable property names of the array-like `value`.
    *
@@ -7373,7 +7398,7 @@
         length = result.length;
 
     for (var key in value) {
-      if ((inherited || hasOwnProperty$7.call(value, key)) && !(skipIndexes && ( // Safari 9 has enumerable `arguments.length` in strict mode.
+      if ((inherited || hasOwnProperty$5.call(value, key)) && !(skipIndexes && ( // Safari 9 has enumerable `arguments.length` in strict mode.
       key == 'length' || // Node.js 0.10 has enumerable non-index properties on buffers.
       isBuff && (key == 'offset' || key == 'parent') || // PhantomJS 2 has enumerable non-index properties on typed arrays.
       isType && (key == 'buffer' || key == 'byteLength' || key == 'byteOffset') || // Skip index properties.
@@ -7386,7 +7411,7 @@
   }
 
   /** Used for built-in method references. */
-  var objectProto$9 = Object.prototype;
+  var objectProto$6 = Object.prototype;
   /**
    * Checks if `value` is likely a prototype object.
    *
@@ -7397,7 +7422,7 @@
 
   function isPrototype(value) {
     var Ctor = value && value.constructor,
-        proto = typeof Ctor == 'function' && Ctor.prototype || objectProto$9;
+        proto = typeof Ctor == 'function' && Ctor.prototype || objectProto$6;
     return value === proto;
   }
 
@@ -7421,10 +7446,10 @@
 
   /** Used for built-in method references. */
 
-  var objectProto$a = Object.prototype;
+  var objectProto$5 = Object.prototype;
   /** Used to check objects for own properties. */
 
-  var hasOwnProperty$8 = objectProto$a.hasOwnProperty;
+  var hasOwnProperty$4 = objectProto$5.hasOwnProperty;
   /**
    * The base implementation of `_.keys` which doesn't treat sparse arrays as dense.
    *
@@ -7441,7 +7466,7 @@
     var result = [];
 
     for (var key in Object(object)) {
-      if (hasOwnProperty$8.call(object, key) && key != 'constructor') {
+      if (hasOwnProperty$4.call(object, key) && key != 'constructor') {
         result.push(key);
       }
     }
@@ -7549,10 +7574,10 @@
 
   /** Used for built-in method references. */
 
-  var objectProto$b = Object.prototype;
+  var objectProto$4 = Object.prototype;
   /** Used to check objects for own properties. */
 
-  var hasOwnProperty$9 = objectProto$b.hasOwnProperty;
+  var hasOwnProperty$3 = objectProto$4.hasOwnProperty;
   /**
    * The base implementation of `_.keysIn` which doesn't treat sparse arrays as dense.
    *
@@ -7562,7 +7587,7 @@
    */
 
   function baseKeysIn(object) {
-    if (!isObject(object)) {
+    if (!isObject$2(object)) {
       return nativeKeysIn(object);
     }
 
@@ -7570,7 +7595,7 @@
         result = [];
 
     for (var key in object) {
-      if (!(key == 'constructor' && (isProto || !hasOwnProperty$9.call(object, key)))) {
+      if (!(key == 'constructor' && (isProto || !hasOwnProperty$3.call(object, key)))) {
         result.push(key);
       }
     }
@@ -7622,17 +7647,17 @@
 
   /** Detect free variable `exports`. */
 
-  var freeExports$2 = (typeof exports === "undefined" ? "undefined" : _typeof(exports)) == 'object' && exports && !exports.nodeType && exports;
+  var freeExports = (typeof exports === "undefined" ? "undefined" : _typeof(exports)) == 'object' && exports && !exports.nodeType && exports;
   /** Detect free variable `module`. */
 
-  var freeModule$2 = freeExports$2 && (typeof module === "undefined" ? "undefined" : _typeof(module)) == 'object' && module && !module.nodeType && module;
+  var freeModule = freeExports && (typeof module === "undefined" ? "undefined" : _typeof(module)) == 'object' && module && !module.nodeType && module;
   /** Detect the popular CommonJS extension `module.exports`. */
 
-  var moduleExports$2 = freeModule$2 && freeModule$2.exports === freeExports$2;
+  var moduleExports = freeModule && freeModule.exports === freeExports;
   /** Built-in value references. */
 
-  var Buffer$2 = moduleExports$2 ? root.Buffer : undefined,
-      allocUnsafe = Buffer$2 ? Buffer$2.allocUnsafe : undefined;
+  var Buffer$1 = moduleExports ? root.Buffer : undefined,
+      allocUnsafe = Buffer$1 ? Buffer$1.allocUnsafe : undefined;
   /**
    * Creates a clone of  `buffer`.
    *
@@ -7723,13 +7748,13 @@
 
   /** Used for built-in method references. */
 
-  var objectProto$c = Object.prototype;
+  var objectProto$3 = Object.prototype;
   /** Built-in value references. */
 
-  var propertyIsEnumerable$1 = objectProto$c.propertyIsEnumerable;
+  var propertyIsEnumerable = objectProto$3.propertyIsEnumerable;
   /* Built-in method references for those with the same name as other `lodash` methods. */
 
-  var nativeGetSymbols = Object.getOwnPropertySymbols;
+  var nativeGetSymbols$1 = Object.getOwnPropertySymbols;
   /**
    * Creates an array of the own enumerable symbols of `object`.
    *
@@ -7738,14 +7763,14 @@
    * @returns {Array} Returns the array of symbols.
    */
 
-  var getSymbols = !nativeGetSymbols ? stubArray : function (object) {
+  var getSymbols = !nativeGetSymbols$1 ? stubArray : function (object) {
     if (object == null) {
       return [];
     }
 
     object = Object(object);
-    return arrayFilter(nativeGetSymbols(object), function (symbol) {
-      return propertyIsEnumerable$1.call(object, symbol);
+    return arrayFilter(nativeGetSymbols$1(object), function (symbol) {
+      return propertyIsEnumerable.call(object, symbol);
     });
   };
 
@@ -7788,7 +7813,7 @@
 
   /* Built-in method references for those with the same name as other `lodash` methods. */
 
-  var nativeGetSymbols$1 = Object.getOwnPropertySymbols;
+  var nativeGetSymbols = Object.getOwnPropertySymbols;
   /**
    * Creates an array of the own and inherited enumerable symbols of `object`.
    *
@@ -7797,7 +7822,7 @@
    * @returns {Array} Returns the array of symbols.
    */
 
-  var getSymbolsIn = !nativeGetSymbols$1 ? stubArray : function (object) {
+  var getSymbolsIn = !nativeGetSymbols ? stubArray : function (object) {
     var result = [];
 
     while (object) {
@@ -7881,12 +7906,12 @@
 
   /** `Object#toString` result references. */
 
-  var mapTag$1 = '[object Map]',
-      objectTag$1 = '[object Object]',
+  var mapTag$5 = '[object Map]',
+      objectTag$2 = '[object Object]',
       promiseTag = '[object Promise]',
-      setTag$1 = '[object Set]',
+      setTag$5 = '[object Set]',
       weakMapTag$1 = '[object WeakMap]';
-  var dataViewTag$1 = '[object DataView]';
+  var dataViewTag$3 = '[object DataView]';
   /** Used to detect maps, sets, and weakmaps. */
 
   var dataViewCtorString = toSource(DataView),
@@ -7904,25 +7929,25 @@
 
   var getTag = baseGetTag; // Fallback for data views, maps, sets, and weak maps in IE 11 and promises in Node.js < 6.
 
-  if (DataView && getTag(new DataView(new ArrayBuffer(1))) != dataViewTag$1 || Map$1 && getTag(new Map$1()) != mapTag$1 || Promise$1 && getTag(Promise$1.resolve()) != promiseTag || Set$1 && getTag(new Set$1()) != setTag$1 || WeakMap && getTag(new WeakMap()) != weakMapTag$1) {
+  if (DataView && getTag(new DataView(new ArrayBuffer(1))) != dataViewTag$3 || Map$1 && getTag(new Map$1()) != mapTag$5 || Promise$1 && getTag(Promise$1.resolve()) != promiseTag || Set$1 && getTag(new Set$1()) != setTag$5 || WeakMap && getTag(new WeakMap()) != weakMapTag$1) {
     getTag = function getTag(value) {
       var result = baseGetTag(value),
-          Ctor = result == objectTag$1 ? value.constructor : undefined,
+          Ctor = result == objectTag$2 ? value.constructor : undefined,
           ctorString = Ctor ? toSource(Ctor) : '';
 
       if (ctorString) {
         switch (ctorString) {
           case dataViewCtorString:
-            return dataViewTag$1;
+            return dataViewTag$3;
 
           case mapCtorString:
-            return mapTag$1;
+            return mapTag$5;
 
           case promiseCtorString:
             return promiseTag;
 
           case setCtorString:
-            return setTag$1;
+            return setTag$5;
 
           case weakMapCtorString:
             return weakMapTag$1;
@@ -7936,10 +7961,10 @@
   var getTag$1 = getTag;
 
   /** Used for built-in method references. */
-  var objectProto$d = Object.prototype;
+  var objectProto$2 = Object.prototype;
   /** Used to check objects for own properties. */
 
-  var hasOwnProperty$a = objectProto$d.hasOwnProperty;
+  var hasOwnProperty$2 = objectProto$2.hasOwnProperty;
   /**
    * Initializes an array clone.
    *
@@ -7952,7 +7977,7 @@
     var length = array.length,
         result = new array.constructor(length); // Add properties assigned by `RegExp#exec`.
 
-    if (length && typeof array[0] == 'string' && hasOwnProperty$a.call(array, 'index')) {
+    if (length && typeof array[0] == 'string' && hasOwnProperty$2.call(array, 'index')) {
       result.index = array.index;
       result.input = array.input;
     }
@@ -8011,7 +8036,7 @@
   /** Used to convert symbols to primitives and strings. */
 
   var symbolProto$1 = _Symbol ? _Symbol.prototype : undefined,
-      symbolValueOf = symbolProto$1 ? symbolProto$1.valueOf : undefined;
+      symbolValueOf$1 = symbolProto$1 ? symbolProto$1.valueOf : undefined;
   /**
    * Creates a clone of the `symbol` object.
    *
@@ -8021,7 +8046,7 @@
    */
 
   function cloneSymbol(symbol) {
-    return symbolValueOf ? Object(symbolValueOf.call(symbol)) : {};
+    return symbolValueOf$1 ? Object(symbolValueOf$1.call(symbol)) : {};
   }
 
   /**
@@ -8040,15 +8065,15 @@
 
   /** `Object#toString` result references. */
 
-  var boolTag$1 = '[object Boolean]',
-      dateTag$1 = '[object Date]',
-      mapTag$2 = '[object Map]',
-      numberTag$1 = '[object Number]',
-      regexpTag$1 = '[object RegExp]',
-      setTag$2 = '[object Set]',
-      stringTag$1 = '[object String]',
-      symbolTag$1 = '[object Symbol]';
-  var arrayBufferTag$1 = '[object ArrayBuffer]',
+  var boolTag$2 = '[object Boolean]',
+      dateTag$2 = '[object Date]',
+      mapTag$4 = '[object Map]',
+      numberTag$2 = '[object Number]',
+      regexpTag$2 = '[object RegExp]',
+      setTag$4 = '[object Set]',
+      stringTag$3 = '[object String]',
+      symbolTag$2 = '[object Symbol]';
+  var arrayBufferTag$2 = '[object ArrayBuffer]',
       dataViewTag$2 = '[object DataView]',
       float32Tag$1 = '[object Float32Array]',
       float64Tag$1 = '[object Float64Array]',
@@ -8076,11 +8101,11 @@
     var Ctor = object.constructor;
 
     switch (tag) {
-      case arrayBufferTag$1:
+      case arrayBufferTag$2:
         return cloneArrayBuffer(object);
 
-      case boolTag$1:
-      case dateTag$1:
+      case boolTag$2:
+      case dateTag$2:
         return new Ctor(+object);
 
       case dataViewTag$2:
@@ -8097,20 +8122,20 @@
       case uint32Tag$1:
         return cloneTypedArray(object, isDeep);
 
-      case mapTag$2:
+      case mapTag$4:
         return new Ctor();
 
-      case numberTag$1:
-      case stringTag$1:
+      case numberTag$2:
+      case stringTag$3:
         return new Ctor(object);
 
-      case regexpTag$1:
+      case regexpTag$2:
         return cloneRegExp(object);
 
-      case setTag$2:
+      case setTag$4:
         return new Ctor();
 
-      case symbolTag$1:
+      case symbolTag$2:
         return cloneSymbol(object);
     }
   }
@@ -8131,7 +8156,7 @@
     function object() {}
 
     return function (proto) {
-      if (!isObject(proto)) {
+      if (!isObject$2(proto)) {
         return {};
       }
 
@@ -8236,42 +8261,42 @@
 
   /** Used to compose bitmasks for cloning. */
 
-  var CLONE_DEEP_FLAG = 1,
+  var CLONE_DEEP_FLAG$1 = 1,
       CLONE_FLAT_FLAG = 2,
-      CLONE_SYMBOLS_FLAG = 4;
+      CLONE_SYMBOLS_FLAG$1 = 4;
   /** `Object#toString` result references. */
 
-  var argsTag$2 = '[object Arguments]',
+  var argsTag$1 = '[object Arguments]',
       arrayTag$1 = '[object Array]',
-      boolTag$2 = '[object Boolean]',
-      dateTag$2 = '[object Date]',
+      boolTag$1 = '[object Boolean]',
+      dateTag$1 = '[object Date]',
       errorTag$1 = '[object Error]',
-      funcTag$2 = '[object Function]',
-      genTag$1 = '[object GeneratorFunction]',
-      mapTag$4 = '[object Map]',
-      numberTag$2 = '[object Number]',
-      objectTag$2 = '[object Object]',
-      regexpTag$2 = '[object RegExp]',
-      setTag$4 = '[object Set]',
+      funcTag = '[object Function]',
+      genTag = '[object GeneratorFunction]',
+      mapTag$2 = '[object Map]',
+      numberTag$1 = '[object Number]',
+      objectTag$1 = '[object Object]',
+      regexpTag$1 = '[object RegExp]',
+      setTag$2 = '[object Set]',
       stringTag$2 = '[object String]',
-      symbolTag$2 = '[object Symbol]',
-      weakMapTag$2 = '[object WeakMap]';
-  var arrayBufferTag$2 = '[object ArrayBuffer]',
-      dataViewTag$3 = '[object DataView]',
-      float32Tag$2 = '[object Float32Array]',
-      float64Tag$2 = '[object Float64Array]',
-      int8Tag$2 = '[object Int8Array]',
-      int16Tag$2 = '[object Int16Array]',
-      int32Tag$2 = '[object Int32Array]',
-      uint8Tag$2 = '[object Uint8Array]',
-      uint8ClampedTag$2 = '[object Uint8ClampedArray]',
-      uint16Tag$2 = '[object Uint16Array]',
-      uint32Tag$2 = '[object Uint32Array]';
+      symbolTag$1 = '[object Symbol]',
+      weakMapTag = '[object WeakMap]';
+  var arrayBufferTag$1 = '[object ArrayBuffer]',
+      dataViewTag$1 = '[object DataView]',
+      float32Tag = '[object Float32Array]',
+      float64Tag = '[object Float64Array]',
+      int8Tag = '[object Int8Array]',
+      int16Tag = '[object Int16Array]',
+      int32Tag = '[object Int32Array]',
+      uint8Tag = '[object Uint8Array]',
+      uint8ClampedTag = '[object Uint8ClampedArray]',
+      uint16Tag = '[object Uint16Array]',
+      uint32Tag = '[object Uint32Array]';
   /** Used to identify `toStringTag` values supported by `_.clone`. */
 
   var cloneableTags = {};
-  cloneableTags[argsTag$2] = cloneableTags[arrayTag$1] = cloneableTags[arrayBufferTag$2] = cloneableTags[dataViewTag$3] = cloneableTags[boolTag$2] = cloneableTags[dateTag$2] = cloneableTags[float32Tag$2] = cloneableTags[float64Tag$2] = cloneableTags[int8Tag$2] = cloneableTags[int16Tag$2] = cloneableTags[int32Tag$2] = cloneableTags[mapTag$4] = cloneableTags[numberTag$2] = cloneableTags[objectTag$2] = cloneableTags[regexpTag$2] = cloneableTags[setTag$4] = cloneableTags[stringTag$2] = cloneableTags[symbolTag$2] = cloneableTags[uint8Tag$2] = cloneableTags[uint8ClampedTag$2] = cloneableTags[uint16Tag$2] = cloneableTags[uint32Tag$2] = true;
-  cloneableTags[errorTag$1] = cloneableTags[funcTag$2] = cloneableTags[weakMapTag$2] = false;
+  cloneableTags[argsTag$1] = cloneableTags[arrayTag$1] = cloneableTags[arrayBufferTag$1] = cloneableTags[dataViewTag$1] = cloneableTags[boolTag$1] = cloneableTags[dateTag$1] = cloneableTags[float32Tag] = cloneableTags[float64Tag] = cloneableTags[int8Tag] = cloneableTags[int16Tag] = cloneableTags[int32Tag] = cloneableTags[mapTag$2] = cloneableTags[numberTag$1] = cloneableTags[objectTag$1] = cloneableTags[regexpTag$1] = cloneableTags[setTag$2] = cloneableTags[stringTag$2] = cloneableTags[symbolTag$1] = cloneableTags[uint8Tag] = cloneableTags[uint8ClampedTag] = cloneableTags[uint16Tag] = cloneableTags[uint32Tag] = true;
+  cloneableTags[errorTag$1] = cloneableTags[funcTag] = cloneableTags[weakMapTag] = false;
   /**
    * The base implementation of `_.clone` and `_.cloneDeep` which tracks
    * traversed objects.
@@ -8291,9 +8316,9 @@
 
   function baseClone(value, bitmask, customizer, key, object, stack) {
     var result,
-        isDeep = bitmask & CLONE_DEEP_FLAG,
+        isDeep = bitmask & CLONE_DEEP_FLAG$1,
         isFlat = bitmask & CLONE_FLAT_FLAG,
-        isFull = bitmask & CLONE_SYMBOLS_FLAG;
+        isFull = bitmask & CLONE_SYMBOLS_FLAG$1;
 
     if (customizer) {
       result = object ? customizer(value, key, object, stack) : customizer(value);
@@ -8303,7 +8328,7 @@
       return result;
     }
 
-    if (!isObject(value)) {
+    if (!isObject$2(value)) {
       return value;
     }
 
@@ -8317,13 +8342,13 @@
       }
     } else {
       var tag = getTag$1(value),
-          isFunc = tag == funcTag$2 || tag == genTag$1;
+          isFunc = tag == funcTag || tag == genTag;
 
       if (isBuffer(value)) {
         return cloneBuffer(value, isDeep);
       }
 
-      if (tag == objectTag$2 || tag == argsTag$2 || isFunc && !object) {
+      if (tag == objectTag$1 || tag == argsTag$1 || isFunc && !object) {
         result = isFlat || isFunc ? {} : initCloneObject(value);
 
         if (!isDeep) {
@@ -8374,8 +8399,8 @@
 
   /** Used to compose bitmasks for cloning. */
 
-  var CLONE_DEEP_FLAG$1 = 1,
-      CLONE_SYMBOLS_FLAG$1 = 4;
+  var CLONE_DEEP_FLAG = 1,
+      CLONE_SYMBOLS_FLAG = 4;
   /**
    * This method is like `_.cloneWith` except that it recursively clones `value`.
    *
@@ -8407,12 +8432,12 @@
 
   function cloneDeepWith(value, customizer) {
     customizer = typeof customizer == 'function' ? customizer : undefined;
-    return baseClone(value, CLONE_DEEP_FLAG$1 | CLONE_SYMBOLS_FLAG$1, customizer);
+    return baseClone(value, CLONE_DEEP_FLAG | CLONE_SYMBOLS_FLAG, customizer);
   }
 
   /** `Object#toString` result references. */
 
-  var stringTag$3 = '[object String]';
+  var stringTag$1 = '[object String]';
   /**
    * Checks if `value` is classified as a `String` primitive or object.
    *
@@ -8432,7 +8457,7 @@
    */
 
   function isString(value) {
-    return typeof value == 'string' || !isArray(value) && isObjectLike(value) && baseGetTag(value) == stringTag$3;
+    return typeof value == 'string' || !isArray(value) && isObjectLike(value) && baseGetTag(value) == stringTag$1;
   }
 
   /**
@@ -8497,18 +8522,18 @@
   }
 
   /** Used to compose unicode character classes. */
-  var rsAstralRange = "\\ud800-\\udfff",
-      rsComboMarksRange = "\\u0300-\\u036f",
-      reComboHalfMarksRange = "\\ufe20-\\ufe2f",
-      rsComboSymbolsRange = "\\u20d0-\\u20ff",
-      rsComboRange = rsComboMarksRange + reComboHalfMarksRange + rsComboSymbolsRange,
-      rsVarRange = "\\ufe0e\\ufe0f";
+  var rsAstralRange$2 = "\\ud800-\\udfff",
+      rsComboMarksRange$3 = "\\u0300-\\u036f",
+      reComboHalfMarksRange$3 = "\\ufe20-\\ufe2f",
+      rsComboSymbolsRange$3 = "\\u20d0-\\u20ff",
+      rsComboRange$3 = rsComboMarksRange$3 + reComboHalfMarksRange$3 + rsComboSymbolsRange$3,
+      rsVarRange$2 = "\\ufe0e\\ufe0f";
   /** Used to compose unicode capture groups. */
 
-  var rsZWJ = "\\u200d";
+  var rsZWJ$2 = "\\u200d";
   /** Used to detect strings with [zero-width joiners or code points from the astral planes](http://eev.ee/blog/2015/09/12/dark-corners-of-unicode/). */
 
-  var reHasUnicode = RegExp('[' + rsZWJ + rsAstralRange + rsComboRange + rsVarRange + ']');
+  var reHasUnicode = RegExp('[' + rsZWJ$2 + rsAstralRange$2 + rsComboRange$3 + rsVarRange$2 + ']');
   /**
    * Checks if `string` contains Unicode symbols.
    *
@@ -8523,31 +8548,31 @@
 
   /** Used to compose unicode character classes. */
   var rsAstralRange$1 = "\\ud800-\\udfff",
-      rsComboMarksRange$1 = "\\u0300-\\u036f",
-      reComboHalfMarksRange$1 = "\\ufe20-\\ufe2f",
-      rsComboSymbolsRange$1 = "\\u20d0-\\u20ff",
-      rsComboRange$1 = rsComboMarksRange$1 + reComboHalfMarksRange$1 + rsComboSymbolsRange$1,
+      rsComboMarksRange$2 = "\\u0300-\\u036f",
+      reComboHalfMarksRange$2 = "\\ufe20-\\ufe2f",
+      rsComboSymbolsRange$2 = "\\u20d0-\\u20ff",
+      rsComboRange$2 = rsComboMarksRange$2 + reComboHalfMarksRange$2 + rsComboSymbolsRange$2,
       rsVarRange$1 = "\\ufe0e\\ufe0f";
   /** Used to compose unicode capture groups. */
 
   var rsAstral = '[' + rsAstralRange$1 + ']',
-      rsCombo = '[' + rsComboRange$1 + ']',
-      rsFitz = "\\ud83c[\\udffb-\\udfff]",
-      rsModifier = '(?:' + rsCombo + '|' + rsFitz + ')',
-      rsNonAstral = '[^' + rsAstralRange$1 + ']',
-      rsRegional = "(?:\\ud83c[\\udde6-\\uddff]){2}",
-      rsSurrPair = "[\\ud800-\\udbff][\\udc00-\\udfff]",
+      rsCombo$2 = '[' + rsComboRange$2 + ']',
+      rsFitz$1 = "\\ud83c[\\udffb-\\udfff]",
+      rsModifier$1 = '(?:' + rsCombo$2 + '|' + rsFitz$1 + ')',
+      rsNonAstral$1 = '[^' + rsAstralRange$1 + ']',
+      rsRegional$1 = "(?:\\ud83c[\\udde6-\\uddff]){2}",
+      rsSurrPair$1 = "[\\ud800-\\udbff][\\udc00-\\udfff]",
       rsZWJ$1 = "\\u200d";
   /** Used to compose unicode regexes. */
 
-  var reOptMod = rsModifier + '?',
-      rsOptVar = '[' + rsVarRange$1 + ']?',
-      rsOptJoin = '(?:' + rsZWJ$1 + '(?:' + [rsNonAstral, rsRegional, rsSurrPair].join('|') + ')' + rsOptVar + reOptMod + ')*',
-      rsSeq = rsOptVar + reOptMod + rsOptJoin,
-      rsSymbol = '(?:' + [rsNonAstral + rsCombo + '?', rsCombo, rsRegional, rsSurrPair, rsAstral].join('|') + ')';
+  var reOptMod$1 = rsModifier$1 + '?',
+      rsOptVar$1 = '[' + rsVarRange$1 + ']?',
+      rsOptJoin$1 = '(?:' + rsZWJ$1 + '(?:' + [rsNonAstral$1, rsRegional$1, rsSurrPair$1].join('|') + ')' + rsOptVar$1 + reOptMod$1 + ')*',
+      rsSeq$1 = rsOptVar$1 + reOptMod$1 + rsOptJoin$1,
+      rsSymbol = '(?:' + [rsNonAstral$1 + rsCombo$2 + '?', rsCombo$2, rsRegional$1, rsSurrPair$1, rsAstral].join('|') + ')';
   /** Used to match [string symbols](https://mathiasbynens.be/notes/javascript-unicode). */
 
-  var reUnicode = RegExp(rsFitz + '(?=' + rsFitz + ')|' + rsSymbol + rsSeq, 'g');
+  var reUnicode = RegExp(rsFitz$1 + '(?=' + rsFitz$1 + ')|' + rsSymbol + rsSeq$1, 'g');
   /**
    * Converts a Unicode `string` to an array.
    *
@@ -8622,8 +8647,8 @@
 
   /** `Object#toString` result references. */
 
-  var mapTag$5 = '[object Map]',
-      setTag$5 = '[object Set]';
+  var mapTag$1 = '[object Map]',
+      setTag$1 = '[object Set]';
   /** Built-in value references. */
 
   var symIterator = _Symbol ? _Symbol.iterator : undefined;
@@ -8665,14 +8690,14 @@
     }
 
     var tag = getTag$1(value),
-        func = tag == mapTag$5 ? mapToArray : tag == setTag$5 ? setToArray : values;
+        func = tag == mapTag$1 ? mapToArray : tag == setTag$1 ? setToArray : values;
     return func(value);
   }
 
-  var toString$1 = Object.prototype.toString;
+  var toString = Object.prototype.toString;
   var errorToString = Error.prototype.toString;
   var regExpToString = RegExp.prototype.toString;
-  var symbolToString$1 = typeof Symbol !== 'undefined' ? Symbol.prototype.toString : function () {
+  var symbolToString = typeof Symbol !== 'undefined' ? Symbol.prototype.toString : function () {
     return '';
   };
   var SYMBOL_REGEXP = /^Symbol\((.*)\)(.*)$/;
@@ -8695,8 +8720,8 @@
     if (typeOf === 'number') return printNumber(val);
     if (typeOf === 'string') return quoteStrings ? "\"" + val + "\"" : val;
     if (typeOf === 'function') return '[Function ' + (val.name || 'anonymous') + ']';
-    if (typeOf === 'symbol') return symbolToString$1.call(val).replace(SYMBOL_REGEXP, 'Symbol($1)');
-    var tag = toString$1.call(val).slice(8, -1);
+    if (typeOf === 'symbol') return symbolToString.call(val).replace(SYMBOL_REGEXP, 'Symbol($1)');
+    var tag = toString.call(val).slice(8, -1);
     if (tag === 'Date') return isNaN(val.getTime()) ? '' + val : val.toISOString(val);
     if (tag === 'Error' || val instanceof Error) return '[' + errorToString.call(val) + ']';
     if (tag === 'RegExp') return regExpToString.call(val);
@@ -8714,7 +8739,7 @@
   }
 
   var mixed = {
-    default: '${path} is invalid',
+    "default": '${path} is invalid',
     required: '${path} is a required field',
     oneOf: '${path} must be one of the following values: ${values}',
     notOneOf: '${path} must not be one of the following values: ${values}',
@@ -8762,7 +8787,7 @@
   var object = {
     noUnknown: '${path} field has unspecified keys: ${unknown}'
   };
-  var array = {
+  var array$1 = {
     min: '${path} field must have at least ${min} items',
     max: '${path} field must have less than or equal to ${max} items'
   };
@@ -8912,7 +8937,7 @@
 
       return next;
     },
-    catch: function _catch(handler) {
+    "catch": function _catch(handler) {
       if (this._isResolved()) {
         return SynchronousPromise.resolve(this._data)._setParent(this);
       }
@@ -8928,7 +8953,7 @@
 
       return next;
     },
-    finally: function _finally(callback) {
+    "finally": function _finally(callback) {
       var ran = false;
 
       function runFinally(result, err) {
@@ -8957,7 +8982,7 @@
 
       return this.then(function (result) {
         return runFinally(result);
-      }).catch(function (err) {
+      })["catch"](function (err) {
         return runFinally(null, err);
       });
     },
@@ -9116,7 +9141,7 @@
         self._data = result;
 
         self._runResolutions();
-      }).catch(function (error) {
+      })["catch"](function (error) {
         self._error = error;
 
         self._setRejected();
@@ -9134,7 +9159,7 @@
     _chainPromiseData: function _chainPromiseData(promiseData, nextSynchronousPromise) {
       promiseData.then(function (newData) {
         nextSynchronousPromise.resolve(newData);
-      }).catch(function (newError) {
+      })["catch"](function (newError) {
         nextSynchronousPromise.reject(newError);
       });
     },
@@ -9168,7 +9193,7 @@
       if (looksLikeAPromise(result)) {
         result.then(function (newResult) {
           resolve(newResult);
-        }).catch(function (error) {
+        })["catch"](function (error) {
           reject(error);
         });
       } else {
@@ -9224,7 +9249,7 @@
           allData[idx] = thisResult;
           numResolved += 1;
           doResolve();
-        }).catch(function (err) {
+        })["catch"](function (err) {
           doReject(err);
         });
       });
@@ -9267,7 +9292,7 @@
       args.forEach(function (arg, idx) {
         SynchronousPromise.resolve(arg).then(function (thisResult) {
           doResolve(thisResult);
-        }).catch(function (err) {
+        })["catch"](function (err) {
           allErrors[idx] = err;
           numRejected += 1;
           doReject();
@@ -9305,7 +9330,7 @@
             value: thisResult
           };
           doSettled();
-        }).catch(function (err) {
+        })["catch"](function (err) {
           allData[idx] = {
             status: "rejected",
             reason: err
@@ -9405,7 +9430,7 @@
     return arguments.length === 1 ? fn : fn(params);
   };
 
-  var promise = function promise(sync) {
+  var promise$1 = function promise(sync) {
     return sync ? synchronousPromise.SynchronousPromise : Promise;
   };
 
@@ -9419,9 +9444,9 @@
 
   function scopeToValue(promises, value, sync) {
     //console.log('scopeToValue', promises, value)
-    var p = promise(sync).all(promises); //console.log('scopeToValue B', p)
+    var p = promise$1(sync).all(promises); //console.log('scopeToValue B', p)
 
-    var b = p.catch(function (err) {
+    var b = p["catch"](function (err) {
       if (err.name === 'ValidationError') err.value = value;
       throw err;
     }); //console.log('scopeToValue c', b)
@@ -9445,7 +9470,7 @@
     };
   }
   function settled(promises, sync) {
-    var Promise = promise(sync);
+    var Promise = promise$1(sync);
     return Promise.all(promises.map(function (p) {
       return Promise.resolve(p).then(function (value) {
         return {
@@ -9576,7 +9601,7 @@
   }
 
   /** Used to stand-in for `undefined` hash values. */
-  var HASH_UNDEFINED$2 = '__lodash_hash_undefined__';
+  var HASH_UNDEFINED = '__lodash_hash_undefined__';
   /**
    * Adds `value` to the array cache.
    *
@@ -9589,7 +9614,7 @@
    */
 
   function setCacheAdd(value) {
-    this.__data__.set(value, HASH_UNDEFINED$2);
+    this.__data__.set(value, HASH_UNDEFINED);
 
     return this;
   }
@@ -9667,8 +9692,8 @@
 
   /** Used to compose bitmasks for value comparisons. */
 
-  var COMPARE_PARTIAL_FLAG = 1,
-      COMPARE_UNORDERED_FLAG = 2;
+  var COMPARE_PARTIAL_FLAG$5 = 1,
+      COMPARE_UNORDERED_FLAG$3 = 2;
   /**
    * A specialized version of `baseIsEqualDeep` for arrays with support for
    * partial deep comparisons.
@@ -9684,7 +9709,7 @@
    */
 
   function equalArrays(array, other, bitmask, customizer, equalFunc, stack) {
-    var isPartial = bitmask & COMPARE_PARTIAL_FLAG,
+    var isPartial = bitmask & COMPARE_PARTIAL_FLAG$5,
         arrLength = array.length,
         othLength = other.length;
 
@@ -9701,7 +9726,7 @@
 
     var index = -1,
         result = true,
-        seen = bitmask & COMPARE_UNORDERED_FLAG ? new SetCache() : undefined;
+        seen = bitmask & COMPARE_UNORDERED_FLAG$3 ? new SetCache() : undefined;
     stack.set(array, other);
     stack.set(other, array); // Ignore non-index properties.
 
@@ -9745,25 +9770,25 @@
 
   /** Used to compose bitmasks for value comparisons. */
 
-  var COMPARE_PARTIAL_FLAG$1 = 1,
-      COMPARE_UNORDERED_FLAG$1 = 2;
+  var COMPARE_PARTIAL_FLAG$4 = 1,
+      COMPARE_UNORDERED_FLAG$2 = 2;
   /** `Object#toString` result references. */
 
-  var boolTag$3 = '[object Boolean]',
-      dateTag$3 = '[object Date]',
-      errorTag$2 = '[object Error]',
-      mapTag$6 = '[object Map]',
-      numberTag$3 = '[object Number]',
-      regexpTag$3 = '[object RegExp]',
-      setTag$6 = '[object Set]',
-      stringTag$4 = '[object String]',
-      symbolTag$3 = '[object Symbol]';
-  var arrayBufferTag$3 = '[object ArrayBuffer]',
-      dataViewTag$4 = '[object DataView]';
+  var boolTag = '[object Boolean]',
+      dateTag = '[object Date]',
+      errorTag = '[object Error]',
+      mapTag = '[object Map]',
+      numberTag = '[object Number]',
+      regexpTag = '[object RegExp]',
+      setTag = '[object Set]',
+      stringTag = '[object String]',
+      symbolTag = '[object Symbol]';
+  var arrayBufferTag = '[object ArrayBuffer]',
+      dataViewTag = '[object DataView]';
   /** Used to convert symbols to primitives and strings. */
 
-  var symbolProto$2 = _Symbol ? _Symbol.prototype : undefined,
-      symbolValueOf$1 = symbolProto$2 ? symbolProto$2.valueOf : undefined;
+  var symbolProto = _Symbol ? _Symbol.prototype : undefined,
+      symbolValueOf = symbolProto ? symbolProto.valueOf : undefined;
   /**
    * A specialized version of `baseIsEqualDeep` for comparing objects of
    * the same `toStringTag`.
@@ -9784,7 +9809,7 @@
 
   function equalByTag(object, other, tag, bitmask, customizer, equalFunc, stack) {
     switch (tag) {
-      case dataViewTag$4:
+      case dataViewTag:
         if (object.byteLength != other.byteLength || object.byteOffset != other.byteOffset) {
           return false;
         }
@@ -9792,35 +9817,35 @@
         object = object.buffer;
         other = other.buffer;
 
-      case arrayBufferTag$3:
+      case arrayBufferTag:
         if (object.byteLength != other.byteLength || !equalFunc(new Uint8Array(object), new Uint8Array(other))) {
           return false;
         }
 
         return true;
 
-      case boolTag$3:
-      case dateTag$3:
-      case numberTag$3:
+      case boolTag:
+      case dateTag:
+      case numberTag:
         // Coerce booleans to `1` or `0` and dates to milliseconds.
         // Invalid dates are coerced to `NaN`.
         return eq(+object, +other);
 
-      case errorTag$2:
+      case errorTag:
         return object.name == other.name && object.message == other.message;
 
-      case regexpTag$3:
-      case stringTag$4:
+      case regexpTag:
+      case stringTag:
         // Coerce regexes to strings and treat strings, primitives and objects,
         // as equal. See http://www.ecma-international.org/ecma-262/7.0/#sec-regexp.prototype.tostring
         // for more details.
         return object == other + '';
 
-      case mapTag$6:
+      case mapTag:
         var convert = mapToArray;
 
-      case setTag$6:
-        var isPartial = bitmask & COMPARE_PARTIAL_FLAG$1;
+      case setTag:
+        var isPartial = bitmask & COMPARE_PARTIAL_FLAG$4;
         convert || (convert = setToArray);
 
         if (object.size != other.size && !isPartial) {
@@ -9834,16 +9859,16 @@
           return stacked == other;
         }
 
-        bitmask |= COMPARE_UNORDERED_FLAG$1; // Recursively compare objects (susceptible to call stack limits).
+        bitmask |= COMPARE_UNORDERED_FLAG$2; // Recursively compare objects (susceptible to call stack limits).
 
         stack.set(object, other);
         var result = equalArrays(convert(object), convert(other), bitmask, customizer, equalFunc, stack);
         stack['delete'](object);
         return result;
 
-      case symbolTag$3:
-        if (symbolValueOf$1) {
-          return symbolValueOf$1.call(object) == symbolValueOf$1.call(other);
+      case symbolTag:
+        if (symbolValueOf) {
+          return symbolValueOf.call(object) == symbolValueOf.call(other);
         }
 
     }
@@ -9853,13 +9878,13 @@
 
   /** Used to compose bitmasks for value comparisons. */
 
-  var COMPARE_PARTIAL_FLAG$2 = 1;
+  var COMPARE_PARTIAL_FLAG$3 = 1;
   /** Used for built-in method references. */
 
-  var objectProto$e = Object.prototype;
+  var objectProto$1 = Object.prototype;
   /** Used to check objects for own properties. */
 
-  var hasOwnProperty$b = objectProto$e.hasOwnProperty;
+  var hasOwnProperty$1 = objectProto$1.hasOwnProperty;
   /**
    * A specialized version of `baseIsEqualDeep` for objects with support for
    * partial deep comparisons.
@@ -9875,7 +9900,7 @@
    */
 
   function equalObjects(object, other, bitmask, customizer, equalFunc, stack) {
-    var isPartial = bitmask & COMPARE_PARTIAL_FLAG$2,
+    var isPartial = bitmask & COMPARE_PARTIAL_FLAG$3,
         objProps = getAllKeys(object),
         objLength = objProps.length,
         othProps = getAllKeys(other),
@@ -9890,7 +9915,7 @@
     while (index--) {
       var key = objProps[index];
 
-      if (!(isPartial ? key in other : hasOwnProperty$b.call(other, key))) {
+      if (!(isPartial ? key in other : hasOwnProperty$1.call(other, key))) {
         return false;
       }
     } // Assume cyclic values are equal.
@@ -9941,18 +9966,18 @@
 
   /** Used to compose bitmasks for value comparisons. */
 
-  var COMPARE_PARTIAL_FLAG$3 = 1;
+  var COMPARE_PARTIAL_FLAG$2 = 1;
   /** `Object#toString` result references. */
 
-  var argsTag$3 = '[object Arguments]',
-      arrayTag$2 = '[object Array]',
-      objectTag$3 = '[object Object]';
+  var argsTag = '[object Arguments]',
+      arrayTag = '[object Array]',
+      objectTag = '[object Object]';
   /** Used for built-in method references. */
 
-  var objectProto$f = Object.prototype;
+  var objectProto = Object.prototype;
   /** Used to check objects for own properties. */
 
-  var hasOwnProperty$c = objectProto$f.hasOwnProperty;
+  var hasOwnProperty = objectProto.hasOwnProperty;
   /**
    * A specialized version of `baseIsEqual` for arrays and objects which performs
    * deep comparisons and tracks traversed objects enabling objects with circular
@@ -9971,12 +9996,12 @@
   function baseIsEqualDeep(object, other, bitmask, customizer, equalFunc, stack) {
     var objIsArr = isArray(object),
         othIsArr = isArray(other),
-        objTag = objIsArr ? arrayTag$2 : getTag$1(object),
-        othTag = othIsArr ? arrayTag$2 : getTag$1(other);
-    objTag = objTag == argsTag$3 ? objectTag$3 : objTag;
-    othTag = othTag == argsTag$3 ? objectTag$3 : othTag;
-    var objIsObj = objTag == objectTag$3,
-        othIsObj = othTag == objectTag$3,
+        objTag = objIsArr ? arrayTag : getTag$1(object),
+        othTag = othIsArr ? arrayTag : getTag$1(other);
+    objTag = objTag == argsTag ? objectTag : objTag;
+    othTag = othTag == argsTag ? objectTag : othTag;
+    var objIsObj = objTag == objectTag,
+        othIsObj = othTag == objectTag,
         isSameTag = objTag == othTag;
 
     if (isSameTag && isBuffer(object)) {
@@ -9993,9 +10018,9 @@
       return objIsArr || isTypedArray(object) ? equalArrays(object, other, bitmask, customizer, equalFunc, stack) : equalByTag(object, other, objTag, bitmask, customizer, equalFunc, stack);
     }
 
-    if (!(bitmask & COMPARE_PARTIAL_FLAG$3)) {
-      var objIsWrapped = objIsObj && hasOwnProperty$c.call(object, '__wrapped__'),
-          othIsWrapped = othIsObj && hasOwnProperty$c.call(other, '__wrapped__');
+    if (!(bitmask & COMPARE_PARTIAL_FLAG$2)) {
+      var objIsWrapped = objIsObj && hasOwnProperty.call(object, '__wrapped__'),
+          othIsWrapped = othIsObj && hasOwnProperty.call(other, '__wrapped__');
 
       if (objIsWrapped || othIsWrapped) {
         var objUnwrapped = objIsWrapped ? object.value() : object,
@@ -10042,8 +10067,8 @@
 
   /** Used to compose bitmasks for value comparisons. */
 
-  var COMPARE_PARTIAL_FLAG$4 = 1,
-      COMPARE_UNORDERED_FLAG$2 = 2;
+  var COMPARE_PARTIAL_FLAG$1 = 1,
+      COMPARE_UNORDERED_FLAG$1 = 2;
   /**
    * The base implementation of `_.isMatch` without support for iteratee shorthands.
    *
@@ -10091,7 +10116,7 @@
           var result = customizer(objValue, srcValue, key, object, source, stack);
         }
 
-        if (!(result === undefined ? baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG$4 | COMPARE_UNORDERED_FLAG$2, customizer, stack) : result)) {
+        if (!(result === undefined ? baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG$1 | COMPARE_UNORDERED_FLAG$1, customizer, stack) : result)) {
           return false;
         }
       }
@@ -10110,7 +10135,7 @@
    */
 
   function isStrictComparable(value) {
-    return value === value && !isObject(value);
+    return value === value && !isObject$2(value);
   }
 
   /**
@@ -10270,8 +10295,8 @@
 
   /** Used to compose bitmasks for value comparisons. */
 
-  var COMPARE_PARTIAL_FLAG$5 = 1,
-      COMPARE_UNORDERED_FLAG$3 = 2;
+  var COMPARE_PARTIAL_FLAG = 1,
+      COMPARE_UNORDERED_FLAG = 2;
   /**
    * The base implementation of `_.matchesProperty` which doesn't clone `srcValue`.
    *
@@ -10288,7 +10313,7 @@
 
     return function (object) {
       var objValue = get(object, path);
-      return objValue === undefined && objValue === srcValue ? hasIn(object, path) : baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG$5 | COMPARE_UNORDERED_FLAG$3);
+      return objValue === undefined && objValue === srcValue ? hasIn(object, path) : baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG | COMPARE_UNORDERED_FLAG);
     };
   }
 
@@ -10622,7 +10647,7 @@
   var formatError = ValidationError.formatError;
 
   var thenable = function thenable(p) {
-    return p && typeof p.then === 'function' && typeof p.catch === 'function';
+    return p && typeof p.then === 'function' && typeof p["catch"] === 'function';
   };
 
   function runTest(testFn, ctx, value, sync) {
@@ -10795,8 +10820,8 @@
       Reference.isRef(value) ? this.refs.set(value.key, value) : this.list.add(value);
     };
 
-    _proto.delete = function _delete(value) {
-      Reference.isRef(value) ? this.refs.delete(value.key) : this.list.delete(value);
+    _proto["delete"] = function _delete(value) {
+      Reference.isRef(value) ? this.refs["delete"](value.key) : this.list["delete"](value);
     };
 
     _proto.has = function has(value, resolve) {
@@ -10827,10 +10852,10 @@
         return next.add(value);
       });
       removeItems.list.forEach(function (value) {
-        return next.delete(value);
+        return next["delete"](value);
       });
       removeItems.refs.forEach(function (value) {
-        return next.delete(value);
+        return next["delete"](value);
       });
       return next;
     };
@@ -10860,7 +10885,7 @@
     this.withMutation(function () {
       _this.typeError(mixed.notType);
     });
-    if (has(options, 'default')) this._defaultDefault = options.default;
+    if (has(options, 'default')) this._defaultDefault = options["default"];
     this.type = options.type || 'mixed'; // TODO: remove
 
     this._type = options.type || 'mixed';
@@ -10963,7 +10988,7 @@
       }, rawValue);
 
       if (value === undefined && has(this, '_default')) {
-        value = this.default();
+        value = this["default"]();
       }
 
       return value;
@@ -11048,7 +11073,7 @@
         sync: true
       })).then(function (r) {
         return result = r;
-      }).catch(function (e) {
+      })["catch"](function (e) {
         return err = e;
       });
 
@@ -11058,7 +11083,7 @@
     isValid: function isValid(value, options) {
       return this.validate(value, options).then(function () {
         return true;
-      }).catch(function (err) {
+      })["catch"](function (err) {
         if (err.name === 'ValidationError') return false;
         throw err;
       });
@@ -11078,9 +11103,9 @@
       }
 
       var schema = this.resolve(options);
-      return schema.default();
+      return schema["default"]();
     },
-    default: function _default(def) {
+    "default": function _default(def) {
       if (arguments.length === 0) {
         var defaultValue = has(this, '_default') ? this._default : this._defaultDefault;
         return typeof defaultValue === 'function' ? defaultValue.call(this) : cloneDeepWith(defaultValue);
@@ -11175,7 +11200,7 @@
         };
       }
 
-      if (opts.message === undefined) opts.message = mixed.default;
+      if (opts.message === undefined) opts.message = mixed["default"];
       if (typeof opts.test !== 'function') throw new TypeError('`test` is a required parameters');
       var next = this.clone();
       var validate = createValidation(opts);
@@ -11240,7 +11265,7 @@
       enums.forEach(function (val) {
         next._whitelist.add(val);
 
-        next._blacklist.delete(val);
+        next._blacklist["delete"](val);
       });
       next._whitelistError = createValidation({
         message: message,
@@ -11266,7 +11291,7 @@
       enums.forEach(function (val) {
         next._blacklist.add(val);
 
-        next._whitelist.delete(val);
+        next._whitelist["delete"](val);
       });
       next._blacklistError = createValidation({
         message: message,
@@ -11539,7 +11564,7 @@
     },
     //-- transforms --
     ensure: function ensure() {
-      return this.default('').transform(function (val) {
+      return this["default"]('').transform(function (val) {
         return val === null ? '' : val;
       });
     },
@@ -12114,13 +12139,13 @@
   var reLatin = /[\xc0-\xd6\xd8-\xf6\xf8-\xff\u0100-\u017f]/g;
   /** Used to compose unicode character classes. */
 
-  var rsComboMarksRange$2 = "\\u0300-\\u036f",
-      reComboHalfMarksRange$2 = "\\ufe20-\\ufe2f",
-      rsComboSymbolsRange$2 = "\\u20d0-\\u20ff",
-      rsComboRange$2 = rsComboMarksRange$2 + reComboHalfMarksRange$2 + rsComboSymbolsRange$2;
+  var rsComboMarksRange$1 = "\\u0300-\\u036f",
+      reComboHalfMarksRange$1 = "\\ufe20-\\ufe2f",
+      rsComboSymbolsRange$1 = "\\u20d0-\\u20ff",
+      rsComboRange$1 = rsComboMarksRange$1 + reComboHalfMarksRange$1 + rsComboSymbolsRange$1;
   /** Used to compose unicode capture groups. */
 
-  var rsCombo$1 = '[' + rsComboRange$2 + ']';
+  var rsCombo$1 = '[' + rsComboRange$1 + ']';
   /**
    * Used to match [combining diacritical marks](https://en.wikipedia.org/wiki/Combining_Diacritical_Marks) and
    * [combining diacritical marks for symbols](https://en.wikipedia.org/wiki/Combining_Diacritical_Marks_for_Symbols).
@@ -12147,7 +12172,7 @@
    */
 
   function deburr(string) {
-    string = toString(string);
+    string = toString$1(string);
     return string && string.replace(reLatin, deburrLetter).replace(reComboMark, '');
   }
 
@@ -12180,11 +12205,11 @@
   }
 
   /** Used to compose unicode character classes. */
-  var rsAstralRange$2 = "\\ud800-\\udfff",
-      rsComboMarksRange$3 = "\\u0300-\\u036f",
-      reComboHalfMarksRange$3 = "\\ufe20-\\ufe2f",
-      rsComboSymbolsRange$3 = "\\u20d0-\\u20ff",
-      rsComboRange$3 = rsComboMarksRange$3 + reComboHalfMarksRange$3 + rsComboSymbolsRange$3,
+  var rsAstralRange = "\\ud800-\\udfff",
+      rsComboMarksRange = "\\u0300-\\u036f",
+      reComboHalfMarksRange = "\\ufe20-\\ufe2f",
+      rsComboSymbolsRange = "\\u20d0-\\u20ff",
+      rsComboRange = rsComboMarksRange + reComboHalfMarksRange + rsComboSymbolsRange,
       rsDingbatRange = "\\u2700-\\u27bf",
       rsLowerRange = 'a-z\\xdf-\\xf6\\xf8-\\xff',
       rsMathOpRange = '\\xac\\xb1\\xd7\\xf7',
@@ -12192,37 +12217,37 @@
       rsPunctuationRange = "\\u2000-\\u206f",
       rsSpaceRange = " \\t\\x0b\\f\\xa0\\ufeff\\n\\r\\u2028\\u2029\\u1680\\u180e\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200a\\u202f\\u205f\\u3000",
       rsUpperRange = 'A-Z\\xc0-\\xd6\\xd8-\\xde',
-      rsVarRange$2 = "\\ufe0e\\ufe0f",
+      rsVarRange = "\\ufe0e\\ufe0f",
       rsBreakRange = rsMathOpRange + rsNonCharRange + rsPunctuationRange + rsSpaceRange;
   /** Used to compose unicode capture groups. */
 
-  var rsApos = "['\u2019]",
+  var rsApos$1 = "['\u2019]",
       rsBreak = '[' + rsBreakRange + ']',
-      rsCombo$2 = '[' + rsComboRange$3 + ']',
+      rsCombo = '[' + rsComboRange + ']',
       rsDigits = '\\d+',
       rsDingbat = '[' + rsDingbatRange + ']',
       rsLower = '[' + rsLowerRange + ']',
-      rsMisc = '[^' + rsAstralRange$2 + rsBreakRange + rsDigits + rsDingbatRange + rsLowerRange + rsUpperRange + ']',
-      rsFitz$1 = "\\ud83c[\\udffb-\\udfff]",
-      rsModifier$1 = '(?:' + rsCombo$2 + '|' + rsFitz$1 + ')',
-      rsNonAstral$1 = '[^' + rsAstralRange$2 + ']',
-      rsRegional$1 = "(?:\\ud83c[\\udde6-\\uddff]){2}",
-      rsSurrPair$1 = "[\\ud800-\\udbff][\\udc00-\\udfff]",
+      rsMisc = '[^' + rsAstralRange + rsBreakRange + rsDigits + rsDingbatRange + rsLowerRange + rsUpperRange + ']',
+      rsFitz = "\\ud83c[\\udffb-\\udfff]",
+      rsModifier = '(?:' + rsCombo + '|' + rsFitz + ')',
+      rsNonAstral = '[^' + rsAstralRange + ']',
+      rsRegional = "(?:\\ud83c[\\udde6-\\uddff]){2}",
+      rsSurrPair = "[\\ud800-\\udbff][\\udc00-\\udfff]",
       rsUpper = '[' + rsUpperRange + ']',
-      rsZWJ$2 = "\\u200d";
+      rsZWJ = "\\u200d";
   /** Used to compose unicode regexes. */
 
   var rsMiscLower = '(?:' + rsLower + '|' + rsMisc + ')',
       rsMiscUpper = '(?:' + rsUpper + '|' + rsMisc + ')',
-      rsOptContrLower = '(?:' + rsApos + '(?:d|ll|m|re|s|t|ve))?',
-      rsOptContrUpper = '(?:' + rsApos + '(?:D|LL|M|RE|S|T|VE))?',
-      reOptMod$1 = rsModifier$1 + '?',
-      rsOptVar$1 = '[' + rsVarRange$2 + ']?',
-      rsOptJoin$1 = '(?:' + rsZWJ$2 + '(?:' + [rsNonAstral$1, rsRegional$1, rsSurrPair$1].join('|') + ')' + rsOptVar$1 + reOptMod$1 + ')*',
+      rsOptContrLower = '(?:' + rsApos$1 + '(?:d|ll|m|re|s|t|ve))?',
+      rsOptContrUpper = '(?:' + rsApos$1 + '(?:D|LL|M|RE|S|T|VE))?',
+      reOptMod = rsModifier + '?',
+      rsOptVar = '[' + rsVarRange + ']?',
+      rsOptJoin = '(?:' + rsZWJ + '(?:' + [rsNonAstral, rsRegional, rsSurrPair].join('|') + ')' + rsOptVar + reOptMod + ')*',
       rsOrdLower = '\\d*(?:1st|2nd|3rd|(?![123])\\dth)(?=\\b|[A-Z_])',
       rsOrdUpper = '\\d*(?:1ST|2ND|3RD|(?![123])\\dTH)(?=\\b|[a-z_])',
-      rsSeq$1 = rsOptVar$1 + reOptMod$1 + rsOptJoin$1,
-      rsEmoji = '(?:' + [rsDingbat, rsRegional$1, rsSurrPair$1].join('|') + ')' + rsSeq$1;
+      rsSeq = rsOptVar + reOptMod + rsOptJoin,
+      rsEmoji = '(?:' + [rsDingbat, rsRegional, rsSurrPair].join('|') + ')' + rsSeq;
   /** Used to match complex or compound words. */
 
   var reUnicodeWord = RegExp([rsUpper + '?' + rsLower + '+' + rsOptContrLower + '(?=' + [rsBreak, rsUpper, '$'].join('|') + ')', rsMiscUpper + '+' + rsOptContrUpper + '(?=' + [rsBreak, rsUpper + rsMiscLower, '$'].join('|') + ')', rsUpper + '?' + rsMiscLower + '+' + rsOptContrLower, rsUpper + '+' + rsOptContrUpper, rsOrdUpper, rsOrdLower, rsDigits, rsEmoji].join('|'), 'g');
@@ -12259,7 +12284,7 @@
    */
 
   function words(string, pattern, guard) {
-    string = toString(string);
+    string = toString$1(string);
     pattern = guard ? undefined : pattern;
 
     if (pattern === undefined) {
@@ -12271,10 +12296,10 @@
 
   /** Used to compose unicode capture groups. */
 
-  var rsApos$1 = "['\u2019]";
+  var rsApos = "['\u2019]";
   /** Used to match apostrophes. */
 
-  var reApos = RegExp(rsApos$1, 'g');
+  var reApos = RegExp(rsApos, 'g');
   /**
    * Creates a function like `_.camelCase`.
    *
@@ -12375,7 +12400,7 @@
 
   function createCaseFirst(methodName) {
     return function (string) {
-      string = toString(string);
+      string = toString$1(string);
       var strSymbols = hasUnicode(string) ? stringToArray(string) : undefined;
       var chr = strSymbols ? strSymbols[0] : string.charAt(0);
       var trailing = strSymbols ? castSlice(strSymbols, 1).join('') : string.slice(1);
@@ -12420,7 +12445,7 @@
    */
 
   function capitalize(string) {
-    return upperFirst(toString(string).toLowerCase());
+    return upperFirst(toString$1(string).toLowerCase());
   }
 
   /**
@@ -12490,7 +12515,7 @@
     return toposort(uniqueNodes(edges), edges);
   };
 
-  var array$1 = toposort;
+  var array = toposort;
 
   function toposort(nodes, edges) {
     var cursor = nodes.length,
@@ -12543,7 +12568,7 @@
           visit(child, nodesHash.get(child), predecessors);
         } while (i);
 
-        predecessors.delete(node);
+        predecessors["delete"](node);
       }
 
       sorted[--cursor] = node;
@@ -12584,7 +12609,7 @@
 
     return res;
   }
-  toposort_1.array = array$1;
+  toposort_1.array = array;
 
   function sortFields(fields, excludes) {
     if (excludes === void 0) {
@@ -12653,31 +12678,31 @@
     return data;
   }
 
-  function _templateObject2() {
+  function _templateObject2$1() {
     var data = _taggedTemplateLiteralLoose(["", ".", ""]);
 
-    _templateObject2 = function _templateObject2() {
+    _templateObject2$1 = function _templateObject2() {
       return data;
     };
 
     return data;
   }
 
-  function _templateObject() {
+  function _templateObject$1() {
     var data = _taggedTemplateLiteralLoose(["", ".", ""]);
 
-    _templateObject = function _templateObject() {
+    _templateObject$1 = function _templateObject() {
       return data;
     };
 
     return data;
   }
 
-  var isObject$2 = function isObject(obj) {
+  var isObject = function isObject(obj) {
     return Object.prototype.toString.call(obj) === '[object Object]';
   };
 
-  var promise$1 = function promise(sync) {
+  var promise = function promise(sync) {
     return sync ? synchronousPromise.SynchronousPromise : Promise;
   };
 
@@ -12694,14 +12719,14 @@
     if (!(this instanceof ObjectSchema)) return new ObjectSchema(spec);
     SchemaType.call(this, {
       type: 'object',
-      default: function _default() {
+      "default": function _default() {
         var _this = this;
 
         if (!this._nodes.length) return undefined;
         var dft = {};
 
         this._nodes.forEach(function (key) {
-          dft[key] = _this.fields[key].default ? _this.fields[key].default() : undefined;
+          dft[key] = _this.fields[key]["default"] ? _this.fields[key]["default"]() : undefined;
         });
 
         return dft;
@@ -12731,7 +12756,7 @@
   }
   inherits(ObjectSchema, SchemaType, {
     _typeCheck: function _typeCheck(value) {
-      return isObject$2(value) || typeof value === 'function';
+      return isObject(value) || typeof value === 'function';
     },
     _cast: function _cast(_value, options) {
       var _this3 = this;
@@ -12743,7 +12768,7 @@
       var value = SchemaType.prototype._cast.call(this, _value, options); //should ignore nulls here
 
 
-      if (value === undefined) return this.default();
+      if (value === undefined) return this["default"]();
       if (!this._typeCheck(value)) return value;
       var fields = this.fields;
       var strip = this._option('stripUnknown', options) === true;
@@ -12768,7 +12793,7 @@
           var fieldValue;
           var strict = field._options && field._options.strict; // safe to mutate since this is fired in sequence
 
-          innerOptions.path = makePath(_templateObject(), options.path, prop);
+          innerOptions.path = makePath(_templateObject$1(), options.path, prop);
           innerOptions.value = value[prop];
           field = field.resolve(innerOptions);
 
@@ -12802,8 +12827,8 @@
         __validating: true,
         originalValue: originalValue
       });
-      return SchemaType.prototype._validate.call(this, _value, opts).catch(propagateErrors(endEarly, errors)).then(function (value) {
-        if (!recursive || !isObject$2(value)) {
+      return SchemaType.prototype._validate.call(this, _value, opts)["catch"](propagateErrors(endEarly, errors)).then(function (value) {
+        if (!recursive || !isObject(value)) {
           // only iterate though actual objects
           if (errors.length) throw errors[0];
           return value;
@@ -12812,7 +12837,7 @@
         originalValue = originalValue || value;
 
         var validations = _this4._nodes.map(function (key) {
-          var path = key.indexOf('.') === -1 ? makePath(_templateObject2(), opts.path, key) : makePath(_templateObject3(), opts.path, key);
+          var path = key.indexOf('.') === -1 ? makePath(_templateObject2$1(), opts.path, key) : makePath(_templateObject3(), opts.path, key);
           var field = _this4.fields[key];
 
           var innerOptions = _extends({}, opts, {
@@ -12829,7 +12854,7 @@
             return field.validate(value[key], innerOptions);
           }
 
-          return promise$1(sync).resolve(true);
+          return promise(sync).resolve(true);
         });
 
         return runValidations({
@@ -12956,20 +12981,20 @@
     }
   });
 
-  function _templateObject2$1() {
+  function _templateObject2() {
     var data = _taggedTemplateLiteralLoose(["", "[", "]"]);
 
-    _templateObject2$1 = function _templateObject2() {
+    _templateObject2 = function _templateObject2() {
       return data;
     };
 
     return data;
   }
 
-  function _templateObject$1() {
+  function _templateObject() {
     var data = _taggedTemplateLiteralLoose(["", "[", "]"]);
 
-    _templateObject$1 = function _templateObject() {
+    _templateObject = function _templateObject() {
       return data;
     };
 
@@ -13015,7 +13040,7 @@
       var isChanged = false;
       var castArray = value.map(function (v, idx) {
         var castElement = _this2.innerType.cast(v, _extends({}, _opts, {
-          path: makePath(_templateObject$1(), _opts.path, idx)
+          path: makePath(_templateObject(), _opts.path, idx)
         }));
 
         if (castElement !== v) {
@@ -13043,7 +13068,7 @@
       var recursive = this._option('recursive', options);
 
       var originalValue = options.originalValue != null ? options.originalValue : _value;
-      return SchemaType.prototype._validate.call(this, _value, options).catch(propagateErrors(endEarly, errors)).then(function (value) {
+      return SchemaType.prototype._validate.call(this, _value, options)["catch"](propagateErrors(endEarly, errors)).then(function (value) {
         if (!recursive || !innerType || !_this3._typeCheck(value)) {
           if (errors.length) throw errors[0];
           return value;
@@ -13051,7 +13076,7 @@
 
         originalValue = originalValue || value;
         var validations = value.map(function (item, idx) {
-          var path = makePath(_templateObject2$1(), options.path, idx); // object._validate note for isStrict explanation
+          var path = makePath(_templateObject2(), options.path, idx); // object._validate note for isStrict explanation
 
           var innerOptions = _extends({}, options, {
             path: path,
@@ -13084,7 +13109,7 @@
       return next;
     },
     min: function min(_min, message) {
-      message = message || array.min;
+      message = message || array$1.min;
       return this.test({
         message: message,
         name: 'min',
@@ -13098,7 +13123,7 @@
       });
     },
     max: function max(_max, message) {
-      message = message || array.max;
+      message = message || array$1.max;
       return this.test({
         message: message,
         name: 'max',
@@ -13114,7 +13139,7 @@
     ensure: function ensure() {
       var _this4 = this;
 
-      return this.default(function () {
+      return this["default"](function () {
         return [];
       }).transform(function (val, original) {
         // We don't want to return `null` for nullable schema
@@ -13162,12 +13187,12 @@
   //
   //
   //
-  var script$l = {
+  var script$P = {
     name: 'controls',
     props: {
       isEditing: {
         type: Boolean,
-        default: false
+        "default": false
       }
     },
     methods: {
@@ -13183,10 +13208,10 @@
   };
 
   /* script */
-  var __vue_script__$l = script$l;
+  var __vue_script__$P = script$P;
   /* template */
 
-  var __vue_render__$l = function __vue_render__() {
+  var __vue_render__$P = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -13230,19 +13255,19 @@
     }, [_vm._v("\n    Edit\n  ")])], 1);
   };
 
-  var __vue_staticRenderFns__$l = [];
+  var __vue_staticRenderFns__$P = [];
   /* style */
 
-  var __vue_inject_styles__$l = undefined;
+  var __vue_inject_styles__$P = undefined;
   /* scoped */
 
-  var __vue_scope_id__$l = undefined;
+  var __vue_scope_id__$P = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$l = false;
+  var __vue_is_functional_template__$P = false;
   /* component normalizer */
 
-  function __vue_normalize__$l(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$P(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "Controls.vue";
@@ -13263,10 +13288,10 @@
   /* style inject SSR */
 
 
-  var Controls = __vue_normalize__$l({
-    render: __vue_render__$l,
-    staticRenderFns: __vue_staticRenderFns__$l
-  }, __vue_inject_styles__$l, __vue_script__$l, __vue_scope_id__$l, __vue_is_functional_template__$l);
+  var Controls$1 = __vue_normalize__$P({
+    render: __vue_render__$P,
+    staticRenderFns: __vue_staticRenderFns__$P
+  }, __vue_inject_styles__$P, __vue_script__$P, __vue_scope_id__$P, __vue_is_functional_template__$P);
 
   /*!
    * Quill Editor v1.3.7
@@ -13500,22 +13525,22 @@
           find: Registry.find,
           query: Registry.query,
           register: Registry.register,
-          Container: container_1.default,
-          Format: format_1.default,
-          Leaf: leaf_1.default,
-          Embed: embed_1.default,
-          Scroll: scroll_1.default,
-          Block: block_1.default,
-          Inline: inline_1.default,
-          Text: text_1.default,
+          Container: container_1["default"],
+          Format: format_1["default"],
+          Leaf: leaf_1["default"],
+          Embed: embed_1["default"],
+          Scroll: scroll_1["default"],
+          Block: block_1["default"],
+          Inline: inline_1["default"],
+          Text: text_1["default"],
           Attributor: {
-            Attribute: attributor_1.default,
-            Class: class_1.default,
-            Style: style_1.default,
-            Store: store_1.default
+            Attribute: attributor_1["default"],
+            Class: class_1["default"],
+            Style: style_1["default"],
+            Store: store_1["default"]
           }
         };
-        exports.default = Parchment;
+        exports["default"] = Parchment;
         /***/
       },
       /* 1 */
@@ -13856,8 +13881,8 @@
           return this.reduce(function (length, elem) {
             if (elem.insert) {
               return length + op.length(elem);
-            } else if (elem.delete) {
-              return length - elem.delete;
+            } else if (elem["delete"]) {
+              return length - elem["delete"];
             }
 
             return length;
@@ -14251,7 +14276,7 @@
         Object.defineProperty(exports, "__esModule", {
           value: true
         });
-        exports.default = exports.BlockEmbed = exports.bubbleFormats = undefined;
+        exports["default"] = exports.BlockEmbed = exports.bubbleFormats = undefined;
 
         var _createClass = function () {
           function defineProperties(target, props) {
@@ -14322,7 +14347,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -14372,17 +14397,17 @@
             value: function attach() {
               _get(BlockEmbed.prototype.__proto__ || Object.getPrototypeOf(BlockEmbed.prototype), 'attach', this).call(this);
 
-              this.attributes = new _parchment2.default.Attributor.Store(this.domNode);
+              this.attributes = new _parchment2["default"].Attributor.Store(this.domNode);
             }
           }, {
             key: 'delta',
             value: function delta() {
-              return new _quillDelta2.default().insert(this.value(), (0, _extend2.default)(this.formats(), this.attributes.values()));
+              return new _quillDelta2["default"]().insert(this.value(), (0, _extend2["default"])(this.formats(), this.attributes.values()));
             }
           }, {
             key: 'format',
             value: function format(name, value) {
-              var attribute = _parchment2.default.query(name, _parchment2.default.Scope.BLOCK_ATTRIBUTE);
+              var attribute = _parchment2["default"].query(name, _parchment2["default"].Scope.BLOCK_ATTRIBUTE);
 
               if (attribute != null) {
                 this.attributes.attribute(attribute, value);
@@ -14397,7 +14422,7 @@
             key: 'insertAt',
             value: function insertAt(index, value, def) {
               if (typeof value === 'string' && value.endsWith('\n')) {
-                var block = _parchment2.default.create(Block.blotName);
+                var block = _parchment2["default"].create(Block.blotName);
 
                 this.parent.insertBefore(block, index === 0 ? this : this.next);
                 block.insertAt(0, value.slice(0, -1));
@@ -14408,9 +14433,9 @@
           }]);
 
           return BlockEmbed;
-        }(_parchment2.default.Embed);
+        }(_parchment2["default"].Embed);
 
-        BlockEmbed.scope = _parchment2.default.Scope.BLOCK_BLOT; // It is important for cursor behavior BlockEmbeds use tags that are block level elements
+        BlockEmbed.scope = _parchment2["default"].Scope.BLOCK_BLOT; // It is important for cursor behavior BlockEmbeds use tags that are block level elements
 
         var Block = function (_Parchment$Block) {
           _inherits(Block, _Parchment$Block);
@@ -14428,13 +14453,13 @@
             key: 'delta',
             value: function delta() {
               if (this.cache.delta == null) {
-                this.cache.delta = this.descendants(_parchment2.default.Leaf).reduce(function (delta, leaf) {
+                this.cache.delta = this.descendants(_parchment2["default"].Leaf).reduce(function (delta, leaf) {
                   if (leaf.length() === 0) {
                     return delta;
                   } else {
                     return delta.insert(leaf.value(), bubbleFormats(leaf));
                   }
-                }, new _quillDelta2.default()).insert('\n', bubbleFormats(this));
+                }, new _quillDelta2["default"]()).insert('\n', bubbleFormats(this));
               }
 
               return this.cache.delta;
@@ -14451,7 +14476,7 @@
             value: function formatAt(index, length, name, value) {
               if (length <= 0) return;
 
-              if (_parchment2.default.query(name, _parchment2.default.Scope.BLOCK)) {
+              if (_parchment2["default"].query(name, _parchment2["default"].Scope.BLOCK)) {
                 if (index + length === this.length()) {
                   this.format(name, value);
                 }
@@ -14493,7 +14518,7 @@
 
               _get(Block.prototype.__proto__ || Object.getPrototypeOf(Block.prototype), 'insertBefore', this).call(this, blot, ref);
 
-              if (head instanceof _break2.default) {
+              if (head instanceof _break2["default"]) {
                 head.remove();
               }
 
@@ -14559,19 +14584,19 @@
           }]);
 
           return Block;
-        }(_parchment2.default.Block);
+        }(_parchment2["default"].Block);
 
         Block.blotName = 'block';
         Block.tagName = 'P';
         Block.defaultChild = 'break';
-        Block.allowedChildren = [_inline2.default, _parchment2.default.Embed, _text2.default];
+        Block.allowedChildren = [_inline2["default"], _parchment2["default"].Embed, _text2["default"]];
 
         function bubbleFormats(blot) {
           var formats = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
           if (blot == null) return formats;
 
           if (typeof blot.formats === 'function') {
-            formats = (0, _extend2.default)(formats, blot.formats());
+            formats = (0, _extend2["default"])(formats, blot.formats());
           }
 
           if (blot.parent == null || blot.parent.blotName == 'scroll' || blot.parent.statics.scope !== blot.statics.scope) {
@@ -14583,7 +14608,7 @@
 
         exports.bubbleFormats = bubbleFormats;
         exports.BlockEmbed = BlockEmbed;
-        exports.default = Block;
+        exports["default"] = Block;
         /***/
       },
       /* 5 */
@@ -14594,7 +14619,7 @@
         Object.defineProperty(exports, "__esModule", {
           value: true
         });
-        exports.default = exports.overload = exports.expandConfig = undefined;
+        exports["default"] = exports.overload = exports.expandConfig = undefined;
 
         var _typeof$1 = typeof Symbol === "function" && _typeof(Symbol.iterator) === "symbol" ? function (obj) {
           return _typeof(obj);
@@ -14698,7 +14723,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -14723,7 +14748,7 @@
           }
         }
 
-        var debug = (0, _logger2.default)('quill');
+        var debug = (0, _logger2["default"])('quill');
 
         var Quill = function () {
           _createClass(Quill, null, [{
@@ -14733,12 +14758,12 @@
                 limit = 'log';
               }
 
-              _logger2.default.level(limit);
+              _logger2["default"].level(limit);
             }
           }, {
             key: 'find',
             value: function find(node) {
-              return node.__quill || _parchment2.default.find(node);
+              return node.__quill || _parchment2["default"].find(node);
             }
           }, {
             key: 'import',
@@ -14775,7 +14800,7 @@
                 this.imports[path] = target;
 
                 if ((path.startsWith('blots/') || path.startsWith('formats/')) && target.blotName !== 'abstract') {
-                  _parchment2.default.register(target);
+                  _parchment2["default"].register(target);
                 } else if (path.startsWith('modules') && typeof target.register === 'function') {
                   target.register();
                 }
@@ -14809,24 +14834,24 @@
             this.root.classList.add('ql-blank');
             this.root.setAttribute('data-gramm', false);
             this.scrollingContainer = this.options.scrollingContainer || this.root;
-            this.emitter = new _emitter4.default();
-            this.scroll = _parchment2.default.create(this.root, {
+            this.emitter = new _emitter4["default"]();
+            this.scroll = _parchment2["default"].create(this.root, {
               emitter: this.emitter,
               whitelist: this.options.formats
             });
-            this.editor = new _editor2.default(this.scroll);
-            this.selection = new _selection2.default(this.scroll, this.emitter);
+            this.editor = new _editor2["default"](this.scroll);
+            this.selection = new _selection2["default"](this.scroll, this.emitter);
             this.theme = new this.options.theme(this, this.options);
             this.keyboard = this.theme.addModule('keyboard');
             this.clipboard = this.theme.addModule('clipboard');
             this.history = this.theme.addModule('history');
             this.theme.init();
-            this.emitter.on(_emitter4.default.events.EDITOR_CHANGE, function (type) {
-              if (type === _emitter4.default.events.TEXT_CHANGE) {
+            this.emitter.on(_emitter4["default"].events.EDITOR_CHANGE, function (type) {
+              if (type === _emitter4["default"].events.TEXT_CHANGE) {
                 _this2.root.classList.toggle('ql-blank', _this2.editor.isBlank());
               }
             });
-            this.emitter.on(_emitter4.default.events.SCROLL_UPDATE, function (source, mutations) {
+            this.emitter.on(_emitter4["default"].events.SCROLL_UPDATE, function (source, mutations) {
               var range = _this2.selection.lastRange;
               var index = range && range.length === 0 ? range.index : undefined;
               modify.call(_this2, function () {
@@ -14906,15 +14931,15 @@
             value: function format(name, value) {
               var _this4 = this;
 
-              var source = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : _emitter4.default.sources.API;
+              var source = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : _emitter4["default"].sources.API;
               return modify.call(this, function () {
                 var range = _this4.getSelection(true);
 
-                var change = new _quillDelta2.default();
+                var change = new _quillDelta2["default"]();
 
                 if (range == null) {
                   return change;
-                } else if (_parchment2.default.query(name, _parchment2.default.Scope.BLOCK)) {
+                } else if (_parchment2["default"].query(name, _parchment2["default"].Scope.BLOCK)) {
                   change = _this4.editor.formatLine(range.index, range.length, _defineProperty({}, name, value));
                 } else if (range.length === 0) {
                   _this4.selection.format(name, value);
@@ -14924,7 +14949,7 @@
                   change = _this4.editor.formatText(range.index, range.length, _defineProperty({}, name, value));
                 }
 
-                _this4.setSelection(range, _emitter4.default.sources.SILENT);
+                _this4.setSelection(range, _emitter4["default"].sources.SILENT);
 
                 return change;
               }, source);
@@ -15159,9 +15184,9 @@
             value: function setContents(delta) {
               var _this10 = this;
 
-              var source = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _emitter4.default.sources.API;
+              var source = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _emitter4["default"].sources.API;
               return modify.call(this, function () {
-                delta = new _quillDelta2.default(delta);
+                delta = new _quillDelta2["default"](delta);
 
                 var length = _this10.getLength();
 
@@ -15174,7 +15199,7 @@
                 if (lastOp != null && typeof lastOp.insert === 'string' && lastOp.insert[lastOp.insert.length - 1] === '\n') {
                   _this10.editor.deleteText(_this10.getLength() - 1, 1);
 
-                  applied.delete(1);
+                  applied["delete"](1);
                 }
 
                 var ret = deleted.compose(applied);
@@ -15196,7 +15221,7 @@
                 source = _overload16[3];
                 this.selection.setRange(new _selection.Range(index, length), source);
 
-                if (source !== _emitter4.default.sources.SILENT) {
+                if (source !== _emitter4["default"].sources.SILENT) {
                   this.selection.scrollIntoView(this.scrollingContainer);
                 }
               }
@@ -15204,14 +15229,14 @@
           }, {
             key: 'setText',
             value: function setText(text) {
-              var source = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _emitter4.default.sources.API;
-              var delta = new _quillDelta2.default().insert(text);
+              var source = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _emitter4["default"].sources.API;
+              var delta = new _quillDelta2["default"]().insert(text);
               return this.setContents(delta, source);
             }
           }, {
             key: 'update',
             value: function update() {
-              var source = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _emitter4.default.sources.USER;
+              var source = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _emitter4["default"].sources.USER;
               var change = this.scroll.update(source); // Will update selection before selection.update() does if text changes
 
               this.selection.update(source);
@@ -15222,9 +15247,9 @@
             value: function updateContents(delta) {
               var _this11 = this;
 
-              var source = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _emitter4.default.sources.API;
+              var source = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _emitter4["default"].sources.API;
               return modify.call(this, function () {
-                delta = new _quillDelta2.default(delta);
+                delta = new _quillDelta2["default"](delta);
                 return _this11.editor.applyDelta(delta, source);
               }, source, true);
             }
@@ -15243,19 +15268,19 @@
           strict: true,
           theme: 'default'
         };
-        Quill.events = _emitter4.default.events;
-        Quill.sources = _emitter4.default.sources; // eslint-disable-next-line no-undef
+        Quill.events = _emitter4["default"].events;
+        Quill.sources = _emitter4["default"].sources; // eslint-disable-next-line no-undef
 
         Quill.version = "1.3.7";
         Quill.imports = {
-          'delta': _quillDelta2.default,
-          'parchment': _parchment2.default,
-          'core/module': _module2.default,
-          'core/theme': _theme2.default
+          'delta': _quillDelta2["default"],
+          'parchment': _parchment2["default"],
+          'core/module': _module2["default"],
+          'core/theme': _theme2["default"]
         };
 
         function expandConfig(container, userConfig) {
-          userConfig = (0, _extend2.default)(true, {
+          userConfig = (0, _extend2["default"])(true, {
             container: container,
             modules: {
               clipboard: true,
@@ -15265,16 +15290,16 @@
           }, userConfig);
 
           if (!userConfig.theme || userConfig.theme === Quill.DEFAULTS.theme) {
-            userConfig.theme = _theme2.default;
+            userConfig.theme = _theme2["default"];
           } else {
-            userConfig.theme = Quill.import('themes/' + userConfig.theme);
+            userConfig.theme = Quill["import"]('themes/' + userConfig.theme);
 
             if (userConfig.theme == null) {
               throw new Error('Invalid theme ' + userConfig.theme + '. Did you register it?');
             }
           }
 
-          var themeConfig = (0, _extend2.default)(true, {}, userConfig.theme.DEFAULTS);
+          var themeConfig = (0, _extend2["default"])(true, {}, userConfig.theme.DEFAULTS);
           [themeConfig, userConfig].forEach(function (config) {
             config.modules = config.modules || {};
             Object.keys(config.modules).forEach(function (module) {
@@ -15285,7 +15310,7 @@
           });
           var moduleNames = Object.keys(themeConfig.modules).concat(Object.keys(userConfig.modules));
           var moduleConfig = moduleNames.reduce(function (config, name) {
-            var moduleClass = Quill.import('modules/' + name);
+            var moduleClass = Quill["import"]('modules/' + name);
 
             if (moduleClass == null) {
               debug.error('Cannot load ' + name + ' module. Are you sure you registered it?');
@@ -15302,7 +15327,7 @@
             };
           }
 
-          userConfig = (0, _extend2.default)(true, {}, Quill.DEFAULTS, {
+          userConfig = (0, _extend2["default"])(true, {}, Quill.DEFAULTS, {
             modules: moduleConfig
           }, themeConfig, userConfig);
           ['bounds', 'container', 'scrollingContainer'].forEach(function (key) {
@@ -15323,8 +15348,8 @@
 
 
         function modify(modifier, source, index, shift) {
-          if (this.options.strict && !this.isEnabled() && source === _emitter4.default.sources.USER) {
-            return new _quillDelta2.default();
+          if (this.options.strict && !this.isEnabled() && source === _emitter4["default"].sources.USER) {
+            return new _quillDelta2["default"]();
           }
 
           var range = index == null ? null : this.getSelection();
@@ -15340,17 +15365,17 @@
               range = shiftRange(range, index, shift, source);
             }
 
-            this.setSelection(range, _emitter4.default.sources.SILENT);
+            this.setSelection(range, _emitter4["default"].sources.SILENT);
           }
 
           if (change.length() > 0) {
             var _emitter;
 
-            var args = [_emitter4.default.events.TEXT_CHANGE, change, oldDelta, source];
+            var args = [_emitter4["default"].events.TEXT_CHANGE, change, oldDelta, source];
 
-            (_emitter = this.emitter).emit.apply(_emitter, [_emitter4.default.events.EDITOR_CHANGE].concat(args));
+            (_emitter = this.emitter).emit.apply(_emitter, [_emitter4["default"].events.EDITOR_CHANGE].concat(args));
 
-            if (source !== _emitter4.default.sources.SILENT) {
+            if (source !== _emitter4["default"].sources.SILENT) {
               var _emitter2;
 
               (_emitter2 = this.emitter).emit.apply(_emitter2, args);
@@ -15387,7 +15412,7 @@
           } // Handle optional source
 
 
-          source = source || _emitter4.default.sources.API;
+          source = source || _emitter4["default"].sources.API;
           return [index, length, formats, source];
         }
 
@@ -15396,9 +15421,9 @@
           var start = void 0,
               end = void 0;
 
-          if (index instanceof _quillDelta2.default) {
+          if (index instanceof _quillDelta2["default"]) {
             var _map = [range.index, range.index + range.length].map(function (pos) {
-              return index.transformPosition(pos, source !== _emitter4.default.sources.USER);
+              return index.transformPosition(pos, source !== _emitter4["default"].sources.USER);
             });
 
             var _map2 = _slicedToArray(_map, 2);
@@ -15407,7 +15432,7 @@
             end = _map2[1];
           } else {
             var _map3 = [range.index, range.index + range.length].map(function (pos) {
-              if (pos < index || pos === index && source === _emitter4.default.sources.USER) return pos;
+              if (pos < index || pos === index && source === _emitter4["default"].sources.USER) return pos;
 
               if (length >= 0) {
                 return pos + length;
@@ -15427,7 +15452,7 @@
 
         exports.expandConfig = expandConfig;
         exports.overload = overload;
-        exports.default = Quill;
+        exports["default"] = Quill;
         /***/
       },
       /* 6 */
@@ -15492,7 +15517,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -15538,7 +15563,7 @@
           _createClass(Inline, [{
             key: 'formatAt',
             value: function formatAt(index, length, name, value) {
-              if (Inline.compare(this.statics.blotName, name) < 0 && _parchment2.default.query(name, _parchment2.default.Scope.BLOT)) {
+              if (Inline.compare(this.statics.blotName, name) < 0 && _parchment2["default"].query(name, _parchment2["default"].Scope.BLOT)) {
                 var blot = this.isolate(index, length);
 
                 if (value) {
@@ -15578,14 +15603,14 @@
           }]);
 
           return Inline;
-        }(_parchment2.default.Inline);
+        }(_parchment2["default"].Inline);
 
-        Inline.allowedChildren = [Inline, _parchment2.default.Embed, _text2.default]; // Lower index means deeper in the DOM tree, since not found (-1) is for embeds
+        Inline.allowedChildren = [Inline, _parchment2["default"].Embed, _text2["default"]]; // Lower index means deeper in the DOM tree, since not found (-1) is for embeds
 
         Inline.order = ['cursor', 'inline', // Must be lower
         'underline', 'strike', 'italic', 'bold', 'script', 'link', 'code' // Must be higher
         ];
-        exports.default = Inline;
+        exports["default"] = Inline;
         /***/
       },
       /* 7 */
@@ -15603,7 +15628,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -15647,9 +15672,9 @@
           }
 
           return TextBlot;
-        }(_parchment2.default.Text);
+        }(_parchment2["default"].Text);
 
-        exports.default = TextBlot;
+        exports["default"] = TextBlot;
         /***/
       },
       /* 8 */
@@ -15714,7 +15739,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -15748,7 +15773,7 @@
           if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
         }
 
-        var debug = (0, _logger2.default)('quill:events');
+        var debug = (0, _logger2["default"])('quill:events');
         var EVENTS = ['selectionchange', 'mousedown', 'mouseup', 'click'];
         EVENTS.forEach(function (eventName) {
           document.addEventListener(eventName, function () {
@@ -15820,7 +15845,7 @@
           }]);
 
           return Emitter;
-        }(_eventemitter2.default);
+        }(_eventemitter2["default"]);
 
         Emitter.events = {
           EDITOR_CHANGE: 'editor-change',
@@ -15835,7 +15860,7 @@
           SILENT: 'silent',
           USER: 'user'
         };
-        exports.default = Emitter;
+        exports["default"] = Emitter;
         /***/
       },
       /* 9 */
@@ -15863,7 +15888,7 @@
         };
 
         Module.DEFAULTS = {};
-        exports.default = Module;
+        exports["default"] = Module;
         /***/
       },
       /* 10 */
@@ -15901,7 +15926,7 @@
           level = newLevel;
         };
 
-        exports.default = namespace;
+        exports["default"] = namespace;
         /***/
       },
       /* 11 */
@@ -16085,7 +16110,7 @@
           return Attributor;
         }();
 
-        exports.default = Attributor;
+        exports["default"] = Attributor;
         /***/
       },
       /* 13 */
@@ -16096,7 +16121,7 @@
         Object.defineProperty(exports, "__esModule", {
           value: true
         });
-        exports.default = exports.Code = undefined;
+        exports["default"] = exports.Code = undefined;
 
         var _slicedToArray = function () {
           function sliceIterator(arr, i) {
@@ -16201,7 +16226,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -16245,7 +16270,7 @@
           }
 
           return Code;
-        }(_inline2.default);
+        }(_inline2["default"]);
 
         Code.blotName = 'code';
         Code.tagName = 'CODE';
@@ -16273,14 +16298,14 @@
 
               return text.split('\n').reduce(function (delta, frag) {
                 return delta.insert(frag).insert('\n', _this3.formats());
-              }, new _quillDelta2.default());
+              }, new _quillDelta2["default"]());
             }
           }, {
             key: 'format',
             value: function format(name, value) {
               if (name === this.statics.blotName && value) return;
 
-              var _descendant = this.descendant(_text2.default, this.length() - 1),
+              var _descendant = this.descendant(_text2["default"], this.length() - 1),
                   _descendant2 = _slicedToArray(_descendant, 1),
                   text = _descendant2[0];
 
@@ -16295,7 +16320,7 @@
             value: function formatAt(index, length, name, value) {
               if (length === 0) return;
 
-              if (_parchment2.default.query(name, _parchment2.default.Scope.BLOCK) == null || name === this.statics.blotName && value === this.statics.formats(this.domNode)) {
+              if (_parchment2["default"].query(name, _parchment2["default"].Scope.BLOCK) == null || name === this.statics.blotName && value === this.statics.formats(this.domNode)) {
                 return;
               }
 
@@ -16316,7 +16341,7 @@
             value: function insertAt(index, value, def) {
               if (def != null) return;
 
-              var _descendant3 = this.descendant(_text2.default, index),
+              var _descendant3 = this.descendant(_text2["default"], index),
                   _descendant4 = _slicedToArray(_descendant3, 2),
                   text = _descendant4[0],
                   offset = _descendant4[1];
@@ -16350,7 +16375,7 @@
             key: 'optimize',
             value: function optimize(context) {
               if (!this.domNode.textContent.endsWith('\n')) {
-                this.appendChild(_parchment2.default.create('text', '\n'));
+                this.appendChild(_parchment2["default"].create('text', '\n'));
               }
 
               _get(CodeBlock.prototype.__proto__ || Object.getPrototypeOf(CodeBlock.prototype), 'optimize', this).call(this, context);
@@ -16369,11 +16394,11 @@
               _get(CodeBlock.prototype.__proto__ || Object.getPrototypeOf(CodeBlock.prototype), 'replace', this).call(this, target);
 
               [].slice.call(this.domNode.querySelectorAll('*')).forEach(function (node) {
-                var blot = _parchment2.default.find(node);
+                var blot = _parchment2["default"].find(node);
 
                 if (blot == null) {
                   node.parentNode.removeChild(node);
-                } else if (blot instanceof _parchment2.default.Embed) {
+                } else if (blot instanceof _parchment2["default"].Embed) {
                   blot.remove();
                 } else {
                   blot.unwrap();
@@ -16396,13 +16421,13 @@
           }]);
 
           return CodeBlock;
-        }(_block2.default);
+        }(_block2["default"]);
 
         CodeBlock.blotName = 'code-block';
         CodeBlock.tagName = 'PRE';
         CodeBlock.TAB = '  ';
         exports.Code = Code;
-        exports.default = CodeBlock;
+        exports["default"] = CodeBlock;
         /***/
       },
       /* 14 */
@@ -16518,7 +16543,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -16564,7 +16589,7 @@
               this.scroll.batchStart();
               delta = normalizeDelta(delta);
               delta.reduce(function (index, op) {
-                var length = op.retain || op.delete || op.insert.length || 1;
+                var length = op.retain || op["delete"] || op.insert.length || 1;
                 var attributes = op.attributes || {};
 
                 if (op.insert != null) {
@@ -16587,17 +16612,17 @@
                         line = _scroll$line2[0],
                         offset = _scroll$line2[1];
 
-                    var formats = (0, _extend2.default)({}, (0, _block.bubbleFormats)(line));
+                    var formats = (0, _extend2["default"])({}, (0, _block.bubbleFormats)(line));
 
-                    if (line instanceof _block2.default) {
-                      var _line$descendant = line.descendant(_parchment2.default.Leaf, offset),
+                    if (line instanceof _block2["default"]) {
+                      var _line$descendant = line.descendant(_parchment2["default"].Leaf, offset),
                           _line$descendant2 = _slicedToArray(_line$descendant, 1),
                           leaf = _line$descendant2[0];
 
-                      formats = (0, _extend2.default)(formats, (0, _block.bubbleFormats)(leaf));
+                      formats = (0, _extend2["default"])(formats, (0, _block.bubbleFormats)(leaf));
                     }
 
-                    attributes = _op2.default.attributes.diff(formats, attributes) || {};
+                    attributes = _op2["default"].attributes.diff(formats, attributes) || {};
                   } else if (_typeof$1(op.insert) === 'object') {
                     var key = Object.keys(op.insert)[0]; // There should only be one key
 
@@ -16615,8 +16640,8 @@
                 return index + length;
               }, 0);
               delta.reduce(function (index, op) {
-                if (typeof op.delete === 'number') {
-                  _this.scroll.deleteAt(index, op.delete);
+                if (typeof op["delete"] === 'number') {
+                  _this.scroll.deleteAt(index, op["delete"]);
 
                   return index;
                 }
@@ -16630,7 +16655,7 @@
             key: 'deleteText',
             value: function deleteText(index, length) {
               this.scroll.deleteAt(index, length);
-              return this.update(new _quillDelta2.default().retain(index).delete(length));
+              return this.update(new _quillDelta2["default"]().retain(index)["delete"](length));
             }
           }, {
             key: 'formatLine',
@@ -16648,7 +16673,7 @@
                 lines.forEach(function (line) {
                   var lineLength = line.length();
 
-                  if (!(line instanceof _code2.default)) {
+                  if (!(line instanceof _code2["default"])) {
                     line.format(format, formats[format]);
                   } else {
                     var codeIndex = index - line.offset(_this2.scroll);
@@ -16660,7 +16685,7 @@
                 });
               });
               this.scroll.optimize();
-              return this.update(new _quillDelta2.default().retain(index).retain(length, (0, _clone2.default)(formats)));
+              return this.update(new _quillDelta2["default"]().retain(index).retain(length, (0, _clone2["default"])(formats)));
             }
           }, {
             key: 'formatText',
@@ -16671,7 +16696,7 @@
               Object.keys(formats).forEach(function (format) {
                 _this3.scroll.formatAt(index, length, format, formats[format]);
               });
-              return this.update(new _quillDelta2.default().retain(index).retain(length, (0, _clone2.default)(formats)));
+              return this.update(new _quillDelta2["default"]().retain(index).retain(length, (0, _clone2["default"])(formats)));
             }
           }, {
             key: 'getContents',
@@ -16683,7 +16708,7 @@
             value: function getDelta() {
               return this.scroll.lines().reduce(function (delta, line) {
                 return delta.concat(line.delta());
-              }, new _quillDelta2.default());
+              }, new _quillDelta2["default"]());
             }
           }, {
             key: 'getFormat',
@@ -16697,15 +16722,15 @@
                   var _path = _slicedToArray(path, 1),
                       blot = _path[0];
 
-                  if (blot instanceof _block2.default) {
+                  if (blot instanceof _block2["default"]) {
                     lines.push(blot);
-                  } else if (blot instanceof _parchment2.default.Leaf) {
+                  } else if (blot instanceof _parchment2["default"].Leaf) {
                     leaves.push(blot);
                   }
                 });
               } else {
                 lines = this.scroll.lines(index, length);
-                leaves = this.scroll.descendants(_parchment2.default.Leaf, index, length);
+                leaves = this.scroll.descendants(_parchment2["default"].Leaf, index, length);
               }
 
               var formatsArr = [lines, leaves].map(function (blots) {
@@ -16720,7 +16745,7 @@
 
                 return formats;
               });
-              return _extend2.default.apply(_extend2.default, formatsArr);
+              return _extend2["default"].apply(_extend2["default"], formatsArr);
             }
           }, {
             key: 'getText',
@@ -16735,7 +16760,7 @@
             key: 'insertEmbed',
             value: function insertEmbed(index, embed, value) {
               this.scroll.insertAt(index, embed, value);
-              return this.update(new _quillDelta2.default().retain(index).insert(_defineProperty({}, embed, value)));
+              return this.update(new _quillDelta2["default"]().retain(index).insert(_defineProperty({}, embed, value)));
             }
           }, {
             key: 'insertText',
@@ -16748,7 +16773,7 @@
               Object.keys(formats).forEach(function (format) {
                 _this4.scroll.formatAt(index, text.length, format, formats[format]);
               });
-              return this.update(new _quillDelta2.default().retain(index).insert(text, (0, _clone2.default)(formats)));
+              return this.update(new _quillDelta2["default"]().retain(index).insert(text, (0, _clone2["default"])(formats)));
             }
           }, {
             key: 'isBlank',
@@ -16756,9 +16781,9 @@
               if (this.scroll.children.length == 0) return true;
               if (this.scroll.children.length > 1) return false;
               var block = this.scroll.children.head;
-              if (block.statics.blotName !== _block2.default.blotName) return false;
+              if (block.statics.blotName !== _block2["default"].blotName) return false;
               if (block.children.length > 1) return false;
-              return block.children.head instanceof _break2.default;
+              return block.children.head instanceof _break2["default"];
             }
           }, {
             key: 'removeFormat',
@@ -16771,10 +16796,10 @@
                   offset = _scroll$line4[1];
 
               var suffixLength = 0,
-                  suffix = new _quillDelta2.default();
+                  suffix = new _quillDelta2["default"]();
 
               if (line != null) {
-                if (!(line instanceof _code2.default)) {
+                if (!(line instanceof _code2["default"])) {
                   suffixLength = line.length() - offset;
                 } else {
                   suffixLength = line.newlineIndex(offset) - offset + 1;
@@ -16784,8 +16809,8 @@
               }
 
               var contents = this.getContents(index, length + suffixLength);
-              var diff = contents.diff(new _quillDelta2.default().insert(text).concat(suffix));
-              var delta = new _quillDelta2.default().retain(index).concat(diff);
+              var diff = contents.diff(new _quillDelta2["default"]().insert(text).concat(suffix));
+              var delta = new _quillDelta2["default"]().retain(index).concat(diff);
               return this.applyDelta(delta);
             }
           }, {
@@ -16795,28 +16820,28 @@
               var cursorIndex = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
               var oldDelta = this.delta;
 
-              if (mutations.length === 1 && mutations[0].type === 'characterData' && mutations[0].target.data.match(ASCII) && _parchment2.default.find(mutations[0].target)) {
+              if (mutations.length === 1 && mutations[0].type === 'characterData' && mutations[0].target.data.match(ASCII) && _parchment2["default"].find(mutations[0].target)) {
                 // Optimization for character changes
-                var textBlot = _parchment2.default.find(mutations[0].target);
+                var textBlot = _parchment2["default"].find(mutations[0].target);
 
                 var formats = (0, _block.bubbleFormats)(textBlot);
                 var index = textBlot.offset(this.scroll);
-                var oldValue = mutations[0].oldValue.replace(_cursor2.default.CONTENTS, '');
-                var oldText = new _quillDelta2.default().insert(oldValue);
-                var newText = new _quillDelta2.default().insert(textBlot.value());
-                var diffDelta = new _quillDelta2.default().retain(index).concat(oldText.diff(newText, cursorIndex));
+                var oldValue = mutations[0].oldValue.replace(_cursor2["default"].CONTENTS, '');
+                var oldText = new _quillDelta2["default"]().insert(oldValue);
+                var newText = new _quillDelta2["default"]().insert(textBlot.value());
+                var diffDelta = new _quillDelta2["default"]().retain(index).concat(oldText.diff(newText, cursorIndex));
                 change = diffDelta.reduce(function (delta, op) {
                   if (op.insert) {
                     return delta.insert(op.insert, formats);
                   } else {
                     return delta.push(op);
                   }
-                }, new _quillDelta2.default());
+                }, new _quillDelta2["default"]());
                 this.delta = oldDelta.compose(change);
               } else {
                 this.delta = this.getDelta();
 
-                if (!change || !(0, _deepEqual2.default)(oldDelta.compose(change), this.delta)) {
+                if (!change || !(0, _deepEqual2["default"])(oldDelta.compose(change), this.delta)) {
                   change = oldDelta.diff(this.delta, cursorIndex);
                 }
               }
@@ -16849,7 +16874,7 @@
         function normalizeDelta(delta) {
           return delta.reduce(function (delta, op) {
             if (op.insert === 1) {
-              var attributes = (0, _clone2.default)(op.attributes);
+              var attributes = (0, _clone2["default"])(op.attributes);
               delete attributes['image'];
               return delta.insert({
                 image: op.attributes.image
@@ -16857,7 +16882,7 @@
             }
 
             if (op.attributes != null && (op.attributes.list === true || op.attributes.bullet === true)) {
-              op = (0, _clone2.default)(op);
+              op = (0, _clone2["default"])(op);
 
               if (op.attributes.list) {
                 op.attributes.list = 'ordered';
@@ -16873,10 +16898,10 @@
             }
 
             return delta.push(op);
-          }, new _quillDelta2.default());
+          }, new _quillDelta2["default"]());
         }
 
-        exports.default = Editor;
+        exports["default"] = Editor;
         /***/
       },
       /* 15 */
@@ -16887,7 +16912,7 @@
         Object.defineProperty(exports, "__esModule", {
           value: true
         });
-        exports.default = exports.Range = undefined;
+        exports["default"] = exports.Range = undefined;
 
         var _slicedToArray = function () {
           function sliceIterator(arr, i) {
@@ -16967,7 +16992,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -16989,7 +17014,7 @@
           }
         }
 
-        var debug = (0, _logger2.default)('quill:selection');
+        var debug = (0, _logger2["default"])('quill:selection');
 
         var Range = function Range(index) {
           var length = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
@@ -17011,37 +17036,37 @@
             this.composing = false;
             this.mouseDown = false;
             this.root = this.scroll.domNode;
-            this.cursor = _parchment2.default.create('cursor', this); // savedRange is last non-null range
+            this.cursor = _parchment2["default"].create('cursor', this); // savedRange is last non-null range
 
             this.lastRange = this.savedRange = new Range(0, 0);
             this.handleComposition();
             this.handleDragging();
             this.emitter.listenDOM('selectionchange', document, function () {
               if (!_this.mouseDown) {
-                setTimeout(_this.update.bind(_this, _emitter4.default.sources.USER), 1);
+                setTimeout(_this.update.bind(_this, _emitter4["default"].sources.USER), 1);
               }
             });
-            this.emitter.on(_emitter4.default.events.EDITOR_CHANGE, function (type, delta) {
-              if (type === _emitter4.default.events.TEXT_CHANGE && delta.length() > 0) {
-                _this.update(_emitter4.default.sources.SILENT);
+            this.emitter.on(_emitter4["default"].events.EDITOR_CHANGE, function (type, delta) {
+              if (type === _emitter4["default"].events.TEXT_CHANGE && delta.length() > 0) {
+                _this.update(_emitter4["default"].sources.SILENT);
               }
             });
-            this.emitter.on(_emitter4.default.events.SCROLL_BEFORE_UPDATE, function () {
+            this.emitter.on(_emitter4["default"].events.SCROLL_BEFORE_UPDATE, function () {
               if (!_this.hasFocus()) return;
 
-              var native = _this.getNativeRange();
+              var _native = _this.getNativeRange();
 
-              if (native == null) return;
-              if (native.start.node === _this.cursor.textNode) return; // cursor.restore() will handle
+              if (_native == null) return;
+              if (_native.start.node === _this.cursor.textNode) return; // cursor.restore() will handle
               // TODO unclear if this has negative side effects
 
-              _this.emitter.once(_emitter4.default.events.SCROLL_UPDATE, function () {
+              _this.emitter.once(_emitter4["default"].events.SCROLL_UPDATE, function () {
                 try {
-                  _this.setNativeRange(native.start.node, native.start.offset, native.end.node, native.end.offset);
+                  _this.setNativeRange(_native.start.node, _native.start.offset, _native.end.node, _native.end.offset);
                 } catch (ignored) {}
               });
             });
-            this.emitter.on(_emitter4.default.events.SCROLL_OPTIMIZE, function (mutations, context) {
+            this.emitter.on(_emitter4["default"].events.SCROLL_OPTIMIZE, function (mutations, context) {
               if (context.range) {
                 var _context$range = context.range,
                     startNode = _context$range.startNode,
@@ -17052,7 +17077,7 @@
                 _this.setNativeRange(startNode, startOffset, endNode, endOffset);
               }
             });
-            this.update(_emitter4.default.sources.SILENT);
+            this.update(_emitter4["default"].sources.SILENT);
           }
 
           _createClass(Selection, [{
@@ -17087,7 +17112,7 @@
               this.emitter.listenDOM('mouseup', document.body, function () {
                 _this3.mouseDown = false;
 
-                _this3.update(_emitter4.default.sources.USER);
+                _this3.update(_emitter4["default"].sources.USER);
               });
             }
           }, {
@@ -17103,14 +17128,14 @@
               if (this.scroll.whitelist != null && !this.scroll.whitelist[_format]) return;
               this.scroll.update();
               var nativeRange = this.getNativeRange();
-              if (nativeRange == null || !nativeRange.native.collapsed || _parchment2.default.query(_format, _parchment2.default.Scope.BLOCK)) return;
+              if (nativeRange == null || !nativeRange["native"].collapsed || _parchment2["default"].query(_format, _parchment2["default"].Scope.BLOCK)) return;
 
               if (nativeRange.start.node !== this.cursor.textNode) {
-                var blot = _parchment2.default.find(nativeRange.start.node, false);
+                var blot = _parchment2["default"].find(nativeRange.start.node, false);
 
                 if (blot == null) return; // TODO Give blot ability to not split
 
-                if (blot instanceof _parchment2.default.Leaf) {
+                if (blot instanceof _parchment2["default"].Leaf) {
                   var after = blot.split(nativeRange.start.offset);
                   blot.parent.insertBefore(this.cursor, after);
                 } else {
@@ -17229,7 +17254,7 @@
 
               var positions = [[range.start.node, range.start.offset]];
 
-              if (!range.native.collapsed) {
+              if (!range["native"].collapsed) {
                 positions.push([range.end.node, range.end.offset]);
               }
 
@@ -17238,13 +17263,13 @@
                     node = _position[0],
                     offset = _position[1];
 
-                var blot = _parchment2.default.find(node, true);
+                var blot = _parchment2["default"].find(node, true);
 
                 var index = blot.offset(_this4.scroll);
 
                 if (offset === 0) {
                   return index;
-                } else if (blot instanceof _parchment2.default.Container) {
+                } else if (blot instanceof _parchment2["default"].Container) {
                   return index + blot.length();
                 } else {
                   return index + blot.index(node, offset);
@@ -17270,7 +17295,7 @@
                   node: nativeRange.endContainer,
                   offset: nativeRange.endOffset
                 },
-                native: nativeRange
+                "native": nativeRange
               };
               [range.start, range.end].forEach(function (position) {
                 var node = position.node,
@@ -17373,9 +17398,9 @@
 
               if (startNode != null) {
                 if (!this.hasFocus()) this.root.focus();
-                var native = (this.getNativeRange() || {}).native;
+                var _native2 = (this.getNativeRange() || {})["native"];
 
-                if (native == null || force || startNode !== native.startContainer || startOffset !== native.startOffset || endNode !== native.endContainer || endOffset !== native.endOffset) {
+                if (_native2 == null || force || startNode !== _native2.startContainer || startOffset !== _native2.startOffset || endNode !== _native2.endContainer || endOffset !== _native2.endOffset) {
                   if (startNode.tagName == "BR") {
                     startOffset = [].indexOf.call(startNode.parentNode.childNodes, startNode);
                     startNode = startNode.parentNode;
@@ -17402,7 +17427,7 @@
             key: 'setRange',
             value: function setRange(range) {
               var force = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-              var source = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : _emitter4.default.sources.API;
+              var source = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : _emitter4["default"].sources.API;
 
               if (typeof force === 'string') {
                 source = force;
@@ -17423,7 +17448,7 @@
           }, {
             key: 'update',
             value: function update() {
-              var source = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _emitter4.default.sources.USER;
+              var source = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _emitter4["default"].sources.USER;
               var oldRange = this.lastRange;
 
               var _getRange = this.getRange(),
@@ -17437,18 +17462,18 @@
                 this.savedRange = this.lastRange;
               }
 
-              if (!(0, _deepEqual2.default)(oldRange, this.lastRange)) {
+              if (!(0, _deepEqual2["default"])(oldRange, this.lastRange)) {
                 var _emitter;
 
-                if (!this.composing && nativeRange != null && nativeRange.native.collapsed && nativeRange.start.node !== this.cursor.textNode) {
+                if (!this.composing && nativeRange != null && nativeRange["native"].collapsed && nativeRange.start.node !== this.cursor.textNode) {
                   this.cursor.restore();
                 }
 
-                var args = [_emitter4.default.events.SELECTION_CHANGE, (0, _clone2.default)(this.lastRange), (0, _clone2.default)(oldRange), source];
+                var args = [_emitter4["default"].events.SELECTION_CHANGE, (0, _clone2["default"])(this.lastRange), (0, _clone2["default"])(oldRange), source];
 
-                (_emitter = this.emitter).emit.apply(_emitter, [_emitter4.default.events.EDITOR_CHANGE].concat(args));
+                (_emitter = this.emitter).emit.apply(_emitter, [_emitter4["default"].events.EDITOR_CHANGE].concat(args));
 
-                if (source !== _emitter4.default.sources.SILENT) {
+                if (source !== _emitter4["default"].sources.SILENT) {
                   var _emitter2;
 
                   (_emitter2 = this.emitter).emit.apply(_emitter2, args);
@@ -17478,7 +17503,7 @@
         }
 
         exports.Range = Range;
-        exports.default = Selection;
+        exports["default"] = Selection;
         /***/
       },
       /* 16 */
@@ -17539,7 +17564,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -17609,11 +17634,11 @@
           }]);
 
           return Break;
-        }(_parchment2.default.Embed);
+        }(_parchment2["default"].Embed);
 
         Break.blotName = 'break';
         Break.tagName = 'BR';
-        exports.default = Break;
+        exports["default"] = Break;
         /***/
       },
       /* 17 */
@@ -17681,7 +17706,7 @@
           ContainerBlot.prototype.build = function () {
             var _this = this;
 
-            this.children = new linked_list_1.default(); // Need to be reversed for if DOM nodes already in order
+            this.children = new linked_list_1["default"](); // Need to be reversed for if DOM nodes already in order
 
             [].slice.call(this.domNode.childNodes).reverse().forEach(function (node) {
               try {
@@ -17919,7 +17944,7 @@
           };
 
           return ContainerBlot;
-        }(shadow_1.default);
+        }(shadow_1["default"]);
 
         function makeBlot(node) {
           var blot = Registry.find(node);
@@ -17945,7 +17970,7 @@
           return blot;
         }
 
-        exports.default = ContainerBlot;
+        exports["default"] = ContainerBlot;
         /***/
       },
       /* 18 */
@@ -17995,7 +18020,7 @@
           function FormatBlot(domNode) {
             var _this = _super.call(this, domNode) || this;
 
-            _this.attributes = new store_1.default(_this.domNode);
+            _this.attributes = new store_1["default"](_this.domNode);
             return _this;
           }
 
@@ -18012,7 +18037,7 @@
           FormatBlot.prototype.format = function (name, value) {
             var format = Registry.query(name);
 
-            if (format instanceof attributor_1.default) {
+            if (format instanceof attributor_1["default"]) {
               this.attributes.attribute(format, value);
             } else if (value) {
               if (format != null && (name !== this.statics.blotName || this.formats()[name] !== value)) {
@@ -18062,9 +18087,9 @@
           };
 
           return FormatBlot;
-        }(container_1.default);
+        }(container_1["default"]);
 
-        exports.default = FormatBlot;
+        exports["default"] = FormatBlot;
         /***/
       },
       /* 19 */
@@ -18137,9 +18162,9 @@
 
           LeafBlot.scope = Registry.Scope.INLINE_BLOT;
           return LeafBlot;
-        }(shadow_1.default);
+        }(shadow_1["default"]);
 
-        exports.default = LeafBlot;
+        exports["default"] = LeafBlot;
         /***/
       },
       /* 20 */
@@ -18708,7 +18733,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -18743,7 +18768,7 @@
         }
 
         function isLine(blot) {
-          return blot instanceof _block2.default || blot instanceof _block.BlockEmbed;
+          return blot instanceof _block2["default"] || blot instanceof _block.BlockEmbed;
         }
 
         var Scroll = function (_Parchment$Scroll) {
@@ -18804,7 +18829,7 @@
                   return;
                 }
 
-                if (first instanceof _code2.default) {
+                if (first instanceof _code2["default"]) {
                   var newlineIndex = first.newlineIndex(first.length(), true);
 
                   if (newlineIndex > -1) {
@@ -18815,7 +18840,7 @@
                       return;
                     }
                   }
-                } else if (last instanceof _code2.default) {
+                } else if (last instanceof _code2["default"]) {
                   var _newlineIndex = last.newlineIndex(0);
 
                   if (_newlineIndex > -1) {
@@ -18823,7 +18848,7 @@
                   }
                 }
 
-                var ref = last.children.head instanceof _break2.default ? null : last.children.head;
+                var ref = last.children.head instanceof _break2["default"] ? null : last.children.head;
                 first.moveChildren(last, ref);
                 first.remove();
               }
@@ -18851,8 +18876,8 @@
               if (def != null && this.whitelist != null && !this.whitelist[value]) return;
 
               if (index >= this.length()) {
-                if (def == null || _parchment2.default.query(value, _parchment2.default.Scope.BLOCK) == null) {
-                  var blot = _parchment2.default.create(this.statics.defaultChild);
+                if (def == null || _parchment2["default"].query(value, _parchment2["default"].Scope.BLOCK) == null) {
+                  var blot = _parchment2["default"].create(this.statics.defaultChild);
 
                   this.appendChild(blot);
 
@@ -18862,7 +18887,7 @@
 
                   blot.insertAt(0, value, def);
                 } else {
-                  var embed = _parchment2.default.create(value, def);
+                  var embed = _parchment2["default"].create(value, def);
 
                   this.appendChild(embed);
                 }
@@ -18875,8 +18900,8 @@
           }, {
             key: 'insertBefore',
             value: function insertBefore(blot, ref) {
-              if (blot.statics.scope === _parchment2.default.Scope.INLINE_BLOT) {
-                var wrapper = _parchment2.default.create(this.statics.defaultChild);
+              if (blot.statics.scope === _parchment2["default"].Scope.INLINE_BLOT) {
+                var wrapper = _parchment2["default"].create(this.statics.defaultChild);
 
                 wrapper.appendChild(blot);
                 blot = wrapper;
@@ -18910,7 +18935,7 @@
                 blot.children.forEachAt(index, length, function (child, index, length) {
                   if (isLine(child)) {
                     lines.push(child);
-                  } else if (child instanceof _parchment2.default.Container) {
+                  } else if (child instanceof _parchment2["default"].Container) {
                     lines = lines.concat(getLines(child, index, lengthLeft));
                   }
 
@@ -18931,7 +18956,7 @@
               _get(Scroll.prototype.__proto__ || Object.getPrototypeOf(Scroll.prototype), 'optimize', this).call(this, mutations, context);
 
               if (mutations.length > 0) {
-                this.emitter.emit(_emitter2.default.events.SCROLL_OPTIMIZE, mutations, context);
+                this.emitter.emit(_emitter2["default"].events.SCROLL_OPTIMIZE, mutations, context);
               }
             }
           }, {
@@ -18943,7 +18968,7 @@
             key: 'update',
             value: function update(mutations) {
               if (this.batch === true) return;
-              var source = _emitter2.default.sources.USER;
+              var source = _emitter2["default"].sources.USER;
 
               if (typeof mutations === 'string') {
                 source = mutations;
@@ -18954,27 +18979,27 @@
               }
 
               if (mutations.length > 0) {
-                this.emitter.emit(_emitter2.default.events.SCROLL_BEFORE_UPDATE, source, mutations);
+                this.emitter.emit(_emitter2["default"].events.SCROLL_BEFORE_UPDATE, source, mutations);
               }
 
               _get(Scroll.prototype.__proto__ || Object.getPrototypeOf(Scroll.prototype), 'update', this).call(this, mutations.concat([])); // pass copy
 
 
               if (mutations.length > 0) {
-                this.emitter.emit(_emitter2.default.events.SCROLL_UPDATE, source, mutations);
+                this.emitter.emit(_emitter2["default"].events.SCROLL_UPDATE, source, mutations);
               }
             }
           }]);
 
           return Scroll;
-        }(_parchment2.default.Scroll);
+        }(_parchment2["default"].Scroll);
 
         Scroll.blotName = 'scroll';
         Scroll.className = 'ql-editor';
         Scroll.tagName = 'DIV';
         Scroll.defaultChild = 'block';
-        Scroll.allowedChildren = [_block2.default, _block.BlockEmbed, _container2.default];
-        exports.default = Scroll;
+        Scroll.allowedChildren = [_block2["default"], _block.BlockEmbed, _container2["default"]];
+        exports["default"] = Scroll;
         /***/
       },
       /* 23 */
@@ -18985,7 +19010,7 @@
         Object.defineProperty(exports, "__esModule", {
           value: true
         });
-        exports.SHORTKEY = exports.default = undefined;
+        exports.SHORTKEY = exports["default"] = undefined;
 
         var _typeof$1 = typeof Symbol === "function" && _typeof(Symbol.iterator) === "symbol" ? function (obj) {
           return _typeof(obj);
@@ -19087,7 +19112,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -19136,7 +19161,7 @@
           if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
         }
 
-        var debug = (0, _logger2.default)('quill:keyboard');
+        var debug = (0, _logger2["default"])('quill:keyboard');
         var SHORTKEY = /Mac/i.test(navigator.platform) ? 'metaKey' : 'ctrlKey';
 
         var Keyboard = function (_Module) {
@@ -19265,7 +19290,7 @@
                 };
               }
 
-              binding = (0, _extend2.default)(binding, context, handler);
+              binding = (0, _extend2["default"])(binding, context, handler);
               this.bindings[binding.key] = this.bindings[binding.key] || [];
               this.bindings[binding.key].push(binding);
             }
@@ -19301,8 +19326,8 @@
                     leafEnd = _ref2[0],
                     offsetEnd = _ref2[1];
 
-                var prefixText = leafStart instanceof _parchment2.default.Text ? leafStart.value().slice(0, offsetStart) : '';
-                var suffixText = leafEnd instanceof _parchment2.default.Text ? leafEnd.value().slice(offsetEnd) : '';
+                var prefixText = leafStart instanceof _parchment2["default"].Text ? leafStart.value().slice(0, offsetStart) : '';
+                var suffixText = leafEnd instanceof _parchment2["default"].Text ? leafEnd.value().slice(offsetEnd) : '';
                 var curContext = {
                   collapsed: range.length === 0,
                   empty: range.length === 0 && line.length() <= 1,
@@ -19328,7 +19353,7 @@
                     if (!Object.keys(binding.format).every(function (name) {
                       if (binding.format[name] === true) return curContext.format[name] != null;
                       if (binding.format[name] === false) return curContext.format[name] == null;
-                      return (0, _deepEqual2.default)(binding.format[name], curContext.format[name]);
+                      return (0, _deepEqual2["default"])(binding.format[name], curContext.format[name]);
                     })) {
                       return false;
                     }
@@ -19347,7 +19372,7 @@
           }]);
 
           return Keyboard;
-        }(_module2.default);
+        }(_module2["default"]);
 
         Keyboard.keys = {
           BACKSPACE: 8,
@@ -19371,7 +19396,7 @@
               format: ['blockquote', 'indent', 'list'],
               handler: function handler(range, context) {
                 if (context.collapsed && context.offset !== 0) return true;
-                this.quill.format('indent', '+1', _quill2.default.sources.USER);
+                this.quill.format('indent', '+1', _quill2["default"].sources.USER);
               }
             },
             'outdent': {
@@ -19381,7 +19406,7 @@
               // highlight tab or tab at beginning of list, indent or blockquote
               handler: function handler(range, context) {
                 if (context.collapsed && context.offset !== 0) return true;
-                this.quill.format('indent', '-1', _quill2.default.sources.USER);
+                this.quill.format('indent', '-1', _quill2["default"].sources.USER);
               }
             },
             'outdent backspace': {
@@ -19395,9 +19420,9 @@
               offset: 0,
               handler: function handler(range, context) {
                 if (context.format.indent != null) {
-                  this.quill.format('indent', '-1', _quill2.default.sources.USER);
+                  this.quill.format('indent', '-1', _quill2["default"].sources.USER);
                 } else if (context.format.list != null) {
-                  this.quill.format('list', false, _quill2.default.sources.USER);
+                  this.quill.format('list', false, _quill2["default"].sources.USER);
                 }
               }
             },
@@ -19409,17 +19434,17 @@
               collapsed: true,
               prefix: /\t$/,
               handler: function handler(range) {
-                this.quill.deleteText(range.index - 1, 1, _quill2.default.sources.USER);
+                this.quill.deleteText(range.index - 1, 1, _quill2["default"].sources.USER);
               }
             },
             'tab': {
               key: Keyboard.keys.TAB,
               handler: function handler(range) {
                 this.quill.history.cutoff();
-                var delta = new _quillDelta2.default().retain(range.index).delete(range.length).insert('\t');
-                this.quill.updateContents(delta, _quill2.default.sources.USER);
+                var delta = new _quillDelta2["default"]().retain(range.index)["delete"](range.length).insert('\t');
+                this.quill.updateContents(delta, _quill2["default"].sources.USER);
                 this.quill.history.cutoff();
-                this.quill.setSelection(range.index + 1, _quill2.default.sources.SILENT);
+                this.quill.setSelection(range.index + 1, _quill2["default"].sources.SILENT);
               }
             },
             'list empty enter': {
@@ -19428,10 +19453,10 @@
               format: ['list'],
               empty: true,
               handler: function handler(range, context) {
-                this.quill.format('list', false, _quill2.default.sources.USER);
+                this.quill.format('list', false, _quill2["default"].sources.USER);
 
                 if (context.format.indent) {
-                  this.quill.format('indent', false, _quill2.default.sources.USER);
+                  this.quill.format('indent', false, _quill2["default"].sources.USER);
                 }
               }
             },
@@ -19447,14 +19472,14 @@
                     line = _quill$getLine4[0],
                     offset = _quill$getLine4[1];
 
-                var formats = (0, _extend2.default)({}, line.formats(), {
+                var formats = (0, _extend2["default"])({}, line.formats(), {
                   list: 'checked'
                 });
-                var delta = new _quillDelta2.default().retain(range.index).insert('\n', formats).retain(line.length() - offset - 1).retain(1, {
+                var delta = new _quillDelta2["default"]().retain(range.index).insert('\n', formats).retain(line.length() - offset - 1).retain(1, {
                   list: 'unchecked'
                 });
-                this.quill.updateContents(delta, _quill2.default.sources.USER);
-                this.quill.setSelection(range.index + 1, _quill2.default.sources.SILENT);
+                this.quill.updateContents(delta, _quill2["default"].sources.USER);
+                this.quill.setSelection(range.index + 1, _quill2["default"].sources.SILENT);
                 this.quill.scrollIntoView();
               }
             },
@@ -19469,11 +19494,11 @@
                     line = _quill$getLine6[0],
                     offset = _quill$getLine6[1];
 
-                var delta = new _quillDelta2.default().retain(range.index).insert('\n', context.format).retain(line.length() - offset - 1).retain(1, {
+                var delta = new _quillDelta2["default"]().retain(range.index).insert('\n', context.format).retain(line.length() - offset - 1).retain(1, {
                   header: null
                 });
-                this.quill.updateContents(delta, _quill2.default.sources.USER);
-                this.quill.setSelection(range.index + 1, _quill2.default.sources.SILENT);
+                this.quill.updateContents(delta, _quill2["default"].sources.USER);
+                this.quill.setSelection(range.index + 1, _quill2["default"].sources.SILENT);
                 this.quill.scrollIntoView();
               }
             },
@@ -19514,14 +19539,14 @@
                     value = 'ordered';
                 }
 
-                this.quill.insertText(range.index, ' ', _quill2.default.sources.USER);
+                this.quill.insertText(range.index, ' ', _quill2["default"].sources.USER);
                 this.quill.history.cutoff();
-                var delta = new _quillDelta2.default().retain(range.index - offset).delete(length + 1).retain(line.length() - 2 - offset).retain(1, {
+                var delta = new _quillDelta2["default"]().retain(range.index - offset)["delete"](length + 1).retain(line.length() - 2 - offset).retain(1, {
                   list: value
                 });
-                this.quill.updateContents(delta, _quill2.default.sources.USER);
+                this.quill.updateContents(delta, _quill2["default"].sources.USER);
                 this.quill.history.cutoff();
-                this.quill.setSelection(range.index - length, _quill2.default.sources.SILENT);
+                this.quill.setSelection(range.index - length, _quill2["default"].sources.SILENT);
               }
             },
             'code exit': {
@@ -19536,10 +19561,10 @@
                     line = _quill$getLine10[0],
                     offset = _quill$getLine10[1];
 
-                var delta = new _quillDelta2.default().retain(range.index + line.length() - offset - 2).retain(1, {
+                var delta = new _quillDelta2["default"]().retain(range.index + line.length() - offset - 2).retain(1, {
                   'code-block': null
-                }).delete(1);
-                this.quill.updateContents(delta, _quill2.default.sources.USER);
+                })["delete"](1);
+                this.quill.updateContents(delta, _quill2["default"].sources.USER);
               }
             },
             'embed left': makeEmbedArrowHandler(Keyboard.keys.LEFT, false),
@@ -19568,19 +19593,19 @@
                 _quill$getLeaf4 = _slicedToArray(_quill$getLeaf3, 1),
                 leaf = _quill$getLeaf4[0];
 
-            if (!(leaf instanceof _parchment2.default.Embed)) return true;
+            if (!(leaf instanceof _parchment2["default"].Embed)) return true;
 
             if (key === Keyboard.keys.LEFT) {
               if (shiftKey) {
-                this.quill.setSelection(range.index - 1, range.length + 1, _quill2.default.sources.USER);
+                this.quill.setSelection(range.index - 1, range.length + 1, _quill2["default"].sources.USER);
               } else {
-                this.quill.setSelection(range.index - 1, _quill2.default.sources.USER);
+                this.quill.setSelection(range.index - 1, _quill2["default"].sources.USER);
               }
             } else {
               if (shiftKey) {
-                this.quill.setSelection(range.index, range.length + 1, _quill2.default.sources.USER);
+                this.quill.setSelection(range.index, range.length + 1, _quill2["default"].sources.USER);
               } else {
-                this.quill.setSelection(range.index + range.length + 1, _quill2.default.sources.USER);
+                this.quill.setSelection(range.index + range.length + 1, _quill2["default"].sources.USER);
               }
             }
 
@@ -19605,16 +19630,16 @@
             if (prev != null && prev.length() > 1) {
               var curFormats = line.formats();
               var prevFormats = this.quill.getFormat(range.index - 1, 1);
-              formats = _op2.default.attributes.diff(curFormats, prevFormats) || {};
+              formats = _op2["default"].attributes.diff(curFormats, prevFormats) || {};
             }
           } // Check for astral symbols
 
 
           var length = /[\uD800-\uDBFF][\uDC00-\uDFFF]$/.test(context.prefix) ? 2 : 1;
-          this.quill.deleteText(range.index - length, length, _quill2.default.sources.USER);
+          this.quill.deleteText(range.index - length, length, _quill2["default"].sources.USER);
 
           if (Object.keys(formats).length > 0) {
-            this.quill.formatLine(range.index - length, length, formats, _quill2.default.sources.USER);
+            this.quill.formatLine(range.index - length, length, formats, _quill2["default"].sources.USER);
           }
 
           this.quill.focus();
@@ -19639,15 +19664,15 @@
             if (next) {
               var curFormats = line.formats();
               var nextFormats = this.quill.getFormat(range.index, 1);
-              formats = _op2.default.attributes.diff(curFormats, nextFormats) || {};
+              formats = _op2["default"].attributes.diff(curFormats, nextFormats) || {};
               nextLength = next.length();
             }
           }
 
-          this.quill.deleteText(range.index, length, _quill2.default.sources.USER);
+          this.quill.deleteText(range.index, length, _quill2["default"].sources.USER);
 
           if (Object.keys(formats).length > 0) {
-            this.quill.formatLine(range.index + nextLength - 1, length, formats, _quill2.default.sources.USER);
+            this.quill.formatLine(range.index + nextLength - 1, length, formats, _quill2["default"].sources.USER);
           }
         }
 
@@ -19658,16 +19683,16 @@
           if (lines.length > 1) {
             var firstFormats = lines[0].formats();
             var lastFormats = lines[lines.length - 1].formats();
-            formats = _op2.default.attributes.diff(lastFormats, firstFormats) || {};
+            formats = _op2["default"].attributes.diff(lastFormats, firstFormats) || {};
           }
 
-          this.quill.deleteText(range, _quill2.default.sources.USER);
+          this.quill.deleteText(range, _quill2["default"].sources.USER);
 
           if (Object.keys(formats).length > 0) {
-            this.quill.formatLine(range.index, 1, formats, _quill2.default.sources.USER);
+            this.quill.formatLine(range.index, 1, formats, _quill2["default"].sources.USER);
           }
 
-          this.quill.setSelection(range.index, _quill2.default.sources.SILENT);
+          this.quill.setSelection(range.index, _quill2["default"].sources.SILENT);
           this.quill.focus();
         }
 
@@ -19679,23 +19704,23 @@
           }
 
           var lineFormats = Object.keys(context.format).reduce(function (lineFormats, format) {
-            if (_parchment2.default.query(format, _parchment2.default.Scope.BLOCK) && !Array.isArray(context.format[format])) {
+            if (_parchment2["default"].query(format, _parchment2["default"].Scope.BLOCK) && !Array.isArray(context.format[format])) {
               lineFormats[format] = context.format[format];
             }
 
             return lineFormats;
           }, {});
-          this.quill.insertText(range.index, '\n', lineFormats, _quill2.default.sources.USER); // Earlier scroll.deleteAt might have messed up our selection,
+          this.quill.insertText(range.index, '\n', lineFormats, _quill2["default"].sources.USER); // Earlier scroll.deleteAt might have messed up our selection,
           // so insertText's built in selection preservation is not reliable
 
-          this.quill.setSelection(range.index + 1, _quill2.default.sources.SILENT);
+          this.quill.setSelection(range.index + 1, _quill2["default"].sources.SILENT);
           this.quill.focus();
           Object.keys(context.format).forEach(function (name) {
             if (lineFormats[name] != null) return;
             if (Array.isArray(context.format[name])) return;
             if (name === 'link') return;
 
-            _this3.quill.format(name, context.format[name], _quill2.default.sources.USER);
+            _this3.quill.format(name, context.format[name], _quill2["default"].sources.USER);
           });
         }
 
@@ -19707,7 +19732,7 @@
               'code-block': true
             },
             handler: function handler(range) {
-              var CodeBlock = _parchment2.default.query('code-block');
+              var CodeBlock = _parchment2["default"].query('code-block');
 
               var index = range.index,
                   length = range.length;
@@ -19746,8 +19771,8 @@
 
                 offset += line.length + 1;
               });
-              this.quill.update(_quill2.default.sources.USER);
-              this.quill.setSelection(index, length, _quill2.default.sources.SILENT);
+              this.quill.update(_quill2["default"].sources.USER);
+              this.quill.setSelection(index, length, _quill2["default"].sources.SILENT);
             }
           };
         }
@@ -19757,7 +19782,7 @@
             key: format[0].toUpperCase(),
             shortKey: true,
             handler: function handler(range, context) {
-              this.quill.format(format, !context.format[format], _quill2.default.sources.USER);
+              this.quill.format(format, !context.format[format], _quill2["default"].sources.USER);
             }
           };
         }
@@ -19770,7 +19795,7 @@
           }
 
           if ((typeof binding === 'undefined' ? 'undefined' : _typeof$1(binding)) === 'object') {
-            binding = (0, _clone2.default)(binding, false);
+            binding = (0, _clone2["default"])(binding, false);
           }
 
           if (typeof binding.key === 'string') {
@@ -19791,7 +19816,7 @@
           return binding;
         }
 
-        exports.default = Keyboard;
+        exports["default"] = Keyboard;
         exports.SHORTKEY = SHORTKEY;
         /***/
       },
@@ -19895,7 +19920,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -19969,7 +19994,7 @@
               var target = this,
                   index = 0;
 
-              while (target != null && target.statics.scope !== _parchment2.default.Scope.BLOCK_BLOT) {
+              while (target != null && target.statics.scope !== _parchment2["default"].Scope.BLOCK_BLOT) {
                 index += target.offset(target.parent);
                 target = target.parent;
               }
@@ -20029,13 +20054,13 @@
               if (this.textNode.data !== Cursor.CONTENTS) {
                 var text = this.textNode.data.split(Cursor.CONTENTS).join('');
 
-                if (this.next instanceof _text2.default) {
+                if (this.next instanceof _text2["default"]) {
                   restoreText = this.next.domNode;
                   this.next.insertAt(0, text);
                   this.textNode.data = Cursor.CONTENTS;
                 } else {
                   this.textNode.data = text;
-                  this.parent.insertBefore(_parchment2.default.create(this.textNode), this);
+                  this.parent.insertBefore(_parchment2["default"].create(this.textNode), this);
                   this.textNode = document.createTextNode(Cursor.CONTENTS);
                   this.domNode.appendChild(this.textNode);
                 }
@@ -20080,14 +20105,14 @@
           }]);
 
           return Cursor;
-        }(_parchment2.default.Embed);
+        }(_parchment2["default"].Embed);
 
         Cursor.blotName = 'cursor';
         Cursor.className = 'ql-cursor';
         Cursor.tagName = 'span';
         Cursor.CONTENTS = "\uFEFF"; // Zero width no break space
 
-        exports.default = Cursor;
+        exports["default"] = Cursor;
         /***/
       },
       /* 25 */
@@ -20109,7 +20134,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -20153,10 +20178,10 @@
           }
 
           return Container;
-        }(_parchment2.default.Container);
+        }(_parchment2["default"].Container);
 
-        Container.allowedChildren = [_block2.default, _block.BlockEmbed, Container];
-        exports.default = Container;
+        Container.allowedChildren = [_block2["default"], _block.BlockEmbed, Container];
+        exports["default"] = Container;
         /***/
       },
       /* 26 */
@@ -20218,7 +20243,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -20275,13 +20300,13 @@
           }]);
 
           return ColorAttributor;
-        }(_parchment2.default.Attributor.Style);
+        }(_parchment2["default"].Attributor.Style);
 
-        var ColorClass = new _parchment2.default.Attributor.Class('color', 'ql-color', {
-          scope: _parchment2.default.Scope.INLINE
+        var ColorClass = new _parchment2["default"].Attributor.Class('color', 'ql-color', {
+          scope: _parchment2["default"].Scope.INLINE
         });
         var ColorStyle = new ColorAttributor('color', 'color', {
-          scope: _parchment2.default.Scope.INLINE
+          scope: _parchment2["default"].Scope.INLINE
         });
         exports.ColorAttributor = ColorAttributor;
         exports.ColorClass = ColorClass;
@@ -20296,7 +20321,7 @@
         Object.defineProperty(exports, "__esModule", {
           value: true
         });
-        exports.sanitize = exports.default = undefined;
+        exports.sanitize = exports["default"] = undefined;
 
         var _createClass = function () {
           function defineProperties(target, props) {
@@ -20347,7 +20372,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -20421,7 +20446,7 @@
           }]);
 
           return Link;
-        }(_inline2.default);
+        }(_inline2["default"]);
 
         Link.blotName = 'link';
         Link.tagName = 'A';
@@ -20435,7 +20460,7 @@
           return protocols.indexOf(protocol) > -1;
         }
 
-        exports.default = Link;
+        exports["default"] = Link;
         exports.sanitize = _sanitize;
         /***/
       },
@@ -20482,7 +20507,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -20515,13 +20540,13 @@
             this.label.addEventListener('keydown', function (event) {
               switch (event.keyCode) {
                 // Allows the "Enter" key to open the picker
-                case _keyboard2.default.keys.ENTER:
+                case _keyboard2["default"].keys.ENTER:
                   _this.togglePicker();
 
                   break;
                 // Allows the "Escape" key to close the picker
 
-                case _keyboard2.default.keys.ESCAPE:
+                case _keyboard2["default"].keys.ESCAPE:
                   _this.escape();
 
                   event.preventDefault();
@@ -20563,14 +20588,14 @@
               item.addEventListener('keydown', function (event) {
                 switch (event.keyCode) {
                   // Allows the "Enter" key to select an item
-                  case _keyboard2.default.keys.ENTER:
+                  case _keyboard2["default"].keys.ENTER:
                     _this2.selectItem(item, true);
 
                     event.preventDefault();
                     break;
                   // Allows the "Escape" key to close the picker
 
-                  case _keyboard2.default.keys.ESCAPE:
+                  case _keyboard2["default"].keys.ESCAPE:
                     _this2.escape();
 
                     event.preventDefault();
@@ -20584,7 +20609,7 @@
             value: function buildLabel() {
               var label = document.createElement('span');
               label.classList.add('ql-picker-label');
-              label.innerHTML = _dropdown2.default;
+              label.innerHTML = _dropdown2["default"];
               label.tabIndex = '0';
               label.setAttribute('role', 'button');
               label.setAttribute('aria-expanded', 'false');
@@ -20710,7 +20735,7 @@
           return Picker;
         }();
 
-        exports.default = Picker;
+        exports["default"] = Picker;
         /***/
       },
       /* 29 */
@@ -20776,28 +20801,28 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
-        _quill2.default.register({
-          'blots/block': _block2.default,
+        _quill2["default"].register({
+          'blots/block': _block2["default"],
           'blots/block/embed': _block.BlockEmbed,
-          'blots/break': _break2.default,
-          'blots/container': _container2.default,
-          'blots/cursor': _cursor2.default,
-          'blots/embed': _embed2.default,
-          'blots/inline': _inline2.default,
-          'blots/scroll': _scroll2.default,
-          'blots/text': _text2.default,
-          'modules/clipboard': _clipboard2.default,
-          'modules/history': _history2.default,
-          'modules/keyboard': _keyboard2.default
+          'blots/break': _break2["default"],
+          'blots/container': _container2["default"],
+          'blots/cursor': _cursor2["default"],
+          'blots/embed': _embed2["default"],
+          'blots/inline': _inline2["default"],
+          'blots/scroll': _scroll2["default"],
+          'blots/text': _text2["default"],
+          'modules/clipboard': _clipboard2["default"],
+          'modules/history': _history2["default"],
+          'modules/keyboard': _keyboard2["default"]
         });
 
-        _parchment2.default.register(_block2.default, _break2.default, _cursor2.default, _inline2.default, _scroll2.default, _text2.default);
+        _parchment2["default"].register(_block2["default"], _break2["default"], _cursor2["default"], _inline2["default"], _scroll2["default"], _text2["default"]);
 
-        exports.default = _quill2.default;
+        exports["default"] = _quill2["default"];
         /***/
       },
       /* 30 */
@@ -20999,7 +21024,7 @@
           return ShadowBlot;
         }();
 
-        exports.default = ShadowBlot;
+        exports["default"] = ShadowBlot;
         /***/
       },
       /* 31 */
@@ -21048,13 +21073,13 @@
             var _this = this;
 
             this.attributes = {};
-            var attributes = attributor_1.default.keys(this.domNode);
-            var classes = class_1.default.keys(this.domNode);
-            var styles = style_1.default.keys(this.domNode);
+            var attributes = attributor_1["default"].keys(this.domNode);
+            var classes = class_1["default"].keys(this.domNode);
+            var styles = style_1["default"].keys(this.domNode);
             attributes.concat(classes).concat(styles).forEach(function (name) {
               var attr = Registry.query(name, Registry.Scope.ATTRIBUTE);
 
-              if (attr instanceof attributor_1.default) {
+              if (attr instanceof attributor_1["default"]) {
                 _this.attributes[attr.attrName] = attr;
               }
             });
@@ -21092,7 +21117,7 @@
           return AttributorStore;
         }();
 
-        exports.default = AttributorStore;
+        exports["default"] = AttributorStore;
         /***/
       },
       /* 32 */
@@ -21176,9 +21201,9 @@
           };
 
           return ClassAttributor;
-        }(attributor_1.default);
+        }(attributor_1["default"]);
 
-        exports.default = ClassAttributor;
+        exports["default"] = ClassAttributor;
         /***/
       },
       /* 33 */
@@ -21261,9 +21286,9 @@
           };
 
           return StyleAttributor;
-        }(attributor_1.default);
+        }(attributor_1["default"]);
 
-        exports.default = StyleAttributor;
+        exports["default"] = StyleAttributor;
         /***/
       },
       /* 34 */
@@ -21322,7 +21347,7 @@
           }, {
             key: 'addModule',
             value: function addModule(name) {
-              var moduleClass = this.quill.constructor.import('modules/' + name);
+              var moduleClass = this.quill.constructor["import"]('modules/' + name);
               this.modules[name] = new moduleClass(this.quill, this.options.modules[name] || {});
               return this.modules[name];
             }
@@ -21337,7 +21362,7 @@
         Theme.themes = {
           'default': Theme
         };
-        exports.default = Theme;
+        exports["default"] = Theme;
         /***/
       },
       /* 35 */
@@ -21402,7 +21427,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -21480,7 +21505,7 @@
               var text = node.data.split(GUARD_TEXT).join('');
 
               if (node === this.leftGuard) {
-                if (this.prev instanceof _text2.default) {
+                if (this.prev instanceof _text2["default"]) {
                   var prevLength = this.prev.length();
                   this.prev.insertAt(prevLength, text);
                   range = {
@@ -21489,14 +21514,14 @@
                   };
                 } else {
                   textNode = document.createTextNode(text);
-                  this.parent.insertBefore(_parchment2.default.create(textNode), this);
+                  this.parent.insertBefore(_parchment2["default"].create(textNode), this);
                   range = {
                     startNode: textNode,
                     startOffset: text.length
                   };
                 }
               } else if (node === this.rightGuard) {
-                if (this.next instanceof _text2.default) {
+                if (this.next instanceof _text2["default"]) {
                   this.next.insertAt(0, text);
                   range = {
                     startNode: this.next.domNode,
@@ -21504,7 +21529,7 @@
                   };
                 } else {
                   textNode = document.createTextNode(text);
-                  this.parent.insertBefore(_parchment2.default.create(textNode), this.next);
+                  this.parent.insertBefore(_parchment2["default"].create(textNode), this.next);
                   range = {
                     startNode: textNode,
                     startOffset: text.length
@@ -21531,9 +21556,9 @@
           }]);
 
           return Embed;
-        }(_parchment2.default.Embed);
+        }(_parchment2["default"].Embed);
 
-        exports.default = Embed;
+        exports["default"] = Embed;
         /***/
       },
       /* 36 */
@@ -21552,17 +21577,17 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
         var config = {
-          scope: _parchment2.default.Scope.BLOCK,
+          scope: _parchment2["default"].Scope.BLOCK,
           whitelist: ['right', 'center', 'justify']
         };
-        var AlignAttribute = new _parchment2.default.Attributor.Attribute('align', 'align', config);
-        var AlignClass = new _parchment2.default.Attributor.Class('align', 'ql-align', config);
-        var AlignStyle = new _parchment2.default.Attributor.Style('align', 'text-align', config);
+        var AlignAttribute = new _parchment2["default"].Attributor.Attribute('align', 'align', config);
+        var AlignClass = new _parchment2["default"].Attributor.Class('align', 'ql-align', config);
+        var AlignStyle = new _parchment2["default"].Attributor.Style('align', 'text-align', config);
         exports.AlignAttribute = AlignAttribute;
         exports.AlignClass = AlignClass;
         exports.AlignStyle = AlignStyle;
@@ -21586,15 +21611,15 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
-        var BackgroundClass = new _parchment2.default.Attributor.Class('background', 'ql-bg', {
-          scope: _parchment2.default.Scope.INLINE
+        var BackgroundClass = new _parchment2["default"].Attributor.Class('background', 'ql-bg', {
+          scope: _parchment2["default"].Scope.INLINE
         });
         var BackgroundStyle = new _color.ColorAttributor('background', 'background-color', {
-          scope: _parchment2.default.Scope.INLINE
+          scope: _parchment2["default"].Scope.INLINE
         });
         exports.BackgroundClass = BackgroundClass;
         exports.BackgroundStyle = BackgroundStyle;
@@ -21616,17 +21641,17 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
         var config = {
-          scope: _parchment2.default.Scope.BLOCK,
+          scope: _parchment2["default"].Scope.BLOCK,
           whitelist: ['rtl']
         };
-        var DirectionAttribute = new _parchment2.default.Attributor.Attribute('direction', 'dir', config);
-        var DirectionClass = new _parchment2.default.Attributor.Class('direction', 'ql-direction', config);
-        var DirectionStyle = new _parchment2.default.Attributor.Style('direction', 'direction', config);
+        var DirectionAttribute = new _parchment2["default"].Attributor.Attribute('direction', 'dir', config);
+        var DirectionClass = new _parchment2["default"].Attributor.Class('direction', 'ql-direction', config);
+        var DirectionStyle = new _parchment2["default"].Attributor.Style('direction', 'direction', config);
         exports.DirectionAttribute = DirectionAttribute;
         exports.DirectionClass = DirectionClass;
         exports.DirectionStyle = DirectionStyle;
@@ -21691,7 +21716,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -21726,10 +21751,10 @@
         }
 
         var config = {
-          scope: _parchment2.default.Scope.INLINE,
+          scope: _parchment2["default"].Scope.INLINE,
           whitelist: ['serif', 'monospace']
         };
-        var FontClass = new _parchment2.default.Attributor.Class('font', 'ql-font', config);
+        var FontClass = new _parchment2["default"].Attributor.Class('font', 'ql-font', config);
 
         var FontStyleAttributor = function (_Parchment$Attributor) {
           _inherits(FontStyleAttributor, _Parchment$Attributor);
@@ -21748,7 +21773,7 @@
           }]);
 
           return FontStyleAttributor;
-        }(_parchment2.default.Attributor.Style);
+        }(_parchment2["default"].Attributor.Style);
 
         var FontStyle = new FontStyleAttributor('font', 'font-family', config);
         exports.FontStyle = FontStyle;
@@ -21771,16 +21796,16 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
-        var SizeClass = new _parchment2.default.Attributor.Class('size', 'ql-size', {
-          scope: _parchment2.default.Scope.INLINE,
+        var SizeClass = new _parchment2["default"].Attributor.Class('size', 'ql-size', {
+          scope: _parchment2["default"].Scope.INLINE,
           whitelist: ['small', 'large', 'huge']
         });
-        var SizeStyle = new _parchment2.default.Attributor.Style('size', 'font-size', {
-          scope: _parchment2.default.Scope.INLINE,
+        var SizeStyle = new _parchment2["default"].Attributor.Style('size', 'font-size', {
+          scope: _parchment2["default"].Scope.INLINE,
           whitelist: ['10px', '18px', '32px']
         });
         exports.SizeClass = SizeClass;
@@ -21851,7 +21876,7 @@
         Object.defineProperty(exports, "__esModule", {
           value: true
         });
-        exports.getLastChangeIndex = exports.default = undefined;
+        exports.getLastChangeIndex = exports["default"] = undefined;
 
         var _createClass = function () {
           function defineProperties(target, props) {
@@ -21885,7 +21910,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -21932,10 +21957,10 @@
 
             _this.clear();
 
-            _this.quill.on(_quill2.default.events.EDITOR_CHANGE, function (eventName, delta, oldDelta, source) {
-              if (eventName !== _quill2.default.events.TEXT_CHANGE || _this.ignoreChange) return;
+            _this.quill.on(_quill2["default"].events.EDITOR_CHANGE, function (eventName, delta, oldDelta, source) {
+              if (eventName !== _quill2["default"].events.TEXT_CHANGE || _this.ignoreChange) return;
 
-              if (!_this.options.userOnly || source === _quill2.default.sources.USER) {
+              if (!_this.options.userOnly || source === _quill2["default"].sources.USER) {
                 _this.record(delta, oldDelta);
               } else {
                 _this.transform(delta);
@@ -21971,7 +21996,7 @@
               this.stack[dest].push(delta);
               this.lastRecorded = 0;
               this.ignoreChange = true;
-              this.quill.updateContents(delta[source], _quill2.default.sources.USER);
+              this.quill.updateContents(delta[source], _quill2["default"].sources.USER);
               this.ignoreChange = false;
               var index = getLastChangeIndex(delta[source]);
               this.quill.setSelection(index);
@@ -22039,7 +22064,7 @@
           }]);
 
           return History;
-        }(_module2.default);
+        }(_module2["default"]);
 
         History.DEFAULTS = {
           delay: 1000,
@@ -22057,7 +22082,7 @@
 
           if (lastOp.attributes != null) {
             return Object.keys(lastOp.attributes).some(function (attr) {
-              return _parchment2.default.query(attr, _parchment2.default.Scope.BLOCK) != null;
+              return _parchment2["default"].query(attr, _parchment2["default"].Scope.BLOCK) != null;
             });
           }
 
@@ -22066,7 +22091,7 @@
 
         function getLastChangeIndex(delta) {
           var deleteLength = delta.reduce(function (length, op) {
-            length += op.delete || 0;
+            length += op["delete"] || 0;
             return length;
           }, 0);
           var changeIndex = delta.length() - deleteLength;
@@ -22078,7 +22103,7 @@
           return changeIndex;
         }
 
-        exports.default = History;
+        exports["default"] = History;
         exports.getLastChangeIndex = getLastChangeIndex;
         /***/
       },
@@ -22090,7 +22115,7 @@
         Object.defineProperty(exports, "__esModule", {
           value: true
         });
-        exports.default = exports.BaseTooltip = undefined;
+        exports["default"] = exports.BaseTooltip = undefined;
 
         var _createClass = function () {
           function defineProperties(target, props) {
@@ -22173,7 +22198,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -22289,7 +22314,7 @@
                     fillSelect(select, ALIGNS);
                   }
 
-                  return new _iconPicker2.default(select, icons.align);
+                  return new _iconPicker2["default"](select, icons.align);
                 } else if (select.classList.contains('ql-background') || select.classList.contains('ql-color')) {
                   var format = select.classList.contains('ql-background') ? 'background' : 'color';
 
@@ -22297,7 +22322,7 @@
                     fillSelect(select, COLORS, format === 'background' ? '#ffffff' : '#000000');
                   }
 
-                  return new _colorPicker2.default(select, icons[format]);
+                  return new _colorPicker2["default"](select, icons[format]);
                 } else {
                   if (select.querySelector('option') == null) {
                     if (select.classList.contains('ql-font')) {
@@ -22309,7 +22334,7 @@
                     }
                   }
 
-                  return new _picker2.default(select);
+                  return new _picker2["default"](select);
                 }
               });
 
@@ -22319,14 +22344,14 @@
                 });
               };
 
-              this.quill.on(_emitter2.default.events.EDITOR_CHANGE, update);
+              this.quill.on(_emitter2["default"].events.EDITOR_CHANGE, update);
             }
           }]);
 
           return BaseTheme;
-        }(_theme2.default);
+        }(_theme2["default"]);
 
-        BaseTheme.DEFAULTS = (0, _extend2.default)(true, {}, _theme2.default.DEFAULTS, {
+        BaseTheme.DEFAULTS = (0, _extend2["default"])(true, {}, _theme2["default"].DEFAULTS, {
           modules: {
             toolbar: {
               handlers: {
@@ -22350,11 +22375,11 @@
                         reader.onload = function (e) {
                           var range = _this3.quill.getSelection(true);
 
-                          _this3.quill.updateContents(new _quillDelta2.default().retain(range.index).delete(range.length).insert({
+                          _this3.quill.updateContents(new _quillDelta2["default"]().retain(range.index)["delete"](range.length).insert({
                             image: e.target.result
-                          }), _emitter2.default.sources.USER);
+                          }), _emitter2["default"].sources.USER);
 
-                          _this3.quill.setSelection(range.index + 1, _emitter2.default.sources.SILENT);
+                          _this3.quill.setSelection(range.index + 1, _emitter2["default"].sources.SILENT);
 
                           fileInput.value = "";
                         };
@@ -22396,11 +22421,11 @@
               var _this5 = this;
 
               this.textbox.addEventListener('keydown', function (event) {
-                if (_keyboard2.default.match(event, 'enter')) {
+                if (_keyboard2["default"].match(event, 'enter')) {
                   _this5.save();
 
                   event.preventDefault();
-                } else if (_keyboard2.default.match(event, 'escape')) {
+                } else if (_keyboard2["default"].match(event, 'escape')) {
                   _this5.cancel();
 
                   event.preventDefault();
@@ -22449,11 +22474,11 @@
                     var scrollTop = this.quill.root.scrollTop;
 
                     if (this.linkRange) {
-                      this.quill.formatText(this.linkRange, 'link', value, _emitter2.default.sources.USER);
+                      this.quill.formatText(this.linkRange, 'link', value, _emitter2["default"].sources.USER);
                       delete this.linkRange;
                     } else {
                       this.restoreFocus();
-                      this.quill.format('link', value, _emitter2.default.sources.USER);
+                      this.quill.format('link', value, _emitter2["default"].sources.USER);
                     }
 
                     this.quill.root.scrollTop = scrollTop;
@@ -22473,13 +22498,13 @@
 
                     if (range != null) {
                       var index = range.index + range.length;
-                      this.quill.insertEmbed(index, this.root.getAttribute('data-mode'), value, _emitter2.default.sources.USER);
+                      this.quill.insertEmbed(index, this.root.getAttribute('data-mode'), value, _emitter2["default"].sources.USER);
 
                       if (this.root.getAttribute('data-mode') === 'formula') {
-                        this.quill.insertText(index + 1, ' ', _emitter2.default.sources.USER);
+                        this.quill.insertText(index + 1, ' ', _emitter2["default"].sources.USER);
                       }
 
-                      this.quill.setSelection(index + 2, _emitter2.default.sources.USER);
+                      this.quill.setSelection(index + 2, _emitter2["default"].sources.USER);
                     }
 
                     break;
@@ -22492,7 +22517,7 @@
           }]);
 
           return BaseTooltip;
-        }(_tooltip2.default);
+        }(_tooltip2["default"]);
 
         function extractVideoUrl(url) {
           var match = url.match(/^(?:(https?):\/\/)?(?:(?:www|m)\.)?youtube\.com\/watch.*v=([a-zA-Z0-9_-]+)/) || url.match(/^(?:(https?):\/\/)?(?:(?:www|m)\.)?youtu\.be\/([a-zA-Z0-9_-]+)/);
@@ -22525,7 +22550,7 @@
         }
 
         exports.BaseTooltip = BaseTooltip;
-        exports.default = BaseTheme;
+        exports["default"] = BaseTheme;
         /***/
       },
       /* 44 */
@@ -22708,7 +22733,7 @@
           return LinkedList;
         }();
 
-        exports.default = LinkedList;
+        exports["default"] = LinkedList;
         /***/
       },
       /* 45 */
@@ -22851,7 +22876,7 @@
                 return;
               }
 
-              if (blot instanceof container_1.default) {
+              if (blot instanceof container_1["default"]) {
                 blot.children.forEach(optimize);
               }
 
@@ -22876,7 +22901,7 @@
                       var child = Registry.find(node, false);
                       mark(child, false);
 
-                      if (child instanceof container_1.default) {
+                      if (child instanceof container_1["default"]) {
                         child.children.forEach(function (grandChild) {
                           mark(grandChild, false);
                         });
@@ -22941,9 +22966,9 @@
           ScrollBlot.scope = Registry.Scope.BLOCK_BLOT;
           ScrollBlot.tagName = 'DIV';
           return ScrollBlot;
-        }(container_1.default);
+        }(container_1["default"]);
 
-        exports.default = ScrollBlot;
+        exports["default"] = ScrollBlot;
         /***/
       },
       /* 46 */
@@ -23012,7 +23037,7 @@
 
             if (name === this.statics.blotName && !value) {
               this.children.forEach(function (child) {
-                if (!(child instanceof format_1.default)) {
+                if (!(child instanceof format_1["default"])) {
                   child = child.wrap(InlineBlot.blotName, true);
                 }
 
@@ -23054,9 +23079,9 @@
           InlineBlot.scope = Registry.Scope.INLINE_BLOT;
           InlineBlot.tagName = 'SPAN';
           return InlineBlot;
-        }(format_1.default);
+        }(format_1["default"]);
 
-        exports.default = InlineBlot;
+        exports["default"] = InlineBlot;
         /***/
       },
       /* 47 */
@@ -23150,9 +23175,9 @@
           BlockBlot.scope = Registry.Scope.BLOCK_BLOT;
           BlockBlot.tagName = 'P';
           return BlockBlot;
-        }(format_1.default);
+        }(format_1["default"]);
 
-        exports.default = BlockBlot;
+        exports["default"] = BlockBlot;
         /***/
       },
       /* 48 */
@@ -23221,9 +23246,9 @@
           };
 
           return EmbedBlot;
-        }(leaf_1.default);
+        }(leaf_1["default"]);
 
-        exports.default = EmbedBlot;
+        exports["default"] = EmbedBlot;
         /***/
       },
       /* 49 */
@@ -23360,9 +23385,9 @@
           TextBlot.blotName = 'text';
           TextBlot.scope = Registry.Scope.INLINE_BLOT;
           return TextBlot;
-        }(leaf_1.default);
+        }(leaf_1["default"]);
 
-        exports.default = TextBlot;
+        exports["default"] = TextBlot;
         /***/
       },
       /* 50 */
@@ -24575,7 +24600,7 @@
         Object.defineProperty(exports, "__esModule", {
           value: true
         });
-        exports.matchText = exports.matchSpacing = exports.matchNewline = exports.matchBlot = exports.matchAttributor = exports.default = undefined;
+        exports.matchText = exports.matchSpacing = exports.matchNewline = exports.matchBlot = exports.matchAttributor = exports["default"] = undefined;
 
         var _typeof$1 = typeof Symbol === "function" && _typeof(Symbol.iterator) === "symbol" ? function (obj) {
           return _typeof(obj);
@@ -24681,7 +24706,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -24730,7 +24755,7 @@
           if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
         }
 
-        var debug = (0, _logger2.default)('quill:clipboard');
+        var debug = (0, _logger2["default"])('quill:clipboard');
         var DOM_KEY = '__ql-matcher';
         var CLIPBOARD_CONFIG = [[Node.TEXT_NODE, matchText], [Node.TEXT_NODE, matchNewline], ['br', matchBreak], [Node.ELEMENT_NODE, matchNewline], [Node.ELEMENT_NODE, matchBlot], [Node.ELEMENT_NODE, matchSpacing], [Node.ELEMENT_NODE, matchAttributor], [Node.ELEMENT_NODE, matchStyles], ['li', matchIndent], ['b', matchAlias.bind(matchAlias, 'bold')], ['i', matchAlias.bind(matchAlias, 'italic')], ['style', matchIgnore]];
         var ATTRIBUTE_ATTRIBUTORS = [_align.AlignAttribute, _direction.DirectionAttribute].reduce(function (memo, attr) {
@@ -24787,10 +24812,10 @@
 
               var formats = this.quill.getFormat(this.quill.selection.savedRange.index);
 
-              if (formats[_code2.default.blotName]) {
+              if (formats[_code2["default"].blotName]) {
                 var text = this.container.innerText;
                 this.container.innerHTML = '';
-                return new _quillDelta2.default().insert(text, _defineProperty({}, _code2.default.blotName, formats[_code2.default.blotName]));
+                return new _quillDelta2["default"]().insert(text, _defineProperty({}, _code2["default"].blotName, formats[_code2["default"].blotName]));
               }
 
               var _prepareMatching = this.prepareMatching(),
@@ -24801,7 +24826,7 @@
               var delta = traverse(this.container, elementMatchers, textMatchers); // Remove trailing newline
 
               if (deltaEndsWith(delta, '\n') && delta.ops[delta.ops.length - 1].attributes == null) {
-                delta = delta.compose(new _quillDelta2.default().retain(delta.length() - 1).delete(1));
+                delta = delta.compose(new _quillDelta2["default"]().retain(delta.length() - 1)["delete"](1));
               }
 
               debug.log('convert', this.container.innerHTML, delta);
@@ -24811,15 +24836,15 @@
           }, {
             key: 'dangerouslyPasteHTML',
             value: function dangerouslyPasteHTML(index, html) {
-              var source = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : _quill2.default.sources.API;
+              var source = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : _quill2["default"].sources.API;
 
               if (typeof index === 'string') {
                 this.quill.setContents(this.convert(index), html);
-                this.quill.setSelection(0, _quill2.default.sources.SILENT);
+                this.quill.setSelection(0, _quill2["default"].sources.SILENT);
               } else {
                 var paste = this.convert(html);
-                this.quill.updateContents(new _quillDelta2.default().retain(index).concat(paste), source);
-                this.quill.setSelection(index + paste.length(), _quill2.default.sources.SILENT);
+                this.quill.updateContents(new _quillDelta2["default"]().retain(index).concat(paste), source);
+                this.quill.setSelection(index + paste.length(), _quill2["default"].sources.SILENT);
               }
             }
           }, {
@@ -24829,17 +24854,17 @@
 
               if (e.defaultPrevented || !this.quill.isEnabled()) return;
               var range = this.quill.getSelection();
-              var delta = new _quillDelta2.default().retain(range.index);
+              var delta = new _quillDelta2["default"]().retain(range.index);
               var scrollTop = this.quill.scrollingContainer.scrollTop;
               this.container.focus();
-              this.quill.selection.update(_quill2.default.sources.SILENT);
+              this.quill.selection.update(_quill2["default"].sources.SILENT);
               setTimeout(function () {
-                delta = delta.concat(_this2.convert()).delete(range.length);
+                delta = delta.concat(_this2.convert())["delete"](range.length);
 
-                _this2.quill.updateContents(delta, _quill2.default.sources.USER); // range.length contributes to delta.length()
+                _this2.quill.updateContents(delta, _quill2["default"].sources.USER); // range.length contributes to delta.length()
 
 
-                _this2.quill.setSelection(delta.length() - range.length, _quill2.default.sources.SILENT);
+                _this2.quill.setSelection(delta.length() - range.length, _quill2["default"].sources.SILENT);
 
                 _this2.quill.scrollingContainer.scrollTop = scrollTop;
 
@@ -24881,7 +24906,7 @@
           }]);
 
           return Clipboard;
-        }(_module2.default);
+        }(_module2["default"]);
 
         Clipboard.DEFAULTS = {
           matchers: [],
@@ -24898,9 +24923,9 @@
               if (op.attributes && op.attributes[format]) {
                 return delta.push(op);
               } else {
-                return delta.insert(op.insert, (0, _extend3.default)({}, _defineProperty({}, format, value), op.attributes));
+                return delta.insert(op.insert, (0, _extend3["default"])({}, _defineProperty({}, format, value), op.attributes));
               }
-            }, new _quillDelta2.default());
+            }, new _quillDelta2["default"]());
           }
         }
 
@@ -24934,7 +24959,7 @@
           if (node.nodeType === node.TEXT_NODE) {
             return textMatchers.reduce(function (delta, matcher) {
               return matcher(node, delta);
-            }, new _quillDelta2.default());
+            }, new _quillDelta2["default"]());
           } else if (node.nodeType === node.ELEMENT_NODE) {
             return [].reduce.call(node.childNodes || [], function (delta, childNode) {
               var childrenDelta = traverse(childNode, elementMatchers, textMatchers);
@@ -24949,9 +24974,9 @@
               }
 
               return delta.concat(childrenDelta);
-            }, new _quillDelta2.default());
+            }, new _quillDelta2["default"]());
           } else {
-            return new _quillDelta2.default();
+            return new _quillDelta2["default"]();
           }
         }
 
@@ -24960,15 +24985,15 @@
         }
 
         function matchAttributor(node, delta) {
-          var attributes = _parchment2.default.Attributor.Attribute.keys(node);
+          var attributes = _parchment2["default"].Attributor.Attribute.keys(node);
 
-          var classes = _parchment2.default.Attributor.Class.keys(node);
+          var classes = _parchment2["default"].Attributor.Class.keys(node);
 
-          var styles = _parchment2.default.Attributor.Style.keys(node);
+          var styles = _parchment2["default"].Attributor.Style.keys(node);
 
           var formats = {};
           attributes.concat(classes).concat(styles).forEach(function (name) {
-            var attr = _parchment2.default.query(name, _parchment2.default.Scope.ATTRIBUTE);
+            var attr = _parchment2["default"].query(name, _parchment2["default"].Scope.ATTRIBUTE);
 
             if (attr != null) {
               formats[attr.attrName] = attr.value(node);
@@ -24997,17 +25022,17 @@
         }
 
         function matchBlot(node, delta) {
-          var match = _parchment2.default.query(node);
+          var match = _parchment2["default"].query(node);
 
           if (match == null) return delta;
 
-          if (match.prototype instanceof _parchment2.default.Embed) {
+          if (match.prototype instanceof _parchment2["default"].Embed) {
             var embed = {};
             var value = match.value(node);
 
             if (value != null) {
               embed[match.blotName] = value;
-              delta = new _quillDelta2.default().insert(embed, match.formats(node));
+              delta = new _quillDelta2["default"]().insert(embed, match.formats(node));
             }
           } else if (typeof match.formats === 'function') {
             delta = applyFormat(delta, match.blotName, match.formats(node));
@@ -25025,11 +25050,11 @@
         }
 
         function matchIgnore() {
-          return new _quillDelta2.default();
+          return new _quillDelta2["default"]();
         }
 
         function matchIndent(node, delta) {
-          var match = _parchment2.default.query(node);
+          var match = _parchment2["default"].query(node);
 
           if (match == null || match.blotName !== 'list-item' || !deltaEndsWith(delta, '\n')) {
             return delta;
@@ -25039,7 +25064,7 @@
               parent = node.parentNode;
 
           while (!parent.classList.contains('ql-clipboard')) {
-            if ((_parchment2.default.query(parent) || {}).blotName === 'list') {
+            if ((_parchment2["default"].query(parent) || {}).blotName === 'list') {
               indent += 1;
             }
 
@@ -25047,7 +25072,7 @@
           }
 
           if (indent <= 0) return delta;
-          return delta.compose(new _quillDelta2.default().retain(delta.length() - 1).retain(1, {
+          return delta.compose(new _quillDelta2["default"]().retain(delta.length() - 1).retain(1, {
             indent: indent
           }));
         }
@@ -25092,7 +25117,7 @@
 
           if (parseFloat(style.textIndent || 0) > 0) {
             // Could be 0.5in
-            delta = new _quillDelta2.default().insert('\t').concat(delta);
+            delta = new _quillDelta2["default"]().insert('\t').concat(delta);
           }
 
           return delta;
@@ -25132,7 +25157,7 @@
           return delta.insert(text);
         }
 
-        exports.default = Clipboard;
+        exports["default"] = Clipboard;
         exports.matchAttributor = matchAttributor;
         exports.matchBlot = matchBlot;
         exports.matchNewline = matchNewline;
@@ -25198,7 +25223,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -25263,11 +25288,11 @@
           }]);
 
           return Bold;
-        }(_inline2.default);
+        }(_inline2["default"]);
 
         Bold.blotName = 'bold';
         Bold.tagName = ['STRONG', 'B'];
-        exports.default = Bold;
+        exports["default"] = Bold;
         /***/
       },
       /* 57 */
@@ -25278,7 +25303,7 @@
         Object.defineProperty(exports, "__esModule", {
           value: true
         });
-        exports.addControls = exports.default = undefined;
+        exports.addControls = exports["default"] = undefined;
 
         var _slicedToArray = function () {
           function sliceIterator(arr, i) {
@@ -25358,7 +25383,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -25407,7 +25432,7 @@
           if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
         }
 
-        var debug = (0, _logger2.default)('quill:toolbar');
+        var debug = (0, _logger2["default"])('quill:toolbar');
 
         var Toolbar = function (_Module) {
           _inherits(Toolbar, _Module);
@@ -25445,13 +25470,13 @@
               _this.attach(input);
             });
 
-            _this.quill.on(_quill2.default.events.EDITOR_CHANGE, function (type, range) {
-              if (type === _quill2.default.events.SELECTION_CHANGE) {
+            _this.quill.on(_quill2["default"].events.EDITOR_CHANGE, function (type, range) {
+              if (type === _quill2["default"].events.SELECTION_CHANGE) {
                 _this.update(range);
               }
             });
 
-            _this.quill.on(_quill2.default.events.SCROLL_OPTIMIZE, function () {
+            _this.quill.on(_quill2["default"].events.SCROLL_OPTIMIZE, function () {
               var _this$quill$selection = _this.quill.selection.getRange(),
                   _this$quill$selection2 = _slicedToArray(_this$quill$selection, 1),
                   range = _this$quill$selection2[0]; // quill.getSelection triggers update
@@ -25489,7 +25514,7 @@
                   return;
                 }
 
-                if (_parchment2.default.query(format) == null) {
+                if (_parchment2["default"].query(format) == null) {
                   debug.warn('ignoring attaching to nonexistent format', format, input);
                   return;
                 }
@@ -25526,13 +25551,13 @@
 
                 if (_this2.handlers[format] != null) {
                   _this2.handlers[format].call(_this2, value);
-                } else if (_parchment2.default.query(format).prototype instanceof _parchment2.default.Embed) {
+                } else if (_parchment2["default"].query(format).prototype instanceof _parchment2["default"].Embed) {
                   value = prompt('Enter ' + format);
                   if (!value) return;
 
-                  _this2.quill.updateContents(new _quillDelta2.default().retain(range.index).delete(range.length).insert(_defineProperty({}, format, value)), _quill2.default.sources.USER);
+                  _this2.quill.updateContents(new _quillDelta2["default"]().retain(range.index)["delete"](range.length).insert(_defineProperty({}, format, value)), _quill2["default"].sources.USER);
                 } else {
-                  _this2.quill.format(format, value, _quill2.default.sources.USER);
+                  _this2.quill.format(format, value, _quill2["default"].sources.USER);
                 }
 
                 _this2.update(range);
@@ -25590,7 +25615,7 @@
           }]);
 
           return Toolbar;
-        }(_module2.default);
+        }(_module2["default"]);
 
         Toolbar.DEFAULTS = {};
 
@@ -25662,24 +25687,24 @@
                 var formats = this.quill.getFormat();
                 Object.keys(formats).forEach(function (name) {
                   // Clean functionality in existing apps only clean inline formats
-                  if (_parchment2.default.query(name, _parchment2.default.Scope.INLINE) != null) {
+                  if (_parchment2["default"].query(name, _parchment2["default"].Scope.INLINE) != null) {
                     _this3.quill.format(name, false);
                   }
                 });
               } else {
-                this.quill.removeFormat(range, _quill2.default.sources.USER);
+                this.quill.removeFormat(range, _quill2["default"].sources.USER);
               }
             },
             direction: function direction(value) {
               var align = this.quill.getFormat()['align'];
 
               if (value === 'rtl' && align == null) {
-                this.quill.format('align', 'right', _quill2.default.sources.USER);
+                this.quill.format('align', 'right', _quill2["default"].sources.USER);
               } else if (!value && align === 'right') {
-                this.quill.format('align', false, _quill2.default.sources.USER);
+                this.quill.format('align', false, _quill2["default"].sources.USER);
               }
 
-              this.quill.format('direction', value, _quill2.default.sources.USER);
+              this.quill.format('direction', value, _quill2["default"].sources.USER);
             },
             indent: function indent(value) {
               var range = this.quill.getSelection();
@@ -25689,7 +25714,7 @@
               if (value === '+1' || value === '-1') {
                 var modifier = value === '+1' ? 1 : -1;
                 if (formats.direction === 'rtl') modifier *= -1;
-                this.quill.format('indent', indent + modifier, _quill2.default.sources.USER);
+                this.quill.format('indent', indent + modifier, _quill2["default"].sources.USER);
               }
             },
             link: function link(value) {
@@ -25697,7 +25722,7 @@
                 value = prompt('Enter link URL:');
               }
 
-              this.quill.format('link', value, _quill2.default.sources.USER);
+              this.quill.format('link', value, _quill2["default"].sources.USER);
             },
             list: function list(value) {
               var range = this.quill.getSelection();
@@ -25705,17 +25730,17 @@
 
               if (value === 'check') {
                 if (formats['list'] === 'checked' || formats['list'] === 'unchecked') {
-                  this.quill.format('list', false, _quill2.default.sources.USER);
+                  this.quill.format('list', false, _quill2["default"].sources.USER);
                 } else {
-                  this.quill.format('list', 'unchecked', _quill2.default.sources.USER);
+                  this.quill.format('list', 'unchecked', _quill2["default"].sources.USER);
                 }
               } else {
-                this.quill.format('list', value, _quill2.default.sources.USER);
+                this.quill.format('list', value, _quill2["default"].sources.USER);
               }
             }
           }
         };
-        exports.default = Toolbar;
+        exports["default"] = Toolbar;
         exports.addControls = addControls;
         /***/
       },
@@ -25784,7 +25809,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -25863,9 +25888,9 @@
           }]);
 
           return ColorPicker;
-        }(_picker2.default);
+        }(_picker2["default"]);
 
-        exports.default = ColorPicker;
+        exports["default"] = ColorPicker;
         /***/
       },
       /* 60 */
@@ -25926,7 +25951,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -25991,9 +26016,9 @@
           }]);
 
           return IconPicker;
-        }(_picker2.default);
+        }(_picker2["default"]);
 
-        exports.default = IconPicker;
+        exports["default"] = IconPicker;
         /***/
       },
       /* 61 */
@@ -26097,7 +26122,7 @@
           return Tooltip;
         }();
 
-        exports.default = Tooltip;
+        exports["default"] = Tooltip;
         /***/
       },
       /* 62 */
@@ -26214,7 +26239,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -26277,8 +26302,8 @@
             key: 'extendToolbar',
             value: function extendToolbar(toolbar) {
               toolbar.container.classList.add('ql-snow');
-              this.buildButtons([].slice.call(toolbar.container.querySelectorAll('button')), _icons2.default);
-              this.buildPickers([].slice.call(toolbar.container.querySelectorAll('select')), _icons2.default);
+              this.buildButtons([].slice.call(toolbar.container.querySelectorAll('button')), _icons2["default"]);
+              this.buildPickers([].slice.call(toolbar.container.querySelectorAll('select')), _icons2["default"]);
               this.tooltip = new SnowTooltip(this.quill, this.options.bounds);
 
               if (toolbar.container.querySelector('.ql-link')) {
@@ -26293,9 +26318,9 @@
           }]);
 
           return SnowTheme;
-        }(_base2.default);
+        }(_base2["default"]);
 
-        SnowTheme.DEFAULTS = (0, _extend2.default)(true, {}, _base2.default.DEFAULTS, {
+        SnowTheme.DEFAULTS = (0, _extend2["default"])(true, {}, _base2["default"].DEFAULTS, {
           modules: {
             toolbar: {
               handlers: {
@@ -26354,7 +26379,7 @@
 
                   _this3.restoreFocus();
 
-                  _this3.quill.formatText(range, 'link', false, _emitter2.default.sources.USER);
+                  _this3.quill.formatText(range, 'link', false, _emitter2["default"].sources.USER);
 
                   delete _this3.linkRange;
                 }
@@ -26363,11 +26388,11 @@
 
                 _this3.hide();
               });
-              this.quill.on(_emitter2.default.events.SELECTION_CHANGE, function (range, oldRange, source) {
+              this.quill.on(_emitter2["default"].events.SELECTION_CHANGE, function (range, oldRange, source) {
                 if (range == null) return;
 
-                if (range.length === 0 && source === _emitter2.default.sources.USER) {
-                  var _quill$scroll$descend = _this3.quill.scroll.descendant(_link2.default, range.index),
+                if (range.length === 0 && source === _emitter2["default"].sources.USER) {
+                  var _quill$scroll$descend = _this3.quill.scroll.descendant(_link2["default"], range.index),
                       _quill$scroll$descend2 = _slicedToArray(_quill$scroll$descend, 2),
                       link = _quill$scroll$descend2[0],
                       offset = _quill$scroll$descend2[1];
@@ -26375,7 +26400,7 @@
                   if (link != null) {
                     _this3.linkRange = new _selection.Range(range.index - offset, link.length());
 
-                    var preview = _link2.default.formats(link.domNode);
+                    var preview = _link2["default"].formats(link.domNode);
 
                     _this3.preview.textContent = preview;
 
@@ -26407,7 +26432,7 @@
         }(_base.BaseTooltip);
 
         SnowTooltip.TEMPLATE = ['<a class="ql-preview" rel="noopener noreferrer" target="_blank" href="about:blank"></a>', '<input type="text" data-formula="e=mc^2" data-link="https://quilljs.com" data-video="Embed URL">', '<a class="ql-action"></a>', '<a class="ql-remove"></a>'].join('');
-        exports.default = SnowTheme;
+        exports["default"] = SnowTheme;
         /***/
       },
       /* 63 */
@@ -26527,11 +26552,11 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
-        _core2.default.register({
+        _core2["default"].register({
           'attributors/attribute/direction': _direction.DirectionAttribute,
           'attributors/class/align': _align.AlignClass,
           'attributors/class/background': _background.BackgroundClass,
@@ -26547,7 +26572,7 @@
           'attributors/style/size': _size.SizeStyle
         }, true);
 
-        _core2.default.register({
+        _core2["default"].register({
           'formats/align': _align.AlignClass,
           'formats/direction': _direction.DirectionClass,
           'formats/indent': _indent.IndentClass,
@@ -26555,33 +26580,33 @@
           'formats/color': _color.ColorStyle,
           'formats/font': _font.FontClass,
           'formats/size': _size.SizeClass,
-          'formats/blockquote': _blockquote2.default,
-          'formats/code-block': _code2.default,
-          'formats/header': _header2.default,
-          'formats/list': _list2.default,
-          'formats/bold': _bold2.default,
+          'formats/blockquote': _blockquote2["default"],
+          'formats/code-block': _code2["default"],
+          'formats/header': _header2["default"],
+          'formats/list': _list2["default"],
+          'formats/bold': _bold2["default"],
           'formats/code': _code.Code,
-          'formats/italic': _italic2.default,
-          'formats/link': _link2.default,
-          'formats/script': _script2.default,
-          'formats/strike': _strike2.default,
-          'formats/underline': _underline2.default,
-          'formats/image': _image2.default,
-          'formats/video': _video2.default,
+          'formats/italic': _italic2["default"],
+          'formats/link': _link2["default"],
+          'formats/script': _script2["default"],
+          'formats/strike': _strike2["default"],
+          'formats/underline': _underline2["default"],
+          'formats/image': _image2["default"],
+          'formats/video': _video2["default"],
           'formats/list/item': _list.ListItem,
-          'modules/formula': _formula2.default,
-          'modules/syntax': _syntax2.default,
-          'modules/toolbar': _toolbar2.default,
-          'themes/bubble': _bubble2.default,
-          'themes/snow': _snow2.default,
-          'ui/icons': _icons2.default,
-          'ui/picker': _picker2.default,
-          'ui/icon-picker': _iconPicker2.default,
-          'ui/color-picker': _colorPicker2.default,
-          'ui/tooltip': _tooltip2.default
+          'modules/formula': _formula2["default"],
+          'modules/syntax': _syntax2["default"],
+          'modules/toolbar': _toolbar2["default"],
+          'themes/bubble': _bubble2["default"],
+          'themes/snow': _snow2["default"],
+          'ui/icons': _icons2["default"],
+          'ui/picker': _picker2["default"],
+          'ui/icon-picker': _iconPicker2["default"],
+          'ui/color-picker': _colorPicker2["default"],
+          'ui/tooltip': _tooltip2["default"]
         }, true);
 
-        exports.default = _core2.default;
+        exports["default"] = _core2["default"];
         /***/
       },
       /* 64 */
@@ -26643,7 +26668,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -26714,10 +26739,10 @@
           }]);
 
           return IdentAttributor;
-        }(_parchment2.default.Attributor.Class);
+        }(_parchment2["default"].Attributor.Class);
 
         var IndentClass = new IdentAttributor('indent', 'ql-indent', {
-          scope: _parchment2.default.Scope.BLOCK,
+          scope: _parchment2["default"].Scope.BLOCK,
           whitelist: [1, 2, 3, 4, 5, 6, 7, 8]
         });
         exports.IndentClass = IndentClass;
@@ -26738,7 +26763,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -26782,11 +26807,11 @@
           }
 
           return Blockquote;
-        }(_block2.default);
+        }(_block2["default"]);
 
         Blockquote.blotName = 'blockquote';
         Blockquote.tagName = 'blockquote';
-        exports.default = Blockquote;
+        exports["default"] = Blockquote;
         /***/
       },
       /* 66 */
@@ -26822,7 +26847,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -26873,11 +26898,11 @@
           }]);
 
           return Header;
-        }(_block2.default);
+        }(_block2["default"]);
 
         Header.blotName = 'header';
         Header.tagName = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
-        exports.default = Header;
+        exports["default"] = Header;
         /***/
       },
       /* 67 */
@@ -26888,7 +26913,7 @@
         Object.defineProperty(exports, "__esModule", {
           value: true
         });
-        exports.default = exports.ListItem = undefined;
+        exports["default"] = exports.ListItem = undefined;
 
         var _createClass = function () {
           function defineProperties(target, props) {
@@ -26947,7 +26972,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -27009,7 +27034,7 @@
             key: 'format',
             value: function format(name, value) {
               if (name === List.blotName && !value) {
-                this.replaceWith(_parchment2.default.create(this.statics.scope));
+                this.replaceWith(_parchment2["default"].create(this.statics.scope));
               } else {
                 _get(ListItem.prototype.__proto__ || Object.getPrototypeOf(ListItem.prototype), 'format', this).call(this, name, value);
               }
@@ -27044,7 +27069,7 @@
           }]);
 
           return ListItem;
-        }(_block2.default);
+        }(_block2["default"]);
 
         ListItem.blotName = 'list-item';
         ListItem.tagName = 'LI';
@@ -27092,7 +27117,7 @@
 
               var format = _this2.statics.formats(domNode);
 
-              var blot = _parchment2.default.find(e.target);
+              var blot = _parchment2["default"].find(e.target);
 
               if (format === 'checked') {
                 blot.format('list', 'unchecked');
@@ -27146,7 +27171,7 @@
             key: 'replace',
             value: function replace(target) {
               if (target.statics.blotName !== this.statics.blotName) {
-                var item = _parchment2.default.create(this.statics.defaultChild);
+                var item = _parchment2["default"].create(this.statics.defaultChild);
 
                 target.moveChildren(item);
                 this.appendChild(item);
@@ -27157,15 +27182,15 @@
           }]);
 
           return List;
-        }(_container2.default);
+        }(_container2["default"]);
 
         List.blotName = 'list';
-        List.scope = _parchment2.default.Scope.BLOCK_BLOT;
+        List.scope = _parchment2["default"].Scope.BLOCK_BLOT;
         List.tagName = ['OL', 'UL'];
         List.defaultChild = 'list-item';
         List.allowedChildren = [ListItem];
         exports.ListItem = ListItem;
-        exports.default = List;
+        exports["default"] = List;
         /***/
       },
       /* 68 */
@@ -27183,7 +27208,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -27227,11 +27252,11 @@
           }
 
           return Italic;
-        }(_bold2.default);
+        }(_bold2["default"]);
 
         Italic.blotName = 'italic';
         Italic.tagName = ['EM', 'I'];
-        exports.default = Italic;
+        exports["default"] = Italic;
         /***/
       },
       /* 69 */
@@ -27292,7 +27317,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -27356,11 +27381,11 @@
           }]);
 
           return Script;
-        }(_inline2.default);
+        }(_inline2["default"]);
 
         Script.blotName = 'script';
         Script.tagName = ['SUB', 'SUP'];
-        exports.default = Script;
+        exports["default"] = Script;
         /***/
       },
       /* 70 */
@@ -27378,7 +27403,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -27422,11 +27447,11 @@
           }
 
           return Strike;
-        }(_inline2.default);
+        }(_inline2["default"]);
 
         Strike.blotName = 'strike';
         Strike.tagName = 'S';
-        exports.default = Strike;
+        exports["default"] = Strike;
         /***/
       },
       /* 71 */
@@ -27444,7 +27469,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -27488,11 +27513,11 @@
           }
 
           return Underline;
-        }(_inline2.default);
+        }(_inline2["default"]);
 
         Underline.blotName = 'underline';
         Underline.tagName = 'U';
-        exports.default = Underline;
+        exports["default"] = Underline;
         /***/
       },
       /* 72 */
@@ -27555,7 +27580,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -27653,11 +27678,11 @@
           }]);
 
           return Image;
-        }(_parchment2.default.Embed);
+        }(_parchment2["default"].Embed);
 
         Image.blotName = 'image';
         Image.tagName = 'IMG';
-        exports.default = Image;
+        exports["default"] = Image;
         /***/
       },
       /* 73 */
@@ -27720,7 +27745,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -27802,7 +27827,7 @@
           }, {
             key: 'sanitize',
             value: function sanitize(url) {
-              return _link2.default.sanitize(url);
+              return _link2["default"].sanitize(url);
             }
           }, {
             key: 'value',
@@ -27817,7 +27842,7 @@
         Video.blotName = 'video';
         Video.className = 'ql-video';
         Video.tagName = 'IFRAME';
-        exports.default = Video;
+        exports["default"] = Video;
         /***/
       },
       /* 74 */
@@ -27828,7 +27853,7 @@
         Object.defineProperty(exports, "__esModule", {
           value: true
         });
-        exports.default = exports.FormulaBlot = undefined;
+        exports["default"] = exports.FormulaBlot = undefined;
 
         var _createClass = function () {
           function defineProperties(target, props) {
@@ -27887,7 +27912,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -27953,7 +27978,7 @@
           }]);
 
           return FormulaBlot;
-        }(_embed2.default);
+        }(_embed2["default"]);
 
         FormulaBlot.blotName = 'formula';
         FormulaBlot.className = 'ql-formula';
@@ -27965,7 +27990,7 @@
           _createClass(Formula, null, [{
             key: 'register',
             value: function register() {
-              _quill2.default.register(FormulaBlot, true);
+              _quill2["default"].register(FormulaBlot, true);
             }
           }]);
 
@@ -27982,10 +28007,10 @@
           }
 
           return Formula;
-        }(_module2.default);
+        }(_module2["default"]);
 
         exports.FormulaBlot = FormulaBlot;
-        exports.default = Formula;
+        exports["default"] = Formula;
         /***/
       },
       /* 75 */
@@ -27996,7 +28021,7 @@
         Object.defineProperty(exports, "__esModule", {
           value: true
         });
-        exports.default = exports.CodeToken = exports.CodeBlock = undefined;
+        exports["default"] = exports.CodeToken = exports.CodeBlock = undefined;
 
         var _createClass = function () {
           function defineProperties(target, props) {
@@ -28059,7 +28084,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -28128,11 +28153,11 @@
           }]);
 
           return SyntaxCodeBlock;
-        }(_code2.default);
+        }(_code2["default"]);
 
         SyntaxCodeBlock.className = 'ql-syntax';
-        var CodeToken = new _parchment2.default.Attributor.Class('token', 'hljs', {
-          scope: _parchment2.default.Scope.INLINE
+        var CodeToken = new _parchment2["default"].Attributor.Class('token', 'hljs', {
+          scope: _parchment2["default"].Scope.INLINE
         });
 
         var Syntax = function (_Module) {
@@ -28141,9 +28166,9 @@
           _createClass(Syntax, null, [{
             key: 'register',
             value: function register() {
-              _quill2.default.register(CodeToken, true);
+              _quill2["default"].register(CodeToken, true);
 
-              _quill2.default.register(SyntaxCodeBlock, true);
+              _quill2["default"].register(SyntaxCodeBlock, true);
             }
           }]);
 
@@ -28158,7 +28183,7 @@
 
             var timer = null;
 
-            _this2.quill.on(_quill2.default.events.SCROLL_OPTIMIZE, function () {
+            _this2.quill.on(_quill2["default"].events.SCROLL_OPTIMIZE, function () {
               clearTimeout(timer);
               timer = setTimeout(function () {
                 _this2.highlight();
@@ -28178,21 +28203,21 @@
               var _this3 = this;
 
               if (this.quill.selection.composing) return;
-              this.quill.update(_quill2.default.sources.USER);
+              this.quill.update(_quill2["default"].sources.USER);
               var range = this.quill.getSelection();
               this.quill.scroll.descendants(SyntaxCodeBlock).forEach(function (code) {
                 code.highlight(_this3.options.highlight);
               });
-              this.quill.update(_quill2.default.sources.SILENT);
+              this.quill.update(_quill2["default"].sources.SILENT);
 
               if (range != null) {
-                this.quill.setSelection(range, _quill2.default.sources.SILENT);
+                this.quill.setSelection(range, _quill2["default"].sources.SILENT);
               }
             }
           }]);
 
           return Syntax;
-        }(_module2.default);
+        }(_module2["default"]);
 
         Syntax.DEFAULTS = {
           highlight: function () {
@@ -28206,7 +28231,7 @@
         };
         exports.CodeBlock = SyntaxCodeBlock;
         exports.CodeToken = CodeToken;
-        exports.default = Syntax;
+        exports["default"] = Syntax;
         /***/
       },
       /* 76 */
@@ -28441,7 +28466,7 @@
         Object.defineProperty(exports, "__esModule", {
           value: true
         });
-        exports.default = exports.BubbleTooltip = undefined;
+        exports["default"] = exports.BubbleTooltip = undefined;
 
         var _get = function get(object, property, receiver) {
           if (object === null) object = Function.prototype;
@@ -28506,7 +28531,7 @@
 
         function _interopRequireDefault(obj) {
           return obj && obj.__esModule ? obj : {
-            default: obj
+            "default": obj
           };
         }
 
@@ -28568,15 +28593,15 @@
             value: function extendToolbar(toolbar) {
               this.tooltip = new BubbleTooltip(this.quill, this.options.bounds);
               this.tooltip.root.appendChild(toolbar.container);
-              this.buildButtons([].slice.call(toolbar.container.querySelectorAll('button')), _icons2.default);
-              this.buildPickers([].slice.call(toolbar.container.querySelectorAll('select')), _icons2.default);
+              this.buildButtons([].slice.call(toolbar.container.querySelectorAll('button')), _icons2["default"]);
+              this.buildPickers([].slice.call(toolbar.container.querySelectorAll('select')), _icons2["default"]);
             }
           }]);
 
           return BubbleTheme;
-        }(_base2.default);
+        }(_base2["default"]);
 
-        BubbleTheme.DEFAULTS = (0, _extend2.default)(true, {}, _base2.default.DEFAULTS, {
+        BubbleTheme.DEFAULTS = (0, _extend2["default"])(true, {}, _base2["default"].DEFAULTS, {
           modules: {
             toolbar: {
               handlers: {
@@ -28600,10 +28625,10 @@
 
             var _this2 = _possibleConstructorReturn(this, (BubbleTooltip.__proto__ || Object.getPrototypeOf(BubbleTooltip)).call(this, quill, bounds));
 
-            _this2.quill.on(_emitter2.default.events.EDITOR_CHANGE, function (type, range, oldRange, source) {
-              if (type !== _emitter2.default.events.SELECTION_CHANGE) return;
+            _this2.quill.on(_emitter2["default"].events.EDITOR_CHANGE, function (type, range, oldRange, source) {
+              if (type !== _emitter2["default"].events.SELECTION_CHANGE) return;
 
-              if (range != null && range.length > 0 && source === _emitter2.default.sources.USER) {
+              if (range != null && range.length > 0 && source === _emitter2["default"].sources.USER) {
                 _this2.show(); // Lock our width so we will expand beyond our offsetParent boundaries
 
 
@@ -28644,7 +28669,7 @@
               this.root.querySelector('.ql-close').addEventListener('click', function () {
                 _this3.root.classList.remove('ql-editing');
               });
-              this.quill.on(_emitter2.default.events.SCROLL_OPTIMIZE, function () {
+              this.quill.on(_emitter2["default"].events.SCROLL_OPTIMIZE, function () {
                 // Let selection be restored by toolbar handlers before repositioning
                 setTimeout(function () {
                   if (_this3.root.classList.contains('ql-hidden')) return;
@@ -28679,7 +28704,7 @@
 
         BubbleTooltip.TEMPLATE = ['<span class="ql-tooltip-arrow"></span>', '<div class="ql-tooltip-editor">', '<input type="text" data-formula="e=mc^2" data-link="https://quilljs.com" data-video="Embed URL">', '<a class="ql-close"></a>', '</div>'].join('');
         exports.BubbleTooltip = BubbleTooltip;
-        exports.default = BubbleTheme;
+        exports["default"] = BubbleTheme;
         /***/
       },
       /* 109 */
@@ -28715,7 +28740,7 @@
     window.Quill = require('quill/dist/quill.js');
   }
 
-  var script$m = {
+  var script$O = {
     name: 'quill-editor',
     data: function data() {
       return {
@@ -28762,7 +28787,7 @@
       options: {
         type: Object,
         required: false,
-        default: function _default() {
+        "default": function _default() {
           return {};
         }
       }
@@ -28851,10 +28876,10 @@
   };
 
   /* script */
-  var __vue_script__$m = script$m;
+  var __vue_script__$O = script$O;
   /* template */
 
-  var __vue_render__$m = function __vue_render__() {
+  var __vue_render__$O = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -28868,10 +28893,10 @@
     })], 2);
   };
 
-  var __vue_staticRenderFns__$m = [];
+  var __vue_staticRenderFns__$O = [];
   /* style */
 
-  var __vue_inject_styles__$m = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$O = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-dfc14f92_0", {
       source: ".quill-editor img{max-width:100%}",
@@ -28882,16 +28907,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$m = undefined;
+  var __vue_scope_id__$O = undefined;
   /* module identifier */
 
-  var __vue_module_identifier__$f = undefined;
+  var __vue_module_identifier__$y = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$m = false;
+  var __vue_is_functional_template__$O = false;
   /* component normalizer */
 
-  function __vue_normalize__$m(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$O(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "editor.vue";
@@ -28936,9 +28961,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$f() {
+  function __vue_create_injector__$y() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$f.styles || (__vue_create_injector__$f.styles = {});
+    var styles = __vue_create_injector__$y.styles || (__vue_create_injector__$y.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -29000,19 +29025,15 @@
   /* style inject SSR */
 
 
-  var editor = __vue_normalize__$m({
-    render: __vue_render__$m,
-    staticRenderFns: __vue_staticRenderFns__$m
-  }, __vue_inject_styles__$m, __vue_script__$m, __vue_scope_id__$m, __vue_is_functional_template__$m, __vue_module_identifier__$f, __vue_create_injector__$f);
+  var editor = __vue_normalize__$O({
+    render: __vue_render__$O,
+    staticRenderFns: __vue_staticRenderFns__$O
+  }, __vue_inject_styles__$O, __vue_script__$O, __vue_scope_id__$O, __vue_is_functional_template__$O, __vue_module_identifier__$y, __vue_create_injector__$y);
 
   var editor$1 = /*#__PURE__*/Object.freeze({
     __proto__: null,
     'default': editor
   });
-
-  function getCjsExportFromNamespace (n) {
-  	return n && n['default'] || n;
-  }
 
   var require$$0 = getCjsExportFromNamespace(editor$1);
 
@@ -29024,7 +29045,7 @@
 
   var quillEditor = require$$0;
 
-  quillEditor = quillEditor.default || quillEditor;
+  quillEditor = quillEditor["default"] || quillEditor;
   var VueQuillEditor = {
     Quill: quill,
     quillEditor: quillEditor,
@@ -29034,7 +29055,7 @@
   };
   var vueQuillEditor = VueQuillEditor;
 
-  var QUILL_OPTIONS = {
+  var QUILL_OPTIONS$1 = {
     modules: {
       toolbar: [['bold', 'italic', 'underline', 'strike'], ['blockquote', 'code-block'], [{
         list: 'ordered'
@@ -29052,34 +29073,34 @@
     }
   };
 
-  var getAnswerType = function getAnswerType(isGraded) {
+  var getAnswerType$1 = function getAnswerType(isGraded) {
     return isGraded ? 'Answer' : 'Option';
   };
 
-  var getButtonLabel = function getButtonLabel(isExpanded) {
+  var getButtonLabel$1 = function getButtonLabel(isExpanded) {
     return isExpanded ? 'hide' : 'show';
   };
 
-  var script$n = {
+  var script$N = {
     name: 'feedback',
     props: {
       answers: {
         type: [Array, Boolean],
-        default: null
+        "default": null
       },
       feedback: {
         type: Object,
-        default: function _default() {
+        "default": function _default() {
           return {};
         }
       },
       isEditing: {
         type: Boolean,
-        default: false
+        "default": false
       },
       isGraded: {
         type: Boolean,
-        default: false
+        "default": false
       }
     },
     data: function data(vm) {
@@ -29089,13 +29110,13 @@
     },
     computed: {
       quillOptions: function quillOptions() {
-        return QUILL_OPTIONS;
+        return QUILL_OPTIONS$1;
       },
       answerType: function answerType(vm) {
-        return getAnswerType(vm.isGraded);
+        return getAnswerType$1(vm.isGraded);
       },
       buttonLabel: function buttonLabel(vm) {
-        return getButtonLabel(vm.isExpanded);
+        return getButtonLabel$1(vm.isExpanded);
       },
       processedAnswers: function processedAnswers(vm) {
         return isArray__default['default'](vm.answers) ? vm.answers : ['True', 'False'];
@@ -29104,7 +29125,7 @@
     methods: {
       updateFeedback: function updateFeedback(_ref, index) {
         var html = _ref.html;
-        this.$emit('update', _defineProperty({}, index, html));
+        this.$emit('update', _defineProperty$1({}, index, html));
       },
       toggleExpand: function toggleExpand() {
         this.isExpanded = !this.isExpanded;
@@ -29122,10 +29143,10 @@
   };
 
   /* script */
-  var __vue_script__$n = script$n;
+  var __vue_script__$N = script$N;
   /* template */
 
-  var __vue_render__$n = function __vue_render__() {
+  var __vue_render__$N = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -29179,19 +29200,19 @@
     }), 1) : _vm._e()])], 1);
   };
 
-  var __vue_staticRenderFns__$n = [];
+  var __vue_staticRenderFns__$N = [];
   /* style */
 
-  var __vue_inject_styles__$n = undefined;
+  var __vue_inject_styles__$N = undefined;
   /* scoped */
 
-  var __vue_scope_id__$n = undefined;
+  var __vue_scope_id__$N = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$n = false;
+  var __vue_is_functional_template__$N = false;
   /* component normalizer */
 
-  function __vue_normalize__$n(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$N(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "Feedback.vue";
@@ -29212,13 +29233,13 @@
   /* style inject SSR */
 
 
-  var Feedback = __vue_normalize__$n({
-    render: __vue_render__$n,
-    staticRenderFns: __vue_staticRenderFns__$n
-  }, __vue_inject_styles__$n, __vue_script__$n, __vue_scope_id__$n, __vue_is_functional_template__$n);
+  var Feedback$1 = __vue_normalize__$N({
+    render: __vue_render__$N,
+    staticRenderFns: __vue_staticRenderFns__$N
+  }, __vue_inject_styles__$N, __vue_script__$N, __vue_scope_id__$N, __vue_is_functional_template__$N);
 
   //
-  var script$o = {
+  var script$M = {
     name: 'tailor-contained-content',
     inheritAttrs: false,
     props: {
@@ -29228,19 +29249,19 @@
       },
       isDisabled: {
         type: Boolean,
-        default: false
+        "default": false
       },
       isDragged: {
         type: Boolean,
-        default: false
+        "default": false
       },
       setWidth: {
         type: Boolean,
-        default: true
+        "default": true
       },
       dense: {
         type: Boolean,
-        default: false
+        "default": false
       }
     },
     data: function data() {
@@ -29278,15 +29299,15 @@
       }, 20)
     },
     components: {
-      ContentElement: ContentElement
+      ContentElement: ContentElement$3
     }
   };
 
   /* script */
-  var __vue_script__$o = script$o;
+  var __vue_script__$M = script$M;
   /* template */
 
-  var __vue_render__$o = function __vue_render__() {
+  var __vue_render__$M = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -29295,7 +29316,7 @@
 
     return _c('div', {
       staticClass: "contained-content",
-      class: [_vm.widthClass, {
+      "class": [_vm.widthClass, {
         disabled: _vm.isDisabled,
         hovered: _vm.isHovered
       }],
@@ -29336,10 +29357,10 @@
     }, 'content-element', _vm.bindings, false))], 1);
   };
 
-  var __vue_staticRenderFns__$o = [];
+  var __vue_staticRenderFns__$M = [];
   /* style */
 
-  var __vue_inject_styles__$o = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$M = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-cb586726_0", {
       source: ".drag-handle[data-v-cb586726]{position:absolute;left:-3px;z-index:2;width:26px;opacity:0}.drag-handle .mdi[data-v-cb586726]{color:#888;font-size:28px}.hovered .drag-handle[data-v-cb586726]{opacity:1;transition:opacity .6s ease-in-out;cursor:pointer}.disabled .drag-handle[data-v-cb586726]{display:none}.contained-content[data-v-cb586726]{position:relative;margin:7px 0;padding:0}",
@@ -29350,16 +29371,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$o = "data-v-cb586726";
+  var __vue_scope_id__$M = "data-v-cb586726";
   /* module identifier */
 
-  var __vue_module_identifier__$g = undefined;
+  var __vue_module_identifier__$x = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$o = false;
+  var __vue_is_functional_template__$M = false;
   /* component normalizer */
 
-  function __vue_normalize__$o(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$M(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "ContainedContent.vue";
@@ -29404,9 +29425,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$g() {
+  function __vue_create_injector__$x() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$g.styles || (__vue_create_injector__$g.styles = {});
+    var styles = __vue_create_injector__$x.styles || (__vue_create_injector__$x.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -29468,10 +29489,10 @@
   /* style inject SSR */
 
 
-  var ContainedContent = __vue_normalize__$o({
-    render: __vue_render__$o,
-    staticRenderFns: __vue_staticRenderFns__$o
-  }, __vue_inject_styles__$o, __vue_script__$o, __vue_scope_id__$o, __vue_is_functional_template__$o, __vue_module_identifier__$g, __vue_create_injector__$g);
+  var ContainedContent$1 = __vue_normalize__$M({
+    render: __vue_render__$M,
+    staticRenderFns: __vue_staticRenderFns__$M
+  }, __vue_inject_styles__$M, __vue_script__$M, __vue_scope_id__$M, __vue_is_functional_template__$M, __vue_module_identifier__$x, __vue_create_injector__$x);
 
   //
   //
@@ -29481,21 +29502,21 @@
   //
   //
   //
-  var script$p = {
+  var script$L = {
     name: 'tailor-input-error',
     props: {
       error: {
         type: String,
-        default: ''
+        "default": ''
       }
     }
   };
 
   /* script */
-  var __vue_script__$p = script$p;
+  var __vue_script__$L = script$L;
   /* template */
 
-  var __vue_render__$p = function __vue_render__() {
+  var __vue_render__$L = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -29511,10 +29532,10 @@
     }, [_vm._v("\n    " + _vm._s(_vm.error) + "\n  ")]) : _vm._e()]);
   };
 
-  var __vue_staticRenderFns__$p = [];
+  var __vue_staticRenderFns__$L = [];
   /* style */
 
-  var __vue_inject_styles__$p = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$L = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-ff8d03d8_0", {
       source: ".input-error[data-v-ff8d03d8]{color:var(--v-error-base);font-size:.75rem}",
@@ -29525,16 +29546,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$p = "data-v-ff8d03d8";
+  var __vue_scope_id__$L = "data-v-ff8d03d8";
   /* module identifier */
 
-  var __vue_module_identifier__$h = undefined;
+  var __vue_module_identifier__$w = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$p = false;
+  var __vue_is_functional_template__$L = false;
   /* component normalizer */
 
-  function __vue_normalize__$p(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$L(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "InputError.vue";
@@ -29579,9 +29600,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$h() {
+  function __vue_create_injector__$w() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$h.styles || (__vue_create_injector__$h.styles = {});
+    var styles = __vue_create_injector__$w.styles || (__vue_create_injector__$w.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -29643,18 +29664,18 @@
   /* style inject SSR */
 
 
-  var InputError = __vue_normalize__$p({
-    render: __vue_render__$p,
-    staticRenderFns: __vue_staticRenderFns__$p
-  }, __vue_inject_styles__$p, __vue_script__$p, __vue_scope_id__$p, __vue_is_functional_template__$p, __vue_module_identifier__$h, __vue_create_injector__$h);
+  var InputError$1 = __vue_normalize__$L({
+    render: __vue_render__$L,
+    staticRenderFns: __vue_staticRenderFns__$L
+  }, __vue_inject_styles__$L, __vue_script__$L, __vue_scope_id__$L, __vue_is_functional_template__$L, __vue_module_identifier__$w, __vue_create_injector__$w);
 
   //
-  var DRAG_OPTIONS = {
+  var DRAG_OPTIONS$1 = {
     handle: '.drag-handle',
     scrollSensitivity: 125,
     scrollSpeed: 15
   };
-  var script$q = {
+  var script$K = {
     name: 'question',
     props: {
       assessment: {
@@ -29663,13 +29684,13 @@
       },
       errors: {
         type: Array,
-        default: function _default() {
+        "default": function _default() {
           return [];
         }
       },
       isEditing: {
         type: Boolean,
-        default: false
+        "default": false
       }
     },
     data: function data() {
@@ -29694,7 +29715,7 @@
         return head__default['default'](utils.assessment.getErrorMessages(vm.errors, 'question'));
       },
       dragOptions: function dragOptions() {
-        return DRAG_OPTIONS;
+        return DRAG_OPTIONS$1;
       }
     }),
     methods: {
@@ -29741,18 +29762,18 @@
       });
     },
     components: {
-      AddElement: AddElement,
-      ContainedContent: ContainedContent,
+      AddElement: AddElement$1,
+      ContainedContent: ContainedContent$1,
       Draggable: Draggable__default['default'],
-      InputError: InputError
+      InputError: InputError$1
     }
   };
 
   /* script */
-  var __vue_script__$q = script$q;
+  var __vue_script__$K = script$K;
   /* template */
 
-  var __vue_render__$q = function __vue_render__() {
+  var __vue_render__$K = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -29762,7 +29783,7 @@
     return _c('div', [_c('div', {
       staticClass: "subtitle-2 mb-2"
     }, [_vm._v("Question")]), _vm._v(" "), _c('div', {
-      class: ['question-container', {
+      "class": ['question-container', {
         focused: _vm.isFocused,
         disabled: !_vm.isEditing,
         incorrect: !!_vm.questionError
@@ -29795,7 +29816,7 @@
         }
       });
     }), 1)], 1), _vm._v(" "), _c('add-element', {
-      class: {
+      "class": {
         invisible: !_vm.isEditing
       },
       attrs: {
@@ -29837,10 +29858,10 @@
     })], 1);
   };
 
-  var __vue_staticRenderFns__$q = [];
+  var __vue_staticRenderFns__$K = [];
   /* style */
 
-  var __vue_inject_styles__$q = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$K = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-28708166_0", {
       source: ".question-container[data-v-28708166]{position:relative;min-height:8.75rem;padding:1rem 3rem 0 2.5rem;text-align:center;background:#ebebeb;border-radius:.125rem;transition:.3s cubic-bezier(.25,.8,.5,1)}.question-container[data-v-28708166]::after,.question-container[data-v-28708166]::before{content:'';position:absolute;bottom:-1px;left:0;width:100%;transition:.3s cubic-bezier(.25,.8,.5,1)}.question-container[data-v-28708166]::before{border-style:solid;border-width:thin 0 0 0}.question-container[data-v-28708166]::after{border-style:solid;border-width:thin 0 thin 0;transform:scaleX(0)}.question-container[data-v-28708166]:not(.focused):not(.disabled):not(.incorrect):hover{background:#dcdcdc}.question-container[data-v-28708166]:not(.focused):not(.disabled):not(.incorrect):hover  .content-element{border-color:#bbb}.focused[data-v-28708166]::after{transform:scaleX(1)}.disabled[data-v-28708166]{color:rgba(0,0,0,.38)}.disabled[data-v-28708166]::before{border-image:repeating-linear-gradient(to right,rgba(0,0,0,.38) 0,rgba(0,0,0,.38) .125rem,transparent .125rem,transparent .25rem) 1 repeat}.incorrect[data-v-28708166]::after,.incorrect[data-v-28708166]::before{border-color:var(--v-error-base)}.invisible[data-v-28708166]{visibility:none}",
@@ -29851,16 +29872,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$q = "data-v-28708166";
+  var __vue_scope_id__$K = "data-v-28708166";
   /* module identifier */
 
-  var __vue_module_identifier__$i = undefined;
+  var __vue_module_identifier__$v = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$q = false;
+  var __vue_is_functional_template__$K = false;
   /* component normalizer */
 
-  function __vue_normalize__$q(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$K(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "Question.vue";
@@ -29905,9 +29926,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$i() {
+  function __vue_create_injector__$v() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$i.styles || (__vue_create_injector__$i.styles = {});
+    var styles = __vue_create_injector__$v.styles || (__vue_create_injector__$v.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -29969,24 +29990,24 @@
   /* style inject SSR */
 
 
-  var Question = __vue_normalize__$q({
-    render: __vue_render__$q,
-    staticRenderFns: __vue_staticRenderFns__$q
-  }, __vue_inject_styles__$q, __vue_script__$q, __vue_scope_id__$q, __vue_is_functional_template__$q, __vue_module_identifier__$i, __vue_create_injector__$i);
+  var Question$1 = __vue_normalize__$K({
+    render: __vue_render__$K,
+    staticRenderFns: __vue_staticRenderFns__$K
+  }, __vue_inject_styles__$K, __vue_script__$K, __vue_scope_id__$K, __vue_is_functional_template__$K, __vue_module_identifier__$v, __vue_create_injector__$v);
 
   //
 
-  var resolveComponentName = function resolveComponentName(type) {
+  var resolveComponentName$1 = function resolveComponentName(type) {
     return utils.getComponentName(utils.processAnswerType(type));
   };
 
-  var WITH_FEEDBACK = ['MC', 'SC', 'TF'];
-  var TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
-  var validationOptions = {
+  var WITH_FEEDBACK$1 = ['MC', 'SC', 'TF'];
+  var TEXT_CONTAINERS$3 = ['JODIT_HTML', 'HTML'];
+  var validationOptions$1 = {
     recursive: true,
     abortEarly: false
   };
-  var script$r = {
+  var script$J = {
     name: 'tce-question-container',
     inject: ['$teRegistry'],
     props: {
@@ -29996,7 +30017,7 @@
       },
       isDisabled: {
         type: Boolean,
-        default: false
+        "default": false
       }
     },
     data: function data(vm) {
@@ -30016,10 +30037,10 @@
         return vm.element.type === 'ASSESSMENT';
       },
       showFeedback: function showFeedback(vm) {
-        return WITH_FEEDBACK.includes(vm.answerType);
+        return WITH_FEEDBACK$1.includes(vm.answerType);
       },
       componentName: function componentName(vm) {
-        return resolveComponentName(vm.answerType);
+        return resolveComponentName$1(vm.answerType);
       },
       config: function config(vm) {
         return vm.$teRegistry.get(vm.answerType);
@@ -30029,7 +30050,7 @@
       },
       schema: function schema() {
         var schema = this.config.schema;
-        return ObjectSchema().shape(Object.assign({}, baseSchema, this.isGraded ? schema : omit__default['default'](schema, ['correct'])));
+        return ObjectSchema().shape(Object.assign({}, baseSchema$1, this.isGraded ? schema : omit__default['default'](schema, ['correct'])));
       }
     },
     methods: {
@@ -30045,7 +30066,7 @@
 
         if (validate && !isEmpty__default['default'](this.errors)) {
           this.errors = [];
-          this.validate().catch(function (err) {
+          this.validate()["catch"](function (err) {
             return _this.errors = err.inner;
           });
         }
@@ -30060,7 +30081,7 @@
 
           _this2.isEditing = false;
           _this2.errors = [];
-        }).catch(function (err) {
+        })["catch"](function (err) {
           return _this2.errors = err.inner;
         });
       },
@@ -30073,7 +30094,7 @@
         this.alert = {};
       },
       validate: function validate() {
-        return this.schema.validate(this.editedElement.data, validationOptions);
+        return this.schema.validate(this.editedElement.data, validationOptions$1);
       },
       updateFeedback: function updateFeedback(data) {
         var element = this.editedElement;
@@ -30081,21 +30102,21 @@
       }
     },
     components: {
-      Controls: Controls,
-      Feedback: Feedback,
-      Question: Question
+      Controls: Controls$1,
+      Feedback: Feedback$1,
+      Question: Question$1
     }
   };
-  var question = ArraySchema().test('has-text', 'Please define question', function (question) {
-    return !!question.find(containsText);
+  var question$1 = ArraySchema().test('has-text', 'Please define question', function (question) {
+    return !!question.find(containsText$1);
   });
 
-  function containsText(asset) {
-    return TEXT_CONTAINERS.includes(asset.type) && asset.data.content && asset.data.content.trim().length > 0;
+  function containsText$1(asset) {
+    return TEXT_CONTAINERS$3.includes(asset.type) && asset.data.content && asset.data.content.trim().length > 0;
   }
 
-  var baseSchema = {
-    question: question,
+  var baseSchema$1 = {
+    question: question$1,
     hint: StringSchema().trim().max(500),
     _refs: ObjectSchema().shape({
       objectiveId: NumberSchema().integer().positive()
@@ -30103,10 +30124,10 @@
   };
 
   /* script */
-  var __vue_script__$r = script$r;
+  var __vue_script__$J = script$J;
   /* template */
 
-  var __vue_render__$r = function __vue_render__() {
+  var __vue_render__$J = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -30211,10 +30232,10 @@
     }) : _vm._e()], 1)], 2);
   };
 
-  var __vue_staticRenderFns__$r = [];
+  var __vue_staticRenderFns__$J = [];
   /* style */
 
-  var __vue_inject_styles__$r = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$J = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-b4ecdf22_0", {
       source: ".tce-question-container[data-v-b4ecdf22]{min-height:25rem;background-color:#fff;overflow:visible;text-align:left}.tce-question-container[data-v-b4ecdf22]  .title{font-weight:400}.tce-question-container .content[data-v-b4ecdf22]{margin:.5rem 1.625rem}@media (max-width:1263px){.tce-question-container .content[data-v-b4ecdf22]{margin:.5rem}}.tce-question-container .tce-answer[data-v-b4ecdf22]{overflow:hidden}.disabled .controls[data-v-b4ecdf22]{display:none}",
@@ -30225,16 +30246,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$r = "data-v-b4ecdf22";
+  var __vue_scope_id__$J = "data-v-b4ecdf22";
   /* module identifier */
 
-  var __vue_module_identifier__$j = undefined;
+  var __vue_module_identifier__$u = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$r = false;
+  var __vue_is_functional_template__$J = false;
   /* component normalizer */
 
-  function __vue_normalize__$r(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$J(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "index.vue";
@@ -30279,9 +30300,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$j() {
+  function __vue_create_injector__$u() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$j.styles || (__vue_create_injector__$j.styles = {});
+    var styles = __vue_create_injector__$u.styles || (__vue_create_injector__$u.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -30343,23 +30364,23 @@
   /* style inject SSR */
 
 
-  var TceQuestionContainer = __vue_normalize__$r({
-    render: __vue_render__$r,
-    staticRenderFns: __vue_staticRenderFns__$r
-  }, __vue_inject_styles__$r, __vue_script__$r, __vue_scope_id__$r, __vue_is_functional_template__$r, __vue_module_identifier__$j, __vue_create_injector__$j);
+  var TceQuestionContainer$1 = __vue_normalize__$J({
+    render: __vue_render__$J,
+    staticRenderFns: __vue_staticRenderFns__$J
+  }, __vue_inject_styles__$J, __vue_script__$J, __vue_scope_id__$J, __vue_is_functional_template__$J, __vue_module_identifier__$u, __vue_create_injector__$u);
 
   //
-  var TEXT_CONTAINERS$1 = ['JODIT_HTML', 'HTML'];
-  var blankRegex = /(@blank)/g;
-  var htmlRegex = /(<\/?[^>]+(>|$))|&nbsp;/g;
+  var TEXT_CONTAINERS$2 = ['JODIT_HTML', 'HTML'];
+  var blankRegex$1 = /(@blank)/g;
+  var htmlRegex$1 = /(<\/?[^>]+(>|$))|&nbsp;/g;
 
-  var getTextAssets = function getTextAssets(item) {
+  var getTextAssets$1 = function getTextAssets(item) {
     return filter__default['default'](item, function (it) {
-      return TEXT_CONTAINERS$1.includes(it.type);
+      return TEXT_CONTAINERS$2.includes(it.type);
     });
   };
 
-  var script$s = {
+  var script$I = {
     name: 'tailor-assessment-item',
     inject: ['$teRegistry', '$editorState'],
     props: {
@@ -30369,15 +30390,15 @@
       },
       expanded: {
         type: Boolean,
-        default: false
+        "default": false
       },
       draggable: {
         type: Boolean,
-        default: false
+        "default": false
       },
       isDisabled: {
         type: Boolean,
-        default: false
+        "default": false
       }
     },
     data: function data() {
@@ -30390,9 +30411,9 @@
         return this.$teRegistry.get(this.assessment.data.type);
       },
       question: function question() {
-        var textAssets = getTextAssets(this.assessment.data.question);
+        var textAssets = getTextAssets$1(this.assessment.data.question);
         var question = map__default['default'](textAssets, 'data.content').join(' ');
-        return question.replace(htmlRegex, '').replace(blankRegex, function () {
+        return question.replace(htmlRegex$1, '').replace(blankRegex$1, function () {
           return '____';
         });
       }
@@ -30405,16 +30426,16 @@
       }
     },
     components: {
-      PublishDiffChip: PublishDiffChip,
-      TceQuestionContainer: TceQuestionContainer
+      PublishDiffChip: PublishDiffChip$1,
+      TceQuestionContainer: TceQuestionContainer$1
     }
   };
 
   /* script */
-  var __vue_script__$s = script$s;
+  var __vue_script__$I = script$I;
   /* template */
 
-  var __vue_render__$s = function __vue_render__() {
+  var __vue_render__$I = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -30423,7 +30444,7 @@
 
     return _c('li', {
       staticClass: "list-group-item assessment-item elevation-1",
-      class: [_vm.assessment.changeSincePublish, {
+      "class": [_vm.assessment.changeSincePublish, {
         hover: _vm.hover,
         expanded: _vm.expanded,
         diff: _vm.$editorState.isPublishDiff
@@ -30502,7 +30523,7 @@
       }
     }) : _c('v-btn', {
       staticClass: "delete",
-      class: {
+      "class": {
         disabled: _vm.isDisabled
       },
       attrs: {
@@ -30518,10 +30539,10 @@
     }, [_c('v-icon', [_vm._v("mdi-close")])], 1)], 1)], 1);
   };
 
-  var __vue_staticRenderFns__$s = [];
+  var __vue_staticRenderFns__$I = [];
   /* style */
 
-  var __vue_inject_styles__$s = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$I = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-493c9656_0", {
       source: ".assessment-item[data-v-493c9656]{margin-bottom:.625rem;padding:0}.assessment-item .v-chip[data-v-493c9656]{min-width:1.875rem}.assessment-item .drag-handle[data-v-493c9656]{position:absolute;top:0;left:-3px;color:#888;font-size:28px;opacity:0;cursor:move}.assessment-item.hover .drag-handle[data-v-493c9656]{opacity:1;transition:opacity .6s ease-in-out}.assessment-item .minimized[data-v-493c9656]{padding:.375rem 1.375rem;cursor:pointer}.assessment-item .minimized .question[data-v-493c9656]{display:inline-block;max-width:80%;min-height:1.875rem;color:#444;font-size:1rem;font-weight:400;line-height:2.125rem}.assessment-item .minimized .v-chip[data-v-493c9656]{margin-top:.125rem}.assessment-item .delete[data-v-493c9656]{opacity:0}.assessment-item.hover:not(.sortable-chosen) .delete[data-v-493c9656]:not(.disabled){opacity:1}.question-container[data-v-493c9656]{margin:0!important}.diff[data-v-493c9656]{border:none}.diff.expanded[data-v-493c9656]{border-radius:4px}.diff.new[data-v-493c9656]{border:none;box-shadow:0 0 0 2px var(--v-success-lighten2)!important}.diff.changed[data-v-493c9656],.diff.removed[data-v-493c9656]{border:none;box-shadow:0 0 0 2px var(--v-secondary-lighten4)!important}",
@@ -30532,16 +30553,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$s = "data-v-493c9656";
+  var __vue_scope_id__$I = "data-v-493c9656";
   /* module identifier */
 
-  var __vue_module_identifier__$k = undefined;
+  var __vue_module_identifier__$t = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$s = false;
+  var __vue_is_functional_template__$I = false;
   /* component normalizer */
 
-  function __vue_normalize__$s(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$I(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "AssessmentItem.vue";
@@ -30586,9 +30607,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$k() {
+  function __vue_create_injector__$t() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$k.styles || (__vue_create_injector__$k.styles = {});
+    var styles = __vue_create_injector__$t.styles || (__vue_create_injector__$t.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -30650,12 +30671,12 @@
   /* style inject SSR */
 
 
-  var AssessmentItem = __vue_normalize__$s({
-    render: __vue_render__$s,
-    staticRenderFns: __vue_staticRenderFns__$s
-  }, __vue_inject_styles__$s, __vue_script__$s, __vue_scope_id__$s, __vue_is_functional_template__$s, __vue_module_identifier__$k, __vue_create_injector__$k);
+  var AssessmentItem = __vue_normalize__$I({
+    render: __vue_render__$I,
+    staticRenderFns: __vue_staticRenderFns__$I
+  }, __vue_inject_styles__$I, __vue_script__$I, __vue_scope_id__$I, __vue_is_functional_template__$I, __vue_module_identifier__$t, __vue_create_injector__$t);
 
-  var downloadMixin = {
+  var downloadMixin$1 = {
     methods: {
       download: function download(url, fileName) {
         var a = document.createElement('a');
@@ -30667,9 +30688,9 @@
     }
   };
 
-  var uploadMixin = {
-    inject: ['$storageService', '$repository'],
-    mixins: [downloadMixin],
+  var uploadMixin$1 = {
+    inject: ['$api', '$repository'],
+    mixins: [downloadMixin$1],
     data: function data() {
       return {
         uploading: false
@@ -30684,29 +30705,29 @@
       createFileForm: function createFileForm(e) {
         this.form = new FormData();
 
-        var _e$target$files = _slicedToArray(e.target.files, 1),
+        var _e$target$files = _slicedToArray$1(e.target.files, 1),
             file = _e$target$files[0];
 
         if (!file) return;
         this.form.append('file', file, file.name);
       },
-      upload: loader(function (e) {
+      upload: loader$1(function (e) {
         var _this = this;
 
         this.createFileForm(e);
-        return this.$storageService.upload(this.repositoryId, this.form).then(function (data) {
+        return this.$api.asset.upload(this.repositoryId, this.form).then(function (data) {
           var _this$form$get = _this.form.get('file'),
               name = _this$form$get.name;
 
           _this.$emit('upload', Object.assign({}, data, {
             name: name
           }));
-        }).catch(function () {
+        })["catch"](function () {
           _this.error = 'An error has occurred!';
         });
       }, 'uploading'),
       downloadFile: async function downloadFile(key, name) {
-        var url = await this.$storageService.getUrl(this.repositoryId, key);
+        var url = await this.$api.asset.getUrl(this.repositoryId, key);
         return this.download(url, name);
       },
       deleteFile: function deleteFile(item) {
@@ -30724,27 +30745,27 @@
   };
 
   //
-  var script$t = {
+  var script$H = {
     name: 'upload-btn',
-    mixins: [uploadMixin],
+    mixins: [uploadMixin$1],
     props: {
       id: {
         type: String,
-        default: function _default() {
+        "default": function _default() {
           return uniqueId__default['default']('file_');
         }
       },
       fileName: {
         type: String,
-        default: ''
+        "default": ''
       },
       fileKey: {
         type: String,
-        default: ''
+        "default": ''
       },
       validate: {
         type: Object,
-        default: function _default() {
+        "default": function _default() {
           return {
             ext: []
           };
@@ -30752,11 +30773,11 @@
       },
       label: {
         type: String,
-        default: 'Choose a file'
+        "default": 'Choose a file'
       },
       sm: {
         type: Boolean,
-        default: false
+        "default": false
       }
     },
     methods: {
@@ -30775,10 +30796,10 @@
   };
 
   /* script */
-  var __vue_script__$t = script$t;
+  var __vue_script__$H = script$H;
   /* template */
 
-  var __vue_render__$t = function __vue_render__() {
+  var __vue_render__$H = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -30850,10 +30871,10 @@
     }, [_c('v-icon', [_vm._v("mdi-delete")])], 1) : _vm._e()], 1)]);
   };
 
-  var __vue_staticRenderFns__$t = [];
+  var __vue_staticRenderFns__$H = [];
   /* style */
 
-  var __vue_inject_styles__$t = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$H = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-1f089141_0", {
       source: ".file-upload[data-v-1f089141],.upload-form[data-v-1f089141]{display:inline-block}.upload-input[data-v-1f089141]{visibility:hidden;max-width:0;max-height:0}.file-name[data-v-1f089141]{color:#00f;font-size:1rem;text-decoration:underline;cursor:pointer}",
@@ -30864,16 +30885,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$t = "data-v-1f089141";
+  var __vue_scope_id__$H = "data-v-1f089141";
   /* module identifier */
 
-  var __vue_module_identifier__$l = undefined;
+  var __vue_module_identifier__$s = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$t = false;
+  var __vue_is_functional_template__$H = false;
   /* component normalizer */
 
-  function __vue_normalize__$t(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$H(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "UploadBtn.vue";
@@ -30918,9 +30939,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$l() {
+  function __vue_create_injector__$s() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$l.styles || (__vue_create_injector__$l.styles = {});
+    var styles = __vue_create_injector__$s.styles || (__vue_create_injector__$s.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -30982,14 +31003,14 @@
   /* style inject SSR */
 
 
-  var UploadBtn = __vue_normalize__$t({
-    render: __vue_render__$t,
-    staticRenderFns: __vue_staticRenderFns__$t
-  }, __vue_inject_styles__$t, __vue_script__$t, __vue_scope_id__$t, __vue_is_functional_template__$t, __vue_module_identifier__$l, __vue_create_injector__$l);
+  var UploadBtn$1 = __vue_normalize__$H({
+    render: __vue_render__$H,
+    staticRenderFns: __vue_staticRenderFns__$H
+  }, __vue_inject_styles__$H, __vue_script__$H, __vue_scope_id__$H, __vue_is_functional_template__$H, __vue_module_identifier__$s, __vue_create_injector__$s);
 
   //
 
-  function isUploaded(url) {
+  function isUploaded$1(url) {
     try {
       return url && new URL(url).protocol === 'storage:';
     } catch (e) {
@@ -30997,16 +31018,16 @@
     }
   }
 
-  var script$u = {
+  var script$G = {
     name: 'tailor-asset-input',
     props: {
       url: {
         type: String,
-        default: null
+        "default": null
       },
       publicUrl: {
         type: String,
-        default: null
+        "default": null
       },
       extensions: {
         type: Array,
@@ -31014,15 +31035,15 @@
       },
       allowFileUpload: {
         type: Boolean,
-        default: true
+        "default": true
       },
       uploadLabel: {
         type: String,
-        default: 'Select file'
+        "default": 'Select file'
       }
     },
     data: function data() {
-      var isLinked = !isUploaded(this.url);
+      var isLinked = !isUploaded$1(this.url);
       return {
         isEditing: !this.url,
         uploading: false,
@@ -31062,22 +31083,22 @@
         this.$emit('input', payload);
       },
       cancel: function cancel() {
-        var isLinked = !isUploaded(this.url);
+        var isLinked = !isUploaded$1(this.url);
         this.urlInput = isLinked ? this.url : null;
         this.file = isLinked ? null : pick__default['default'](this, ['url', 'publicUrl']);
         this.isEditing = !this.url;
       }
     },
     components: {
-      UploadBtn: UploadBtn
+      UploadBtn: UploadBtn$1
     }
   };
 
   /* script */
-  var __vue_script__$u = script$u;
+  var __vue_script__$G = script$G;
   /* template */
 
-  var __vue_render__$u = function __vue_render__() {
+  var __vue_render__$G = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -31205,10 +31226,10 @@
     }, [_vm._v("\n      Cancel\n    ")]) : _vm._e()]], 2);
   };
 
-  var __vue_staticRenderFns__$u = [];
+  var __vue_staticRenderFns__$G = [];
   /* style */
 
-  var __vue_inject_styles__$u = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$G = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-00f47ac8_0", {
       source: ".v-text-field[data-v-00f47ac8]{min-width:21.875rem;margin:.5rem .75rem 0 1.75rem}.action[data-v-00f47ac8]  .v-btn__content{min-width:4rem!important}.upload-btn[data-v-00f47ac8]  .v-btn{height:100%}.upload-btn[data-v-00f47ac8]  .v-btn .v-btn__content{padding:1.5rem 0}",
@@ -31219,16 +31240,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$u = "data-v-00f47ac8";
+  var __vue_scope_id__$G = "data-v-00f47ac8";
   /* module identifier */
 
-  var __vue_module_identifier__$m = undefined;
+  var __vue_module_identifier__$r = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$u = false;
+  var __vue_is_functional_template__$G = false;
   /* component normalizer */
 
-  function __vue_normalize__$u(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$G(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "AssetInput.vue";
@@ -31273,9 +31294,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$m() {
+  function __vue_create_injector__$r() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$m.styles || (__vue_create_injector__$m.styles = {});
+    var styles = __vue_create_injector__$r.styles || (__vue_create_injector__$r.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -31337,10 +31358,10 @@
   /* style inject SSR */
 
 
-  var AssetInput = __vue_normalize__$u({
-    render: __vue_render__$u,
-    staticRenderFns: __vue_staticRenderFns__$u
-  }, __vue_inject_styles__$u, __vue_script__$u, __vue_scope_id__$u, __vue_is_functional_template__$u, __vue_module_identifier__$m, __vue_create_injector__$m);
+  var AssetInput = __vue_normalize__$G({
+    render: __vue_render__$G,
+    staticRenderFns: __vue_staticRenderFns__$G
+  }, __vue_inject_styles__$G, __vue_script__$G, __vue_scope_id__$G, __vue_is_functional_template__$G, __vue_module_identifier__$r, __vue_create_injector__$r);
 
   //
   //
@@ -31370,24 +31391,24 @@
   //
   //
   //
-  var script$v = {
+  var script$F = {
     name: 'date-picker',
     props: {
       value: {
         type: [String, Date],
-        default: null
+        "default": null
       },
       label: {
         type: String,
-        default: null
+        "default": null
       },
       clearable: {
         type: Boolean,
-        default: true
+        "default": true
       },
       placeholder: {
         type: String,
-        default: 'Click to set...'
+        "default": 'Click to set...'
       }
     },
     data: function data() {
@@ -31404,10 +31425,10 @@
   };
 
   /* script */
-  var __vue_script__$v = script$v;
+  var __vue_script__$F = script$F;
   /* template */
 
-  var __vue_render__$v = function __vue_render__() {
+  var __vue_render__$F = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -31467,19 +31488,19 @@
     })], 1);
   };
 
-  var __vue_staticRenderFns__$v = [];
+  var __vue_staticRenderFns__$F = [];
   /* style */
 
-  var __vue_inject_styles__$v = undefined;
+  var __vue_inject_styles__$F = undefined;
   /* scoped */
 
-  var __vue_scope_id__$v = undefined;
+  var __vue_scope_id__$F = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$v = false;
+  var __vue_is_functional_template__$F = false;
   /* component normalizer */
 
-  function __vue_normalize__$v(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$F(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "DatePicker.vue";
@@ -31500,51 +31521,51 @@
   /* style inject SSR */
 
 
-  var DatePicker = __vue_normalize__$v({
-    render: __vue_render__$v,
-    staticRenderFns: __vue_staticRenderFns__$v
-  }, __vue_inject_styles__$v, __vue_script__$v, __vue_scope_id__$v, __vue_is_functional_template__$v);
+  var DatePicker = __vue_normalize__$F({
+    render: __vue_render__$F,
+    staticRenderFns: __vue_staticRenderFns__$F
+  }, __vue_inject_styles__$F, __vue_script__$F, __vue_scope_id__$F, __vue_is_functional_template__$F);
 
   //
-  var CE_FOCUS_EVENT = 'element:focus';
-  var script$w = {
+  var CE_FOCUS_EVENT$1 = 'element:focus';
+  var script$E = {
     name: 'tailor-element-list',
     props: {
       elements: {
         type: Array,
-        default: function _default() {
+        "default": function _default() {
           return [];
         }
       },
       dragOptions: {
         type: Object,
-        default: function _default() {
+        "default": function _default() {
           return {};
         }
       },
       supportedTypes: {
         type: Array,
-        default: null
+        "default": null
       },
       activity: {
         type: Object,
-        default: null
+        "default": null
       },
       layout: {
         type: Boolean,
-        default: false
+        "default": false
       },
       isDisabled: {
         type: Boolean,
-        default: false
+        "default": false
       },
       enableAdd: {
         type: Boolean,
-        default: true
+        "default": true
       },
       addElementOptions: {
         type: Object,
-        default: function _default() {
+        "default": function _default() {
           return {};
         }
       }
@@ -31568,11 +31589,11 @@
       getElementId: utils.getElementId,
       onDragStart: function onDragStart(index) {
         this.dragElementIndex = index;
-        this.editorChannel.emit(CE_FOCUS_EVENT);
+        this.editorChannel.emit(CE_FOCUS_EVENT$1);
       },
       onDragEnd: function onDragEnd(element) {
         this.dragElementIndex = -1;
-        this.editorChannel.emit(CE_FOCUS_EVENT, element);
+        this.editorChannel.emit(CE_FOCUS_EVENT$1, element);
       },
       reorder: function reorder(_ref) {
         var newPosition = _ref.newIndex;
@@ -31584,16 +31605,16 @@
       }
     },
     components: {
-      AddElement: AddElement,
+      AddElement: AddElement$1,
       Draggable: Draggable__default['default']
     }
   };
 
   /* script */
-  var __vue_script__$w = script$w;
+  var __vue_script__$E = script$E;
   /* template */
 
-  var __vue_render__$w = function __vue_render__() {
+  var __vue_render__$E = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -31621,7 +31642,7 @@
       return _c('div', {
         key: _vm.getElementId(element),
         staticClass: "pr-5",
-        class: "col-xs-" + _vm.get(element, 'data.width', 12),
+        "class": "col-xs-" + _vm.get(element, 'data.width', 12),
         on: {
           "dragstart": function dragstart($event) {
             return _vm.onDragStart(index);
@@ -31659,10 +31680,10 @@
     })] : _vm._e()], 2);
   };
 
-  var __vue_staticRenderFns__$w = [];
+  var __vue_staticRenderFns__$E = [];
   /* style */
 
-  var __vue_inject_styles__$w = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$E = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-f18f3e56_0", {
       source: ".list-group[data-v-f18f3e56]{padding:.625rem 1.5rem}[data-v-f18f3e56] .sortable-ghost .drag-handle{display:none}[data-v-f18f3e56] .sortable-ghost .content-element{max-height:9.375rem;background:#f4f5f5}[data-v-f18f3e56] .sortable-ghost .content-element>*{visibility:hidden}[data-v-f18f3e56] .sortable-drag .content-element{max-height:auto;background:#fff}",
@@ -31673,16 +31694,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$w = "data-v-f18f3e56";
+  var __vue_scope_id__$E = "data-v-f18f3e56";
   /* module identifier */
 
-  var __vue_module_identifier__$n = undefined;
+  var __vue_module_identifier__$q = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$w = false;
+  var __vue_is_functional_template__$E = false;
   /* component normalizer */
 
-  function __vue_normalize__$w(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$E(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "ElementList.vue";
@@ -31727,9 +31748,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$n() {
+  function __vue_create_injector__$q() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$n.styles || (__vue_create_injector__$n.styles = {});
+    var styles = __vue_create_injector__$q.styles || (__vue_create_injector__$q.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -31791,10 +31812,10 @@
   /* style inject SSR */
 
 
-  var ElementList = __vue_normalize__$w({
-    render: __vue_render__$w,
-    staticRenderFns: __vue_staticRenderFns__$w
-  }, __vue_inject_styles__$w, __vue_script__$w, __vue_scope_id__$w, __vue_is_functional_template__$w, __vue_module_identifier__$n, __vue_create_injector__$n);
+  var ElementList$1 = __vue_normalize__$E({
+    render: __vue_render__$E,
+    staticRenderFns: __vue_staticRenderFns__$E
+  }, __vue_inject_styles__$E, __vue_script__$E, __vue_scope_id__$E, __vue_is_functional_template__$E, __vue_module_identifier__$q, __vue_create_injector__$q);
 
   //
   //
@@ -31832,7 +31853,7 @@
   //
   //
   //
-  var script$x = {
+  var script$D = {
     name: 'tailor-element-placeholder',
     props: {
       name: {
@@ -31845,31 +31866,31 @@
       },
       placeholder: {
         type: String,
-        default: 'Select to edit'
+        "default": 'Select to edit'
       },
       activePlaceholder: {
         type: String,
-        default: 'Use toolbar to edit'
+        "default": 'Use toolbar to edit'
       },
       activeIcon: {
         type: String,
-        default: null
+        "default": null
       },
       activeColor: {
         type: String,
-        default: '#fff'
+        "default": '#fff'
       },
       isDisabled: {
         type: Boolean,
-        default: false
+        "default": false
       },
       isFocused: {
         type: Boolean,
-        default: false
+        "default": false
       },
       dense: {
         type: Boolean,
-        default: false
+        "default": false
       }
     },
     computed: {
@@ -31881,10 +31902,10 @@
   };
 
   /* script */
-  var __vue_script__$x = script$x;
+  var __vue_script__$D = script$D;
   /* template */
 
-  var __vue_render__$x = function __vue_render__() {
+  var __vue_render__$D = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -31893,7 +31914,7 @@
 
     return _c('v-sheet', {
       staticClass: "transparent grey--text text--darken-4",
-      class: _vm.dense ? 'pt-3' : 'pa-12'
+      "class": _vm.dense ? 'pt-3' : 'pa-12'
     }, [_c('v-avatar', {
       attrs: {
         "size": _vm.dense ? 40 : 60,
@@ -31906,7 +31927,7 @@
       }
     }, [_vm._v("\n      " + _vm._s(_vm.icon) + "\n    ")])], 1), _vm._v(" "), _c('div', {
       staticClass: "grey--text",
-      class: [_vm.isDisabled ? 'text--darken-3' : 'text--darken-4', _vm.dense ? 'my-2 subtitle-2' : 'my-4 headline']
+      "class": [_vm.isDisabled ? 'text--darken-3' : 'text--darken-4', _vm.dense ? 'my-2 subtitle-2' : 'my-4 headline']
     }, [_vm._v("\n    " + _vm._s(_vm.name) + "\n  ")]), _vm._v(" "), !_vm.dense && !_vm.isDisabled ? _c('div', {
       staticClass: "subtitle-1"
     }, [!_vm.isFocused ? [_vm._v(_vm._s(_vm.placeholder))] : [_c('span', [_vm._v(_vm._s(_vm.activePlaceholder))]), _vm._v(" "), _vm.activeIcon ? _c('v-icon', {
@@ -31917,19 +31938,19 @@
     }, [_vm._v("\n        " + _vm._s(_vm.activeIcon) + "\n      ")]) : _vm._e()]], 2) : _vm._e()], 1);
   };
 
-  var __vue_staticRenderFns__$x = [];
+  var __vue_staticRenderFns__$D = [];
   /* style */
 
-  var __vue_inject_styles__$x = undefined;
+  var __vue_inject_styles__$D = undefined;
   /* scoped */
 
-  var __vue_scope_id__$x = undefined;
+  var __vue_scope_id__$D = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$x = false;
+  var __vue_is_functional_template__$D = false;
   /* component normalizer */
 
-  function __vue_normalize__$x(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$D(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "ElementPlaceholder.vue";
@@ -31950,12 +31971,12 @@
   /* style inject SSR */
 
 
-  var ElementPlaceholder = __vue_normalize__$x({
-    render: __vue_render__$x,
-    staticRenderFns: __vue_staticRenderFns__$x
-  }, __vue_inject_styles__$x, __vue_script__$x, __vue_scope_id__$x, __vue_is_functional_template__$x);
+  var ElementPlaceholder = __vue_normalize__$D({
+    render: __vue_render__$D,
+    staticRenderFns: __vue_staticRenderFns__$D
+  }, __vue_inject_styles__$D, __vue_script__$D, __vue_scope_id__$D, __vue_is_functional_template__$D);
 
-  var script$y = {
+  var script$C = {
     name: 'tailor-embedded-container',
     inheritAttrs: false,
     props: {
@@ -31965,23 +31986,23 @@
       },
       types: {
         type: Array,
-        default: function _default() {
+        "default": function _default() {
           return ['JODIT_HTML', 'IMAGE', 'HTML', 'VIDEO'];
         }
       },
       isDisabled: {
         type: Boolean,
-        default: false
+        "default": false
       },
       addElementOptions: {
         type: Object,
-        default: function _default() {
+        "default": function _default() {
           return {};
         }
       },
       enableAdd: {
         type: Boolean,
-        default: true
+        "default": true
       }
     },
     computed: {
@@ -32013,7 +32034,7 @@
       },
       save: function save(item, key, value) {
         var container = cloneDeep__default['default'](this.container);
-        container.embeds[item.id] = Object.assign({}, item, _defineProperty({}, key, value));
+        container.embeds[item.id] = Object.assign({}, item, _defineProperty$1({}, key, value));
         this.$emit('save', container);
       },
       requestDeleteConfirmation: function requestDeleteConfirmation(element) {
@@ -32029,16 +32050,16 @@
       }
     }),
     components: {
-      ContainedContent: ContainedContent,
-      ElementList: ElementList
+      ContainedContent: ContainedContent$1,
+      ElementList: ElementList$1
     }
   };
 
   /* script */
-  var __vue_script__$y = script$y;
+  var __vue_script__$C = script$C;
   /* template */
 
-  var __vue_render__$y = function __vue_render__() {
+  var __vue_render__$C = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -32085,19 +32106,19 @@
     });
   };
 
-  var __vue_staticRenderFns__$y = [];
+  var __vue_staticRenderFns__$C = [];
   /* style */
 
-  var __vue_inject_styles__$y = undefined;
+  var __vue_inject_styles__$C = undefined;
   /* scoped */
 
-  var __vue_scope_id__$y = undefined;
+  var __vue_scope_id__$C = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$y = false;
+  var __vue_is_functional_template__$C = false;
   /* component normalizer */
 
-  function __vue_normalize__$y(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$C(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "EmbeddedContainer.vue";
@@ -32118,23 +32139,23 @@
   /* style inject SSR */
 
 
-  var EmbeddedContainer = __vue_normalize__$y({
-    render: __vue_render__$y,
-    staticRenderFns: __vue_staticRenderFns__$y
-  }, __vue_inject_styles__$y, __vue_script__$y, __vue_scope_id__$y, __vue_is_functional_template__$y);
+  var EmbeddedContainer = __vue_normalize__$C({
+    render: __vue_render__$C,
+    staticRenderFns: __vue_staticRenderFns__$C
+  }, __vue_inject_styles__$C, __vue_script__$C, __vue_scope_id__$C, __vue_is_functional_template__$C);
 
-  var script$z = {
+  var script$A = {
     name: 'tailor-active-users',
     props: {
       users: {
         type: Array,
-        default: function _default() {
+        "default": function _default() {
           return [];
         }
       },
       size: {
         type: Number,
-        default: 36
+        "default": 36
       }
     },
     filters: {
@@ -32143,10 +32164,10 @@
   };
   /* script */
 
-  var __vue_script__$z = script$z;
+  var __vue_script__$A = script$A;
   /* template */
 
-  var __vue_render__$z = function __vue_render__() {
+  var __vue_render__$A = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -32192,10 +32213,10 @@
     }), 1);
   };
 
-  var __vue_staticRenderFns__$z = [];
+  var __vue_staticRenderFns__$A = [];
   /* style */
 
-  var __vue_inject_styles__$z = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$A = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-33d463d4_0", {
       source: ".avatar[data-v-33d463d4]{transition:all .2s}.avatar img[data-v-33d463d4]{padding:.125rem}.avatar[data-v-33d463d4]:focus-within,.avatar[data-v-33d463d4]:hover{transform:scale(1.1);z-index:1}.avatar:focus-within img[data-v-33d463d4]:focus,.avatar:hover img[data-v-33d463d4]:focus{outline:0}",
@@ -32206,16 +32227,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$z = "data-v-33d463d4";
+  var __vue_scope_id__$A = "data-v-33d463d4";
   /* module identifier */
 
   var __vue_module_identifier__$o = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$z = false;
+  var __vue_is_functional_template__$A = false;
   /* component normalizer */
 
-  function __vue_normalize__$z(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$A(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "ActiveUsers.vue";
@@ -32322,10 +32343,10 @@
   /* style inject SSR */
 
 
-  var ActiveUsers$1 = __vue_normalize__$z({
-    render: __vue_render__$z,
-    staticRenderFns: __vue_staticRenderFns__$z
-  }, __vue_inject_styles__$z, __vue_script__$z, __vue_scope_id__$z, __vue_is_functional_template__$z, __vue_module_identifier__$o, __vue_create_injector__$o); //
+  var ActiveUsers = __vue_normalize__$A({
+    render: __vue_render__$A,
+    staticRenderFns: __vue_staticRenderFns__$A
+  }, __vue_inject_styles__$A, __vue_script__$A, __vue_scope_id__$A, __vue_is_functional_template__$A, __vue_module_identifier__$o, __vue_create_injector__$o); //
   //
   //
   //
@@ -32367,7 +32388,7 @@
   //
 
 
-  var script$1$1 = {
+  var script$z = {
     name: 'add-new-element',
     props: {
       library: {
@@ -32387,10 +32408,10 @@
   };
   /* script */
 
-  var __vue_script__$1$1 = script$1$1;
+  var __vue_script__$z = script$z;
   /* template */
 
-  var __vue_render__$1$1 = function __vue_render__() {
+  var __vue_render__$z = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -32448,10 +32469,10 @@
     })], 2)]);
   };
 
-  var __vue_staticRenderFns__$1$1 = [];
+  var __vue_staticRenderFns__$z = [];
   /* style */
 
-  var __vue_inject_styles__$1$1 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$z = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-5e4d908e_0", {
       source: ".element-container[data-v-5e4d908e]{min-height:20rem;padding:0 0 1.875rem;border-top-left-radius:.5rem;border-top-right-radius:.5rem;overflow:hidden}.group-heading[data-v-5e4d908e]{margin:0 2.5rem .375rem;padding-top:.5rem;font-size:.875rem;font-weight:500;line-height:1rem;text-align:left}.group-elements[data-v-5e4d908e]{display:flex;flex-wrap:wrap;width:100%;padding:0 1.875rem}.add-element[data-v-5e4d908e]{width:8.125rem;min-width:8.125rem;height:auto!important;min-height:4.375rem;padding:0!important;white-space:normal}.add-element[data-v-5e4d908e]  .v-btn__content{flex:1 1 100%;flex-direction:column;padding:.375rem;text-transform:none}.add-element .v-icon[data-v-5e4d908e]{padding:.125rem 0;font-size:1.875rem}.add-element .button-text[data-v-5e4d908e]{margin:.625rem 0}",
@@ -32462,16 +32483,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$1$1 = "data-v-5e4d908e";
+  var __vue_scope_id__$z = "data-v-5e4d908e";
   /* module identifier */
 
-  var __vue_module_identifier__$1$1 = undefined;
+  var __vue_module_identifier__$n = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$1$1 = false;
+  var __vue_is_functional_template__$z = false;
   /* component normalizer */
 
-  function __vue_normalize__$1$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$z(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "AddNewElement.vue";
@@ -32514,9 +32535,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$1$1() {
+  function __vue_create_injector__$n() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$1$1.styles || (__vue_create_injector__$1$1.styles = {});
+    var styles = __vue_create_injector__$n.styles || (__vue_create_injector__$n.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -32578,12 +32599,12 @@
   /* style inject SSR */
 
 
-  var AddNewElement$1 = __vue_normalize__$1$1({
-    render: __vue_render__$1$1,
-    staticRenderFns: __vue_staticRenderFns__$1$1
-  }, __vue_inject_styles__$1$1, __vue_script__$1$1, __vue_scope_id__$1$1, __vue_is_functional_template__$1$1, __vue_module_identifier__$1$1, __vue_create_injector__$1$1);
+  var AddNewElement = __vue_normalize__$z({
+    render: __vue_render__$z,
+    staticRenderFns: __vue_staticRenderFns__$z
+  }, __vue_inject_styles__$z, __vue_script__$z, __vue_scope_id__$z, __vue_is_functional_template__$z, __vue_module_identifier__$n, __vue_create_injector__$n);
 
-  function _defineProperty$1(obj, key, value) {
+  function _defineProperty(obj, key, value) {
     if (key in obj) {
       Object.defineProperty(obj, key, {
         value: value,
@@ -32598,27 +32619,27 @@
     return obj;
   }
 
-  function _slicedToArray$1(arr, i) {
-    return _arrayWithHoles$1(arr) || _iterableToArrayLimit$1(arr, i) || _unsupportedIterableToArray$1(arr, i) || _nonIterableRest$1();
+  function _slicedToArray(arr, i) {
+    return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
   }
 
-  function _toConsumableArray$1(arr) {
-    return _arrayWithoutHoles$1(arr) || _iterableToArray$1(arr) || _unsupportedIterableToArray$1(arr) || _nonIterableSpread$1();
+  function _toConsumableArray(arr) {
+    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
   }
 
-  function _arrayWithoutHoles$1(arr) {
-    if (Array.isArray(arr)) return _arrayLikeToArray$1(arr);
+  function _arrayWithoutHoles(arr) {
+    if (Array.isArray(arr)) return _arrayLikeToArray(arr);
   }
 
-  function _arrayWithHoles$1(arr) {
+  function _arrayWithHoles(arr) {
     if (Array.isArray(arr)) return arr;
   }
 
-  function _iterableToArray$1(iter) {
+  function _iterableToArray(iter) {
     if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
   }
 
-  function _iterableToArrayLimit$1(arr, i) {
+  function _iterableToArrayLimit(arr, i) {
     if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
     var _arr = [];
     var _n = true;
@@ -32645,16 +32666,16 @@
     return _arr;
   }
 
-  function _unsupportedIterableToArray$1(o, minLen) {
+  function _unsupportedIterableToArray(o, minLen) {
     if (!o) return;
-    if (typeof o === "string") return _arrayLikeToArray$1(o, minLen);
+    if (typeof o === "string") return _arrayLikeToArray(o, minLen);
     var n = Object.prototype.toString.call(o).slice(8, -1);
     if (n === "Object" && o.constructor) n = o.constructor.name;
     if (n === "Map" || n === "Set") return Array.from(o);
-    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$1(o, minLen);
+    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
   }
 
-  function _arrayLikeToArray$1(arr, len) {
+  function _arrayLikeToArray(arr, len) {
     if (len == null || len > arr.length) len = arr.length;
 
     for (var i = 0, arr2 = new Array(len); i < len; i++) {
@@ -32664,11 +32685,11 @@
     return arr2;
   }
 
-  function _nonIterableSpread$1() {
+  function _nonIterableSpread() {
     throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
   }
 
-  function _nonIterableRest$1() {
+  function _nonIterableRest() {
     throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
   } //
   //
@@ -32697,7 +32718,7 @@
   //
 
 
-  var script$2$1 = {
+  var script$y = {
     name: 'tailor-editor-link',
     props: {
       activityId: {
@@ -32706,7 +32727,7 @@
       },
       elementUid: {
         type: String,
-        default: null
+        "default": null
       },
       label: {
         type: String,
@@ -32732,10 +32753,10 @@
   };
   /* script */
 
-  var __vue_script__$2$1 = script$2$1;
+  var __vue_script__$y = script$y;
   /* template */
 
-  var __vue_render__$2$1 = function __vue_render__() {
+  var __vue_render__$y = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -32784,19 +32805,19 @@
     }, [_vm._v(" "), _vm._t("tooltip", [_c('span', [_vm._v("View element")])])], 2)], 1);
   };
 
-  var __vue_staticRenderFns__$2$1 = [];
+  var __vue_staticRenderFns__$y = [];
   /* style */
 
-  var __vue_inject_styles__$2$1 = undefined;
+  var __vue_inject_styles__$y = undefined;
   /* scoped */
 
-  var __vue_scope_id__$2$1 = undefined;
+  var __vue_scope_id__$y = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$2$1 = false;
+  var __vue_is_functional_template__$y = false;
   /* component normalizer */
 
-  function __vue_normalize__$2$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$y(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "EditorLink.vue";
@@ -32816,13 +32837,13 @@
   /* style inject SSR */
 
 
-  var EditorLink$1 = __vue_normalize__$2$1({
-    render: __vue_render__$2$1,
-    staticRenderFns: __vue_staticRenderFns__$2$1
-  }, __vue_inject_styles__$2$1, __vue_script__$2$1, __vue_scope_id__$2$1, __vue_is_functional_template__$2$1); //
+  var EditorLink = __vue_normalize__$y({
+    render: __vue_render__$y,
+    staticRenderFns: __vue_staticRenderFns__$y
+  }, __vue_inject_styles__$y, __vue_script__$y, __vue_scope_id__$y, __vue_is_functional_template__$y); //
 
 
-  var getOptions$1 = function getOptions() {
+  var getOptions = function getOptions() {
     return {
       resolve: {
         action: 'resolve',
@@ -32842,7 +32863,7 @@
     };
   };
 
-  var script$3$1 = {
+  var script$x = {
     name: 'comment-header',
     props: {
       comment: {
@@ -32851,15 +32872,15 @@
       },
       isActivityThread: {
         type: Boolean,
-        default: false
+        "default": false
       },
       isResolved: {
         type: Boolean,
-        default: false
+        "default": false
       },
       elementLabel: {
         type: String,
-        default: null
+        "default": null
       },
       user: {
         type: Object,
@@ -32886,21 +32907,21 @@
         return vm.isAuthor && !vm.isDeleted && !vm.isResolved;
       },
       options: function options() {
-        var options = getOptions$1();
+        var options = getOptions();
         if (this.isActivityThread) delete options.resolve;
         return options;
       }
     },
     components: {
-      EditorLink: EditorLink$1
+      EditorLink: EditorLink
     }
   };
   /* script */
 
-  var __vue_script__$3$1 = script$3$1;
+  var __vue_script__$x = script$x;
   /* template */
 
-  var __vue_render__$3$1 = function __vue_render__() {
+  var __vue_render__$x = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -32993,10 +33014,10 @@
     }), 1) : _vm._e()], 1);
   };
 
-  var __vue_staticRenderFns__$3$1 = [];
+  var __vue_staticRenderFns__$x = [];
   /* style */
 
-  var __vue_inject_styles__$3$1 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$x = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-a1e0c4e8_0", {
       source: ".header[data-v-a1e0c4e8]{display:flex;align-items:flex-start}.header .comment-avatar[data-v-a1e0c4e8]{margin:.375rem .375rem 0 0}.header .info-container[data-v-a1e0c4e8]{display:flex;flex-direction:column;flex:0 100%;max-width:calc(100% - 8rem);margin-left:.125rem}.header .info-container .author[data-v-a1e0c4e8]{display:inline-block;max-width:75%;color:#000;font-size:1rem}.header .info-container .edited[data-v-a1e0c4e8],.header .info-container .time[data-v-a1e0c4e8]{color:#888;font-size:.75rem}.header .info-container hr.v-divider--vertical[data-v-a1e0c4e8]{margin:.25rem .125rem .125rem .625rem}.header .info-container[data-v-a1e0c4e8]  .editor-link{display:inline-flex;align-self:flex-end}.header .actions[data-v-a1e0c4e8]{margin-left:auto}",
@@ -33007,16 +33028,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$3$1 = "data-v-a1e0c4e8";
+  var __vue_scope_id__$x = "data-v-a1e0c4e8";
   /* module identifier */
 
-  var __vue_module_identifier__$2$1 = undefined;
+  var __vue_module_identifier__$m = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$3$1 = false;
+  var __vue_is_functional_template__$x = false;
   /* component normalizer */
 
-  function __vue_normalize__$3$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$x(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "Header.vue";
@@ -33059,9 +33080,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$2$1() {
+  function __vue_create_injector__$m() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$2$1.styles || (__vue_create_injector__$2$1.styles = {});
+    var styles = __vue_create_injector__$m.styles || (__vue_create_injector__$m.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -33123,10 +33144,10 @@
   /* style inject SSR */
 
 
-  var CommentHeader$1 = __vue_normalize__$3$1({
-    render: __vue_render__$3$1,
-    staticRenderFns: __vue_staticRenderFns__$3$1
-  }, __vue_inject_styles__$3$1, __vue_script__$3$1, __vue_scope_id__$3$1, __vue_is_functional_template__$3$1, __vue_module_identifier__$2$1, __vue_create_injector__$2$1); //
+  var CommentHeader = __vue_normalize__$x({
+    render: __vue_render__$x,
+    staticRenderFns: __vue_staticRenderFns__$x
+  }, __vue_inject_styles__$x, __vue_script__$x, __vue_scope_id__$x, __vue_is_functional_template__$x, __vue_module_identifier__$m, __vue_create_injector__$m); //
   //
   //
   //
@@ -33149,25 +33170,25 @@
   //
 
 
-  var script$4$1 = {
+  var script$w = {
     name: 'comment-preview',
     props: {
       content: {
         type: String,
-        default: ''
+        "default": ''
       },
       isResolved: {
         type: Boolean,
-        default: false
+        "default": false
       }
     }
   };
   /* script */
 
-  var __vue_script__$4$1 = script$4$1;
+  var __vue_script__$w = script$w;
   /* template */
 
-  var __vue_render__$4$1 = function __vue_render__() {
+  var __vue_render__$w = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -33176,7 +33197,7 @@
 
     return _c('div', {
       staticClass: "content",
-      class: {
+      "class": {
         resolved: _vm.isResolved
       }
     }, [_vm.isResolved ? _c('div', {
@@ -33207,10 +33228,10 @@
     }, [_vm._v(" "), _c('span', [_vm._v("Unresolve comment")])])], 1) : _vm._e(), _vm._v(" "), _c('pre', [_c('span', [_vm._v(_vm._s(_vm.content))]), _c('br')])]);
   };
 
-  var __vue_staticRenderFns__$4$1 = [];
+  var __vue_staticRenderFns__$w = [];
   /* style */
 
-  var __vue_inject_styles__$4$1 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$w = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-3d625308_0", {
       source: ".content[data-v-3d625308]{margin-top:.375rem}.content pre[data-v-3d625308]{height:100%;margin:0;padding:0 .25rem .5rem 0;font:inherit;white-space:pre-wrap;word-break:break-all;word-wrap:break-word;overflow-wrap:break-word;background:inherit;border:none;overflow:hidden}.content.resolved[data-v-3d625308]{opacity:.7}.content.resolved .resolvement-options[data-v-3d625308]{display:flex;align-items:center;margin-bottom:.25rem;font-size:.75rem}",
@@ -33221,16 +33242,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$4$1 = "data-v-3d625308";
+  var __vue_scope_id__$w = "data-v-3d625308";
   /* module identifier */
 
-  var __vue_module_identifier__$3$1 = undefined;
+  var __vue_module_identifier__$l = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$4$1 = false;
+  var __vue_is_functional_template__$w = false;
   /* component normalizer */
 
-  function __vue_normalize__$4$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$w(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "Preview.vue";
@@ -33273,9 +33294,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$3$1() {
+  function __vue_create_injector__$l() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$3$1.styles || (__vue_create_injector__$3$1.styles = {});
+    var styles = __vue_create_injector__$l.styles || (__vue_create_injector__$l.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -33337,13 +33358,13 @@
   /* style inject SSR */
 
 
-  var CommentPreview$1 = __vue_normalize__$4$1({
-    render: __vue_render__$4$1,
-    staticRenderFns: __vue_staticRenderFns__$4$1
-  }, __vue_inject_styles__$4$1, __vue_script__$4$1, __vue_scope_id__$4$1, __vue_is_functional_template__$4$1, __vue_module_identifier__$3$1, __vue_create_injector__$3$1); //
+  var CommentPreview = __vue_normalize__$w({
+    render: __vue_render__$w,
+    staticRenderFns: __vue_staticRenderFns__$w
+  }, __vue_inject_styles__$w, __vue_script__$w, __vue_scope_id__$w, __vue_is_functional_template__$w, __vue_module_identifier__$l, __vue_create_injector__$l); //
 
 
-  var script$5$1 = {
+  var script$v = {
     name: 'thread-comment',
     props: {
       comment: {
@@ -33352,11 +33373,11 @@
       },
       isActivityThread: {
         type: Boolean,
-        default: false
+        "default": false
       },
       elementLabel: {
         type: String,
-        default: null
+        "default": null
       },
       user: {
         type: Object,
@@ -33401,16 +33422,16 @@
       }
     },
     components: {
-      CommentHeader: CommentHeader$1,
-      CommentPreview: CommentPreview$1
+      CommentHeader: CommentHeader,
+      CommentPreview: CommentPreview
     }
   };
   /* script */
 
-  var __vue_script__$5$1 = script$5$1;
+  var __vue_script__$v = script$v;
   /* template */
 
-  var __vue_render__$5$1 = function __vue_render__() {
+  var __vue_render__$v = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -33485,10 +33506,10 @@
     }, [_vm._v("mdi-check")]), _vm._v(" Save\n        ")], 1)], 1)]], 2)], 1);
   };
 
-  var __vue_staticRenderFns__$5$1 = [];
+  var __vue_staticRenderFns__$v = [];
   /* style */
 
-  var __vue_inject_styles__$5$1 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$v = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-3d04e7dc_0", {
       source: ".comment[data-v-3d04e7dc]{display:flex;flex-direction:column;font-family:Roboto,Arial,sans-serif}.comment-body[data-v-3d04e7dc]{flex:1;padding:0 .25rem 0 2.625rem}.comment-editor.v-textarea[data-v-3d04e7dc]{margin:.75rem 0 0 0}.comment-editor.v-textarea[data-v-3d04e7dc]  .v-input__slot{width:auto}",
@@ -33499,16 +33520,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$5$1 = "data-v-3d04e7dc";
+  var __vue_scope_id__$v = "data-v-3d04e7dc";
   /* module identifier */
 
-  var __vue_module_identifier__$4$1 = undefined;
+  var __vue_module_identifier__$k = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$5$1 = false;
+  var __vue_is_functional_template__$v = false;
   /* component normalizer */
 
-  function __vue_normalize__$5$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$v(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "index.vue";
@@ -33551,9 +33572,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$4$1() {
+  function __vue_create_injector__$k() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$4$1.styles || (__vue_create_injector__$4$1.styles = {});
+    var styles = __vue_create_injector__$k.styles || (__vue_create_injector__$k.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -33615,29 +33636,29 @@
   /* style inject SSR */
 
 
-  var ThreadComment$1 = __vue_normalize__$5$1({
-    render: __vue_render__$5$1,
-    staticRenderFns: __vue_staticRenderFns__$5$1
-  }, __vue_inject_styles__$5$1, __vue_script__$5$1, __vue_scope_id__$5$1, __vue_is_functional_template__$5$1, __vue_module_identifier__$4$1, __vue_create_injector__$4$1); //
+  var ThreadComment = __vue_normalize__$v({
+    render: __vue_render__$v,
+    staticRenderFns: __vue_staticRenderFns__$v
+  }, __vue_inject_styles__$v, __vue_script__$v, __vue_scope_id__$v, __vue_is_functional_template__$v, __vue_module_identifier__$k, __vue_create_injector__$k); //
 
 
-  var script$6$1 = {
+  var script$u = {
     name: 'thread-list',
     inject: ['$teRegistry'],
     props: {
       comments: {
         type: Array,
-        default: function _default() {
+        "default": function _default() {
           return [];
         }
       },
       isActivityThread: {
         type: Boolean,
-        default: false
+        "default": false
       },
       elementLabel: {
         type: String,
-        default: null
+        "default": null
       },
       user: {
         type: Object,
@@ -33656,15 +33677,15 @@
       }
     },
     components: {
-      ThreadComment: ThreadComment$1
+      ThreadComment: ThreadComment
     }
   };
   /* script */
 
-  var __vue_script__$6$1 = script$6$1;
+  var __vue_script__$u = script$u;
   /* template */
 
-  var __vue_render__$6$1 = function __vue_render__() {
+  var __vue_render__$u = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -33690,10 +33711,10 @@
     }), 0);
   };
 
-  var __vue_staticRenderFns__$6$1 = [];
+  var __vue_staticRenderFns__$u = [];
   /* style */
 
-  var __vue_inject_styles__$6$1 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$u = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-b5620cec_0", {
       source: ".thread-list[data-v-b5620cec]{margin:0;padding:0;list-style:none}.thread-list .thread-list-item .v-divider[data-v-b5620cec]{margin:0 .25rem 1rem .25rem}.thread-list .thread-list-item:first-child .v-divider[data-v-b5620cec]{display:none}",
@@ -33704,16 +33725,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$6$1 = "data-v-b5620cec";
+  var __vue_scope_id__$u = "data-v-b5620cec";
   /* module identifier */
 
-  var __vue_module_identifier__$5$1 = undefined;
+  var __vue_module_identifier__$j = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$6$1 = false;
+  var __vue_is_functional_template__$u = false;
   /* component normalizer */
 
-  function __vue_normalize__$6$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$u(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "List.vue";
@@ -33756,9 +33777,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$5$1() {
+  function __vue_create_injector__$j() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$5$1.styles || (__vue_create_injector__$5$1.styles = {});
+    var styles = __vue_create_injector__$j.styles || (__vue_create_injector__$j.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -33820,13 +33841,13 @@
   /* style inject SSR */
 
 
-  var ThreadList$1 = __vue_normalize__$6$1({
-    render: __vue_render__$6$1,
-    staticRenderFns: __vue_staticRenderFns__$6$1
-  }, __vue_inject_styles__$6$1, __vue_script__$6$1, __vue_scope_id__$6$1, __vue_is_functional_template__$6$1, __vue_module_identifier__$5$1, __vue_create_injector__$5$1); //
+  var ThreadList = __vue_normalize__$u({
+    render: __vue_render__$u,
+    staticRenderFns: __vue_staticRenderFns__$u
+  }, __vue_inject_styles__$u, __vue_script__$u, __vue_scope_id__$u, __vue_is_functional_template__$u, __vue_module_identifier__$j, __vue_create_injector__$j); //
 
 
-  var script$7$1 = {
+  var script$t = {
     name: 'unseen-divider',
     props: {
       count: {
@@ -33843,10 +33864,10 @@
   };
   /* script */
 
-  var __vue_script__$7$1 = script$7$1;
+  var __vue_script__$t = script$t;
   /* template */
 
-  var __vue_render__$7$1 = function __vue_render__() {
+  var __vue_render__$t = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -33881,10 +33902,10 @@
     }, [_vm._v(_vm._s(_vm.unseenCommentsLabel))])], 1)], 1);
   };
 
-  var __vue_staticRenderFns__$7$1 = [];
+  var __vue_staticRenderFns__$t = [];
   /* style */
 
-  var __vue_inject_styles__$7$1 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$t = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-221b9d72_0", {
       source: ".unseen-divider[data-v-221b9d72]{text-align:center}.unseen-divider .v-divider[data-v-221b9d72]{margin:1rem 0 .25rem}.unseen-divider[data-v-221b9d72]  .v-chip.v-chip--outlined.v-chip{margin:-1.5rem 0 .5rem 0;border-radius:1rem!important;background-color:#fafafa!important}.unseen-divider[data-v-221b9d72]  .v-chip.v-chip--outlined.v-chip .v-chip__content .v-chip__close{margin-top:.125rem;font-size:.75rem!important}",
@@ -33895,16 +33916,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$7$1 = "data-v-221b9d72";
+  var __vue_scope_id__$t = "data-v-221b9d72";
   /* module identifier */
 
-  var __vue_module_identifier__$6$1 = undefined;
+  var __vue_module_identifier__$i = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$7$1 = false;
+  var __vue_is_functional_template__$t = false;
   /* component normalizer */
 
-  function __vue_normalize__$7$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$t(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "UnseenDivider.vue";
@@ -33947,9 +33968,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$6$1() {
+  function __vue_create_injector__$i() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$6$1.styles || (__vue_create_injector__$6$1.styles = {});
+    var styles = __vue_create_injector__$i.styles || (__vue_create_injector__$i.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -34011,12 +34032,12 @@
   /* style inject SSR */
 
 
-  var UnseenDivider$1 = __vue_normalize__$7$1({
-    render: __vue_render__$7$1,
-    staticRenderFns: __vue_staticRenderFns__$7$1
-  }, __vue_inject_styles__$7$1, __vue_script__$7$1, __vue_scope_id__$7$1, __vue_is_functional_template__$7$1, __vue_module_identifier__$6$1, __vue_create_injector__$6$1);
+  var UnseenDivider = __vue_normalize__$t({
+    render: __vue_render__$t,
+    staticRenderFns: __vue_staticRenderFns__$t
+  }, __vue_inject_styles__$t, __vue_script__$t, __vue_scope_id__$t, __vue_is_functional_template__$t, __vue_module_identifier__$i, __vue_create_injector__$i);
 
-  var script$8$1 = {
+  var script$s = {
     name: 'discussion-thread',
     props: {
       items: {
@@ -34025,15 +34046,15 @@
       },
       showAll: {
         type: Boolean,
-        default: false
+        "default": false
       },
       minDisplayed: {
         type: Number,
-        default: 5
+        "default": 5
       },
       isActivityThread: {
         type: Boolean,
-        default: false
+        "default": false
       },
       unseenCount: {
         type: Number,
@@ -34057,7 +34078,7 @@
         var comments = showAll ? items : takeRgt__default['default'](items, minDisplayed);
 
         var _partition = partition__default['default'](comments, 'unseen'),
-            _partition2 = _slicedToArray$1(_partition, 2),
+            _partition2 = _slicedToArray(_partition, 2),
             unseen = _partition2[0],
             seen = _partition2[1];
 
@@ -34105,16 +34126,16 @@
       }
     },
     components: {
-      UnseenDivider: UnseenDivider$1,
-      ThreadList: ThreadList$1
+      UnseenDivider: UnseenDivider,
+      ThreadList: ThreadList
     }
   };
   /* script */
 
-  var __vue_script__$8$1 = script$8$1;
+  var __vue_script__$s = script$s;
   /* template */
 
-  var __vue_render__$8$1 = function __vue_render__() {
+  var __vue_render__$s = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -34129,7 +34150,7 @@
         expression: "onIntersect"
       }],
       staticClass: "discussion-thread",
-      class: {
+      "class": {
         'scroll-container': !_vm.isActivityThread
       }
     }, [_c('thread-list', _vm._b({
@@ -34181,10 +34202,10 @@
     }, false))], 1);
   };
 
-  var __vue_staticRenderFns__$8$1 = [];
+  var __vue_staticRenderFns__$s = [];
   /* style */
 
-  var __vue_inject_styles__$8$1 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$s = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-c6af8436_0", {
       source: ".discussion-thread[data-v-c6af8436]{width:100%}.discussion-thread.scroll-container[data-v-c6af8436]{max-height:31.25rem;overflow-y:scroll;overflow-x:hidden;padding-right:1.5rem;box-sizing:content-box}.discussion-thread .fade-enter-active[data-v-c6af8436],.discussion-thread .fade-leave-active[data-v-c6af8436]{transition:opacity .5s}.discussion-thread .fade-enter[data-v-c6af8436],.discussion-thread .fade-leave-to[data-v-c6af8436]{opacity:0}",
@@ -34195,16 +34216,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$8$1 = "data-v-c6af8436";
+  var __vue_scope_id__$s = "data-v-c6af8436";
   /* module identifier */
 
-  var __vue_module_identifier__$7$1 = undefined;
+  var __vue_module_identifier__$h = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$8$1 = false;
+  var __vue_is_functional_template__$s = false;
   /* component normalizer */
 
-  function __vue_normalize__$8$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$s(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "index.vue";
@@ -34247,9 +34268,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$7$1() {
+  function __vue_create_injector__$h() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$7$1.styles || (__vue_create_injector__$7$1.styles = {});
+    var styles = __vue_create_injector__$h.styles || (__vue_create_injector__$h.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -34311,10 +34332,10 @@
   /* style inject SSR */
 
 
-  var DiscussionThread$1 = __vue_normalize__$8$1({
-    render: __vue_render__$8$1,
-    staticRenderFns: __vue_staticRenderFns__$8$1
-  }, __vue_inject_styles__$8$1, __vue_script__$8$1, __vue_scope_id__$8$1, __vue_is_functional_template__$8$1, __vue_module_identifier__$7$1, __vue_create_injector__$7$1); //
+  var DiscussionThread = __vue_normalize__$s({
+    render: __vue_render__$s,
+    staticRenderFns: __vue_staticRenderFns__$s
+  }, __vue_inject_styles__$s, __vue_script__$s, __vue_scope_id__$s, __vue_is_functional_template__$s, __vue_module_identifier__$h, __vue_create_injector__$h); //
   //
   //
   //
@@ -34336,15 +34357,15 @@
   //
 
 
-  var script$9$1 = {
+  var script$r = {
     name: 'resolve-comments-btn'
   };
   /* script */
 
-  var __vue_script__$9$1 = script$9$1;
+  var __vue_script__$r = script$r;
   /* template */
 
-  var __vue_render__$9$1 = function __vue_render__() {
+  var __vue_render__$r = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -34381,19 +34402,19 @@
     }, [_vm._v(" "), _c('span', [_vm._v("Mark all as resolved and hide discussion")])])], 1);
   };
 
-  var __vue_staticRenderFns__$9$1 = [];
+  var __vue_staticRenderFns__$r = [];
   /* style */
 
-  var __vue_inject_styles__$9$1 = undefined;
+  var __vue_inject_styles__$r = undefined;
   /* scoped */
 
-  var __vue_scope_id__$9$1 = undefined;
+  var __vue_scope_id__$r = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$9$1 = false;
+  var __vue_is_functional_template__$r = false;
   /* component normalizer */
 
-  function __vue_normalize__$9$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$r(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "ResolveButton.vue";
@@ -34413,61 +34434,61 @@
   /* style inject SSR */
 
 
-  var ResolveButton$1 = __vue_normalize__$9$1({
-    render: __vue_render__$9$1,
-    staticRenderFns: __vue_staticRenderFns__$9$1
-  }, __vue_inject_styles__$9$1, __vue_script__$9$1, __vue_scope_id__$9$1, __vue_is_functional_template__$9$1); //
+  var ResolveButton = __vue_normalize__$r({
+    render: __vue_render__$r,
+    staticRenderFns: __vue_staticRenderFns__$r
+  }, __vue_inject_styles__$r, __vue_script__$r, __vue_scope_id__$r, __vue_is_functional_template__$r); //
 
 
-  var initCommentInput$1 = function initCommentInput() {
+  var initCommentInput = function initCommentInput() {
     return {
       content: ''
     };
   };
 
-  var script$a$1 = {
+  var script$q = {
     name: 'tailor-embedded-discussion',
     inheritAttrs: true,
     props: {
       comments: {
         type: Array,
-        default: function _default() {
+        "default": function _default() {
           return [];
         }
       },
       unseenComments: {
         type: Array,
-        default: function _default() {
+        "default": function _default() {
           return [];
         }
       },
       commentsShownLimit: {
         type: Number,
-        default: 5
+        "default": 5
       },
       scrollTarget: {
         type: String,
-        default: 'discussion'
+        "default": 'discussion'
       },
       showHeading: {
         type: Boolean,
-        default: false
+        "default": false
       },
       showNotifications: {
         type: Boolean,
-        default: false
+        "default": false
       },
       isActivityThread: {
         type: Boolean,
-        default: false
+        "default": false
       },
       hasUnresolvedComments: {
         type: Boolean,
-        default: false
+        "default": false
       },
       isVisible: {
         type: Boolean,
-        default: false
+        "default": false
       },
       user: {
         type: Object,
@@ -34477,7 +34498,7 @@
     data: function data() {
       return {
         showAll: false,
-        comment: initCommentInput$1()
+        comment: initCommentInput()
       };
     },
     computed: {
@@ -34523,7 +34544,7 @@
           createdAt: Date.now(),
           updatedAt: Date.now()
         };
-        this.comment = initCommentInput$1();
+        this.comment = initCommentInput();
         this.$emit('save', payload); // Keep editor/discussion container inside viewport.
 
         var scrollOptions = {
@@ -34592,19 +34613,19 @@
       }
     },
     created: function created() {
-      this.comment = initCommentInput$1();
+      this.comment = initCommentInput();
     },
     components: {
-      DiscussionThread: DiscussionThread$1,
-      ResolveButton: ResolveButton$1
+      DiscussionThread: DiscussionThread,
+      ResolveButton: ResolveButton
     }
   };
   /* script */
 
-  var __vue_script__$a$1 = script$a$1;
+  var __vue_script__$q = script$q;
   /* template */
 
-  var __vue_render__$a$1 = function __vue_render__() {
+  var __vue_render__$q = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -34619,7 +34640,7 @@
         "click": _vm.resolveAll
       }
     }) : _vm._e(), _vm._v(" "), _c('div', {
-      class: {
+      "class": {
         'pb-7': !_vm.showHeading && _vm.hasHiddenComments
       }
     }, [_vm.hasHiddenComments ? _c('v-btn', {
@@ -34714,10 +34735,10 @@
     }, [_c('v-icon', [_vm._v("mdi-send")])], 1)], 1)], 1);
   };
 
-  var __vue_staticRenderFns__$a$1 = [];
+  var __vue_staticRenderFns__$q = [];
   /* style */
 
-  var __vue_inject_styles__$a$1 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$q = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-5744b719_0", {
       source: ".embedded-discussion[data-v-5744b719]{font-family:Roboto,Arial,sans-serif}.embedded-discussion .resolve-btn-container[data-v-5744b719]{display:flex;justify-content:flex-end;margin:.5rem 0 0 0}.embedded-discussion .header[data-v-5744b719]{margin:.875rem 0 1.625rem 0;font-size:1.125rem;font-weight:400}.embedded-discussion .comment-input[data-v-5744b719]{margin:0 .25rem 0 .25rem}.embedded-discussion .alert[data-v-5744b719]  .v-icon{color:var(--v-primary-darken2)!important}",
@@ -34728,16 +34749,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$a$1 = "data-v-5744b719";
+  var __vue_scope_id__$q = "data-v-5744b719";
   /* module identifier */
 
-  var __vue_module_identifier__$8$1 = undefined;
+  var __vue_module_identifier__$g = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$a$1 = false;
+  var __vue_is_functional_template__$q = false;
   /* component normalizer */
 
-  function __vue_normalize__$a$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$q(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "index.vue";
@@ -34780,9 +34801,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$8$1() {
+  function __vue_create_injector__$g() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$8$1.styles || (__vue_create_injector__$8$1.styles = {});
+    var styles = __vue_create_injector__$g.styles || (__vue_create_injector__$g.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -34844,16 +34865,16 @@
   /* style inject SSR */
 
 
-  var Discussion$2 = __vue_normalize__$a$1({
-    render: __vue_render__$a$1,
-    staticRenderFns: __vue_staticRenderFns__$a$1
-  }, __vue_inject_styles__$a$1, __vue_script__$a$1, __vue_scope_id__$a$1, __vue_is_functional_template__$a$1, __vue_module_identifier__$8$1, __vue_create_injector__$8$1); //
+  var Discussion$1 = __vue_normalize__$q({
+    render: __vue_render__$q,
+    staticRenderFns: __vue_staticRenderFns__$q
+  }, __vue_inject_styles__$q, __vue_script__$q, __vue_scope_id__$q, __vue_is_functional_template__$q, __vue_module_identifier__$g, __vue_create_injector__$g); //
 
 
-  var getActivatorOptions$1 = function getActivatorOptions(unseenComments) {
+  var getActivatorOptions = function getActivatorOptions(unseenComments) {
     return {
       unseen: {
-        class: 'teal accent-4 white--text',
+        "class": 'teal accent-4 white--text',
         tooltip: 'View new comments',
         text: unseenComments.length
       },
@@ -34870,12 +34891,12 @@
     };
   };
 
-  var script$b$1 = {
+  var script$p = {
     name: 'tailor-element-discussion',
     props: {
       id: {
         type: Number,
-        default: null
+        "default": null
       },
       uid: {
         type: String,
@@ -34887,7 +34908,7 @@
       },
       hasUnresolvedComments: {
         type: Boolean,
-        default: false
+        "default": false
       },
       lastSeen: {
         type: Number,
@@ -34926,7 +34947,7 @@
         var comments = this.comments,
             unseenComments = this.unseenComments;
         var type = unseenComments.length ? 'unseen' : comments.length ? 'preview' : 'post';
-        return getActivatorOptions$1(unseenComments)[type];
+        return getActivatorOptions(unseenComments)[type];
       }
     }),
     methods: {
@@ -34971,15 +34992,15 @@
       }
     },
     components: {
-      Discussion: Discussion$2
+      Discussion: Discussion$1
     }
   };
   /* script */
 
-  var __vue_script__$b$1 = script$b$1;
+  var __vue_script__$p = script$p;
   /* template */
 
-  var __vue_render__$b$1 = function __vue_render__() {
+  var __vue_render__$p = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -35015,7 +35036,7 @@
               fn: function fn(ref) {
                 var tooltip = ref.on;
                 return [_c('v-btn', _vm._g({
-                  class: _vm.activator.class,
+                  "class": _vm.activator["class"],
                   attrs: {
                     "x-small": "",
                     "icon": ""
@@ -35069,10 +35090,10 @@
     }, false))], 1);
   };
 
-  var __vue_staticRenderFns__$b$1 = [];
+  var __vue_staticRenderFns__$p = [];
   /* style */
 
-  var __vue_inject_styles__$b$1 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$p = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-382b8ce9_0", {
       source: "[data-v-382b8ce9] .v-menu__content{background:#fff}[data-v-382b8ce9] .v-menu__content .embedded-discussion{text-align:left}[data-v-382b8ce9] .v-menu__content .comment .author{font-size:.875rem}.unseen[data-v-382b8ce9]{font-size:.75rem}",
@@ -35083,16 +35104,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$b$1 = "data-v-382b8ce9";
+  var __vue_scope_id__$p = "data-v-382b8ce9";
   /* module identifier */
 
-  var __vue_module_identifier__$9$1 = undefined;
+  var __vue_module_identifier__$f = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$b$1 = false;
+  var __vue_is_functional_template__$p = false;
   /* component normalizer */
 
-  function __vue_normalize__$b$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$p(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "ElementDiscussion.vue";
@@ -35135,9 +35156,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$9$1() {
+  function __vue_create_injector__$f() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$9$1.styles || (__vue_create_injector__$9$1.styles = {});
+    var styles = __vue_create_injector__$f.styles || (__vue_create_injector__$f.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -35199,13 +35220,13 @@
   /* style inject SSR */
 
 
-  var Discussion$1$1 = __vue_normalize__$b$1({
-    render: __vue_render__$b$1,
-    staticRenderFns: __vue_staticRenderFns__$b$1
-  }, __vue_inject_styles__$b$1, __vue_script__$b$1, __vue_scope_id__$b$1, __vue_is_functional_template__$b$1, __vue_module_identifier__$9$1, __vue_create_injector__$9$1); //
+  var Discussion = __vue_normalize__$p({
+    render: __vue_render__$p,
+    staticRenderFns: __vue_staticRenderFns__$p
+  }, __vue_inject_styles__$p, __vue_script__$p, __vue_scope_id__$p, __vue_is_functional_template__$p, __vue_module_identifier__$f, __vue_create_injector__$f); //
 
 
-  var script$c$1 = {
+  var script$o = {
     name: 'tailor-publish-diff-chip',
     props: {
       changeType: {
@@ -35213,16 +35234,16 @@
           if (!value) return true;
           return Object.values(utils.publishDiffChangeTypes).includes(value);
         },
-        default: null
+        "default": null
       }
     }
   };
   /* script */
 
-  var __vue_script__$c$1 = script$c$1;
+  var __vue_script__$o = script$o;
   /* template */
 
-  var __vue_render__$c$1 = function __vue_render__() {
+  var __vue_render__$o = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -35240,19 +35261,19 @@
     }, [_vm._v("\n  " + _vm._s(_vm.changeType) + "\n")]) : _vm._e();
   };
 
-  var __vue_staticRenderFns__$c$1 = [];
+  var __vue_staticRenderFns__$o = [];
   /* style */
 
-  var __vue_inject_styles__$c$1 = undefined;
+  var __vue_inject_styles__$o = undefined;
   /* scoped */
 
-  var __vue_scope_id__$c$1 = undefined;
+  var __vue_scope_id__$o = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$c$1 = false;
+  var __vue_is_functional_template__$o = false;
   /* component normalizer */
 
-  function __vue_normalize__$c$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$o(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "PublishDiffChip.vue";
@@ -35272,18 +35293,18 @@
   /* style inject SSR */
 
 
-  var PublishDiffChip$1 = __vue_normalize__$c$1({
-    render: __vue_render__$c$1,
-    staticRenderFns: __vue_staticRenderFns__$c$1
-  }, __vue_inject_styles__$c$1, __vue_script__$c$1, __vue_scope_id__$c$1, __vue_is_functional_template__$c$1); //
+  var PublishDiffChip = __vue_normalize__$o({
+    render: __vue_render__$o,
+    staticRenderFns: __vue_staticRenderFns__$o
+  }, __vue_inject_styles__$o, __vue_script__$o, __vue_scope_id__$o, __vue_is_functional_template__$o); //
 
 
-  var script$d$1 = {
+  var script$n = {
     name: 'tailor-content-element',
     inject: {
       $getCurrentUser: {},
       $editorState: {
-        default: {}
+        "default": {}
       }
     },
     inheritAttrs: false,
@@ -35294,31 +35315,31 @@
       },
       parent: {
         type: Object,
-        default: null
+        "default": null
       },
       isHovered: {
         type: Boolean,
-        default: false
+        "default": false
       },
       isDragged: {
         type: Boolean,
-        default: false
+        "default": false
       },
       isDisabled: {
         type: Boolean,
-        default: false
+        "default": false
       },
       frame: {
         type: Boolean,
-        default: true
+        "default": true
       },
       dense: {
         type: Boolean,
-        default: false
+        "default": false
       },
       showDiscussion: {
         type: Boolean,
-        default: false
+        "default": false
       }
     },
     data: function data() {
@@ -35426,17 +35447,17 @@
       };
     },
     components: {
-      ActiveUsers: ActiveUsers$1,
-      Discussion: Discussion$1$1,
-      PublishDiffChip: PublishDiffChip$1
+      ActiveUsers: ActiveUsers,
+      Discussion: Discussion,
+      PublishDiffChip: PublishDiffChip
     }
   };
   /* script */
 
-  var __vue_script__$d$1 = script$d$1;
+  var __vue_script__$n = script$n;
   /* template */
 
-  var __vue_render__$d$1 = function __vue_render__() {
+  var __vue_render__$n = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -35445,7 +35466,7 @@
 
     return _c('div', {
       staticClass: "content-element",
-      class: [_vm.element.changeSincePublish, {
+      "class": [_vm.element.changeSincePublish, {
         selected: _vm.activeUsers.length,
         focused: _vm.isFocused,
         diff: _vm.$editorState.isPublishDiff,
@@ -35456,7 +35477,7 @@
       }
     }, [_c('div', {
       staticClass: "header d-flex",
-      class: {
+      "class": {
         visible: _vm.$editorState.isPublishDiff && _vm.element.changeSincePublish
       }
     }, [_c('publish-diff-chip', {
@@ -35494,7 +35515,7 @@
     }), false)), _vm._v(" "), !_vm.isDisabled ? _c('div', {
       staticClass: "element-actions"
     }, [_vm.showDiscussion ? _c('div', {
-      class: {
+      "class": {
         'is-visible': _vm.isHighlighted || _vm.hasComments
       }
     }, [_c('discussion', _vm._b({
@@ -35505,7 +35526,7 @@
         "open": _vm.focus
       }
     }, 'discussion', _vm.element, false))], 1) : _vm._e(), _vm._v(" "), !_vm.parent ? _c('div', {
-      class: {
+      "class": {
         'is-visible': _vm.isHighlighted
       }
     }, [_c('v-btn', {
@@ -35534,10 +35555,10 @@
     }) : _vm._e()], 1);
   };
 
-  var __vue_staticRenderFns__$d$1 = [];
+  var __vue_staticRenderFns__$n = [];
   /* style */
 
-  var __vue_inject_styles__$d$1 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$n = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-74c5ccda_0", {
       source: ".content-element[data-v-74c5ccda]{position:relative;border:1px solid transparent}.content-element[data-v-74c5ccda]::after{content:'';display:none;position:absolute;top:0;right:-.125rem;width:.125rem;height:100%}.content-element.focused[data-v-74c5ccda]{border:1px dashed #1de9b6}.content-element.focused[data-v-74c5ccda]::after{display:block;background:#1de9b6}.content-element.selected[data-v-74c5ccda]{border:1px dashed #ff4081}.content-element.selected[data-v-74c5ccda]::after{display:block;background:#ff4081}.frame[data-v-74c5ccda]{padding:10px 20px;border:1px solid #e1e1e1}.element-actions[data-v-74c5ccda]{display:flex;flex-direction:column;position:absolute;top:-.0625rem;right:-1.25rem;width:1.5rem;height:100%;padding-left:.75rem}.element-actions>*[data-v-74c5ccda]{min-height:1.75rem;opacity:0;transition:opacity .1s linear}.element-actions>.is-visible[data-v-74c5ccda]{opacity:1;transition:opacity .5s linear}.active-users[data-v-74c5ccda]{position:absolute;top:0;left:-1.625rem}.save-indicator[data-v-74c5ccda]{position:absolute;bottom:-.125rem;left:0}.header[data-v-74c5ccda]{width:100%;max-height:0}.header.visible[data-v-74c5ccda]{max-height:unset;padding:0 0 .5rem}.diff.new[data-v-74c5ccda]{border:none;box-shadow:0 0 0 2px var(--v-success-lighten2)!important}.diff.changed[data-v-74c5ccda],.diff.removed[data-v-74c5ccda]{border:none;box-shadow:0 0 0 2px var(--v-secondary-lighten4)!important}.diff .element-actions[data-v-74c5ccda]{display:none}",
@@ -35548,16 +35569,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$d$1 = "data-v-74c5ccda";
+  var __vue_scope_id__$n = "data-v-74c5ccda";
   /* module identifier */
 
-  var __vue_module_identifier__$a$1 = undefined;
+  var __vue_module_identifier__$e = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$d$1 = false;
+  var __vue_is_functional_template__$n = false;
   /* component normalizer */
 
-  function __vue_normalize__$d$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$n(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "ContentElement.vue";
@@ -35600,9 +35621,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$a$1() {
+  function __vue_create_injector__$e() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$a$1.styles || (__vue_create_injector__$a$1.styles = {});
+    var styles = __vue_create_injector__$e.styles || (__vue_create_injector__$e.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -35664,13 +35685,13 @@
   /* style inject SSR */
 
 
-  var ContentElement$2 = __vue_normalize__$d$1({
-    render: __vue_render__$d$1,
-    staticRenderFns: __vue_staticRenderFns__$d$1
-  }, __vue_inject_styles__$d$1, __vue_script__$d$1, __vue_scope_id__$d$1, __vue_is_functional_template__$d$1, __vue_module_identifier__$a$1, __vue_create_injector__$a$1); //
+  var ContentElement$1 = __vue_normalize__$n({
+    render: __vue_render__$n,
+    staticRenderFns: __vue_staticRenderFns__$n
+  }, __vue_inject_styles__$n, __vue_script__$n, __vue_scope_id__$n, __vue_is_functional_template__$n, __vue_module_identifier__$e, __vue_create_injector__$e); //
 
 
-  var script$e$1 = {
+  var script$m = {
     name: 'content-element-preview',
     props: {
       element: {
@@ -35679,15 +35700,15 @@
       },
       selectable: {
         type: Boolean,
-        default: false
+        "default": false
       },
       isSelected: {
         type: Boolean,
-        default: false
+        "default": false
       },
       selectionDisabled: {
         type: Boolean,
-        default: false
+        "default": false
       }
     },
     computed: {
@@ -35705,15 +35726,15 @@
       }
     },
     components: {
-      ContentElement: ContentElement$2
+      ContentElement: ContentElement$1
     }
   };
   /* script */
 
-  var __vue_script__$e$1 = script$e$1;
+  var __vue_script__$m = script$m;
   /* template */
 
-  var __vue_render__$e$1 = function __vue_render__() {
+  var __vue_render__$m = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -35722,7 +35743,7 @@
 
     return _c('div', {
       staticClass: "element-preview-container float-none",
-      class: _vm.elementWidth
+      "class": _vm.elementWidth
     }, [_vm.selectable ? _c('v-checkbox', {
       attrs: {
         "input-value": _vm.isSelected,
@@ -35741,7 +35762,7 @@
             staticClass: "element-wrapper flex-grow-1"
           }, [_c('content-element', _vm._b({
             staticClass: "content-element",
-            class: {
+            "class": {
               selected: _vm.isSelected
             },
             attrs: {
@@ -35759,7 +35780,7 @@
                 var on = ref.on;
                 return [_c('v-btn', _vm._g({
                   staticClass: "open-element-button",
-                  class: {
+                  "class": {
                     visible: hover
                   },
                   attrs: {
@@ -35788,10 +35809,10 @@
     })], 1);
   };
 
-  var __vue_staticRenderFns__$e$1 = [];
+  var __vue_staticRenderFns__$m = [];
   /* style */
 
-  var __vue_inject_styles__$e$1 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$m = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-72d4e8ff_0", {
       source: ".element-preview-container[data-v-72d4e8ff]{display:flex;position:relative;margin:.25rem 0}.element-preview-container .v-input[data-v-72d4e8ff]{margin:0}.content-element[data-v-72d4e8ff]{flex:1 0;margin:.4375rem 0 0 .25rem;box-shadow:none;border:1px solid #e1e1e1}.content-element.selected[data-v-72d4e8ff]{border-style:dashed;border-color:#444}.content-element.selected[data-v-72d4e8ff]::after{display:none}.element-preview-container[data-v-72d4e8ff]  .contained-content{margin:0}.element-preview-container[data-v-72d4e8ff]  .contained-content .message span:not(.heading){display:none}.element-preview-container[data-v-72d4e8ff]  .contained-content .ql-editor{word-break:break-all}.element-wrapper[data-v-72d4e8ff]{position:relative}.open-element-button[data-v-72d4e8ff]{position:absolute;top:0;right:-.75rem;transition:opacity .4s}.open-element-button[data-v-72d4e8ff]:not(.visible){opacity:0}",
@@ -35802,16 +35823,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$e$1 = "data-v-72d4e8ff";
+  var __vue_scope_id__$m = "data-v-72d4e8ff";
   /* module identifier */
 
-  var __vue_module_identifier__$b$1 = undefined;
+  var __vue_module_identifier__$d = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$e$1 = false;
+  var __vue_is_functional_template__$m = false;
   /* component normalizer */
 
-  function __vue_normalize__$e$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$m(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "Element.vue";
@@ -35854,9 +35875,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$b$1() {
+  function __vue_create_injector__$d() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$b$1.styles || (__vue_create_injector__$b$1.styles = {});
+    var styles = __vue_create_injector__$d.styles || (__vue_create_injector__$d.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -35918,13 +35939,13 @@
   /* style inject SSR */
 
 
-  var ContentElement$1$1 = __vue_normalize__$e$1({
-    render: __vue_render__$e$1,
-    staticRenderFns: __vue_staticRenderFns__$e$1
-  }, __vue_inject_styles__$e$1, __vue_script__$e$1, __vue_scope_id__$e$1, __vue_is_functional_template__$e$1, __vue_module_identifier__$b$1, __vue_create_injector__$b$1); //
+  var ContentElement = __vue_normalize__$m({
+    render: __vue_render__$m,
+    staticRenderFns: __vue_staticRenderFns__$m
+  }, __vue_inject_styles__$m, __vue_script__$m, __vue_scope_id__$m, __vue_is_functional_template__$m, __vue_module_identifier__$d, __vue_create_injector__$d); //
 
 
-  var script$f$1 = {
+  var script$l = {
     name: 'content-preview',
     props: {
       contentContainers: {
@@ -35933,21 +35954,21 @@
       },
       selectable: {
         type: Boolean,
-        default: false
+        "default": false
       },
       multiple: {
         type: Boolean,
-        default: true
+        "default": true
       },
       allowedTypes: {
         type: Array,
-        default: function _default() {
+        "default": function _default() {
           return [];
         }
       },
       selected: {
         type: Array,
-        default: function _default() {
+        "default": function _default() {
           return [];
         }
       }
@@ -35979,15 +36000,15 @@
       }
     },
     components: {
-      ContentElement: ContentElement$1$1
+      ContentElement: ContentElement
     }
   };
   /* script */
 
-  var __vue_script__$f$1 = script$f$1;
+  var __vue_script__$l = script$l;
   /* template */
 
-  var __vue_render__$f$1 = function __vue_render__() {
+  var __vue_render__$l = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -36029,10 +36050,10 @@
     })], 2);
   };
 
-  var __vue_staticRenderFns__$f$1 = [];
+  var __vue_staticRenderFns__$l = [];
   /* style */
 
-  var __vue_inject_styles__$f$1 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$l = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-2013b96d_0", {
       source: ".content-preview .v-alert[data-v-2013b96d]{display:flex;align-items:center;justify-content:center;height:19rem}.content-preview .content-container[data-v-2013b96d]:last-child{margin-bottom:.625rem}",
@@ -36043,16 +36064,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$f$1 = "data-v-2013b96d";
+  var __vue_scope_id__$l = "data-v-2013b96d";
   /* module identifier */
 
-  var __vue_module_identifier__$c$1 = undefined;
+  var __vue_module_identifier__$c = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$f$1 = false;
+  var __vue_is_functional_template__$l = false;
   /* component normalizer */
 
-  function __vue_normalize__$f$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$l(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "index.vue";
@@ -36095,9 +36116,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$c$1() {
+  function __vue_create_injector__$c() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$c$1.styles || (__vue_create_injector__$c$1.styles = {});
+    var styles = __vue_create_injector__$c.styles || (__vue_create_injector__$c.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -36159,38 +36180,38 @@
   /* style inject SSR */
 
 
-  var ContentPreview$1 = __vue_normalize__$f$1({
-    render: __vue_render__$f$1,
-    staticRenderFns: __vue_staticRenderFns__$f$1
-  }, __vue_inject_styles__$f$1, __vue_script__$f$1, __vue_scope_id__$f$1, __vue_is_functional_template__$f$1, __vue_module_identifier__$c$1, __vue_create_injector__$c$1);
+  var ContentPreview = __vue_normalize__$l({
+    render: __vue_render__$l,
+    staticRenderFns: __vue_staticRenderFns__$l
+  }, __vue_inject_styles__$l, __vue_script__$l, __vue_scope_id__$l, __vue_is_functional_template__$l, __vue_module_identifier__$c, __vue_create_injector__$c);
 
-  function loader$1(action, name) {
+  function loader(action, name) {
     var minDuration = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
     return function () {
       var _this = this;
 
       this[name] = true;
-      return pMinDelay_1(Promise.resolve(action.call.apply(action, [this].concat(Array.prototype.slice.call(arguments)))), minDuration).finally(function () {
+      return pMinDelay_1(Promise.resolve(action.call.apply(action, [this].concat(Array.prototype.slice.call(arguments)))), minDuration)["finally"](function () {
         return _this[name] = false;
       });
     };
   } //
 
 
-  var toTreeFormat$1 = utils.activity.toTreeFormat;
-  var script$g$1 = {
+  var toTreeFormat = utils.activity.toTreeFormat;
+  var script$k = {
     name: 'select-activity',
     inject: ['$schema'],
     props: {
       selectedElements: {
         type: Array,
-        default: function _default() {
+        "default": function _default() {
           return [];
         }
       },
       activities: {
         type: Array,
-        default: function _default() {
+        "default": function _default() {
           return [];
         }
       }
@@ -36208,7 +36229,7 @@
         return map__default['default'](vm.activities, 'id');
       },
       activityTree: function activityTree(vm) {
-        return toTreeFormat$1(vm.activities, vm.$schema, []);
+        return toTreeFormat(vm.activities, vm.$schema, []);
       },
       noResultsMessage: function noResultsMessage() {
         var activities = this.activities,
@@ -36235,10 +36256,10 @@
   };
   /* script */
 
-  var __vue_script__$g$1 = script$g$1;
+  var __vue_script__$k = script$k;
   /* template */
 
-  var __vue_render__$g$1 = function __vue_render__() {
+  var __vue_render__$k = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -36320,10 +36341,10 @@
     }, [_vm._v("\n    " + _vm._s(_vm.noResultsMessage) + "\n  ")])], 1);
   };
 
-  var __vue_staticRenderFns__$g$1 = [];
+  var __vue_staticRenderFns__$k = [];
   /* style */
 
-  var __vue_inject_styles__$g$1 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$k = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-285b0632_0", {
       source: ".treeview[data-v-285b0632]{max-height:19rem;text-align:left;background-color:#fcfcfc;border:1px solid #eee;overflow-y:scroll}.treeview .v-chip.custom-chip[data-v-285b0632]{border-radius:12px!important}.treeview[data-v-285b0632]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__content>*,.treeview[data-v-285b0632]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__root{cursor:auto}",
@@ -36334,16 +36355,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$g$1 = "data-v-285b0632";
+  var __vue_scope_id__$k = "data-v-285b0632";
   /* module identifier */
 
-  var __vue_module_identifier__$d$1 = undefined;
+  var __vue_module_identifier__$b = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$g$1 = false;
+  var __vue_is_functional_template__$k = false;
   /* component normalizer */
 
-  function __vue_normalize__$g$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$k(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "SelectActivity.vue";
@@ -36386,9 +36407,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$d$1() {
+  function __vue_create_injector__$b() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$d$1.styles || (__vue_create_injector__$d$1.styles = {});
+    var styles = __vue_create_injector__$b.styles || (__vue_create_injector__$b.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -36450,20 +36471,21 @@
   /* style inject SSR */
 
 
-  var SelectActivity$1 = __vue_normalize__$g$1({
-    render: __vue_render__$g$1,
-    staticRenderFns: __vue_staticRenderFns__$g$1
-  }, __vue_inject_styles__$g$1, __vue_script__$g$1, __vue_scope_id__$g$1, __vue_is_functional_template__$g$1, __vue_module_identifier__$d$1, __vue_create_injector__$d$1); //
+  var SelectActivity = __vue_normalize__$k({
+    render: __vue_render__$k,
+    staticRenderFns: __vue_staticRenderFns__$k
+  }, __vue_inject_styles__$k, __vue_script__$k, __vue_scope_id__$k, __vue_is_functional_template__$k, __vue_module_identifier__$b, __vue_create_injector__$b); //
 
 
-  var script$h$1 = {
+  var script$j = {
     name: 'select-repository',
     props: {
       repository: {
         type: Object,
-        default: null
+        "default": null
       }
     },
+    inject: ['$api'],
     data: function data() {
       return {
         repositories: [],
@@ -36478,10 +36500,10 @@
           this.$emit('selected', repository);
         }
       },
-      fetchRepositories: debounce__default['default'](loader$1(function (search) {
+      fetchRepositories: debounce__default['default'](loader(function (search) {
         var _this = this;
 
-        return api.repository.getRepositories({
+        return this.$api.repository.getRepositories({
           search: search
         }).then(function (repositories) {
           _this.repositories = sortBy__default['default'](repositories, 'name');
@@ -36494,10 +36516,10 @@
   };
   /* script */
 
-  var __vue_script__$h$1 = script$h$1;
+  var __vue_script__$j = script$j;
   /* template */
 
-  var __vue_render__$h$1 = function __vue_render__() {
+  var __vue_render__$j = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -36524,19 +36546,19 @@
     }, 'v-combobox', _vm.$attrs, false));
   };
 
-  var __vue_staticRenderFns__$h$1 = [];
+  var __vue_staticRenderFns__$j = [];
   /* style */
 
-  var __vue_inject_styles__$h$1 = undefined;
+  var __vue_inject_styles__$j = undefined;
   /* scoped */
 
-  var __vue_scope_id__$h$1 = undefined;
+  var __vue_scope_id__$j = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$h$1 = false;
+  var __vue_is_functional_template__$j = false;
   /* component normalizer */
 
-  function __vue_normalize__$h$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$j(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "SelectRepository.vue";
@@ -36556,10 +36578,10 @@
   /* style inject SSR */
 
 
-  var SelectRepository$1 = __vue_normalize__$h$1({
-    render: __vue_render__$h$1,
-    staticRenderFns: __vue_staticRenderFns__$h$1
-  }, __vue_inject_styles__$h$1, __vue_script__$h$1, __vue_scope_id__$h$1, __vue_is_functional_template__$h$1); //
+  var SelectRepository = __vue_normalize__$j({
+    render: __vue_render__$j,
+    staticRenderFns: __vue_staticRenderFns__$j
+  }, __vue_inject_styles__$j, __vue_script__$j, __vue_scope_id__$j, __vue_is_functional_template__$j); //
   //
   //
   //
@@ -36593,29 +36615,29 @@
   //
 
 
-  var script$i$1 = {
+  var script$i = {
     name: 'tailor-dialog',
     props: {
       headerIcon: {
         type: String,
-        default: null
+        "default": null
       },
       width: {
         type: [Number, String],
-        default: 500
+        "default": 500
       },
       paddingless: {
         type: Boolean,
-        default: false
+        "default": false
       }
     }
   };
   /* script */
 
-  var __vue_script__$i$1 = script$i$1;
+  var __vue_script__$i = script$i;
   /* template */
 
-  var __vue_render__$i$1 = function __vue_render__() {
+  var __vue_render__$i = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -36652,16 +36674,16 @@
     }, [_vm._v(_vm._s(_vm.headerIcon))])], 1) : _vm._e(), _vm._v(" "), _c('div', {
       staticClass: "text-truncate"
     }, [_vm._t("header")], 2)], 1), _vm._v(" "), _c('v-card-text', {
-      class: [_vm.paddingless ? 'pa-0' : 'pt-7 px-4 pb-2']
+      "class": [_vm.paddingless ? 'pa-0' : 'pt-7 px-4 pb-2']
     }, [_vm._t("body")], 2), _vm._v(" "), _vm.$slots.actions ? _c('v-card-actions', {
       staticClass: "px-4 pb-3"
     }, [_c('v-spacer'), _vm._v(" "), _vm._t("actions")], 2) : _vm._e()], 1)], 1);
   };
 
-  var __vue_staticRenderFns__$i$1 = [];
+  var __vue_staticRenderFns__$i = [];
   /* style */
 
-  var __vue_inject_styles__$i$1 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$i = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-b6f646a2_0", {
       source: ".dialog-title[data-v-b6f646a2]{display:flex;color:#f1f1f1}.dialog-title .text-truncate[data-v-b6f646a2]{flex:1;text-align:left}",
@@ -36672,16 +36694,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$i$1 = "data-v-b6f646a2";
+  var __vue_scope_id__$i = "data-v-b6f646a2";
   /* module identifier */
 
-  var __vue_module_identifier__$e$1 = undefined;
+  var __vue_module_identifier__$a = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$i$1 = false;
+  var __vue_is_functional_template__$i = false;
   /* component normalizer */
 
-  function __vue_normalize__$i$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$i(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "TailorDialog.vue";
@@ -36724,9 +36746,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$e$1() {
+  function __vue_create_injector__$a() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$e$1.styles || (__vue_create_injector__$e$1.styles = {});
+    var styles = __vue_create_injector__$a.styles || (__vue_create_injector__$a.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -36788,13 +36810,13 @@
   /* style inject SSR */
 
 
-  var TailorDialog$1 = __vue_normalize__$i$1({
-    render: __vue_render__$i$1,
-    staticRenderFns: __vue_staticRenderFns__$i$1
-  }, __vue_inject_styles__$i$1, __vue_script__$i$1, __vue_scope_id__$i$1, __vue_is_functional_template__$i$1, __vue_module_identifier__$e$1, __vue_create_injector__$e$1);
+  var TailorDialog = __vue_normalize__$i({
+    render: __vue_render__$i,
+    staticRenderFns: __vue_staticRenderFns__$i
+  }, __vue_inject_styles__$i, __vue_script__$i, __vue_scope_id__$i, __vue_is_functional_template__$i, __vue_module_identifier__$a, __vue_create_injector__$a);
 
-  var getDescendants$1 = utils.activity.getDescendants;
-  var TOGGLE_BUTTON$1 = {
+  var getDescendants = utils.activity.getDescendants;
+  var TOGGLE_BUTTON = {
     SELECT: {
       label: 'Select all',
       icon: 'checkbox-multiple-marked-outline'
@@ -36804,13 +36826,13 @@
       icon: 'checkbox-multiple-blank-outline'
     }
   };
-  var script$j$1 = {
+  var script$h = {
     name: 'select-element',
-    inject: ['$schema', '$repository'],
+    inject: ['$schema', '$repository', '$api'],
     props: {
       selected: {
         type: Array,
-        default: function _default() {
+        "default": function _default() {
           return [];
         }
       },
@@ -36824,19 +36846,19 @@
       },
       multiple: {
         type: Boolean,
-        default: true
+        "default": true
       },
       submitLabel: {
         type: String,
-        default: 'Save'
+        "default": 'Save'
       },
       headerIcon: {
         type: String,
-        default: 'mdi-toy-brick-plus-outline'
+        "default": 'mdi-toy-brick-plus-outline'
       },
       onlyCurrentRepo: {
         type: Boolean,
-        default: false
+        "default": false
       }
     },
     data: function data() {
@@ -36874,7 +36896,7 @@
         if (!activity || !activities.length) return [];
         var containers = sortBy__default['default'](activities.filter(this.isRootContainer), [this.getTypePosition, 'position', 'createdAt']);
         return flatMap__default['default'](containers, function (it) {
-          return [it].concat(_toConsumableArray$1(_this.getSubcontainers(it)));
+          return [it].concat(_toConsumableArray(_this.getSubcontainers(it)));
         });
       },
       elements: function elements() {
@@ -36892,8 +36914,8 @@
             multiple = this.multiple,
             selection = this.selection;
         if (!multiple || !selection.activity || !elements.length) return;
-        var SELECT = TOGGLE_BUTTON$1.SELECT,
-            DESELECT = TOGGLE_BUTTON$1.DESELECT;
+        var SELECT = TOGGLE_BUTTON.SELECT,
+            DESELECT = TOGGLE_BUTTON.DESELECT;
         return allElementsSelected ? DESELECT : SELECT;
       }
     },
@@ -36914,7 +36936,7 @@
       },
       getSubcontainers: function getSubcontainers(container) {
         var activities = this.items.activities;
-        return sortBy__default['default'](getDescendants$1(activities, container), 'position');
+        return sortBy__default['default'](getDescendants(activities, container), 'position');
       },
       showActivityElements: async function showActivityElements(activity) {
         var _this3 = this;
@@ -36953,7 +36975,7 @@
       deselectActivity: function deselectActivity() {
         this.selection.activity = null;
         this.items.contentContainers = [];
-        this.selection.elements = _toConsumableArray$1(this.selected);
+        this.selection.elements = _toConsumableArray(this.selected);
       },
       selectRepository: async function selectRepository(repository) {
         var currentRepository = this.currentRepository;
@@ -36961,10 +36983,10 @@
         this.deselectActivity();
         this.items.activities = currentRepository.id === repository.id ? currentRepository.activities : await this.fetchActivities(repository);
       },
-      fetchActivities: loader$1(function (repository) {
-        return api.activity.getActivities(repository.id);
+      fetchActivities: loader(function (repository) {
+        return this.$api.activity.getActivities(repository.id);
       }, 'loadingContent'),
-      fetchElements: loader$1(function (containers) {
+      fetchElements: loader(function (containers) {
         var repositoryId = this.selection.repository.id;
         var queryOpts = {
           repositoryId: repositoryId,
@@ -36972,10 +36994,10 @@
             return it.id;
           })
         };
-        return api.contentElement.fetch(queryOpts);
+        return this.$api.contentElement.fetch(queryOpts);
       }, 'loadingContent', 500),
       save: function save() {
-        this.$emit('selected', _toConsumableArray$1(this.selection.elements));
+        this.$emit('selected', _toConsumableArray(this.selection.elements));
         this.close();
       },
       close: function close() {
@@ -37001,23 +37023,23 @@
       }
     },
     created: function created() {
-      this.selection.elements = _toConsumableArray$1(this.selected);
+      this.selection.elements = _toConsumableArray(this.selected);
       this.selection.repository = this.currentRepository;
       this.items.activities = this.currentRepository.activities;
     },
     components: {
-      ContentPreview: ContentPreview$1,
-      SelectActivity: SelectActivity$1,
-      SelectRepository: SelectRepository$1,
-      TailorDialog: TailorDialog$1
+      ContentPreview: ContentPreview,
+      SelectActivity: SelectActivity,
+      SelectRepository: SelectRepository,
+      TailorDialog: TailorDialog
     }
   };
   /* script */
 
-  var __vue_script__$j$1 = script$j$1;
+  var __vue_script__$h = script$h;
   /* template */
 
-  var __vue_render__$j$1 = function __vue_render__() {
+  var __vue_render__$h = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -37135,19 +37157,19 @@
     });
   };
 
-  var __vue_staticRenderFns__$j$1 = [];
+  var __vue_staticRenderFns__$h = [];
   /* style */
 
-  var __vue_inject_styles__$j$1 = undefined;
+  var __vue_inject_styles__$h = undefined;
   /* scoped */
 
-  var __vue_scope_id__$j$1 = undefined;
+  var __vue_scope_id__$h = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$j$1 = false;
+  var __vue_is_functional_template__$h = false;
   /* component normalizer */
 
-  function __vue_normalize__$j$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$h(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "index.vue";
@@ -37167,18 +37189,18 @@
   /* style inject SSR */
 
 
-  var SelectElement$1 = __vue_normalize__$j$1({
-    render: __vue_render__$j$1,
-    staticRenderFns: __vue_staticRenderFns__$j$1
-  }, __vue_inject_styles__$j$1, __vue_script__$j$1, __vue_scope_id__$j$1, __vue_is_functional_template__$j$1); //
+  var SelectElement = __vue_normalize__$h({
+    render: __vue_render__$h,
+    staticRenderFns: __vue_staticRenderFns__$h
+  }, __vue_inject_styles__$h, __vue_script__$h, __vue_scope_id__$h, __vue_is_functional_template__$h); //
 
 
-  var DEFAULT_ELEMENT_WIDTH$1 = 100;
-  var LAYOUT$1 = {
+  var DEFAULT_ELEMENT_WIDTH = 100;
+  var LAYOUT = {
     HALF_WIDTH: 6,
     FULL_WIDTH: 12
   };
-  var ELEMENT_GROUPS$1 = [{
+  var ELEMENT_GROUPS = [{
     name: 'Content Elements',
     icon: 'mdi-set-center'
   }, {
@@ -37189,9 +37211,9 @@
     icon: 'mdi-comment-question-outline'
   }];
 
-  var getQuestionData$1 = function getQuestionData(element, type) {
+  var getQuestionData = function getQuestionData(element, type) {
     var data = {
-      width: LAYOUT$1.FULL_WIDTH
+      width: LAYOUT.FULL_WIDTH
     };
     var question = [{
       id: utils.uuid(),
@@ -37205,7 +37227,7 @@
     }, element.data);
   };
 
-  var script$k$1 = {
+  var script$g = {
     name: 'tailor-add-element',
     inject: ['$teRegistry'],
     props: {
@@ -37215,41 +37237,41 @@
       },
       activity: {
         type: Object,
-        default: null
+        "default": null
       },
       position: {
         type: Number,
-        default: null
+        "default": null
       },
       layout: {
         type: Boolean,
-        default: true
+        "default": true
       },
       include: {
         type: Array,
-        default: null
+        "default": null
       },
       show: {
         type: Boolean,
-        default: false
+        "default": false
       },
       large: {
         type: Boolean,
-        default: false
+        "default": false
       },
       label: {
         type: String,
-        default: 'Add content'
+        "default": 'Add content'
       },
       icon: {
         type: String,
-        default: 'mdi-plus'
+        "default": 'mdi-plus'
       }
     },
     data: function data() {
       return {
         isVisible: false,
-        elementWidth: DEFAULT_ELEMENT_WIDTH$1,
+        elementWidth: DEFAULT_ELEMENT_WIDTH,
         showElementBrowser: false
       };
     },
@@ -37307,14 +37329,14 @@
       library: function library() {
         var groups = [this.contentElements, this.assessments, this.reflections];
         return reduce__default['default'](groups, function (acc, elements, i) {
-          if (elements.length) acc.push(Object.assign({}, ELEMENT_GROUPS$1[i], {
+          if (elements.length) acc.push(Object.assign({}, ELEMENT_GROUPS[i], {
             elements: elements
           }));
           return acc;
         }, []);
       },
       processedWidth: function processedWidth() {
-        return this.elementWidth === 50 ? LAYOUT$1.HALF_WIDTH : LAYOUT$1.FULL_WIDTH;
+        return this.elementWidth === 50 ? LAYOUT.HALF_WIDTH : LAYOUT.FULL_WIDTH;
       },
       allowedTypes: function allowedTypes() {
         var elementWidth = this.elementWidth,
@@ -37323,7 +37345,7 @@
             library = this.library;
         var elements = flatMap__default['default'](library, 'elements');
         if (!layout) return include || [];
-        var allowedElements = elementWidth === DEFAULT_ELEMENT_WIDTH$1 ? elements : reject__default['default'](elements, 'ui.forceFullWidth');
+        var allowedElements = elementWidth === DEFAULT_ELEMENT_WIDTH ? elements : reject__default['default'](elements, 'ui.forceFullWidth');
         var allowedTypes = allowedElements.map(function (it) {
           return it.type;
         });
@@ -37370,12 +37392,12 @@
         }; // If embed, assign id
 
         Object.assign(element, contextData);
-        if (utils.isQuestion(element.type)) element.data = getQuestionData$1(element, subtype);
+        if (utils.isQuestion(element.type)) element.data = getQuestionData(element, subtype);
         if (element.type === 'REFLECTION') delete element.data.correct;
         return element;
       },
       onHidden: function onHidden() {
-        this.elementWidth = DEFAULT_ELEMENT_WIDTH$1;
+        this.elementWidth = DEFAULT_ELEMENT_WIDTH;
         this.$emit('hidden');
       },
       showElementPicker: function showElementPicker() {
@@ -37391,16 +37413,16 @@
       }
     },
     components: {
-      AddNewElement: AddNewElement$1,
-      SelectElement: SelectElement$1
+      AddNewElement: AddNewElement,
+      SelectElement: SelectElement
     }
   };
   /* script */
 
-  var __vue_script__$k$1 = script$k$1;
+  var __vue_script__$g = script$g;
   /* template */
 
-  var __vue_render__$k$1 = function __vue_render__() {
+  var __vue_render__$g = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -37520,19 +37542,19 @@
     })] : _vm._e()], 2);
   };
 
-  var __vue_staticRenderFns__$k$1 = [];
+  var __vue_staticRenderFns__$g = [];
   /* style */
 
-  var __vue_inject_styles__$k$1 = undefined;
+  var __vue_inject_styles__$g = undefined;
   /* scoped */
 
-  var __vue_scope_id__$k$1 = undefined;
+  var __vue_scope_id__$g = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$k$1 = false;
+  var __vue_is_functional_template__$g = false;
   /* component normalizer */
 
-  function __vue_normalize__$k$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$g(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "index.vue";
@@ -37552,10 +37574,10 @@
   /* style inject SSR */
 
 
-  var AddElement$1 = __vue_normalize__$k$1({
-    render: __vue_render__$k$1,
-    staticRenderFns: __vue_staticRenderFns__$k$1
-  }, __vue_inject_styles__$k$1, __vue_script__$k$1, __vue_scope_id__$k$1, __vue_is_functional_template__$k$1); //
+  var AddElement = __vue_normalize__$g({
+    render: __vue_render__$g,
+    staticRenderFns: __vue_staticRenderFns__$g
+  }, __vue_inject_styles__$g, __vue_script__$g, __vue_scope_id__$g, __vue_is_functional_template__$g); //
   //
   //
   //
@@ -37580,12 +37602,12 @@
   //
 
 
-  var script$l$1 = {
+  var script$f = {
     name: 'controls',
     props: {
       isEditing: {
         type: Boolean,
-        default: false
+        "default": false
       }
     },
     methods: {
@@ -37601,10 +37623,10 @@
   };
   /* script */
 
-  var __vue_script__$l$1 = script$l$1;
+  var __vue_script__$f = script$f;
   /* template */
 
-  var __vue_render__$l$1 = function __vue_render__() {
+  var __vue_render__$f = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -37648,19 +37670,19 @@
     }, [_vm._v("\n    Edit\n  ")])], 1);
   };
 
-  var __vue_staticRenderFns__$l$1 = [];
+  var __vue_staticRenderFns__$f = [];
   /* style */
 
-  var __vue_inject_styles__$l$1 = undefined;
+  var __vue_inject_styles__$f = undefined;
   /* scoped */
 
-  var __vue_scope_id__$l$1 = undefined;
+  var __vue_scope_id__$f = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$l$1 = false;
+  var __vue_is_functional_template__$f = false;
   /* component normalizer */
 
-  function __vue_normalize__$l$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$f(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "Controls.vue";
@@ -37680,12 +37702,12 @@
   /* style inject SSR */
 
 
-  var Controls$1 = __vue_normalize__$l$1({
-    render: __vue_render__$l$1,
-    staticRenderFns: __vue_staticRenderFns__$l$1
-  }, __vue_inject_styles__$l$1, __vue_script__$l$1, __vue_scope_id__$l$1, __vue_is_functional_template__$l$1);
+  var Controls = __vue_normalize__$f({
+    render: __vue_render__$f,
+    staticRenderFns: __vue_staticRenderFns__$f
+  }, __vue_inject_styles__$f, __vue_script__$f, __vue_scope_id__$f, __vue_is_functional_template__$f);
 
-  var QUILL_OPTIONS$1 = {
+  var QUILL_OPTIONS = {
     modules: {
       toolbar: [['bold', 'italic', 'underline', 'strike'], ['blockquote', 'code-block'], [{
         list: 'ordered'
@@ -37703,34 +37725,34 @@
     }
   };
 
-  var getAnswerType$1 = function getAnswerType(isGraded) {
+  var getAnswerType = function getAnswerType(isGraded) {
     return isGraded ? 'Answer' : 'Option';
   };
 
-  var getButtonLabel$1 = function getButtonLabel(isExpanded) {
+  var getButtonLabel = function getButtonLabel(isExpanded) {
     return isExpanded ? 'hide' : 'show';
   };
 
-  var script$m$1 = {
+  var script$e = {
     name: 'feedback',
     props: {
       answers: {
         type: [Array, Boolean],
-        default: null
+        "default": null
       },
       feedback: {
         type: Object,
-        default: function _default() {
+        "default": function _default() {
           return {};
         }
       },
       isEditing: {
         type: Boolean,
-        default: false
+        "default": false
       },
       isGraded: {
         type: Boolean,
-        default: false
+        "default": false
       }
     },
     data: function data(vm) {
@@ -37740,13 +37762,13 @@
     },
     computed: {
       quillOptions: function quillOptions() {
-        return QUILL_OPTIONS$1;
+        return QUILL_OPTIONS;
       },
       answerType: function answerType(vm) {
-        return getAnswerType$1(vm.isGraded);
+        return getAnswerType(vm.isGraded);
       },
       buttonLabel: function buttonLabel(vm) {
-        return getButtonLabel$1(vm.isExpanded);
+        return getButtonLabel(vm.isExpanded);
       },
       processedAnswers: function processedAnswers(vm) {
         return isArray__default['default'](vm.answers) ? vm.answers : ['True', 'False'];
@@ -37755,7 +37777,7 @@
     methods: {
       updateFeedback: function updateFeedback(_ref, index) {
         var html = _ref.html;
-        this.$emit('update', _defineProperty$1({}, index, html));
+        this.$emit('update', _defineProperty({}, index, html));
       },
       toggleExpand: function toggleExpand() {
         this.isExpanded = !this.isExpanded;
@@ -37773,10 +37795,10 @@
   };
   /* script */
 
-  var __vue_script__$m$1 = script$m$1;
+  var __vue_script__$e = script$e;
   /* template */
 
-  var __vue_render__$m$1 = function __vue_render__() {
+  var __vue_render__$e = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -37830,19 +37852,19 @@
     }), 1) : _vm._e()])], 1);
   };
 
-  var __vue_staticRenderFns__$m$1 = [];
+  var __vue_staticRenderFns__$e = [];
   /* style */
 
-  var __vue_inject_styles__$m$1 = undefined;
+  var __vue_inject_styles__$e = undefined;
   /* scoped */
 
-  var __vue_scope_id__$m$1 = undefined;
+  var __vue_scope_id__$e = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$m$1 = false;
+  var __vue_is_functional_template__$e = false;
   /* component normalizer */
 
-  function __vue_normalize__$m$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$e(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "Feedback.vue";
@@ -37862,13 +37884,13 @@
   /* style inject SSR */
 
 
-  var Feedback$1 = __vue_normalize__$m$1({
-    render: __vue_render__$m$1,
-    staticRenderFns: __vue_staticRenderFns__$m$1
-  }, __vue_inject_styles__$m$1, __vue_script__$m$1, __vue_scope_id__$m$1, __vue_is_functional_template__$m$1); //
+  var Feedback = __vue_normalize__$e({
+    render: __vue_render__$e,
+    staticRenderFns: __vue_staticRenderFns__$e
+  }, __vue_inject_styles__$e, __vue_script__$e, __vue_scope_id__$e, __vue_is_functional_template__$e); //
 
 
-  var script$n$1 = {
+  var script$d = {
     name: 'tailor-contained-content',
     inheritAttrs: false,
     props: {
@@ -37878,19 +37900,19 @@
       },
       isDisabled: {
         type: Boolean,
-        default: false
+        "default": false
       },
       isDragged: {
         type: Boolean,
-        default: false
+        "default": false
       },
       setWidth: {
         type: Boolean,
-        default: true
+        "default": true
       },
       dense: {
         type: Boolean,
-        default: false
+        "default": false
       }
     },
     data: function data() {
@@ -37928,15 +37950,15 @@
       }, 20)
     },
     components: {
-      ContentElement: ContentElement$2
+      ContentElement: ContentElement$1
     }
   };
   /* script */
 
-  var __vue_script__$n$1 = script$n$1;
+  var __vue_script__$d = script$d;
   /* template */
 
-  var __vue_render__$n$1 = function __vue_render__() {
+  var __vue_render__$d = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -37945,7 +37967,7 @@
 
     return _c('div', {
       staticClass: "contained-content",
-      class: [_vm.widthClass, {
+      "class": [_vm.widthClass, {
         disabled: _vm.isDisabled,
         hovered: _vm.isHovered
       }],
@@ -37986,10 +38008,10 @@
     }, 'content-element', _vm.bindings, false))], 1);
   };
 
-  var __vue_staticRenderFns__$n$1 = [];
+  var __vue_staticRenderFns__$d = [];
   /* style */
 
-  var __vue_inject_styles__$n$1 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$d = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-cb586726_0", {
       source: ".drag-handle[data-v-cb586726]{position:absolute;left:-3px;z-index:2;width:26px;opacity:0}.drag-handle .mdi[data-v-cb586726]{color:#888;font-size:28px}.hovered .drag-handle[data-v-cb586726]{opacity:1;transition:opacity .6s ease-in-out;cursor:pointer}.disabled .drag-handle[data-v-cb586726]{display:none}.contained-content[data-v-cb586726]{position:relative;margin:7px 0;padding:0}",
@@ -38000,16 +38022,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$n$1 = "data-v-cb586726";
+  var __vue_scope_id__$d = "data-v-cb586726";
   /* module identifier */
 
-  var __vue_module_identifier__$f$1 = undefined;
+  var __vue_module_identifier__$9 = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$n$1 = false;
+  var __vue_is_functional_template__$d = false;
   /* component normalizer */
 
-  function __vue_normalize__$n$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$d(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "ContainedContent.vue";
@@ -38052,9 +38074,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$f$1() {
+  function __vue_create_injector__$9() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$f$1.styles || (__vue_create_injector__$f$1.styles = {});
+    var styles = __vue_create_injector__$9.styles || (__vue_create_injector__$9.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -38116,10 +38138,10 @@
   /* style inject SSR */
 
 
-  var ContainedContent$1 = __vue_normalize__$n$1({
-    render: __vue_render__$n$1,
-    staticRenderFns: __vue_staticRenderFns__$n$1
-  }, __vue_inject_styles__$n$1, __vue_script__$n$1, __vue_scope_id__$n$1, __vue_is_functional_template__$n$1, __vue_module_identifier__$f$1, __vue_create_injector__$f$1); //
+  var ContainedContent = __vue_normalize__$d({
+    render: __vue_render__$d,
+    staticRenderFns: __vue_staticRenderFns__$d
+  }, __vue_inject_styles__$d, __vue_script__$d, __vue_scope_id__$d, __vue_is_functional_template__$d, __vue_module_identifier__$9, __vue_create_injector__$9); //
   //
   //
   //
@@ -38129,21 +38151,21 @@
   //
 
 
-  var script$o$1 = {
+  var script$c = {
     name: 'tailor-input-error',
     props: {
       error: {
         type: String,
-        default: ''
+        "default": ''
       }
     }
   };
   /* script */
 
-  var __vue_script__$o$1 = script$o$1;
+  var __vue_script__$c = script$c;
   /* template */
 
-  var __vue_render__$o$1 = function __vue_render__() {
+  var __vue_render__$c = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -38159,10 +38181,10 @@
     }, [_vm._v("\n    " + _vm._s(_vm.error) + "\n  ")]) : _vm._e()]);
   };
 
-  var __vue_staticRenderFns__$o$1 = [];
+  var __vue_staticRenderFns__$c = [];
   /* style */
 
-  var __vue_inject_styles__$o$1 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$c = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-ff8d03d8_0", {
       source: ".input-error[data-v-ff8d03d8]{color:var(--v-error-base);font-size:.75rem}",
@@ -38173,16 +38195,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$o$1 = "data-v-ff8d03d8";
+  var __vue_scope_id__$c = "data-v-ff8d03d8";
   /* module identifier */
 
-  var __vue_module_identifier__$g$1 = undefined;
+  var __vue_module_identifier__$8 = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$o$1 = false;
+  var __vue_is_functional_template__$c = false;
   /* component normalizer */
 
-  function __vue_normalize__$o$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$c(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "InputError.vue";
@@ -38225,9 +38247,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$g$1() {
+  function __vue_create_injector__$8() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$g$1.styles || (__vue_create_injector__$g$1.styles = {});
+    var styles = __vue_create_injector__$8.styles || (__vue_create_injector__$8.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -38289,18 +38311,18 @@
   /* style inject SSR */
 
 
-  var InputError$1 = __vue_normalize__$o$1({
-    render: __vue_render__$o$1,
-    staticRenderFns: __vue_staticRenderFns__$o$1
-  }, __vue_inject_styles__$o$1, __vue_script__$o$1, __vue_scope_id__$o$1, __vue_is_functional_template__$o$1, __vue_module_identifier__$g$1, __vue_create_injector__$g$1); //
+  var InputError = __vue_normalize__$c({
+    render: __vue_render__$c,
+    staticRenderFns: __vue_staticRenderFns__$c
+  }, __vue_inject_styles__$c, __vue_script__$c, __vue_scope_id__$c, __vue_is_functional_template__$c, __vue_module_identifier__$8, __vue_create_injector__$8); //
 
 
-  var DRAG_OPTIONS$1 = {
+  var DRAG_OPTIONS = {
     handle: '.drag-handle',
     scrollSensitivity: 125,
     scrollSpeed: 15
   };
-  var script$p$1 = {
+  var script$b = {
     name: 'question',
     props: {
       assessment: {
@@ -38309,13 +38331,13 @@
       },
       errors: {
         type: Array,
-        default: function _default() {
+        "default": function _default() {
           return [];
         }
       },
       isEditing: {
         type: Boolean,
-        default: false
+        "default": false
       }
     },
     data: function data() {
@@ -38340,7 +38362,7 @@
         return head__default['default'](utils.assessment.getErrorMessages(vm.errors, 'question'));
       },
       dragOptions: function dragOptions() {
-        return DRAG_OPTIONS$1;
+        return DRAG_OPTIONS;
       }
     }),
     methods: {
@@ -38387,18 +38409,18 @@
       });
     },
     components: {
-      AddElement: AddElement$1,
-      ContainedContent: ContainedContent$1,
+      AddElement: AddElement,
+      ContainedContent: ContainedContent,
       Draggable: Draggable__default['default'],
-      InputError: InputError$1
+      InputError: InputError
     }
   };
   /* script */
 
-  var __vue_script__$p$1 = script$p$1;
+  var __vue_script__$b = script$b;
   /* template */
 
-  var __vue_render__$p$1 = function __vue_render__() {
+  var __vue_render__$b = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -38408,7 +38430,7 @@
     return _c('div', [_c('div', {
       staticClass: "subtitle-2 mb-2"
     }, [_vm._v("Question")]), _vm._v(" "), _c('div', {
-      class: ['question-container', {
+      "class": ['question-container', {
         focused: _vm.isFocused,
         disabled: !_vm.isEditing,
         incorrect: !!_vm.questionError
@@ -38441,7 +38463,7 @@
         }
       });
     }), 1)], 1), _vm._v(" "), _c('add-element', {
-      class: {
+      "class": {
         invisible: !_vm.isEditing
       },
       attrs: {
@@ -38483,10 +38505,10 @@
     })], 1);
   };
 
-  var __vue_staticRenderFns__$p$1 = [];
+  var __vue_staticRenderFns__$b = [];
   /* style */
 
-  var __vue_inject_styles__$p$1 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$b = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-28708166_0", {
       source: ".question-container[data-v-28708166]{position:relative;min-height:8.75rem;padding:1rem 3rem 0 2.5rem;text-align:center;background:#ebebeb;border-radius:.125rem;transition:.3s cubic-bezier(.25,.8,.5,1)}.question-container[data-v-28708166]::after,.question-container[data-v-28708166]::before{content:'';position:absolute;bottom:-1px;left:0;width:100%;transition:.3s cubic-bezier(.25,.8,.5,1)}.question-container[data-v-28708166]::before{border-style:solid;border-width:thin 0 0 0}.question-container[data-v-28708166]::after{border-style:solid;border-width:thin 0 thin 0;transform:scaleX(0)}.question-container[data-v-28708166]:not(.focused):not(.disabled):not(.incorrect):hover{background:#dcdcdc}.question-container[data-v-28708166]:not(.focused):not(.disabled):not(.incorrect):hover  .content-element{border-color:#bbb}.focused[data-v-28708166]::after{transform:scaleX(1)}.disabled[data-v-28708166]{color:rgba(0,0,0,.38)}.disabled[data-v-28708166]::before{border-image:repeating-linear-gradient(to right,rgba(0,0,0,.38) 0,rgba(0,0,0,.38) .125rem,transparent .125rem,transparent .25rem) 1 repeat}.incorrect[data-v-28708166]::after,.incorrect[data-v-28708166]::before{border-color:var(--v-error-base)}.invisible[data-v-28708166]{visibility:none}",
@@ -38497,16 +38519,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$p$1 = "data-v-28708166";
+  var __vue_scope_id__$b = "data-v-28708166";
   /* module identifier */
 
-  var __vue_module_identifier__$h$1 = undefined;
+  var __vue_module_identifier__$7 = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$p$1 = false;
+  var __vue_is_functional_template__$b = false;
   /* component normalizer */
 
-  function __vue_normalize__$p$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$b(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "Question.vue";
@@ -38549,9 +38571,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$h$1() {
+  function __vue_create_injector__$7() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$h$1.styles || (__vue_create_injector__$h$1.styles = {});
+    var styles = __vue_create_injector__$7.styles || (__vue_create_injector__$7.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -38613,23 +38635,23 @@
   /* style inject SSR */
 
 
-  var Question$1 = __vue_normalize__$p$1({
-    render: __vue_render__$p$1,
-    staticRenderFns: __vue_staticRenderFns__$p$1
-  }, __vue_inject_styles__$p$1, __vue_script__$p$1, __vue_scope_id__$p$1, __vue_is_functional_template__$p$1, __vue_module_identifier__$h$1, __vue_create_injector__$h$1); //
+  var Question = __vue_normalize__$b({
+    render: __vue_render__$b,
+    staticRenderFns: __vue_staticRenderFns__$b
+  }, __vue_inject_styles__$b, __vue_script__$b, __vue_scope_id__$b, __vue_is_functional_template__$b, __vue_module_identifier__$7, __vue_create_injector__$7); //
 
 
-  var resolveComponentName$1 = function resolveComponentName(type) {
+  var resolveComponentName = function resolveComponentName(type) {
     return utils.getComponentName(utils.processAnswerType(type));
   };
 
-  var WITH_FEEDBACK$1 = ['MC', 'SC', 'TF'];
-  var TEXT_CONTAINERS$2 = ['JODIT_HTML', 'HTML'];
-  var validationOptions$1 = {
+  var WITH_FEEDBACK = ['MC', 'SC', 'TF'];
+  var TEXT_CONTAINERS$1 = ['JODIT_HTML', 'HTML'];
+  var validationOptions = {
     recursive: true,
     abortEarly: false
   };
-  var script$q$1 = {
+  var script$a = {
     name: 'tce-question-container',
     inject: ['$teRegistry'],
     props: {
@@ -38639,7 +38661,7 @@
       },
       isDisabled: {
         type: Boolean,
-        default: false
+        "default": false
       }
     },
     data: function data(vm) {
@@ -38659,10 +38681,10 @@
         return vm.element.type === 'ASSESSMENT';
       },
       showFeedback: function showFeedback(vm) {
-        return WITH_FEEDBACK$1.includes(vm.answerType);
+        return WITH_FEEDBACK.includes(vm.answerType);
       },
       componentName: function componentName(vm) {
-        return resolveComponentName$1(vm.answerType);
+        return resolveComponentName(vm.answerType);
       },
       config: function config(vm) {
         return vm.$teRegistry.get(vm.answerType);
@@ -38672,7 +38694,7 @@
       },
       schema: function schema() {
         var schema = this.config.schema;
-        return ObjectSchema().shape(Object.assign({}, baseSchema$1, this.isGraded ? schema : omit__default['default'](schema, ['correct'])));
+        return ObjectSchema().shape(Object.assign({}, baseSchema, this.isGraded ? schema : omit__default['default'](schema, ['correct'])));
       }
     },
     methods: {
@@ -38688,7 +38710,7 @@
 
         if (validate && !isEmpty__default['default'](this.errors)) {
           this.errors = [];
-          this.validate().catch(function (err) {
+          this.validate()["catch"](function (err) {
             return _this.errors = err.inner;
           });
         }
@@ -38703,7 +38725,7 @@
 
           _this2.isEditing = false;
           _this2.errors = [];
-        }).catch(function (err) {
+        })["catch"](function (err) {
           return _this2.errors = err.inner;
         });
       },
@@ -38716,7 +38738,7 @@
         this.alert = {};
       },
       validate: function validate() {
-        return this.schema.validate(this.editedElement.data, validationOptions$1);
+        return this.schema.validate(this.editedElement.data, validationOptions);
       },
       updateFeedback: function updateFeedback(data) {
         var element = this.editedElement;
@@ -38724,21 +38746,21 @@
       }
     },
     components: {
-      Controls: Controls$1,
-      Feedback: Feedback$1,
-      Question: Question$1
+      Controls: Controls,
+      Feedback: Feedback,
+      Question: Question
     }
   };
-  var question$1 = ArraySchema().test('has-text', 'Please define question', function (question) {
-    return !!question.find(containsText$1);
+  var question = ArraySchema().test('has-text', 'Please define question', function (question) {
+    return !!question.find(containsText);
   });
 
-  function containsText$1(asset) {
-    return TEXT_CONTAINERS$2.includes(asset.type) && asset.data.content && asset.data.content.trim().length > 0;
+  function containsText(asset) {
+    return TEXT_CONTAINERS$1.includes(asset.type) && asset.data.content && asset.data.content.trim().length > 0;
   }
 
-  var baseSchema$1 = {
-    question: question$1,
+  var baseSchema = {
+    question: question,
     hint: StringSchema().trim().max(500),
     _refs: ObjectSchema().shape({
       objectiveId: NumberSchema().integer().positive()
@@ -38746,10 +38768,10 @@
   };
   /* script */
 
-  var __vue_script__$q$1 = script$q$1;
+  var __vue_script__$a = script$a;
   /* template */
 
-  var __vue_render__$q$1 = function __vue_render__() {
+  var __vue_render__$a = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -38854,10 +38876,10 @@
     }) : _vm._e()], 1)], 2);
   };
 
-  var __vue_staticRenderFns__$q$1 = [];
+  var __vue_staticRenderFns__$a = [];
   /* style */
 
-  var __vue_inject_styles__$q$1 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$a = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-b4ecdf22_0", {
       source: ".tce-question-container[data-v-b4ecdf22]{min-height:25rem;background-color:#fff;overflow:visible;text-align:left}.tce-question-container[data-v-b4ecdf22]  .title{font-weight:400}.tce-question-container .content[data-v-b4ecdf22]{margin:.5rem 1.625rem}@media (max-width:1263px){.tce-question-container .content[data-v-b4ecdf22]{margin:.5rem}}.tce-question-container .tce-answer[data-v-b4ecdf22]{overflow:hidden}.disabled .controls[data-v-b4ecdf22]{display:none}",
@@ -38868,16 +38890,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$q$1 = "data-v-b4ecdf22";
+  var __vue_scope_id__$a = "data-v-b4ecdf22";
   /* module identifier */
 
-  var __vue_module_identifier__$i$1 = undefined;
+  var __vue_module_identifier__$6 = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$q$1 = false;
+  var __vue_is_functional_template__$a = false;
   /* component normalizer */
 
-  function __vue_normalize__$q$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$a(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "index.vue";
@@ -38920,9 +38942,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$i$1() {
+  function __vue_create_injector__$6() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$i$1.styles || (__vue_create_injector__$i$1.styles = {});
+    var styles = __vue_create_injector__$6.styles || (__vue_create_injector__$6.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -38984,23 +39006,23 @@
   /* style inject SSR */
 
 
-  var TceQuestionContainer$1 = __vue_normalize__$q$1({
-    render: __vue_render__$q$1,
-    staticRenderFns: __vue_staticRenderFns__$q$1
-  }, __vue_inject_styles__$q$1, __vue_script__$q$1, __vue_scope_id__$q$1, __vue_is_functional_template__$q$1, __vue_module_identifier__$i$1, __vue_create_injector__$i$1); //
+  var TceQuestionContainer = __vue_normalize__$a({
+    render: __vue_render__$a,
+    staticRenderFns: __vue_staticRenderFns__$a
+  }, __vue_inject_styles__$a, __vue_script__$a, __vue_scope_id__$a, __vue_is_functional_template__$a, __vue_module_identifier__$6, __vue_create_injector__$6); //
 
 
-  var TEXT_CONTAINERS$1$1 = ['JODIT_HTML', 'HTML'];
-  var blankRegex$1 = /(@blank)/g;
-  var htmlRegex$1 = /(<\/?[^>]+(>|$))|&nbsp;/g;
+  var TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
+  var blankRegex = /(@blank)/g;
+  var htmlRegex = /(<\/?[^>]+(>|$))|&nbsp;/g;
 
-  var getTextAssets$1 = function getTextAssets(item) {
+  var getTextAssets = function getTextAssets(item) {
     return filter__default['default'](item, function (it) {
-      return TEXT_CONTAINERS$1$1.includes(it.type);
+      return TEXT_CONTAINERS.includes(it.type);
     });
   };
 
-  var script$r$1 = {
+  var script$9 = {
     name: 'tailor-assessment-item',
     inject: ['$teRegistry', '$editorState'],
     props: {
@@ -39010,15 +39032,15 @@
       },
       expanded: {
         type: Boolean,
-        default: false
+        "default": false
       },
       draggable: {
         type: Boolean,
-        default: false
+        "default": false
       },
       isDisabled: {
         type: Boolean,
-        default: false
+        "default": false
       }
     },
     data: function data() {
@@ -39031,9 +39053,9 @@
         return this.$teRegistry.get(this.assessment.data.type);
       },
       question: function question() {
-        var textAssets = getTextAssets$1(this.assessment.data.question);
+        var textAssets = getTextAssets(this.assessment.data.question);
         var question = map__default['default'](textAssets, 'data.content').join(' ');
-        return question.replace(htmlRegex$1, '').replace(blankRegex$1, function () {
+        return question.replace(htmlRegex, '').replace(blankRegex, function () {
           return '____';
         });
       }
@@ -39046,16 +39068,16 @@
       }
     },
     components: {
-      PublishDiffChip: PublishDiffChip$1,
-      TceQuestionContainer: TceQuestionContainer$1
+      PublishDiffChip: PublishDiffChip,
+      TceQuestionContainer: TceQuestionContainer
     }
   };
   /* script */
 
-  var __vue_script__$r$1 = script$r$1;
+  var __vue_script__$9 = script$9;
   /* template */
 
-  var __vue_render__$r$1 = function __vue_render__() {
+  var __vue_render__$9 = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -39064,7 +39086,7 @@
 
     return _c('li', {
       staticClass: "list-group-item assessment-item elevation-1",
-      class: [_vm.assessment.changeSincePublish, {
+      "class": [_vm.assessment.changeSincePublish, {
         hover: _vm.hover,
         expanded: _vm.expanded,
         diff: _vm.$editorState.isPublishDiff
@@ -39143,7 +39165,7 @@
       }
     }) : _c('v-btn', {
       staticClass: "delete",
-      class: {
+      "class": {
         disabled: _vm.isDisabled
       },
       attrs: {
@@ -39159,10 +39181,10 @@
     }, [_c('v-icon', [_vm._v("mdi-close")])], 1)], 1)], 1);
   };
 
-  var __vue_staticRenderFns__$r$1 = [];
+  var __vue_staticRenderFns__$9 = [];
   /* style */
 
-  var __vue_inject_styles__$r$1 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$9 = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-493c9656_0", {
       source: ".assessment-item[data-v-493c9656]{margin-bottom:.625rem;padding:0}.assessment-item .v-chip[data-v-493c9656]{min-width:1.875rem}.assessment-item .drag-handle[data-v-493c9656]{position:absolute;top:0;left:-3px;color:#888;font-size:28px;opacity:0;cursor:move}.assessment-item.hover .drag-handle[data-v-493c9656]{opacity:1;transition:opacity .6s ease-in-out}.assessment-item .minimized[data-v-493c9656]{padding:.375rem 1.375rem;cursor:pointer}.assessment-item .minimized .question[data-v-493c9656]{display:inline-block;max-width:80%;min-height:1.875rem;color:#444;font-size:1rem;font-weight:400;line-height:2.125rem}.assessment-item .minimized .v-chip[data-v-493c9656]{margin-top:.125rem}.assessment-item .delete[data-v-493c9656]{opacity:0}.assessment-item.hover:not(.sortable-chosen) .delete[data-v-493c9656]:not(.disabled){opacity:1}.question-container[data-v-493c9656]{margin:0!important}.diff[data-v-493c9656]{border:none}.diff.expanded[data-v-493c9656]{border-radius:4px}.diff.new[data-v-493c9656]{border:none;box-shadow:0 0 0 2px var(--v-success-lighten2)!important}.diff.changed[data-v-493c9656],.diff.removed[data-v-493c9656]{border:none;box-shadow:0 0 0 2px var(--v-secondary-lighten4)!important}",
@@ -39173,16 +39195,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$r$1 = "data-v-493c9656";
+  var __vue_scope_id__$9 = "data-v-493c9656";
   /* module identifier */
 
-  var __vue_module_identifier__$j$1 = undefined;
+  var __vue_module_identifier__$5 = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$r$1 = false;
+  var __vue_is_functional_template__$9 = false;
   /* component normalizer */
 
-  function __vue_normalize__$r$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$9(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "AssessmentItem.vue";
@@ -39225,9 +39247,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$j$1() {
+  function __vue_create_injector__$5() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$j$1.styles || (__vue_create_injector__$j$1.styles = {});
+    var styles = __vue_create_injector__$5.styles || (__vue_create_injector__$5.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -39289,12 +39311,12 @@
   /* style inject SSR */
 
 
-  __vue_normalize__$r$1({
-    render: __vue_render__$r$1,
-    staticRenderFns: __vue_staticRenderFns__$r$1
-  }, __vue_inject_styles__$r$1, __vue_script__$r$1, __vue_scope_id__$r$1, __vue_is_functional_template__$r$1, __vue_module_identifier__$j$1, __vue_create_injector__$j$1);
+  __vue_normalize__$9({
+    render: __vue_render__$9,
+    staticRenderFns: __vue_staticRenderFns__$9
+  }, __vue_inject_styles__$9, __vue_script__$9, __vue_scope_id__$9, __vue_is_functional_template__$9, __vue_module_identifier__$5, __vue_create_injector__$5);
 
-  var downloadMixin$1 = {
+  var downloadMixin = {
     methods: {
       download: function download(url, fileName) {
         var a = document.createElement('a');
@@ -39305,9 +39327,9 @@
       }
     }
   };
-  var uploadMixin$1 = {
-    inject: ['$storageService', '$repository'],
-    mixins: [downloadMixin$1],
+  var uploadMixin = {
+    inject: ['$api', '$repository'],
+    mixins: [downloadMixin],
     data: function data() {
       return {
         uploading: false
@@ -39322,29 +39344,29 @@
       createFileForm: function createFileForm(e) {
         this.form = new FormData();
 
-        var _e$target$files = _slicedToArray$1(e.target.files, 1),
+        var _e$target$files = _slicedToArray(e.target.files, 1),
             file = _e$target$files[0];
 
         if (!file) return;
         this.form.append('file', file, file.name);
       },
-      upload: loader$1(function (e) {
+      upload: loader(function (e) {
         var _this = this;
 
         this.createFileForm(e);
-        return this.$storageService.upload(this.repositoryId, this.form).then(function (data) {
+        return this.$api.asset.upload(this.repositoryId, this.form).then(function (data) {
           var _this$form$get = _this.form.get('file'),
               name = _this$form$get.name;
 
           _this.$emit('upload', Object.assign({}, data, {
             name: name
           }));
-        }).catch(function () {
+        })["catch"](function () {
           _this.error = 'An error has occurred!';
         });
       }, 'uploading'),
       downloadFile: async function downloadFile(key, name) {
-        var url = await this.$storageService.getUrl(this.repositoryId, key);
+        var url = await this.$api.asset.getUrl(this.repositoryId, key);
         return this.download(url, name);
       },
       deleteFile: function deleteFile(item) {
@@ -39361,27 +39383,27 @@
     })
   }; //
 
-  var script$s$1 = {
+  var script$8 = {
     name: 'upload-btn',
-    mixins: [uploadMixin$1],
+    mixins: [uploadMixin],
     props: {
       id: {
         type: String,
-        default: function _default() {
+        "default": function _default() {
           return uniqueId__default['default']('file_');
         }
       },
       fileName: {
         type: String,
-        default: ''
+        "default": ''
       },
       fileKey: {
         type: String,
-        default: ''
+        "default": ''
       },
       validate: {
         type: Object,
-        default: function _default() {
+        "default": function _default() {
           return {
             ext: []
           };
@@ -39389,11 +39411,11 @@
       },
       label: {
         type: String,
-        default: 'Choose a file'
+        "default": 'Choose a file'
       },
       sm: {
         type: Boolean,
-        default: false
+        "default": false
       }
     },
     methods: {
@@ -39412,10 +39434,10 @@
   };
   /* script */
 
-  var __vue_script__$s$1 = script$s$1;
+  var __vue_script__$8 = script$8;
   /* template */
 
-  var __vue_render__$s$1 = function __vue_render__() {
+  var __vue_render__$8 = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -39487,10 +39509,10 @@
     }, [_c('v-icon', [_vm._v("mdi-delete")])], 1) : _vm._e()], 1)]);
   };
 
-  var __vue_staticRenderFns__$s$1 = [];
+  var __vue_staticRenderFns__$8 = [];
   /* style */
 
-  var __vue_inject_styles__$s$1 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$8 = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-1f089141_0", {
       source: ".file-upload[data-v-1f089141],.upload-form[data-v-1f089141]{display:inline-block}.upload-input[data-v-1f089141]{visibility:hidden;max-width:0;max-height:0}.file-name[data-v-1f089141]{color:#00f;font-size:1rem;text-decoration:underline;cursor:pointer}",
@@ -39501,16 +39523,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$s$1 = "data-v-1f089141";
+  var __vue_scope_id__$8 = "data-v-1f089141";
   /* module identifier */
 
-  var __vue_module_identifier__$k$1 = undefined;
+  var __vue_module_identifier__$4 = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$s$1 = false;
+  var __vue_is_functional_template__$8 = false;
   /* component normalizer */
 
-  function __vue_normalize__$s$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$8(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "UploadBtn.vue";
@@ -39553,9 +39575,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$k$1() {
+  function __vue_create_injector__$4() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$k$1.styles || (__vue_create_injector__$k$1.styles = {});
+    var styles = __vue_create_injector__$4.styles || (__vue_create_injector__$4.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -39617,13 +39639,13 @@
   /* style inject SSR */
 
 
-  var UploadBtn$1 = __vue_normalize__$s$1({
-    render: __vue_render__$s$1,
-    staticRenderFns: __vue_staticRenderFns__$s$1
-  }, __vue_inject_styles__$s$1, __vue_script__$s$1, __vue_scope_id__$s$1, __vue_is_functional_template__$s$1, __vue_module_identifier__$k$1, __vue_create_injector__$k$1); //
+  var UploadBtn = __vue_normalize__$8({
+    render: __vue_render__$8,
+    staticRenderFns: __vue_staticRenderFns__$8
+  }, __vue_inject_styles__$8, __vue_script__$8, __vue_scope_id__$8, __vue_is_functional_template__$8, __vue_module_identifier__$4, __vue_create_injector__$4); //
 
 
-  function isUploaded$1(url) {
+  function isUploaded(url) {
     try {
       return url && new URL(url).protocol === 'storage:';
     } catch (e) {
@@ -39631,16 +39653,16 @@
     }
   }
 
-  var script$t$1 = {
+  var script$7 = {
     name: 'tailor-asset-input',
     props: {
       url: {
         type: String,
-        default: null
+        "default": null
       },
       publicUrl: {
         type: String,
-        default: null
+        "default": null
       },
       extensions: {
         type: Array,
@@ -39648,15 +39670,15 @@
       },
       allowFileUpload: {
         type: Boolean,
-        default: true
+        "default": true
       },
       uploadLabel: {
         type: String,
-        default: 'Select file'
+        "default": 'Select file'
       }
     },
     data: function data() {
-      var isLinked = !isUploaded$1(this.url);
+      var isLinked = !isUploaded(this.url);
       return {
         isEditing: !this.url,
         uploading: false,
@@ -39696,22 +39718,22 @@
         this.$emit('input', payload);
       },
       cancel: function cancel() {
-        var isLinked = !isUploaded$1(this.url);
+        var isLinked = !isUploaded(this.url);
         this.urlInput = isLinked ? this.url : null;
         this.file = isLinked ? null : pick__default['default'](this, ['url', 'publicUrl']);
         this.isEditing = !this.url;
       }
     },
     components: {
-      UploadBtn: UploadBtn$1
+      UploadBtn: UploadBtn
     }
   };
   /* script */
 
-  var __vue_script__$t$1 = script$t$1;
+  var __vue_script__$7 = script$7;
   /* template */
 
-  var __vue_render__$t$1 = function __vue_render__() {
+  var __vue_render__$7 = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -39839,10 +39861,10 @@
     }, [_vm._v("\n      Cancel\n    ")]) : _vm._e()]], 2);
   };
 
-  var __vue_staticRenderFns__$t$1 = [];
+  var __vue_staticRenderFns__$7 = [];
   /* style */
 
-  var __vue_inject_styles__$t$1 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$7 = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-00f47ac8_0", {
       source: ".v-text-field[data-v-00f47ac8]{min-width:21.875rem;margin:.5rem .75rem 0 1.75rem}.action[data-v-00f47ac8]  .v-btn__content{min-width:4rem!important}.upload-btn[data-v-00f47ac8]  .v-btn{height:100%}.upload-btn[data-v-00f47ac8]  .v-btn .v-btn__content{padding:1.5rem 0}",
@@ -39853,16 +39875,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$t$1 = "data-v-00f47ac8";
+  var __vue_scope_id__$7 = "data-v-00f47ac8";
   /* module identifier */
 
-  var __vue_module_identifier__$l$1 = undefined;
+  var __vue_module_identifier__$3 = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$t$1 = false;
+  var __vue_is_functional_template__$7 = false;
   /* component normalizer */
 
-  function __vue_normalize__$t$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$7(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "AssetInput.vue";
@@ -39905,9 +39927,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$l$1() {
+  function __vue_create_injector__$3() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$l$1.styles || (__vue_create_injector__$l$1.styles = {});
+    var styles = __vue_create_injector__$3.styles || (__vue_create_injector__$3.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -39969,10 +39991,10 @@
   /* style inject SSR */
 
 
-  __vue_normalize__$t$1({
-    render: __vue_render__$t$1,
-    staticRenderFns: __vue_staticRenderFns__$t$1
-  }, __vue_inject_styles__$t$1, __vue_script__$t$1, __vue_scope_id__$t$1, __vue_is_functional_template__$t$1, __vue_module_identifier__$l$1, __vue_create_injector__$l$1); //
+  __vue_normalize__$7({
+    render: __vue_render__$7,
+    staticRenderFns: __vue_staticRenderFns__$7
+  }, __vue_inject_styles__$7, __vue_script__$7, __vue_scope_id__$7, __vue_is_functional_template__$7, __vue_module_identifier__$3, __vue_create_injector__$3); //
   //
   //
   //
@@ -40002,24 +40024,24 @@
   //
 
 
-  var script$u$1 = {
+  var script$6 = {
     name: 'date-picker',
     props: {
       value: {
         type: [String, Date],
-        default: null
+        "default": null
       },
       label: {
         type: String,
-        default: null
+        "default": null
       },
       clearable: {
         type: Boolean,
-        default: true
+        "default": true
       },
       placeholder: {
         type: String,
-        default: 'Click to set...'
+        "default": 'Click to set...'
       }
     },
     data: function data() {
@@ -40036,10 +40058,10 @@
   };
   /* script */
 
-  var __vue_script__$u$1 = script$u$1;
+  var __vue_script__$6 = script$6;
   /* template */
 
-  var __vue_render__$u$1 = function __vue_render__() {
+  var __vue_render__$6 = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -40099,19 +40121,19 @@
     })], 1);
   };
 
-  var __vue_staticRenderFns__$u$1 = [];
+  var __vue_staticRenderFns__$6 = [];
   /* style */
 
-  var __vue_inject_styles__$u$1 = undefined;
+  var __vue_inject_styles__$6 = undefined;
   /* scoped */
 
-  var __vue_scope_id__$u$1 = undefined;
+  var __vue_scope_id__$6 = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$u$1 = false;
+  var __vue_is_functional_template__$6 = false;
   /* component normalizer */
 
-  function __vue_normalize__$u$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$6(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "DatePicker.vue";
@@ -40131,51 +40153,51 @@
   /* style inject SSR */
 
 
-  __vue_normalize__$u$1({
-    render: __vue_render__$u$1,
-    staticRenderFns: __vue_staticRenderFns__$u$1
-  }, __vue_inject_styles__$u$1, __vue_script__$u$1, __vue_scope_id__$u$1, __vue_is_functional_template__$u$1); //
+  __vue_normalize__$6({
+    render: __vue_render__$6,
+    staticRenderFns: __vue_staticRenderFns__$6
+  }, __vue_inject_styles__$6, __vue_script__$6, __vue_scope_id__$6, __vue_is_functional_template__$6); //
 
 
-  var CE_FOCUS_EVENT$1 = 'element:focus';
-  var script$v$1 = {
+  var CE_FOCUS_EVENT = 'element:focus';
+  var script$5 = {
     name: 'tailor-element-list',
     props: {
       elements: {
         type: Array,
-        default: function _default() {
+        "default": function _default() {
           return [];
         }
       },
       dragOptions: {
         type: Object,
-        default: function _default() {
+        "default": function _default() {
           return {};
         }
       },
       supportedTypes: {
         type: Array,
-        default: null
+        "default": null
       },
       activity: {
         type: Object,
-        default: null
+        "default": null
       },
       layout: {
         type: Boolean,
-        default: false
+        "default": false
       },
       isDisabled: {
         type: Boolean,
-        default: false
+        "default": false
       },
       enableAdd: {
         type: Boolean,
-        default: true
+        "default": true
       },
       addElementOptions: {
         type: Object,
-        default: function _default() {
+        "default": function _default() {
           return {};
         }
       }
@@ -40199,11 +40221,11 @@
       getElementId: utils.getElementId,
       onDragStart: function onDragStart(index) {
         this.dragElementIndex = index;
-        this.editorChannel.emit(CE_FOCUS_EVENT$1);
+        this.editorChannel.emit(CE_FOCUS_EVENT);
       },
       onDragEnd: function onDragEnd(element) {
         this.dragElementIndex = -1;
-        this.editorChannel.emit(CE_FOCUS_EVENT$1, element);
+        this.editorChannel.emit(CE_FOCUS_EVENT, element);
       },
       reorder: function reorder(_ref) {
         var newPosition = _ref.newIndex;
@@ -40215,16 +40237,16 @@
       }
     },
     components: {
-      AddElement: AddElement$1,
+      AddElement: AddElement,
       Draggable: Draggable__default['default']
     }
   };
   /* script */
 
-  var __vue_script__$v$1 = script$v$1;
+  var __vue_script__$5 = script$5;
   /* template */
 
-  var __vue_render__$v$1 = function __vue_render__() {
+  var __vue_render__$5 = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -40252,7 +40274,7 @@
       return _c('div', {
         key: _vm.getElementId(element),
         staticClass: "pr-5",
-        class: "col-xs-" + _vm.get(element, 'data.width', 12),
+        "class": "col-xs-" + _vm.get(element, 'data.width', 12),
         on: {
           "dragstart": function dragstart($event) {
             return _vm.onDragStart(index);
@@ -40290,10 +40312,10 @@
     })] : _vm._e()], 2);
   };
 
-  var __vue_staticRenderFns__$v$1 = [];
+  var __vue_staticRenderFns__$5 = [];
   /* style */
 
-  var __vue_inject_styles__$v$1 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$5 = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-f18f3e56_0", {
       source: ".list-group[data-v-f18f3e56]{padding:.625rem 1.5rem}[data-v-f18f3e56] .sortable-ghost .drag-handle{display:none}[data-v-f18f3e56] .sortable-ghost .content-element{max-height:9.375rem;background:#f4f5f5}[data-v-f18f3e56] .sortable-ghost .content-element>*{visibility:hidden}[data-v-f18f3e56] .sortable-drag .content-element{max-height:auto;background:#fff}",
@@ -40304,16 +40326,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$v$1 = "data-v-f18f3e56";
+  var __vue_scope_id__$5 = "data-v-f18f3e56";
   /* module identifier */
 
-  var __vue_module_identifier__$m$1 = undefined;
+  var __vue_module_identifier__$2 = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$v$1 = false;
+  var __vue_is_functional_template__$5 = false;
   /* component normalizer */
 
-  function __vue_normalize__$v$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$5(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "ElementList.vue";
@@ -40356,9 +40378,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$m$1() {
+  function __vue_create_injector__$2() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$m$1.styles || (__vue_create_injector__$m$1.styles = {});
+    var styles = __vue_create_injector__$2.styles || (__vue_create_injector__$2.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -40420,10 +40442,10 @@
   /* style inject SSR */
 
 
-  var ElementList$1 = __vue_normalize__$v$1({
-    render: __vue_render__$v$1,
-    staticRenderFns: __vue_staticRenderFns__$v$1
-  }, __vue_inject_styles__$v$1, __vue_script__$v$1, __vue_scope_id__$v$1, __vue_is_functional_template__$v$1, __vue_module_identifier__$m$1, __vue_create_injector__$m$1); //
+  var ElementList = __vue_normalize__$5({
+    render: __vue_render__$5,
+    staticRenderFns: __vue_staticRenderFns__$5
+  }, __vue_inject_styles__$5, __vue_script__$5, __vue_scope_id__$5, __vue_is_functional_template__$5, __vue_module_identifier__$2, __vue_create_injector__$2); //
   //
   //
   //
@@ -40461,7 +40483,7 @@
   //
 
 
-  var script$w$1 = {
+  var script$4 = {
     name: 'tailor-element-placeholder',
     props: {
       name: {
@@ -40474,31 +40496,31 @@
       },
       placeholder: {
         type: String,
-        default: 'Select to edit'
+        "default": 'Select to edit'
       },
       activePlaceholder: {
         type: String,
-        default: 'Use toolbar to edit'
+        "default": 'Use toolbar to edit'
       },
       activeIcon: {
         type: String,
-        default: null
+        "default": null
       },
       activeColor: {
         type: String,
-        default: '#fff'
+        "default": '#fff'
       },
       isDisabled: {
         type: Boolean,
-        default: false
+        "default": false
       },
       isFocused: {
         type: Boolean,
-        default: false
+        "default": false
       },
       dense: {
         type: Boolean,
-        default: false
+        "default": false
       }
     },
     computed: {
@@ -40510,10 +40532,10 @@
   };
   /* script */
 
-  var __vue_script__$w$1 = script$w$1;
+  var __vue_script__$4 = script$4;
   /* template */
 
-  var __vue_render__$w$1 = function __vue_render__() {
+  var __vue_render__$4 = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -40522,7 +40544,7 @@
 
     return _c('v-sheet', {
       staticClass: "transparent grey--text text--darken-4",
-      class: _vm.dense ? 'pt-3' : 'pa-12'
+      "class": _vm.dense ? 'pt-3' : 'pa-12'
     }, [_c('v-avatar', {
       attrs: {
         "size": _vm.dense ? 40 : 60,
@@ -40535,7 +40557,7 @@
       }
     }, [_vm._v("\n      " + _vm._s(_vm.icon) + "\n    ")])], 1), _vm._v(" "), _c('div', {
       staticClass: "grey--text",
-      class: [_vm.isDisabled ? 'text--darken-3' : 'text--darken-4', _vm.dense ? 'my-2 subtitle-2' : 'my-4 headline']
+      "class": [_vm.isDisabled ? 'text--darken-3' : 'text--darken-4', _vm.dense ? 'my-2 subtitle-2' : 'my-4 headline']
     }, [_vm._v("\n    " + _vm._s(_vm.name) + "\n  ")]), _vm._v(" "), !_vm.dense && !_vm.isDisabled ? _c('div', {
       staticClass: "subtitle-1"
     }, [!_vm.isFocused ? [_vm._v(_vm._s(_vm.placeholder))] : [_c('span', [_vm._v(_vm._s(_vm.activePlaceholder))]), _vm._v(" "), _vm.activeIcon ? _c('v-icon', {
@@ -40546,19 +40568,19 @@
     }, [_vm._v("\n        " + _vm._s(_vm.activeIcon) + "\n      ")]) : _vm._e()]], 2) : _vm._e()], 1);
   };
 
-  var __vue_staticRenderFns__$w$1 = [];
+  var __vue_staticRenderFns__$4 = [];
   /* style */
 
-  var __vue_inject_styles__$w$1 = undefined;
+  var __vue_inject_styles__$4 = undefined;
   /* scoped */
 
-  var __vue_scope_id__$w$1 = undefined;
+  var __vue_scope_id__$4 = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$w$1 = false;
+  var __vue_is_functional_template__$4 = false;
   /* component normalizer */
 
-  function __vue_normalize__$w$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$4(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "ElementPlaceholder.vue";
@@ -40578,12 +40600,12 @@
   /* style inject SSR */
 
 
-  __vue_normalize__$w$1({
-    render: __vue_render__$w$1,
-    staticRenderFns: __vue_staticRenderFns__$w$1
-  }, __vue_inject_styles__$w$1, __vue_script__$w$1, __vue_scope_id__$w$1, __vue_is_functional_template__$w$1);
+  __vue_normalize__$4({
+    render: __vue_render__$4,
+    staticRenderFns: __vue_staticRenderFns__$4
+  }, __vue_inject_styles__$4, __vue_script__$4, __vue_scope_id__$4, __vue_is_functional_template__$4);
 
-  var script$x$1 = {
+  var script$3 = {
     name: 'tailor-embedded-container',
     inheritAttrs: false,
     props: {
@@ -40593,23 +40615,23 @@
       },
       types: {
         type: Array,
-        default: function _default() {
+        "default": function _default() {
           return ['JODIT_HTML', 'IMAGE', 'HTML', 'VIDEO'];
         }
       },
       isDisabled: {
         type: Boolean,
-        default: false
+        "default": false
       },
       addElementOptions: {
         type: Object,
-        default: function _default() {
+        "default": function _default() {
           return {};
         }
       },
       enableAdd: {
         type: Boolean,
-        default: true
+        "default": true
       }
     },
     computed: {
@@ -40641,7 +40663,7 @@
       },
       save: function save(item, key, value) {
         var container = cloneDeep__default['default'](this.container);
-        container.embeds[item.id] = Object.assign({}, item, _defineProperty$1({}, key, value));
+        container.embeds[item.id] = Object.assign({}, item, _defineProperty({}, key, value));
         this.$emit('save', container);
       },
       requestDeleteConfirmation: function requestDeleteConfirmation(element) {
@@ -40657,16 +40679,16 @@
       }
     }),
     components: {
-      ContainedContent: ContainedContent$1,
-      ElementList: ElementList$1
+      ContainedContent: ContainedContent,
+      ElementList: ElementList
     }
   };
   /* script */
 
-  var __vue_script__$x$1 = script$x$1;
+  var __vue_script__$3 = script$3;
   /* template */
 
-  var __vue_render__$x$1 = function __vue_render__() {
+  var __vue_render__$3 = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -40713,19 +40735,19 @@
     });
   };
 
-  var __vue_staticRenderFns__$x$1 = [];
+  var __vue_staticRenderFns__$3 = [];
   /* style */
 
-  var __vue_inject_styles__$x$1 = undefined;
+  var __vue_inject_styles__$3 = undefined;
   /* scoped */
 
-  var __vue_scope_id__$x$1 = undefined;
+  var __vue_scope_id__$3 = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$x$1 = false;
+  var __vue_is_functional_template__$3 = false;
   /* component normalizer */
 
-  function __vue_normalize__$x$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$3(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "EmbeddedContainer.vue";
@@ -40745,33 +40767,33 @@
   /* style inject SSR */
 
 
-  __vue_normalize__$x$1({
-    render: __vue_render__$x$1,
-    staticRenderFns: __vue_staticRenderFns__$x$1
-  }, __vue_inject_styles__$x$1, __vue_script__$x$1, __vue_scope_id__$x$1, __vue_is_functional_template__$x$1); //
+  __vue_normalize__$3({
+    render: __vue_render__$3,
+    staticRenderFns: __vue_staticRenderFns__$3
+  }, __vue_inject_styles__$3, __vue_script__$3, __vue_scope_id__$3, __vue_is_functional_template__$3); //
 
 
-  var script$y$1 = {
+  var script$2$1 = {
     name: 'file-input',
-    mixins: [uploadMixin$1],
+    mixins: [uploadMixin],
     props: {
       id: {
         type: String,
-        default: function _default() {
+        "default": function _default() {
           return uniqueId__default['default']('file_');
         }
       },
       fileKey: {
         type: String,
-        default: ''
+        "default": ''
       },
       fileName: {
         type: String,
-        default: ''
+        "default": ''
       },
       validate: {
         type: Object,
-        default: function _default() {
+        "default": function _default() {
           return {
             ext: []
           };
@@ -40779,19 +40801,19 @@
       },
       label: {
         type: String,
-        default: 'File upload'
+        "default": 'File upload'
       },
       placeholder: {
         type: String,
-        default: 'Choose a file'
+        "default": 'Choose a file'
       },
       outlined: {
         type: Boolean,
-        default: false
+        "default": false
       },
       dense: {
         type: Boolean,
-        default: false
+        "default": false
       }
     },
     computed: {
@@ -40808,10 +40830,10 @@
   };
   /* script */
 
-  var __vue_script__$y$1 = script$y$1;
+  var __vue_script__$2$1 = script$2$1;
   /* template */
 
-  var __vue_render__$y$1 = function __vue_render__() {
+  var __vue_render__$2$1 = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -40876,19 +40898,19 @@
     }, [_c('v-icon', [_vm._v("mdi-close")])], 1)], 1)], 1);
   };
 
-  var __vue_staticRenderFns__$y$1 = [];
+  var __vue_staticRenderFns__$2$1 = [];
   /* style */
 
-  var __vue_inject_styles__$y$1 = undefined;
+  var __vue_inject_styles__$2$1 = undefined;
   /* scoped */
 
-  var __vue_scope_id__$y$1 = undefined;
+  var __vue_scope_id__$2$1 = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$y$1 = false;
+  var __vue_is_functional_template__$2$1 = false;
   /* component normalizer */
 
-  function __vue_normalize__$y$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$2$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "FileInput.vue";
@@ -40908,10 +40930,10 @@
   /* style inject SSR */
 
 
-  __vue_normalize__$y$1({
-    render: __vue_render__$y$1,
-    staticRenderFns: __vue_staticRenderFns__$y$1
-  }, __vue_inject_styles__$y$1, __vue_script__$y$1, __vue_scope_id__$y$1, __vue_is_functional_template__$y$1); //
+  __vue_normalize__$2$1({
+    render: __vue_render__$2$1,
+    staticRenderFns: __vue_staticRenderFns__$2$1
+  }, __vue_inject_styles__$2$1, __vue_script__$2$1, __vue_scope_id__$2$1, __vue_is_functional_template__$2$1); //
   //
   //
   //
@@ -40926,7 +40948,7 @@
   //
 
 
-  var script$z$1 = {
+  var script$1$1 = {
     name: 'tailor-inline-activator',
     inheritAttrs: false,
     props: {
@@ -40938,10 +40960,10 @@
   };
   /* script */
 
-  var __vue_script__$z$1 = script$z$1;
+  var __vue_script__$1$1 = script$1$1;
   /* template */
 
-  var __vue_render__$z$1 = function __vue_render__() {
+  var __vue_render__$1$1 = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -40950,7 +40972,7 @@
 
     return _c('button', _vm._g({
       staticClass: "inline-activator",
-      class: {
+      "class": {
         disabled: _vm.disabled
       }
     }, _vm.$listeners), [_c('hr'), _vm._v(" "), _c('v-avatar', {
@@ -40966,10 +40988,10 @@
     }, [_vm._v("mdi-plus")])], 1), _vm._v(" "), _c('hr')], 1);
   };
 
-  var __vue_staticRenderFns__$z$1 = [];
+  var __vue_staticRenderFns__$1$1 = [];
   /* style */
 
-  var __vue_inject_styles__$z$1 = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$1$1 = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-64eb8c58_0", {
       source: ".default-activator-state[data-v-64eb8c58],.inline-activator[data-v-64eb8c58],.inline-activator.disabled[data-v-64eb8c58],.inline-activator.disabled[data-v-64eb8c58]:hover{padding:0 3.125rem;opacity:0}.inline-activator[data-v-64eb8c58]{display:flex;align-items:center;width:100%;margin:0;padding:0 3.125rem;opacity:0;transition:opacity .3s,padding .3s}.inline-activator[data-v-64eb8c58],.inline-activator .v-chip[data-v-64eb8c58]{cursor:pointer}.inline-activator hr[data-v-64eb8c58]{flex:1;display:inline-flex;margin:0;border-top:.0625rem dashed var(--v-primary-darken3)}.inline-activator[data-v-64eb8c58]:focus,.inline-activator[data-v-64eb8c58]:hover{padding:.75rem 0;opacity:1;outline:0;transition:opacity .3s .25s,padding .3s .1s}.inline-activator.disabled[data-v-64eb8c58],.inline-activator.disabled[data-v-64eb8c58]:hover{pointer-events:none}",
@@ -40980,16 +41002,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$z$1 = "data-v-64eb8c58";
+  var __vue_scope_id__$1$1 = "data-v-64eb8c58";
   /* module identifier */
 
-  var __vue_module_identifier__$n$1 = undefined;
+  var __vue_module_identifier__$1$1 = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$z$1 = false;
+  var __vue_is_functional_template__$1$1 = false;
   /* component normalizer */
 
-  function __vue_normalize__$z$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$1$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "InlineActivator.vue";
@@ -41032,9 +41054,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$n$1() {
+  function __vue_create_injector__$1$1() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$n$1.styles || (__vue_create_injector__$n$1.styles = {});
+    var styles = __vue_create_injector__$1$1.styles || (__vue_create_injector__$1$1.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -41096,10 +41118,10 @@
   /* style inject SSR */
 
 
-  __vue_normalize__$z$1({
-    render: __vue_render__$z$1,
-    staticRenderFns: __vue_staticRenderFns__$z$1
-  }, __vue_inject_styles__$z$1, __vue_script__$z$1, __vue_scope_id__$z$1, __vue_is_functional_template__$z$1, __vue_module_identifier__$n$1, __vue_create_injector__$n$1); //
+  __vue_normalize__$1$1({
+    render: __vue_render__$1$1,
+    staticRenderFns: __vue_staticRenderFns__$1$1
+  }, __vue_inject_styles__$1$1, __vue_script__$1$1, __vue_scope_id__$1$1, __vue_is_functional_template__$1$1, __vue_module_identifier__$1$1, __vue_create_injector__$1$1); //
   //
   //
   //
@@ -41112,21 +41134,21 @@
   //
 
 
-  var script$A = {
+  var script$B = {
     name: 'tailor-preview-overlay',
     props: {
       show: {
         type: Boolean,
-        default: false
+        "default": false
       }
     }
   };
   /* script */
 
-  var __vue_script__$A = script$A;
+  var __vue_script__$B = script$B;
   /* template */
 
-  var __vue_render__$A = function __vue_render__() {
+  var __vue_render__$B = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
@@ -41144,10 +41166,10 @@
     }, [_vm._t("default", [_vm._v("Click to preview")])], 2)]);
   };
 
-  var __vue_staticRenderFns__$A = [];
+  var __vue_staticRenderFns__$B = [];
   /* style */
 
-  var __vue_inject_styles__$A = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$B = function __vue_inject_styles__(inject) {
     if (!inject) return;
     inject("data-v-20303d2e_0", {
       source: ".message[data-v-20303d2e]{border-radius:2px;font-size:1.125rem}",
@@ -41158,16 +41180,16 @@
   /* scoped */
 
 
-  var __vue_scope_id__$A = "data-v-20303d2e";
+  var __vue_scope_id__$B = "data-v-20303d2e";
   /* module identifier */
 
-  var __vue_module_identifier__$o$1 = undefined;
+  var __vue_module_identifier__$p = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$A = false;
+  var __vue_is_functional_template__$B = false;
   /* component normalizer */
 
-  function __vue_normalize__$A(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$B(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
     component.__file = "PreviewOverlay.vue";
@@ -41205,360 +41227,6 @@
         }
       }
     }
-    return component;
-  }
-  /* style inject */
-
-
-  function __vue_create_injector__$o$1() {
-    var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$o$1.styles || (__vue_create_injector__$o$1.styles = {});
-    var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
-    return function addStyle(id, css) {
-      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
-
-      var group = isOldIE ? css.media || 'default' : id;
-      var style = styles[group] || (styles[group] = {
-        ids: [],
-        parts: [],
-        element: undefined
-      });
-
-      if (!style.ids.includes(id)) {
-        var code = css.source;
-        var index = style.ids.length;
-        style.ids.push(id);
-
-        if (css.map) {
-          // https://developer.chrome.com/devtools/docs/javascript-debugging
-          // this makes source maps inside style tags work properly in Chrome
-          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
-
-          code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
-        }
-
-        if (isOldIE) {
-          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
-        }
-
-        if (!style.element) {
-          var el = style.element = document.createElement('style');
-          el.type = 'text/css';
-          if (css.media) el.setAttribute('media', css.media);
-
-          if (isOldIE) {
-            el.setAttribute('data-group', group);
-            el.setAttribute('data-next-index', '0');
-          }
-
-          head.appendChild(el);
-        }
-
-        if (isOldIE) {
-          index = parseInt(style.element.getAttribute('data-next-index'));
-          style.element.setAttribute('data-next-index', index + 1);
-        }
-
-        if (style.element.styleSheet) {
-          style.parts.push(code);
-          style.element.styleSheet.cssText = style.parts.filter(Boolean).join('\n');
-        } else {
-          var textNode = document.createTextNode(code);
-          var nodes = style.element.childNodes;
-          if (nodes[index]) style.element.removeChild(nodes[index]);
-          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
-        }
-      }
-    };
-  }
-  /* style inject SSR */
-
-
-  __vue_normalize__$A({
-    render: __vue_render__$A,
-    staticRenderFns: __vue_staticRenderFns__$A
-  }, __vue_inject_styles__$A, __vue_script__$A, __vue_scope_id__$A, __vue_is_functional_template__$A, __vue_module_identifier__$o$1, __vue_create_injector__$o$1);
-
-  //
-  var script$B = {
-    name: 'file-input',
-    mixins: [uploadMixin$1],
-    props: {
-      id: {
-        type: String,
-        default: function _default() {
-          return uniqueId__default['default']('file_');
-        }
-      },
-      fileKey: {
-        type: String,
-        default: ''
-      },
-      fileName: {
-        type: String,
-        default: ''
-      },
-      validate: {
-        type: Object,
-        default: function _default() {
-          return {
-            ext: []
-          };
-        }
-      },
-      label: {
-        type: String,
-        default: 'File upload'
-      },
-      placeholder: {
-        type: String,
-        default: 'Choose a file'
-      },
-      outlined: {
-        type: Boolean,
-        default: false
-      },
-      dense: {
-        type: Boolean,
-        default: false
-      }
-    },
-    computed: {
-      acceptedFileTypes: function acceptedFileTypes() {
-        var ext = get__default['default'](this.validate, 'ext', []);
-        return ext.length ? ".".concat(ext.join(',.')) : '';
-      }
-    },
-    watch: {
-      uploading: function uploading(val) {
-        this.$emit('update:uploading', val);
-      }
-    }
-  };
-
-  /* script */
-  var __vue_script__$B = script$B;
-  /* template */
-
-  var __vue_render__$B = function __vue_render__() {
-    var _vm = this;
-
-    var _h = _vm.$createElement;
-
-    var _c = _vm._self._c || _h;
-
-    return _c('form', {
-      on: {
-        "submit": function submit($event) {
-          $event.preventDefault();
-        }
-      }
-    }, [!_vm.fileKey ? _c('v-file-input', {
-      ref: _vm.id,
-      attrs: {
-        "accept": _vm.acceptedFileTypes,
-        "label": _vm.label,
-        "placeholder": _vm.placeholder,
-        "outlined": _vm.outlined,
-        "dense": _vm.dense,
-        "clearable": false,
-        "append-icon": _vm.uploading ? 'mdi-loading mdi-spin' : 'mdi-upload',
-        "prepend-icon": ""
-      },
-      on: {
-        "click:append": function clickAppend($event) {
-          _vm.$refs[_vm.id].$el.querySelector('input').click();
-        }
-      },
-      nativeOn: {
-        "change": function change($event) {
-          return _vm.upload($event);
-        }
-      }
-    }) : _c('div', {
-      staticClass: "mb-5 px-1 grey--text text--darken-3"
-    }, [_c('div', [_vm._v(_vm._s(_vm.label))]), _vm._v(" "), _c('v-btn', {
-      staticClass: "grey--text text--darken-4 text-none px-0",
-      attrs: {
-        "text": ""
-      },
-      on: {
-        "click": function click($event) {
-          return _vm.downloadFile(_vm.fileKey, _vm.fileName);
-        }
-      }
-    }, [_vm._v("\n      " + _vm._s(_vm._f("truncate")(_vm.fileName, 35)) + "\n    ")]), _vm._v(" "), _c('v-btn', {
-      staticClass: "ml-1",
-      attrs: {
-        "color": "grey darken-4",
-        "icon": "",
-        "x-small": ""
-      },
-      on: {
-        "click": function click($event) {
-          return _vm.deleteFile({
-            id: _vm.id,
-            fileName: _vm.fileName
-          });
-        }
-      }
-    }, [_c('v-icon', [_vm._v("mdi-close")])], 1)], 1)], 1);
-  };
-
-  var __vue_staticRenderFns__$B = [];
-  /* style */
-
-  var __vue_inject_styles__$B = undefined;
-  /* scoped */
-
-  var __vue_scope_id__$B = undefined;
-  /* functional template */
-
-  var __vue_is_functional_template__$B = false;
-  /* component normalizer */
-
-  function __vue_normalize__$B(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
-    var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
-
-    component.__file = "FileInput.vue";
-
-    if (!component.render) {
-      component.render = template.render;
-      component.staticRenderFns = template.staticRenderFns;
-      component._compiled = true;
-      if (functional) component.functional = true;
-    }
-
-    component._scopeId = scope;
-
-    return component;
-  }
-  /* style inject */
-
-  /* style inject SSR */
-
-
-  var FileInput = __vue_normalize__$B({
-    render: __vue_render__$B,
-    staticRenderFns: __vue_staticRenderFns__$B
-  }, __vue_inject_styles__$B, __vue_script__$B, __vue_scope_id__$B, __vue_is_functional_template__$B);
-
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  var script$C = {
-    name: 'tailor-inline-activator',
-    inheritAttrs: false,
-    props: {
-      disabled: {
-        type: Boolean,
-        required: false
-      }
-    }
-  };
-
-  /* script */
-  var __vue_script__$C = script$C;
-  /* template */
-
-  var __vue_render__$C = function __vue_render__() {
-    var _vm = this;
-
-    var _h = _vm.$createElement;
-
-    var _c = _vm._self._c || _h;
-
-    return _c('button', _vm._g({
-      staticClass: "inline-activator",
-      class: {
-        disabled: _vm.disabled
-      }
-    }, _vm.$listeners), [_c('hr'), _vm._v(" "), _c('v-avatar', {
-      attrs: {
-        "size": "20",
-        "color": "primary darken-4"
-      }
-    }, [_c('v-icon', {
-      attrs: {
-        "size": "16",
-        "dark": ""
-      }
-    }, [_vm._v("mdi-plus")])], 1), _vm._v(" "), _c('hr')], 1);
-  };
-
-  var __vue_staticRenderFns__$C = [];
-  /* style */
-
-  var __vue_inject_styles__$C = function __vue_inject_styles__(inject) {
-    if (!inject) return;
-    inject("data-v-64eb8c58_0", {
-      source: ".default-activator-state[data-v-64eb8c58],.inline-activator[data-v-64eb8c58],.inline-activator.disabled[data-v-64eb8c58],.inline-activator.disabled[data-v-64eb8c58]:hover{padding:0 3.125rem;opacity:0}.inline-activator[data-v-64eb8c58]{display:flex;align-items:center;width:100%;margin:0;padding:0 3.125rem;opacity:0;transition:opacity .3s,padding .3s}.inline-activator[data-v-64eb8c58],.inline-activator .v-chip[data-v-64eb8c58]{cursor:pointer}.inline-activator hr[data-v-64eb8c58]{flex:1;display:inline-flex;margin:0;border-top:.0625rem dashed var(--v-primary-darken3)}.inline-activator[data-v-64eb8c58]:focus,.inline-activator[data-v-64eb8c58]:hover{padding:.75rem 0;opacity:1;outline:0;transition:opacity .3s .25s,padding .3s .1s}.inline-activator.disabled[data-v-64eb8c58],.inline-activator.disabled[data-v-64eb8c58]:hover{pointer-events:none}",
-      map: undefined,
-      media: undefined
-    });
-  };
-  /* scoped */
-
-
-  var __vue_scope_id__$C = "data-v-64eb8c58";
-  /* module identifier */
-
-  var __vue_module_identifier__$p = undefined;
-  /* functional template */
-
-  var __vue_is_functional_template__$C = false;
-  /* component normalizer */
-
-  function __vue_normalize__$C(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
-    var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
-
-    component.__file = "InlineActivator.vue";
-
-    if (!component.render) {
-      component.render = template.render;
-      component.staticRenderFns = template.staticRenderFns;
-      component._compiled = true;
-      if (functional) component.functional = true;
-    }
-
-    component._scopeId = scope;
-
-    {
-      var hook;
-
-      if (style) {
-        hook = function hook(context) {
-          style.call(this, createInjector(context));
-        };
-      }
-
-      if (hook !== undefined) {
-        if (component.functional) {
-          // register for functional component in vue file
-          var originalRender = component.render;
-
-          component.render = function renderWithStyleInjection(h, context) {
-            hook.call(context);
-            return originalRender(h, context);
-          };
-        } else {
-          // inject component registration as beforeCreate hook
-          var existing = component.beforeCreate;
-          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
-        }
-      }
-    }
-
     return component;
   }
   /* style inject */
@@ -41628,61 +41296,235 @@
   /* style inject SSR */
 
 
-  var InlineActivator = __vue_normalize__$C({
-    render: __vue_render__$C,
-    staticRenderFns: __vue_staticRenderFns__$C
-  }, __vue_inject_styles__$C, __vue_script__$C, __vue_scope_id__$C, __vue_is_functional_template__$C, __vue_module_identifier__$p, __vue_create_injector__$p);
+  __vue_normalize__$B({
+    render: __vue_render__$B,
+    staticRenderFns: __vue_staticRenderFns__$B
+  }, __vue_inject_styles__$B, __vue_script__$B, __vue_scope_id__$B, __vue_is_functional_template__$B, __vue_module_identifier__$p, __vue_create_injector__$p);
 
   //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  var script$D = {
-    name: 'tailor-preview-overlay',
+  var script$2 = {
+    name: 'file-input',
+    mixins: [uploadMixin],
     props: {
-      show: {
+      id: {
+        type: String,
+        "default": function _default() {
+          return uniqueId__default['default']('file_');
+        }
+      },
+      fileKey: {
+        type: String,
+        "default": ''
+      },
+      fileName: {
+        type: String,
+        "default": ''
+      },
+      validate: {
+        type: Object,
+        "default": function _default() {
+          return {
+            ext: []
+          };
+        }
+      },
+      label: {
+        type: String,
+        "default": 'File upload'
+      },
+      placeholder: {
+        type: String,
+        "default": 'Choose a file'
+      },
+      outlined: {
         type: Boolean,
-        default: false
+        "default": false
+      },
+      dense: {
+        type: Boolean,
+        "default": false
+      }
+    },
+    computed: {
+      acceptedFileTypes: function acceptedFileTypes() {
+        var ext = get__default['default'](this.validate, 'ext', []);
+        return ext.length ? ".".concat(ext.join(',.')) : '';
+      }
+    },
+    watch: {
+      uploading: function uploading(val) {
+        this.$emit('update:uploading', val);
       }
     }
   };
 
   /* script */
-  var __vue_script__$D = script$D;
+  var __vue_script__$2 = script$2;
   /* template */
 
-  var __vue_render__$D = function __vue_render__() {
+  var __vue_render__$2 = function __vue_render__() {
     var _vm = this;
 
     var _h = _vm.$createElement;
 
     var _c = _vm._self._c || _h;
 
-    return _c('v-overlay', {
-      attrs: {
-        "value": _vm.show,
-        "opacity": "0.9",
-        "absolute": ""
+    return _c('form', {
+      on: {
+        "submit": function submit($event) {
+          $event.preventDefault();
+        }
       }
-    }, [_c('button', {
-      staticClass: "message pa-2 grey--text text--lighten-2"
-    }, [_vm._t("default", [_vm._v("Click to preview")])], 2)]);
+    }, [!_vm.fileKey ? _c('v-file-input', {
+      ref: _vm.id,
+      attrs: {
+        "accept": _vm.acceptedFileTypes,
+        "label": _vm.label,
+        "placeholder": _vm.placeholder,
+        "outlined": _vm.outlined,
+        "dense": _vm.dense,
+        "clearable": false,
+        "append-icon": _vm.uploading ? 'mdi-loading mdi-spin' : 'mdi-upload',
+        "prepend-icon": ""
+      },
+      on: {
+        "click:append": function clickAppend($event) {
+          _vm.$refs[_vm.id].$el.querySelector('input').click();
+        }
+      },
+      nativeOn: {
+        "change": function change($event) {
+          return _vm.upload($event);
+        }
+      }
+    }) : _c('div', {
+      staticClass: "mb-5 px-1 grey--text text--darken-3"
+    }, [_c('div', [_vm._v(_vm._s(_vm.label))]), _vm._v(" "), _c('v-btn', {
+      staticClass: "grey--text text--darken-4 text-none px-0",
+      attrs: {
+        "text": ""
+      },
+      on: {
+        "click": function click($event) {
+          return _vm.downloadFile(_vm.fileKey, _vm.fileName);
+        }
+      }
+    }, [_vm._v("\n      " + _vm._s(_vm._f("truncate")(_vm.fileName, 35)) + "\n    ")]), _vm._v(" "), _c('v-btn', {
+      staticClass: "ml-1",
+      attrs: {
+        "color": "grey darken-4",
+        "icon": "",
+        "x-small": ""
+      },
+      on: {
+        "click": function click($event) {
+          return _vm.deleteFile({
+            id: _vm.id,
+            fileName: _vm.fileName
+          });
+        }
+      }
+    }, [_c('v-icon', [_vm._v("mdi-close")])], 1)], 1)], 1);
   };
 
-  var __vue_staticRenderFns__$D = [];
+  var __vue_staticRenderFns__$2 = [];
   /* style */
 
-  var __vue_inject_styles__$D = function __vue_inject_styles__(inject) {
+  var __vue_inject_styles__$2 = undefined;
+  /* scoped */
+
+  var __vue_scope_id__$2 = undefined;
+  /* functional template */
+
+  var __vue_is_functional_template__$2 = false;
+  /* component normalizer */
+
+  function __vue_normalize__$2(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+    var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
+
+    component.__file = "FileInput.vue";
+
+    if (!component.render) {
+      component.render = template.render;
+      component.staticRenderFns = template.staticRenderFns;
+      component._compiled = true;
+      if (functional) component.functional = true;
+    }
+
+    component._scopeId = scope;
+
+    return component;
+  }
+  /* style inject */
+
+  /* style inject SSR */
+
+
+  var FileInput = __vue_normalize__$2({
+    render: __vue_render__$2,
+    staticRenderFns: __vue_staticRenderFns__$2
+  }, __vue_inject_styles__$2, __vue_script__$2, __vue_scope_id__$2, __vue_is_functional_template__$2);
+
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  var script$1 = {
+    name: 'tailor-inline-activator',
+    inheritAttrs: false,
+    props: {
+      disabled: {
+        type: Boolean,
+        required: false
+      }
+    }
+  };
+
+  /* script */
+  var __vue_script__$1 = script$1;
+  /* template */
+
+  var __vue_render__$1 = function __vue_render__() {
+    var _vm = this;
+
+    var _h = _vm.$createElement;
+
+    var _c = _vm._self._c || _h;
+
+    return _c('button', _vm._g({
+      staticClass: "inline-activator",
+      "class": {
+        disabled: _vm.disabled
+      }
+    }, _vm.$listeners), [_c('hr'), _vm._v(" "), _c('v-avatar', {
+      attrs: {
+        "size": "20",
+        "color": "primary darken-4"
+      }
+    }, [_c('v-icon', {
+      attrs: {
+        "size": "16",
+        "dark": ""
+      }
+    }, [_vm._v("mdi-plus")])], 1), _vm._v(" "), _c('hr')], 1);
+  };
+
+  var __vue_staticRenderFns__$1 = [];
+  /* style */
+
+  var __vue_inject_styles__$1 = function __vue_inject_styles__(inject) {
     if (!inject) return;
-    inject("data-v-20303d2e_0", {
-      source: ".message[data-v-20303d2e]{border-radius:2px;font-size:1.125rem}",
+    inject("data-v-64eb8c58_0", {
+      source: ".default-activator-state[data-v-64eb8c58],.inline-activator[data-v-64eb8c58],.inline-activator.disabled[data-v-64eb8c58],.inline-activator.disabled[data-v-64eb8c58]:hover{padding:0 3.125rem;opacity:0}.inline-activator[data-v-64eb8c58]{display:flex;align-items:center;width:100%;margin:0;padding:0 3.125rem;opacity:0;transition:opacity .3s,padding .3s}.inline-activator[data-v-64eb8c58],.inline-activator .v-chip[data-v-64eb8c58]{cursor:pointer}.inline-activator hr[data-v-64eb8c58]{flex:1;display:inline-flex;margin:0;border-top:.0625rem dashed var(--v-primary-darken3)}.inline-activator[data-v-64eb8c58]:focus,.inline-activator[data-v-64eb8c58]:hover{padding:.75rem 0;opacity:1;outline:0;transition:opacity .3s .25s,padding .3s .1s}.inline-activator.disabled[data-v-64eb8c58],.inline-activator.disabled[data-v-64eb8c58]:hover{pointer-events:none}",
       map: undefined,
       media: undefined
     });
@@ -41690,19 +41532,19 @@
   /* scoped */
 
 
-  var __vue_scope_id__$D = "data-v-20303d2e";
+  var __vue_scope_id__$1 = "data-v-64eb8c58";
   /* module identifier */
 
-  var __vue_module_identifier__$q = undefined;
+  var __vue_module_identifier__$1 = undefined;
   /* functional template */
 
-  var __vue_is_functional_template__$D = false;
+  var __vue_is_functional_template__$1 = false;
   /* component normalizer */
 
-  function __vue_normalize__$D(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+  function __vue_normalize__$1(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
     var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
-    component.__file = "PreviewOverlay.vue";
+    component.__file = "InlineActivator.vue";
 
     if (!component.render) {
       component.render = template.render;
@@ -41744,9 +41586,9 @@
   /* style inject */
 
 
-  function __vue_create_injector__$q() {
+  function __vue_create_injector__$1() {
     var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$q.styles || (__vue_create_injector__$q.styles = {});
+    var styles = __vue_create_injector__$1.styles || (__vue_create_injector__$1.styles = {});
     var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
     return function addStyle(id, css) {
       if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
@@ -41808,31 +41650,211 @@
   /* style inject SSR */
 
 
-  var PreviewOverlay = __vue_normalize__$D({
-    render: __vue_render__$D,
-    staticRenderFns: __vue_staticRenderFns__$D
-  }, __vue_inject_styles__$D, __vue_script__$D, __vue_scope_id__$D, __vue_is_functional_template__$D, __vue_module_identifier__$q, __vue_create_injector__$q);
+  var InlineActivator = __vue_normalize__$1({
+    render: __vue_render__$1,
+    staticRenderFns: __vue_staticRenderFns__$1
+  }, __vue_inject_styles__$1, __vue_script__$1, __vue_scope_id__$1, __vue_is_functional_template__$1, __vue_module_identifier__$1, __vue_create_injector__$1);
 
-  exports.ActiveUsers = ActiveUsers;
-  exports.AddElement = AddElement;
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  var script = {
+    name: 'tailor-preview-overlay',
+    props: {
+      show: {
+        type: Boolean,
+        "default": false
+      }
+    }
+  };
+
+  /* script */
+  var __vue_script__ = script;
+  /* template */
+
+  var __vue_render__ = function __vue_render__() {
+    var _vm = this;
+
+    var _h = _vm.$createElement;
+
+    var _c = _vm._self._c || _h;
+
+    return _c('v-overlay', {
+      attrs: {
+        "value": _vm.show,
+        "opacity": "0.9",
+        "absolute": ""
+      }
+    }, [_c('button', {
+      staticClass: "message pa-2 grey--text text--lighten-2"
+    }, [_vm._t("default", [_vm._v("Click to preview")])], 2)]);
+  };
+
+  var __vue_staticRenderFns__ = [];
+  /* style */
+
+  var __vue_inject_styles__ = function __vue_inject_styles__(inject) {
+    if (!inject) return;
+    inject("data-v-20303d2e_0", {
+      source: ".message[data-v-20303d2e]{border-radius:2px;font-size:1.125rem}",
+      map: undefined,
+      media: undefined
+    });
+  };
+  /* scoped */
+
+
+  var __vue_scope_id__ = "data-v-20303d2e";
+  /* module identifier */
+
+  var __vue_module_identifier__ = undefined;
+  /* functional template */
+
+  var __vue_is_functional_template__ = false;
+  /* component normalizer */
+
+  function __vue_normalize__(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+    var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
+
+    component.__file = "PreviewOverlay.vue";
+
+    if (!component.render) {
+      component.render = template.render;
+      component.staticRenderFns = template.staticRenderFns;
+      component._compiled = true;
+      if (functional) component.functional = true;
+    }
+
+    component._scopeId = scope;
+
+    {
+      var hook;
+
+      if (style) {
+        hook = function hook(context) {
+          style.call(this, createInjector(context));
+        };
+      }
+
+      if (hook !== undefined) {
+        if (component.functional) {
+          // register for functional component in vue file
+          var originalRender = component.render;
+
+          component.render = function renderWithStyleInjection(h, context) {
+            hook.call(context);
+            return originalRender(h, context);
+          };
+        } else {
+          // inject component registration as beforeCreate hook
+          var existing = component.beforeCreate;
+          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+        }
+      }
+    }
+
+    return component;
+  }
+  /* style inject */
+
+
+  function __vue_create_injector__() {
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var styles = __vue_create_injector__.styles || (__vue_create_injector__.styles = {});
+    var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+    return function addStyle(id, css) {
+      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return; // SSR styles are present.
+
+      var group = isOldIE ? css.media || 'default' : id;
+      var style = styles[group] || (styles[group] = {
+        ids: [],
+        parts: [],
+        element: undefined
+      });
+
+      if (!style.ids.includes(id)) {
+        var code = css.source;
+        var index = style.ids.length;
+        style.ids.push(id);
+
+        if (css.map) {
+          // https://developer.chrome.com/devtools/docs/javascript-debugging
+          // this makes source maps inside style tags work properly in Chrome
+          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
+
+          code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
+        }
+
+        if (isOldIE) {
+          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+        }
+
+        if (!style.element) {
+          var el = style.element = document.createElement('style');
+          el.type = 'text/css';
+          if (css.media) el.setAttribute('media', css.media);
+
+          if (isOldIE) {
+            el.setAttribute('data-group', group);
+            el.setAttribute('data-next-index', '0');
+          }
+
+          head.appendChild(el);
+        }
+
+        if (isOldIE) {
+          index = parseInt(style.element.getAttribute('data-next-index'));
+          style.element.setAttribute('data-next-index', index + 1);
+        }
+
+        if (style.element.styleSheet) {
+          style.parts.push(code);
+          style.element.styleSheet.cssText = style.parts.filter(Boolean).join('\n');
+        } else {
+          var textNode = document.createTextNode(code);
+          var nodes = style.element.childNodes;
+          if (nodes[index]) style.element.removeChild(nodes[index]);
+          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
+        }
+      }
+    };
+  }
+  /* style inject SSR */
+
+
+  var PreviewOverlay = __vue_normalize__({
+    render: __vue_render__,
+    staticRenderFns: __vue_staticRenderFns__
+  }, __vue_inject_styles__, __vue_script__, __vue_scope_id__, __vue_is_functional_template__, __vue_module_identifier__, __vue_create_injector__);
+
+  exports.ActiveUsers = ActiveUsers$1;
+  exports.AddElement = AddElement$1;
   exports.AssessmentItem = AssessmentItem;
   exports.AssetInput = AssetInput;
-  exports.ContainedContent = ContainedContent;
-  exports.ContentElement = ContentElement;
+  exports.ContainedContent = ContainedContent$1;
+  exports.ContentElement = ContentElement$3;
   exports.DatePicker = DatePicker;
-  exports.Discussion = Discussion;
-  exports.ElementList = ElementList;
+  exports.Discussion = Discussion$3;
+  exports.ElementList = ElementList$1;
   exports.ElementPlaceholder = ElementPlaceholder;
   exports.EmbeddedContainer = EmbeddedContainer;
   exports.FileInput = FileInput;
   exports.InlineActivator = InlineActivator;
-  exports.InputError = InputError;
+  exports.InputError = InputError$1;
   exports.PreviewOverlay = PreviewOverlay;
-  exports.PublishDiffChip = PublishDiffChip;
-  exports.QuestionContainer = TceQuestionContainer;
-  exports.SelectElement = SelectElement;
-  exports.UploadBtn = UploadBtn;
-  exports.upload = uploadMixin;
+  exports.PublishDiffChip = PublishDiffChip$1;
+  exports.QuestionContainer = TceQuestionContainer$1;
+  exports.SelectElement = SelectElement$1;
+  exports.UploadBtn = UploadBtn$1;
+  exports.upload = uploadMixin$1;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 

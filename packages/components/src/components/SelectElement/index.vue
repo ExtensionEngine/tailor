@@ -53,10 +53,6 @@
 </template>
 
 <script>
-import {
-  activity as activityApi,
-  contentElement as contentElementApi
-} from '@tailor/api';
 import { activity as activityUtils } from '@tailor/utils';
 import ContentPreview from '../ContentPreview/index.vue';
 import flatMap from 'lodash/flatMap';
@@ -75,7 +71,7 @@ const TOGGLE_BUTTON = {
 
 export default {
   name: 'select-element',
-  inject: ['$schema', '$repository'],
+  inject: ['$schema', '$repository', '$api'],
   props: {
     selected: { type: Array, default: () => [] },
     heading: { type: String, required: true },
@@ -177,12 +173,12 @@ export default {
         : await this.fetchActivities(repository);
     },
     fetchActivities: loader(function (repository) {
-      return activityApi.getActivities(repository.id);
+      return this.$api.activity.getActivities(repository.id);
     }, 'loadingContent'),
     fetchElements: loader(function (containers) {
       const { id: repositoryId } = this.selection.repository;
       const queryOpts = { repositoryId, ids: containers.map(it => it.id) };
-      return contentElementApi.fetch(queryOpts);
+      return this.$api.contentElement.fetch(queryOpts);
     }, 'loadingContent', 500),
     save() {
       this.$emit('selected', [...this.selection.elements]);

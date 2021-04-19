@@ -27,7 +27,6 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import { repository as api } from '@tailor/api';
 import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
 import Meta from '@/components/common/MetaInput';
@@ -65,7 +64,7 @@ export default {
     },
     publish() {
       this.publishing = true;
-      return api.publishRepositoryMeta(this.$route.params.repositoryId)
+      return this.$api.repository.publishRepositoryMeta(this.$route.params.repositoryId)
         .then(() => (this.publishing = false));
     }
   },

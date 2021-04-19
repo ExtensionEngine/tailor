@@ -81,7 +81,6 @@
 </template>
 
 <script>
-import { user as api } from '@tailor/api';
 import cloneDeep from 'lodash/cloneDeep';
 import humanize from 'humanize-string';
 import isEmpty from 'lodash/isEmpty';
@@ -102,6 +101,7 @@ export default {
     visible: { type: Boolean, default: false },
     userData: { type: Object, default: () => ({}) }
   },
+  inject: ['$api'],
   data: () => ({ user: resetUser(), isReinviting: false }),
   computed: {
     isNewUser: vm => !vm.user.id,
@@ -120,13 +120,13 @@ export default {
     },
     async submit() {
       const action = this.isNewUser ? 'create' : 'update';
-      await api.upsert(this.user);
+      await this.$api.user.upsert(this.user);
       this.$emit(`${action}d`);
       this.close();
     },
     reinvite() {
       this.isReinviting = true;
-      api.reinvite(this.user).finally(() => (this.isReinviting = false));
+      this.$api.user.reinvite(this.user).finally(() => (this.isReinviting = false));
     }
   },
   watch: {

@@ -20,7 +20,6 @@
 </template>
 
 <script>
-import api from '@tailor/api';
 import { ContentElement } from '@tailor/components';
 import EntitySidebar from './EntitySidebar';
 import first from 'lodash/first';
@@ -39,6 +38,7 @@ export default {
     revision: { type: Object, required: true },
     isDetached: { type: Boolean, default: false }
   },
+  inject: ['$api'],
   data: () => ({
     expanded: false,
     revisions: [],
@@ -52,7 +52,7 @@ export default {
     getRevisions() {
       const { entity, state } = this.revision;
       const params = { entity, entityId: state.id };
-      return api.revision.fetch(this.repositoryId, params).then(data => {
+      return this.$api.revision.fetch(this.repositoryId, params).then(data => {
         data.forEach(it => {
           if (includes(WITHOUT_STATICS, it.state.type)) it.resolved = true;
         });
@@ -64,7 +64,7 @@ export default {
       this.selectedRevision = revision;
       if (revision.resolved) return;
       this.$set(revision, 'loading', true);
-      return api.revision.get(this.repositoryId, revision.id).then(data => {
+      return this.$api.revision.get(this.repositoryId, revision.id).then(data => {
         Object.assign(revision, { state: data.state, resolved: true });
         this.$set(this.selectedRevision, revision);
         return Promise.delay(600);
@@ -74,7 +74,7 @@ export default {
       this.$set(revision, 'loading', true);
       const entity = { ...revision.state, paranoid: false };
       const options = pick(entity, ['id', 'repositoryId']);
-      return api.contentElement.patch(options, entity)
+      return this.$api.contentElement.patch(options, entity)
         .then(this.getRevisions)
         .then(revisions => {
           const newRevision = first(revisions);

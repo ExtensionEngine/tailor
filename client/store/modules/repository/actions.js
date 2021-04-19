@@ -1,4 +1,4 @@
-import { repository as api } from '@tailor/api';
+import { repository as api } from '@/api';
 import each from 'lodash/each';
 import feed from './feed';
 import filter from 'lodash/filter';

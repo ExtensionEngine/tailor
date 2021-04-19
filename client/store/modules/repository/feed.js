@@ -1,4 +1,4 @@
-import { feed as api } from '@tailor/api';
+import { feed as api } from '@/api';
 import SSEConnection from '@/sse';
 import urlJoin from 'url-join';
 

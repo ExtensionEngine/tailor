@@ -3,7 +3,7 @@ import {
   calculatePosition,
   InsertLocation
 } from '@tailor/utils';
-import { client } from '@tailor/api';
+import { client } from '@/api';
 import { Activity as Events } from '@/../common/sse';
 import feed from '../feed';
 import findIndex from 'lodash/findIndex';

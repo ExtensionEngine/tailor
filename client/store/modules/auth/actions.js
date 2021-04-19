@@ -1,4 +1,4 @@
-import { auth as api } from '@tailor/api';
+import { auth as api } from '@/api';
 
 export const login = ({ commit }, credentials) => {
   return api.login(credentials)

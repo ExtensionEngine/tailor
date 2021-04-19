@@ -26,11 +26,11 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
-import { activity as api } from '@tailor/api';
 import publishMixin from 'components/common/mixins/publish';
 
 export default {
   name: 'activity-actions',
+  inject: ['$api'],
   mixins: [publishMixin],
   computed: {
     ...mapState('editor', ['showPublishDiff']),
@@ -74,7 +74,7 @@ export default {
     ...mapActions('repository/activities', { publishActivity: 'publish' }),
     preview() {
       const { repositoryId, id } = this.activity;
-      return api.createPreview(repositoryId, id)
+      return this.$api.activity.createPreview(repositoryId, id)
         .then(location => window.open(location));
     }
   }

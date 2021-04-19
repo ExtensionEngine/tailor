@@ -23,7 +23,6 @@ import merge from 'lodash/merge';
 import omit from 'lodash/omit';
 import { publishDiffChangeTypes } from '@tailor/utils';
 import reduce from 'lodash/reduce';
-import { revision as revisionApi } from '@tailor/api';
 
 const { NEW, REMOVED, CHANGED } = publishDiffChangeTypes;
 const getPublishedState = revisions => revisions.reduce((all, { state }) => ({
@@ -42,6 +41,7 @@ export default {
     publishTimestamp: { type: String, default: null },
     showDiff: { type: Boolean, default: false }
   },
+  inject: ['$api'],
   data: () => ({ publishedElements: {}, publishedActivities: {} }),
   computed: {
     processedElements() {
@@ -98,7 +98,7 @@ export default {
         activityId: this.activityId,
         timestamp: this.publishTimestamp
       };
-      return revisionApi.getStateAtMoment(this.repositoryId, query)
+      return this.$api.revision.getStateAtMoment(this.repositoryId, query)
         .then(({ activities, elements }) => {
           this.publishedElements = getPublishedState(elements);
           this.publishedActivities = getPublishedState(activities);

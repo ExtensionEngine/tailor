@@ -58,8 +58,6 @@
 </template>
 
 <script>
-import { auth as api } from '@tailor/api';
-
 const ERRORS = {
   default: 'An error has occurred!',
   resetToken: 'Invalid reset password URL!'
@@ -72,6 +70,7 @@ export default {
     error: null,
     isLoading: true
   }),
+  inject: ['$api'],
   computed: {
     token: vm => vm.$route.params.token
   },
@@ -84,7 +83,7 @@ export default {
     }
   },
   created() {
-    return api.validateResetToken(this.token)
+    return this.$api.auth.validateResetToken(this.token)
       .catch(() => (this.error = ERRORS.resetToken))
       .finally(() => (this.isLoading = false));
   }
