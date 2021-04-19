@@ -30,7 +30,7 @@ import { mapActions, mapGetters } from 'vuex';
 import { repository as api } from '@tailor/api';
 import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
-import Meta from 'tce-core/MetaInput';
+import Meta from '@/components/common/MetaInput';
 import set from 'lodash/set';
 
 export default {

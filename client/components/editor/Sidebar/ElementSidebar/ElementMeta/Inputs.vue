@@ -10,7 +10,7 @@
 
 <script>
 import { getElementId } from '@tailor/utils';
-import MetaInput from 'tce-core/MetaInput';
+import MetaInput from '@/components/common/MetaInput';
 
 export default {
   name: 'element-meta-inputs',

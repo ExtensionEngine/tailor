@@ -65,7 +65,7 @@ import { mapActions, mapGetters } from 'vuex';
 import ActivityDiscussion from '../ActivityDiscussion';
 import ActivityStatus from './Status';
 import LabelChip from '@/components/repository/common/LabelChip';
-import MetaInput from 'tce-core/MetaInput';
+import MetaInput from '@/components/common/MetaInput';
 import Relationship from './Relationship';
 
 export default {

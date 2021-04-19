@@ -43,7 +43,7 @@
 <script>
 import { InsertLocation } from '@tailor/utils';
 import { mapActions } from 'vuex';
-import MetaInput from 'tce-core/MetaInput';
+import MetaInput from '@/components/common/MetaInput';
 import TailorDialog from '@/components/common/TailorDialog';
 import TypeSelect from './TypeSelect';
 
