@@ -67,6 +67,7 @@ export default {
     }
   },
   provide() {
+    const self = this;
     const $editorState = {};
     Object.defineProperties($editorState, {
       isPublishDiff: {
@@ -74,7 +75,12 @@ export default {
         enumerable: true
       }
     });
-    return { $editorState };
+    return {
+      get $repository() {
+        return { ...self.repository, activities: self.activities };
+      },
+      $editorState
+    };
   },
   watch: {
     activityId() {
