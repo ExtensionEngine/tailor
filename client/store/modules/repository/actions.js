@@ -2,11 +2,13 @@ import { repository as api } from '@tailor/api';
 import each from 'lodash/each';
 import feed from './feed';
 import filter from 'lodash/filter';
+import get from 'lodash/get';
 import Promise from 'bluebird';
 
 export const initialize = async (store, id) => {
   const { dispatch } = store;
-  await dispatch('reset', id);
+  const repositoryId = get(store, 'state.repositoryId');
+  if (repositoryId !== id) await dispatch('reset', id);
   initializeSSE(id, store);
   // Initialize repository state
   return Promise.all([

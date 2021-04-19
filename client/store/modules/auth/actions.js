@@ -14,12 +14,6 @@ export const changePassword = (_, { currentPassword, newPassword }) => {
   return api.changePassword(currentPassword, newPassword);
 };
 
-export const forgotPassword = (_, { email }) => api.forgotPassword(email);
-
-export const resetPassword = (_, { token, password }) => {
-  return api.resetPassword(token, password);
-};
-
 export const fetchUserInfo = ({ commit }) => {
   return api.getUserInfo()
     .then(({ data: { user, authData } }) => commit('setAuth', { user, authData }))
