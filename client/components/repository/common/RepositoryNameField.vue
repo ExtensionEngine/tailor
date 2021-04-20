@@ -69,7 +69,7 @@ export default {
   },
   async created() {
     const { repositoryId } = this;
-    const params = { ...repositoryId ? { repositoryId } : {}, getNames: true };
+    const params = repositoryId ? { repositoryId } : {};
     this.repositoryNames = await api.getRepositories(params);
   }
 };
