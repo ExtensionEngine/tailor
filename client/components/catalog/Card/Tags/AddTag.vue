@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import { tag as api } from '@/api';
 import differenceBy from 'lodash/differenceBy';
 import map from 'lodash/map';
 import { mapActions } from 'vuex';
@@ -48,7 +49,6 @@ export default {
   props: {
     repository: { type: Object, required: true }
   },
-  inject: ['$api'],
   data: () => ({ tagInput: '', tags: [] }),
   computed: {
     assignedTags: vm => vm.repository.tags,
@@ -70,7 +70,7 @@ export default {
     }
   },
   created() {
-    this.$api.tag.fetch().then(tags => (this.tags = tags));
+    api.fetch().then(tags => (this.tags = tags));
   },
   components: { TailorDialog }
 };

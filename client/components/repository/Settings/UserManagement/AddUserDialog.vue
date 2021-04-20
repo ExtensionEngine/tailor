@@ -64,6 +64,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import { user as api } from '@/api';
 import TailorDialog from '@/components/common/TailorDialog';
 import throttle from 'lodash/throttle';
 
@@ -76,7 +77,6 @@ export default {
   props: {
     roles: { type: Array, required: true }
   },
-  inject: ['$api'],
   data() {
     return {
       isVisible: false,
@@ -105,7 +105,7 @@ export default {
         this.suggestedUsers = [];
         return;
       }
-      const { items: users } = await this.$api.user.fetch({ filter });
+      const { items: users } = await api.fetch({ filter });
       this.suggestedUsers = users.map(it => it.email);
     }, 350),
     close() {

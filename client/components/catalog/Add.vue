@@ -117,6 +117,7 @@
 </template>
 
 <script>
+import { repository as api } from '@/api';
 import loader from '@/components/common/loader';
 import { mapGetters } from 'vuex';
 import { SCHEMAS } from '@tailor/config';
@@ -140,7 +141,6 @@ export default {
     showLoader: false,
     serverError: ''
   }),
-  inject: ['$api'],
   computed: {
     ...mapGetters(['isAdmin']),
     isCreate: vm => vm.selectedTab === NEW_TAB,
@@ -154,7 +154,7 @@ export default {
         .catch(() => (this.serverError = 'An error has occurred!'));
     }, 'showLoader'),
     create() {
-      return this.$api.repository.save(this.repository);
+      return api.save(this.repository);
     },
     import() {
       const { archive, repository } = this;
@@ -163,7 +163,7 @@ export default {
       form.append('name', repository.name);
       form.append('description', repository.description);
       const headers = { 'content-type': 'multipart/form-data' };
-      return this.$api.repository.importRepository(form, { headers });
+      return api.importRepository(form, { headers });
     },
     hide() {
       this.showLoader = false;

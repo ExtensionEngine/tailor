@@ -47,6 +47,7 @@
 </template>
 
 <script>
+import { auth as api } from '@/api';
 import { delay } from 'bluebird';
 
 const getDefaultData = () => ({
@@ -57,11 +58,10 @@ const getDefaultData = () => ({
 
 export default {
   data: () => getDefaultData(),
-  inject: ['$api'],
   methods: {
     submit() {
       this.showMessage = true;
-      Promise.all([this.$api.auth.forgotPassword(this.email), delay(5000)])
+      Promise.all([api.forgotPassword(this.email), delay(5000)])
         .then(() => this.$router.push('/'))
         .catch(() => (this.error = 'Something went wrong!'));
     },

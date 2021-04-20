@@ -1,3 +1,13 @@
+import activity from './activity';
+import contentElement from './contentElement';
+import repository from './repository';
+
+export const exposedApi = {
+  fetchRepositories: repository.getRepositories,
+  fetchActivities: activity.getActivities,
+  fetchContentElements: contentElement.fetch
+};
+
 export { default as activity } from './activity';
 export { default as asset } from './asset';
 export { default as auth } from './auth';

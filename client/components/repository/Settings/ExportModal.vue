@@ -19,6 +19,7 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
+import { repository as api } from '@/api';
 import TailorDialog from '@/components/common/TailorDialog';
 
 const STATUS = {
@@ -41,7 +42,6 @@ const STATUS = {
 };
 
 export default {
-  inject: ['$api'],
   data: () => ({ jobId: null, status: STATUS.INIT }),
   computed: {
     ...mapState({ token: state => state.auth.token }),
@@ -51,7 +51,7 @@ export default {
     exportRepository() {
       const { jobId, repository, token } = this;
       const fields = { token: { value: token, type: 'hidden' } };
-      return this.$api.repository.exportRepository(repository.id, jobId, fields)
+      return api.exportRepository(repository.id, jobId, fields)
         .finally(() => this.close());
     },
     close() {
@@ -59,7 +59,7 @@ export default {
     }
   },
   created() {
-    return this.$api.repository.initiateExportJob(this.repository.id)
+    return api.initiateExportJob(this.repository.id)
       .then(jobId => {
         this.jobId = jobId;
         this.status = STATUS.READY;

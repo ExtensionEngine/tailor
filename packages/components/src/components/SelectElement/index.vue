@@ -173,12 +173,12 @@ export default {
         : await this.fetchActivities(repository);
     },
     fetchActivities: loader(function (repository) {
-      return this.$api.activity.getActivities(repository.id);
+      return this.$api.fetchActivities(repository.id);
     }, 'loadingContent'),
     fetchElements: loader(function (containers) {
       const { id: repositoryId } = this.selection.repository;
       const queryOpts = { repositoryId, ids: containers.map(it => it.id) };
-      return this.$api.contentElement.fetch(queryOpts);
+      return this.$api.fetchContentElements(queryOpts);
     }, 'loadingContent', 500),
     save() {
       this.$emit('selected', [...this.selection.elements]);

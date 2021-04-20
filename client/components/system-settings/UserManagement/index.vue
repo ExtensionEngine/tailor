@@ -77,6 +77,7 @@
 </template>
 
 <script>
+import { user as api } from '@/api';
 import humanize from 'humanize-string';
 import loader from '@/components/common/loader';
 import { mapRequests } from '@extensionengine/vue-radio';
@@ -101,13 +102,12 @@ const headers = () => [
   { text: 'Actions', value: 'email', align: 'center', sortable: false }
 ];
 const actions = {
-  archive: (user, api) => api.user.remove(user),
-  restore: (user, api) => api.user.upsert(user)
+  archive: user => api.remove(user),
+  restore: user => api.upsert(user)
 };
 
 export default {
   name: 'user-list',
-  inject: ['$api'],
   data() {
     return {
       users: [],
@@ -134,7 +134,7 @@ export default {
     },
     fetch: throttle(loader(async function (opts) {
       Object.assign(this.dataTable, opts);
-      const { items, total } = await this.$api.user.fetch({
+      const { items, total } = await api.fetch({
         sortBy: this.dataTable.sortBy[0],
         sortOrder: this.dataTable.sortDesc[0] ? 'DESC' : 'ASC',
         offset: (this.dataTable.page - 1) * this.dataTable.itemsPerPage,
@@ -147,11 +147,10 @@ export default {
     }, 'loading'), 400),
     archiveOrRestore(user) {
       const action = user.deletedAt ? 'restore' : 'archive';
-      const { user: userApi } = this.$api;
       this.confirmation = {
         title: `${humanize(action)} user`,
         message: `Are you sure you want to ${action} user "${user.email}"?`,
-        action: () => actions[action](user, userApi).then(() => this.fetch())
+        action: () => actions[action](user).then(() => this.fetch())
       };
       this.showConfirmationModal(this.confirmation);
     }

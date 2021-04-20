@@ -37,7 +37,7 @@ export default {
       }
     },
     fetchRepositories: debounce(loader(function (search) {
-      return this.$api.repository.getRepositories({ search }).then(repositories => {
+      return this.$api.fetchRepositories({ search }).then(repositories => {
         this.repositories = sortBy(repositories, 'name');
       });
     }, 'loading'), 500)

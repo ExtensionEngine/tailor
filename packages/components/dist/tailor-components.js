@@ -4492,7 +4492,7 @@ var script$j = {
     fetchRepositories: debounce__default['default'](loader(function (search) {
       var _this = this;
 
-      return this.$api.repository.getRepositories({
+      return this.$api.fetchRepositories({
         search: search
       }).then(function (repositories) {
         _this.repositories = sortBy__default['default'](repositories, 'name');
@@ -4976,7 +4976,7 @@ var script$h = {
       this.items.activities = currentRepository.id === repository.id ? currentRepository.activities : await this.fetchActivities(repository);
     },
     fetchActivities: loader(function (repository) {
-      return this.$api.activity.getActivities(repository.id);
+      return this.$api.fetchActivities(repository.id);
     }, 'loadingContent'),
     fetchElements: loader(function (containers) {
       var repositoryId = this.selection.repository.id;
@@ -4986,7 +4986,7 @@ var script$h = {
           return it.id;
         })
       };
-      return this.$api.contentElement.fetch(queryOpts);
+      return this.$api.fetchContentElements(queryOpts);
     }, 'loadingContent', 500),
     save: function save() {
       this.$emit('selected', _toConsumableArray(this.selection.elements));
@@ -7336,7 +7336,7 @@ var downloadMixin = {
 };
 
 var uploadMixin = {
-  inject: ['$api', '$repository'],
+  inject: ['$storageService', '$repository'],
   mixins: [downloadMixin],
   data: function data() {
     return {
@@ -7362,7 +7362,7 @@ var uploadMixin = {
       var _this = this;
 
       this.createFileForm(e);
-      return this.$api.asset.upload(this.repositoryId, this.form).then(function (data) {
+      return this.$storageService.upload(this.repositoryId, this.form).then(function (data) {
         var _this$form$get = _this.form.get('file'),
             name = _this$form$get.name;
 
@@ -7374,7 +7374,7 @@ var uploadMixin = {
       });
     }, 'uploading'),
     downloadFile: async function downloadFile(key, name) {
-      var url = await this.$api.asset.getUrl(this.repositoryId, key);
+      var url = await this.$storageService.getUrl(this.repositoryId, key);
       return this.download(url, name);
     },
     deleteFile: function deleteFile(item) {

@@ -3,7 +3,7 @@ import './polyfills';
 import 'bootstrap-sass/assets/javascripts/bootstrap';
 import '@/utils/validation';
 
-import * as api from '@/api';
+import { asset as assetApi, exposedApi } from '@/api';
 import { schema } from '@tailor/config';
 import ContentPluginRegistry from './content-plugins';
 
@@ -64,7 +64,8 @@ Promise.all([getStore(), contentPluginRegistry.initialize()])
       render: h => h(App),
       provide() {
         return {
-          $api: api,
+          $api: exposedApi,
+          $storageService: assetApi,
           $teRegistry: contentPluginRegistry.elementRegistry,
           $ccRegistry: contentPluginRegistry.containerRegistry,
           $schema: schema,

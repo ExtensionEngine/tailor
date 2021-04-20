@@ -53,6 +53,10 @@
 </template>
 
 <script>
+import {
+  activity as activityApi,
+  repository as repositoryApi
+} from '@/api';
 import { mapActions, mapGetters } from 'vuex';
 import debounce from 'lodash/debounce';
 import find from 'lodash/find';
@@ -78,7 +82,6 @@ export default {
     anchor: { type: Object, default: null },
     showActivator: { type: Boolean, default: false }
   },
-  inject: ['$api'],
   data: () => ({
     visible: false,
     repositories: [],
@@ -107,7 +110,7 @@ export default {
       this.selectedActivities = [];
       if (repository.activities) return;
       this.isFetchingActivities = true;
-      const activities = await this.$api.activity.getActivities(repository.id);
+      const activities = await activityApi.getActivities(repository.id);
       repository.activities = sortBy(activities, 'position');
       this.isFetchingActivities = false;
     },
@@ -144,7 +147,7 @@ export default {
     },
     fetchRepositories: debounce(loader(function (search = '') {
       const params = { search, schema: this.repository.schema };
-      return this.$api.repository.getRepositories(params).then(repositories => {
+      return repositoryApi.getRepositories(params).then(repositories => {
         this.repositories = sortBy(repositories, 'name');
       });
     }, 'isFetchingRepositories'), 500)

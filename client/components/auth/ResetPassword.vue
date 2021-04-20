@@ -58,6 +58,8 @@
 </template>
 
 <script>
+import { auth as api } from '@/api';
+
 const ERRORS = {
   default: 'An error has occurred!',
   resetToken: 'Invalid reset password URL!'
@@ -70,20 +72,19 @@ export default {
     error: null,
     isLoading: true
   }),
-  inject: ['$api'],
   computed: {
     token: vm => vm.$route.params.token
   },
   methods: {
     submit() {
       const { token, password } = this;
-      return this.resetPassword(token, password)
+      return api.resetPassword(token, password)
         .then(() => this.$router.push('/'))
         .catch(() => (this.error = ERRORS.default));
     }
   },
   created() {
-    return this.$api.auth.validateResetToken(this.token)
+    return api.validateResetToken(this.token)
       .catch(() => (this.error = ERRORS.resetToken))
       .finally(() => (this.isLoading = false));
   }

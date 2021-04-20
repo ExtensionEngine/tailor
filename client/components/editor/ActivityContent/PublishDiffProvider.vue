@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import { revision as api } from '@/api';
 import cloneDeep from 'lodash/cloneDeep';
 import filter from 'lodash/filter';
 import isAfter from 'date-fns/isAfter';
@@ -41,7 +42,6 @@ export default {
     publishTimestamp: { type: String, default: null },
     showDiff: { type: Boolean, default: false }
   },
-  inject: ['$api'],
   data: () => ({ publishedElements: {}, publishedActivities: {} }),
   computed: {
     processedElements() {
@@ -98,7 +98,7 @@ export default {
         activityId: this.activityId,
         timestamp: this.publishTimestamp
       };
-      return this.$api.revision.getStateAtMoment(this.repositoryId, query)
+      return api.getStateAtMoment(this.repositoryId, query)
         .then(({ activities, elements }) => {
           this.publishedElements = getPublishedState(elements);
           this.publishedActivities = getPublishedState(activities);
