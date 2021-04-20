@@ -245,8 +245,3 @@ module.exports = {
   addTag,
   removeTag
 };
-
-function getRepositoryNames({ repositoryId }) {
-  const where = repositoryId ? { [Op.not]: { id: repositoryId } } : {};
-  return Repository.findAll({ where, attributes: ['name'] });
-}
