@@ -46,7 +46,7 @@ export default {
   }),
   computed: {
     ...mapGetters('editor', ['activity', 'contentContainers', 'rootContainerGroups']),
-    ...mapGetters('repository', ['repository', 'outlineActivities']),
+    ...mapGetters('repository', ['repository', 'activities', 'outlineActivities']),
     ...mapGetters('repository/userTracking', ['getActiveUsers']),
     ...mapState('editor', ['showPublishDiff']),
     activeUsers: vm => vm.getActiveUsers('activity', vm.activityId)
