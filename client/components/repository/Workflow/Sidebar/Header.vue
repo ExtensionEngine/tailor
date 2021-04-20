@@ -59,7 +59,7 @@ import LabelChip from '@/components/repository/common/LabelChip';
 import { mapGetters } from 'vuex';
 
 export default {
-  inject: ['$schema'],
+  inject: ['$schemaService'],
   props: {
     uid: { type: String, required: true },
     id: { type: Number, required: true },
@@ -71,7 +71,7 @@ export default {
   },
   computed: {
     ...mapGetters('repository', ['structure']),
-    activityConfig: vm => vm.$schema.getLevel(vm.type),
+    activityConfig: vm => vm.$schemaService.getLevel(vm.type),
     isUpdated() {
       if (!this.updatedAt) return false;
       const createdAt = this.truncateSeconds(new Date(this.createdAt));

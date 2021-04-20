@@ -27,7 +27,7 @@ import Publishing from './Publishing';
 
 export default {
   name: 'activity-sidebar-header',
-  inject: ['$schema'],
+  inject: ['$schemaService'],
   props: {
     activity: { type: Object, required: true }
   },
@@ -36,7 +36,7 @@ export default {
     ...mapGetters('repository', ['outlineActivities', 'isRepositoryAdmin']),
     isEditable() {
       const type = get(this.activity, 'type');
-      return type && this.$schema.isEditable(type);
+      return type && this.$schemaService.isEditable(type);
     }
   },
   methods: {

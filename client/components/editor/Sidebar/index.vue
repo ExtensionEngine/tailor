@@ -59,7 +59,7 @@ import { mapGetters } from 'vuex';
 
 export default {
   name: 'editor-sidebar',
-  inject: ['$schema'],
+  inject: ['$schemaService'],
   props: {
     repository: { type: Object, required: true },
     activities: { type: Array, required: true },
@@ -91,7 +91,7 @@ export default {
     metadata() {
       const { repository, selectedElement } = this;
       const schemaId = get(repository, 'schema');
-      return this.$schema.getElementMetadata(schemaId, selectedElement);
+      return this.$schemaService.getElementMetadata(schemaId, selectedElement);
     }
   },
   methods: { getElementId },

@@ -9,11 +9,11 @@ const { ADD_AFTER, ADD_BEFORE, ADD_INTO } = InsertLocation;
 
 export default {
   mixins: [selectActivity],
-  inject: ['$schema'],
+  inject: ['$schemaService'],
   computed: {
     ...mapGetters('repository', ['structure', 'activities']),
     parent: vm => find(vm.activities, { id: vm.activity.parentId }),
-    isEditable: vm => vm.$schema.isEditable(vm.activity.type),
+    isEditable: vm => vm.$schemaService.isEditable(vm.activity.type),
     levels: vm => uniqBy(vm.sameLevel.concat(vm.subLevels), 'type'),
     sameLevel() {
       if (!this.parent) return this.structure.filter(it => it.rootLevel);

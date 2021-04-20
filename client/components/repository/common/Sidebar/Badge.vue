@@ -34,14 +34,14 @@ const getDescendantsInfo = (descendants, count, label) => {
 
 export default {
   name: 'sidebar-badge',
-  inject: ['$schema'],
+  inject: ['$schemaService'],
   props: {
     activity: { type: Object, default: () => ({}) }
   },
   computed: {
     ...mapGetters('repository', { outline: 'outlineActivities' }),
     label() {
-      return this.$schema.getActivityLabel(this.activity);
+      return this.$schemaService.getActivityLabel(this.activity);
     },
     hasChanges() {
       return isChanged(this.activity);
@@ -57,8 +57,8 @@ export default {
       return getActivityInfo(hasChanges, label);
     },
     descendantsInfo() {
-      const { $schema, changedDescendants, label } = this;
-      const labelCountMap = countBy(changedDescendants, $schema.getActivityLabel);
+      const { $schemaService, changedDescendants, label } = this;
+      const labelCountMap = countBy(changedDescendants, $schemaService.getActivityLabel);
       const descendants = arrayToSentence(map(labelCountMap, getDescriptor));
       return getDescendantsInfo(descendants, changedDescendants.length, label);
     },

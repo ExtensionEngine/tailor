@@ -34,7 +34,7 @@ import Meta from '@/components/common/MetaInput';
 import set from 'lodash/set';
 
 export default {
-  inject: ['$schema'],
+  inject: ['$schemaService'],
   data: () => ({ publishing: false }),
   computed: {
     ...mapGetters('repository', ['repository']),
@@ -53,7 +53,7 @@ export default {
         validate: { required: true, min: 2, max: 2000 }
       }];
     },
-    metadata: vm => vm.$schema.getRepositoryMetadata(vm.repository)
+    metadata: vm => vm.$schemaService.getRepositoryMetadata(vm.repository)
   },
   methods: {
     ...mapActions('repositories', ['update']),

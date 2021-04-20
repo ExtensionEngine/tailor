@@ -42,7 +42,7 @@ import xorBy from 'lodash/xorBy';
 const { toTreeFormat } = activityUtils;
 
 export default {
-  inject: ['$schema'],
+  inject: ['$schemaService'],
   props: {
     schemaName: { type: String, required: true },
     activities: { type: Array, required: true },
@@ -50,7 +50,7 @@ export default {
   },
   data: () => ({ selected: [], search: '' }),
   computed: {
-    activityTree: vm => toTreeFormat(vm.activities, vm.$schema, vm.supportedLevels),
+    activityTree: vm => toTreeFormat(vm.activities, vm.$schemaService, vm.supportedLevels),
     hasSearchResults() {
       if (!this.search || !this.$refs) return true;
       const { excludedItems, nodes } = this.$refs.treeview;

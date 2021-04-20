@@ -76,7 +76,7 @@ export default {
   name: 'content-containers',
   mixins: [deprecation],
   inheritAttrs: false,
-  inject: ['$schema', '$ccRegistry'],
+  inject: ['$schemaService', '$ccRegistry'],
   props: {
     containerGroup: { type: Array, default: () => ({}) },
     processedElements: { type: Object, required: true },
@@ -98,7 +98,7 @@ export default {
       });
     },
     containerName() {
-      const id = this.$schema.getContainerTemplateId(this);
+      const id = this.$schemaService.getContainerTemplateId(this);
       return getContainerName(this.$ccRegistry.get(id) ? id : 'DEFAULT');
     },
     name: vm => vm.label.toLowerCase(),

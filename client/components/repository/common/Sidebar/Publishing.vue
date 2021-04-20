@@ -41,14 +41,14 @@ import publishMixin from 'components/common/mixins/publish';
 const { getDescendants } = activityUtils;
 
 export default {
-  inject: ['$schema'],
+  inject: ['$schemaService'],
   mixins: [publishMixin],
   props: {
     activity: { type: Object, required: true },
     outlineActivities: { type: Array, required: true }
   },
   computed: {
-    config: vm => vm.$schema.getLevel(vm.activity.type),
+    config: vm => vm.$schemaService.getLevel(vm.activity.type),
     publishedAtMessage() {
       const { publishedAt } = this.activity;
       return publishedAt

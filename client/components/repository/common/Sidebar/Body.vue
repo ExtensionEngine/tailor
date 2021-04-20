@@ -70,7 +70,7 @@ import Relationship from './Relationship';
 
 export default {
   name: 'activity-sidebar-body',
-  inject: ['$schema'],
+  inject: ['$schemaService'],
   props: {
     activity: { type: Object, required: true }
   },
@@ -78,8 +78,8 @@ export default {
     ...mapGetters(['isAdmin']),
     ...mapGetters('repository', ['isRepositoryAdmin']),
     activityUrl: () => window.location.href,
-    config: vm => vm.$schema.getLevel(vm.activity.type),
-    metadata: vm => vm.$schema.getActivityMetadata(vm.activity)
+    config: vm => vm.$schemaService.getLevel(vm.activity.type),
+    metadata: vm => vm.$schemaService.getActivityMetadata(vm.activity)
   },
   methods: {
     ...mapActions('repository/activities', ['update']),

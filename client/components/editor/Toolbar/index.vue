@@ -58,7 +58,7 @@ import { getElementId } from '@tailor/utils';
 
 export default {
   name: 'editor-toolbar',
-  inject: ['$schema'],
+  inject: ['$schemaService'],
   props: {
     element: { type: Object, default: null },
     activeUsers: { type: Array, default: () => [] }
@@ -67,7 +67,7 @@ export default {
     ...mapState('editor', ['showPublishDiff']),
     ...mapGetters('editor', ['activity']),
     config() {
-      return this.$schema.getLevel(this.activity.type);
+      return this.$schemaService.getLevel(this.activity.type);
     }
   },
   methods: {

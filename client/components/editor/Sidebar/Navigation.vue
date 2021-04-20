@@ -53,7 +53,7 @@ const { toTreeFormat } = activityUtils;
 
 export default {
   name: 'activity-navigation',
-  inject: ['$schema'],
+  inject: ['$schemaService'],
   props: {
     repository: { type: Object, required: true },
     activities: { type: Array, required: true },
@@ -66,14 +66,14 @@ export default {
     };
   },
   computed: {
-    activityConfigs: vm => vm.$schema.getOutlineLevels(vm.repository.schema),
+    activityConfigs: vm => vm.$schemaService.getOutlineLevels(vm.repository.schema),
     activityTypes: vm => vm.activityConfigs.map(it => it.type),
     editableTypes: vm => vm.editableActivityConfigs.map(it => it.type),
     editableActivityConfigs() {
-      return this.activityConfigs.filter(it => this.$schema.isEditable(it.type));
+      return this.activityConfigs.filter(it => this.$schemaService.isEditable(it.type));
     },
     activityTree() {
-      return toTreeFormat(this.activities, this.$schema, this.editableActivityConfigs);
+      return toTreeFormat(this.activities, this.$schemaService, this.editableActivityConfigs);
     },
     hasSearchResults() {
       if (!this.search || !this.$refs) return true;

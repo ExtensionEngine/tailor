@@ -50,7 +50,7 @@ const { toTreeFormat } = activityUtils;
 
 export default {
   name: 'select-activity',
-  inject: ['$schema'],
+  inject: ['$schemaService'],
   props: {
     selectedElements: { type: Array, default: () => [] },
     activities: { type: Array, default: () => [] }
@@ -59,7 +59,7 @@ export default {
   computed: {
     groupedSelection: vm => groupBy(vm.selectedElements, 'outlineId'),
     expandedActivityIds: vm => map(vm.activities, 'id'),
-    activityTree: vm => toTreeFormat(vm.activities, vm.$schema, []),
+    activityTree: vm => toTreeFormat(vm.activities, vm.$schemaService, []),
     noResultsMessage() {
       const { activities, search, $refs } = this;
       if (!activities.length) return 'Empty repository';
@@ -71,7 +71,7 @@ export default {
   },
   methods: {
     hasContentContainers(type) {
-      return this.$schema.isEditable(type);
+      return this.$schemaService.isEditable(type);
     },
     getChipLabel({ length }) {
       return `${length} ${pluralize('element', length)} selected`;

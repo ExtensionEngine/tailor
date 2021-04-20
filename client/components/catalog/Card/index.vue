@@ -96,7 +96,7 @@ const getPublishingInfo = hasChanges => hasChanges
   : 'Published.';
 
 export default {
-  inject: ['$schema'],
+  inject: ['$schemaService'],
   props: {
     repository: { type: Object, required: true }
   },
@@ -104,7 +104,7 @@ export default {
   computed: {
     name: ({ repository }) => repository.name,
     description: ({ repository }) => repository.description,
-    schema: ({ $schema, repository }) => $schema.getSchema(repository.schema).name,
+    schema: ({ $schemaService, repository }) => $schemaService.getSchema(repository.schema).name,
     lastActivity: ({ repository }) => first(repository.revisions),
     hasUnpublishedChanges: ({ repository }) => repository.hasUnpublishedChanges,
     isPinned: ({ repository }) => get(repository, 'repositoryUser.pinned', false),

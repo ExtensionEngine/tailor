@@ -58,7 +58,7 @@ const ELEMENT_MUTATIONS = [
 export default {
   name: 'activity-content',
   mixins: [commentEventListeners],
-  inject: ['$schema'],
+  inject: ['$schemaService'],
   props: {
     repository: { type: Object, required: true },
     activity: { type: Object, required: true },
@@ -93,7 +93,7 @@ export default {
         acc[it.uid] = { ...it, comments, hasUnresolvedComments, lastSeen: lastSeen || 0 };
       }, {});
     },
-    containerConfigs: vm => vm.$schema.getSupportedContainers(vm.activity.type)
+    containerConfigs: vm => vm.$schemaService.getSupportedContainers(vm.activity.type)
   },
   methods: {
     ...mapActions('repository/contentElements', { getContentElements: 'fetch' }),

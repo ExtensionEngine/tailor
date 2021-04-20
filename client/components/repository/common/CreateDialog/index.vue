@@ -56,7 +56,7 @@ const { ADD_AFTER, ADD_INTO } = InsertLocation;
 
 export default {
   name: 'create-activity-dialog',
-  inject: ['$schema'],
+  inject: ['$schemaService'],
   props: {
     repositoryId: { type: Number, required: true },
     levels: { type: Array, required: true },
@@ -78,7 +78,7 @@ export default {
   computed: {
     metadata() {
       if (!this.activity.type) return null;
-      return this.$schema.getActivityMetadata(this.activity);
+      return this.$schemaService.getActivityMetadata(this.activity);
     },
     hasSingleOption: vm => vm.levels.length === 1,
     defaultLabel: vm => vm.hasSingleOption ? `Add ${vm.levels[0].label}` : 'Add'

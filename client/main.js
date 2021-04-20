@@ -68,7 +68,7 @@ Promise.all([getStore(), contentPluginRegistry.initialize()])
           $storageService: assetApi,
           $teRegistry: contentPluginRegistry.elementRegistry,
           $ccRegistry: contentPluginRegistry.containerRegistry,
-          $schema: schema,
+          $schemaService: schema,
           $getCurrentUser: () => store.state.auth.user
         };
       }

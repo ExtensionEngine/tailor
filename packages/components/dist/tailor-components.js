@@ -4188,7 +4188,7 @@ function loader(action, name) {
 var toTreeFormat = utils.activity.toTreeFormat;
 var script$k = {
   name: 'select-activity',
-  inject: ['$schema'],
+  inject: ['$schemaService'],
   props: {
     selectedElements: {
       type: Array,
@@ -4216,7 +4216,7 @@ var script$k = {
       return map__default['default'](vm.activities, 'id');
     },
     activityTree: function activityTree(vm) {
-      return toTreeFormat(vm.activities, vm.$schema, []);
+      return toTreeFormat(vm.activities, vm.$schemaService, []);
     },
     noResultsMessage: function noResultsMessage() {
       var activities = this.activities,
@@ -4233,7 +4233,7 @@ var script$k = {
   },
   methods: {
     hasContentContainers: function hasContentContainers(type) {
-      return this.$schema.isEditable(type);
+      return this.$schemaService.isEditable(type);
     },
     getChipLabel: function getChipLabel(_ref) {
       var length = _ref.length;
@@ -4333,8 +4333,8 @@ var __vue_staticRenderFns__$k = [];
 
 var __vue_inject_styles__$k = function __vue_inject_styles__(inject) {
   if (!inject) return;
-  inject("data-v-285b0632_0", {
-    source: ".treeview[data-v-285b0632]{max-height:19rem;text-align:left;background-color:#fcfcfc;border:1px solid #eee;overflow-y:scroll}.treeview .v-chip.custom-chip[data-v-285b0632]{border-radius:12px!important}.treeview[data-v-285b0632]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__content>*,.treeview[data-v-285b0632]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__root{cursor:auto}",
+  inject("data-v-ca448cba_0", {
+    source: ".treeview[data-v-ca448cba]{max-height:19rem;text-align:left;background-color:#fcfcfc;border:1px solid #eee;overflow-y:scroll}.treeview .v-chip.custom-chip[data-v-ca448cba]{border-radius:12px!important}.treeview[data-v-ca448cba]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__content>*,.treeview[data-v-ca448cba]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__root{cursor:auto}",
     map: undefined,
     media: undefined
   });
@@ -4342,7 +4342,7 @@ var __vue_inject_styles__$k = function __vue_inject_styles__(inject) {
 /* scoped */
 
 
-var __vue_scope_id__$k = "data-v-285b0632";
+var __vue_scope_id__$k = "data-v-ca448cba";
 /* module identifier */
 
 var __vue_module_identifier__$b = undefined;
@@ -4820,7 +4820,7 @@ var TOGGLE_BUTTON = {
 };
 var script$h = {
   name: 'select-element',
-  inject: ['$schema', '$repository', '$api'],
+  inject: ['$schemaService', '$repository', '$api'],
   props: {
     selected: {
       type: Array,
@@ -4913,7 +4913,7 @@ var script$h = {
   },
   methods: {
     getContainerTypes: function getContainerTypes(type) {
-      return map__default['default'](this.$schema.getSupportedContainers(type), 'type');
+      return map__default['default'](this.$schemaService.getSupportedContainers(type), 'type');
     },
     getTypePosition: function getTypePosition(_ref) {
       var type = _ref.type;

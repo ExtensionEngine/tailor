@@ -71,7 +71,7 @@ const TOGGLE_BUTTON = {
 
 export default {
   name: 'select-element',
-  inject: ['$schema', '$repository', '$api'],
+  inject: ['$schemaService', '$repository', '$api'],
   props: {
     selected: { type: Array, default: () => [] },
     heading: { type: String, required: true },
@@ -122,7 +122,7 @@ export default {
   },
   methods: {
     getContainerTypes(type) {
-      return map(this.$schema.getSupportedContainers(type), 'type');
+      return map(this.$schemaService.getSupportedContainers(type), 'type');
     },
     getTypePosition({ type }) {
       return this.rootContainerTypes.indexOf(type);

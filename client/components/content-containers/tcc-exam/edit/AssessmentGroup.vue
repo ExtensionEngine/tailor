@@ -72,7 +72,7 @@ import uniq from 'lodash/uniq';
 
 export default {
   name: 'assessment-group',
-  inject: ['$schema'],
+  inject: ['$schemaService'],
   props: {
     group: { type: Object, required: true },
     elements: { type: Object, required: true },
@@ -102,7 +102,7 @@ export default {
       const types = uniq(map(this.objectives, 'type'));
       const label = types.length > 1
         ? 'Objective'
-        : this.$schema.getLevel(types[0]).label;
+        : this.$schemaService.getLevel(types[0]).label;
       return `Link ${label}`;
     }
   },
