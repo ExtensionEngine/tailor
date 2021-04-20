@@ -23,7 +23,7 @@
       deletable-chips return-object outlined>
       <template #item="{ item }">
         {{ item.data.name }}
-        <span class="ml-2 primary--text text--lighten-1">({{ item.id }})</span>
+        <span class="ml-2 primary--text text--lighten-1">({{ item.shortId }})</span>
       </template>
     </v-autocomplete>
   </validation-provider>
