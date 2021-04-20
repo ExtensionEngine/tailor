@@ -18,6 +18,7 @@
       :disabled="!options.length"
       :error-messages="errors"
       :class="{ required: !allowEmpty }"
+      item-value="id"
       item-text="data.name"
       deletable-chips return-object outlined />
   </validation-provider>
