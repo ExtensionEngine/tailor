@@ -22,8 +22,8 @@
       item-text="data.name"
       deletable-chips return-object outlined>
       <template #item="{ item }">
+        <label-chip color="primary lighten-4" class="mr-2">{{ item.shortId }}</label-chip>
         {{ item.data.name }}
-        <span class="ml-2 primary--text text--lighten-1">({{ item.shortId }})</span>
       </template>
     </v-autocomplete>
   </validation-provider>
@@ -43,6 +43,7 @@ import get from 'lodash/get';
 import groupBy from 'lodash/groupBy';
 import includes from 'lodash/includes';
 import isEmpty from 'lodash/isEmpty';
+import LabelChip from '../LabelChip';
 import lowerCase from 'lodash/lowerCase';
 import map from 'lodash/map';
 import pluralize from 'pluralize';
@@ -114,7 +115,8 @@ export default {
   },
   created() {
     this.value = this.multiple ? this.associations : this.associations[0];
-  }
+  },
+  components: { LabelChip }
 };
 </script>
 
