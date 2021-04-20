@@ -75,19 +75,11 @@
             </validation-provider>
           </v-tab-item>
         </v-tabs-items>
-        <validation-provider
-          v-slot="{ errors }"
-          name="name"
-          rules="required|min:2|max:250">
-          <v-text-field
-            v-model.trim="repository.name"
-            :error-messages="errors"
-            name="repositoryName"
-            label="Name"
-            placeholder="Enter name..."
-            outlined
-            class="required" />
-        </validation-provider>
+        <repository-name-field
+          v-model="repository.name"
+          name="repositoryName"
+          placeholder="Enter name..."
+          class="mb-2" />
         <validation-provider
           v-slot="{ errors }"
           name="description"
@@ -120,6 +112,7 @@
 import api from '@/api/repository';
 import loader from '@/components/common/loader';
 import { mapGetters } from 'vuex';
+import RepositoryNameField from '../repository/common/RepositoryNameField';
 import { SCHEMAS } from 'shared/activities';
 import TailorDialog from '@/components/common/TailorDialog';
 
@@ -178,7 +171,7 @@ export default {
       this.repository = resetData();
     }
   },
-  components: { TailorDialog }
+  components: { RepositoryNameField, TailorDialog }
 };
 </script>
 

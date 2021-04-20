@@ -65,8 +65,10 @@ const includeRepositoryTags = query => {
 };
 
 function index({ query, user, opts }, res) {
-  if (query.search) opts.where.name = getFilter(query.search);
-  if (query.schemas) opts.where.schema = query.schemas;
+  const { search, name, schemas } = query;
+  if (search) opts.where.name = getFilter(search);
+  if (name) opts.where.name = name;
+  if (schemas) opts.where.schema = schemas;
   if (getVal(opts, 'order.0.0') === 'name') opts.order[0][0] = lowercaseName;
   opts.include = [
     includeLastRevision(),

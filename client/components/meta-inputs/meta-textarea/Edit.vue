@@ -13,8 +13,7 @@
       :placeholder="meta.placeholder"
       :error-messages="errors"
       :rows="rows"
-      auto-grow
-      outlined
+      auto-grow outlined
       class="my-2" />
   </validation-provider>
 </template>
@@ -29,11 +28,7 @@ export default {
     meta: { type: Object, default: () => ({ value: null }) },
     rows: { type: Number, default: 2 }
   },
-  data() {
-    return {
-      value: this.meta.value
-    };
-  },
+  data: vm => ({ value: vm.meta.value }),
   computed: {
     validationRules: vm => get(vm.meta, 'validate.rules', vm.meta.validate)
   },
