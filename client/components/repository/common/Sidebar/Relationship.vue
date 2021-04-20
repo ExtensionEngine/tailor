@@ -20,7 +20,12 @@
       :class="{ required: !allowEmpty }"
       item-value="id"
       item-text="data.name"
-      deletable-chips return-object outlined />
+      deletable-chips return-object outlined>
+      <template #item="{ item }">
+        {{ item.data.name }}
+        <span class="ml-2 primary--text text--lighten-1">({{ item.id }})</span>
+      </template>
+    </v-autocomplete>
   </validation-provider>
 </template>
 
