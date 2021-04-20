@@ -6,20 +6,20 @@
     :rules="validationRules"
     slim>
     <v-text-field
-      v-model.trim="context"
+      v-model.trim="internalValue"
       @change="update"
       v-bind="$attrs"
       :error-messages="errors"
-      :messages="existingRepoWarning"
+      :messages="warning"
       :label="label"
       outlined
       class="required">
       <template #message="{ message }">
-        <div v-if="existingRepoWarning" class="d-flex align-center">
-          <v-icon color="warning" class="text-body-1 mr-1">mdi-alert</v-icon>
+        <div v-if="warning" class="d-flex align-center">
+          <v-icon color="warning" class="mr-1 text-body-1">mdi-alert</v-icon>
           <span class="warning--text">{{ message }}</span>
         </div>
-        <span v-else>{{ message }}</span>
+        <template v-else>{{ message }}</template>
       </template>
     </v-text-field>
   </validation-provider>
@@ -31,7 +31,7 @@ import debounce from 'lodash/debounce';
 import lowerCase from 'lodash/lowerCase';
 import some from 'lodash/some';
 
-const EXISTING_REPO_MESSAGE = 'Warning: a Repository with that name already exists.';
+const EXISTING_NAME_MSG = 'Warning: a Repository with that name already exists.';
 
 export default {
   name: 'repository-name-field',
@@ -43,28 +43,28 @@ export default {
     validationRules: { type: [String, Object], default: 'required|min:2|max:250' }
   },
   data: () => ({
-    context: '',
-    existingRepoWarning: '',
-    repositoryNames: []
+    internalValue: '',
+    repositoryNames: [],
+    warning: ''
   }),
   methods: {
     lowerCase,
     async update() {
       const { valid } = await this.$refs.validator.validate();
       if (!valid) return;
-      this.$emit('change', this.context);
+      this.$emit('change', this.internalValue);
     }
   },
   watch: {
     value: {
       immediate: true,
       handler(val) {
-        this.context = val;
+        this.internalValue = val;
       }
     },
-    context: debounce(function (name) {
-      const isNameExists = some(this.repositoryNames, { name });
-      this.existingRepoWarning = isNameExists ? EXISTING_REPO_MESSAGE : '';
+    internalValue: debounce(function (name) {
+      const isDuplicate = some(this.repositoryNames, { name });
+      this.warning = isDuplicate ? EXISTING_NAME_MSG : '';
     }, 200)
   },
   async created() {

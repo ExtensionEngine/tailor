@@ -14,7 +14,7 @@
       @change="updateKey('name', $event)"
       :value="repository.name "
       :repository-id="repositoryId"
-      class="my-3" />
+      class="my-2" />
     <meta-input
       :key="descriptionMeta.key"
       @update="updateKey"
@@ -40,10 +40,12 @@ import RepositoryNameField from '../common/RepositoryNameField';
 import set from 'lodash/set';
 
 export default {
+  props: {
+    repositoryId: { type: Number, required: true }
+  },
   data: () => ({ publishing: false }),
   computed: {
     ...mapGetters('repository', ['repository']),
-    repositoryId: vm => parseInt(vm.$route.params.repositoryId, 10),
     metadata: vm => getRepositoryMetadata(vm.repository),
     descriptionMeta: ({ repository }) => ({
       key: 'description',

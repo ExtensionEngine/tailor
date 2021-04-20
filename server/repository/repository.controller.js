@@ -65,8 +65,9 @@ const includeRepositoryTags = query => {
 };
 
 function index({ query, user, opts }, res) {
-  const { search, schemas, getNames } = query;
+  const { search, name, schemas } = query;
   if (search) opts.where.name = getFilter(search);
+  if (name) opts.where.name = name;
   if (schemas) opts.where.schema = schemas;
   if (getVal(opts, 'order.0.0') === 'name') opts.order[0][0] = lowercaseName;
   opts.include = [
@@ -74,9 +75,9 @@ function index({ query, user, opts }, res) {
     includeRepositoryUser(user, query),
     ...includeRepositoryTags(query)
   ];
-  const repositories = getNames
-    ? getRepositoryNames(query)
-    : user.isAdmin() ? Repository.findAll(opts) : user.getRepositories(opts);
+  const repositories = user.isAdmin()
+    ? Repository.findAll(opts)
+    : user.getRepositories(opts);
   return repositories.then(data => res.json({ data }));
 }
 

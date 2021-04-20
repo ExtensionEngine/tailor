@@ -39,7 +39,7 @@
           class="mb-12">
           {{ serverError }}
         </v-alert>
-        <v-tabs-items v-model="selectedTab" class="mb-2">
+        <v-tabs-items v-model="selectedTab">
           <v-tab-item key="schema">
             <validation-provider
               v-slot="{ errors }"
