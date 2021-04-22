@@ -71,7 +71,7 @@ function extractJwtFromCookie(req) {
 }
 
 function secretOrKeyProvider(_, rawToken, done) {
-  const { id } = jwt.decode(rawToken);
+  const { id } = jwt.decode(rawToken) || {};
   return User.findByPk(id, { rejectOnEmpty: true })
     .then(user => user.getTokenSecret())
     .then(secret => done(null, secret))

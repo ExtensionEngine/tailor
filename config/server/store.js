@@ -1,9 +1,9 @@
 'use strict';
 
 module.exports = {
-  provider: process.env.STORE_PROVIDER || 'local',
+  provider: process.env.STORE_PROVIDER || 'memory',
   ttl: parseInt(process.env.STORE_TTL, 10) || 0,
-  local: {},
+  memory: {},
   redis: {
     port: parseInt(process.env.REDIS_PORT, 10) || 6379,
     host: process.env.REDIS_HOST || 'localhost',
