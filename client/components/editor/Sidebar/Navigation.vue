@@ -73,7 +73,11 @@ export default {
       return this.activityConfigs.filter(it => this.$schemaService.isEditable(it.type));
     },
     activityTree() {
-      return toTreeFormat(this.activities, this.$schemaService, this.editableActivityConfigs);
+      return toTreeFormat(
+        this.activities,
+        this.$schemaService,
+        this.editableActivityConfigs
+      );
     },
     hasSearchResults() {
       if (!this.search || !this.$refs) return true;
