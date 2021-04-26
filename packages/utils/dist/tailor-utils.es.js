@@ -200,42 +200,42 @@ var typeInfo = {
   MC: {
     type: 'MC',
     title: 'Multiple choice',
-    "class": 'multiple-choice'
+    class: 'multiple-choice'
   },
   SC: {
     type: 'SC',
     title: 'Single choice',
-    "class": 'single-choice'
+    class: 'single-choice'
   },
   TR: {
     type: 'TR',
     title: 'Text response',
-    "class": 'text-response'
+    class: 'text-response'
   },
   NR: {
     type: 'NR',
     title: 'Numerical response',
-    "class": 'numerical-response'
+    class: 'numerical-response'
   },
   TF: {
     type: 'TF',
     title: 'True - false',
-    "class": 'true-false'
+    class: 'true-false'
   },
   FB: {
     type: 'FB',
     title: 'Fill in the blank',
-    "class": 'fill-blank'
+    class: 'fill-blank'
   },
   MQ: {
     type: 'MQ',
     title: 'Matching question',
-    "class": 'matching-question'
+    class: 'matching-question'
   },
   DD: {
     type: 'DD',
     title: 'Drag & Drop',
-    "class": 'drag-drop'
+    class: 'drag-drop'
   }
 };
 var baseDefaults = {

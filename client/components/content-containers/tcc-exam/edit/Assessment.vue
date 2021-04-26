@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { AssessmentItem } from '@tailor/components';
+import { AssessmentItem } from '@tailor/core-components';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import set from 'lodash/set';

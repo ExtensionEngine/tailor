@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { ElementPlaceholder, PreviewOverlay } from '@tailor/components';
+import { ElementPlaceholder, PreviewOverlay } from '@tailor/core-components';
 import BrightcovePlayer from './Player';
 import get from 'lodash/get';
 

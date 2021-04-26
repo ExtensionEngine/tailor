@@ -24,7 +24,7 @@ import {
   contentElement as contentElementApi,
   revision as revisionApi
 } from '@/api';
-import { ContentElement } from '@tailor/components';
+import { ContentElement } from '@tailor/core-components';
 import EntitySidebar from './EntitySidebar';
 import first from 'lodash/first';
 import get from 'lodash/get';

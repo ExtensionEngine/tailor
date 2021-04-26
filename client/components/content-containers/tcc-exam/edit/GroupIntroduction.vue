@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { ContainedContent, ElementList } from '@tailor/components';
+import { ContainedContent, ElementList } from '@tailor/core-components';
 import cloneDeep from 'lodash/cloneDeep';
 import filter from 'lodash/filter';
 import { isQuestion } from '@tailor/utils';

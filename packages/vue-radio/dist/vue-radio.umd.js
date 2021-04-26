@@ -78,7 +78,7 @@
     if (typeof Proxy === "function") return true;
 
     try {
-      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+      Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
       return true;
     } catch (e) {
       return false;
@@ -261,7 +261,7 @@
     throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
   }
 
-  var isFunction$1 = function isFunction(arg) {
+  var isFunction = function isFunction(arg) {
     return typeof arg === 'function';
   };
 
@@ -309,7 +309,7 @@
           args[_key - 1] = arguments[_key];
         }
 
-        var onReply = isFunction$1(last(args)) ? args.pop() : noop;
+        var onReply = isFunction(last(args)) ? args.pop() : noop;
         this.once(replyEvent(id), onReply);
         this.emit.apply(this, [requestEvent(id)].concat(args));
         return this;
@@ -371,7 +371,7 @@
       value: function stopReplying(id, listener) {
         var onRequest = this._repliers.get(listener);
 
-        if (onRequest) this._repliers["delete"](onRequest);
+        if (onRequest) this._repliers.delete(onRequest);
         this.off(requestEvent(id), onRequest);
         return this;
       }
@@ -425,7 +425,7 @@
 
   _defineProperty(Radio, "_channels", new Map());
 
-  var isFunction = function isFunction(arg) {
+  var isFunction$1 = function isFunction(arg) {
     return typeof arg === 'function';
   };
 
@@ -437,7 +437,7 @@
     });
   }
   function mapRequests(channel, requests) {
-    var getChannel = !isFunction(channel) ? function (vm) {
+    var getChannel = !isFunction$1(channel) ? function (vm) {
       return vm.$radio.channel(channel);
     } : channel;
     return mapKeys(castObject(requests), function (request) {
@@ -585,11 +585,11 @@
         return channel.replyOnce(id, listener);
       },
       off: function off(event, listener) {
-        cleanup["delete"](listener);
+        cleanup.delete(listener);
         return channel.off(event, listener);
       },
       stopReplying: function stopReplying(id, listener) {
-        cleanup["delete"](listener);
+        cleanup.delete(listener);
         return channel.stopReplying(id, listener);
       }
     };

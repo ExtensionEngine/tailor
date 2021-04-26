@@ -38,7 +38,7 @@
 <script>
 import CarouselItem from './CarouselItem';
 import cloneDeep from 'lodash/cloneDeep';
-import { ElementPlaceholder } from '@tailor/components';
+import { ElementPlaceholder } from '@tailor/core-components';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import last from 'lodash/last';

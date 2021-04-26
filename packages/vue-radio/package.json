@@ -1,6 +1,6 @@
 {
   "name": "@extensionengine/vue-radio",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Vue radio plugin",
   "author": "ExtensionEngine <info@extensionengine.com>",
   "homepage": "",
@@ -17,7 +17,7 @@
     "lint": "eslint --ext .js,.vue ."
   },
   "bugs": {
-    "url": "https://github.com/ExtensionEngine/vue-radio/issues"
+    "url": "https://github.com/ExtensionEngine/tailor/issues"
   },
   "devDependencies": {
     "@babel/core": "^7.13.8",

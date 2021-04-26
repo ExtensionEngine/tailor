@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { AssetInput } from '@tailor/components';
+import { AssetInput } from '@tailor/core-components';
 import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
 import set from 'lodash/set';

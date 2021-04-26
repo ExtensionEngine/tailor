@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { ElementPlaceholder, PreviewOverlay } from '@tailor/components';
+import { ElementPlaceholder, PreviewOverlay } from '@tailor/core-components';
 
 export default {
   name: 'tce-embed',

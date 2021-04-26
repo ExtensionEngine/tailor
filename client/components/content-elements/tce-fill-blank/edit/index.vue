@@ -71,7 +71,7 @@ import { assessment } from '@tailor/utils';
 import cloneDeep from 'lodash/cloneDeep';
 import Draggable from 'vuedraggable';
 import get from 'lodash/get';
-import { InputError } from '@tailor/components';
+import { InputError } from '@tailor/core-components';
 import { mapRequests } from '@extensionengine/vue-radio';
 import pluralize from 'pluralize';
 import pullAt from 'lodash/pullAt';

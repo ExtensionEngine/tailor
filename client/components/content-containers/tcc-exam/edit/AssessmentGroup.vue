@@ -60,7 +60,7 @@ import { numberToLetter, uuid } from '@tailor/utils';
 import AssessmentItem from './Assessment';
 import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
-import { ElementList } from '@tailor/components';
+import { ElementList } from '@tailor/core-components';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
 import GroupIntroduction from './GroupIntroduction';

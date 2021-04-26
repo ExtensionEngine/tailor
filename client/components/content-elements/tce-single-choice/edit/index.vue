@@ -49,7 +49,7 @@
 import { assessment } from '@tailor/utils';
 import cloneDeep from 'lodash/cloneDeep';
 import head from 'lodash/head';
-import { InputError } from '@tailor/components';
+import { InputError } from '@tailor/core-components';
 import range from 'lodash/range';
 import set from 'lodash/set';
 

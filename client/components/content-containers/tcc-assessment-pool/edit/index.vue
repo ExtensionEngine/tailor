@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { AddElement, AssessmentItem } from '@tailor/components';
+import { AddElement, AssessmentItem } from '@tailor/core-components';
 import filter from 'lodash/filter';
 import sortBy from 'lodash/sortBy';
 import { uuid } from '@tailor/utils';

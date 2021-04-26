@@ -17,7 +17,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
-import { Discussion } from '@tailor/components';
+import { Discussion } from '@tailor/core-components';
 import get from 'lodash/get';
 import orderBy from 'lodash/orderBy';
 
