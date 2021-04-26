@@ -45,18 +45,11 @@ export default {
   inject: ['$schemaService'],
   props: {
     schemaName: { type: String, required: true },
-    activities: { type: Array, required: true },
-    supportedLevels: { type: Array, required: true }
+    activities: { type: Array, required: true }
   },
   data: () => ({ selected: [], search: '' }),
   computed: {
-    activityTree() {
-      return toTreeFormat(
-        this.activities,
-        this.$schemaService,
-        this.supportedLevels
-      );
-    },
+    activityTree: vm => toTreeFormat(vm.activities, vm.$schemaService),
     hasSearchResults() {
       if (!this.search || !this.$refs) return true;
       const { excludedItems, nodes } = this.$refs.treeview;

@@ -33,7 +33,6 @@
       @close="showCopyDialog = null"
       @completed="parentId => expandParent({ parentId })"
       :repository-id="activity.repositoryId"
-      :levels="supportedLevels"
       :anchor="activity"
       :action="action" />
   </div>

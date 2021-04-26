@@ -170,17 +170,15 @@ function getOutlineChildren(activities, schema, parentId) {
     return types.includes(it.type);
   });
 }
-function toTreeFormat(activities, schema, targetLevels) {
-  var parentId = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
-  var level = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
+function toTreeFormat(activities, schema) {
+  var parentId = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+  var level = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1;
   return getOutlineChildren(activities, schema, parentId).map(function (activity) {
     return Object.assign({}, activity, {
       name: activity.data.name,
       level: level,
-      selectable: !!targetLevels.find(function (it) {
-        return it.type === activity.type;
-      }),
-      children: toTreeFormat(activities, schema, targetLevels, activity.id, level + 1)
+      selectable: schema.isEditable(activity.type),
+      children: toTreeFormat(activities, schema, activity.id, level + 1)
     });
   });
 }

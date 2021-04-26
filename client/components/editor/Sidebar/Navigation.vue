@@ -72,13 +72,7 @@ export default {
     editableActivityConfigs() {
       return this.activityConfigs.filter(it => this.$schemaService.isEditable(it.type));
     },
-    activityTree() {
-      return toTreeFormat(
-        this.activities,
-        this.$schemaService,
-        this.editableActivityConfigs
-      );
-    },
+    activityTree: vm => toTreeFormat(vm.activities, vm.$schemaService),
     hasSearchResults() {
       if (!this.search || !this.$refs) return true;
       const { excludedItems, nodes } = this.$refs.activityTree;

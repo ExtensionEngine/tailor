@@ -39,12 +39,12 @@ export function getOutlineChildren(activities, schema, parentId) {
   return filter(children, it => types.includes(it.type));
 }
 
-export function toTreeFormat(activities, schema, targetLevels, parentId = null, level = 1) {
+export function toTreeFormat(activities, schema, parentId = null, level = 1) {
   return getOutlineChildren(activities, schema, parentId).map(activity => ({
     ...activity,
     name: activity.data.name,
     level,
-    selectable: !!targetLevels.find(it => it.type === activity.type),
-    children: toTreeFormat(activities, schema, targetLevels, activity.id, level + 1)
+    selectable: schema.isEditable(activity.type),
+    children: toTreeFormat(activities, schema, activity.id, level + 1)
   }));
 }

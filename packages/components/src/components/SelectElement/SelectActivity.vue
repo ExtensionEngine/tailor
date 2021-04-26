@@ -59,7 +59,7 @@ export default {
   computed: {
     groupedSelection: vm => groupBy(vm.selectedElements, 'outlineId'),
     expandedActivityIds: vm => map(vm.activities, 'id'),
-    activityTree: vm => toTreeFormat(vm.activities, vm.$schemaService, []),
+    activityTree: vm => toTreeFormat(vm.activities, vm.$schemaService),
     noResultsMessage() {
       const { activities, search, $refs } = this;
       if (!activities.length) return 'Empty repository';
