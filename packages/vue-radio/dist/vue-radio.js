@@ -76,7 +76,7 @@ function _isNativeReflectConstruct() {
   if (typeof Proxy === "function") return true;
 
   try {
-    Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
+    Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
     return true;
   } catch (e) {
     return false;
@@ -259,7 +259,7 @@ function _nonIterableRest() {
   throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 
-var isFunction = function isFunction(arg) {
+var isFunction$1 = function isFunction(arg) {
   return typeof arg === 'function';
 };
 
@@ -307,7 +307,7 @@ var Channel = /*#__PURE__*/function () {
         args[_key - 1] = arguments[_key];
       }
 
-      var onReply = isFunction(last(args)) ? args.pop() : noop;
+      var onReply = isFunction$1(last(args)) ? args.pop() : noop;
       this.once(replyEvent(id), onReply);
       this.emit.apply(this, [requestEvent(id)].concat(args));
       return this;
@@ -369,7 +369,7 @@ var Channel = /*#__PURE__*/function () {
     value: function stopReplying(id, listener) {
       var onRequest = this._repliers.get(listener);
 
-      if (onRequest) this._repliers.delete(onRequest);
+      if (onRequest) this._repliers["delete"](onRequest);
       this.off(requestEvent(id), onRequest);
       return this;
     }
@@ -423,7 +423,7 @@ _defineProperty(Radio, "_instance", null);
 
 _defineProperty(Radio, "_channels", new Map());
 
-var isFunction$1 = function isFunction(arg) {
+var isFunction = function isFunction(arg) {
   return typeof arg === 'function';
 };
 
@@ -435,7 +435,7 @@ function mapChannels(channels) {
   });
 }
 function mapRequests(channel, requests) {
-  var getChannel = !isFunction$1(channel) ? function (vm) {
+  var getChannel = !isFunction(channel) ? function (vm) {
     return vm.$radio.channel(channel);
   } : channel;
   return mapKeys(castObject(requests), function (request) {
@@ -583,11 +583,11 @@ function wrapChannel(channel, vm) {
       return channel.replyOnce(id, listener);
     },
     off: function off(event, listener) {
-      cleanup.delete(listener);
+      cleanup["delete"](listener);
       return channel.off(event, listener);
     },
     stopReplying: function stopReplying(id, listener) {
-      cleanup.delete(listener);
+      cleanup["delete"](listener);
       return channel.stopReplying(id, listener);
     }
   };

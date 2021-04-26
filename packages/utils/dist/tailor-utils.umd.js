@@ -251,20 +251,20 @@
   var _Symbol = Symbol$1;
 
   /** Used for built-in method references. */
-  var objectProto = Object.prototype;
+  var objectProto$b = Object.prototype;
 
   /** Used to check objects for own properties. */
-  var hasOwnProperty = objectProto.hasOwnProperty;
+  var hasOwnProperty$8 = objectProto$b.hasOwnProperty;
 
   /**
    * Used to resolve the
    * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
    * of values.
    */
-  var nativeObjectToString = objectProto.toString;
+  var nativeObjectToString$1 = objectProto$b.toString;
 
   /** Built-in value references. */
-  var symToStringTag = _Symbol ? _Symbol.toStringTag : undefined;
+  var symToStringTag$1 = _Symbol ? _Symbol.toStringTag : undefined;
 
   /**
    * A specialized version of `baseGetTag` which ignores `Symbol.toStringTag` values.
@@ -274,20 +274,20 @@
    * @returns {string} Returns the raw `toStringTag`.
    */
   function getRawTag(value) {
-    var isOwn = hasOwnProperty.call(value, symToStringTag),
-        tag = value[symToStringTag];
+    var isOwn = hasOwnProperty$8.call(value, symToStringTag$1),
+        tag = value[symToStringTag$1];
 
     try {
-      value[symToStringTag] = undefined;
+      value[symToStringTag$1] = undefined;
       var unmasked = true;
     } catch (e) {}
 
-    var result = nativeObjectToString.call(value);
+    var result = nativeObjectToString$1.call(value);
     if (unmasked) {
       if (isOwn) {
-        value[symToStringTag] = tag;
+        value[symToStringTag$1] = tag;
       } else {
-        delete value[symToStringTag];
+        delete value[symToStringTag$1];
       }
     }
     return result;
@@ -296,14 +296,14 @@
   var _getRawTag = getRawTag;
 
   /** Used for built-in method references. */
-  var objectProto$1 = Object.prototype;
+  var objectProto$a = Object.prototype;
 
   /**
    * Used to resolve the
    * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
    * of values.
    */
-  var nativeObjectToString$1 = objectProto$1.toString;
+  var nativeObjectToString = objectProto$a.toString;
 
   /**
    * Converts `value` to a string using `Object.prototype.toString`.
@@ -313,7 +313,7 @@
    * @returns {string} Returns the converted string.
    */
   function objectToString(value) {
-    return nativeObjectToString$1.call(value);
+    return nativeObjectToString.call(value);
   }
 
   var _objectToString = objectToString;
@@ -323,7 +323,7 @@
       undefinedTag = '[object Undefined]';
 
   /** Built-in value references. */
-  var symToStringTag$1 = _Symbol ? _Symbol.toStringTag : undefined;
+  var symToStringTag = _Symbol ? _Symbol.toStringTag : undefined;
 
   /**
    * The base implementation of `getTag` without fallbacks for buggy environments.
@@ -336,7 +336,7 @@
     if (value == null) {
       return value === undefined ? undefinedTag : nullTag;
     }
-    return (symToStringTag$1 && symToStringTag$1 in Object(value))
+    return (symToStringTag && symToStringTag in Object(value))
       ? _getRawTag(value)
       : _objectToString(value);
   }
@@ -374,7 +374,7 @@
   var isObjectLike_1 = isObjectLike;
 
   /** `Object#toString` result references. */
-  var argsTag = '[object Arguments]';
+  var argsTag$2 = '[object Arguments]';
 
   /**
    * The base implementation of `_.isArguments`.
@@ -384,19 +384,19 @@
    * @returns {boolean} Returns `true` if `value` is an `arguments` object,
    */
   function baseIsArguments(value) {
-    return isObjectLike_1(value) && _baseGetTag(value) == argsTag;
+    return isObjectLike_1(value) && _baseGetTag(value) == argsTag$2;
   }
 
   var _baseIsArguments = baseIsArguments;
 
   /** Used for built-in method references. */
-  var objectProto$2 = Object.prototype;
+  var objectProto$9 = Object.prototype;
 
   /** Used to check objects for own properties. */
-  var hasOwnProperty$1 = objectProto$2.hasOwnProperty;
+  var hasOwnProperty$7 = objectProto$9.hasOwnProperty;
 
   /** Built-in value references. */
-  var propertyIsEnumerable = objectProto$2.propertyIsEnumerable;
+  var propertyIsEnumerable$1 = objectProto$9.propertyIsEnumerable;
 
   /**
    * Checks if `value` is likely an `arguments` object.
@@ -417,8 +417,8 @@
    * // => false
    */
   var isArguments = _baseIsArguments(function() { return arguments; }()) ? _baseIsArguments : function(value) {
-    return isObjectLike_1(value) && hasOwnProperty$1.call(value, 'callee') &&
-      !propertyIsEnumerable.call(value, 'callee');
+    return isObjectLike_1(value) && hasOwnProperty$7.call(value, 'callee') &&
+      !propertyIsEnumerable$1.call(value, 'callee');
   };
 
   var isArguments_1 = isArguments;
@@ -508,7 +508,7 @@
   });
 
   /** Used as references for various `Number` constants. */
-  var MAX_SAFE_INTEGER = 9007199254740991;
+  var MAX_SAFE_INTEGER$2 = 9007199254740991;
 
   /** Used to detect unsigned integer values. */
   var reIsUint = /^(?:0|[1-9]\d*)$/;
@@ -523,7 +523,7 @@
    */
   function isIndex(value, length) {
     var type = typeof value;
-    length = length == null ? MAX_SAFE_INTEGER : length;
+    length = length == null ? MAX_SAFE_INTEGER$2 : length;
 
     return !!length &&
       (type == 'number' ||
@@ -571,21 +571,21 @@
 
   /** `Object#toString` result references. */
   var argsTag$1 = '[object Arguments]',
-      arrayTag = '[object Array]',
-      boolTag = '[object Boolean]',
-      dateTag = '[object Date]',
-      errorTag = '[object Error]',
-      funcTag = '[object Function]',
-      mapTag = '[object Map]',
-      numberTag = '[object Number]',
-      objectTag = '[object Object]',
-      regexpTag = '[object RegExp]',
-      setTag = '[object Set]',
-      stringTag = '[object String]',
-      weakMapTag = '[object WeakMap]';
+      arrayTag$1 = '[object Array]',
+      boolTag$1 = '[object Boolean]',
+      dateTag$1 = '[object Date]',
+      errorTag$1 = '[object Error]',
+      funcTag$1 = '[object Function]',
+      mapTag$2 = '[object Map]',
+      numberTag$1 = '[object Number]',
+      objectTag$2 = '[object Object]',
+      regexpTag$1 = '[object RegExp]',
+      setTag$2 = '[object Set]',
+      stringTag$1 = '[object String]',
+      weakMapTag$1 = '[object WeakMap]';
 
-  var arrayBufferTag = '[object ArrayBuffer]',
-      dataViewTag = '[object DataView]',
+  var arrayBufferTag$1 = '[object ArrayBuffer]',
+      dataViewTag$2 = '[object DataView]',
       float32Tag = '[object Float32Array]',
       float64Tag = '[object Float64Array]',
       int8Tag = '[object Int8Array]',
@@ -603,14 +603,14 @@
   typedArrayTags[int32Tag] = typedArrayTags[uint8Tag] =
   typedArrayTags[uint8ClampedTag] = typedArrayTags[uint16Tag] =
   typedArrayTags[uint32Tag] = true;
-  typedArrayTags[argsTag$1] = typedArrayTags[arrayTag] =
-  typedArrayTags[arrayBufferTag] = typedArrayTags[boolTag] =
-  typedArrayTags[dataViewTag] = typedArrayTags[dateTag] =
-  typedArrayTags[errorTag] = typedArrayTags[funcTag] =
-  typedArrayTags[mapTag] = typedArrayTags[numberTag] =
-  typedArrayTags[objectTag] = typedArrayTags[regexpTag] =
-  typedArrayTags[setTag] = typedArrayTags[stringTag] =
-  typedArrayTags[weakMapTag] = false;
+  typedArrayTags[argsTag$1] = typedArrayTags[arrayTag$1] =
+  typedArrayTags[arrayBufferTag$1] = typedArrayTags[boolTag$1] =
+  typedArrayTags[dataViewTag$2] = typedArrayTags[dateTag$1] =
+  typedArrayTags[errorTag$1] = typedArrayTags[funcTag$1] =
+  typedArrayTags[mapTag$2] = typedArrayTags[numberTag$1] =
+  typedArrayTags[objectTag$2] = typedArrayTags[regexpTag$1] =
+  typedArrayTags[setTag$2] = typedArrayTags[stringTag$1] =
+  typedArrayTags[weakMapTag$1] = false;
 
   /**
    * The base implementation of `_.isTypedArray` without Node.js optimizations.
@@ -697,10 +697,10 @@
   var isTypedArray_1 = isTypedArray;
 
   /** Used for built-in method references. */
-  var objectProto$3 = Object.prototype;
+  var objectProto$8 = Object.prototype;
 
   /** Used to check objects for own properties. */
-  var hasOwnProperty$2 = objectProto$3.hasOwnProperty;
+  var hasOwnProperty$6 = objectProto$8.hasOwnProperty;
 
   /**
    * Creates an array of the enumerable property names of the array-like `value`.
@@ -720,7 +720,7 @@
         length = result.length;
 
     for (var key in value) {
-      if ((inherited || hasOwnProperty$2.call(value, key)) &&
+      if ((inherited || hasOwnProperty$6.call(value, key)) &&
           !(skipIndexes && (
              // Safari 9 has enumerable `arguments.length` in strict mode.
              key == 'length' ||
@@ -740,7 +740,7 @@
   var _arrayLikeKeys = arrayLikeKeys;
 
   /** Used for built-in method references. */
-  var objectProto$4 = Object.prototype;
+  var objectProto$7 = Object.prototype;
 
   /**
    * Checks if `value` is likely a prototype object.
@@ -751,7 +751,7 @@
    */
   function isPrototype(value) {
     var Ctor = value && value.constructor,
-        proto = (typeof Ctor == 'function' && Ctor.prototype) || objectProto$4;
+        proto = (typeof Ctor == 'function' && Ctor.prototype) || objectProto$7;
 
     return value === proto;
   }
@@ -780,10 +780,10 @@
   var _nativeKeys = nativeKeys;
 
   /** Used for built-in method references. */
-  var objectProto$5 = Object.prototype;
+  var objectProto$6 = Object.prototype;
 
   /** Used to check objects for own properties. */
-  var hasOwnProperty$3 = objectProto$5.hasOwnProperty;
+  var hasOwnProperty$5 = objectProto$6.hasOwnProperty;
 
   /**
    * The base implementation of `_.keys` which doesn't treat sparse arrays as dense.
@@ -798,7 +798,7 @@
     }
     var result = [];
     for (var key in Object(object)) {
-      if (hasOwnProperty$3.call(object, key) && key != 'constructor') {
+      if (hasOwnProperty$5.call(object, key) && key != 'constructor') {
         result.push(key);
       }
     }
@@ -841,7 +841,7 @@
 
   /** `Object#toString` result references. */
   var asyncTag = '[object AsyncFunction]',
-      funcTag$1 = '[object Function]',
+      funcTag = '[object Function]',
       genTag = '[object GeneratorFunction]',
       proxyTag = '[object Proxy]';
 
@@ -869,7 +869,7 @@
     // The use of `Object#toString` avoids issues with the `typeof` operator
     // in Safari 9 which returns 'object' for typed arrays and other constructors.
     var tag = _baseGetTag(value);
-    return tag == funcTag$1 || tag == genTag || tag == asyncTag || tag == proxyTag;
+    return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;
   }
 
   var isFunction_1 = isFunction;
@@ -1295,10 +1295,10 @@
   var _isMasked = isMasked;
 
   /** Used for built-in method references. */
-  var funcProto = Function.prototype;
+  var funcProto$1 = Function.prototype;
 
   /** Used to resolve the decompiled source of functions. */
-  var funcToString = funcProto.toString;
+  var funcToString$1 = funcProto$1.toString;
 
   /**
    * Converts `func` to its source code.
@@ -1310,7 +1310,7 @@
   function toSource(func) {
     if (func != null) {
       try {
-        return funcToString.call(func);
+        return funcToString$1.call(func);
       } catch (e) {}
       try {
         return (func + '');
@@ -1331,18 +1331,18 @@
   var reIsHostCtor = /^\[object .+?Constructor\]$/;
 
   /** Used for built-in method references. */
-  var funcProto$1 = Function.prototype,
-      objectProto$6 = Object.prototype;
+  var funcProto = Function.prototype,
+      objectProto$5 = Object.prototype;
 
   /** Used to resolve the decompiled source of functions. */
-  var funcToString$1 = funcProto$1.toString;
+  var funcToString = funcProto.toString;
 
   /** Used to check objects for own properties. */
-  var hasOwnProperty$4 = objectProto$6.hasOwnProperty;
+  var hasOwnProperty$4 = objectProto$5.hasOwnProperty;
 
   /** Used to detect if a method is native. */
   var reIsNative = RegExp('^' +
-    funcToString$1.call(hasOwnProperty$4).replace(reRegExpChar, '\\$&')
+    funcToString.call(hasOwnProperty$4).replace(reRegExpChar, '\\$&')
     .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
   );
 
@@ -1436,13 +1436,13 @@
   var _hashDelete = hashDelete;
 
   /** Used to stand-in for `undefined` hash values. */
-  var HASH_UNDEFINED = '__lodash_hash_undefined__';
+  var HASH_UNDEFINED$2 = '__lodash_hash_undefined__';
 
   /** Used for built-in method references. */
-  var objectProto$7 = Object.prototype;
+  var objectProto$4 = Object.prototype;
 
   /** Used to check objects for own properties. */
-  var hasOwnProperty$5 = objectProto$7.hasOwnProperty;
+  var hasOwnProperty$3 = objectProto$4.hasOwnProperty;
 
   /**
    * Gets the hash value for `key`.
@@ -1457,18 +1457,18 @@
     var data = this.__data__;
     if (_nativeCreate) {
       var result = data[key];
-      return result === HASH_UNDEFINED ? undefined : result;
+      return result === HASH_UNDEFINED$2 ? undefined : result;
     }
-    return hasOwnProperty$5.call(data, key) ? data[key] : undefined;
+    return hasOwnProperty$3.call(data, key) ? data[key] : undefined;
   }
 
   var _hashGet = hashGet;
 
   /** Used for built-in method references. */
-  var objectProto$8 = Object.prototype;
+  var objectProto$3 = Object.prototype;
 
   /** Used to check objects for own properties. */
-  var hasOwnProperty$6 = objectProto$8.hasOwnProperty;
+  var hasOwnProperty$2 = objectProto$3.hasOwnProperty;
 
   /**
    * Checks if a hash value for `key` exists.
@@ -1481,7 +1481,7 @@
    */
   function hashHas(key) {
     var data = this.__data__;
-    return _nativeCreate ? (data[key] !== undefined) : hasOwnProperty$6.call(data, key);
+    return _nativeCreate ? (data[key] !== undefined) : hasOwnProperty$2.call(data, key);
   }
 
   var _hashHas = hashHas;
@@ -1734,7 +1734,7 @@
   var _Stack = Stack;
 
   /** Used to stand-in for `undefined` hash values. */
-  var HASH_UNDEFINED$2 = '__lodash_hash_undefined__';
+  var HASH_UNDEFINED = '__lodash_hash_undefined__';
 
   /**
    * Adds `value` to the array cache.
@@ -1747,7 +1747,7 @@
    * @returns {Object} Returns the cache instance.
    */
   function setCacheAdd(value) {
-    this.__data__.set(value, HASH_UNDEFINED$2);
+    this.__data__.set(value, HASH_UNDEFINED);
     return this;
   }
 
@@ -1831,8 +1831,8 @@
   var _cacheHas = cacheHas;
 
   /** Used to compose bitmasks for value comparisons. */
-  var COMPARE_PARTIAL_FLAG = 1,
-      COMPARE_UNORDERED_FLAG = 2;
+  var COMPARE_PARTIAL_FLAG$5 = 1,
+      COMPARE_UNORDERED_FLAG$3 = 2;
 
   /**
    * A specialized version of `baseIsEqualDeep` for arrays with support for
@@ -1848,7 +1848,7 @@
    * @returns {boolean} Returns `true` if the arrays are equivalent, else `false`.
    */
   function equalArrays(array, other, bitmask, customizer, equalFunc, stack) {
-    var isPartial = bitmask & COMPARE_PARTIAL_FLAG,
+    var isPartial = bitmask & COMPARE_PARTIAL_FLAG$5,
         arrLength = array.length,
         othLength = other.length;
 
@@ -1863,7 +1863,7 @@
     }
     var index = -1,
         result = true,
-        seen = (bitmask & COMPARE_UNORDERED_FLAG) ? new _SetCache : undefined;
+        seen = (bitmask & COMPARE_UNORDERED_FLAG$3) ? new _SetCache : undefined;
 
     stack.set(array, other);
     stack.set(other, array);
@@ -1955,26 +1955,26 @@
   var _setToArray = setToArray;
 
   /** Used to compose bitmasks for value comparisons. */
-  var COMPARE_PARTIAL_FLAG$1 = 1,
-      COMPARE_UNORDERED_FLAG$1 = 2;
+  var COMPARE_PARTIAL_FLAG$4 = 1,
+      COMPARE_UNORDERED_FLAG$2 = 2;
 
   /** `Object#toString` result references. */
-  var boolTag$1 = '[object Boolean]',
-      dateTag$1 = '[object Date]',
-      errorTag$1 = '[object Error]',
+  var boolTag = '[object Boolean]',
+      dateTag = '[object Date]',
+      errorTag = '[object Error]',
       mapTag$1 = '[object Map]',
-      numberTag$1 = '[object Number]',
-      regexpTag$1 = '[object RegExp]',
+      numberTag = '[object Number]',
+      regexpTag = '[object RegExp]',
       setTag$1 = '[object Set]',
-      stringTag$1 = '[object String]',
-      symbolTag = '[object Symbol]';
+      stringTag = '[object String]',
+      symbolTag$1 = '[object Symbol]';
 
-  var arrayBufferTag$1 = '[object ArrayBuffer]',
+  var arrayBufferTag = '[object ArrayBuffer]',
       dataViewTag$1 = '[object DataView]';
 
   /** Used to convert symbols to primitives and strings. */
-  var symbolProto = _Symbol ? _Symbol.prototype : undefined,
-      symbolValueOf = symbolProto ? symbolProto.valueOf : undefined;
+  var symbolProto$1 = _Symbol ? _Symbol.prototype : undefined,
+      symbolValueOf = symbolProto$1 ? symbolProto$1.valueOf : undefined;
 
   /**
    * A specialized version of `baseIsEqualDeep` for comparing objects of
@@ -2003,25 +2003,25 @@
         object = object.buffer;
         other = other.buffer;
 
-      case arrayBufferTag$1:
+      case arrayBufferTag:
         if ((object.byteLength != other.byteLength) ||
             !equalFunc(new _Uint8Array(object), new _Uint8Array(other))) {
           return false;
         }
         return true;
 
-      case boolTag$1:
-      case dateTag$1:
-      case numberTag$1:
+      case boolTag:
+      case dateTag:
+      case numberTag:
         // Coerce booleans to `1` or `0` and dates to milliseconds.
         // Invalid dates are coerced to `NaN`.
         return eq_1(+object, +other);
 
-      case errorTag$1:
+      case errorTag:
         return object.name == other.name && object.message == other.message;
 
-      case regexpTag$1:
-      case stringTag$1:
+      case regexpTag:
+      case stringTag:
         // Coerce regexes to strings and treat strings, primitives and objects,
         // as equal. See http://www.ecma-international.org/ecma-262/7.0/#sec-regexp.prototype.tostring
         // for more details.
@@ -2031,7 +2031,7 @@
         var convert = _mapToArray;
 
       case setTag$1:
-        var isPartial = bitmask & COMPARE_PARTIAL_FLAG$1;
+        var isPartial = bitmask & COMPARE_PARTIAL_FLAG$4;
         convert || (convert = _setToArray);
 
         if (object.size != other.size && !isPartial) {
@@ -2042,7 +2042,7 @@
         if (stacked) {
           return stacked == other;
         }
-        bitmask |= COMPARE_UNORDERED_FLAG$1;
+        bitmask |= COMPARE_UNORDERED_FLAG$2;
 
         // Recursively compare objects (susceptible to call stack limits).
         stack.set(object, other);
@@ -2050,7 +2050,7 @@
         stack['delete'](object);
         return result;
 
-      case symbolTag:
+      case symbolTag$1:
         if (symbolValueOf) {
           return symbolValueOf.call(object) == symbolValueOf.call(other);
         }
@@ -2124,10 +2124,10 @@
   var stubArray_1 = stubArray;
 
   /** Used for built-in method references. */
-  var objectProto$9 = Object.prototype;
+  var objectProto$2 = Object.prototype;
 
   /** Built-in value references. */
-  var propertyIsEnumerable$1 = objectProto$9.propertyIsEnumerable;
+  var propertyIsEnumerable = objectProto$2.propertyIsEnumerable;
 
   /* Built-in method references for those with the same name as other `lodash` methods. */
   var nativeGetSymbols = Object.getOwnPropertySymbols;
@@ -2145,7 +2145,7 @@
     }
     object = Object(object);
     return _arrayFilter(nativeGetSymbols(object), function(symbol) {
-      return propertyIsEnumerable$1.call(object, symbol);
+      return propertyIsEnumerable.call(object, symbol);
     });
   };
 
@@ -2165,13 +2165,13 @@
   var _getAllKeys = getAllKeys;
 
   /** Used to compose bitmasks for value comparisons. */
-  var COMPARE_PARTIAL_FLAG$2 = 1;
+  var COMPARE_PARTIAL_FLAG$3 = 1;
 
   /** Used for built-in method references. */
-  var objectProto$a = Object.prototype;
+  var objectProto$1 = Object.prototype;
 
   /** Used to check objects for own properties. */
-  var hasOwnProperty$7 = objectProto$a.hasOwnProperty;
+  var hasOwnProperty$1 = objectProto$1.hasOwnProperty;
 
   /**
    * A specialized version of `baseIsEqualDeep` for objects with support for
@@ -2187,7 +2187,7 @@
    * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
    */
   function equalObjects(object, other, bitmask, customizer, equalFunc, stack) {
-    var isPartial = bitmask & COMPARE_PARTIAL_FLAG$2,
+    var isPartial = bitmask & COMPARE_PARTIAL_FLAG$3,
         objProps = _getAllKeys(object),
         objLength = objProps.length,
         othProps = _getAllKeys(other),
@@ -2199,7 +2199,7 @@
     var index = objLength;
     while (index--) {
       var key = objProps[index];
-      if (!(isPartial ? key in other : hasOwnProperty$7.call(other, key))) {
+      if (!(isPartial ? key in other : hasOwnProperty$1.call(other, key))) {
         return false;
       }
     }
@@ -2274,13 +2274,13 @@
   var _WeakMap = WeakMap;
 
   /** `Object#toString` result references. */
-  var mapTag$2 = '[object Map]',
+  var mapTag = '[object Map]',
       objectTag$1 = '[object Object]',
       promiseTag = '[object Promise]',
-      setTag$2 = '[object Set]',
-      weakMapTag$1 = '[object WeakMap]';
+      setTag = '[object Set]',
+      weakMapTag = '[object WeakMap]';
 
-  var dataViewTag$2 = '[object DataView]';
+  var dataViewTag = '[object DataView]';
 
   /** Used to detect maps, sets, and weakmaps. */
   var dataViewCtorString = _toSource(_DataView),
@@ -2299,11 +2299,11 @@
   var getTag = _baseGetTag;
 
   // Fallback for data views, maps, sets, and weak maps in IE 11 and promises in Node.js < 6.
-  if ((_DataView && getTag(new _DataView(new ArrayBuffer(1))) != dataViewTag$2) ||
-      (_Map && getTag(new _Map) != mapTag$2) ||
+  if ((_DataView && getTag(new _DataView(new ArrayBuffer(1))) != dataViewTag) ||
+      (_Map && getTag(new _Map) != mapTag) ||
       (_Promise && getTag(_Promise.resolve()) != promiseTag) ||
-      (_Set && getTag(new _Set) != setTag$2) ||
-      (_WeakMap && getTag(new _WeakMap) != weakMapTag$1)) {
+      (_Set && getTag(new _Set) != setTag) ||
+      (_WeakMap && getTag(new _WeakMap) != weakMapTag)) {
     getTag = function(value) {
       var result = _baseGetTag(value),
           Ctor = result == objectTag$1 ? value.constructor : undefined,
@@ -2311,11 +2311,11 @@
 
       if (ctorString) {
         switch (ctorString) {
-          case dataViewCtorString: return dataViewTag$2;
-          case mapCtorString: return mapTag$2;
+          case dataViewCtorString: return dataViewTag;
+          case mapCtorString: return mapTag;
           case promiseCtorString: return promiseTag;
-          case setCtorString: return setTag$2;
-          case weakMapCtorString: return weakMapTag$1;
+          case setCtorString: return setTag;
+          case weakMapCtorString: return weakMapTag;
         }
       }
       return result;
@@ -2325,18 +2325,18 @@
   var _getTag = getTag;
 
   /** Used to compose bitmasks for value comparisons. */
-  var COMPARE_PARTIAL_FLAG$3 = 1;
+  var COMPARE_PARTIAL_FLAG$2 = 1;
 
   /** `Object#toString` result references. */
-  var argsTag$2 = '[object Arguments]',
-      arrayTag$1 = '[object Array]',
-      objectTag$2 = '[object Object]';
+  var argsTag = '[object Arguments]',
+      arrayTag = '[object Array]',
+      objectTag = '[object Object]';
 
   /** Used for built-in method references. */
-  var objectProto$b = Object.prototype;
+  var objectProto = Object.prototype;
 
   /** Used to check objects for own properties. */
-  var hasOwnProperty$8 = objectProto$b.hasOwnProperty;
+  var hasOwnProperty = objectProto.hasOwnProperty;
 
   /**
    * A specialized version of `baseIsEqual` for arrays and objects which performs
@@ -2355,14 +2355,14 @@
   function baseIsEqualDeep(object, other, bitmask, customizer, equalFunc, stack) {
     var objIsArr = isArray_1(object),
         othIsArr = isArray_1(other),
-        objTag = objIsArr ? arrayTag$1 : _getTag(object),
-        othTag = othIsArr ? arrayTag$1 : _getTag(other);
+        objTag = objIsArr ? arrayTag : _getTag(object),
+        othTag = othIsArr ? arrayTag : _getTag(other);
 
-    objTag = objTag == argsTag$2 ? objectTag$2 : objTag;
-    othTag = othTag == argsTag$2 ? objectTag$2 : othTag;
+    objTag = objTag == argsTag ? objectTag : objTag;
+    othTag = othTag == argsTag ? objectTag : othTag;
 
-    var objIsObj = objTag == objectTag$2,
-        othIsObj = othTag == objectTag$2,
+    var objIsObj = objTag == objectTag,
+        othIsObj = othTag == objectTag,
         isSameTag = objTag == othTag;
 
     if (isSameTag && isBuffer_1(object)) {
@@ -2378,9 +2378,9 @@
         ? _equalArrays(object, other, bitmask, customizer, equalFunc, stack)
         : _equalByTag(object, other, objTag, bitmask, customizer, equalFunc, stack);
     }
-    if (!(bitmask & COMPARE_PARTIAL_FLAG$3)) {
-      var objIsWrapped = objIsObj && hasOwnProperty$8.call(object, '__wrapped__'),
-          othIsWrapped = othIsObj && hasOwnProperty$8.call(other, '__wrapped__');
+    if (!(bitmask & COMPARE_PARTIAL_FLAG$2)) {
+      var objIsWrapped = objIsObj && hasOwnProperty.call(object, '__wrapped__'),
+          othIsWrapped = othIsObj && hasOwnProperty.call(other, '__wrapped__');
 
       if (objIsWrapped || othIsWrapped) {
         var objUnwrapped = objIsWrapped ? object.value() : object,
@@ -2426,8 +2426,8 @@
   var _baseIsEqual = baseIsEqual;
 
   /** Used to compose bitmasks for value comparisons. */
-  var COMPARE_PARTIAL_FLAG$4 = 1,
-      COMPARE_UNORDERED_FLAG$2 = 2;
+  var COMPARE_PARTIAL_FLAG$1 = 1,
+      COMPARE_UNORDERED_FLAG$1 = 2;
 
   /**
    * The base implementation of `_.isMatch` without support for iteratee shorthands.
@@ -2473,7 +2473,7 @@
           var result = customizer(objValue, srcValue, key, object, source, stack);
         }
         if (!(result === undefined
-              ? _baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG$4 | COMPARE_UNORDERED_FLAG$2, customizer, stack)
+              ? _baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG$1 | COMPARE_UNORDERED_FLAG$1, customizer, stack)
               : result
             )) {
           return false;
@@ -2562,7 +2562,7 @@
   var _baseMatches = baseMatches;
 
   /** `Object#toString` result references. */
-  var symbolTag$1 = '[object Symbol]';
+  var symbolTag = '[object Symbol]';
 
   /**
    * Checks if `value` is classified as a `Symbol` primitive or object.
@@ -2583,7 +2583,7 @@
    */
   function isSymbol(value) {
     return typeof value == 'symbol' ||
-      (isObjectLike_1(value) && _baseGetTag(value) == symbolTag$1);
+      (isObjectLike_1(value) && _baseGetTag(value) == symbolTag);
   }
 
   var isSymbol_1 = isSymbol;
@@ -2761,11 +2761,11 @@
   var _arrayMap = arrayMap;
 
   /** Used as references for various `Number` constants. */
-  var INFINITY = 1 / 0;
+  var INFINITY$2 = 1 / 0;
 
   /** Used to convert symbols to primitives and strings. */
-  var symbolProto$1 = _Symbol ? _Symbol.prototype : undefined,
-      symbolToString = symbolProto$1 ? symbolProto$1.toString : undefined;
+  var symbolProto = _Symbol ? _Symbol.prototype : undefined,
+      symbolToString = symbolProto ? symbolProto.toString : undefined;
 
   /**
    * The base implementation of `_.toString` which doesn't convert nullish
@@ -2788,7 +2788,7 @@
       return symbolToString ? symbolToString.call(value) : '';
     }
     var result = (value + '');
-    return (result == '0' && (1 / value) == -INFINITY) ? '-0' : result;
+    return (result == '0' && (1 / value) == -INFINITY$2) ? '-0' : result;
   }
 
   var _baseToString = baseToString;
@@ -2991,8 +2991,8 @@
   var hasIn_1 = hasIn;
 
   /** Used to compose bitmasks for value comparisons. */
-  var COMPARE_PARTIAL_FLAG$5 = 1,
-      COMPARE_UNORDERED_FLAG$3 = 2;
+  var COMPARE_PARTIAL_FLAG = 1,
+      COMPARE_UNORDERED_FLAG = 2;
 
   /**
    * The base implementation of `_.matchesProperty` which doesn't clone `srcValue`.
@@ -3010,7 +3010,7 @@
       var objValue = get_1(object, path);
       return (objValue === undefined && objValue === srcValue)
         ? hasIn_1(object, path)
-        : _baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG$5 | COMPARE_UNORDERED_FLAG$3);
+        : _baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG | COMPARE_UNORDERED_FLAG);
     };
   }
 
@@ -3282,7 +3282,7 @@
   var toNumber_1 = toNumber;
 
   /** Used as references for various `Number` constants. */
-  var INFINITY$2 = 1 / 0,
+  var INFINITY = 1 / 0,
       MAX_INTEGER = 1.7976931348623157e+308;
 
   /**
@@ -3313,7 +3313,7 @@
       return value === 0 ? value : 0;
     }
     value = toNumber_1(value);
-    if (value === INFINITY$2 || value === -INFINITY$2) {
+    if (value === INFINITY || value === -INFINITY) {
       var sign = (value < 0 ? -1 : 1);
       return sign * MAX_INTEGER;
     }
@@ -3358,7 +3358,7 @@
   var toInteger_1 = toInteger;
 
   /* Built-in method references for those with the same name as other `lodash` methods. */
-  var nativeMax = Math.max;
+  var nativeMax$1 = Math.max;
 
   /**
    * This method is like `_.find` except that it returns the index of the first
@@ -3402,7 +3402,7 @@
     }
     var index = fromIndex == null ? 0 : toInteger_1(fromIndex);
     if (index < 0) {
-      index = nativeMax(length + index, 0);
+      index = nativeMax$1(length + index, 0);
     }
     return _baseFindIndex(array, _baseIteratee(predicate), index);
   }
@@ -3690,7 +3690,7 @@
   var _apply = apply;
 
   /* Built-in method references for those with the same name as other `lodash` methods. */
-  var nativeMax$1 = Math.max;
+  var nativeMax = Math.max;
 
   /**
    * A specialized version of `baseRest` which transforms the rest array.
@@ -3702,11 +3702,11 @@
    * @returns {Function} Returns the new function.
    */
   function overRest(func, start, transform) {
-    start = nativeMax$1(start === undefined ? (func.length - 1) : start, 0);
+    start = nativeMax(start === undefined ? (func.length - 1) : start, 0);
     return function() {
       var args = arguments,
           index = -1,
-          length = nativeMax$1(args.length - start, 0),
+          length = nativeMax(args.length - start, 0),
           array = Array(length);
 
       while (++index < length) {
@@ -3994,8 +3994,8 @@
       pid = pad(process.pid.toString(36), padding),
       hostname = os__default['default'].hostname(),
       length = hostname.length,
-      hostId = pad(hostname.split('').reduce(function (prev, char) {
-    return +prev + char.charCodeAt(0);
+      hostId = pad(hostname.split('').reduce(function (prev, _char) {
+    return +prev + _char.charCodeAt(0);
   }, +length + 36).toString(36), padding);
 
   var fingerprint = function fingerprint() {
@@ -4027,11 +4027,11 @@
 
   var c = 0,
       blockSize = 4,
-      base = 36,
-      discreteValues = Math.pow(base, blockSize);
+      base$1 = 36,
+      discreteValues = Math.pow(base$1, blockSize);
 
   function randomBlock() {
-    return pad((getRandomValue() * discreteValues << 0).toString(base), blockSize);
+    return pad((getRandomValue() * discreteValues << 0).toString(base$1), blockSize);
   }
 
   function safeCounter() {
@@ -4049,9 +4049,9 @@
     // timestamp
     // warning: this exposes the exact date and time
     // that the uid was created.
-    timestamp = new Date().getTime().toString(base),
+    timestamp = new Date().getTime().toString(base$1),
         // Prevent same-machine collisions.
-    counter = pad(safeCounter().toString(base), blockSize),
+    counter = pad(safeCounter().toString(base$1), blockSize),
         // A few chars to generate distinct ids for different
     // clients (so different computers are far less
     // likely to generate the same id)
@@ -4099,7 +4099,7 @@
   var _castFunction = castFunction;
 
   /** Used as references for various `Number` constants. */
-  var MAX_SAFE_INTEGER$2 = 9007199254740991;
+  var MAX_SAFE_INTEGER = 9007199254740991;
 
   /** Used as references for the maximum length and index of an array. */
   var MAX_ARRAY_LENGTH = 4294967295;
@@ -4128,7 +4128,7 @@
    */
   function times(n, iteratee) {
     n = toInteger_1(n);
-    if (n < 1 || n > MAX_SAFE_INTEGER$2) {
+    if (n < 1 || n > MAX_SAFE_INTEGER) {
       return [];
     }
     var index = MAX_ARRAY_LENGTH,
@@ -4150,42 +4150,42 @@
     MC: {
       type: 'MC',
       title: 'Multiple choice',
-      class: 'multiple-choice'
+      "class": 'multiple-choice'
     },
     SC: {
       type: 'SC',
       title: 'Single choice',
-      class: 'single-choice'
+      "class": 'single-choice'
     },
     TR: {
       type: 'TR',
       title: 'Text response',
-      class: 'text-response'
+      "class": 'text-response'
     },
     NR: {
       type: 'NR',
       title: 'Numerical response',
-      class: 'numerical-response'
+      "class": 'numerical-response'
     },
     TF: {
       type: 'TF',
       title: 'True - false',
-      class: 'true-false'
+      "class": 'true-false'
     },
     FB: {
       type: 'FB',
       title: 'Fill in the blank',
-      class: 'fill-blank'
+      "class": 'fill-blank'
     },
     MQ: {
       type: 'MQ',
       title: 'Matching question',
-      class: 'matching-question'
+      "class": 'matching-question'
     },
     DD: {
       type: 'DD',
       title: 'Drag & Drop',
-      class: 'drag-drop'
+      "class": 'drag-drop'
     }
   };
   var baseDefaults = {
@@ -4312,14 +4312,14 @@
   });
 
   var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  var base$1 = alphabet.length;
+  var base = alphabet.length;
   function numberToLetter(n) {
     var digits = [];
 
     do {
-      var v = n % base$1;
+      var v = n % base;
       digits.push(v);
-      n = Math.floor(n / base$1);
+      n = Math.floor(n / base);
     } while (n-- > 0);
 
     var chars = [];
