@@ -79,8 +79,8 @@ export default {
     groupedOptions() {
       const grouped = groupBy(this.options, 'type');
       return flatMap(grouped, (it, type) => {
-        const headerLabel = pluralize(this.$schemaService.getLevel(type).label);
-        return concat({ header: headerLabel }, it);
+        const headerLabel = this.$schemaService.getLevel(type).label;
+        return concat({ header: pluralize(headerLabel) }, it);
       });
     },
     selectPlaceholder() {
