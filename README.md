@@ -39,7 +39,7 @@ Adaptive course authoring platform.
 
 ### Setup
 
-- Run `npm run tce:setup` in the repo directory
+- Run `npm install` in the repo directory
 - Create a database in PostgreSQL
 - Application is configured via environment variables contained in a file named
   `.env`. Use the `.env.example` file as a template: `cp .env.example .env` and
