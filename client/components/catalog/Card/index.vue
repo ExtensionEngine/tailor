@@ -104,7 +104,7 @@ export default {
   computed: {
     name: ({ repository }) => repository.name,
     description: ({ repository }) => repository.description,
-    schema: ({ $schemaService, repository }) => $schemaService.getSchema(repository.schema).name,
+    schema: vm => vm.$schemaService.getSchema(vm.repository.schema).name,
     lastActivity: ({ repository }) => first(repository.revisions),
     hasUnpublishedChanges: ({ repository }) => repository.hasUnpublishedChanges,
     isPinned: ({ repository }) => get(repository, 'repositoryUser.pinned', false),

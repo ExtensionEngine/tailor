@@ -50,7 +50,13 @@ export default {
   },
   data: () => ({ selected: [], search: '' }),
   computed: {
-    activityTree: vm => toTreeFormat(vm.activities, vm.$schemaService, vm.supportedLevels),
+    activityTree() {
+      return toTreeFormat(
+        this.activities,
+        this.$schemaService,
+        this.supportedLevels
+      );
+    },
     hasSearchResults() {
       if (!this.search || !this.$refs) return true;
       const { excludedItems, nodes } = this.$refs.treeview;

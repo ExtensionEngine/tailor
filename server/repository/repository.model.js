@@ -6,6 +6,7 @@ const Promise = require('bluebird');
 const { schema } = require('@tailor/config');
 
 const { getRepositoryRelationships, getSchema } = schema;
+
 class Repository extends Model {
   static fields(DataTypes) {
     const { BOOLEAN, DATE, JSONB, STRING, TEXT, UUID, UUIDV4 } = DataTypes;
