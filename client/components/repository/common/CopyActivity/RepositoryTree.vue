@@ -39,7 +39,7 @@
 import { activity as activityUtils } from '@tailor/utils';
 import xorBy from 'lodash/xorBy';
 
-const { toTreeFormat } = activityUtils;
+const { getOutlineTree } = activityUtils;
 
 export default {
   inject: ['$schemaService'],
@@ -49,7 +49,7 @@ export default {
   },
   data: () => ({ selected: [], search: '' }),
   computed: {
-    activityTree: vm => toTreeFormat(vm.activities, vm.$schemaService),
+    activityTree: vm => getOutlineTree(vm.activities, vm.$schemaService),
     hasSearchResults() {
       if (!this.search || !this.$refs) return true;
       const { excludedItems, nodes } = this.$refs.treeview;

@@ -15,7 +15,7 @@
     "tce:bootstrap": "lerna bootstrap",
     "tce:build": "lerna run build",
     "tce:link": "npm link ./packages/*",
-    "tce:setup": "npm i && npm run tce:bootstrap && npm run tce:build && npm run tce:link",
+    "tce:setup": "npm run tce:bootstrap && npm run tce:build && npm run tce:link",
     "clean": "del-cli dist/* !dist/.gitkeep",
     "webpack:inspect-config": "poi --inspect-webpack",
     "webpack:bundle-report": "poi --prod --bundle-report",

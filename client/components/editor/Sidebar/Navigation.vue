@@ -49,7 +49,7 @@
 <script>
 import { activity as activityUtils } from '@tailor/utils';
 
-const { toTreeFormat } = activityUtils;
+const { getOutlineTree } = activityUtils;
 
 export default {
   name: 'activity-navigation',
@@ -72,7 +72,7 @@ export default {
     editableActivityConfigs() {
       return this.activityConfigs.filter(it => this.$schemaService.isEditable(it.type));
     },
-    activityTree: vm => toTreeFormat(vm.activities, vm.$schemaService),
+    activityTree: vm => getOutlineTree(vm.activities, vm.$schemaService),
     hasSearchResults() {
       if (!this.search || !this.$refs) return true;
       const { excludedItems, nodes } = this.$refs.activityTree;

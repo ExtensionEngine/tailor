@@ -46,7 +46,7 @@ import groupBy from 'lodash/groupBy';
 import map from 'lodash/map';
 import pluralize from 'pluralize';
 
-const { toTreeFormat } = activityUtils;
+const { getOutlineTree } = activityUtils;
 
 export default {
   name: 'select-activity',
@@ -59,7 +59,7 @@ export default {
   computed: {
     groupedSelection: vm => groupBy(vm.selectedElements, 'outlineId'),
     expandedActivityIds: vm => map(vm.activities, 'id'),
-    activityTree: vm => toTreeFormat(vm.activities, vm.$schemaService),
+    activityTree: vm => getOutlineTree(vm.activities, vm.$schemaService),
     noResultsMessage() {
       const { activities, search, $refs } = this;
       if (!activities.length) return 'Empty repository';

@@ -4123,7 +4123,7 @@ function loader(action, name) {
 }
 
 //
-var toTreeFormat = activity.toTreeFormat;
+var getOutlineTree = activity.getOutlineTree;
 var script$k = {
   name: 'select-activity',
   inject: ['$schemaService'],
@@ -4154,7 +4154,7 @@ var script$k = {
       return map(vm.activities, 'id');
     },
     activityTree: function activityTree(vm) {
-      return toTreeFormat(vm.activities, vm.$schemaService);
+      return getOutlineTree(vm.activities, vm.$schemaService);
     },
     noResultsMessage: function noResultsMessage() {
       var activities = this.activities,
@@ -4271,8 +4271,8 @@ var __vue_staticRenderFns__$k = [];
 
 var __vue_inject_styles__$k = function __vue_inject_styles__(inject) {
   if (!inject) return;
-  inject("data-v-5843d6cd_0", {
-    source: ".treeview[data-v-5843d6cd]{max-height:19rem;text-align:left;background-color:#fcfcfc;border:1px solid #eee;overflow-y:scroll}.treeview .v-chip.custom-chip[data-v-5843d6cd]{border-radius:12px!important}.treeview[data-v-5843d6cd]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__content>*,.treeview[data-v-5843d6cd]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__root{cursor:auto}",
+  inject("data-v-19035899_0", {
+    source: ".treeview[data-v-19035899]{max-height:19rem;text-align:left;background-color:#fcfcfc;border:1px solid #eee;overflow-y:scroll}.treeview .v-chip.custom-chip[data-v-19035899]{border-radius:12px!important}.treeview[data-v-19035899]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__content>*,.treeview[data-v-19035899]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__root{cursor:auto}",
     map: undefined,
     media: undefined
   });
@@ -4280,7 +4280,7 @@ var __vue_inject_styles__$k = function __vue_inject_styles__(inject) {
 /* scoped */
 
 
-var __vue_scope_id__$k = "data-v-5843d6cd";
+var __vue_scope_id__$k = "data-v-19035899";
 /* module identifier */
 
 var __vue_module_identifier__$b = undefined;

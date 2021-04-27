@@ -32,19 +32,32 @@ export function getAncestors(activities, activity) {
   return [...ancestors, parent];
 }
 
-export function getOutlineChildren(activities, schema, parentId) {
+export function getOutlineChildren(activities, parentId, schema) {
   const children = getChildren(activities, parentId);
   if (!parentId || !children.length) return children;
-  const types = schema.getLevel(find(activities, { id: parentId }).type).subLevels;
+  const parentType = find(activities, { id: parentId }).type;
+  const types = schema.getLevel(parentType).subLevels;
   return filter(children, it => types.includes(it.type));
 }
 
-export function toTreeFormat(activities, schema, parentId = null, level = 1) {
-  return getOutlineChildren(activities, schema, parentId).map(activity => ({
+export function getOutlineTree(activities, schema, options = {}) {
+  return toTreeFormat(activities, schema, { filterFn: getOutlineChildren, ...options });
+}
+
+export function toTreeFormat(activities, schema, {
+  filterFn = getChildren,
+  parentId = null,
+  level = 1
+}) {
+  return filterFn(activities, parentId, schema).map(activity => ({
     ...activity,
     name: activity.data.name,
     level,
     selectable: schema.isEditable(activity.type),
-    children: toTreeFormat(activities, schema, activity.id, level + 1)
+    children: toTreeFormat(activities, schema, {
+      filterFn,
+      parentId: activity.id,
+      level: level + 1
+    })
   }));
 }

@@ -3949,25 +3949,40 @@
     var ancestors = getAncestors(activities, parent);
     return [].concat(_toConsumableArray(ancestors), [parent]);
   }
-  function getOutlineChildren(activities, schema, parentId) {
+  function getOutlineChildren(activities, parentId, schema) {
     var children = getChildren(activities, parentId);
     if (!parentId || !children.length) return children;
-    var types = schema.getLevel(find_1(activities, {
+    var parentType = find_1(activities, {
       id: parentId
-    }).type).subLevels;
+    }).type;
+    var types = schema.getLevel(parentType).subLevels;
     return filter_1(children, function (it) {
       return types.includes(it.type);
     });
   }
-  function toTreeFormat(activities, schema) {
-    var parentId = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-    var level = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1;
-    return getOutlineChildren(activities, schema, parentId).map(function (activity) {
+  function getOutlineTree(activities, schema) {
+    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    return toTreeFormat(activities, schema, Object.assign({
+      filterFn: getOutlineChildren
+    }, options));
+  }
+  function toTreeFormat(activities, schema, _ref) {
+    var _ref$filterFn = _ref.filterFn,
+        filterFn = _ref$filterFn === void 0 ? getChildren : _ref$filterFn,
+        _ref$parentId = _ref.parentId,
+        parentId = _ref$parentId === void 0 ? null : _ref$parentId,
+        _ref$level = _ref.level,
+        level = _ref$level === void 0 ? 1 : _ref$level;
+    return filterFn(activities, parentId, schema).map(function (activity) {
       return Object.assign({}, activity, {
         name: activity.data.name,
         level: level,
         selectable: schema.isEditable(activity.type),
-        children: toTreeFormat(activities, schema, activity.id, level + 1)
+        children: toTreeFormat(activities, schema, {
+          filterFn: filterFn,
+          parentId: activity.id,
+          level: level + 1
+        })
       });
     });
   }
@@ -3980,6 +3995,7 @@
     getDescendants: getDescendants,
     getAncestors: getAncestors,
     getOutlineChildren: getOutlineChildren,
+    getOutlineTree: getOutlineTree,
     toTreeFormat: toTreeFormat
   });
 
