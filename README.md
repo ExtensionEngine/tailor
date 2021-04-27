@@ -304,13 +304,13 @@ After installation, the extension is ready for use and should be listed in `tail
 
 ## CYPRESS TEST
 
-Run all tests headlessly in the Electron browser
+#### Run all tests headlessly in the Electron browser
 
 ```
 npm run cy:run
 ```
 
-Run tests with the Cypress Test Runner
+#### Run tests with the Cypress Test Runner
 
 ```
 npm run cy:open
