@@ -1,4 +1,6 @@
-const pages = require('../framework/pages')
+'use strict';
+
+const pages = require('../framework/pages');
 
 before(() => {
   cy.preserveCookies();

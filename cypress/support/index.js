@@ -1,3 +1,5 @@
+'use strict';
+
 // ***********************************************************
 // This example support/index.js is processed and
 // loaded automatically before your test files.
@@ -27,5 +29,5 @@ require('cypress-xpath');
 beforeEach(() => {
   cy.fixture('credentials').then(function (data) {
     this.myCredentials = data;
-  })
+  });
 });

@@ -1,4 +1,6 @@
-const pages = require('../framework/pages')
+'use strict';
+
+const pages = require('../framework/pages');
 
 before(() => {
   cy.preserveCookies();
@@ -13,10 +15,10 @@ describe('Login with incorrect credentials', () => {
   });
 
   it('Login', function () {
-    pages.loginPage.login("random@email.com", "randomPassword");
+    pages.loginPage.login('random@email.com', 'randomPassword');
   });
 
   it('Check alert message', function () {
-    pages.loginPage.checkAlertMessage("The email or password you entered is incorrect.");
-  })
+    pages.loginPage.checkAlertMessage('The email or password you entered is incorrect.');
+  });
 });

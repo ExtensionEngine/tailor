@@ -1,3 +1,5 @@
+'use strict';
+
 // ***********************************************
 // This example commands.js shows you how to
 // create various custom commands and overwrite
@@ -27,9 +29,9 @@
 /**
  * Enable cookie preservation during test run.
  */
- Cypress.Commands.add('preserveCookies', () => {
+Cypress.Commands.add('preserveCookies', () => {
   Cypress.Cookies.defaults({
-    preserve: (cookies) => true,
+    preserve: cookies => true
   });
 });
 /**
@@ -37,7 +39,7 @@
  */
 Cypress.Commands.add('deleteCookies', () => {
   Cypress.Cookies.defaults({
-    preserve: (cookies) => false,
+    preserve: cookies => false
   });
   cy.clearCookies();
 });

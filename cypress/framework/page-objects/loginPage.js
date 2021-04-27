@@ -1,3 +1,5 @@
+'use strict';
+
 const selectors = require('../selectors');
 
 function checkAlertMessage(message) {
