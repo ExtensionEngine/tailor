@@ -26,6 +26,23 @@ module.exports = {
         parser: '@babel/eslint-parser',
         sourceType: 'module'
       }
+    },
+    {
+      files: ['cypress/**'],
+      extends: [
+        'plugin:cypress/recommended'
+      ],
+      plugins: [
+        'cypress'
+      ],
+      rules: {
+        'func-names': 'off',
+        'cypress/no-assigning-return-values': 'error',
+        'cypress/no-unnecessary-waiting': 'error',
+        'cypress/assertion-before-screenshot': 'warn',
+        'cypress/no-force': 'warn',
+        'cypress/no-async-tests': 'error'
+      }
     }
   ],
   globals: {
