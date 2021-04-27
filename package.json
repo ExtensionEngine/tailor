@@ -15,6 +15,7 @@
     "clean": "del-cli dist/* !dist/.gitkeep",
     "cy:open": "npx cypress open",
     "cy:run": "npx cypress run",
+    "cy:lint": "npx eslint --ext .js ./cypress --fix",
     "webpack:inspect-config": "poi --inspect-webpack",
     "webpack:bundle-report": "poi --prod --bundle-report",
     "webpack:stats": "poi --prod --print-stats",
