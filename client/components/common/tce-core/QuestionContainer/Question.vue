@@ -25,7 +25,7 @@
       :layout="false"
       :position="question.length"
       :disabled="!isEditing"
-      :include="['JODIT_HTML', 'IMAGE', 'EMBED', 'HTML']"
+      :include="['TIPTAP_HTML', 'IMAGE', 'EMBED', 'HTML']"
       :class="{ invisible: !isEditing }">
       <div class="d-flex justify-space-between mt-2 pl-3">
         <input-error :error="questionError" />

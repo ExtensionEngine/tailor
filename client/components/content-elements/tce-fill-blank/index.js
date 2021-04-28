@@ -2,7 +2,7 @@ import * as yup from 'yup';
 import Edit from './edit';
 import find from 'lodash/find';
 
-const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
+const TEXT_CONTAINERS = ['TIPTAP_HTML', 'HTML'];
 const BLANK_PLACEHOLDER = /(@blank)/g;
 
 const answer = () => yup.string().trim().max(200).required().label('Answer');

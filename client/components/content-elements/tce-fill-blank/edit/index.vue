@@ -79,7 +79,7 @@ import reduce from 'lodash/reduce';
 import size from 'lodash/size';
 import times from 'lodash/times';
 
-const TEXT_TYPES = ['JODIT_HTML', 'HTML'];
+const TEXT_TYPES = ['TIPTAP_HTML', 'HTML'];
 const BLANK = /(@blank)/g;
 
 const SYNC_ERROR = `

@@ -86,7 +86,7 @@ const ELEMENT_GROUPS = [
 
 const getQuestionData = (element, type) => {
   const data = { width: LAYOUT.FULL_WIDTH };
-  const question = [{ id: uuid(), data, type: 'JODIT_HTML', embedded: true }];
+  const question = [{ id: uuid(), data, type: 'TIPTAP_HTML', embedded: true }];
   return { question, type, ...element.data };
 };
 

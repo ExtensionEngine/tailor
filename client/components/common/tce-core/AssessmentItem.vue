@@ -63,7 +63,7 @@ import filter from 'lodash/filter';
 import map from 'lodash/map';
 import PublishDiffChip from './PublishDiffChip';
 
-const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
+const TEXT_CONTAINERS = ['TIPTAP_HTML', 'HTML'];
 const blankRegex = /(@blank)/g;
 const htmlRegex = /(<\/?[^>]+(>|$))|&nbsp;/g;
 
