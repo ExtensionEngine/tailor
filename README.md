@@ -61,6 +61,7 @@ Adaptive course authoring platform.
 This project uses a monorepo setup. In order to contribute to [packages](./packages) following commands should be executed:
 - Run `npm run tce:setup` - initial setup, dependency installation, package linking, etc. This command should be executed only a single time. 
 - Run `npm run tce:build` - build all packages. Run this command after altering the package's code.
+- Run `npm run tce:build --package=<package-name>` to build only specified package. For example: `npm run tce:build --package=core-components`.
 
 ### Production
 
