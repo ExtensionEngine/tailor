@@ -13,7 +13,7 @@
     "dev:client": "poi --serve",
     "build": "del-cli node_modules/.cache/vue-loader && poi --prod",
     "tce:bootstrap": "lerna bootstrap",
-    "tce:build": "lerna run build",
+    "tce:build": "lerna run build --",
     "tce:link": "npm link ./packages/*",
     "tce:setup": "npm run tce:bootstrap && npm run tce:build && npm run tce:link",
     "clean": "del-cli dist/* !dist/.gitkeep",
