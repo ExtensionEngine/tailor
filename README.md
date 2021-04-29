@@ -58,6 +58,10 @@ Adaptive course authoring platform.
 - Server: `npm run dev:server`
 - Client (webpack dev server): `npm run dev:client`
 
+This project uses a monorepo setup. In order to contribute to [packages](./packages) following commands should be executed:
+- Run `npm run tce:setup` - initial setup, dependency installation, package linking, etc. This command should be executed only a single time. 
+- Run `npm run tce:build` - build all packages. Run this command after altering the package's code.
+
 ### Production
 
 - Bundle client by issuing `npm run build`
