@@ -6,6 +6,8 @@ const { provider, ...options } = require('../../../config/server').store;
 
 const DEFAULT_WINDOW_MS = 15 * 60 * 1000; // every 15 minutes
 
+// Store must be implemented using the following interface:
+// https://github.com/nfriedly/express-rate-limit/blob/master/README.md#store
 class Store {
   constructor() {
     this.cache = new Tapster({
