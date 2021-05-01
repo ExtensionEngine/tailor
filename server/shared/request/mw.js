@@ -26,7 +26,7 @@ class Store {
 
   async decrement(key) {
     const record = await this.cache.get(key);
-    if (!record) return;
+    if (!record || !record.hits) return;
     const hits = record.hits - 1;
     await this.cache.set(key, { ...record, hits });
   }
