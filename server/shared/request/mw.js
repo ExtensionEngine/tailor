@@ -32,7 +32,7 @@ class Store {
   }
 
   resetKey(key) {
-    this.cache.delete(key);
+    return this.cache.delete(key);
   }
 }
 

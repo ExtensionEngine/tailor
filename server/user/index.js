@@ -51,6 +51,6 @@ function getKeyFromRequest(req, res, next) {
 }
 
 function resetLoginAttempts(req, res, next) {
-  loginRequestLimiter.resetKey(req.key);
-  return next();
+  return loginRequestLimiter.resetKey(req.key)
+    .then(() => next());
 }
