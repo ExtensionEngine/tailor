@@ -18,7 +18,10 @@ class Store {
   }
 
   async incr(key, cb) {
-    const record = await this.cache.has(key) ? await this.cache.get(key) : { hits: 0 };
+    const initialState = { hits: 0 };
+    const record = await this.cache.has(key)
+      ? await this.cache.get(key)
+      : initialState;
     const hits = record.hits + 1;
     await this.cache.set(key, { ...record, hits });
     cb(null, hits);
@@ -28,7 +31,7 @@ class Store {
     const record = await this.cache.get(key);
     if (!record || !record.hits) return;
     const hits = record.hits - 1;
-    await this.cache.set(key, { ...record, hits });
+    return this.cache.set(key, { ...record, hits });
   }
 
   resetKey(key) {
@@ -36,10 +39,12 @@ class Store {
   }
 }
 
+const defaultStore = new Store();
+
 function requestLimiter({
   max = 10,
   windowMs = DEFAULT_WINDOW_MS,
-  store = new Store(),
+  store = defaultStore,
   ...opts
 } = {}) {
   return rateLimit({ max, windowMs, store, ...opts });
