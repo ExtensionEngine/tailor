@@ -1,7 +1,7 @@
 'use strict';
 
 const { authenticate, logout } = require('../shared/auth');
-const { getKeyFromRequest, resetLoginAttempts } = require('./mw');
+const { getKeyFromRequest, loginRequestLimiter, resetLoginAttempts } = require('./mw');
 const { ACCEPTED } = require('http-status-codes');
 const { authorize } = require('../shared/auth/mw');
 const ctrl = require('./user.controller');
@@ -10,8 +10,6 @@ const { requestLimiter } = require('../shared/request/mw');
 const router = require('express').Router();
 const { User } = require('../shared/database');
 
-const loginRequestLimiter = requestLimiter({ keyGenerator: req => req.key });
-
 // Public routes:
 router
   .post(
@@ -19,7 +17,7 @@ router
     getKeyFromRequest,
     loginRequestLimiter,
     authenticate('local', { setCookie: true }),
-    resetLoginAttempts(loginRequestLimiter),
+    resetLoginAttempts,
     ctrl.getProfile
   )
   .post('/forgot-password', ctrl.forgotPassword)

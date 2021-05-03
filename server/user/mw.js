@@ -1,6 +1,9 @@
 'use strict';
 
 const crypto = require('crypto');
+const { requestLimiter } = require('../shared/request/mw');
+
+const loginRequestLimiter = requestLimiter({ keyGenerator: req => req.key });
 
 function getKeyFromRequest(req, res, next) {
   const key = [req.ip, req.body.email].join(':');
@@ -8,11 +11,9 @@ function getKeyFromRequest(req, res, next) {
   return next();
 }
 
-function resetLoginAttempts(requestLimiter) {
-  return (req, res, next) => {
-    return requestLimiter.resetKey(req.key)
-      .then(() => next());
-  };
+function resetLoginAttempts(req, res, next) {
+  return requestLimiter.resetKey(req.key)
+    .then(() => next());
 }
 
-module.exports = { getKeyFromRequest, resetLoginAttempts };
+module.exports = { loginRequestLimiter, getKeyFromRequest, resetLoginAttempts };
