@@ -77,7 +77,7 @@ import { mapActions } from 'vuex';
 
 const LOGIN_ERR_MESSAGE = 'The email or password you entered is incorrect.';
 const TOO_MANY_REQ_CODE = 429;
-const TOO_MANY_REQ_ERR_MESSAGE = 'Too many requests. Please try again later.';
+const TOO_MANY_REQ_ERR_MESSAGE = 'Too many login attempts. Please try again later.';
 const getOidcErrorMessage = (email, buttonLabel) =>
   `Account with email ${email} does not exist.
   Click "${buttonLabel}" to try with a different account.`;
