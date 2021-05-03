@@ -5,11 +5,11 @@ const path = require('path');
 /** @type {import('bili').Config} */
 module.exports = {
   input: {
-    'tailor-components': 'src/index.js'
+    'tailor-core-components': 'src/index.js'
   },
   output: {
     format: ['cjs', 'es', 'umd', 'umd-min'],
-    moduleName: 'TailorComponents',
+    moduleName: 'TailorCoreComponents',
     extractCSS: false
   },
   bundleNodeModules: ['rollup-plugin-vue', 'vue-runtime-helpers'],

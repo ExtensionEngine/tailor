@@ -13,8 +13,8 @@
   },
   "license": "MIT",
   "author": "ExtensionEngine <info@extensionengine.com>",
-  "main": "dist/tailor-components.js",
-  "module": "dist/tailor-components.es.js",
+  "main": "dist/tailor-core-components.js",
+  "module": "dist/tailor-core-components.es.js",
   "scripts": {
     "prebuild": "del-cli dist",
     "build": "bili",
