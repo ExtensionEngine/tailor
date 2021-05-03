@@ -1,9 +1,9 @@
 'use strict';
 
 const { authenticate, logout } = require('../shared/auth');
+const { getKeyFromRequest, resetLoginAttempts } = require('./mw');
 const { ACCEPTED } = require('http-status-codes');
 const { authorize } = require('../shared/auth/mw');
-const crypto = require('crypto');
 const ctrl = require('./user.controller');
 const { processPagination } = require('../shared/database/pagination');
 const { requestLimiter } = require('../shared/request/mw');
@@ -19,7 +19,7 @@ router
     getKeyFromRequest,
     loginRequestLimiter,
     authenticate('local', { setCookie: true }),
-    resetLoginAttempts,
+    resetLoginAttempts(loginRequestLimiter),
     ctrl.getProfile
   )
   .post('/forgot-password', ctrl.forgotPassword)
@@ -43,14 +43,3 @@ module.exports = {
   path: '/users',
   router
 };
-
-function getKeyFromRequest(req, res, next) {
-  const key = [req.ip, req.body.email].join(':');
-  req.key = crypto.createHash('sha256').update(key).digest('base64');
-  return next();
-}
-
-function resetLoginAttempts(req, res, next) {
-  return loginRequestLimiter.resetKey(req.key)
-    .then(() => next());
-}
