@@ -47,8 +47,10 @@ export function getOutlineTree(activities, schema, options = {}) {
 export function toTreeFormat(activities, schema, {
   filterFn = getChildren,
   parentId = null,
-  level = 1
+  level = 1,
+  maxLevel = 20
 }) {
+  if (level > maxLevel) return [];
   return filterFn(activities, parentId, schema).map(activity => ({
     ...activity,
     name: activity.data.name,
@@ -57,7 +59,8 @@ export function toTreeFormat(activities, schema, {
     children: toTreeFormat(activities, schema, {
       filterFn,
       parentId: activity.id,
-      level: level + 1
+      level: level + 1,
+      maxLevel
     })
   }));
 }

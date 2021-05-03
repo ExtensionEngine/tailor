@@ -183,7 +183,10 @@ function toTreeFormat(activities, schema, _ref) {
       _ref$parentId = _ref.parentId,
       parentId = _ref$parentId === void 0 ? null : _ref$parentId,
       _ref$level = _ref.level,
-      level = _ref$level === void 0 ? 1 : _ref$level;
+      level = _ref$level === void 0 ? 1 : _ref$level,
+      _ref$maxLevel = _ref.maxLevel,
+      maxLevel = _ref$maxLevel === void 0 ? 20 : _ref$maxLevel;
+  if (level > maxLevel) return [];
   return filterFn(activities, parentId, schema).map(function (activity) {
     return Object.assign({}, activity, {
       name: activity.data.name,
@@ -192,7 +195,8 @@ function toTreeFormat(activities, schema, _ref) {
       children: toTreeFormat(activities, schema, {
         filterFn: filterFn,
         parentId: activity.id,
-        level: level + 1
+        level: level + 1,
+        maxLevel: maxLevel
       })
     });
   });
