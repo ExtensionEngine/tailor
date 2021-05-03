@@ -49,7 +49,7 @@
 <script>
 import { activity as activityUtils } from '@tailor/utils';
 
-const { getOutlineTree } = activityUtils;
+const { toTreeFormat, getOutlineChildrenFilterFn } = activityUtils;
 
 export default {
   name: 'activity-navigation',
@@ -72,12 +72,14 @@ export default {
     editableActivityConfigs() {
       return this.activityConfigs.filter(it => this.$schemaService.isEditable(it.type));
     },
+    isActivitySelectable() {
+      return activity => this.$schemaService.isEditable(activity.type);
+    },
     activityTree() {
-      return getOutlineTree(
-        this.activities,
-        this.$schemaService,
-        { targetLevels: this.editableActivityConfigs }
-      );
+      return toTreeFormat(this.activities, {
+        filterNodesFn: getOutlineChildrenFilterFn(this.$schemaService),
+        processNodeFn: this.isActivitySelectable
+      });
     },
     hasSearchResults() {
       if (!this.search || !this.$refs) return true;
