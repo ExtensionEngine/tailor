@@ -19,11 +19,10 @@ class Store {
 
   async incr(key, cb) {
     const initialState = { hits: 0 };
-    const record = await this.cache.has(key)
+    const { hits, ...record } = await this.cache.has(key)
       ? await this.cache.get(key)
       : initialState;
-    const hits = record.hits + 1;
-    await this.cache.set(key, { ...record, hits });
+    await this.cache.set(key, { ...record, hits: hits + 1 });
     cb(null, hits);
   }
 
