@@ -12,7 +12,7 @@ function getKeyFromRequest(req, res, next) {
 }
 
 function resetLoginAttempts(req, res, next) {
-  return requestLimiter.resetKey(req.key)
+  return loginRequestLimiter.resetKey(req.key)
     .then(() => next());
 }
 
