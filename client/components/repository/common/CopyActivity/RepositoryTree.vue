@@ -50,7 +50,13 @@ export default {
   },
   data: () => ({ selected: [], search: '' }),
   computed: {
-    activityTree: vm => getOutlineTree(vm.activities, vm.$schemaService, { targetLevels: vm.supportedLevels }),
+    activityTree() {
+      return getOutlineTree(
+        this.activities,
+        this.$schemaService,
+        { targetLevels: this.supportedLevels }
+      );
+    },
     hasSearchResults() {
       if (!this.search || !this.$refs) return true;
       const { excludedItems, nodes } = this.$refs.treeview;
