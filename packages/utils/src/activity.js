@@ -46,6 +46,7 @@ export function getOutlineTree(activities, schema, options = {}) {
 
 export function toTreeFormat(activities, schema, {
   filterFn = getChildren,
+  targetLevels = [],
   parentId = null,
   level = 1,
   maxLevel = 20
@@ -55,9 +56,10 @@ export function toTreeFormat(activities, schema, {
     ...activity,
     name: activity.data.name,
     level,
-    selectable: schema.isEditable(activity.type),
+    selectable: targetLevels.some(it => it.type === activity.type),
     children: toTreeFormat(activities, schema, {
       filterFn,
+      targetLevels,
       parentId: activity.id,
       level: level + 1,
       maxLevel

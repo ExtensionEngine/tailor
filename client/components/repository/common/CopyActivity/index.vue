@@ -35,6 +35,7 @@
         v-if="selectedRepository && !isFetchingActivities"
         @change="selectedActivities = $event"
         :schema-name="schema.name"
+        :supported-levels="levels"
         :activities="selectedRepository.activities || []" />
     </template>
     <template v-slot:actions>
@@ -76,6 +77,7 @@ export default {
   name: 'copy-activity',
   props: {
     repositoryId: { type: Number, required: true },
+    levels: { type: Array, required: true },
     action: { type: String, required: true },
     anchor: { type: Object, default: null },
     showActivator: { type: Boolean, default: false }

@@ -180,6 +180,8 @@ function getOutlineTree(activities, schema) {
 function toTreeFormat(activities, schema, _ref) {
   var _ref$filterFn = _ref.filterFn,
       filterFn = _ref$filterFn === void 0 ? getChildren : _ref$filterFn,
+      _ref$targetLevels = _ref.targetLevels,
+      targetLevels = _ref$targetLevels === void 0 ? [] : _ref$targetLevels,
       _ref$parentId = _ref.parentId,
       parentId = _ref$parentId === void 0 ? null : _ref$parentId,
       _ref$level = _ref.level,
@@ -191,9 +193,12 @@ function toTreeFormat(activities, schema, _ref) {
     return Object.assign({}, activity, {
       name: activity.data.name,
       level: level,
-      selectable: schema.isEditable(activity.type),
+      selectable: targetLevels.some(function (it) {
+        return it.type === activity.type;
+      }),
       children: toTreeFormat(activities, schema, {
         filterFn: filterFn,
+        targetLevels: targetLevels,
         parentId: activity.id,
         level: level + 1,
         maxLevel: maxLevel
