@@ -32,14 +32,6 @@ export function getAncestors(activities, activity) {
   return [...ancestors, parent];
 }
 
-export function getOutlineChildren(activities, parentId, schema) {
-  const children = getChildren(activities, parentId);
-  if (!parentId || !children.length) return children;
-  const parentType = find(activities, { id: parentId }).type;
-  const types = schema.getLevel(parentType).subLevels;
-  return filter(children, it => types.includes(it.type));
-}
-
 export function outlineActivitiesFilter(schema) {
   return activities => activities.filter(it => schema.isOutlineActivity(it.type));
 }

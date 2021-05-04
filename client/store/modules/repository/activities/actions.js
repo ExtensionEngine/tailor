@@ -10,7 +10,7 @@ import findIndex from 'lodash/findIndex';
 import generateActions from '@/store/helpers/actions';
 import { schema } from '@tailor/config';
 
-const { getDescendants, getOutlineChildren } = activityUtils;
+const { getDescendants } = activityUtils;
 const { api, fetch, get, reset, save, setEndpoint, update } = generateActions();
 const { ADD_INTO } = InsertLocation;
 
@@ -56,7 +56,7 @@ const clone = ({ commit }, mapping) => {
 };
 
 const calculateInsertPosition = ({ state }, { activity, anchor, action }) => {
-  const items = getOutlineChildren(state.items, activity.parentId, schema);
+  const items = schema.getOutlineChildren(state.items, activity.parentId);
   const context = { items, action };
   if (action !== ADD_INTO) {
     context.newPosition = anchor ? findIndex(items, { id: anchor.id }) : 1;
@@ -66,7 +66,7 @@ const calculateInsertPosition = ({ state }, { activity, anchor, action }) => {
 
 const calculateCopyPosition = ({ state }, { anchor, action }) => {
   const id = action === ADD_INTO ? anchor.id : anchor.parentId;
-  const items = getOutlineChildren(state.items, id, schema);
+  const items = schema.getOutlineChildren(state.items, id);
   if (action === ADD_INTO) return calculatePosition({ items, action });
   const newPosition = findIndex(items, { id: anchor.id });
   const context = { items, newPosition, action };

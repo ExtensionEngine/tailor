@@ -1,6 +1,7 @@
 'use strict';
 
 const castArray = require('lodash/castArray');
+const filter = require('lodash/filter');
 const find = require('lodash/find');
 const first = require('lodash/first');
 const flatMap = require('lodash/flatMap');
@@ -8,6 +9,7 @@ const get = require('lodash/get');
 const isString = require('lodash/isString');
 const map = require('lodash/map');
 const reduce = require('lodash/reduce');
+const sortBy = require('lodash/sortBy');
 const union = require('lodash/union');
 const uniq = require('lodash/uniq');
 
@@ -18,6 +20,7 @@ module.exports = (schemas, defaultConfiguration) => {
     getLevel: getActivityConfig,
     getOutlineLevels,
     isOutlineActivity,
+    getOutlineChildren,
     isTrackedInWorkflow,
     getRepositoryMetadata,
     getActivityLabel,
@@ -114,6 +117,14 @@ module.exports = (schemas, defaultConfiguration) => {
   function getActivityConfig(type) {
     const schemaId = getSchemaId(type);
     return schemaId ? find(getOutlineLevels(schemaId), { type }) : {};
+  }
+
+  function getOutlineChildren(activities, parentId) {
+    const children = sortBy(filter(activities, { parentId }), 'position');
+    if (!parentId || !children.length) return children;
+    const parentType = find(activities, { id: parentId }).type;
+    const types = getActivityConfig(parentType).subLevels;
+    return filter(children, it => types.includes(it.type));
   }
 
   function getElementConfig(schemaId, type) {

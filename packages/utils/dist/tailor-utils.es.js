@@ -160,17 +160,6 @@ function getAncestors(activities, activity) {
   var ancestors = getAncestors(activities, parent);
   return [].concat(_toConsumableArray(ancestors), [parent]);
 }
-function getOutlineChildren(activities, parentId, schema) {
-  var children = getChildren(activities, parentId);
-  if (!parentId || !children.length) return children;
-  var parentType = find(activities, {
-    id: parentId
-  }).type;
-  var types = schema.getLevel(parentType).subLevels;
-  return filter(children, function (it) {
-    return types.includes(it.type);
-  });
-}
 function outlineActivitiesFilter(schema) {
   return function (activities) {
     return activities.filter(function (it) {
@@ -216,7 +205,6 @@ var activity = /*#__PURE__*/Object.freeze({
   getChildren: getChildren,
   getDescendants: getDescendants,
   getAncestors: getAncestors,
-  getOutlineChildren: getOutlineChildren,
   outlineActivitiesFilter: outlineActivitiesFilter,
   toTreeFormat: toTreeFormat
 });
