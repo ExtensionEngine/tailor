@@ -185,9 +185,11 @@ function getOutlineChildren(activities, parentId, schema) {
     return types.includes(it.type);
   });
 }
-function getOutlineChildrenFilterFn(schema) {
-  return function (activities, parentId) {
-    return getOutlineChildren(activities, parentId, schema);
+function outlineActivitiesFilter(schema) {
+  return function (activities) {
+    return activities.filter(function (it) {
+      return schema.isOutlineActivity(it.type);
+    });
   };
 }
 function toTreeFormat(activities, _ref) {
@@ -203,7 +205,10 @@ function toTreeFormat(activities, _ref) {
       _internals$maxLevel = _internals.maxLevel,
       maxLevel = _internals$maxLevel === void 0 ? 20 : _internals$maxLevel;
   if (level > maxLevel) throw new Error('Max level exceeded');
-  return filterNodesFn(activities, parentId).map(function (activity) {
+  var parentActivities = filter__default['default'](activities, {
+    parentId: parentId
+  });
+  return filterNodesFn(parentActivities).map(function (activity) {
     return Object.assign({}, activity, {
       name: activity.data.name,
       level: level,
@@ -226,7 +231,7 @@ var activity = /*#__PURE__*/Object.freeze({
   getDescendants: getDescendants,
   getAncestors: getAncestors,
   getOutlineChildren: getOutlineChildren,
-  getOutlineChildrenFilterFn: getOutlineChildrenFilterFn,
+  outlineActivitiesFilter: outlineActivitiesFilter,
   toTreeFormat: toTreeFormat
 });
 

@@ -46,7 +46,7 @@ import groupBy from 'lodash/groupBy';
 import map from 'lodash/map';
 import pluralize from 'pluralize';
 
-const { toTreeFormat, getOutlineChildrenFilterFn } = activityUtils;
+const { toTreeFormat, outlineActivitiesFilter } = activityUtils;
 
 export default {
   name: 'select-activity',
@@ -61,7 +61,7 @@ export default {
     expandedActivityIds: vm => map(vm.activities, 'id'),
     activityTree() {
       return toTreeFormat(this.activities, {
-        filterNodesFn: getOutlineChildrenFilterFn(this.$schemaService)
+        filterNodesFn: outlineActivitiesFilter(this.$schemaService)
       });
     },
     noResultsMessage() {

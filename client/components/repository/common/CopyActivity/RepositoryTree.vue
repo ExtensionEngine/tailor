@@ -39,7 +39,7 @@
 import { activity as activityUtils } from '@tailor/utils';
 import xorBy from 'lodash/xorBy';
 
-const { toTreeFormat, getOutlineChildrenFilterFn } = activityUtils;
+const { toTreeFormat, outlineActivitiesFilter } = activityUtils;
 
 export default {
   inject: ['$schemaService'],
@@ -57,7 +57,7 @@ export default {
     },
     activityTree() {
       return toTreeFormat(this.activities, {
-        filterNodesFn: getOutlineChildrenFilterFn(this.$schemaService),
+        filterNodesFn: outlineActivitiesFilter(this.$schemaService),
         processNodeFn: this.isActivitySelectable
       });
     },

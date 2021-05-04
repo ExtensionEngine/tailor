@@ -40,14 +40,15 @@ export function getOutlineChildren(activities, parentId, schema) {
   return filter(children, it => types.includes(it.type));
 }
 
-export function getOutlineChildrenFilterFn(schema) {
-  return (activities, parentId) => getOutlineChildren(activities, parentId, schema);
+export function outlineActivitiesFilter(schema) {
+  return activities => activities.filter(it => schema.isOutlineActivity(it.type));
 }
 
 export function toTreeFormat(activities, { filterNodesFn, processNodeFn }, _internals = {}) {
   const { parentId = null, level = 1, maxLevel = 20 } = _internals;
   if (level > maxLevel) throw new Error('Max level exceeded');
-  return filterNodesFn(activities, parentId).map(activity => ({
+  const parentActivities = filter(activities, { parentId });
+  return filterNodesFn(parentActivities).map(activity => ({
     ...activity,
     name: activity.data.name,
     level,

@@ -4186,7 +4186,7 @@ function loader(action, name) {
 
 //
 var toTreeFormat = utils.activity.toTreeFormat,
-    getOutlineChildrenFilterFn = utils.activity.getOutlineChildrenFilterFn;
+    outlineActivitiesFilter = utils.activity.outlineActivitiesFilter;
 var script$k = {
   name: 'select-activity',
   inject: ['$schemaService'],
@@ -4218,7 +4218,7 @@ var script$k = {
     },
     activityTree: function activityTree() {
       return toTreeFormat(this.activities, {
-        filterNodesFn: getOutlineChildrenFilterFn(this.$schemaService)
+        filterNodesFn: outlineActivitiesFilter(this.$schemaService)
       });
     },
     noResultsMessage: function noResultsMessage() {
@@ -4336,8 +4336,8 @@ var __vue_staticRenderFns__$k = [];
 
 var __vue_inject_styles__$k = function __vue_inject_styles__(inject) {
   if (!inject) return;
-  inject("data-v-466d804b_0", {
-    source: ".treeview[data-v-466d804b]{max-height:19rem;text-align:left;background-color:#fcfcfc;border:1px solid #eee;overflow-y:scroll}.treeview .v-chip.custom-chip[data-v-466d804b]{border-radius:12px!important}.treeview[data-v-466d804b]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__content>*,.treeview[data-v-466d804b]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__root{cursor:auto}",
+  inject("data-v-35e3c899_0", {
+    source: ".treeview[data-v-35e3c899]{max-height:19rem;text-align:left;background-color:#fcfcfc;border:1px solid #eee;overflow-y:scroll}.treeview .v-chip.custom-chip[data-v-35e3c899]{border-radius:12px!important}.treeview[data-v-35e3c899]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__content>*,.treeview[data-v-35e3c899]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__root{cursor:auto}",
     map: undefined,
     media: undefined
   });
@@ -4345,7 +4345,7 @@ var __vue_inject_styles__$k = function __vue_inject_styles__(inject) {
 /* scoped */
 
 
-var __vue_scope_id__$k = "data-v-466d804b";
+var __vue_scope_id__$k = "data-v-35e3c899";
 /* module identifier */
 
 var __vue_module_identifier__$b = undefined;
