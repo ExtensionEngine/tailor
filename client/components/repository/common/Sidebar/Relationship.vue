@@ -6,8 +6,8 @@
     :name="lowerCase(label)"
     immediate>
     <v-autocomplete
-      v-model="value"
       @input="onRelationshipChanged"
+      :value="value"
       :items="groupedOptions"
       :name="type"
       :label="label"
@@ -63,10 +63,10 @@ export default {
     allowInsideLineage: { type: Boolean, default: false },
     allowedTypes: { type: Array, default: () => [] }
   },
-  data: () => ({ value: null }),
   computed: {
     ...mapGetters('repository', ['outlineActivities']),
     ...mapGetters('repository/activities', ['getLineage']),
+    value: vm => vm.multiple ? vm.associations : vm.associations[0],
     options() {
       const { allowInsideLineage, allowCircularLinks, activity: { id } } = this;
       const activities = without(this.outlineActivities, this.activity);
@@ -105,17 +105,13 @@ export default {
       return get(activity, `refs.${this.type}`, []);
     },
     async onRelationshipChanged(value) {
-      await this.$nextTick();
-      const { valid } = await this.$refs.validator.validate();
+      const { valid } = await this.$refs.validator.validate(value);
       if (!valid) return;
       const associations = compact(castArray(value));
       const activity = cloneDeep(this.activity) || {};
       set(activity, `refs.${this.type}`, map(associations, 'id'));
       this.update(activity);
     }
-  },
-  created() {
-    this.value = this.multiple ? this.associations : this.associations[0];
   },
   components: { LabelChip }
 };
