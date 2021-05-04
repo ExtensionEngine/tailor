@@ -5,7 +5,7 @@
         <sidebar @action="onActionClick" />
       </v-col>
       <v-col cols="9">
-        <router-view />
+        <router-view :repository-id="repositoryId" />
       </v-col>
     </v-row>
     <export-modal
@@ -31,6 +31,9 @@ import Sidebar from './Sidebar';
 
 export default {
   mixins: [publishMixin],
+  props: {
+    repositoryId: { type: Number, required: true }
+  },
   data: () => ({
     showCloneModal: false,
     showExportModal: false
