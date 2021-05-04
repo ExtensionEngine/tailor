@@ -176,7 +176,7 @@ function getAncestors(activities, activity) {
 }
 function outlineActivitiesFilter(schema) {
   return function (activities) {
-    return activities.filter(function (it) {
+    return filter__default['default'](activities, function (it) {
       return schema.isOutlineActivity(it.type);
     });
   };

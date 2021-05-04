@@ -33,7 +33,7 @@ export function getAncestors(activities, activity) {
 }
 
 export function outlineActivitiesFilter(schema) {
-  return activities => activities.filter(it => schema.isOutlineActivity(it.type));
+  return activities => filter(activities, it => schema.isOutlineActivity(it.type));
 }
 
 export function toTreeFormat(activities, { filterNodesFn, processNodeFn }, _internals = {}) {

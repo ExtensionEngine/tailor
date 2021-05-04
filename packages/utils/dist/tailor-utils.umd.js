@@ -3951,7 +3951,7 @@
   }
   function outlineActivitiesFilter(schema) {
     return function (activities) {
-      return activities.filter(function (it) {
+      return filter_1(activities, function (it) {
         return schema.isOutlineActivity(it.type);
       });
     };
