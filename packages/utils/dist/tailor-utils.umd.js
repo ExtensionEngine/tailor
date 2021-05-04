@@ -3949,13 +3949,6 @@
     var ancestors = getAncestors(activities, parent);
     return [].concat(_toConsumableArray(ancestors), [parent]);
   }
-  function outlineActivitiesFilter(schema) {
-    return function (activities) {
-      return filter_1(activities, function (it) {
-        return schema.isOutlineActivity(it.type);
-      });
-    };
-  }
   function toTreeFormat(activities, _ref) {
     var filterNodesFn = _ref.filterNodesFn,
         processNodeFn = _ref.processNodeFn;
@@ -3994,7 +3987,6 @@
     getChildren: getChildren,
     getDescendants: getDescendants,
     getAncestors: getAncestors,
-    outlineActivitiesFilter: outlineActivitiesFilter,
     toTreeFormat: toTreeFormat
   });
 

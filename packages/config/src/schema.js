@@ -21,6 +21,7 @@ module.exports = (schemas, defaultConfiguration) => {
     getOutlineLevels,
     isOutlineActivity,
     getOutlineChildren,
+    filterOutlineActivities,
     isTrackedInWorkflow,
     getRepositoryMetadata,
     getActivityLabel,
@@ -125,6 +126,10 @@ module.exports = (schemas, defaultConfiguration) => {
     const parentType = find(activities, { id: parentId }).type;
     const types = getActivityConfig(parentType).subLevels;
     return filter(children, it => types.includes(it.type));
+  }
+
+  function filterOutlineActivities(activities) {
+    return filter(activities, it => isOutlineActivity(it.type));
   }
 
   function getElementConfig(schemaId, type) {

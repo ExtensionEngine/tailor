@@ -49,7 +49,7 @@
 <script>
 import { activity as activityUtils } from '@tailor/utils';
 
-const { toTreeFormat, outlineActivitiesFilter } = activityUtils;
+const { toTreeFormat } = activityUtils;
 
 export default {
   name: 'activity-navigation',
@@ -79,7 +79,7 @@ export default {
     },
     activityTree() {
       return toTreeFormat(this.activities, {
-        filterNodesFn: outlineActivitiesFilter(this.$schemaService),
+        filterNodesFn: this.$schemaService.filterOutlineActivities,
         processNodeFn: this.isActivitySelectable
       });
     },

@@ -32,10 +32,6 @@ export function getAncestors(activities, activity) {
   return [...ancestors, parent];
 }
 
-export function outlineActivitiesFilter(schema) {
-  return activities => filter(activities, it => schema.isOutlineActivity(it.type));
-}
-
 export function toTreeFormat(activities, { filterNodesFn, processNodeFn }, _internals = {}) {
   const { parentId = null, level = 1, maxLevel = 20 } = _internals;
   if (level > maxLevel) throw new Error('Max level exceeded');

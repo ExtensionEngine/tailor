@@ -174,13 +174,6 @@ function getAncestors(activities, activity) {
   var ancestors = getAncestors(activities, parent);
   return [].concat(_toConsumableArray(ancestors), [parent]);
 }
-function outlineActivitiesFilter(schema) {
-  return function (activities) {
-    return filter__default['default'](activities, function (it) {
-      return schema.isOutlineActivity(it.type);
-    });
-  };
-}
 function toTreeFormat(activities, _ref) {
   var filterNodesFn = _ref.filterNodesFn,
       processNodeFn = _ref.processNodeFn;
@@ -219,7 +212,6 @@ var activity = /*#__PURE__*/Object.freeze({
   getChildren: getChildren,
   getDescendants: getDescendants,
   getAncestors: getAncestors,
-  outlineActivitiesFilter: outlineActivitiesFilter,
   toTreeFormat: toTreeFormat
 });
 
