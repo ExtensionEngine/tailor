@@ -72,7 +72,7 @@ export default {
     editableActivityConfigs() {
       return this.activityConfigs.filter(it => this.$schemaService.isEditable(it.type));
     },
-    isActivitySelectable() {
+    attachActivityAttrs() {
       return activity => ({
         selectable: this.$schemaService.isEditable(activity.type)
       });
@@ -80,7 +80,7 @@ export default {
     activityTree() {
       return toTreeFormat(this.activities, {
         filterNodesFn: this.$schemaService.filterOutlineActivities,
-        processNodeFn: this.isActivitySelectable
+        processNodeFn: this.attachActivityAttrs
       });
     },
     hasSearchResults() {

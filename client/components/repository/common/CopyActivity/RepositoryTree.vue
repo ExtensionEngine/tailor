@@ -50,7 +50,7 @@ export default {
   },
   data: () => ({ selected: [], search: '' }),
   computed: {
-    isActivitySelectable() {
+    attachActivityAttrs() {
       return activity => ({
         selectable: this.supportedLevels.some(it => it.type === activity.type)
       });
@@ -58,7 +58,7 @@ export default {
     activityTree() {
       return toTreeFormat(this.activities, {
         filterNodesFn: this.$schemaService.filterOutlineActivities,
-        processNodeFn: this.isActivitySelectable
+        processNodeFn: this.attachActivityAttrs
       });
     },
     hasSearchResults() {
