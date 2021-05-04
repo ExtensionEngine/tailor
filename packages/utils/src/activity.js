@@ -51,11 +51,11 @@ export function toTreeFormat(activities, { filterNodesFn, processNodeFn }, _inte
     ...activity,
     name: activity.data.name,
     level,
-    selectable: processNodeFn ? processNodeFn(activity) : false,
     children: toTreeFormat(activities, { filterNodesFn, processNodeFn }, {
       ..._internals,
       parentId: activity.id,
       level: level + 1
-    })
+    }),
+    ...processNodeFn && processNodeFn(activity)
   }));
 }

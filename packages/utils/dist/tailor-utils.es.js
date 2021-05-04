@@ -193,7 +193,6 @@ function toTreeFormat(activities, _ref) {
     return Object.assign({}, activity, {
       name: activity.data.name,
       level: level,
-      selectable: processNodeFn ? processNodeFn(activity) : false,
       children: toTreeFormat(activities, {
         filterNodesFn: filterNodesFn,
         processNodeFn: processNodeFn
@@ -201,7 +200,7 @@ function toTreeFormat(activities, _ref) {
         parentId: activity.id,
         level: level + 1
       }))
-    });
+    }, processNodeFn && processNodeFn(activity));
   });
 }
 

@@ -3982,7 +3982,6 @@
       return Object.assign({}, activity, {
         name: activity.data.name,
         level: level,
-        selectable: processNodeFn ? processNodeFn(activity) : false,
         children: toTreeFormat(activities, {
           filterNodesFn: filterNodesFn,
           processNodeFn: processNodeFn
@@ -3990,7 +3989,7 @@
           parentId: activity.id,
           level: level + 1
         }))
-      });
+      }, processNodeFn && processNodeFn(activity));
     });
   }
 

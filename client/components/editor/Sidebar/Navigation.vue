@@ -73,7 +73,9 @@ export default {
       return this.activityConfigs.filter(it => this.$schemaService.isEditable(it.type));
     },
     isActivitySelectable() {
-      return activity => this.$schemaService.isEditable(activity.type);
+      return activity => ({
+        selectable: this.$schemaService.isEditable(activity.type)
+      });
     },
     activityTree() {
       return toTreeFormat(this.activities, {

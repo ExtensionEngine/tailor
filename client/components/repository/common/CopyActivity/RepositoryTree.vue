@@ -51,7 +51,9 @@ export default {
   data: () => ({ selected: [], search: '' }),
   computed: {
     isActivitySelectable() {
-      return activity => this.supportedLevels.some(it => it.type === activity.type);
+      return activity => ({
+        selectable: this.supportedLevels.some(it => it.type === activity.type)
+      });
     },
     activityTree() {
       return toTreeFormat(this.activities, {
