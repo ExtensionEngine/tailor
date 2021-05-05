@@ -78,7 +78,7 @@ export default {
   methods: {
     submit() {
       const { token, password } = this;
-      return this.resetPassword(token, password)
+      return api.resetPassword(token, password)
         .then(() => this.$router.push('/'))
         .catch(() => (this.error = ERRORS.default));
     }
