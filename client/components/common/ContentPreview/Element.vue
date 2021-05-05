@@ -23,7 +23,7 @@
               color="blue-grey darken-4"
               fab depressed x-small
               class="open-element-button">
-              <v-icon color="secondary lighten-4" dense>mdi-open-in-new</v-icon>
+              <v-icon color="white" dense>mdi-open-in-new</v-icon>
             </v-btn>
           </template>
           <span>Open in editor</span>
