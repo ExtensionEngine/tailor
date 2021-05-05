@@ -32,7 +32,6 @@ module.exports = (schemas, defaultConfiguration) => {
     getSiblingTypes,
     getSupportedContainers,
     getContainerTemplateId,
-    hasAssessments: level => getActivityConfig(level).hasAssessments,
     isEditable: activityType => {
       const config = getActivityConfig(activityType);
       const hasContainers = !!getSupportedContainers(activityType).length;

@@ -67,7 +67,6 @@ export default {
   },
   computed: {
     activityConfigs: vm => vm.$schemaService.getOutlineLevels(vm.repository.schema),
-    activityTypes: vm => vm.activityConfigs.map(it => it.type),
     editableTypes: vm => vm.editableActivityConfigs.map(it => it.type),
     editableActivityConfigs() {
       return this.activityConfigs.filter(it => this.$schemaService.isEditable(it.type));
