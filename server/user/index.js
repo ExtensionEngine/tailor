@@ -1,7 +1,7 @@
 'use strict';
 
 const { authenticate, logout } = require('../shared/auth');
-const { getKeyFromRequest, loginRequestLimiter, resetLoginAttempts } = require('./mw');
+const { loginRequestLimiter, resetLoginAttempts, setLoginLimitId } = require('./mw');
 const { ACCEPTED } = require('http-status-codes');
 const { authorize } = require('../shared/auth/mw');
 const ctrl = require('./user.controller');
@@ -14,7 +14,7 @@ const { User } = require('../shared/database');
 router
   .post(
     '/login',
-    getKeyFromRequest,
+    setLoginLimitId,
     loginRequestLimiter,
     authenticate('local', { setCookie: true }),
     resetLoginAttempts,

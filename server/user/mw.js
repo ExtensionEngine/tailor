@@ -3,9 +3,14 @@
 const crypto = require('crypto');
 const { requestLimiter } = require('../shared/request/mw');
 
-const loginRequestLimiter = requestLimiter({ keyGenerator: req => req.userKey });
+const ONE_HOUR_IN_MS = 60 * 60 * 1000;
 
-function getKeyFromRequest(req, res, next) {
+const loginRequestLimiter = requestLimiter({
+  windowMs: ONE_HOUR_IN_MS,
+  keyGenerator: req => req.userKey
+});
+
+function setLoginLimitId(req, res, next) {
   const key = [req.ip, req.body.email].join(':');
   req.userKey = crypto.createHash('sha256').update(key).digest('base64');
   return next();
@@ -16,4 +21,4 @@ function resetLoginAttempts(req, res, next) {
     .then(() => next());
 }
 
-module.exports = { loginRequestLimiter, getKeyFromRequest, resetLoginAttempts };
+module.exports = { loginRequestLimiter, setLoginLimitId, resetLoginAttempts };
