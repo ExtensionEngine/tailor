@@ -1,13 +1,14 @@
 <template>
   <div>
-    <v-alert v-if="error" color="pink lighten-1" text class="mb-5">
-      {{ error }}
-    </v-alert>
-    <v-alert v-if="message" color="success" text class="mb-5">
+    <v-alert
+      v-if="message"
+      :color="isError ? 'pink lighten-1' : 'success'"
+      text
+      class="mb-5">
       {{ message }}
     </v-alert>
     <v-progress-circular v-if="isLoading" color="primary darken-2" indeterminate />
-    <div v-else-if="error">
+    <div v-else-if="isError">
       <router-link :to="{ name: 'forgot-password' }">
         <v-icon size="20">mdi-arrow-top-right-thick</v-icon>
         Click here to send another reset email.
@@ -79,7 +80,7 @@ export default {
     password: '',
     passwordConfirmation: '',
     message: null,
-    error: null,
+    isError: false,
     isLoading: true
   }),
   computed: {
@@ -90,16 +91,23 @@ export default {
       const { token, password } = this;
       return api.resetPassword(token, password)
         .then(() => {
+          this.isError = false;
           this.message = 'Password changed successfully. Redirecting...';
           return delay(2000);
         })
         .then(() => this.$router.push('/'))
-        .catch(() => (this.error = ERRORS.default));
+        .catch(() => {
+          this.isError = true;
+          this.message = ERRORS.default;
+        });
     }
   },
   created() {
     return api.validateResetToken(this.token)
-      .catch(() => (this.error = ERRORS.resetToken))
+      .catch(() => {
+        this.isError = true;
+        this.message = ERRORS.resetToken;
+      })
       .finally(() => (this.isLoading = false));
   }
 };
