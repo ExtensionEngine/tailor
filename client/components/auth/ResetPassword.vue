@@ -1,13 +1,21 @@
 <template>
   <div>
-    <v-alert :value="!!error" color="pink lighten-1" text class="mb-5">
+    <v-alert v-if="error" color="pink lighten-1" text class="mb-5">
       {{ error }}
     </v-alert>
+    <v-alert v-if="message" color="success" text class="mb-5">
+      {{ message }}
+    </v-alert>
     <v-progress-circular v-if="isLoading" color="primary darken-2" indeterminate />
-    <router-link v-else-if="error" :to="{ name: 'forgot-password' }">
-      <v-icon size="20">mdi-arrow-top-right-thick</v-icon>
-      Click here to send another reset email.
-    </router-link>
+    <div v-else-if="error">
+      <router-link :to="{ name: 'forgot-password' }">
+        <v-icon size="20">mdi-arrow-top-right-thick</v-icon>
+        Click here to send another reset email.
+      </router-link>
+      <v-btn :to="{ name: 'login' }" tag="a" text class="mt-7">
+        <v-icon class="pr-2">mdi-arrow-left</v-icon>Back
+      </v-btn>
+    </div>
     <validation-observer
       v-else
       ref="form"
@@ -59,6 +67,7 @@
 
 <script>
 import api from '@/api/auth';
+import { delay } from 'bluebird';
 
 const ERRORS = {
   default: 'An error has occurred!',
@@ -69,6 +78,7 @@ export default {
   data: () => ({
     password: '',
     passwordConfirmation: '',
+    message: null,
     error: null,
     isLoading: true
   }),
@@ -79,6 +89,10 @@ export default {
     submit() {
       const { token, password } = this;
       return api.resetPassword(token, password)
+        .then(() => {
+          this.message = 'Password changed successfully. Redirecting...';
+          return delay(2000);
+        })
         .then(() => this.$router.push('/'))
         .catch(() => (this.error = ERRORS.default));
     }
