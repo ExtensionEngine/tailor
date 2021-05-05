@@ -24,7 +24,7 @@
           @click="$emit('toggle:graph')"
           :input-value="isGraph"
           icon>
-          <v-icon>mdi-graph-outline</v-icon>
+          <v-icon :color="isGraph && 'secondary'">mdi-graph-outline</v-icon>
         </v-btn>
       </template>
       View graph
