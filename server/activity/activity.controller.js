@@ -91,9 +91,10 @@ function getPreviewUrl({ activity }, res) {
     });
 }
 
-async function updateStatus({ body, activity }, res) {
+async function updateStatus({ user, body, activity }, res) {
+  const context = { user };
   const data = pick(body, ['assigneeId', 'status', 'priority', 'description', 'dueDate']);
-  const status = await activity.createStatus(data);
+  const status = await activity.createStatus(data, { context });
   await status.reload();
   return res.json({ data: status });
 }

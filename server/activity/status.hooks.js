@@ -1,6 +1,7 @@
 'use strict';
 
 const forEach = require('lodash/forEach');
+const get = require('lodash/get');
 const { getLevel } = require('../../config/shared/activities');
 const mail = require('../shared/mail');
 const { Op } = require('sequelize');
@@ -23,7 +24,8 @@ exports.add = (ActivityStatus, Hooks, { Activity }) => {
     sse.channel(activity.repositoryId).send(Events.Update, activity);
   }
 
-  async function notifyAssignee(_, activity) {
+  async function notifyAssignee(_, activity, { context = {} }) {
+    const userId = get(context, 'user.id');
     const [status] = activity.status;
     if (!status.assigneeId) return;
     const previousStatus = await ActivityStatus.findOne({
@@ -33,7 +35,9 @@ exports.add = (ActivityStatus, Hooks, { Activity }) => {
       },
       order: [['createdAt', 'DESC']]
     });
-    if (previousStatus.assigneeId === status.assigneeId) return;
+    const isUnchanged = previousStatus.assigneeId === status.assigneeId;
+    const isSelfAssign = status.assigneeId === userId;
+    if (isUnchanged || isSelfAssign) return;
     sendEmailNotification(activity);
   }
 
