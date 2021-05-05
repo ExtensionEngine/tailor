@@ -67,6 +67,11 @@ import ResolveButton from './ResolveButton';
 
 const initCommentInput = () => ({ content: '' });
 
+const maxLength = input => {
+  if (!input) return true;
+  return input.length <= 600 || 'Max 600 characters';
+};
+
 export default {
   name: 'embedded-discussion',
   inheritAttrs: true,
@@ -88,7 +93,7 @@ export default {
     error: false
   }),
   computed: {
-    rules: () => [input => input.length <= 600 || 'Max 600 characters'],
+    rules: () => [maxLength],
     thread() {
       const { comments, unseenComments } = this;
       const processedThread = comments.map(comment => {
