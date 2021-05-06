@@ -15,10 +15,17 @@
   "author": "ExtensionEngine <info@extensionengine.com>",
   "main": "dist/tailor-utils.js",
   "module": "dist/tailor-utils.esm.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "prebuild": "del-cli dist",
     "build": "bili",
     "lint": "eslint --ext .js,.vue ."
+  },
+  "dependencies": {
+    "to-case": "^2.0.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.13.8",
@@ -42,8 +49,7 @@
     "rollup-plugin-visualizer": "^4.2.0",
     "rollup-plugin-vue": "^6.0.0"
   },
-  "dependencies": {
-    "to-case": "^2.0.0",
-    "uuid": "^8.3.2"
+  "publishConfig": {
+    "access": "public"
   }
 }

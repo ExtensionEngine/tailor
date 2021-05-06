@@ -15,6 +15,9 @@
   "author": "ExtensionEngine <info@extensionengine.com>",
   "main": "dist/tailor-core-components.js",
   "module": "dist/tailor-core-components.es.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "prebuild": "del-cli dist",
     "build": "bili",
@@ -58,5 +61,8 @@
   "peerDependencies": {
     "vee-validate": "^3.4.5",
     "vuetify": "^2.3.21"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

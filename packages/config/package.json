@@ -2,19 +2,22 @@
   "name": "@tailor/config",
   "version": "0.0.1",
   "description": "Access parsed Tailor config",
-  "author": "ExtensionEngine <info@extensionengine.com>",
   "homepage": "https://github.com/ExtensionEngine/tailor#readme",
-  "license": "MIT",
-  "main": "src/index.js",
+  "bugs": {
+    "url": "https://github.com/ExtensionEngine/tailor/issues"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ExtensionEngine/tailor.git"
   },
+  "license": "MIT",
+  "author": "ExtensionEngine <info@extensionengine.com>",
+  "main": "src/index.js",
+  "files": [
+    "src"
+  ],
   "scripts": {
     "lint": "eslint --ext .js ."
-  },
-  "bugs": {
-    "url": "https://github.com/ExtensionEngine/tailor/issues"
   },
   "dependencies": {
     "dedent": "^0.7.0",
@@ -37,5 +40,8 @@
     "eslint-plugin-require-sort": "^1.2.2",
     "eslint-plugin-standard": "^5.0.0",
     "eslint-plugin-vue": "^7.7.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
