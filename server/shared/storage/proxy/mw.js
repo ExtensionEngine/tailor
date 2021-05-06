@@ -4,6 +4,7 @@ const { FORBIDDEN } = require('http-status-codes');
 const miss = require('mississippi');
 const path = require('path');
 const router = require('express').Router();
+const urlParse = require('url-parse');
 
 module.exports = (storage, proxy) => {
   function getFile(req, res, next) {
@@ -22,8 +23,10 @@ module.exports = (storage, proxy) => {
     if (proxy.hasCookies(req.cookies, repositoryId)) return next();
     const maxAge = 1000 * 60 * 60; // 1 hour in ms
     const cookies = proxy.getSignedCookies(repositoryId, maxAge);
+    const { hostname: domain } = urlParse(proxy.host);
+    const cookieOptions = { domain, maxAge, httpOnly: true };
     Object.entries(cookies).forEach(([cookie, value]) => {
-      res.cookie(cookie, value, { maxAge, httpOnly: true });
+      res.cookie(cookie, value, cookieOptions);
     });
     next();
   }
