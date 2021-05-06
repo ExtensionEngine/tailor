@@ -50,6 +50,7 @@ export default {
   }
 
   &.active {
+    border: 2px solid $main-background-color !important;
     box-shadow: var(--v-secondary-base) 0 0 0 2px;
   }
 
