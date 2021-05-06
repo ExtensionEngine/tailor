@@ -1,13 +1,22 @@
 <template>
   <div>
-    <v-alert :value="!!error" color="pink lighten-1" text class="mb-5">
-      {{ error }}
+    <v-alert
+      v-if="message"
+      :color="isError ? 'pink lighten-1' : 'success'"
+      text
+      class="mb-5">
+      {{ message }}
     </v-alert>
     <v-progress-circular v-if="isLoading" color="primary darken-2" indeterminate />
-    <router-link v-else-if="error" :to="{ name: 'forgot-password' }">
-      <v-icon size="20">mdi-arrow-top-right-thick</v-icon>
-      Click here to send another reset email.
-    </router-link>
+    <div v-else-if="isError">
+      <router-link :to="{ name: 'forgot-password' }">
+        <v-icon size="20">mdi-arrow-top-right-thick</v-icon>
+        Click here to send another reset email.
+      </router-link>
+      <v-btn :to="{ name: 'login' }" tag="a" text class="mt-7">
+        <v-icon class="pr-2">mdi-arrow-left</v-icon>Back
+      </v-btn>
+    </div>
     <validation-observer
       v-else
       ref="form"
@@ -59,6 +68,7 @@
 
 <script>
 import api from '@/api/auth';
+import { delay } from 'bluebird';
 
 const ERRORS = {
   default: 'An error has occurred!',
@@ -69,7 +79,8 @@ export default {
   data: () => ({
     password: '',
     passwordConfirmation: '',
-    error: null,
+    message: null,
+    isError: false,
     isLoading: true
   }),
   computed: {
@@ -78,14 +89,25 @@ export default {
   methods: {
     submit() {
       const { token, password } = this;
-      return this.resetPassword(token, password)
+      return api.resetPassword(token, password)
+        .then(() => {
+          this.isError = false;
+          this.message = 'Password changed successfully. Redirecting...';
+          return delay(2000);
+        })
         .then(() => this.$router.push('/'))
-        .catch(() => (this.error = ERRORS.default));
+        .catch(() => {
+          this.isError = true;
+          this.message = ERRORS.default;
+        });
     }
   },
   created() {
     return api.validateResetToken(this.token)
-      .catch(() => (this.error = ERRORS.resetToken))
+      .catch(() => {
+        this.isError = true;
+        this.message = ERRORS.resetToken;
+      })
       .finally(() => (this.isLoading = false));
   }
 };

@@ -110,7 +110,7 @@ export default {
       }
       element.data.items[id] = { id, body: {} };
       this.$emit('save', element.data);
-      this.activateItem(indices.length);
+      this.$nextTick(() => this.activateItem(indices.length));
     });
     this.$elementBus.on('remove', () => this.deleteItem(this.activeItem));
     this.$elementBus.on('height', height => {
