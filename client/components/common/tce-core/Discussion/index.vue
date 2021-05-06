@@ -46,11 +46,13 @@
         ref="commentInput"
         v-model.trim="comment.content"
         @focus="$emit('seen')"
+        @update:error="error = $event"
         :placeholder="commentsCount ? 'Add a comment...' : 'Start the discussion...'"
+        :rules="rules"
         rows="3"
         outlined auto-grow clearable counter
         class="comment-input" />
-      <v-btn @click="post" :disabled="isTextEditorEmpty" icon>
+      <v-btn @click="post" :disabled="isTextEditorEmpty || error" icon>
         <v-icon>mdi-send</v-icon>
       </v-btn>
     </div>
@@ -64,6 +66,11 @@ import orderBy from 'lodash/orderBy';
 import ResolveButton from './ResolveButton';
 
 const initCommentInput = () => ({ content: '' });
+
+const maxLength = input => {
+  if (!input) return true;
+  return input.length <= 600 || 'Max 600 characters';
+};
 
 export default {
   name: 'embedded-discussion',
@@ -82,9 +89,11 @@ export default {
   },
   data: () => ({
     showAll: false,
-    comment: initCommentInput()
+    comment: initCommentInput(),
+    error: false
   }),
   computed: {
+    rules: () => [maxLength],
     thread() {
       const { comments, unseenComments } = this;
       const processedThread = comments.map(comment => {
