@@ -2,32 +2,19 @@
 
 const every = require('lodash/every');
 const NodeRSA = require('node-rsa');
-const { origin } = require('../../../../../config/server');
-const urlJoin = require('url-join');
-const { validateConfig } = require('../../validation');
-const yup = require('yup');
 
-const PROXY_PATH = '/proxy';
 const storageCookies = {
   SIGNATURE: 'Storage-Signature',
   EXPIRES: 'Storage-Expires'
 };
 
-const schema = yup.object().shape({
-  privateKey: yup.string().pkcs1().required()
-});
-
-class Local {
+class LocalAccessManager {
   constructor(config) {
-    config = validateConfig(config, schema);
-
     this.signer = new NodeRSA(config.privateKey, 'private');
-    this.isSelfHosted = true;
-    this.path = PROXY_PATH;
   }
 
-  static create(config) {
-    return new this(config);
+  get cookies() {
+    return Object.values(storageCookies);
   }
 
   getSignedCookies(resource, maxAge) {
@@ -51,17 +38,9 @@ class Local {
   hasCookies(cookies) {
     return every(storageCookies, cookie => cookies[cookie]);
   }
-
-  getFileUrl(key) {
-    return urlJoin(origin, this.path, key);
-  }
-
-  getCookieNames() {
-    return Object.values(storageCookies);
-  }
 }
 
-module.exports = { create: Local.create.bind(Local) };
+module.exports = LocalAccessManager;
 
 function getExpirationTime(maxAge) {
   // Expiration unix timestamp in ms

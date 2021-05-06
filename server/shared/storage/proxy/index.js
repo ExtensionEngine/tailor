@@ -1,11 +1,15 @@
 'use strict';
 
 const autobind = require('auto-bind');
+const flatMap = require('lodash/flatMap');
 const path = require('path');
+const uniq = require('lodash/uniq');
 
 class Proxy {
   constructor(config) {
+    this.storages = {};
     this.provider = Proxy.createProvider(config);
+    this.accessManagers = [this.provider.accessManager];
     autobind(this);
   }
 
@@ -26,28 +30,47 @@ class Proxy {
     return this.isSelfHosted && this.provider.path;
   }
 
-  getSignedCookies(resource, maxAge) {
-    return this.provider.getSignedCookies(resource, maxAge);
+  addStorage(path, storage) {
+    const existing = this.storages[path];
+    if (existing) throw new Error(`Storage is already mounted on ${path} path.`);
+    this.storages[path] = storage;
   }
 
-  verifyCookies(cookies, resource) {
-    return this.provider.verifyCookies(cookies, resource);
+  registerAccessManager(manager) {
+    this.accessManagers.push(manager);
   }
 
-  hasCookies(cookies) {
-    return this.provider.hasCookies(cookies);
+  getStorage(key) {
+    const path = Object.keys(this.storages)
+      .sort(compareStringsByLengthDesc)
+      .find(path => key.startsWith(path));
+
+    return path && this.storages[path];
+  }
+
+  createReadStream(key) {
+    const storage = this.getStorage(key);
+    return storage.createReadStream(key);
   }
 
   getFileUrl(key) {
     return this.provider.getFileUrl(key);
   }
 
+  createAccessManager() {
+    return Object.create(this.provider.accessManager);
+  }
+
+  verifyCookies(cookies, key) {
+    return this.provider.accessManager.verifyCookies(cookies, key);
+  }
+
   getCookieNames() {
-    return this.provider.getCookieNames();
+    return uniq(flatMap(this.accessManagers, 'cookies'));
   }
 }
 
-module.exports = Proxy;
+module.exports = (config, storage) => new Proxy(config, storage);
 
 function loadProvider(name) {
   try {
@@ -56,4 +79,8 @@ function loadProvider(name) {
     if (err.code === 'MODULE_NOT_FOUND') throw new Error('Unsupported proxy provider');
     throw err;
   }
+}
+
+function compareStringsByLengthDesc(fst, sec) {
+  return sec.length - fst.length;
 }

@@ -4,7 +4,7 @@ const { elementRegistry } = require('../content-plugins');
 const get = require('lodash/get');
 const config = require('../../../config/server').storage;
 const Promise = require('bluebird');
-const proxy = require('../../repository/proxy');
+const serviceProvider = require('../../shared/serviceProvider');
 const set = require('lodash/set');
 const toPairs = require('lodash/toPairs');
 const values = require('lodash/values');
@@ -31,8 +31,11 @@ async function resolveAssetsMap(element) {
   await Promise.map(toPairs(element.data.assets), ([key, url]) => {
     if (!url) return set(element.data, key, url);
     const isStorageResource = url.startsWith(config.protocol);
+    const proxy = serviceProvider.get('storageProxy');
+    const storage = serviceProvider.get('repositoryStorage', element.repositoryId);
+    const fullKey = storage.getFullKey(url.substr(config.protocol.length, url.length));
     const resolvedUrl = isStorageResource
-      ? proxy.getFileUrl(url.substr(config.protocol.length, url.length))
+      ? proxy.getFileUrl(fullKey)
       : url;
     set(element.data, key, resolvedUrl);
   });

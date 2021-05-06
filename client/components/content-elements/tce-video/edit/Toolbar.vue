@@ -6,6 +6,7 @@
     <v-toolbar-title class="pl-1">Video component</v-toolbar-title>
     <input-asset
       @input="save"
+      :repository-id="element.repositoryId"
       :url="url"
       :public-url="publicUrl"
       :extensions="['.mp4']"

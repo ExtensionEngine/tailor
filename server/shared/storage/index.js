@@ -66,7 +66,8 @@ class Storage {
   }
 }
 
-module.exports = Storage;
+module.exports = config => new Storage(config);
+module.exports.Storage = Storage;
 
 function loadProvider(name) {
   try {

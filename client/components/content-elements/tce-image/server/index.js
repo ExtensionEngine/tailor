@@ -8,7 +8,7 @@ const mime = require('mime-types');
 
 const DEFAULT_IMAGE_EXTENSION = 'png';
 
-function processImage(asset, { storage }) {
+function processImage(asset, { getRepositoryStorage }) {
   const image = asset.data.url;
   const base64Pattern = /^data:image\/(\w+);base64,/;
 
@@ -22,21 +22,24 @@ function processImage(asset, { storage }) {
     return Promise.resolve(asset);
   }
 
+  const storage = getRepositoryStorage(asset.repositoryId);
   const file = Buffer.from(image.replace(base64Pattern, ''), 'base64');
   const extension = image.match(base64Pattern)[1] || DEFAULT_IMAGE_EXTENSION;
   const hashString = `${asset.id}${file}`;
   const hash = crypto.createHash('md5').update(hashString).digest('hex');
-  const storagePath = storage.getPath(asset.repositoryId);
-  const key = `${storagePath}/${asset.id}/${hash}.${extension}`;
+  const key = `${asset.id}/${hash}.${extension}`;
   asset.data.url = key;
   return saveFile(key, file, storage).then(() => asset);
 }
 
-function resolveImage(asset, { storage, storageProxy }) {
+function resolveImage(asset, { getRepositoryStorage, storageProxy }) {
   if (!asset.data || !asset.data.url) return Promise.resolve(asset);
 
+  const storage = getRepositoryStorage(asset.repositoryId);
+
   function getUrl(key) {
-    asset.data.url = storageProxy.getFileUrl(key);
+    const fullKey = storage.getFullKey(key);
+    asset.data.url = storageProxy.getFileUrl(fullKey);
     return asset;
   }
 

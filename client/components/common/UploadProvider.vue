@@ -1,13 +1,21 @@
+<template>
+  <div>
+    <slot v-bind="{ uploading, uploadFile, downloadFile, deleteFile }"></slot>
+  </div>
+</template>
+
+<script>
 import downloadMixin from 'utils/downloadMixin';
 import loader from '@/components/common/loader';
-import { mapGetters } from 'vuex';
 import { mapRequests } from '@/plugins/radio';
 
 export default {
   inject: ['$storageService'],
   mixins: [downloadMixin],
+  props: {
+    repositoryId: { type: Number, default: null }
+  },
   data: () => ({ uploading: false }),
-  computed: mapGetters('repository', { repositoryId: 'id' }),
   methods: {
     ...mapRequests('app', ['showConfirmationModal']),
     createFileForm(e) {
@@ -16,9 +24,13 @@ export default {
       if (!file) return;
       this.form.append('file', file, file.name);
     },
-    upload: loader(function (e) {
+    upload(data) {
+      if (!this.repositoryId) return this.storageService.upload(data);
+      return this.$storageService.uploadRepositoryAsset(this.repositoryId, data);
+    },
+    uploadFile: loader(function (e) {
       this.createFileForm(e);
-      return this.$storageService.upload(this.repositoryId, this.form)
+      return this.upload(this.form)
         .then(data => {
           const { name } = this.form.get('file');
           this.$emit('upload', { ...data, name });
@@ -27,7 +39,9 @@ export default {
         });
     }, 'uploading'),
     async downloadFile(key, name) {
-      const url = await this.$storageService.getUrl(this.repositoryId, key);
+      const url = this.repositoryId
+        ? await this.$storageService.getRepositoryAssetUrl(this.repositoryId, key)
+        : await this.$storageService.getUrl(key);
       return this.download(url, name);
     },
     deleteFile(item) {
@@ -37,5 +51,11 @@ export default {
         action: () => this.$emit('delete', item.id, null)
       });
     }
+  },
+  watch: {
+    uploading(val) {
+      this.$emit('uploading', val);
+    }
   }
 };
+</script>;

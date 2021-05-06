@@ -8,7 +8,7 @@ const each = require('lodash/each');
 const find = require('lodash/find');
 const omit = require('lodash/omit');
 const { Repository } = require('../shared/database');
-const storage = require('../repository/storage');
+const storage = require('../shared/storage');
 
 Repository.findAll({ paranoid: false })
   .then(repositories => repositories.length && updateRepositoryCatalog(repositories))

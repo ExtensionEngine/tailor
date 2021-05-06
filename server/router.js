@@ -2,13 +2,17 @@
 
 const { auth: authConfig } = require('../config/server');
 const { authenticate } = require('./shared/auth');
+const createStorageRouter = require('./shared/storage/storage.router');
 const express = require('express');
 const { extractAuthData } = require('./shared/auth/mw');
 const repository = require('./repository');
+const serviceProvider = require('./shared/serviceProvider');
 const tag = require('./tag');
 const user = require('./user');
 
 const router = express.Router();
+const storage = serviceProvider.get('storage');
+const storageRouter = createStorageRouter(storage);
 router.use(processBody);
 router.use(extractAuthData);
 
@@ -24,6 +28,7 @@ authConfig.oidc.enabled && (() => {
 // Protected routes:
 router.use(authenticate('jwt'));
 router.use(repository.path, repository.router);
+router.use(storageRouter.path, storageRouter.router);
 router.use(tag.path, tag.router);
 
 module.exports = router;

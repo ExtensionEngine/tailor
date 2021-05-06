@@ -1,6 +1,5 @@
 'use strict';
 
-const { getFileUrl, getPath, saveFile } = require('../../repository/storage');
 const { readFile, sha256 } = require('./util');
 const config = require('../../../config/server').storage;
 const fecha = require('fecha');
@@ -12,46 +11,52 @@ const pickBy = require('lodash/pickBy');
 
 const getStorageUrl = key => `${config.protocol}${key}`;
 
-function getUrl(req, res) {
-  const { query: { key } } = req;
-  return getFileUrl(key).then(url => res.json({ url }));
+function getUrl(storage) {
+  return (req, res) => {
+    const { query: { key } } = req;
+    return storage.getFileUrl(key).then(url => res.json({ url }));
+  };
 }
 
-async function upload({ file, body, user, repository }, res) {
-  const { name } = path.parse(file.originalname);
-  const { id: repositoryId } = repository;
-  if (body.unpack) {
-    const timestamp = fecha.format(new Date(), 'YYYY-MM-DDTHH:mm:ss');
-    const root = `${timestamp}__${user.id}__${name}`;
-    const assets = await uploadArchiveContent(repositoryId, file, root);
-    return res.json({ root, assets });
-  }
-  const asset = await uploadFile(repositoryId, file, name);
-  return res.json(asset);
+function upload(storage) {
+  return async (req, res) => {
+    const { file, body, user } = req;
+    const { name } = path.parse(file.originalname);
+    if (body.unpack) {
+      const timestamp = fecha.format(new Date(), 'YYYY-MM-DDTHH:mm:ss');
+      const root = `${timestamp}__${user.id}__${name}`;
+      const assets = await uploadArchiveContent(storage, file, root);
+      return res.json({ root, assets });
+    }
+    const asset = await uploadFile(storage, file, name);
+    return res.json(asset);
+  };
 }
 
 module.exports = { getUrl, upload };
 
-async function uploadFile(repositoryId, file, name) {
+async function uploadFile(storage, file, name) {
   const buffer = await readFile(file);
   const hash = sha256(file.originalname, buffer);
   const extension = path.extname(file.originalname);
-  const fileName = `${hash}___${name}${extension}`;
-  const key = path.join(getPath(repositoryId), fileName);
-  await saveFile(key, buffer, { ContentType: file.mimetype });
-  const publicUrl = await getFileUrl(key);
+  const key = `${hash}___${name}${extension}`;
+  await storage.saveFile(key, buffer, { ContentType: file.mimetype });
+  const publicUrl = await storage.getFileUrl(key);
   return { key, publicUrl, url: getStorageUrl(key) };
 }
 
-async function uploadArchiveContent(repositoryId, archive, name) {
+async function uploadArchiveContent(storage, archive, name) {
   const buffer = await readFile(archive);
   const content = await JSZip.loadAsync(buffer);
   const files = pickBy(content.files, it => !it.dir);
   const keys = await Promise.all(Object.keys(files).map(async src => {
-    const key = path.join(getPath(repositoryId), name, src);
+    const keyComponents = [name, src].filter(Boolean);
+    const key = path.join(...keyComponents);
     const file = await content.file(src).async('uint8array');
     const mimeType = mime.lookup(src);
-    await saveFile(key, Buffer.from(file), { ContentType: mimeType });
+    await storage.saveFile(key, Buffer.from(file), {
+      ContentType: mimeType
+    });
     return [key, getStorageUrl(key)];
   }));
   return fromPairs(keys);

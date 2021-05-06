@@ -15,6 +15,7 @@
       :uploading.sync="uploading"
       :validate="{ ext: extensions }"
       :confirm-deletion="false"
+      :repository-id="repositoryId"
       :label="uploadLabel"
       class="upload-btn" />
     <template v-if="file">
@@ -93,6 +94,7 @@ function isUploaded(url) {
 export default {
   name: 'input-asset',
   props: {
+    repositoryId: { type: Number, default: null },
     url: { type: String, default: null },
     publicUrl: { type: String, default: null },
     extensions: { type: Array, required: true },

@@ -5,10 +5,10 @@ const config = require('../../../config/server');
 const dedent = require('dedent');
 const depd = require('depd');
 const elementsList = require('../../../config/shared/core-elements');
+const getRepositoryStorage = require('../../repository/storage');
 const hooks = require('./elementHooks');
 const pick = require('lodash/pick');
-const storage = require('../../repository/storage');
-const storageProxy = require('../../repository/proxy');
+const serviceProvider = require('../../shared/serviceProvider');
 const toCase = require('to-case');
 
 const EXTENSIONS_LIST = '../../../extensions/content-elements/index';
@@ -37,7 +37,9 @@ class ElementsRegistry extends BaseRegistry {
   getHook(type, hook) {
     const elementHooks = this._hooks[type];
     if (!elementHooks || !elementHooks[hook]) return;
-    const services = { config, storage, storageProxy };
+    const storageProxy = serviceProvider.get('storageProxy');
+    const storage = serviceProvider.get('storage');
+    const services = { config, storageProxy, storage, getRepositoryStorage };
     return (element, options) => elementHooks[hook](element, services, options);
   }
 
