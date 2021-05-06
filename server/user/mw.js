@@ -10,7 +10,7 @@ const loginRequestLimiter = requestLimiter({
   keyGenerator: req => req.userKey
 });
 
-function setLoginLimitId(req, res, next) {
+function setLoginLimitKey(req, res, next) {
   const key = [req.ip, req.body.email].join(':');
   req.userKey = crypto.createHash('sha256').update(key).digest('base64');
   return next();
@@ -21,4 +21,4 @@ function resetLoginAttempts(req, res, next) {
     .then(() => next());
 }
 
-module.exports = { loginRequestLimiter, setLoginLimitId, resetLoginAttempts };
+module.exports = { loginRequestLimiter, setLoginLimitKey, resetLoginAttempts };
