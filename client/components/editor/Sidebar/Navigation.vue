@@ -66,11 +66,6 @@ export default {
     };
   },
   computed: {
-    activityConfigs: vm => vm.$schemaService.getOutlineLevels(vm.repository.schema),
-    editableTypes: vm => vm.editableActivityConfigs.map(it => it.type),
-    editableActivityConfigs() {
-      return this.activityConfigs.filter(it => this.$schemaService.isEditable(it.type));
-    },
     attachActivityAttrs() {
       return activity => ({
         selectable: this.$schemaService.isEditable(activity.type)
@@ -99,7 +94,7 @@ export default {
       this.$router.push({ name: 'editor', params: { activityId } });
     },
     isActivityEditable(activity) {
-      return this.editableTypes.includes(activity.type);
+      return this.$schemaService.isEditable(activity.type);
     },
     isSelected(activityId) {
       return this.selected.id === activityId;
