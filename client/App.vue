@@ -58,7 +58,7 @@ html {
 }
 
 .v-main {
-  background-color: $main-background-color;
+  background-color: $bg-color-default;
 }
 
 .v-main .view {
