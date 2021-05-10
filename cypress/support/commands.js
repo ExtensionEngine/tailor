@@ -24,12 +24,12 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
-Cypress.Commands.add('loginWithUI', () => {
+Cypress.Commands.add('loginWithUI', (email = 'admin@example.com', pw = 'admin123.') => {
   cy.visit('/');
   cy.findByLabelText(/email/i)
-    .type('admin@example.com');
+    .type(email);
   cy.findByLabelText(/password/i)
-    .type('admin123.');
+    .type(pw);
   cy.findByText(/log in/i)
     .click();
 });
