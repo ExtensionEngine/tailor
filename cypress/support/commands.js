@@ -33,3 +33,8 @@ Cypress.Commands.add('loginWithUI', (email = 'admin@example.com', pw = 'admin123
   cy.findByText(/log in/i)
     .click();
 });
+
+Cypress.Commands.add('assertHome', () => {
+  cy.url()
+    .should('eq', `${Cypress.config().baseUrl}/#/`);
+});
