@@ -23,3 +23,13 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('loginWithUI', () => {
+  cy.visit('/');
+  cy.findByLabelText(/email/i)
+    .type('admin@example.com');
+  cy.findByLabelText(/password/i)
+    .type('admin123.');
+  cy.findByText(/log in/i)
+    .click();
+});
