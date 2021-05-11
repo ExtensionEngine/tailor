@@ -9,6 +9,7 @@
 <script>
 import Checkbox from './Checkbox';
 import ColorPicker from './ColorPicker';
+import Combobox from './Combobox';
 import DatePicker from './DatePicker';
 import FileUpload from './File';
 import get from 'lodash/get';
@@ -21,6 +22,7 @@ import Textarea from './Textarea';
 
 const META_TYPES = {
   CHECKBOX: Checkbox,
+  COMBOBOX: Combobox,
   COLOR: ColorPicker,
   DATE: DatePicker,
   DATETIME: DatePicker,
