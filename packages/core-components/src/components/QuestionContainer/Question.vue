@@ -43,7 +43,7 @@
 
 <script>
 import AddElement from '../AddElement/index.vue';
-import { assessment } from '@tailor/utils';
+import { assessment } from '@tailor-cms/utils';
 import cloneDeep from 'lodash/cloneDeep';
 import ContainedContent from '../ContainedContent.vue';
 import Draggable from 'vuedraggable';

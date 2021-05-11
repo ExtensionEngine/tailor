@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { getPositions, isQuestion, uuid } from '@tailor/utils';
+import { getPositions, isQuestion, uuid } from '@tailor-cms/utils';
 import AddNewElement from './AddNewElement.vue';
 import filter from 'lodash/filter';
 import flatMap from 'lodash/flatMap';

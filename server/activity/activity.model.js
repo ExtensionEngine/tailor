@@ -1,7 +1,7 @@
 'use strict';
 
 const { Model, Op } = require('sequelize');
-const { schema, workflow } = require('@tailor/config');
+const { schema, workflow } = require('@tailor-cms/config');
 const calculatePosition = require('../shared/util/calculatePosition');
 const { Activity: Events } = require('../../common/sse');
 const hooks = require('./hooks');

@@ -1,4 +1,4 @@
-import { calculatePosition } from '@tailor/utils';
+import { calculatePosition } from '@tailor-cms/utils';
 import { ContentElement as Events } from '@/../common/sse';
 import feed from '../feed';
 import generateActions from '@/store/helpers/actions';

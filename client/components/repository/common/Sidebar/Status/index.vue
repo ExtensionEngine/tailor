@@ -50,7 +50,7 @@
 import AssigneeAvatar from '@/components/repository/common/AssigneeAvatar';
 import find from 'lodash/find';
 import { mapGetters } from 'vuex';
-import { workflow } from '@tailor/config';
+import { workflow } from '@tailor-cms/config';
 import WorkflowDueDate from '@/components/repository/common/WorkflowDueDate';
 
 export default {

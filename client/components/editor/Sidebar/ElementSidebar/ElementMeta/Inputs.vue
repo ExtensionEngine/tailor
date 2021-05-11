@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { getElementId } from '@tailor/utils';
+import { getElementId } from '@tailor-cms/utils';
 import MetaInput from '@/components/common/MetaInput';
 
 export default {

@@ -34,10 +34,10 @@
 </template>
 
 <script>
-import { AddElement, AssessmentItem } from '@tailor/core-components';
+import { AddElement, AssessmentItem } from '@tailor-cms/core-components';
 import filter from 'lodash/filter';
 import sortBy from 'lodash/sortBy';
-import { uuid } from '@tailor/utils';
+import { uuid } from '@tailor-cms/utils';
 
 export default {
   name: 'assessment-pool',

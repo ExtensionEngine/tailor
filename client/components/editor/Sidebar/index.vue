@@ -54,7 +54,7 @@ import ActivityNavigation from './Navigation';
 import debounce from 'lodash/debounce';
 import ElementSidebar from './ElementSidebar';
 import get from 'lodash/get';
-import { getElementId } from '@tailor/utils';
+import { getElementId } from '@tailor-cms/utils';
 import { mapGetters } from 'vuex';
 
 export default {

@@ -1,4 +1,4 @@
-import { activity as activityUtils } from '@tailor/utils';
+import { activity as activityUtils } from '@tailor-cms/utils';
 import find from 'lodash/find';
 
 const {

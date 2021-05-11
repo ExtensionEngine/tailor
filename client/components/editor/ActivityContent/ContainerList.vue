@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { getContainerName, getElementId } from '@tailor/utils';
+import { getContainerName, getElementId } from '@tailor-cms/utils';
 import { mapActions, mapState } from 'vuex';
 import capitalize from 'lodash/capitalize';
 import castArray from 'lodash/castArray';

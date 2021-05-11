@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { activity as activityUtils } from '@tailor/utils';
+import { activity as activityUtils } from '@tailor-cms/utils';
 import xorBy from 'lodash/xorBy';
 
 const { toTreeFormat } = activityUtils;

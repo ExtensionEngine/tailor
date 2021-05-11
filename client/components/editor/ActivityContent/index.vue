@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { getElementId, isQuestion } from '@tailor/utils';
+import { getElementId, isQuestion } from '@tailor-cms/utils';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import commentEventListeners from 'components/common/mixins/commentEventListeners';
 import ContentContainers from './ContainerList';

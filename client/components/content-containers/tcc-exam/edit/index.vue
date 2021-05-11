@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { activity as activityUtils, numberToLetter } from '@tailor/utils';
+import { activity as activityUtils, numberToLetter } from '@tailor-cms/utils';
 import AssessmentGroup from './AssessmentGroup';
 import filter from 'lodash/filter';
 import find from 'lodash/find';

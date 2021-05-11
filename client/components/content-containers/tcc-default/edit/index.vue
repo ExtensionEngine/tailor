@@ -59,7 +59,7 @@ import {
   ContainedContent,
   ElementList,
   InlineActivator
-} from '@tailor/core-components';
+} from '@tailor-cms/core-components';
 import filter from 'lodash/filter';
 import sortBy from 'lodash/sortBy';
 

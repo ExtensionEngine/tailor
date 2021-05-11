@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { assessment } from '@tailor/utils';
+import { assessment } from '@tailor-cms/utils';
 
 const getTitle = isGraded => isGraded ? 'Answer' : 'Response';
 

@@ -3,7 +3,7 @@
 const { Activity: Events } = require('../../common/sse');
 const hooks = require('./status.hooks');
 const { Model } = require('sequelize');
-const { workflow } = require('@tailor/config');
+const { workflow } = require('@tailor-cms/config');
 
 const { priorities } = workflow;
 const priorityIds = priorities.map(it => it.id);

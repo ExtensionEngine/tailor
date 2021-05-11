@@ -46,7 +46,7 @@
 import AccordionItem from './AccordionItem';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
-import { ElementPlaceholder } from '@tailor/core-components';
+import { ElementPlaceholder } from '@tailor-cms/core-components';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import omit from 'lodash/omit';

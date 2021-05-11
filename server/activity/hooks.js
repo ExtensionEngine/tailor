@@ -2,7 +2,7 @@
 
 const forEach = require('lodash/forEach');
 const groupBy = require('lodash/groupBy');
-const { schema } = require('@tailor/config');
+const { schema } = require('@tailor-cms/config');
 const sse = require('../shared/sse');
 
 const { isOutlineActivity } = schema;

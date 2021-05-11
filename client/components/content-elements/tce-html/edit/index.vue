@@ -27,7 +27,7 @@
 import { Quill, quillEditor as QuillEditor } from 'vue-quill-editor';
 import createCustomTheme from './theme';
 import debounce from 'lodash/debounce';
-import { ElementPlaceholder } from '@tailor/core-components';
+import { ElementPlaceholder } from '@tailor-cms/core-components';
 import get from 'lodash/get';
 
 const CustomTheme = createCustomTheme(Quill);

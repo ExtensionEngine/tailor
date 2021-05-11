@@ -3,7 +3,7 @@
 const mail = require('../shared/mail');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
-const { schema } = require('@tailor/config');
+const { schema } = require('@tailor-cms/config');
 const sse = require('../shared/sse');
 const without = require('lodash/without');
 

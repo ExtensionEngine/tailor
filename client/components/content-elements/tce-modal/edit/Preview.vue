@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { ContentElement } from '@tailor/core-components';
+import { ContentElement } from '@tailor-cms/core-components';
 
 export default {
   name: 'tce-modal-preview',

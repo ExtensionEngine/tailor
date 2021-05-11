@@ -17,7 +17,7 @@ const { parse } = require('JSONStream');
 const Promise = require('bluebird');
 const reduce = require('lodash/reduce');
 const { repository: role } = require('../../../../config/shared/role');
-const { SCHEMAS } = require('@tailor/config');
+const { SCHEMAS } = require('@tailor-cms/config');
 const zipObject = require('lodash/zipObject');
 
 const noop = Function.prototype;

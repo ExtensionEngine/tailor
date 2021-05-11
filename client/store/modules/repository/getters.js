@@ -1,7 +1,7 @@
 import {
   schema as schemaConfig,
   workflow as workflowConfig
-} from '@tailor/config';
+} from '@tailor-cms/config';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';

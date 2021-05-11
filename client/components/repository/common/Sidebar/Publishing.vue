@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { activity as activityUtils } from '@tailor/utils';
+import { activity as activityUtils } from '@tailor-cms/utils';
 import fecha from 'fecha';
 import { mapActions } from 'vuex';
 import PublishingBadge from './Badge';

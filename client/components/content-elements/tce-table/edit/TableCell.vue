@@ -10,7 +10,7 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
-import { ContentElement } from '@tailor/core-components';
+import { ContentElement } from '@tailor-cms/core-components';
 
 export default {
   name: 'table-cell',

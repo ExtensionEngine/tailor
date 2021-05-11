@@ -22,7 +22,7 @@ const runApp = promisify(app.listen.bind(app));
 
 database.initialize()
   .then(() => logger.info('Database initialized'))
-  .then(() => require('@tailor/config'))
+  .then(() => require('@tailor-cms/config'))
   .then(() => contentPluginRegistry.initialize())
   .then(() => runApp(config.port))
   .then(() => {

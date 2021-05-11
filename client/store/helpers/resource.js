@@ -5,7 +5,7 @@ import join from 'url-join';
 import omit from 'lodash/omit';
 import Queue from 'promise-queue';
 import reduce from 'lodash/reduce';
-import { uuid } from '@tailor/utils';
+import { uuid } from '@tailor-cms/utils';
 
 // Used to serialize api calls that modify data.
 const queue = new Queue(1, Infinity);

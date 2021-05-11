@@ -1,9 +1,9 @@
 import { lower, title as toTitleCase } from 'to-case';
-import { assessment } from '@tailor/utils';
+import { assessment } from '@tailor-cms/utils';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import reduce from 'lodash/reduce';
-import { schema } from '@tailor/config';
+import { schema } from '@tailor-cms/config';
 
 const describe = {
   REPOSITORY: describeRepositoryRevision,

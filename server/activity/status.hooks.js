@@ -4,7 +4,7 @@ const forEach = require('lodash/forEach');
 const get = require('lodash/get');
 const mail = require('../shared/mail');
 const { Op } = require('sequelize');
-const { schema } = require('@tailor/config');
+const { schema } = require('@tailor-cms/config');
 const sse = require('../shared/sse');
 
 exports.add = (ActivityStatus, Hooks, { Activity }) => {

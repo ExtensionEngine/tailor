@@ -48,10 +48,10 @@
 </template>
 
 <script>
-import { assessment } from '@tailor/utils';
+import { assessment } from '@tailor-cms/utils';
 import cloneDeep from 'lodash/cloneDeep';
 import head from 'lodash/head';
-import { InputError } from '@tailor/core-components';
+import { InputError } from '@tailor-cms/core-components';
 import range from 'lodash/range';
 import set from 'lodash/set';
 

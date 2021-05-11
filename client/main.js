@@ -4,7 +4,7 @@ import 'bootstrap-sass/assets/javascripts/bootstrap';
 import '@/utils/validation';
 
 import { asset as assetApi, exposedApi } from '@/api';
-import { schema } from '@tailor/config';
+import { schema } from '@tailor-cms/config';
 import ContentPluginRegistry from './content-plugins';
 
 import { formatDate, truncate } from '@/filters';

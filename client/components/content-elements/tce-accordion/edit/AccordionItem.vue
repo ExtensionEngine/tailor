@@ -57,7 +57,7 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
-import { EmbeddedContainer } from '@tailor/core-components';
+import { EmbeddedContainer } from '@tailor-cms/core-components';
 import forEach from 'lodash/forEach';
 import isEmpty from 'lodash/isEmpty';
 import { mapRequests } from '@extensionengine/vue-radio';

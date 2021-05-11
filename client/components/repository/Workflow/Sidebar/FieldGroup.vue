@@ -67,11 +67,11 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import { DatePicker } from '@tailor/core-components';
+import { DatePicker } from '@tailor-cms/core-components';
 import EditorField from '@/components/common/EditorField';
 import SelectPriority from '@/components/repository/common/SelectPriority';
 import SelectStatus from '../SelectStatus';
-import { workflow } from '@tailor/config';
+import { workflow } from '@tailor-cms/config';
 
 const defaultPriority = workflow.priorities.find(it => it.default);
 

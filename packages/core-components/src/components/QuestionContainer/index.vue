@@ -59,7 +59,7 @@
 
 <script>
 import * as yup from 'yup';
-import { assessment, getComponentName, processAnswerType } from '@tailor/utils';
+import { assessment, getComponentName, processAnswerType } from '@tailor-cms/utils';
 import cloneDeep from 'lodash/cloneDeep';
 import Controls from './Controls.vue';
 import Feedback from './Feedback.vue';

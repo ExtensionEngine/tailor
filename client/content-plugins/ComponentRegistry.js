@@ -2,7 +2,7 @@ import {
   getToolbarName,
   isQuestion,
   processAnswerType
-} from '@tailor/utils';
+} from '@tailor-cms/utils';
 import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
 import kebabCase from 'lodash/kebabCase';

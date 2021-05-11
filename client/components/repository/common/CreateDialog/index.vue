@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { InsertLocation } from '@tailor/utils';
+import { InsertLocation } from '@tailor-cms/utils';
 import { mapActions } from 'vuex';
 import MetaInput from '@/components/common/MetaInput';
 import TailorDialog from '@/components/common/TailorDialog';

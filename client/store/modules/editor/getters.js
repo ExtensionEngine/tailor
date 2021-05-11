@@ -1,11 +1,11 @@
-import { activity as activityUtils } from '@tailor/utils';
+import { activity as activityUtils } from '@tailor-cms/utils';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import flatMap from 'lodash/flatMap';
 import get from 'lodash/get';
 import map from 'lodash/map';
 import reduce from 'lodash/reduce';
-import { schema } from '@tailor/config';
+import { schema } from '@tailor-cms/config';
 import uniqBy from 'lodash/uniqBy';
 import without from 'lodash/without';
 

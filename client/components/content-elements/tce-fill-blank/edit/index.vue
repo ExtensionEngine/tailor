@@ -67,11 +67,11 @@
 </template>
 
 <script>
-import { assessment } from '@tailor/utils';
+import { assessment } from '@tailor-cms/utils';
 import cloneDeep from 'lodash/cloneDeep';
 import Draggable from 'vuedraggable';
 import get from 'lodash/get';
-import { InputError } from '@tailor/core-components';
+import { InputError } from '@tailor-cms/core-components';
 import { mapRequests } from '@extensionengine/vue-radio';
 import pluralize from 'pluralize';
 import pullAt from 'lodash/pullAt';

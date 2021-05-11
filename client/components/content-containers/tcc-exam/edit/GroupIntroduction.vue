@@ -20,10 +20,10 @@
 </template>
 
 <script>
-import { ContainedContent, ElementList } from '@tailor/core-components';
+import { ContainedContent, ElementList } from '@tailor-cms/core-components';
 import cloneDeep from 'lodash/cloneDeep';
 import filter from 'lodash/filter';
-import { isQuestion } from '@tailor/utils';
+import { isQuestion } from '@tailor-cms/utils';
 import sortBy from 'lodash/sortBy';
 
 export default {

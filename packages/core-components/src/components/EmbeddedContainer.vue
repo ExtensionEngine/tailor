@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { calculatePosition } from '@tailor/utils';
+import { calculatePosition } from '@tailor-cms/utils';
 import cloneDeep from 'lodash/cloneDeep';
 import ContainedContent from './ContainedContent.vue';
 import ElementList from './ElementList.vue';

@@ -22,7 +22,7 @@ import map from 'lodash/map';
 import mapValues from 'lodash/mapValues';
 import merge from 'lodash/merge';
 import omit from 'lodash/omit';
-import { publishDiffChangeTypes } from '@tailor/utils';
+import { publishDiffChangeTypes } from '@tailor-cms/utils';
 import reduce from 'lodash/reduce';
 
 const { NEW, REMOVED, CHANGED } = publishDiffChangeTypes;

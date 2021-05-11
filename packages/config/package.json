@@ -1,5 +1,5 @@
 {
-  "name": "@tailor/config",
+  "name": "@tailor-cms/config",
   "version": "0.0.2",
   "description": "Access parsed Tailor config",
   "homepage": "https://github.com/ExtensionEngine/tailor#readme",

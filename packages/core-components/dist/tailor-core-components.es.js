@@ -1,5 +1,5 @@
 import capitalize from 'lodash/capitalize';
-import { Events, publishDiffChangeTypes, getElementId, getComponentName, activity, isQuestion, getPositions, uuid, assessment, processAnswerType, calculatePosition } from '@tailor/utils';
+import { Events, publishDiffChangeTypes, getElementId, getComponentName, activity, isQuestion, getPositions, uuid, assessment, processAnswerType, calculatePosition } from '@tailor-cms/utils';
 import filter from 'lodash/filter';
 import flatMap from 'lodash/flatMap';
 import intersection from 'lodash/intersection';
@@ -36,7 +36,7 @@ import last from 'lodash/last';
 import uniqueId from 'lodash/uniqueId';
 import mapKeys from 'lodash/mapKeys';
 import values from 'lodash/values';
-import { upload } from '@tailor/core-components';
+import { upload } from '@tailor-cms/core-components';
 
 //
 var script$A = {
@@ -3024,8 +3024,8 @@ var __vue_staticRenderFns__$p = [];
 
 var __vue_inject_styles__$p = function __vue_inject_styles__(inject) {
   if (!inject) return;
-  inject("data-v-382b8ce9_0", {
-    source: "[data-v-382b8ce9] .v-menu__content{background:#fff}[data-v-382b8ce9] .v-menu__content .embedded-discussion{text-align:left}[data-v-382b8ce9] .v-menu__content .comment .author{font-size:.875rem}.unseen[data-v-382b8ce9]{font-size:.75rem}",
+  inject("data-v-98d34836_0", {
+    source: "[data-v-98d34836] .v-menu__content{background:#fff}[data-v-98d34836] .v-menu__content .embedded-discussion{text-align:left}[data-v-98d34836] .v-menu__content .comment .author{font-size:.875rem}.unseen[data-v-98d34836]{font-size:.75rem}",
     map: undefined,
     media: undefined
   });
@@ -3033,7 +3033,7 @@ var __vue_inject_styles__$p = function __vue_inject_styles__(inject) {
 /* scoped */
 
 
-var __vue_scope_id__$p = "data-v-382b8ce9";
+var __vue_scope_id__$p = "data-v-98d34836";
 /* module identifier */
 
 var __vue_module_identifier__$f = undefined;
@@ -3492,8 +3492,8 @@ var __vue_staticRenderFns__$n = [];
 
 var __vue_inject_styles__$n = function __vue_inject_styles__(inject) {
   if (!inject) return;
-  inject("data-v-74c5ccda_0", {
-    source: ".content-element[data-v-74c5ccda]{position:relative;border:1px solid transparent}.content-element[data-v-74c5ccda]::after{content:'';display:none;position:absolute;top:0;right:-.125rem;width:.125rem;height:100%}.content-element.focused[data-v-74c5ccda]{border:1px dashed #1de9b6}.content-element.focused[data-v-74c5ccda]::after{display:block;background:#1de9b6}.content-element.selected[data-v-74c5ccda]{border:1px dashed #ff4081}.content-element.selected[data-v-74c5ccda]::after{display:block;background:#ff4081}.frame[data-v-74c5ccda]{padding:10px 20px;border:1px solid #e1e1e1}.element-actions[data-v-74c5ccda]{display:flex;flex-direction:column;position:absolute;top:-.0625rem;right:-1.25rem;width:1.5rem;height:100%;padding-left:.75rem}.element-actions>*[data-v-74c5ccda]{min-height:1.75rem;opacity:0;transition:opacity .1s linear}.element-actions>.is-visible[data-v-74c5ccda]{opacity:1;transition:opacity .5s linear}.active-users[data-v-74c5ccda]{position:absolute;top:0;left:-1.625rem}.save-indicator[data-v-74c5ccda]{position:absolute;bottom:-.125rem;left:0}.header[data-v-74c5ccda]{width:100%;max-height:0}.header.visible[data-v-74c5ccda]{max-height:unset;padding:0 0 .5rem}.diff.new[data-v-74c5ccda]{border:none;box-shadow:0 0 0 2px var(--v-success-lighten2)!important}.diff.changed[data-v-74c5ccda],.diff.removed[data-v-74c5ccda]{border:none;box-shadow:0 0 0 2px var(--v-secondary-lighten4)!important}.diff .element-actions[data-v-74c5ccda]{display:none}",
+  inject("data-v-13d7855e_0", {
+    source: ".content-element[data-v-13d7855e]{position:relative;border:1px solid transparent}.content-element[data-v-13d7855e]::after{content:'';display:none;position:absolute;top:0;right:-.125rem;width:.125rem;height:100%}.content-element.focused[data-v-13d7855e]{border:1px dashed #1de9b6}.content-element.focused[data-v-13d7855e]::after{display:block;background:#1de9b6}.content-element.selected[data-v-13d7855e]{border:1px dashed #ff4081}.content-element.selected[data-v-13d7855e]::after{display:block;background:#ff4081}.frame[data-v-13d7855e]{padding:10px 20px;border:1px solid #e1e1e1}.element-actions[data-v-13d7855e]{display:flex;flex-direction:column;position:absolute;top:-.0625rem;right:-1.25rem;width:1.5rem;height:100%;padding-left:.75rem}.element-actions>*[data-v-13d7855e]{min-height:1.75rem;opacity:0;transition:opacity .1s linear}.element-actions>.is-visible[data-v-13d7855e]{opacity:1;transition:opacity .5s linear}.active-users[data-v-13d7855e]{position:absolute;top:0;left:-1.625rem}.save-indicator[data-v-13d7855e]{position:absolute;bottom:-.125rem;left:0}.header[data-v-13d7855e]{width:100%;max-height:0}.header.visible[data-v-13d7855e]{max-height:unset;padding:0 0 .5rem}.diff.new[data-v-13d7855e]{border:none;box-shadow:0 0 0 2px var(--v-success-lighten2)!important}.diff.changed[data-v-13d7855e],.diff.removed[data-v-13d7855e]{border:none;box-shadow:0 0 0 2px var(--v-secondary-lighten4)!important}.diff .element-actions[data-v-13d7855e]{display:none}",
     map: undefined,
     media: undefined
   });
@@ -3501,7 +3501,7 @@ var __vue_inject_styles__$n = function __vue_inject_styles__(inject) {
 /* scoped */
 
 
-var __vue_scope_id__$n = "data-v-74c5ccda";
+var __vue_scope_id__$n = "data-v-13d7855e";
 /* module identifier */
 
 var __vue_module_identifier__$e = undefined;
@@ -4286,8 +4286,8 @@ var __vue_staticRenderFns__$k = [];
 
 var __vue_inject_styles__$k = function __vue_inject_styles__(inject) {
   if (!inject) return;
-  inject("data-v-6e8a0067_0", {
-    source: ".treeview[data-v-6e8a0067]{max-height:19rem;text-align:left;background-color:#fcfcfc;border:1px solid #eee;overflow-y:scroll}.treeview .v-chip.custom-chip[data-v-6e8a0067]{border-radius:12px!important}.treeview[data-v-6e8a0067]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__content>*,.treeview[data-v-6e8a0067]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__root{cursor:auto}",
+  inject("data-v-350cd4e3_0", {
+    source: ".treeview[data-v-350cd4e3]{max-height:19rem;text-align:left;background-color:#fcfcfc;border:1px solid #eee;overflow-y:scroll}.treeview .v-chip.custom-chip[data-v-350cd4e3]{border-radius:12px!important}.treeview[data-v-350cd4e3]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__content>*,.treeview[data-v-350cd4e3]  .v-treeview-node--leaf>.treeview ::v-deep .v-treeview-node__root{cursor:auto}",
     map: undefined,
     media: undefined
   });
@@ -4295,7 +4295,7 @@ var __vue_inject_styles__$k = function __vue_inject_styles__(inject) {
 /* scoped */
 
 
-var __vue_scope_id__$k = "data-v-6e8a0067";
+var __vue_scope_id__$k = "data-v-350cd4e3";
 /* module identifier */
 
 var __vue_module_identifier__$b = undefined;
@@ -6463,8 +6463,8 @@ var __vue_staticRenderFns__$b = [];
 
 var __vue_inject_styles__$b = function __vue_inject_styles__(inject) {
   if (!inject) return;
-  inject("data-v-28708166_0", {
-    source: ".question-container[data-v-28708166]{position:relative;min-height:8.75rem;padding:1rem 3rem 0 2.5rem;text-align:center;background:#ebebeb;border-radius:.125rem;transition:.3s cubic-bezier(.25,.8,.5,1)}.question-container[data-v-28708166]::after,.question-container[data-v-28708166]::before{content:'';position:absolute;bottom:-1px;left:0;width:100%;transition:.3s cubic-bezier(.25,.8,.5,1)}.question-container[data-v-28708166]::before{border-style:solid;border-width:thin 0 0 0}.question-container[data-v-28708166]::after{border-style:solid;border-width:thin 0 thin 0;transform:scaleX(0)}.question-container[data-v-28708166]:not(.focused):not(.disabled):not(.incorrect):hover{background:#dcdcdc}.question-container[data-v-28708166]:not(.focused):not(.disabled):not(.incorrect):hover  .content-element{border-color:#bbb}.focused[data-v-28708166]::after{transform:scaleX(1)}.disabled[data-v-28708166]{color:rgba(0,0,0,.38)}.disabled[data-v-28708166]::before{border-image:repeating-linear-gradient(to right,rgba(0,0,0,.38) 0,rgba(0,0,0,.38) .125rem,transparent .125rem,transparent .25rem) 1 repeat}.incorrect[data-v-28708166]::after,.incorrect[data-v-28708166]::before{border-color:var(--v-error-base)}.invisible[data-v-28708166]{visibility:none}",
+  inject("data-v-20130bd1_0", {
+    source: ".question-container[data-v-20130bd1]{position:relative;min-height:8.75rem;padding:1rem 3rem 0 2.5rem;text-align:center;background:#ebebeb;border-radius:.125rem;transition:.3s cubic-bezier(.25,.8,.5,1)}.question-container[data-v-20130bd1]::after,.question-container[data-v-20130bd1]::before{content:'';position:absolute;bottom:-1px;left:0;width:100%;transition:.3s cubic-bezier(.25,.8,.5,1)}.question-container[data-v-20130bd1]::before{border-style:solid;border-width:thin 0 0 0}.question-container[data-v-20130bd1]::after{border-style:solid;border-width:thin 0 thin 0;transform:scaleX(0)}.question-container[data-v-20130bd1]:not(.focused):not(.disabled):not(.incorrect):hover{background:#dcdcdc}.question-container[data-v-20130bd1]:not(.focused):not(.disabled):not(.incorrect):hover  .content-element{border-color:#bbb}.focused[data-v-20130bd1]::after{transform:scaleX(1)}.disabled[data-v-20130bd1]{color:rgba(0,0,0,.38)}.disabled[data-v-20130bd1]::before{border-image:repeating-linear-gradient(to right,rgba(0,0,0,.38) 0,rgba(0,0,0,.38) .125rem,transparent .125rem,transparent .25rem) 1 repeat}.incorrect[data-v-20130bd1]::after,.incorrect[data-v-20130bd1]::before{border-color:var(--v-error-base)}.invisible[data-v-20130bd1]{visibility:none}",
     map: undefined,
     media: undefined
   });
@@ -6472,7 +6472,7 @@ var __vue_inject_styles__$b = function __vue_inject_styles__(inject) {
 /* scoped */
 
 
-var __vue_scope_id__$b = "data-v-28708166";
+var __vue_scope_id__$b = "data-v-20130bd1";
 /* module identifier */
 
 var __vue_module_identifier__$7 = undefined;
@@ -6837,8 +6837,8 @@ var __vue_staticRenderFns__$a = [];
 
 var __vue_inject_styles__$a = function __vue_inject_styles__(inject) {
   if (!inject) return;
-  inject("data-v-b4ecdf22_0", {
-    source: ".tce-question-container[data-v-b4ecdf22]{min-height:25rem;background-color:#fff;overflow:visible;text-align:left}.tce-question-container[data-v-b4ecdf22]  .title{font-weight:400}.tce-question-container .content[data-v-b4ecdf22]{margin:.5rem 1.625rem}@media (max-width:1263px){.tce-question-container .content[data-v-b4ecdf22]{margin:.5rem}}.tce-question-container .tce-answer[data-v-b4ecdf22]{overflow:hidden}.disabled .controls[data-v-b4ecdf22]{display:none}",
+  inject("data-v-1a2f662a_0", {
+    source: ".tce-question-container[data-v-1a2f662a]{min-height:25rem;background-color:#fff;overflow:visible;text-align:left}.tce-question-container[data-v-1a2f662a]  .title{font-weight:400}.tce-question-container .content[data-v-1a2f662a]{margin:.5rem 1.625rem}@media (max-width:1263px){.tce-question-container .content[data-v-1a2f662a]{margin:.5rem}}.tce-question-container .tce-answer[data-v-1a2f662a]{overflow:hidden}.disabled .controls[data-v-1a2f662a]{display:none}",
     map: undefined,
     media: undefined
   });
@@ -6846,7 +6846,7 @@ var __vue_inject_styles__$a = function __vue_inject_styles__(inject) {
 /* scoped */
 
 
-var __vue_scope_id__$a = "data-v-b4ecdf22";
+var __vue_scope_id__$a = "data-v-1a2f662a";
 /* module identifier */
 
 var __vue_module_identifier__$6 = undefined;
@@ -8285,8 +8285,8 @@ var __vue_staticRenderFns__$5 = [];
 
 var __vue_inject_styles__$5 = function __vue_inject_styles__(inject) {
   if (!inject) return;
-  inject("data-v-f18f3e56_0", {
-    source: ".list-group[data-v-f18f3e56]{padding:.625rem 1.5rem}[data-v-f18f3e56] .sortable-ghost .drag-handle{display:none}[data-v-f18f3e56] .sortable-ghost .content-element{max-height:9.375rem;background:#f4f5f5}[data-v-f18f3e56] .sortable-ghost .content-element>*{visibility:hidden}[data-v-f18f3e56] .sortable-drag .content-element{max-height:auto;background:#fff}",
+  inject("data-v-504ada5e_0", {
+    source: ".list-group[data-v-504ada5e]{padding:.625rem 1.5rem}[data-v-504ada5e] .sortable-ghost .drag-handle{display:none}[data-v-504ada5e] .sortable-ghost .content-element{max-height:9.375rem;background:#f4f5f5}[data-v-504ada5e] .sortable-ghost .content-element>*{visibility:hidden}[data-v-504ada5e] .sortable-drag .content-element{max-height:auto;background:#fff}",
     map: undefined,
     media: undefined
   });
@@ -8294,7 +8294,7 @@ var __vue_inject_styles__$5 = function __vue_inject_styles__(inject) {
 /* scoped */
 
 
-var __vue_scope_id__$5 = "data-v-f18f3e56";
+var __vue_scope_id__$5 = "data-v-504ada5e";
 /* module identifier */
 
 var __vue_module_identifier__$2 = undefined;

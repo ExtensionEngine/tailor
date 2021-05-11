@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { activity as activityUtils } from '@tailor/utils';
+import { activity as activityUtils } from '@tailor-cms/utils';
 
 const { toTreeFormat } = activityUtils;
 

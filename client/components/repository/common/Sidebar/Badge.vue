@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { activity as activityUtils } from '@tailor/utils';
+import { activity as activityUtils } from '@tailor-cms/utils';
 import countBy from 'lodash/countBy';
 import filter from 'lodash/filter';
 import map from 'lodash/map';

@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { activity as activityUtils } from '@tailor/utils';
+import { activity as activityUtils } from '@tailor-cms/utils';
 import ContentPreview from '../ContentPreview/index.vue';
 import flatMap from 'lodash/flatMap';
 import loader from '@/loader';

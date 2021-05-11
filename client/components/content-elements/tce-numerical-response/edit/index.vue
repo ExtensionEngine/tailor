@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { assessment } from '@tailor/utils';
+import { assessment } from '@tailor-cms/utils';
 import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
 import last from 'lodash/last';

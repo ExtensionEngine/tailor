@@ -1,5 +1,5 @@
 import { mapActions, mapMutations } from 'vuex';
-import { Events } from '@tailor/utils';
+import { Events } from '@tailor-cms/utils';
 import { mapChannels } from '@extensionengine/vue-radio';
 
 const { SAVE, REMOVE, SET_LAST_SEEN, RESOLVE } = Events.Discussion;

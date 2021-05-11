@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import { assessment } from '@tailor/utils';
+import { assessment } from '@tailor-cms/utils';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
 import find from 'lodash/find';

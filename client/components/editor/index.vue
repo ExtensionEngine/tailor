@@ -28,7 +28,7 @@
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import ActivityContent from './ActivityContent';
 import get from 'lodash/get';
-import { getElementId } from '@tailor/utils';
+import { getElementId } from '@tailor-cms/utils';
 import Sidebar from './Sidebar';
 import Toolbar from './Toolbar';
 import withUserTracking from 'components/common/mixins/userTracking';

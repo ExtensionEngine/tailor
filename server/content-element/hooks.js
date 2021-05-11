@@ -7,7 +7,7 @@ const get = require('lodash/get');
 const hash = require('hash-obj');
 const Promise = require('bluebird');
 const { resolveStatics } = require('../shared/storage/helpers');
-const { schema } = require('@tailor/config');
+const { schema } = require('@tailor-cms/config');
 const sse = require('../shared/sse');
 
 module.exports = { add, applyFetchHooks };
