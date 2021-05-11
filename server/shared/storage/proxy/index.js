@@ -22,6 +22,10 @@ class Proxy {
     return this.provider.isSelfHosted;
   }
 
+  get host() {
+    return this.provider.host;
+  }
+
   get path() {
     return this.isSelfHosted && this.provider.path;
   }

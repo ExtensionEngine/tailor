@@ -104,6 +104,13 @@ export default {
     search() {
       return this.$refs.activityTree.updateAll(true);
     }
+  },
+  mounted() {
+    this.$nextTick(() => {
+      const activityTreeEl = this.$refs.activityTree.$el;
+      const selectedNode = activityTreeEl.querySelector('.tree-node.selected');
+      selectedNode.scrollIntoView({ behavior: 'smooth' });
+    });
   }
 };
 </script>

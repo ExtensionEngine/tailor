@@ -6,8 +6,8 @@
     :name="lowerCase(label)"
     immediate>
     <v-autocomplete
-      v-model="value"
       @input="onRelationshipChanged"
+      :value="value"
       :items="groupedOptions"
       :name="type"
       :label="label"
@@ -18,8 +18,14 @@
       :disabled="!options.length"
       :error-messages="errors"
       :class="{ required: !allowEmpty }"
+      item-value="id"
       item-text="data.name"
-      deletable-chips return-object outlined />
+      deletable-chips return-object outlined>
+      <template #item="{ item }">
+        <label-chip color="primary lighten-4" class="mr-2">{{ item.shortId }}</label-chip>
+        {{ item.data.name }}
+      </template>
+    </v-autocomplete>
   </validation-provider>
 </template>
 
@@ -36,6 +42,7 @@ import get from 'lodash/get';
 import groupBy from 'lodash/groupBy';
 import includes from 'lodash/includes';
 import isEmpty from 'lodash/isEmpty';
+import LabelChip from '../LabelChip';
 import lowerCase from 'lodash/lowerCase';
 import map from 'lodash/map';
 import pluralize from 'pluralize';
@@ -56,10 +63,10 @@ export default {
     allowInsideLineage: { type: Boolean, default: false },
     allowedTypes: { type: Array, default: () => [] }
   },
-  data: () => ({ value: null }),
   computed: {
     ...mapGetters('repository', ['outlineActivities']),
     ...mapGetters('repository/activities', ['getLineage']),
+    value: vm => vm.multiple ? vm.associations : vm.associations[0],
     options() {
       const { allowInsideLineage, allowCircularLinks, activity: { id } } = this;
       const activities = without(this.outlineActivities, this.activity);
@@ -98,7 +105,7 @@ export default {
       return get(activity, `refs.${this.type}`, []);
     },
     async onRelationshipChanged(value) {
-      const { valid } = await this.$refs.validator.validate();
+      const { valid } = await this.$refs.validator.validate(value);
       if (!valid) return;
       const associations = compact(castArray(value));
       const activity = cloneDeep(this.activity) || {};
@@ -106,9 +113,7 @@ export default {
       this.update(activity);
     }
   },
-  created() {
-    this.value = this.multiple ? this.associations : this.associations[0];
-  }
+  components: { LabelChip }
 };
 </script>
 

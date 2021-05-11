@@ -54,9 +54,7 @@
             <img :src="lastActivity.user.imgUrl">
           </v-avatar>
           <div class="ml-3 overflow-hidden">
-            <div
-              :class="{ 'subtitle-1 font-weight-bold': isCardHovered }"
-              class="caption">
+            <div class="caption">
               Edited
               <timeago :datetime="lastActivity.createdAt" :auto-update="60" />
               by

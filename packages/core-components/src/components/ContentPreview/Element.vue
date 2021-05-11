@@ -21,9 +21,9 @@
               @click.stop="$emit('element:open', element.uid)"
               :class="{ visible: hover }"
               color="blue-grey darken-4"
-              fab depressed x-small
+              fab depressed x-small dark
               class="open-element-button">
-              <v-icon color="secondary lighten-4" dense>mdi-open-in-new</v-icon>
+              <v-icon dense>mdi-open-in-new</v-icon>
             </v-btn>
           </template>
           <span>Open in editor</span>

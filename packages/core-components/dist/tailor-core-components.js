@@ -2421,6 +2421,11 @@ var initCommentInput = function initCommentInput() {
   };
 };
 
+var maxLength = function maxLength(input) {
+  if (!input) return true;
+  return input.length <= 600 || 'Max 600 characters';
+};
+
 var script$q = {
   name: 'tailor-embedded-discussion',
   inheritAttrs: true,
@@ -2473,10 +2478,14 @@ var script$q = {
   data: function data() {
     return {
       showAll: false,
-      comment: initCommentInput()
+      comment: initCommentInput(),
+      error: false
     };
   },
   computed: {
+    rules: function rules() {
+      return [maxLength];
+    },
     thread: function thread() {
       var comments = this.comments,
           unseenComments = this.unseenComments;
@@ -2681,6 +2690,7 @@ var __vue_render__$q = function __vue_render__() {
     staticClass: "comment-input",
     attrs: {
       "placeholder": _vm.commentsCount ? 'Add a comment...' : 'Start the discussion...',
+      "rules": _vm.rules,
       "rows": "3",
       "outlined": "",
       "auto-grow": "",
@@ -2690,6 +2700,9 @@ var __vue_render__$q = function __vue_render__() {
     on: {
       "focus": function focus($event) {
         return _vm.$emit('seen');
+      },
+      "update:error": function updateError($event) {
+        _vm.error = $event;
       }
     },
     model: {
@@ -2701,7 +2714,7 @@ var __vue_render__$q = function __vue_render__() {
     }
   }), _vm._v(" "), _c('v-btn', {
     attrs: {
-      "disabled": _vm.isTextEditorEmpty,
+      "disabled": _vm.isTextEditorEmpty || _vm.error,
       "icon": ""
     },
     on: {
@@ -2715,8 +2728,8 @@ var __vue_staticRenderFns__$q = [];
 
 var __vue_inject_styles__$q = function __vue_inject_styles__(inject) {
   if (!inject) return;
-  inject("data-v-5744b719_0", {
-    source: ".embedded-discussion[data-v-5744b719]{font-family:Roboto,Arial,sans-serif}.embedded-discussion .resolve-btn-container[data-v-5744b719]{display:flex;justify-content:flex-end;margin:.5rem 0 0 0}.embedded-discussion .header[data-v-5744b719]{margin:.875rem 0 1.625rem 0;font-size:1.125rem;font-weight:400}.embedded-discussion .comment-input[data-v-5744b719]{margin:0 .25rem 0 .25rem}.embedded-discussion .alert[data-v-5744b719]  .v-icon{color:var(--v-primary-darken2)!important}",
+  inject("data-v-7b6d2083_0", {
+    source: ".embedded-discussion[data-v-7b6d2083]{font-family:Roboto,Arial,sans-serif}.embedded-discussion .resolve-btn-container[data-v-7b6d2083]{display:flex;justify-content:flex-end;margin:.5rem 0 0 0}.embedded-discussion .header[data-v-7b6d2083]{margin:.875rem 0 1.625rem 0;font-size:1.125rem;font-weight:400}.embedded-discussion .comment-input[data-v-7b6d2083]{margin:0 .25rem 0 .25rem}.embedded-discussion .alert[data-v-7b6d2083]  .v-icon{color:var(--v-primary-darken2)!important}",
     map: undefined,
     media: undefined
   });
@@ -2724,7 +2737,7 @@ var __vue_inject_styles__$q = function __vue_inject_styles__(inject) {
 /* scoped */
 
 
-var __vue_scope_id__$q = "data-v-5744b719";
+var __vue_scope_id__$q = "data-v-7b6d2083";
 /* module identifier */
 
 var __vue_module_identifier__$g = undefined;
@@ -3770,7 +3783,8 @@ var __vue_render__$m = function __vue_render__() {
                   "color": "blue-grey darken-4",
                   "fab": "",
                   "depressed": "",
-                  "x-small": ""
+                  "x-small": "",
+                  "dark": ""
                 },
                 on: {
                   "click": function click($event) {
@@ -3780,7 +3794,6 @@ var __vue_render__$m = function __vue_render__() {
                 }
               }, on), [_c('v-icon', {
                 attrs: {
-                  "color": "secondary lighten-4",
                   "dense": ""
                 }
               }, [_vm._v("mdi-open-in-new")])], 1)];
@@ -3797,8 +3810,8 @@ var __vue_staticRenderFns__$m = [];
 
 var __vue_inject_styles__$m = function __vue_inject_styles__(inject) {
   if (!inject) return;
-  inject("data-v-72d4e8ff_0", {
-    source: ".element-preview-container[data-v-72d4e8ff]{display:flex;position:relative;margin:.25rem 0}.element-preview-container .v-input[data-v-72d4e8ff]{margin:0}.content-element[data-v-72d4e8ff]{flex:1 0;margin:.4375rem 0 0 .25rem;box-shadow:none;border:1px solid #e1e1e1}.content-element.selected[data-v-72d4e8ff]{border-style:dashed;border-color:#444}.content-element.selected[data-v-72d4e8ff]::after{display:none}.element-preview-container[data-v-72d4e8ff]  .contained-content{margin:0}.element-preview-container[data-v-72d4e8ff]  .contained-content .message span:not(.heading){display:none}.element-preview-container[data-v-72d4e8ff]  .contained-content .ql-editor{word-break:break-all}.element-wrapper[data-v-72d4e8ff]{position:relative}.open-element-button[data-v-72d4e8ff]{position:absolute;top:0;right:-.75rem;transition:opacity .4s}.open-element-button[data-v-72d4e8ff]:not(.visible){opacity:0}",
+  inject("data-v-0ab49a1f_0", {
+    source: ".element-preview-container[data-v-0ab49a1f]{display:flex;position:relative;margin:.25rem 0}.element-preview-container .v-input[data-v-0ab49a1f]{margin:0}.content-element[data-v-0ab49a1f]{flex:1 0;margin:.4375rem 0 0 .25rem;box-shadow:none;border:1px solid #e1e1e1}.content-element.selected[data-v-0ab49a1f]{border-style:dashed;border-color:#444}.content-element.selected[data-v-0ab49a1f]::after{display:none}.element-preview-container[data-v-0ab49a1f]  .contained-content{margin:0}.element-preview-container[data-v-0ab49a1f]  .contained-content .message span:not(.heading){display:none}.element-preview-container[data-v-0ab49a1f]  .contained-content .ql-editor{word-break:break-all}.element-wrapper[data-v-0ab49a1f]{position:relative}.open-element-button[data-v-0ab49a1f]{position:absolute;top:0;right:-.75rem;transition:opacity .4s}.open-element-button[data-v-0ab49a1f]:not(.visible){opacity:0}",
     map: undefined,
     media: undefined
   });
@@ -3806,7 +3819,7 @@ var __vue_inject_styles__$m = function __vue_inject_styles__(inject) {
 /* scoped */
 
 
-var __vue_scope_id__$m = "data-v-72d4e8ff";
+var __vue_scope_id__$m = "data-v-0ab49a1f";
 /* module identifier */
 
 var __vue_module_identifier__$d = undefined;

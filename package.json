@@ -1,6 +1,6 @@
 {
   "name": "tailor",
-  "version": "5.0.0-rc.1",
+  "version": "5.0.0-rc.2",
   "codename": "twill",
   "description": "Content authoring platform",
   "author": "ExtensionEngine <info@extensionengine.com>",
@@ -128,6 +128,7 @@
     "plyrue": "^2.1.4",
     "poi-preset-sass-resources": "^4.1.0",
     "promise-queue": "^2.2.3",
+    "psl": "^1.8.0",
     "randomstring": "^1.1.5",
     "read-pkg-up": "^7.0.0",
     "regenerator-runtime": "^0.13.3",
