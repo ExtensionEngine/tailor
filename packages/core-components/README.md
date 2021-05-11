@@ -4,6 +4,8 @@
 
 # @tailor-cms/core-components
 
+[![Npm
+version](https://badgen.net/npm/v/@tailor-cms/core-components)](https://www.npmjs.com/package/@tailor-cms/core-components)
 [![GitHub
 license](https://badgen.net/github/license/ExtensionEngine/tailor)](https://github.com/ExtensionEngine/tailor/blob/develop/LICENSE)
 [![js @extensionengine

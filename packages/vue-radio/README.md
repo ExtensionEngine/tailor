@@ -4,6 +4,8 @@
 
 # @extensionengine/vue-radio
 
+[![Npm
+version](https://badgen.net/npm/v/@extensionengine/vue-radio)](https://www.npmjs.com/package/@extensionengine/vue-radio)
 [![GitHub
 license](https://badgen.net/github/license/ExtensionEngine/tailor)](https://github.com/ExtensionEngine/tailor/blob/develop/LICENSE)
 [![js @extensionengine

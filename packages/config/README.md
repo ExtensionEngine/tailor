@@ -4,6 +4,8 @@
 
 # @tailor-cms/config
 
+[![Npm
+version](https://badgen.net/npm/v/@tailor-cms/config)](https://www.npmjs.com/package/@tailor-cms/config)
 [![GitHub
 license](https://badgen.net/github/license/ExtensionEngine/tailor)](https://github.com/ExtensionEngine/tailor/blob/develop/LICENSE)
 [![js @extensionengine
