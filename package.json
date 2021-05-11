@@ -16,6 +16,7 @@
     "packages:build": "lerna run build --",
     "packages:link": "npm link ./packages/*",
     "packages:setup": "npm run packages:bootstrap && npm run packages:build && npm run packages:link",
+    "packages:publish": "lerna publish --",
     "clean": "del-cli dist/* !dist/.gitkeep",
     "webpack:inspect-config": "poi --inspect-webpack",
     "webpack:bundle-report": "poi --prod --bundle-report",
