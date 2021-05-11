@@ -14,7 +14,7 @@
         Click here to send another reset email.
       </router-link>
       <v-btn :to="{ name: 'login' }" tag="a" text class="mt-7">
-        <v-icon class="pr-2">mdi-arrow-left</v-icon>Back
+        <v-icon class="pr-2">mdi-arrow-left</v-icon>Back to login page
       </v-btn>
     </div>
     <validation-observer
