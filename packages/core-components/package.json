@@ -26,6 +26,8 @@
     "lint:scss": "stylelint \"**/*.vue\" \"**/*.scss\""
   },
   "dependencies": {
+    "@extensionengine/vue-radio": "^0.1.0",
+    "@tailor-cms/utils": "^0.1.0",
     "lodash": "^4.17.20",
     "pluralize": "^8.0.0",
     "vuedraggable": "^2.24.3"
