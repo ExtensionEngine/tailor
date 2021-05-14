@@ -1,3 +1,5 @@
+'use strict';
+
 // ***********************************************
 // This example commands.js shows you how to
 // create various custom commands and overwrite
@@ -24,17 +26,6 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
-Cypress.Commands.add('loginWithUI', (email = 'admin@example.com', pw = 'admin123.') => {
-  cy.visit('/');
-  cy.findByLabelText(/email/i)
-    .type(email);
-  cy.findByLabelText(/password/i)
-    .type(pw);
-  cy.findByText(/log in/i)
-    .click();
-});
-
-Cypress.Commands.add('assertHome', () => {
-  cy.url()
-    .should('eq', `${Cypress.config().baseUrl}/#/`);
-});
+Cypress.Commands.add('getApp', () => cy.window().then(win => win.__app__));
+Cypress.Commands.add('getStore', () => cy.getApp().then(app => app.$store));
+Cypress.Commands.add('getRoute', () => cy.getApp().then(app => app.$route));
