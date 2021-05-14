@@ -8,7 +8,7 @@
       data-testid="catalog__repositoryCard"
       dark
       class="repository-card d-flex flex-column justify-space-between text-left">
-      <div @click="navigateTo()" class="card-body">
+      <div class="card-body">
         <div class="d-flex align-center ml-4">
           <v-chip :color="repository.data.color" x-small class="readonly px-1" />
           <v-tooltip :disabled="!isSchemaTruncated" open-delay="300" top>
