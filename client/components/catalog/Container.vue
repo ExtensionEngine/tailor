@@ -36,7 +36,7 @@
       <repository-filter-selection
         @close="onFilterChange(toggleRepositoryFilter, $event)"
         @clear:all="onFilterChange(clearRepositoryFilter, $event)" />
-      <v-row>
+      <v-row data-testid="catalog__repositories">
         <v-col
           v-for="repository in repositories"
           :key="repository.uid"

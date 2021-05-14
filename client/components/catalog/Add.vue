@@ -8,6 +8,7 @@
       <v-btn
         v-on="on"
         color="secondary"
+        data-testid="catalog__createRepositoryBtn"
         fab dark absolute
         class="add-repo">
         <v-icon>mdi-plus</v-icon>
@@ -28,6 +29,7 @@
         ref="form"
         @submit.prevent="$refs.form.handleSubmit(submit)"
         tag="form"
+        data-testid="catalog__createRepositoryDialog"
         novalidate
         class="pt-10 pa-4">
         <v-alert
