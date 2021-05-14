@@ -10,6 +10,7 @@
         v-slot="{ handleSubmit }"
         @submit.prevent="$refs.form.handleSubmit(submit)"
         tag="form"
+        data-testid="catalog__addTagDialog"
         novalidate>
         <validation-provider
           ref="nameProvider"

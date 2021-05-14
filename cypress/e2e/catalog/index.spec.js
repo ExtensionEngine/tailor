@@ -5,6 +5,7 @@ const {
   findRepositoryByName,
   selectors: repository
 } = require('./repository.js');
+const { addTag } = require('./tag');
 const auth = require('../auth/utils');
 
 describe('repository catalog', () => {
@@ -25,5 +26,10 @@ describe('repository catalog', () => {
     findRepositoryByName('Test repository')
       .findByTestId(repository.settings)
       .click();
+  });
+
+  it('should add a tag to the repository', () => {
+    const repositoryCard = findRepositoryByName('Test repository');
+    addTag(repositoryCard, 'Test tag');
   });
 });

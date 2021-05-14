@@ -25,6 +25,7 @@
           v-on="on"
           @click.stop="showTagDialog = true"
           color="primary lighten-3"
+          data-testid="catalog__addTagBtn"
           icon>
           <v-icon dense>mdi-tag-plus</v-icon>
         </v-btn>
