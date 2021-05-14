@@ -12,9 +12,7 @@ function addTag(repositoryCard, tagName) {
   });
   cy.findByTestId(sel.addTagDialog).within(() => {
     cy.findByLabelText(/select a tag or add a new one/i)
-      .type(tagName);
-    cy.findByText(/save/i)
-      .click();
+      .type(`${tagName}{enter}`);
   });
 }
 
