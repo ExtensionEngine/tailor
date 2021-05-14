@@ -1,6 +1,5 @@
 'use strict';
 
-/// <reference types="cypress" />
 const { login, loginWithUI } = require('./utils');
 
 const assertHomepageAccess = () => {
