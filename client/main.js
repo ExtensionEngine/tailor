@@ -5,6 +5,7 @@ import '@/utils/validation';
 
 import { asset as assetApi, exposedApi } from '@/api';
 import { schema } from '@tailor-cms/config';
+import { QuestionContainer } from '@tailor-cms/core-components';
 import ContentPluginRegistry from './content-plugins';
 
 import { formatDate, truncate } from '@/filters';
@@ -28,6 +29,7 @@ import getStore from './store';
 import getRouter from './router';
 import App from './App';
 
+Vue.component('tce-question-container', QuestionContainer);
 Vue.component('ValidationObserver', ValidationObserver);
 Vue.component('ValidationProvider', ValidationProvider);
 setInteractionMode('eager');
