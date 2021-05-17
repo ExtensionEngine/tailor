@@ -39,7 +39,7 @@
   "dependencies": {
     "@extensionengine/tapster": "github:ExtensionEngine/tapster#53ccb222c757948d322c33087620453ddf5e70ed",
     "@extensionengine/tce-jodit": "github:extensionengine/tce-jodit#a60d1cd",
-    "@extensionengine/tce-tiptap": "github:extensionengine/tce-tiptap#af04747",
+    "@extensionengine/tce-tiptap": "github:extensionengine/tce-tiptap#05b6a1e",
     "@extensionengine/tce-scorm": "github:ExtensionEngine/tce-scorm#85d39a8d73f303f",
     "@mdi/font": "^5.9.55",
     "@ungap/global-this": "^0.4.0",
