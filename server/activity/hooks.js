@@ -3,7 +3,7 @@
 const forEach = require('lodash/forEach');
 const groupBy = require('lodash/groupBy');
 const { isOutlineActivity } = require('../../config/shared/activities');
-const sse = require('../shared/sse');
+const sse = require('@extensionengine/sse');
 
 module.exports = { add };
 

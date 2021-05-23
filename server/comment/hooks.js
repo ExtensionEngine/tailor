@@ -4,7 +4,7 @@ const { getLevel } = require('../../config/shared/activities');
 const mail = require('../shared/mail');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
-const sse = require('../shared/sse');
+const sse = require('@extensionengine/sse');
 const without = require('lodash/without');
 
 exports.add = (Comment, Hooks, db) => {

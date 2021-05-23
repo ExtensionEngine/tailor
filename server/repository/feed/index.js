@@ -1,7 +1,7 @@
 'use strict';
 
 const ctrl = require('./controller');
-const { middleware: sse } = require('../../shared/sse');
+const { middleware: sse } = require('@extensionengine/sse');
 const router = require('express').Router();
 
 router.get('/subscribe', sse, ctrl.subscribe);
