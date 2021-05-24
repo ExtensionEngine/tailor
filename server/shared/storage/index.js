@@ -1,7 +1,6 @@
 'use strict';
 
 const autobind = require('auto-bind');
-const config = require('../../../config/server').storage;
 const path = require('path');
 
 class Storage {
@@ -28,6 +27,10 @@ class Storage {
 
   deleteFile(key, options = {}) {
     return this.provider.deleteFile(key, options);
+  }
+
+  deleteFiles(keys, options = {}) {
+    return this.provider.deleteFiles(keys, options);
   }
 
   listFiles(options = {}) {
@@ -63,7 +66,7 @@ class Storage {
   }
 }
 
-module.exports = new Storage(config);
+module.exports = Storage;
 
 function loadProvider(name) {
   try {

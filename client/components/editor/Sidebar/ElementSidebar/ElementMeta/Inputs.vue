@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import { getElementId } from 'tce-core/utils';
-import MetaInput from 'tce-core/MetaInput';
+import { getElementId } from '@tailor-cms/utils';
+import MetaInput from '@/components/common/MetaInput';
 
 export default {
   name: 'element-meta-inputs',

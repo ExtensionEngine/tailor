@@ -1,4 +1,4 @@
-import api from '@/api/feed';
+import { feed as api } from '@/api';
 import SSEConnection from '@/sse';
 import urlJoin from 'url-join';
 

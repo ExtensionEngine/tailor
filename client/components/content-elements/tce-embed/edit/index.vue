@@ -27,8 +27,7 @@
 </template>
 
 <script>
-import { ElementPlaceholder } from 'tce-core';
-import PreviewOverlay from 'tce-core/PreviewOverlay';
+import { ElementPlaceholder, PreviewOverlay } from '@tailor-cms/core-components';
 
 export default {
   name: 'tce-embed',
@@ -49,7 +48,9 @@ export default {
     }
   },
   mounted() {
-    this.$elementBus.on('save', data => this.$emit('save', data));
+    this.$elementBus.on('save', data => {
+      this.$emit('save', { ...this.element.data, ...data });
+    });
   },
   components: {
     ElementPlaceholder,

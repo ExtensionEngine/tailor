@@ -1,7 +1,6 @@
 'use strict';
 
 const autobind = require('auto-bind');
-const { proxy: config } = require('../../../../config/server').storage;
 const path = require('path');
 
 class Proxy {
@@ -23,6 +22,10 @@ class Proxy {
     return this.provider.isSelfHosted;
   }
 
+  get host() {
+    return this.provider.host;
+  }
+
   get path() {
     return this.isSelfHosted && this.provider.path;
   }
@@ -42,9 +45,13 @@ class Proxy {
   getFileUrl(key) {
     return this.provider.getFileUrl(key);
   }
+
+  getCookieNames() {
+    return this.provider.getCookieNames();
+  }
 }
 
-module.exports = new Proxy(config);
+module.exports = Proxy;
 
 function loadProvider(name) {
   try {

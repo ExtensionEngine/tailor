@@ -11,7 +11,6 @@ const {
   User
 } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
-const { getSchema } = require('../../config/shared/activities');
 const getVal = require('lodash/get');
 const map = require('lodash/map');
 const { Op } = require('sequelize');
@@ -20,6 +19,7 @@ const Promise = require('bluebird');
 const publishingService = require('../shared/publishing/publishing.service');
 const { repository: role } = require('../../config/shared').role;
 const sample = require('lodash/sample');
+const { schema } = require('@tailor-cms/config');
 const { snakeCase } = require('change-case');
 const TransferService = require('../shared/transfer/transfer.service');
 
@@ -65,8 +65,10 @@ const includeRepositoryTags = query => {
 };
 
 function index({ query, user, opts }, res) {
-  if (query.search) opts.where.name = getFilter(query.search);
-  if (query.schema) opts.where.schema = { [Op.eq]: query.schema };
+  const { search, name, schemas } = query;
+  if (search) opts.where.name = getFilter(search);
+  if (name) opts.where.name = name;
+  if (schemas) opts.where.schema = schemas;
   if (getVal(opts, 'order.0.0') === 'name') opts.order[0][0] = lowercaseName;
   opts.include = [
     includeLastRevision(),
@@ -80,7 +82,7 @@ function index({ query, user, opts }, res) {
 }
 
 async function create({ user, body }, res) {
-  const defaultMeta = getVal(getSchema(body.schema), 'defaultMeta', {});
+  const defaultMeta = getVal(schema.getSchema(body.schema), 'defaultMeta', {});
   const data = { color: sample(DEFAULT_COLORS), ...defaultMeta, ...body.data };
   const repository = await Repository.create({ ...body, data }, {
     isNewRecord: true,

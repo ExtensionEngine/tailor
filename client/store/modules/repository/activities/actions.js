@@ -1,12 +1,16 @@
-import { getDescendants as getDeepChildren, getOutlineChildren } from 'utils/activity';
-import calculatePosition from 'utils/calculatePosition';
+import {
+  activity as activityUtils,
+  calculatePosition,
+  InsertLocation
+} from '@tailor-cms/utils';
+import { client } from '@/api';
 import { Activity as Events } from '@/../common/sse';
 import feed from '../feed';
 import findIndex from 'lodash/findIndex';
 import generateActions from '@/store/helpers/actions';
-import InsertLocation from 'utils/InsertLocation';
-import request from '@/api/request';
+import { schema } from '@tailor-cms/config';
 
+const { getDescendants } = activityUtils;
 const { api, fetch, get, reset, save, setEndpoint, update } = generateActions();
 const { ADD_INTO } = InsertLocation;
 
@@ -14,6 +18,7 @@ const plugSSE = ({ commit }) => {
   feed
     .subscribe(Events.Create, item => commit('save', item))
     .subscribe(Events.Update, item => commit('save', item))
+    .subscribe(Events.BulkUpdate, items => commit('save', items))
     .subscribe(Events.Delete, item => commit('remove', [item]));
 };
 
@@ -25,7 +30,7 @@ const reorder = ({ commit }, { activity, context }) => {
 };
 
 const remove = ({ state, commit }, model) => {
-  const descendants = getDeepChildren(state.items, model);
+  const descendants = getDescendants(state.items, model);
   if (!model.id && !model._version) {
     commit('remove', [model]);
     return Promise.resolve(true);
@@ -43,7 +48,7 @@ const publish = ({ commit }, activity) => {
 const clone = ({ commit }, mapping) => {
   const { srcId, srcRepositoryId } = mapping;
   const url = `/repositories/${srcRepositoryId}/activities/${srcId}/clone`;
-  return request.post(url, mapping)
+  return client.post(url, mapping)
     .then(({ data: { data } }) => {
       commit('fetch', api.processEntries(data));
       return data;
@@ -51,7 +56,7 @@ const clone = ({ commit }, mapping) => {
 };
 
 const calculateInsertPosition = ({ state }, { activity, anchor, action }) => {
-  const items = getOutlineChildren(state.items, activity.parentId);
+  const items = schema.getOutlineChildren(state.items, activity.parentId);
   const context = { items, action };
   if (action !== ADD_INTO) {
     context.newPosition = anchor ? findIndex(items, { id: anchor.id }) : 1;
@@ -61,7 +66,7 @@ const calculateInsertPosition = ({ state }, { activity, anchor, action }) => {
 
 const calculateCopyPosition = ({ state }, { anchor, action }) => {
   const id = action === ADD_INTO ? anchor.id : anchor.parentId;
-  const items = getOutlineChildren(state.items, id);
+  const items = schema.getOutlineChildren(state.items, id);
   if (action === ADD_INTO) return calculatePosition({ items, action });
   const newPosition = findIndex(items, { id: anchor.id });
   const context = { items, newPosition, action };

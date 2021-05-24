@@ -10,11 +10,15 @@
         Publish info
       </v-btn>
     </div>
+    <repository-name-field
+      @change="updateKey('name', $event)"
+      :value="repository.name "
+      :repository-id="repositoryId"
+      class="my-2" />
     <meta-input
-      v-for="it in requiredData"
-      :key="it.key"
+      :key="descriptionMeta.key"
       @update="updateKey"
-      :meta="it"
+      :meta="descriptionMeta"
       class="meta-input" />
     <meta-input
       v-for="it in metadata"
@@ -27,33 +31,29 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import api from '@/api/repository';
+import { repository as api } from '@/api';
 import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
-import { getRepositoryMetadata } from 'shared/activities';
-import Meta from 'tce-core/MetaInput';
+import Meta from '@/components/common/MetaInput';
+import RepositoryNameField from '../common/RepositoryNameField';
 import set from 'lodash/set';
 
 export default {
+  inject: ['$schemaService'],
+  props: {
+    repositoryId: { type: Number, required: true }
+  },
   data: () => ({ publishing: false }),
   computed: {
     ...mapGetters('repository', ['repository']),
-    requiredData() {
-      return [{
-        key: 'name',
-        value: this.repository.name,
-        type: 'TEXTAREA',
-        label: 'Name',
-        validate: { required: true, min: 2, max: 250 }
-      }, {
-        key: 'description',
-        value: this.repository.description,
-        type: 'TEXTAREA',
-        label: 'Description',
-        validate: { required: true, min: 2, max: 2000 }
-      }];
-    },
-    metadata: vm => getRepositoryMetadata(vm.repository)
+    metadata: vm => vm.$schemaService.getRepositoryMetadata(vm.repository),
+    descriptionMeta: ({ repository }) => ({
+      key: 'description',
+      value: repository.description,
+      type: 'TEXTAREA',
+      label: 'Description',
+      validate: { required: true, min: 2, max: 2000 }
+    })
   },
   methods: {
     ...mapActions('repositories', ['update']),
@@ -63,38 +63,39 @@ export default {
       await this.update(set(data, key, value));
       this.$snackbar.show('Saved', { class: 'mb-12' });
     },
-    publish() {
+    async publish() {
       this.publishing = true;
-      return api.publishRepositoryMeta(this.$route.params.repositoryId)
-        .then(() => (this.publishing = false));
+      await api.publishRepositoryMeta(this.repositoryId);
+      this.publishing = false;
     }
   },
-  components: { MetaInput: Meta }
+  components: {
+    MetaInput: Meta,
+    RepositoryNameField
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .settings {
-  padding: 30px;
+  padding: 1.875rem;
   text-align: left;
 
   .meta-input {
-    margin: 20px 0;
+    margin: 1.25rem 0;
   }
 }
 
 .actions {
-  min-height: 36px;
+  min-height: 2.25rem;
 
   .btn {
-    padding: 8px 12px;
+    padding: 0.5rem 0.75rem;
   }
 }
 
-.picker {
-  ::v-deep .actions {
-    margin: 20px 0 0;
-    text-align: left;
-  }
+.picker ::v-deep .actions {
+  margin: 1.25rem 0 0;
+  text-align: left;
 }
 </style>

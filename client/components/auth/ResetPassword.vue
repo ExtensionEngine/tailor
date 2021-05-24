@@ -1,13 +1,24 @@
 <template>
   <div>
     <v-alert
-      :value="!!error"
-      color="pink lighten-1"
+      v-if="message"
+      :color="isError ? 'pink lighten-1' : 'success'"
       text
       class="mb-5">
-      {{ error }}
+      {{ message }}
     </v-alert>
+    <v-progress-circular v-if="isLoading" color="primary darken-2" indeterminate />
+    <div v-else-if="isError">
+      <router-link :to="{ name: 'forgot-password' }">
+        <v-icon size="20">mdi-arrow-top-right-thick</v-icon>
+        Click here to send another reset email.
+      </router-link>
+      <v-btn :to="{ name: 'login' }" tag="a" text class="mt-7">
+        <v-icon class="pr-2">mdi-arrow-left</v-icon>Back
+      </v-btn>
+    </div>
     <validation-observer
+      v-else
       ref="form"
       @submit.prevent="$refs.form.handleSubmit(submit)"
       tag="form"
@@ -56,22 +67,48 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { auth as api } from '@/api';
+import { delay } from 'bluebird';
+
+const ERRORS = {
+  default: 'An error has occurred!',
+  resetToken: 'Invalid reset password URL!'
+};
 
 export default {
   data: () => ({
-    error: null,
     password: '',
-    passwordConfirmation: ''
+    passwordConfirmation: '',
+    message: null,
+    isError: false,
+    isLoading: true
   }),
+  computed: {
+    token: vm => vm.$route.params.token
+  },
   methods: {
-    ...mapActions(['resetPassword']),
     submit() {
-      const { token } = this.$route.params;
-      return this.resetPassword({ password: this.password, token })
+      const { token, password } = this;
+      return api.resetPassword(token, password)
+        .then(() => {
+          this.isError = false;
+          this.message = 'Password changed successfully. Redirecting...';
+          return delay(2000);
+        })
         .then(() => this.$router.push('/'))
-        .catch(() => (this.error = 'An error has occurred!'));
+        .catch(() => {
+          this.isError = true;
+          this.message = ERRORS.default;
+        });
     }
+  },
+  created() {
+    return api.validateResetToken(this.token)
+      .catch(() => {
+        this.isError = true;
+        this.message = ERRORS.resetToken;
+      })
+      .finally(() => (this.isLoading = false));
   }
 };
 </script>

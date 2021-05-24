@@ -1,7 +1,6 @@
 <template>
   <validation-observer
     ref="form"
-    v-slot="{ invalid }"
     @submit.prevent="$refs.form.handleSubmit(submit)"
     tag="form"
     novalidate
@@ -21,7 +20,7 @@
     <validation-provider
       v-slot="{ errors }"
       name="first name"
-      rules="required|min:2|max:50">
+      rules="required|min:2|max:50|name_format">
       <v-text-field
         v-model="userData.firstName"
         :error-messages="errors"
@@ -33,7 +32,7 @@
     <validation-provider
       v-slot="{ errors }"
       name="last name"
-      rules="required|min:2|max:50">
+      rules="required|min:2|max:50|name_format">
       <v-text-field
         v-model="userData.lastName"
         :error-messages="errors"
@@ -47,7 +46,7 @@
         Cancel
       </v-btn>
       <v-btn
-        :disabled="invalid || !hasChanges"
+        :disabled="!hasChanges"
         type="submit"
         color="primary darken-4"
         text>
@@ -92,7 +91,7 @@ export default {
     }
   },
   mounted() {
-    return this.resetForm();
+    this.resetForm();
   }
 };
 </script>

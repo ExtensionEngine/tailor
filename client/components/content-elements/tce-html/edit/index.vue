@@ -27,7 +27,7 @@
 import { Quill, quillEditor as QuillEditor } from 'vue-quill-editor';
 import createCustomTheme from './theme';
 import debounce from 'lodash/debounce';
-import { ElementPlaceholder } from 'tce-core';
+import { ElementPlaceholder } from '@tailor-cms/core-components';
 import get from 'lodash/get';
 
 const CustomTheme = createCustomTheme(Quill);
@@ -84,7 +84,8 @@ export default {
     },
     save() {
       if (!this.hasChanges) return;
-      this.$emit('save', { content: this.content });
+      const { content, element } = this;
+      this.$emit('save', { ...element.data, content });
     }
   },
   watch: {

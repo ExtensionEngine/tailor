@@ -47,8 +47,8 @@
 </template>
 
 <script>
+import { auth as api } from '@/api';
 import { delay } from 'bluebird';
-import { mapActions } from 'vuex';
 
 const getDefaultData = () => ({
   email: '',
@@ -59,10 +59,9 @@ const getDefaultData = () => ({
 export default {
   data: () => getDefaultData(),
   methods: {
-    ...mapActions(['forgotPassword']),
     submit() {
       this.showMessage = true;
-      Promise.all([this.forgotPassword({ email: this.email }), delay(5000)])
+      Promise.all([api.forgotPassword(this.email), delay(5000)])
         .then(() => this.$router.push('/'))
         .catch(() => (this.error = 'Something went wrong!'));
     },

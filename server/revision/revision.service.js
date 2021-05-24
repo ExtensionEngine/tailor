@@ -14,24 +14,8 @@ async function getEntityRemovesSinceMoment(activity, timestamp) {
   const whereCreatedBefore = {
     createdAt: { [Op.lt]: timestamp }
   };
-  const hasNodeId = { [Op.in]: map(nodes, 'id') };
-  const [activities, elements] = await Promise.all([
-    Revision.findAll({
-      where: {
-        ...whereRemovedAfter,
-        entity: 'ACTIVITY',
-        state: { ...whereCreatedBefore, id: hasNodeId }
-      }
-    }),
-    Revision.findAll({
-      where: {
-        ...whereRemovedAfter,
-        entity: 'CONTENT_ELEMENT',
-        state: { ...whereCreatedBefore, activityId: hasNodeId }
-      }
-    })
-  ]);
-  return { activities, elements };
+  const where = { ...whereRemovedAfter, state: whereCreatedBefore };
+  return getRemovesGroupedByEntity(map(nodes, 'id'), where);
 }
 
 function getLastState(ids, activityIds, beforeTimestamp) {
@@ -39,19 +23,42 @@ function getLastState(ids, activityIds, beforeTimestamp) {
     operation: { [Op.or]: ['CREATE', 'UPDATE'] }
   };
   const whereBefore = { createdAt: { [Op.lt]: beforeTimestamp } };
-  return Revision.scope('lastByEntity').findAll({
+  const whereInElementOrActivityIds = {
+    state: {
+      [Op.or]: [{
+        id: { [Op.in]: ids }
+      }, {
+        activityId: { [Op.in]: activityIds }
+      }]
+    }
+  };
+  return Revision.scope('lastByEntity').fetch({
     where: {
       ...whereCreateOrUpdate,
       ...whereBefore,
-      state: {
-        [Op.or]: [{
-          id: { [Op.in]: ids }
-        }, {
-          activityId: { [Op.in]: activityIds }
-        }]
-      }
+      ...whereInElementOrActivityIds
     }
   });
 }
 
 module.exports = { getEntityRemovesSinceMoment, getLastState };
+
+async function getRemovesGroupedByEntity(ids, where) {
+  const [activities, elements] = await Promise.all([
+    Revision.fetch({
+      where: {
+        ...where,
+        entity: 'ACTIVITY',
+        state: { ...where.state, id: { [Op.in]: ids } }
+      }
+    }),
+    Revision.fetch({
+      where: {
+        ...where,
+        entity: 'CONTENT_ELEMENT',
+        state: { ...where.state, activityId: { [Op.in]: ids } }
+      }
+    })
+  ]);
+  return { activities, elements };
+}

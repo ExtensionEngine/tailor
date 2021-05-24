@@ -7,7 +7,7 @@
 
 <script>
 import ElementMeta from './ElementMeta';
-import { getElementId } from 'tce-core/utils';
+import { getElementId } from '@tailor-cms/utils';
 
 export default {
   name: 'element-sidebar',

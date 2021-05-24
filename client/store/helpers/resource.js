@@ -1,12 +1,11 @@
+import { client, extractData } from '@/api';
 import assign from 'lodash/assign';
-import client from '@/api/request';
 import cloneDeep from 'lodash/cloneDeep';
-import { extractData } from '@/api/helpers';
 import join from 'url-join';
 import omit from 'lodash/omit';
 import Queue from 'promise-queue';
 import reduce from 'lodash/reduce';
-import uuid from '@/utils/uuid';
+import { uuid } from '@tailor-cms/utils';
 
 // Used to serialize api calls that modify data.
 const queue = new Queue(1, Infinity);
@@ -60,7 +59,9 @@ export default class Resource {
    * Retrieves model by id.
    */
   getById(id) {
-    return this.get(id).then(extractData);
+    return this.get(id)
+      .then(extractData)
+      .then(item => this.processEntries([item]) && item);
   }
 
   /**
@@ -86,7 +87,7 @@ export default class Resource {
    * @param {object} changes - Key-value collection of properties to update.
    */
   update(uid, changes) {
-    const id = this.mappings[uid];
+    const id = changes.id || this.mappings[uid];
     return this.patch(id, changes).then(extractData);
   }
 

@@ -12,7 +12,7 @@
           :key="tab.name"
           :to="{ name: tab.route, query: tab.query }"
           active-class="tab-active"
-          ripple exact
+          ripple
           class="px-4">
           <v-icon class="pr-2">mdi-{{ tab.icon }}</v-icon>{{ tab.name }}
         </v-tab>
@@ -20,19 +20,42 @@
       <active-users :users="activeUsers" class="px-6" />
     </div>
     <div class="tab-content" infinite-wrapper>
-      <router-view :show-loader="showLoader" />
+      <router-view :repository-id="repositoryId" :show-loader="showLoader" />
     </div>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import ActiveUsers from 'tce-core/ActiveUsers';
+import { ActiveUsers } from '@tailor-cms/core-components';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
 import selectActivity from '@/components/repository/common/selectActivity';
 import sortBy from 'lodash/sortBy';
 import withUserTracking from 'components/common/mixins/userTracking';
+
+const getTabItems = ({ hasWorkflow, hasSettingsAvailable, hasActivities, query }) => [
+  {
+    name: 'Structure',
+    route: 'repository',
+    icon: 'file-tree'
+  },
+  hasActivities && hasWorkflow && {
+    name: 'Progress',
+    route: 'progress',
+    icon: 'chart-timeline-variant'
+  },
+  hasActivities && {
+    name: 'History',
+    route: 'revisions',
+    icon: 'history'
+  },
+  hasSettingsAvailable && {
+    name: 'Settings',
+    route: 'repository-info',
+    icon: 'settings-outline'
+  }
+].filter(Boolean).map(tab => ({ ...tab, query }));
 
 export default {
   mixins: [selectActivity, withUserTracking],
@@ -53,29 +76,23 @@ export default {
       return this.getActiveUsers('repository', this.repositoryId);
     },
     tabs() {
+      const { isAdmin, isRepositoryAdmin, hasWorkflow } = this;
+      const hasSettingsAvailable = isAdmin || isRepositoryAdmin;
       const hasActivities = get(this.activities, 'length');
       const activityId = get(this.lastSelectedActivity, 'id');
-      const query = { ...this.$route.query, activityId };
-      const items = [
-        { name: 'Structure', route: 'repository', icon: 'file-tree' },
-        hasActivities && this.hasWorkflow && {
-          name: 'Progress',
-          route: 'progress',
-          icon: 'chart-timeline-variant'
-        },
-        hasActivities && { name: 'History', route: 'revisions', icon: 'history' },
-        (this.isAdmin || this.isRepositoryAdmin) && {
-          name: 'Settings',
-          route: 'repository-info',
-          icon: 'settings-outline'
-        }
-      ];
-      return items
-        .filter(Boolean)
-        .map(tab => ({ ...tab, query }));
+      const query = { ...this.$route.query, ...activityId && { activityId } };
+      return getTabItems({ hasSettingsAvailable, hasWorkflow, hasActivities, query });
     }
   },
   methods: mapActions('repository', ['initialize', 'expandParents']),
+  provide() {
+    const self = this;
+    return {
+      get $repository() {
+        return { ...self.repository, activities: self.activities };
+      }
+    };
+  },
   watch: {
     selectedActivity: {
       handler(val) {

@@ -1,3 +1,7 @@
+<div align="center">
+  <img width="100" src="./client/assets/img/default-logo-full.svg">
+</div>
+
 # Tailor
 
 [![CircleCI build
@@ -53,6 +57,11 @@ Adaptive course authoring platform.
 
 - Server: `npm run dev:server`
 - Client (webpack dev server): `npm run dev:client`
+
+This project uses a monorepo setup. In order to contribute to [packages](./packages) following commands should be executed:
+- Run `npm run packages:setup` - initial setup, dependency installation, package linking, etc. This command should be executed only a single time. 
+- Run `npm run packages:build` - build all packages. Run this command after altering the package's code.
+- Run `npm run packages:build --package=<package-name>` to build only specified package. For example: `npm run packages:build --package=core-components`.
 
 ### Production
 

@@ -34,7 +34,7 @@
         <validation-provider
           v-slot="{ errors }"
           name="first name"
-          rules="required|min:2|max:50">
+          rules="required|min:2|max:50|name_format">
           <v-text-field
             v-model="user.firstName"
             :error-messages="errors"
@@ -46,7 +46,7 @@
         <validation-provider
           v-slot="{ errors }"
           name="last name"
-          rules="required|min:2|max:50">
+          rules="required|min:2|max:50|name_format">
           <v-text-field
             v-model="user.lastName"
             :error-messages="errors"
@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import api from '@/api/user';
+import { user as api } from '@/api';
 import cloneDeep from 'lodash/cloneDeep';
 import humanize from 'humanize-string';
 import isEmpty from 'lodash/isEmpty';
@@ -105,11 +105,9 @@ export default {
   data: () => ({ user: resetUser(), isReinviting: false }),
   computed: {
     isNewUser: vm => !vm.user.id,
-    roles: vm => map(roles, it => ({ text: humanize(it), value: it })),
+    roles: () => map(roles, it => ({ text: humanize(it), value: it })),
     show: {
-      get() {
-        return this.visible;
-      },
+      get: vm => vm.visible,
       set(value) {
         if (!value) this.close();
       }
@@ -122,7 +120,8 @@ export default {
     },
     async submit() {
       const action = this.isNewUser ? 'create' : 'update';
-      api.upsert(this.user).then(() => this.$emit(`${action}d`));
+      await api.upsert(this.user);
+      this.$emit(`${action}d`);
       this.close();
     },
     reinvite() {

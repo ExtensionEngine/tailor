@@ -5,7 +5,7 @@
         <sidebar @action="onActionClick" />
       </v-col>
       <v-col cols="9">
-        <router-view />
+        <router-view :repository-id="repositoryId" />
       </v-col>
     </v-row>
     <export-modal
@@ -24,13 +24,16 @@ import { mapActions, mapGetters } from 'vuex';
 import AppFooter from '@/components/common/Footer';
 import CloneModal from './CloneModal';
 import ExportModal from './ExportModal';
-import { mapRequests } from '@/plugins/radio';
+import { mapRequests } from '@extensionengine/vue-radio';
 import ProgressDialog from '@/components/common/ProgressDialog';
 import publishMixin from '@/components/common/mixins/publish';
 import Sidebar from './Sidebar';
 
 export default {
   mixins: [publishMixin],
+  props: {
+    repositoryId: { type: Number, required: true }
+  },
   data: () => ({
     showCloneModal: false,
     showExportModal: false

@@ -26,7 +26,12 @@
           :meta="input" />
         <div class="d-flex justify-end">
           <v-btn @click="visible = false" text>Cancel</v-btn>
-          <v-btn type="submit" color="primary darken-4" text>
+          <v-btn
+            :disabled="submitting"
+            :loading="submitting"
+            type="submit"
+            color="primary darken-4"
+            text>
             Create
           </v-btn>
         </div>
@@ -36,10 +41,9 @@
 </template>
 
 <script>
-import { getActivityMetadata } from 'shared/activities';
-import InsertLocation from '@/utils/InsertLocation';
+import { InsertLocation } from '@tailor-cms/utils';
 import { mapActions } from 'vuex';
-import MetaInput from 'tce-core/MetaInput';
+import MetaInput from '@/components/common/MetaInput';
 import TailorDialog from '@/components/common/TailorDialog';
 import TypeSelect from './TypeSelect';
 
@@ -52,6 +56,7 @@ const { ADD_AFTER, ADD_INTO } = InsertLocation;
 
 export default {
   name: 'create-activity-dialog',
+  inject: ['$schemaService'],
   props: {
     repositoryId: { type: Number, required: true },
     levels: { type: Array, required: true },
@@ -66,13 +71,14 @@ export default {
   data() {
     return {
       visible: false,
+      submitting: false,
       activity: initActivityState(this.repositoryId, this.levels)
     };
   },
   computed: {
     metadata() {
       if (!this.activity.type) return null;
-      return getActivityMetadata(this.activity);
+      return this.$schemaService.getActivityMetadata(this.activity);
     },
     hasSingleOption: vm => vm.levels.length === 1,
     defaultLabel: vm => vm.hasSingleOption ? `Add ${vm.levels[0].label}` : 'Add'
@@ -83,16 +89,21 @@ export default {
       this.activity.data[key] = val;
     },
     async submit() {
+      this.submitting = true;
       const { activity, anchor, action } = this;
       if (anchor) {
         activity.parentId = action === ADD_INTO ? anchor.id : anchor.parentId;
       }
       activity.position = await this.calculateInsertPosition({ activity, anchor, action });
-      const item = await this.save({ ...activity });
-      if (anchor && (anchor.id === activity.parentId)) this.$emit('expand', anchor);
-      this.$emit('created', item);
-      this.visible = false;
-      this.$router.push({ query: { activityId: item.id } });
+      try {
+        const item = await this.save({ ...activity });
+        if (anchor && (anchor.id === activity.parentId)) this.$emit('expand', anchor);
+        this.$emit('created', item);
+        this.visible = false;
+        this.$router.push({ query: { activityId: item.id } });
+      } finally {
+        this.submitting = false;
+      }
     }
   },
   watch: {

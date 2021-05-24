@@ -1,28 +1,45 @@
 'use strict';
 
-module.exports = new (class extends Map {
-  addContext(user, context) {
-    const record = this._findOrCreate(user);
-    record.contexts.push(context);
-  }
+const Promise = require('bluebird');
+const Tapster = require('@extensionengine/tapster');
+const { provider, ...options } = require('../../../config/server').store;
 
-  removeContext(user, filterFn) {
-    const record = this.get(user.id);
-    if (!record) return;
-    record.contexts = record.contexts.filter(it => !filterFn(it));
-    if (record.contexts.length <= 0) this.delete(user.id);
-  }
+const store = new Tapster({
+  ...options[provider],
+  store: provider,
+  namespace: 'active-users',
+  ttl: 40
+});
 
-  toJSON() {
-    return Array.from(this.entries())
-      .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
-  }
+async function addContext(user, context) {
+  const record = await findOrCreate(user);
+  const contexts = [...record.contexts, context];
+  return store.set(user.id, { ...record, contexts });
+}
 
-  _findOrCreate(user) {
-    if (!this.has(user.id)) {
-      const connectedAt = new Date();
-      this.set(user.id, { ...user, connectedAt, contexts: [] });
-    }
-    return this.get(user.id);
+async function removeContext(user, predicate) {
+  const record = await store.get(user.id);
+  if (!record) return;
+  const contexts = record.contexts.filter(it => !predicate(it));
+  if (!contexts.length) return store.delete(user.id);
+  return store.set(user.id, { ...record, contexts });
+}
+
+async function getActiveUsers() {
+  const activeUserKeys = await store.getKeys();
+  return Promise
+    .map(activeUserKeys, key => store.get(key))
+    .filter(Boolean)
+    .reduce((acc, user) => ({ ...acc, [user.id]: user }), {});
+}
+
+async function findOrCreate(user) {
+  const hasKey = await store.has(user.id);
+  if (!hasKey) {
+    const connectedAt = new Date();
+    await store.set(user.id, { ...user, connectedAt, contexts: [] });
   }
-})();
+  return store.get(user.id);
+}
+
+module.exports = { addContext, removeContext, getActiveUsers };

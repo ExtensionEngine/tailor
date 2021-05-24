@@ -58,11 +58,15 @@ html {
 }
 
 .v-main {
-  background-color: #f5f5f5;
+  background-color: $bg-color-default;
 }
 
 .v-main .view {
   overflow-y: scroll;
   overflow-y: overlay;
+}
+
+.text--default {
+  color: var(--text-color-default);
 }
 </style>

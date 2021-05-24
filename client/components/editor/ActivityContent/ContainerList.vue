@@ -40,15 +40,14 @@
 </template>
 
 <script>
-import { getContainerName, getElementId } from 'tce-core/utils';
+import { getContainerName, getElementId } from '@tailor-cms/utils';
 import { mapActions, mapState } from 'vuex';
 import capitalize from 'lodash/capitalize';
 import castArray from 'lodash/castArray';
 import deprecation from '@/components/common/mixins/deprecation';
 import get from 'lodash/get';
-import { getContainerTemplateId } from 'shared/activities';
 import isEmpty from 'lodash/isEmpty';
-import { mapRequests } from '@/plugins/radio';
+import { mapRequests } from '@extensionengine/vue-radio';
 import mapValues from 'lodash/mapValues';
 import maxBy from 'lodash/maxBy';
 import pluralize from 'pluralize';
@@ -77,7 +76,7 @@ export default {
   name: 'content-containers',
   mixins: [deprecation],
   inheritAttrs: false,
-  inject: ['$ccRegistry'],
+  inject: ['$schemaService', '$ccRegistry'],
   props: {
     containerGroup: { type: Array, default: () => ({}) },
     processedElements: { type: Object, required: true },
@@ -99,7 +98,7 @@ export default {
       });
     },
     containerName() {
-      const id = getContainerTemplateId(this);
+      const id = this.$schemaService.getContainerTemplateId(this);
       return getContainerName(this.$ccRegistry.get(id) ? id : 'DEFAULT');
     },
     name: vm => vm.label.toLowerCase(),

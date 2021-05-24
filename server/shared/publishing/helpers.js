@@ -6,12 +6,8 @@ const {
   Sequelize: { Op },
   sequelize
 } = require('../database');
-const {
-  getLevelRelationships,
-  getOutlineLevels,
-  getSupportedContainers
-} = require('../../../config/shared/activities');
 const { containerRegistry } = require('../content-plugins');
+const differenceWith = require('lodash/differenceWith');
 const filter = require('lodash/filter');
 const find = require('lodash/find');
 const findIndex = require('lodash/findIndex');
@@ -24,9 +20,15 @@ const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const reduce = require('lodash/reduce');
 const { resolveStatics } = require('../storage/helpers');
-const storage = require('../storage');
+const { schema } = require('@tailor-cms/config');
+const storage = require('../../repository/storage');
 const without = require('lodash/without');
 
+const {
+  getLevelRelationships,
+  getOutlineLevels,
+  getSupportedContainers
+} = schema;
 const { FLAT_REPO_STRUCTURE } = process.env;
 
 const CC_ATTRS = ['id', 'uid', 'type', 'position', 'createdAt', 'updatedAt'];
@@ -34,19 +36,30 @@ const CC_ATTRS = ['id', 'uid', 'type', 'position', 'createdAt', 'updatedAt'];
 function publishActivity(activity) {
   return getStructureData(activity).then(data => {
     const { repository, predecessors, spine } = data;
+    const activityStructure = find(spine.structure, { id: activity.id });
+    const prevPublishedContainers = get(activityStructure, 'contentContainers', []);
+
     predecessors.forEach(it => {
       const exists = find(spine.structure, { id: it.id });
       if (!exists) addToSpine(spine, it);
     });
+
     activity.publishedAt = new Date();
     addToSpine(spine, activity);
-    return publishContent(activity).then(content => {
-      attachContentSummary(find(spine.structure, { id: activity.id }), content);
-      return saveSpine(spine)
-        .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
-        .then(() => updatePublishingStatus(repository, activity))
-        .then(() => activity.save());
-    });
+
+    return publishContainers(activity)
+      .then(async containers => {
+        await unpublishDeletedContainers(activity, prevPublishedContainers, containers);
+        return containers;
+      })
+      .then(containers => {
+        const publishedData = find(spine.structure, { id: activity.id });
+        return attachContainerSummary(publishedData, containers);
+      })
+      .then(() => saveSpine(spine))
+      .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
+      .then(() => updatePublishingStatus(repository, activity))
+      .then(() => activity.save());
   });
 }
 
@@ -76,32 +89,33 @@ function updateRepositoryCatalog(repository, publishedAt) {
   });
 }
 
-function publishRepositoryDetails(repository) {
-  return getPublishedStructure(repository).then(async spine => {
-    Object.assign(spine, getRepositoryAttrs(repository));
-    await updatePublishingStatus(repository);
-    return saveSpine(spine)
-      .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt));
-  });
+async function publishRepositoryDetails(repository) {
+  const spine = await getPublishedStructure(repository);
+  Object.assign(spine, getRepositoryAttrs(repository));
+  await updatePublishingStatus(repository);
+  const savedSpine = await saveSpine(spine);
+  await updateRepositoryCatalog(repository, savedSpine.publishedAt);
+  return repository;
 }
 
 function unpublishActivity(repository, activity) {
   return getPublishedStructure(repository).then(spine => {
     const spineActivity = find(spine.structure, { id: activity.id });
     if (!spineActivity) return;
+
     const deleted = getSpineChildren(spine, activity).concat(spineActivity);
-    return Promise.map(deleted, it => {
-      const filenames = getContentContainerFilenames(it);
-      return Promise.map(filenames, filename => {
-        const key = `${getBaseUrl(repository.id, it.id)}/${filename}.json`;
-        return storage.deleteFile(key);
-      });
-    }).then(() => {
-      spine.structure = filter(spine.structure, ({ id }) => !find(deleted, { id }));
-      return saveSpine(spine)
-        .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
-        .then(() => activity.save());
-    });
+    return Promise
+      .map(deleted, it => {
+        const baseUrl = getBaseUrl(repository.id, it.id);
+        const filePaths = getContainersFilePaths(baseUrl, it.contentContainers);
+        return storage.deleteFiles(filePaths);
+      })
+      .then(() => {
+        spine.structure = filter(spine.structure, ({ id }) => !find(deleted, { id }));
+        return saveSpine(spine);
+      })
+      .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
+      .then(() => activity.save());
   });
 }
 
@@ -127,15 +141,13 @@ async function fetchActivityContent(activity, signed = false) {
   return { containers };
 }
 
-function publishContent(activity) {
-  return publishContainers(activity).then(containers => ({ containers }));
-}
-
 function publishContainers(parent) {
   return fetchContainers(parent)
-    .map(it => {
+    .map(async it => {
       const { id, publishedAs = 'container' } = it;
-      return saveFile(parent, `${id}.${publishedAs}`, it).then(() => it);
+      await saveFile(parent, `${id}.${publishedAs}`, it);
+
+      return it;
     });
 }
 
@@ -181,6 +193,14 @@ async function fetchCustomContainers(parent, config) {
     const customContainers = await builder(parent, it.type, { include });
     return containers.concat(customContainers);
   }, []);
+}
+
+function unpublishDeletedContainers(parent, prevContainers, containers) {
+  const baseUrl = getBaseUrl(parent.repositoryId, parent.id);
+  const prevFilePaths = getContainersFilePaths(baseUrl, prevContainers);
+  const filePaths = getContainersFilePaths(baseUrl, containers);
+  const deletedContainerFiles = differenceWith(prevFilePaths, filePaths);
+  if (deletedContainerFiles.length) return storage.deleteFiles(deletedContainerFiles);
 }
 
 function resolveContainer(container) {
@@ -239,7 +259,7 @@ function getRepositoryAttrs(repository) {
   return temp;
 }
 
-function attachContentSummary(obj, { containers }) {
+function attachContainerSummary(obj, containers) {
   obj.contentContainers = map(containers, getContainerSummary);
 }
 
@@ -254,8 +274,8 @@ function defaultSummaryBuilder({ id, uid, type, publishedAs, elements = [] }) {
   return { id, uid, type, publishedAs, elementCount: elements.length };
 }
 
-function getContentContainerFilenames({ contentContainers = [] }) {
-  return map(contentContainers, it => `${it.id}.${it.publishedAs}`);
+function getContainersFilePaths(baseUrl, containers = []) {
+  return containers.map(it => `${baseUrl}/${it.id}.${it.publishedAs}.json`);
 }
 
 function renameKey(obj, key, newKey) {

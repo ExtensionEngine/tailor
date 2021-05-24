@@ -8,15 +8,18 @@ const feed = require('./feed');
 const multer = require('multer');
 const path = require('path');
 const processQuery = require('../shared/util/processListQuery');
+const proxy = require('./proxy');
 const { Repository } = require('../shared/database');
 const router = require('express').Router();
-const { setSignedCookies } = require('../shared/storage/proxy/mw');
+const storage = require('./storage');
+const { setSignedCookies } = require('../shared/storage/proxy/mw')(storage, proxy);
 
 /* eslint-disable require-sort/require-sort */
 const activity = require('../activity');
 const comment = require('../comment');
 const revision = require('../revision');
 const contentElement = require('../content-element');
+const storageRouter = require('../shared/storage/storage.router');
 /* eslint-enable */
 
 // NOTE: disk storage engine expects an object to be passed as the first argument
@@ -56,9 +59,10 @@ mount(router, '/:repositoryId', activity);
 mount(router, '/:repositoryId', revision);
 mount(router, '/:repositoryId', contentElement);
 mount(router, '/:repositoryId', comment);
+mount(router, '/:repositoryId', storageRouter);
 
 function mount(router, mountPath, subrouter) {
-  return router.use(path.join(mountPath, subrouter.path), subrouter.router);
+  return router.use(path.posix.join(mountPath, subrouter.path), subrouter.router);
 }
 
 function getRepository(req, _res, next, repositoryId) {

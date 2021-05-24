@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import { revision as api } from '@/api';
 import cloneDeep from 'lodash/cloneDeep';
 import filter from 'lodash/filter';
 import isAfter from 'date-fns/isAfter';
@@ -21,12 +22,13 @@ import map from 'lodash/map';
 import mapValues from 'lodash/mapValues';
 import merge from 'lodash/merge';
 import omit from 'lodash/omit';
+import { publishDiffChangeTypes } from '@tailor-cms/utils';
 import reduce from 'lodash/reduce';
-import revisionApi from '@/api/revision';
 
+const { NEW, REMOVED, CHANGED } = publishDiffChangeTypes;
 const getPublishedState = revisions => revisions.reduce((all, { state }) => ({
   ...all,
-  [state.uid]: omit(state, ['createdAt', 'updatedAt'])
+  [state.uid]: omit(state, ['detached', 'createdAt', 'updatedAt', 'deletedAt'])
 }), {});
 
 export default {
@@ -68,12 +70,13 @@ export default {
       return isAfter(updatedAt, publishedAt);
     },
     isRemoved(element) {
-      return !this.elements[element.uid];
+      element = this.elements[element.uid];
+      return !element || element.detached;
     },
     getChangeType(element) {
-      if (this.isAdded(element)) return 'new';
-      if (this.isRemoved(element)) return 'removed';
-      if (this.isModified(element)) return 'changed';
+      if (this.isRemoved(element)) return REMOVED;
+      if (this.isAdded(element)) return NEW;
+      if (this.isModified(element)) return CHANGED;
       return null;
     },
     addChangeType(element) {
@@ -95,7 +98,7 @@ export default {
         activityId: this.activityId,
         timestamp: this.publishTimestamp
       };
-      return revisionApi.getStateAtMoment(this.repositoryId, query)
+      return api.getStateAtMoment(this.repositoryId, query)
         .then(({ activities, elements }) => {
           this.publishedElements = getPublishedState(elements);
           this.publishedActivities = getPublishedState(activities);

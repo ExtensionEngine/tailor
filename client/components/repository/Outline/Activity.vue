@@ -6,12 +6,11 @@
         @mouseover="isHovered = true"
         @mouseout="isHovered = false"
         :id="`activity_${uid}`"
+        :style="{ 'border-left-color': color }"
         :class="{
           selected: isSelected,
-          highlighted: isHovered || isSelected,
-          parent: hasSubtypes
+          highlighted: isHovered || isSelected
         }"
-        :style="{ 'border-left-color': color }"
         class="activity">
         <v-btn
           v-if="hasSubtypes"
@@ -21,8 +20,8 @@
           <v-icon size="30" color="primary darken-3">mdi-{{ icon }}</v-icon>
         </v-btn>
         <div class="activity-name h5 my-auto text-truncate">{{ data.name }}</div>
+        <v-spacer />
         <div v-show="isHighlighted" class="actions my-auto">
-          <v-spacer />
           <options-toolbar
             :activity="{ id, uid, repositoryId, parentId, type, position, data }"
             class="options-toolbar my-auto" />
@@ -68,7 +67,6 @@ import { mapGetters, mapMutations, mapState } from 'vuex';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
-import { isEditable } from 'shared/activities';
 import OptionsMenu from '../common/ActivityOptions/Menu';
 import OptionsToolbar from '../common/ActivityOptions/Toolbar';
 import reorderMixin from './reorderMixin';
@@ -79,6 +77,7 @@ export default {
   name: 'activity',
   mixins: [reorderMixin, selectActivity],
   inheritAttrs: false,
+  inject: ['$schemaService'],
   props: {
     /* eslint-disable-next-line vue/prop-name-casing */
     uid: { type: String, required: true },
@@ -97,7 +96,7 @@ export default {
     ...mapState('repository', { outlineState: 'outline' }),
     config: vm => find(vm.structure, { type: vm.type }),
     color: vm => vm.config.color,
-    isEditable: vm => isEditable(vm.type),
+    isEditable: vm => vm.$schemaService.isEditable(vm.type),
     isSelected: vm => vm.selectedActivity && (vm.selectedActivity.uid === vm.uid),
     isHighlighted: vm => vm.isHovered || vm.isSelected,
     isExpanded: vm => !vm.isCollapsed({ uid: vm.uid }),
@@ -133,7 +132,7 @@ $background-color:  #eceff1;
   display: flex;
   height: 2.75rem;
   margin: 0.625rem 0;
-  padding: 0 0 0 0.5rem;
+  padding: 0 0 0 0.375rem;
   border-radius: 2px;
   background-color: $background-color;
   cursor: pointer;
@@ -153,10 +152,6 @@ $background-color:  #eceff1;
     opacity: 1;
     background-color: darken($background-color, 7);
 
-    &.parent {
-      padding-right: 1.25rem;
-    }
-
     .activity-name {
       color: #111;
     }
@@ -168,7 +163,6 @@ $background-color:  #eceff1;
 
   .actions {
     display: flex;
-    min-width: 11.5rem;
     height: 100%;
     margin: 0 0 0 auto;
     padding: 0;

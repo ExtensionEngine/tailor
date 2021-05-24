@@ -56,21 +56,21 @@
         :activity="activity"
         v-bind="relationship" />
     </div>
-    <activity-discussion :activity="activity" panel />
+    <activity-discussion :activity="activity" panel class="mt-2 mb-5 mx-1" />
   </div>
 </template>
 
 <script>
-import { getActivityMetadata, getLevel } from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex';
 import ActivityDiscussion from '../ActivityDiscussion';
 import ActivityStatus from './Status';
 import LabelChip from '@/components/repository/common/LabelChip';
-import MetaInput from 'tce-core/MetaInput';
+import MetaInput from '@/components/common/MetaInput';
 import Relationship from './Relationship';
 
 export default {
   name: 'activity-sidebar-body',
+  inject: ['$schemaService'],
   props: {
     activity: { type: Object, required: true }
   },
@@ -78,8 +78,8 @@ export default {
     ...mapGetters(['isAdmin']),
     ...mapGetters('repository', ['isRepositoryAdmin']),
     activityUrl: () => window.location.href,
-    config: vm => getLevel(vm.activity.type),
-    metadata: vm => getActivityMetadata(vm.activity)
+    config: vm => vm.$schemaService.getLevel(vm.activity.type),
+    metadata: vm => vm.$schemaService.getActivityMetadata(vm.activity)
   },
   methods: {
     ...mapActions('repository/activities', ['update']),

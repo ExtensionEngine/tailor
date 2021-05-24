@@ -24,6 +24,7 @@ class Local {
     this.signer = new NodeRSA(config.privateKey, 'private');
     this.isSelfHosted = true;
     this.path = PROXY_PATH;
+    this.host = urlJoin(origin, this.path);
   }
 
   static create(config) {
@@ -53,7 +54,11 @@ class Local {
   }
 
   getFileUrl(key) {
-    return urlJoin(origin, this.path, key);
+    return urlJoin(this.host, key);
+  }
+
+  getCookieNames() {
+    return Object.values(storageCookies);
   }
 }
 

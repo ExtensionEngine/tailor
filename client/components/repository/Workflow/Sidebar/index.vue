@@ -13,18 +13,24 @@
       <status-field-group
         @update="updateStatus"
         v-bind="selectedActivity.status"
-        class="mt-9 mb-12" />
+        class="mt-9 mb-2" />
     </template>
     <section v-else class="placeholder grey--text text--darken-3">
       <h4>Status Sidebar</h4>
       <v-icon>mdi-chevron-left</v-icon>
       <div class="info-content">{{ emptyMessage }}</div>
     </section>
+    <activity-discussion
+      v-if="selectedActivity"
+      :activity="selectedActivity"
+      panel
+      class="mt-2 mb-5 mx-1" />
   </v-navigation-drawer>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import ActivityDiscussion from '@/components/repository/common/ActivityDiscussion';
 import SidebarHeader from './Header';
 import StatusFieldGroup from './FieldGroup';
 
@@ -41,26 +47,31 @@ export default {
   },
   methods: {
     ...mapActions('repository/activities', ['saveStatus']),
-    updateStatus(key, value) {
+    async updateStatus(key, value) {
       const status = {
         ...this.selectedActivity.status,
         [key]: value || null
       };
-      this.saveStatus({ activity: this.selectedActivity, status })
-        .then(() => { this.$snackbar.show('Status saved'); });
+      await this.saveStatus({ activity: this.selectedActivity, status });
+      this.$snackbar.show('Status saved');
     }
   },
-  components: { StatusFieldGroup, SidebarHeader }
+  components: {
+    ActivityDiscussion,
+    StatusFieldGroup,
+    SidebarHeader
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .v-navigation-drawer {
+  padding-bottom: 0.375rem;
   text-align: left;
 }
 
 .placeholder {
-  margin-top: 4.375rem;
+  margin: 4.375rem 0 2.5rem 0;
   padding: 0 1rem;
 
   h4 {

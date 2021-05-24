@@ -38,7 +38,7 @@
 <script>
 import CarouselItem from './CarouselItem';
 import cloneDeep from 'lodash/cloneDeep';
-import { ElementPlaceholder } from 'tce-core';
+import { ElementPlaceholder } from '@tailor-cms/core-components';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import last from 'lodash/last';
@@ -110,7 +110,7 @@ export default {
       }
       element.data.items[id] = { id, body: {} };
       this.$emit('save', element.data);
-      this.activateItem(indices.length);
+      this.$nextTick(() => this.activateItem(indices.length));
     });
     this.$elementBus.on('remove', () => this.deleteItem(this.activeItem));
     this.$elementBus.on('height', height => {

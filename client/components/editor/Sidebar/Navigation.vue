@@ -25,7 +25,9 @@
           @click.stop="navigateTo(id)"
           :class="{ selectable, selected: isSelected(id) }"
           class="tree-node pl-2">
-          <span class="text-truncate">{{ name }}</span>
+          <span class="primary--text text--darken-4 text-truncate">
+            {{ name }}
+          </span>
           <v-icon
             v-if="selectable"
             color="primary darken-4"
@@ -45,11 +47,13 @@
 </template>
 
 <script>
-import { getOutlineLevels, isEditable } from 'shared/activities';
-import { toTreeFormat } from 'utils/activity';
+import { activity as activityUtils } from '@tailor-cms/utils';
+
+const { toTreeFormat } = activityUtils;
 
 export default {
   name: 'activity-navigation',
+  inject: ['$schemaService'],
   props: {
     repository: { type: Object, required: true },
     activities: { type: Array, required: true },
@@ -62,12 +66,16 @@ export default {
     };
   },
   computed: {
-    activityTree: vm => toTreeFormat(vm.activities, vm.editableActivityConfigs),
-    activityConfigs: vm => getOutlineLevels(vm.repository.schema),
-    activityTypes: vm => vm.activityConfigs.map(it => it.type),
-    editableTypes: vm => vm.editableActivityConfigs.map(it => it.type),
-    editableActivityConfigs() {
-      return this.activityConfigs.filter(it => isEditable(it.type));
+    attachActivityAttrs() {
+      return activity => ({
+        selectable: this.$schemaService.isEditable(activity.type)
+      });
+    },
+    activityTree() {
+      return toTreeFormat(this.activities, {
+        filterNodesFn: this.$schemaService.filterOutlineActivities,
+        processNodeFn: this.attachActivityAttrs
+      });
     },
     hasSearchResults() {
       if (!this.search || !this.$refs) return true;
@@ -86,7 +94,7 @@ export default {
       this.$router.push({ name: 'editor', params: { activityId } });
     },
     isActivityEditable(activity) {
-      return this.editableTypes.includes(activity.type);
+      return this.$schemaService.isEditable(activity.type);
     },
     isSelected(activityId) {
       return this.selected.id === activityId;
@@ -96,6 +104,13 @@ export default {
     search() {
       return this.$refs.activityTree.updateAll(true);
     }
+  },
+  mounted() {
+    this.$nextTick(() => {
+      const activityTreeEl = this.$refs.activityTree.$el;
+      const selectedNode = activityTreeEl.querySelector('.tree-node.selected');
+      selectedNode.scrollIntoView({ behavior: 'smooth' });
+    });
   }
 };
 </script>

@@ -1,5 +1,7 @@
-import { getDefaultActivityStatus, getWorkflow } from 'shared/workflow';
-import { getOutlineLevels, getSchema } from 'shared/activities';
+import {
+  schema as schemaConfig,
+  workflow as workflowConfig
+} from '@tailor-cms/config';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
@@ -8,6 +10,8 @@ import map from 'lodash/map';
 import { role } from 'shared';
 import values from 'lodash/values';
 
+const { getOutlineLevels, getSchema } = schemaConfig;
+const { getDefaultActivityStatus, getWorkflow } = workflowConfig;
 const HASH_ALPHABET = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789';
 const hashids = new Hashids('', 0, HASH_ALPHABET);
 
@@ -60,7 +64,7 @@ export const workflow = (_state, { repository }) => {
 export const hasWorkflow = (_state, { workflow }) => Boolean(workflow);
 
 export const workflowActivities = (_state, { activities }) => {
-  return activities.filter(it => it.isTrackedInWorkflow);
+  return activities.filter(it => !it.detached && it.isTrackedInWorkflow);
 };
 
 export const isCollapsed = state => {

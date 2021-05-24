@@ -1,7 +1,10 @@
 'use strict';
 
 const { Model, Sequelize } = require('sequelize');
+const { applyFetchHooks } = require('../content-element/hooks');
 const hooks = require('./hooks');
+const isNumber = require('lodash/isNumber');
+const Promise = require('bluebird');
 
 const { literal } = Sequelize;
 
@@ -78,6 +81,22 @@ class Revision extends Model {
 
   static hooks(Hooks, models) {
     hooks.add(this, Hooks, models);
+  }
+
+  static async fetch(query, options) {
+    if (isNumber(query)) {
+      const revision = await this.findByPk(query, options);
+      return revision.applyFetchHooks();
+    }
+    const revisions = await this.findAll(query);
+    return Promise.map(revisions, it => it.applyFetchHooks());
+  }
+
+  async applyFetchHooks() {
+    if (this.entity !== 'CONTENT_ELEMENT') return this;
+    const state = await applyFetchHooks(this.state);
+    this.state = state;
+    return this;
   }
 }
 

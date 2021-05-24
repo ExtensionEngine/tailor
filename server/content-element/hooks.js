@@ -5,12 +5,12 @@ const { elementRegistry } = require('../shared/content-plugins');
 const forEach = require('lodash/forEach');
 const get = require('lodash/get');
 const hash = require('hash-obj');
-const { isOutlineActivity } = require('../../config/shared/activities');
 const Promise = require('bluebird');
 const { resolveStatics } = require('../shared/storage/helpers');
+const { schema } = require('@tailor-cms/config');
 const sse = require('../shared/sse');
 
-module.exports = { add };
+module.exports = { add, applyFetchHooks };
 
 function add(ContentElement, Hooks, Models) {
   const { Events } = ContentElement;
@@ -42,7 +42,9 @@ function add(ContentElement, Hooks, Models) {
     sse.channel(element.repositoryId).send(Events.Create, element);
   }
 
-  function sseUpdate(_, element) {
+  function sseUpdate(hookType, element) {
+    const isDetached = element.previous('detached') === false && element.detached;
+    if (isDetached) return sseDelete(hookType, element);
     sse.channel(element.repositoryId).send(Events.Update, element);
   }
 
@@ -55,13 +57,13 @@ function add(ContentElement, Hooks, Models) {
     return Comment.update({ activityId: null }, options);
   }
 
-  function customElementHook(hookType, element) {
+  function customElementHook(hookType, element, options) {
     const elementHookTypes = elementHookMappings[hookType];
     if (!elementHookTypes) return;
     return Promise.resolve(elementHookTypes)
       .map(hook => elementRegistry.getHook(element.type, hook))
       .filter(Boolean)
-      .reduce((result, hook) => hook(result), element);
+      .reduce((result, hook) => hook(result, options), element);
   }
 
   function processAssets(hookType, element) {
@@ -93,9 +95,18 @@ function add(ContentElement, Hooks, Models) {
   }
 }
 
+function applyFetchHooks(element) {
+  const { AFTER_RETRIEVE, AFTER_LOADED } = elementHooks;
+  const applyHook = (element, hook) => hook(element);
+  const hooks = [AFTER_RETRIEVE, AFTER_LOADED]
+    .map(hook => elementRegistry.getHook(element.type, hook))
+    .filter(Boolean);
+  return Promise.reduce([...hooks, resolveStatics], applyHook, element);
+}
+
 function resolveOutlineActivity(element) {
   return element.getActivity().then(activity => {
-    return activity && isOutlineActivity(activity.type)
+    return activity && schema.isOutlineActivity(activity.type)
       ? activity
       : activity.getOutlineParent();
   });

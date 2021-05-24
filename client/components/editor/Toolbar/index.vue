@@ -15,7 +15,11 @@
           <span class="px-2 grey--text">|</span>
           <span class="white--text">comparing with published</span>
           <span class="px-2 grey--text">@</span>
-          <v-chip color="readonly primary lighten-4" small label>
+          <v-chip
+            color="primary lighten-4"
+            text-color="grey darken-4"
+            small label
+            class="readonly">
             {{ activity.publishedAt | formatDate }}
           </v-chip>
         </template>
@@ -47,14 +51,14 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-import ActiveUsers from 'tce-core/ActiveUsers';
+import { ActiveUsers } from '@tailor-cms/core-components';
 import ActivityActions from './ActivityActions';
-import { ElementToolbar } from 'tce-core';
-import { getElementId } from 'tce-core/utils';
-import { getLevel } from 'shared/activities';
+import ElementToolbar from './ElementToolbar';
+import { getElementId } from '@tailor-cms/utils';
 
 export default {
   name: 'editor-toolbar',
+  inject: ['$schemaService'],
   props: {
     element: { type: Object, default: null },
     activeUsers: { type: Array, default: () => [] }
@@ -63,7 +67,7 @@ export default {
     ...mapState('editor', ['showPublishDiff']),
     ...mapGetters('editor', ['activity']),
     config() {
-      return getLevel(this.activity.type);
+      return this.$schemaService.getLevel(this.activity.type);
     }
   },
   methods: {
