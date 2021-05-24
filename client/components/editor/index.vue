@@ -28,7 +28,7 @@
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import ActivityContent from './ActivityContent';
 import get from 'lodash/get';
-import { getElementId } from 'tce-core/utils';
+import { getElementId } from '@tailor-cms/utils';
 import Sidebar from './Sidebar';
 import Toolbar from './Toolbar';
 import withUserTracking from 'components/common/mixins/userTracking';
@@ -46,7 +46,7 @@ export default {
   }),
   computed: {
     ...mapGetters('editor', ['activity', 'contentContainers', 'rootContainerGroups']),
-    ...mapGetters('repository', ['repository', 'outlineActivities']),
+    ...mapGetters('repository', ['repository', 'activities', 'outlineActivities']),
     ...mapGetters('repository/userTracking', ['getActiveUsers']),
     ...mapState('editor', ['showPublishDiff']),
     activeUsers: vm => vm.getActiveUsers('activity', vm.activityId)
@@ -67,6 +67,7 @@ export default {
     }
   },
   provide() {
+    const self = this;
     const $editorState = {};
     Object.defineProperties($editorState, {
       isPublishDiff: {
@@ -74,7 +75,12 @@ export default {
         enumerable: true
       }
     });
-    return { $editorState };
+    return {
+      get $repository() {
+        return { ...self.repository, activities: self.activities };
+      },
+      $editorState
+    };
   },
   watch: {
     activityId() {

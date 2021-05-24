@@ -23,14 +23,14 @@
 </template>
 
 <script>
-import { priorities } from 'shared/workflow';
+import { workflow } from '@tailor-cms/config';
 
 export default {
   name: 'select-priority',
   props: {
     value: { type: String, required: true }
   },
-  data: () => ({ priorities }),
+  data: () => ({ priorities: workflow.priorities }),
   computed: {
     selected: vm => vm.priorities.find(it => it.id === vm.value)
   }

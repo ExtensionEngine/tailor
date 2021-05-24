@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import api from '@/api/auth';
+import { auth as api } from '@/api';
 import { delay } from 'bluebird';
 
 const ERRORS = {

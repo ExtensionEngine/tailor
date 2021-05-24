@@ -30,7 +30,6 @@
 </template>
 
 <script>
-import { getLevel, getSchemaId } from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex';
 import castArray from 'lodash/castArray';
 import cloneDeep from 'lodash/cloneDeep';
@@ -52,6 +51,7 @@ import without from 'lodash/without';
 
 export default {
   name: 'activity-relationship',
+  inject: ['$schemaService'],
   props: {
     activity: { type: Object, required: true },
     type: { type: String, required: true },
@@ -77,7 +77,7 @@ export default {
         conds.push(it => !includes(lineage, it));
       }
       if (this.allowedTypes.length) {
-        const schemaId = getSchemaId(this.activity.type);
+        const schemaId = this.$schemaService.getSchemaId(this.activity.type);
         const allowedTypes = this.allowedTypes.map(type => `${schemaId}/${type}`);
         conds.push(({ type }) => includes(allowedTypes, type));
       }
@@ -86,8 +86,8 @@ export default {
     groupedOptions() {
       const grouped = groupBy(this.options, 'type');
       return flatMap(grouped, (it, type) => {
-        const headerLabel = pluralize(getLevel(type).label);
-        return concat({ header: headerLabel }, it);
+        const headerLabel = this.$schemaService.getLevel(type).label;
+        return concat({ header: pluralize(headerLabel) }, it);
       });
     },
     selectPlaceholder() {

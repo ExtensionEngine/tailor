@@ -51,7 +51,7 @@
 
 <script>
 import Cropper from './Cropper';
-import { ElementPlaceholder } from 'tce-core';
+import { ElementPlaceholder } from '@tailor-cms/core-components';
 import { imgSrcToDataURL } from 'blob-util';
 import isEmpty from 'lodash/isEmpty';
 

@@ -34,12 +34,11 @@
 </template>
 
 <script>
+import { ElementPlaceholder, PreviewOverlay } from '@tailor-cms/core-components';
 import CircularProgress from './CircularProgress';
-import { ElementPlaceholder } from 'tce-core';
 import get from 'lodash/get';
 import isIE from 'is-iexplorer';
 import isSafari from 'is-safari';
-import PreviewOverlay from 'tce-core/PreviewOverlay';
 
 const ERR_TIMEOUT = 10000;
 const TYPE = 'application/pdf';

@@ -16,7 +16,7 @@
 <script>
 import { focus } from 'vue-focus';
 import invoke from 'lodash/invoke';
-import { mapChannels } from '@/plugins/radio';
+import { mapChannels } from '@extensionengine/vue-radio';
 import TailorDialog from '@/components/common/TailorDialog';
 
 const createContext = () => ({
