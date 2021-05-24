@@ -21,10 +21,9 @@
 </template>
 
 <script>
+import { ElementPlaceholder, PreviewOverlay } from '@tailor-cms/core-components';
 import BrightcovePlayer from './Player';
-import { ElementPlaceholder } from 'tce-core';
 import get from 'lodash/get';
-import PreviewOverlay from 'tce-core/PreviewOverlay';
 
 export default {
   name: 'tce-brightcove-video',

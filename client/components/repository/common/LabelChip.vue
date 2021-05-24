@@ -1,7 +1,7 @@
 <template>
   <v-chip
     v-on="$listeners"
-    color="primary lighten-5"
+    :color="color"
     text-color="black"
     label small
     class="flex-shrink-0 caption text-uppercase readonly">
@@ -10,5 +10,10 @@
 </template>
 
 <script>
-export default { name: 'repository-label-chip' };
+export default {
+  name: 'repository-label-chip',
+  props: {
+    color: { type: String, default: 'primary lighten-5' }
+  }
+};
 </script>

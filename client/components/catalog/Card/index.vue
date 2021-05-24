@@ -54,9 +54,7 @@
             <img :src="lastActivity.user.imgUrl">
           </v-avatar>
           <div class="ml-3 overflow-hidden">
-            <div
-              :class="{ 'subtitle-1 font-weight-bold': isCardHovered }"
-              class="caption">
+            <div class="caption">
               Edited
               <timeago :datetime="lastActivity.createdAt" :auto-update="60" />
               by
@@ -88,7 +86,6 @@
 <script>
 import first from 'lodash/first';
 import get from 'lodash/get';
-import { getSchema } from 'shared/activities';
 import { mapActions } from 'vuex';
 import Tags from './Tags';
 
@@ -97,6 +94,7 @@ const getPublishingInfo = hasChanges => hasChanges
   : 'Published.';
 
 export default {
+  inject: ['$schemaService'],
   props: {
     repository: { type: Object, required: true }
   },
@@ -104,7 +102,7 @@ export default {
   computed: {
     name: ({ repository }) => repository.name,
     description: ({ repository }) => repository.description,
-    schema: ({ repository }) => getSchema(repository.schema).name,
+    schema: vm => vm.$schemaService.getSchema(vm.repository.schema).name,
     lastActivity: ({ repository }) => first(repository.revisions),
     hasUnpublishedChanges: ({ repository }) => repository.hasUnpublishedChanges,
     isPinned: ({ repository }) => get(repository, 'repositoryUser.pinned', false),

@@ -1,9 +1,5 @@
 'use strict';
 
-const {
-  getOutlineLevels,
-  isOutlineActivity
-} = require('../../config/shared/activities');
 const { Activity } = require('../shared/database');
 const { fetchActivityContent } = require('../shared/publishing/helpers');
 const find = require('lodash/find');
@@ -12,6 +8,9 @@ const pick = require('lodash/pick');
 const { previewUrl } = require('../../config/server');
 const publishingService = require('../shared/publishing/publishing.service');
 const request = require('axios');
+const { schema } = require('@tailor-cms/config');
+
+const { getOutlineLevels, isOutlineActivity } = schema;
 
 function list({ repository, query, opts }, res) {
   if (!query.detached) opts.where = { detached: false };
@@ -91,9 +90,10 @@ function getPreviewUrl({ activity }, res) {
     });
 }
 
-async function updateStatus({ body, activity }, res) {
+async function updateStatus({ user, body, activity }, res) {
+  const context = { user };
   const data = pick(body, ['assigneeId', 'status', 'priority', 'description', 'dueDate']);
-  const status = await activity.createStatus(data);
+  const status = await activity.createStatus(data, { context });
   await status.reload();
   return res.json({ data: status });
 }

@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { getElementId, isQuestion } from 'tce-core/utils';
+import { getElementId, isQuestion } from '@tailor-cms/utils';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import commentEventListeners from 'components/common/mixins/commentEventListeners';
 import ContentContainers from './ContainerList';
@@ -39,10 +39,9 @@ import ContentLoader from './Loader';
 import differenceBy from 'lodash/differenceBy';
 import find from 'lodash/find';
 import get from 'lodash/get';
-import { getSupportedContainers } from 'shared/activities';
 import isEqual from 'lodash/isEqual';
 import loader from '@/components/common/loader';
-import { mapChannels } from '@/plugins/radio';
+import { mapChannels } from '@extensionengine/vue-radio';
 import max from 'lodash/max';
 import PublishDiffProvider from './PublishDiffProvider';
 import throttle from 'lodash/throttle';
@@ -59,6 +58,7 @@ const ELEMENT_MUTATIONS = [
 export default {
   name: 'activity-content',
   mixins: [commentEventListeners],
+  inject: ['$schemaService'],
   props: {
     repository: { type: Object, required: true },
     activity: { type: Object, required: true },
@@ -93,7 +93,7 @@ export default {
         acc[it.uid] = { ...it, comments, hasUnresolvedComments, lastSeen: lastSeen || 0 };
       }, {});
     },
-    containerConfigs: vm => getSupportedContainers(vm.activity.type)
+    containerConfigs: vm => vm.$schemaService.getSupportedContainers(vm.activity.type)
   },
   methods: {
     ...mapActions('repository/contentElements', { getContentElements: 'fetch' }),

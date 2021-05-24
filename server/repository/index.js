@@ -62,7 +62,7 @@ mount(router, '/:repositoryId', comment);
 mount(router, '/:repositoryId', storageRouter);
 
 function mount(router, mountPath, subrouter) {
-  return router.use(path.join(mountPath, subrouter.path), subrouter.router);
+  return router.use(path.posix.join(mountPath, subrouter.path), subrouter.router);
 }
 
 function getRepository(req, _res, next, repositoryId) {

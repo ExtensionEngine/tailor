@@ -76,7 +76,7 @@ import map from 'lodash/map';
 import RepositoryCard from './Card';
 import RepositoryFilter from './RepositoryFilter';
 import RepositoryFilterSelection from './RepositoryFilterSelection';
-import { SCHEMAS } from 'shared/activities';
+import { SCHEMAS } from '@tailor-cms/config';
 import Search from './Search';
 import SelectOrder from './SelectOrder';
 
