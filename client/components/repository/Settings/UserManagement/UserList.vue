@@ -35,7 +35,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import debounce from 'lodash/debounce';
-import loader from '@/components/common/loader';
+import { loader } from '@tailor-cms/core-components';
 
 const HEADERS = ['User', 'Email', 'Full Name', 'Role', ''];
 

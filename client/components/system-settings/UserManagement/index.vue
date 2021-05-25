@@ -79,7 +79,7 @@
 <script>
 import { user as api } from '@/api';
 import humanize from 'humanize-string';
-import loader from '@/components/common/loader';
+import { loader } from '@tailor-cms/core-components';
 import { mapRequests } from '@extensionengine/vue-radio';
 import { mapState } from 'vuex';
 import throttle from 'lodash/throttle';

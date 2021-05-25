@@ -18,3 +18,4 @@ export { default as QuestionContainer } from './components/QuestionContainer/ind
 export { default as SelectElement } from './components/SelectElement/index.vue';
 export { default as UploadBtn } from './components/UploadBtn.vue';
 export { default as upload } from './upload';
+export { default as loader } from './loader';

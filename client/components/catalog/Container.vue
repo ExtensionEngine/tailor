@@ -71,7 +71,7 @@ import filterConfigs from './repositoryFilterConfigs';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import InfiniteLoading from 'vue-infinite-loading';
-import loader from '@/components/common/loader';
+import { loader } from '@tailor-cms/core-components';
 import map from 'lodash/map';
 import RepositoryCard from './Card';
 import RepositoryFilter from './RepositoryFilter';

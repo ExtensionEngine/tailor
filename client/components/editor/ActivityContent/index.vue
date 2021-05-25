@@ -40,7 +40,7 @@ import differenceBy from 'lodash/differenceBy';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import isEqual from 'lodash/isEqual';
-import loader from '@/components/common/loader';
+import { loader } from '@tailor-cms/core-components';
 import { mapChannels } from '@extensionengine/vue-radio';
 import max from 'lodash/max';
 import PublishDiffProvider from './PublishDiffProvider';
