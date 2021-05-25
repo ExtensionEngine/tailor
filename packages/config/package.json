@@ -1,6 +1,6 @@
 {
   "name": "@tailor-cms/config",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Access parsed Tailor config",
   "homepage": "https://github.com/ExtensionEngine/tailor#readme",
   "bugs": {
