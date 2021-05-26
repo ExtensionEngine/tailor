@@ -121,7 +121,6 @@
     "mustache": "^3.2.1",
     "node-rsa": "^1.1.1",
     "openid-client": "^4.2.1",
-    "p-min-delay": "^3.1.0",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",

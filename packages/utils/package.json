@@ -1,6 +1,6 @@
 {
   "name": "@tailor-cms/utils",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Tailor utility functions",
   "keywords": [],
   "homepage": "https://github.com/ExtensionEngine/tailor#readme",
@@ -24,6 +24,8 @@
     "lint": "eslint --ext .js,.vue ."
   },
   "dependencies": {
+    "cuid": "^2.1.8",
+    "lodash": "^4.17.21",
     "to-case": "^2.0.0",
     "uuid": "^8.3.2"
   },

@@ -63,7 +63,7 @@ import find from 'lodash/find';
 import head from 'lodash/head';
 import InsertLocation from '@/utils/InsertLocation';
 import last from 'lodash/last';
-import loader from '@/components/common/loader';
+import { loader } from '@tailor-cms/core-components';
 import pluralize from 'pluralize';
 import Promise from 'bluebird';
 import RepositoryTree from './RepositoryTree';
