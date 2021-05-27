@@ -48,10 +48,10 @@
 </template>
 
 <script>
-import { defaults, getErrorMessages } from 'utils/assessment';
+import { assessment } from '@tailor-cms/utils';
 import cloneDeep from 'lodash/cloneDeep';
 import head from 'lodash/head';
-import { InputError } from 'tce-core';
+import { InputError } from '@tailor-cms/core-components';
 import range from 'lodash/range';
 import set from 'lodash/set';
 
@@ -63,7 +63,7 @@ const getButtonLabel = isGraded => isGraded ? 'Add answer' : 'Add option';
 
 export default {
   props: {
-    assessment: { type: Object, default: defaults.MC },
+    assessment: { type: Object, default: assessment.defaults.MC },
     errors: { type: Array, default: () => ([]) },
     isEditing: { type: Boolean, default: false },
     isGraded: { type: Boolean, default: false }
@@ -81,7 +81,7 @@ export default {
     placeholder: vm => getPlaceholder(vm.isGraded),
     addButtonLabel: vm => getButtonLabel(vm.isGraded),
     allowRemoval: vm => vm.isEditing && vm.answers.length > MIN_ANSWER_COUNT,
-    correctError: vm => head(getErrorMessages(vm.errors, 'correct'))
+    correctError: vm => head(assessment.getErrorMessages(vm.errors, 'correct'))
   },
   methods: {
     addAnswer() {
@@ -115,7 +115,7 @@ export default {
       this.update({ answers, correct, feedback });
     },
     answerErrors(index) {
-      return getErrorMessages(this.errors, `answers[${index}]`);
+      return assessment.getErrorMessages(this.errors, `answers[${index}]`);
     },
     update(data) {
       this.$emit('update', data);

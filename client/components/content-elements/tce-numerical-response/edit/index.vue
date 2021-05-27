@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { defaults, getErrorMessages } from 'utils/assessment';
+import { assessment } from '@tailor-cms/utils';
 import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
 import last from 'lodash/last';
@@ -65,7 +65,7 @@ import toNumber from 'lodash/toNumber';
 
 export default {
   props: {
-    assessment: { type: Object, default: defaults.NR },
+    assessment: { type: Object, default: assessment.defaults.NR },
     errors: { type: Array, default: () => ([]) },
     isEditing: { type: Boolean, default: false }
   },
@@ -102,13 +102,13 @@ export default {
       this.update({ prefixes, suffixes, correct });
     },
     correctErrors(index) {
-      return getErrorMessages(this.errors, `correct[${index}]`);
+      return assessment.getErrorMessages(this.errors, `correct[${index}]`);
     },
     prefixErrors(index) {
-      return getErrorMessages(this.errors, `prefixes[${index}]`);
+      return assessment.getErrorMessages(this.errors, `prefixes[${index}]`);
     },
     suffixErrors(index) {
-      return getErrorMessages(this.errors, `suffixes[${index}]`);
+      return assessment.getErrorMessages(this.errors, `suffixes[${index}]`);
     },
     update(data) {
       this.$emit('update', data);

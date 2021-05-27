@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import DatePicker from '@/components/common/DatePicker';
+import { DatePicker } from '@tailor-cms/core-components';
 import set from 'date-fns/set';
 import TimePicker from './TimePicker';
 

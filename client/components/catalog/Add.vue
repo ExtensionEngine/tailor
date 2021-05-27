@@ -31,7 +31,7 @@
         tag="form"
         data-testid="catalog__createRepositoryDialog"
         novalidate
-        class="pt-10 pa-4">
+        class="mt-4 pa-4">
         <v-alert
           @click:close="serverError = null"
           :value="!!serverError"
@@ -42,7 +42,7 @@
           {{ serverError }}
         </v-alert>
         <v-tabs-items v-model="selectedTab">
-          <v-tab-item key="schema">
+          <v-tab-item key="schema" class="pt-1">
             <validation-provider
               v-slot="{ errors }"
               :rules="{ required: isCreate }"
@@ -58,7 +58,7 @@
                 outlined />
             </validation-provider>
           </v-tab-item>
-          <v-tab-item key="archive">
+          <v-tab-item key="archive" class="pt-1">
             <validation-provider
               v-slot="{ errors }"
               :rules="{ required: !isCreate }"
@@ -68,11 +68,10 @@
                 v-model="archive"
                 :error-messages="errors"
                 :clearable="false"
+                :label="archive ? 'Selected archive' : 'Select archive'"
                 :class="{ required: !isCreate }"
-                label="Archive"
                 prepend-icon=""
                 prepend-inner-icon="mdi-paperclip"
-                placeholder="Select repository archive"
                 outlined />
             </validation-provider>
           </v-tab-item>
@@ -111,11 +110,11 @@
 </template>
 
 <script>
-import api from '@/api/repository';
-import loader from '@/components/common/loader';
+import { repository as api } from '@/api';
+import { loader } from '@tailor-cms/core-components';
 import { mapGetters } from 'vuex';
 import RepositoryNameField from '../repository/common/RepositoryNameField';
-import { SCHEMAS } from 'shared/activities';
+import { SCHEMAS } from '@tailor-cms/config';
 import TailorDialog from '@/components/common/TailorDialog';
 
 const NEW_TAB = 0;

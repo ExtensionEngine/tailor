@@ -3,7 +3,9 @@ import './polyfills';
 import 'bootstrap-sass/assets/javascripts/bootstrap';
 import '@/utils/validation';
 
-import assetsApi from '@/api/asset';
+import { asset as assetApi, exposedApi } from '@/api';
+import { schema } from '@tailor-cms/config';
+import { QuestionContainer } from '@tailor-cms/core-components';
 import ContentPluginRegistry from './content-plugins';
 
 import { formatDate, truncate } from '@/filters';
@@ -14,9 +16,8 @@ import {
 } from 'vee-validate';
 import FileFilter from '@/directives/file-filter';
 import OidcClient from './OidcClient';
-import QuestionContainer from 'tce-core/QuestionContainer';
 import Promise from 'bluebird';
-import Radio from '@/plugins/radio';
+import Radio from '@extensionengine/vue-radio';
 import { sync } from 'vuex-router-sync';
 import Timeago from 'vue-timeago';
 import Vue from 'vue';
@@ -66,9 +67,11 @@ Promise.all([getStore(), contentPluginRegistry.initialize()])
       render: h => h(App),
       provide() {
         return {
-          $storageService: assetsApi,
+          $api: exposedApi,
+          $storageService: assetApi,
           $teRegistry: contentPluginRegistry.elementRegistry,
           $ccRegistry: contentPluginRegistry.containerRegistry,
+          $schemaService: schema,
           $getCurrentUser: () => store.state.auth.user
         };
       }

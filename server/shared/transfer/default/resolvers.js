@@ -1,10 +1,10 @@
 'use strict';
 
 const { Activity, ContentElement, Repository } = require('../../database');
-const { getSchema } = require('../../../../config/shared/activities');
 const mapKeys = require('lodash/mapKeys');
 const miss = require('mississippi');
 const QueryStream = require('pg-query-stream');
+const { schema } = require('@tailor-cms/config');
 const { stringify } = require('JSONStream');
 
 const reStorage = /^storage:\/\//;
@@ -35,7 +35,11 @@ function createElementsResolver({ context, transaction }) {
 
 function createManifestResolver({ context }) {
   const { assets, schemaId } = context;
-  const manifest = { schema: getSchema(schemaId), date: new Date(), assets };
+  const manifest = {
+    assets,
+    schema: schema.getSchema(schemaId),
+    date: new Date()
+  };
   return miss.pipe(miss.from.obj([manifest]), stringify(false /* isArray */));
 }
 

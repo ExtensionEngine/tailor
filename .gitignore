@@ -50,6 +50,7 @@ data/*
 dist/*
 !dist/.gitkeep
 stats.json
-
+packages/*/dist
+packages/*/stats.html
 # General
 .DS_Store
