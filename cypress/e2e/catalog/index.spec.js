@@ -1,12 +1,15 @@
 'use strict';
 
+const { addTag, removeTag } = require('./tag');
 const {
   createRepository,
   findRepositoryByName,
   selectors: repository
 } = require('./repository.js');
-const { addTag } = require('./tag');
 const auth = require('../auth/utils');
+
+const TAG_NAME = '___Test tag___';
+const REPOSITORY_NAME = '___Test repository___';
 
 describe('repository catalog', () => {
   beforeEach(() => {
@@ -15,21 +18,43 @@ describe('repository catalog', () => {
   });
 
   it('should create a repository', () => {
-    createRepository('Test repository', 'Test description');
+    createRepository(REPOSITORY_NAME, 'Test description');
   });
 
   it('should access repository', () => {
-    findRepositoryByName('Test repository').click();
+    findRepositoryByName(REPOSITORY_NAME).click();
   });
 
   it('should access repository settings', () => {
-    findRepositoryByName('Test repository')
+    findRepositoryByName(REPOSITORY_NAME)
       .findByTestId(repository.settings)
       .click();
   });
 
   it('should add a tag to the repository', () => {
-    const repositoryCard = findRepositoryByName('Test repository');
-    addTag(repositoryCard, 'Test tag');
+    findRepositoryByName(REPOSITORY_NAME).as('repositoryCard');
+    addTag('@repositoryCard', TAG_NAME);
+    cy.get('@repositoryCard').findByText(TAG_NAME);
+  });
+
+  it('should delete a tag from the repository', () => {
+    findRepositoryByName(REPOSITORY_NAME).as('repositoryCard');
+    removeTag('@repositoryCard', TAG_NAME);
+    cy.confirmAction('Delete tag');
+  });
+
+  it('should delete a repository', () => {
+    findRepositoryByName(REPOSITORY_NAME).as('repositoryCard');
+    cy.get('@repositoryCard')
+      .findByTestId(repository.settings)
+      .click();
+    cy.findByText(/delete/i)
+      .click();
+    cy.confirmAction('Delete repository');
+    cy.getRoute()
+      .then(route => expect(route.name).to.equal('catalog'));
+    cy.root()
+      .contains(REPOSITORY_NAME)
+      .should('not.exist');
   });
 });

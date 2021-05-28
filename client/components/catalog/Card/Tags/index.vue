@@ -6,6 +6,7 @@
         :key="id"
         @click:close="showDeleteConfirmation(id, name)"
         color="primary darken-1"
+        data-testid="catalog__tagChip"
         label close small
         class="mr-2 mb-1">
         <v-tooltip
