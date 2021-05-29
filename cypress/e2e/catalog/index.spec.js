@@ -53,8 +53,9 @@ describe('repository catalog', () => {
     cy.confirmAction('Delete repository');
     cy.getRoute()
       .then(route => expect(route.name).to.equal('catalog'));
-    cy.root()
-      .contains(REPOSITORY_NAME)
+    cy.intercept('/api/repositories*').as('fetchRepositories');
+    cy.wait('@fetchRepositories');
+    cy.contains(REPOSITORY_NAME)
       .should('not.exist');
   });
 });
