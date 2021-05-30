@@ -1,6 +1,6 @@
 {
   "name": "@tailor-cms/core-components",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "",
   "keywords": [],
   "homepage": "https://github.com/ExtensionEngine/tailor#readme",
@@ -26,8 +26,8 @@
     "lint:scss": "stylelint \"**/*.vue\" \"**/*.scss\""
   },
   "dependencies": {
-    "@extensionengine/vue-radio": "^0.1.3",
-    "@tailor-cms/utils": "^0.1.3",
+    "@extensionengine/vue-radio": "^0.1.5",
+    "@tailor-cms/utils": "^0.1.5",
     "lodash": "^4.17.21",
     "p-min-delay": "^3.1.0",
     "pluralize": "^8.0.0",
