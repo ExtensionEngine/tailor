@@ -11,24 +11,25 @@
     item-text="label"
     item-value="value"
     deletable-chips
-    outlined />
+    outlined
+    class="tailor-combobox" />
 </template>
 
 <script>
-import isObject from 'lodash/isObject';
-
 export default {
   name: 'meta-combobox',
   props: {
     meta: { type: Object, default: () => ({ value: null }) }
-  },
-  computed: {
-    value() {
-      const { meta: { value, options } } = this;
-      const hasPrimitiveOptions = !isObject(options[0]);
-      if (hasPrimitiveOptions) return value;
-      return value.map(val => options.find(it => it.value === val));
-    }
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.tailor-combobox {
+  ::v-deep .v-chip {
+    height: initial;
+    padding: 6px 12px;
+    white-space: normal;
+  }
+}
+</style>
