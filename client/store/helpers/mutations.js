@@ -1,7 +1,7 @@
 import castArray from 'lodash/castArray';
 import each from 'lodash/each';
 import omit from 'lodash/omit';
-import uuid from '@/utils/uuid';
+import { uuid } from '@tailor-cms/utils';
 import Vue from 'vue';
 
 export const fetch = (state, items) => {

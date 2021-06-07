@@ -41,10 +41,9 @@
 </template>
 
 <script>
-import { getActivityMetadata } from 'shared/activities';
-import InsertLocation from '@/utils/InsertLocation';
+import { InsertLocation } from '@tailor-cms/utils';
 import { mapActions } from 'vuex';
-import MetaInput from 'tce-core/MetaInput';
+import MetaInput from '@/components/common/MetaInput';
 import TailorDialog from '@/components/common/TailorDialog';
 import TypeSelect from './TypeSelect';
 
@@ -57,6 +56,7 @@ const { ADD_AFTER, ADD_INTO } = InsertLocation;
 
 export default {
   name: 'create-activity-dialog',
+  inject: ['$schemaService'],
   props: {
     repositoryId: { type: Number, required: true },
     levels: { type: Array, required: true },
@@ -78,7 +78,7 @@ export default {
   computed: {
     metadata() {
       if (!this.activity.type) return null;
-      return getActivityMetadata(this.activity);
+      return this.$schemaService.getActivityMetadata(this.activity);
     },
     hasSingleOption: vm => vm.levels.length === 1,
     defaultLabel: vm => vm.hasSingleOption ? `Add ${vm.levels[0].label}` : 'Add'

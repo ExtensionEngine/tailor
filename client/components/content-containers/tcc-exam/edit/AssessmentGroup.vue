@@ -56,24 +56,23 @@
 </template>
 
 <script>
+import { numberToLetter, uuid } from '@tailor-cms/utils';
 import AssessmentItem from './Assessment';
 import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
-import { ElementList } from 'tce-core';
+import { ElementList } from '@tailor-cms/core-components';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
-import { getLevel } from 'shared/activities';
 import GroupIntroduction from './GroupIntroduction';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
-import numberToLetter from 'utils/numberToLetter';
 import pickBy from 'lodash/pickBy';
 import sortBy from 'lodash/sortBy';
 import uniq from 'lodash/uniq';
-import uuid from '@/utils/uuid';
 
 export default {
   name: 'assessment-group',
+  inject: ['$schemaService'],
   props: {
     group: { type: Object, required: true },
     elements: { type: Object, required: true },
@@ -101,7 +100,9 @@ export default {
     objectiveLabel() {
       if (isEmpty(this.objectives)) return '';
       const types = uniq(map(this.objectives, 'type'));
-      const label = types.length > 1 ? 'Objective' : getLevel(types[0]).label;
+      const label = types.length > 1
+        ? 'Objective'
+        : this.$schemaService.getLevel(types[0]).label;
       return `Link ${label}`;
     }
   },

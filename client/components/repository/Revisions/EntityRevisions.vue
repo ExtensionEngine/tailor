@@ -20,15 +20,17 @@
 </template>
 
 <script>
-import ContentElement from 'tce-core/ContentElement';
-import contentElementApi from '@/api/contentElement';
+import {
+  contentElement as contentElementApi,
+  revision as revisionApi
+} from '@/api';
+import { ContentElement } from '@tailor-cms/core-components';
 import EntitySidebar from './EntitySidebar';
 import first from 'lodash/first';
 import get from 'lodash/get';
 import includes from 'lodash/includes';
 import pick from 'lodash/pick';
 import Promise from 'bluebird';
-import revisionApi from '@/api/revision';
 
 const WITHOUT_STATICS = [
   'TIPTAP_HTML', 'BRIGHTCOVE_VIDEO', 'EMBED', 'BREAK', 'HTML'

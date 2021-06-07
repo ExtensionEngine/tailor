@@ -49,13 +49,13 @@
 <script>
 import AssigneeAvatar from '@/components/repository/common/AssigneeAvatar';
 import find from 'lodash/find';
-import { getLevel } from 'shared/activities';
-import { getPriority } from 'shared/workflow';
 import { mapGetters } from 'vuex';
+import { workflow } from '@tailor-cms/config';
 import WorkflowDueDate from '@/components/repository/common/WorkflowDueDate';
 
 export default {
   name: 'activity-status-card',
+  inject: ['$schemaService'],
   props: {
     id: { type: Number, default: null },
     shortId: { type: String, required: true },
@@ -64,9 +64,9 @@ export default {
   },
   computed: {
     ...mapGetters('repository', ['workflow']),
-    activityConfig: vm => getLevel(vm.type),
+    activityConfig: vm => vm.$schemaService.getLevel(vm.type),
     statusConfig: vm => find(vm.workflow.statuses, { id: vm.status.status }),
-    priorityConfig: vm => getPriority(vm.status.priority),
+    priorityConfig: vm => workflow.getPriority(vm.status.priority),
     route: vm => ({ name: 'progress', query: vm.$route.query })
   },
   components: { WorkflowDueDate, AssigneeAvatar }

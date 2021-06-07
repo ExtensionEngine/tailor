@@ -18,14 +18,6 @@ module.exports = {
       parserOptions: {
         sourceType: 'script'
       }
-    },
-    {
-      files: ['extensions/**'],
-      excludedFiles: ['extensions/content-elements/**/server/**'],
-      parserOptions: {
-        parser: '@babel/eslint-parser',
-        sourceType: 'module'
-      }
     }
   ],
   globals: {

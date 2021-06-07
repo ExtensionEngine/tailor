@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import api from '@/api/tag';
+import { tag as api } from '@/api';
 import differenceBy from 'lodash/differenceBy';
 import map from 'lodash/map';
 import { mapActions } from 'vuex';

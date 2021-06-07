@@ -53,19 +53,21 @@
 </template>
 
 <script>
+import {
+  activity as activityApi,
+  repository as repositoryApi
+} from '@/api';
 import { mapActions, mapGetters } from 'vuex';
-import activityApi from 'client/api/activity';
 import debounce from 'lodash/debounce';
 import find from 'lodash/find';
 import head from 'lodash/head';
 import InsertLocation from '@/utils/InsertLocation';
 import last from 'lodash/last';
-import loader from '@/components/common/loader';
+import { loader } from '@tailor-cms/core-components';
 import pluralize from 'pluralize';
 import Promise from 'bluebird';
-import repositoryApi from 'client/api/repository';
 import RepositoryTree from './RepositoryTree';
-import { SCHEMAS } from 'shared/activities';
+import { SCHEMAS } from '@tailor-cms/config';
 import sortBy from 'lodash/sortBy';
 import TailorDialog from '@/components/common/TailorDialog';
 

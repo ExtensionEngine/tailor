@@ -47,7 +47,7 @@ import find from 'lodash/find';
 import first from 'lodash/first';
 import InsertLocation from '@/utils/InsertLocation';
 import { mapActions } from 'vuex';
-import { mapRequests } from '@/plugins/radio';
+import { mapRequests } from '@extensionengine/vue-radio';
 import optionsMixin from './common';
 import sortBy from 'lodash/sortBy';
 

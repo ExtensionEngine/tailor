@@ -1,9 +1,9 @@
 'use strict';
 
-const { getLevel } = require('../../config/shared/activities');
 const mail = require('../shared/mail');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
+const { schema } = require('@tailor-cms/config');
 const sse = require('../shared/sse');
 const without = require('lodash/without');
 
@@ -73,7 +73,7 @@ exports.add = (Comment, Hooks, db) => {
       repositoryName: repository.name,
       activityId: activity.id,
       elementUid: contentElement && contentElement.uid,
-      activityLabel: getLevel(activity.type).label,
+      activityLabel: schema.getLevel(activity.type).label,
       topic: activity.data.name,
       author: author.profile,
       previousComments,

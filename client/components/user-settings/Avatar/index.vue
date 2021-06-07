@@ -37,7 +37,7 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import AvatarDialog from './AvatarDialog';
-import { mapRequests } from '@/plugins/radio';
+import { mapRequests } from '@extensionengine/vue-radio';
 
 const isGravatar = img => /gravatar.com/.test(img);
 

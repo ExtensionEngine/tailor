@@ -27,7 +27,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import ActiveUsers from 'tce-core/ActiveUsers';
+import { ActiveUsers } from '@tailor-cms/core-components';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
 import selectActivity from '@/components/repository/common/selectActivity';
@@ -85,6 +85,14 @@ export default {
     }
   },
   methods: mapActions('repository', ['initialize', 'expandParents']),
+  provide() {
+    const self = this;
+    return {
+      get $repository() {
+        return { ...self.repository, activities: self.activities };
+      }
+    };
+  },
   watch: {
     selectedActivity: {
       handler(val) {

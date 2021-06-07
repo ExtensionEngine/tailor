@@ -57,10 +57,10 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
-import { EmbeddedContainer } from 'tce-core';
+import { EmbeddedContainer } from '@tailor-cms/core-components';
 import forEach from 'lodash/forEach';
 import isEmpty from 'lodash/isEmpty';
-import { mapRequests } from '@/plugins/radio';
+import { mapRequests } from '@extensionengine/vue-radio';
 
 export default {
   name: 'accordion-item',
