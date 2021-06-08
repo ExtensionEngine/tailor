@@ -4,17 +4,29 @@ const { addTag, removeTag } = require('./tag');
 const {
   createRepository,
   findRepositoryByName,
+  interceptRepositoryFetch,
+  removeRepository,
+  searchRepository,
   selectors: repository
 } = require('./repository.js');
 const auth = require('../auth/utils');
+const forEach = require('lodash/forEach');
 
 const TAG_NAME = '___Test tag___';
 const REPOSITORY_NAME = '___Test repository___';
 
 describe('repository catalog', () => {
+  before(() => {
+    auth.login();
+    searchRepository(REPOSITORY_NAME);
+    interceptRepositoryFetch().then(({ body }) => {
+      forEach(body.data, removeRepository);
+      auth.logout();
+    });
+  });
+
   beforeEach(() => {
-    auth.login()
-      .then(() => cy.visit('/'));
+    auth.login();
   });
 
   it('should create a repository', () => {
@@ -43,6 +55,13 @@ describe('repository catalog', () => {
     cy.confirmAction('Delete tag');
   });
 
+  it('should be able to search for the repository', () => {
+    searchRepository(REPOSITORY_NAME);
+    interceptRepositoryFetch();
+    cy.findAllByTestId(repository.card)
+      .then(repositories => expect(repositories).to.have.lengthOf(1));
+  });
+
   it('should delete a repository', () => {
     findRepositoryByName(REPOSITORY_NAME).as('repositoryCard');
     cy.get('@repositoryCard')
@@ -53,8 +72,7 @@ describe('repository catalog', () => {
     cy.confirmAction('Delete repository');
     cy.getRoute()
       .then(route => expect(route.name).to.equal('catalog'));
-    cy.intercept('/api/repositories*').as('fetchRepositories');
-    cy.wait('@fetchRepositories');
+    interceptRepositoryFetch();
     cy.contains(REPOSITORY_NAME)
       .should('not.exist');
   });

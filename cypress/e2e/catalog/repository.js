@@ -5,7 +5,8 @@ const sel = {
   card: 'catalog__repositoryCard',
   createBtn: 'catalog__createRepositoryBtn',
   createDialog: 'catalog__createRepositoryDialog',
-  settings: 'catalog__repositorySettingsBtn'
+  settings: 'catalog__repositorySettingsBtn',
+  searchInput: 'catalog__searchInput'
 };
 
 function findRepositoryByName(name) {
@@ -26,8 +27,25 @@ function createRepository(name, description) {
   });
 }
 
+function removeRepository(instance) {
+  return cy.getStore()
+    .then(store => cy.wrap(store.dispatch('repositories/remove', instance)));
+}
+
+function searchRepository(input) {
+  cy.findByTestId(sel.searchInput)
+    .type(input);
+}
+
+function interceptRepositoryFetch(alias = 'fetchRepositories') {
+  return cy.interceptFetch('/api/repositories*', alias);
+}
+
 module.exports = {
   selectors: sel,
   findRepositoryByName,
-  createRepository
+  createRepository,
+  removeRepository,
+  searchRepository,
+  interceptRepositoryFetch
 };

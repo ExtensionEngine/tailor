@@ -3,8 +3,15 @@
 const { getActor } = require('../../fixtures/users');
 
 function login(user = getActor()) {
+  cy.visit('/');
+  cy.getStore()
+    .then(store => cy.wrap(store.dispatch('login', user)));
+  cy.visit('/');
+}
+
+function logout() {
   return cy.getStore()
-    .then(store => store.dispatch('login', user));
+    .then(store => cy.wrap(store.dispatch('logout')));
 }
 
 function loginWithUI(user = getActor()) {
@@ -18,5 +25,6 @@ function loginWithUI(user = getActor()) {
 
 module.exports = {
   login,
-  loginWithUI
+  loginWithUI,
+  logout
 };

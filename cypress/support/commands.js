@@ -30,6 +30,14 @@ Cypress.Commands.add('getApp', () => cy.window().then(win => win.__app__));
 Cypress.Commands.add('getStore', () => cy.getApp().then(app => app.$store));
 Cypress.Commands.add('getRoute', () => cy.getApp().then(app => app.$route));
 
+Cypress.Commands.add('interceptFetch', (route, alias) => {
+  cy.intercept(route, req => {
+    delete req.headers['if-none-match'];
+  }).as(alias);
+  cy.wait(`@${alias}`);
+  return cy.get(`@${alias}`).then(({ response }) => response);
+});
+
 // Confirmation dialog actions
 Cypress.Commands.add('confirmAction', dialogTitle => {
   return getDialogByTitle(dialogTitle)
