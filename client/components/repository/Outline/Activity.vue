@@ -1,16 +1,11 @@
 <template>
   <div>
-    <div class="activity-wrapper">
+    <v-hover v-slot="{ hover }" class="activity-wrapper">
       <div
         @click="selectActivity(id)"
-        @mouseover="isHovered = true"
-        @mouseout="isHovered = false"
         :id="`activity_${uid}`"
         :style="{ 'border-left-color': color }"
-        :class="{
-          selected: isSelected,
-          highlighted: isHovered || isSelected
-        }"
+        :class="{ selected: isSelected, highlighted: hover }"
         class="activity">
         <v-btn
           v-if="hasSubtypes"
@@ -20,8 +15,7 @@
           <v-icon size="30" color="primary darken-3">mdi-{{ icon }}</v-icon>
         </v-btn>
         <div class="activity-name h5 my-auto text-truncate">{{ data.name }}</div>
-        <v-spacer />
-        <div v-show="isHighlighted" class="actions my-auto">
+        <div v-if="isSelected || hover" class="actions my-auto">
           <options-toolbar
             :activity="{ id, uid, repositoryId, parentId, type, position, data }"
             class="options-toolbar my-auto" />
@@ -44,7 +38,7 @@
             class="options-menu" />
         </div>
       </div>
-    </div>
+    </v-hover>
     <div v-if="!isCollapsed({ uid }) && hasChildren">
       <draggable
         @update="data => reorder(data, children)"
@@ -90,7 +84,6 @@ export default {
     data: { type: Object, required: true },
     activities: { type: Array, default: () => ([]) }
   },
-  data: () => ({ isHovered: false }),
   computed: {
     ...mapGetters('repository', ['structure', 'isCollapsed']),
     ...mapState('repository', { outlineState: 'outline' }),
@@ -98,7 +91,6 @@ export default {
     color: vm => vm.config.color,
     isEditable: vm => isEditable(vm.type),
     isSelected: vm => vm.selectedActivity && (vm.selectedActivity.uid === vm.uid),
-    isHighlighted: vm => vm.isHovered || vm.isSelected,
     isExpanded: vm => !vm.isCollapsed({ uid: vm.uid }),
     hasSubtypes: vm => !!size(vm.config.subLevels),
     hasChildren: vm => (vm.children.length > 0) && vm.hasSubtypes,
@@ -148,7 +140,7 @@ $background-color:  #eceff1;
     line-height: 2.5rem;
   }
 
-  &.highlighted {
+  &.selected, &.highlighted {
     opacity: 1;
     background-color: darken($background-color, 7);
 
