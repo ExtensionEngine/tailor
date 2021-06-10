@@ -4,14 +4,12 @@ const { getActor } = require('../../fixtures/users');
 
 function login(user = getActor()) {
   cy.visit('/');
-  cy.getStore()
-    .then(store => cy.wrap(store.dispatch('login', user)));
+  cy.getStore().invoke('dispatch', 'login', user);
   cy.visit('/');
 }
 
 function logout() {
-  return cy.getStore()
-    .then(store => cy.wrap(store.dispatch('logout')));
+  return cy.getStore().invoke('dispatch', 'logout');
 }
 
 function loginWithUI(user = getActor()) {

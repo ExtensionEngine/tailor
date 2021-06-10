@@ -26,7 +26,7 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
-Cypress.Commands.add('getApp', () => cy.window().then(win => win.__app__));
+Cypress.Commands.add('getApp', () => cy.window().its('__app__'));
 Cypress.Commands.add('getStore', () => cy.getApp().then(app => app.$store));
 Cypress.Commands.add('getRoute', () => cy.getApp().then(app => app.$route));
 

@@ -21,8 +21,8 @@ describe('repository catalog', () => {
     searchRepository(REPOSITORY_NAME);
     interceptRepositoryFetch().then(({ body }) => {
       forEach(body.data, removeRepository);
-      auth.logout();
     });
+    auth.logout();
   });
 
   beforeEach(() => {
