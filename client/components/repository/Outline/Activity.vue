@@ -4,7 +4,7 @@
       <div
         @click="selectActivity(id)"
         :id="`activity_${uid}`"
-        :style="{ 'border-left-color': color }"
+        :style="{ 'border-left-color': config.color }"
         :class="{ selected: isSelected, highlighted: hover }"
         class="activity">
         <v-btn
@@ -57,11 +57,9 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
-import find from 'lodash/find';
-import { isEditable } from 'shared/activities';
 import OptionsMenu from '../common/ActivityOptions/Menu';
 import OptionsToolbar from '../common/ActivityOptions/Toolbar';
 import reorderMixin from './reorderMixin';
@@ -86,10 +84,7 @@ export default {
   },
   computed: {
     ...mapGetters('repository', ['structure', 'isCollapsed']),
-    ...mapState('repository', { outlineState: 'outline' }),
-    config: vm => find(vm.structure, { type: vm.type }),
-    color: vm => vm.config.color,
-    isEditable: vm => isEditable(vm.type),
+    config: vm => vm.structure.find(it => it.type === vm.type),
     isSelected: vm => vm.selectedActivity && (vm.selectedActivity.uid === vm.uid),
     isExpanded: vm => !vm.isCollapsed({ uid: vm.uid }),
     hasSubtypes: vm => !!size(vm.config.subLevels),
