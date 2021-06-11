@@ -1,16 +1,14 @@
-'use strict';
-
-const { addTag, removeTag } = require('./tag');
-const {
+import { addTag, removeTag } from './tag';
+import {
   createRepository,
   findRepositoryByName,
   interceptRepositoryFetch,
   removeRepository,
-  searchRepository,
-  selectors: repository
-} = require('./repository.js');
-const auth = require('../auth/utils');
-const forEach = require('lodash/forEach');
+  selectors as repository,
+  searchRepository
+} from './repository.js';
+import auth from '../auth/utils';
+import forEach from 'lodash/forEach';
 
 const TAG_NAME = '___Test tag___';
 const REPOSITORY_NAME = '___Test repository___';

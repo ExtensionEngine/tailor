@@ -1,5 +1,3 @@
-'use strict';
-
 const sel = {
   list: 'catalog__repositories',
   card: 'catalog__repositoryCard',
@@ -41,7 +39,7 @@ function interceptRepositoryFetch(alias = 'fetchRepositories') {
   return cy.interceptFetch('/api/repositories*', alias);
 }
 
-module.exports = {
+export default {
   selectors: sel,
   findRepositoryByName,
   createRepository,

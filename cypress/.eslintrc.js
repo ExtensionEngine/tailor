@@ -1,7 +1,9 @@
-'use strict';
-
 module.exports = {
+  root: true,
+  extends: ['@extensionengine', 'plugin:cypress/recommended'],
   plugins: ['eslint-plugin-cypress'],
-  extends: ['plugin:cypress/recommended'],
-  env: { 'cypress/globals': true }
+  env: { 'cypress/globals': true },
+  parserOptions: {
+    sourceType: 'module'
+  }
 };

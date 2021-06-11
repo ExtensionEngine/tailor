@@ -24,4 +24,4 @@ module.exports = (_on, config) => {
   const serverConfig = require('../../config/server');
   config.baseUrl = serverConfig.origin;
   return config;
-}
+};

@@ -1,5 +1,3 @@
-'use strict';
-
 const { login, loginWithUI } = require('./utils');
 
 const assertHomepageAccess = () => {

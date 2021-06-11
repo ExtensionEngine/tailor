@@ -1,5 +1,3 @@
-'use strict';
-
 const sel = {
   addTagBtn: 'catalog__addTagBtn',
   addTagDialog: 'catalog__addTagDialog',
@@ -24,7 +22,7 @@ function removeTag(repositorySelector, tagName) {
     .click();
 }
 
-module.exports = {
+export default {
   addTag,
   removeTag,
   selectors: sel

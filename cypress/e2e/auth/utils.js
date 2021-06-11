@@ -1,5 +1,3 @@
-'use strict';
-
 const { getActor } = require('../../fixtures/users');
 
 function login(user = getActor()) {
@@ -21,7 +19,7 @@ function loginWithUI(user = getActor()) {
     .click();
 }
 
-module.exports = {
+export default {
   login,
   loginWithUI,
   logout
