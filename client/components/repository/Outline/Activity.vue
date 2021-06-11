@@ -9,7 +9,7 @@
         class="activity">
         <v-btn
           v-if="hasSubtypes"
-          @click.stop="toggle()"
+          @mousedown.stop="toggle()"
           icon
           class="my-auto">
           <v-icon size="30" color="primary darken-3">mdi-{{ icon }}</v-icon>
