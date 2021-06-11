@@ -14,19 +14,19 @@ class OidcClient {
   get silentUrl() {
     const url = new URL(this.baseUrl, window.location.href);
     url.searchParams.set('silent', true);
-    return url;
+    return url.href;
   }
 
   get resignUrl() {
     const url = new URL(this.baseUrl, window.location.href);
     url.searchParams.set('resign', true);
-    return url;
+    return url.href;
   }
 
   get logoutUrl() {
     const url = new URL(this.baseUrl, window.location.href);
     url.searchParams.set('action', 'logout');
-    return url;
+    return url.href;
   }
 
   authenticate() {
