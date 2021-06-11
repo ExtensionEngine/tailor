@@ -110,6 +110,12 @@ export default {
 $row-background: var(--v-primary-lighten4);
 
 .overview ::v-deep {
+  thead.v-data-table-header {
+    tr th {
+      background: transparent;
+    }
+  }
+
   .column-name {
     max-width: 17.75rem;
   }
