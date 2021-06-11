@@ -2,7 +2,7 @@
   <div>
     <v-hover v-slot="{ hover }" class="activity-wrapper">
       <div
-        @click="selectActivity(id)"
+        @mousedown="selectActivity(id)"
         :id="`activity_${uid}`"
         :style="{ 'border-left-color': config.color }"
         :class="{ selected: isSelected, highlighted: hover }"
