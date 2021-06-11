@@ -87,7 +87,7 @@ export default {
   justify-content: center;
   position: relative;
   min-height: 4.5rem;
-  z-index: 6;
+  z-index: 999;
 
   ::v-deep {
     .element-placeholder {
