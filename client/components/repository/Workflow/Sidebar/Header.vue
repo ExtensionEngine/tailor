@@ -9,6 +9,11 @@
         :type-label="activityConfig.label"
         :color="activityConfig.color" />
     </div>
+    <publishing
+      v-if="isAdmin || isRepositoryAdmin"
+      :activity="{ publishedAt, type }"
+      :outline-activities="outlineActivities"
+      hide-publish />
     <div class="mt-8">
       <v-tooltip open-delay="500" bottom>
         <template #activator="{ on }">
@@ -58,6 +63,7 @@ import { getLevel } from 'shared/activities';
 import isBefore from 'date-fns/isBefore';
 import LabelChip from '@/components/repository/common/LabelChip';
 import { mapGetters } from 'vuex';
+import Publishing from '@/components/repository/common/Sidebar/Publishing';
 
 export default {
   props: {
@@ -67,10 +73,12 @@ export default {
     name: { type: String, required: true },
     type: { type: String, required: true },
     createdAt: { type: String, required: true },
-    updatedAt: { type: String, default: null }
+    updatedAt: { type: String, default: null },
+    publishedAt: { type: String, default: null }
   },
   computed: {
-    ...mapGetters('repository', ['structure']),
+    ...mapGetters(['isAdmin']),
+    ...mapGetters('repository', ['structure', 'outlineActivities', 'isRepositoryAdmin']),
     activityConfig: vm => getLevel(vm.type),
     isUpdated() {
       if (!this.updatedAt) return false;
@@ -86,6 +94,6 @@ export default {
       return fecha.parse(fecha.format(date, format), format);
     }
   },
-  components: { ActivityCard, LabelChip }
+  components: { ActivityCard, LabelChip, Publishing }
 };
 </script>

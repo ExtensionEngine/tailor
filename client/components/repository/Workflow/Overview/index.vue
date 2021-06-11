@@ -22,6 +22,10 @@
     <template #item.dueDate="{ value }">
       <overview-due-date v-if="value" :value="value" />
     </template>
+    <template v-if="isAdmin || isRepositoryAdmin" #item.publishedAt="{ item }">
+      <publishing-badge :activity="item" />
+      <span>{{ item.publishedAt ? 'Published' : 'Not published' }}</span>
+    </template>
   </v-data-table>
 </template>
 
@@ -33,6 +37,7 @@ import OverviewDueDate from './DueDate';
 import OverviewName from './Name';
 import OverviewPriority from './Priority';
 import OverviewStatus from './Status';
+import PublishingBadge from '@/components/repository/common/Sidebar/Badge';
 import selectActivity from '@/components/repository/common/selectActivity';
 
 export default {
@@ -42,7 +47,8 @@ export default {
     activities: { type: Array, default: () => [] }
   },
   computed: {
-    ...mapGetters('repository', ['workflow']),
+    ...mapGetters(['isAdmin']),
+    ...mapGetters('repository', ['isRepositoryAdmin', 'workflow']),
     headers() {
       return [{
         text: 'Name',
@@ -62,13 +68,18 @@ export default {
       }, {
         text: 'Due date',
         value: 'dueDate'
+      }, {
+        text: 'Publish state',
+        value: 'publishedAt'
       }];
     },
     items() {
-      return this.activities.map(({ id, data, status }) => ({
+      return this.activities.map(({ id, data, publishedAt, status, type }) => ({
         ...status,
         id,
         name: data.name,
+        publishedAt,
+        type,
         status: this.getStatusById(status.status),
         priority: getPriority(status.priority),
         class: this.isActivitySelected(id) && 'selected'
@@ -97,6 +108,7 @@ export default {
     }
   },
   components: {
+    PublishingBadge,
     OverviewAssignee,
     OverviewDueDate,
     OverviewName,
