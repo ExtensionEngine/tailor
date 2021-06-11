@@ -16,7 +16,6 @@ import {
 } from 'vee-validate';
 import FileFilter from '@/directives/file-filter';
 import OidcClient from './OidcClient';
-import Promise from 'bluebird';
 import Radio from '@extensionengine/vue-radio';
 import { sync } from 'vuex-router-sync';
 import Timeago from 'vue-timeago';
