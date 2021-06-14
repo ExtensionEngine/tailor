@@ -20,11 +20,15 @@ describe('repository catalog', () => {
     interceptRepositoryFetch().then(({ body }) => {
       forEach(body.data, removeRepository);
     });
-    auth.logout();
+    cy.preserveSession();
   });
 
   beforeEach(() => {
-    auth.login();
+    cy.visit('/');
+  });
+
+  after(() => {
+    cy.resetCookieDefaults();
   });
 
   it('should create a repository', () => {
