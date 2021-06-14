@@ -28,6 +28,18 @@ Cypress.Commands.add('getApp', () => cy.window().its('__app__'));
 Cypress.Commands.add('getStore', () => cy.getApp().then(app => app.$store));
 Cypress.Commands.add('getRoute', () => cy.getApp().then(app => app.$route));
 
+// Manage cookies
+Cypress.Commands.add('preserveSession', () => {
+  Cypress.Cookies.defaults({
+    preserve: ['auth', 'access_token', 'connect.sid']
+  });
+});
+Cypress.Commands.add('resetCookieDefaults', () => {
+  Cypress.Cookies.defaults({
+    preserve: () => false
+  });
+});
+
 Cypress.Commands.add('interceptFetch', (route, alias) => {
   cy.intercept(route, req => {
     delete req.headers['if-none-match'];
