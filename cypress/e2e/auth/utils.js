@@ -1,5 +1,3 @@
-const { getActor } = require('../../fixtures/users');
-
 function login(user = getActor()) {
   cy.visit('/');
   cy.getStore().invoke('dispatch', 'login', user);
@@ -18,6 +16,11 @@ function loginWithUI(user = getActor()) {
   cy.findByText(/log in/i)
     .click();
 }
+
+const getActor = () => ({
+  email: Cypress.env('USERNAME') || 'admin@example.com',
+  password: Cypress.env('PASSWORD') || 'admin123.'
+});
 
 export default {
   login,
