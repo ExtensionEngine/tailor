@@ -18,7 +18,7 @@ const { user: { ADMIN, USER, INTEGRATION } } = roles;
 const gravatarConfig = { size: 130, default: 'identicon' };
 
 class User extends Model {
-  static fields({ DATE, ENUM, STRING, TEXT, UUID, UUIDV4, VIRTUAL }) {
+  static fields({ DATE, ENUM, JSONB, STRING, TEXT, UUID, UUIDV4, VIRTUAL }) {
     return {
       uid: {
         type: UUID,
@@ -73,12 +73,16 @@ class User extends Model {
           return imgUrl || gravatar.url(this.email, gravatarConfig, true /* https */);
         }
       },
+      notifications: {
+        type: JSONB,
+        defaultValue: { assignment: true, comment: true }
+      },
       profile: {
         type: VIRTUAL,
         get() {
           return pick(this, [
             'id', 'email', 'role', 'firstName', 'lastName', 'fullName', 'label',
-            'imgUrl', 'createdAt', 'updatedAt', 'deletedAt'
+            'imgUrl', 'notifications', 'createdAt', 'updatedAt', 'deletedAt'
           ]);
         }
       },
