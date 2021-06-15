@@ -1,7 +1,6 @@
 'use strict';
 
 const mail = require('../shared/mail');
-const map = require('lodash/map');
 const pick = require('lodash/pick');
 const { schema } = require('@tailor-cms/config');
 const sse = require('../shared/sse');
@@ -80,7 +79,10 @@ exports.add = (Comment, Hooks, db) => {
       action: isCreate ? 'left' : 'updated',
       ...pick(comment, ['id', 'content', 'createdAt'])
     };
-    const collaborators = map(repository.repositoryUsers, 'user.email');
+    const collaborators = repository.repositoryUsers.reduce((acc, { user }) => {
+      if (user.notifications.comment) acc.push(user.email);
+      return acc;
+    }, []);
     const recipients = without(collaborators, author.email);
     if (recipients.length) mail.sendCommentNotification(recipients, data);
   }
