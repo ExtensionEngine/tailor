@@ -48,8 +48,8 @@ function getProfile({ user, authData }, res) {
 }
 
 function updateProfile({ user, body }, res) {
-  const { email, firstName, lastName, imgUrl } = body;
-  return user.update({ email, firstName, lastName, imgUrl })
+  const { email, firstName, lastName, imgUrl, notifications } = body;
+  return user.update({ email, firstName, lastName, imgUrl, notifications })
     .then(({ profile }) => res.json({ user: profile }))
     .catch(() => validationError(CONFLICT));
 }

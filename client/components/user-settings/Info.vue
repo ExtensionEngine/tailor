@@ -41,6 +41,21 @@
         outlined
         class="required" />
     </validation-provider>
+    <validation-provider>
+      <v-checkbox
+        v-model="userData.notifications.assignment"
+        label="Assignment notifications"
+        color="primary darken-3"
+        class="ma-0"
+        hide-details />
+    </validation-provider>
+    <validation-provider>
+      <v-checkbox
+        v-model="userData.notifications.comment"
+        label="Comment notifications"
+        color="primary darken-3"
+        hide-details />
+    </validation-provider>
     <div class="d-flex justify-end">
       <v-btn @click="resetForm" :disabled="!hasChanges" text>
         Cancel
@@ -58,14 +73,17 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
+import cloneDeep from 'lodash/cloneDeep';
+import isEqual from 'lodash/isEqual';
 import pick from 'lodash/pick';
 
-const ATTRIBUTES = ['firstName', 'lastName', 'email'];
+const ATTRIBUTES = ['firstName', 'lastName', 'email', 'notifications'];
 
 const resetUser = () => ({
   firstName: null,
   lastName: null,
-  email: null
+  email: null,
+  notifications: {}
 });
 
 export default {
@@ -73,7 +91,7 @@ export default {
   data: () => ({ userData: resetUser() }),
   computed: {
     ...mapState({ user: state => state.auth.user }),
-    hasChanges: vm => ATTRIBUTES.some(key => vm.userData[key] !== vm.user[key])
+    hasChanges: vm => !isEqual(vm.userData, pick(vm.user, ATTRIBUTES))
   },
   methods: {
     ...mapActions(['updateInfo']),
@@ -86,7 +104,7 @@ export default {
         .catch(() => this.$snackbar.error('Something went wrong!'));
     },
     resetForm() {
-      Object.assign(this.userData, pick(this.user, ATTRIBUTES));
+      Object.assign(this.userData, cloneDeep(pick(this.user, ATTRIBUTES)));
       this.$refs.form.reset();
     }
   },
@@ -95,3 +113,11 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.v-input ::v-deep {
+  label {
+    margin-bottom: 0;
+  }
+}
+</style>
