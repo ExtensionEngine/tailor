@@ -18,6 +18,7 @@
 module.exports = (_on, config) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
+  require('dotenv').config();
   const serverConfig = require('../../config/server');
   const { env } = process;
   config.baseUrl = serverConfig.origin;
