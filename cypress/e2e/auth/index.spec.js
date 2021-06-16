@@ -1,7 +1,8 @@
 const { login, loginWithUI, logout } = require('./utils');
 
 const assertHomepageAccess = () => {
-  cy.location().should(loc => expect(loc.hash).to.eq('#/'));
+  cy.location()
+    .should(location => expect(location.hash).to.eq('#/'));
 };
 
 describe('auth', () => {
@@ -15,6 +16,7 @@ describe('auth', () => {
 
   it('should login an existing user by dispatching an action', () => {
     login();
+    cy.visit('/');
     assertHomepageAccess();
   });
 });

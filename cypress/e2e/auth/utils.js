@@ -1,7 +1,5 @@
 function login(user = getActor()) {
-  cy.visit('/');
-  cy.getStore().invoke('dispatch', 'login', user);
-  cy.visit('/');
+  return cy.getStore().invoke('dispatch', 'login', user);
 }
 
 function loginWithUI(user = getActor()) {

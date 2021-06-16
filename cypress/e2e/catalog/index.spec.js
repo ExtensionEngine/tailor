@@ -17,20 +17,20 @@ describe('repository catalog', () => {
   before(() => {
     cy.visit('/');
     auth.login();
+    cy.visit('/');
     searchRepository(REPOSITORY_NAME);
     interceptRepositoryFetch().then(({ body }) => {
       forEach(body.data, removeRepository);
     });
     cy.preserveSession();
+  });
+
+  beforeEach(() => {
     cy.visit('/');
   });
 
   after(() => {
     cy.resetCookieDefaults();
-  });
-
-  afterEach(() => {
-    cy.visit('/');
   });
 
   it('should create a repository', () => {
