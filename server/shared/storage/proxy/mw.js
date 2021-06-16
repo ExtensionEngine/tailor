@@ -7,6 +7,13 @@ const path = require('path');
 const router = require('express').Router();
 const psl = require('psl');
 
+const IPV4_REGEX = /^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])(\.(?!$)|$)){4}$/;
+
+function getDomain() {
+  if (IPV4_REGEX.test(config.hostname)) return null;
+  return psl.parse(config.hostname).domain;
+}
+
 module.exports = (storage, proxy) => {
   function getFile(req, res, next) {
     const key = req.params[0];
@@ -24,7 +31,7 @@ module.exports = (storage, proxy) => {
     if (proxy.hasCookies(req.cookies, repositoryId)) return next();
     const maxAge = 1000 * 60 * 60; // 1 hour in ms
     const cookies = proxy.getSignedCookies(repositoryId, maxAge);
-    const { domain } = psl.parse(config.hostname);
+    const domain = getDomain();
     const cookieOptions = { domain, maxAge, httpOnly: true };
     Object.entries(cookies).forEach(([cookie, value]) => {
       res.cookie(cookie, value, cookieOptions);
