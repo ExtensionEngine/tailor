@@ -10,6 +10,10 @@
     "ie 11"
   ],
   "scripts": {
+    "postinstall": "if [ $BUILD_ASSETS ]; then npm run build; fi",
+    "postshrinkwrap": "rewrite-lockfile package-lock.json",
+    "prestart": "npm run build",
+    "start": "node -r ./server/script/preflight ./server",
     "dev:client": "poi --serve",
     "build": "del-cli node_modules/.cache/vue-loader && poi --prod",
     "packages:bootstrap": "lerna bootstrap",
@@ -21,12 +25,13 @@
     "webpack:inspect-config": "poi --inspect-webpack",
     "webpack:bundle-report": "poi --prod --bundle-report",
     "webpack:stats": "poi --prod --print-stats",
+    "dev:server": "nodemon -r ./server/script/preflight ./server | bunyan-pretty",
+    "debug:server": "nodemon --inspect -r ./server/script/preflight ./server",
+    "cy:open": "npx cypress open",
+    "cy:run": "npx cypress run",
     "lint:js": "eslint --ext .js,.vue .",
     "lint:scss": "stylelint \"client/**/*.vue\" \"client/**/*.scss\"",
     "lint": "npm run lint:js && npm run lint:scss",
-    "dev:server": "nodemon -r ./server/script/preflight ./server | bunyan-pretty",
-    "debug:server": "nodemon --inspect -r ./server/script/preflight ./server",
-    "postinstall": "if [ $BUILD_ASSETS ]; then npm run build; fi",
     "db": "node -r ./server/script/preflight ./server/script/sequelize",
     "db:reset": "npm run db drop && npm run db create && npm run db migrate",
     "db:seed": "npm run db seed:all",
@@ -37,9 +42,7 @@
     "detachDeletedRepos": "node -r ./server/script/preflight ./server/script/detachDeletedRepos.js",
     "migrateAssessmentPools": "node -r ./server/script/preflight ./server/script/migrateAssessmentPools.js",
     "migrateAssetsLocation": "node -r ./server/script/preflight ./server/script/migrateAssetsLocation.js",
-    "fixRevisionUrls": "node -r ./server/script/preflight ./server/script/fixRevisionUrls.js",
-    "start": "node -r ./server/script/preflight ./server",
-    "postshrinkwrap": "rewrite-lockfile package-lock.json"
+    "fixRevisionUrls": "node -r ./server/script/preflight ./server/script/fixRevisionUrls.js"
   },
   "dependencies": {
     "@extensionengine/tapster": "github:ExtensionEngine/tapster#53ccb222c757948d322c33087620453ddf5e70ed",
