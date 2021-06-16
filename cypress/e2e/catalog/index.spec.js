@@ -21,14 +21,15 @@ describe('repository catalog', () => {
       forEach(body.data, removeRepository);
     });
     cy.preserveSession();
-  });
-
-  beforeEach(() => {
     cy.visit('/');
   });
 
   after(() => {
     cy.resetCookieDefaults();
+  });
+
+  afterEach(() => {
+    cy.visit('/');
   });
 
   it('should create a repository', () => {
@@ -37,12 +38,16 @@ describe('repository catalog', () => {
 
   it('should access repository', () => {
     findRepositoryByName(REPOSITORY_NAME).click();
+    cy.getRoute()
+      .then(route => expect(route.name).to.equal('repository'));
   });
 
   it('should access repository settings', () => {
     findRepositoryByName(REPOSITORY_NAME)
       .findByTestId(repository.settings)
       .click();
+    cy.getRoute()
+      .then(route => expect(route.name).to.equal('repository-info'));
   });
 
   it('should add a tag to the repository', () => {
