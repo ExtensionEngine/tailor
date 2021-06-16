@@ -9,5 +9,9 @@ View the {{label}} status by visiting the link:
 
 Or copy and paste this URL into your browser.
 
+You can unsubscribe from assignment notifications in the profile page by visiting the link:
+
+{{unsubscribeLink}}
+
 
 -------------------------------------------------
