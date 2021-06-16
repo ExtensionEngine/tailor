@@ -15,6 +15,7 @@ const REPOSITORY_NAME = '___Test repository___';
 
 describe('repository catalog', () => {
   before(() => {
+    cy.visit('/');
     auth.login();
     searchRepository(REPOSITORY_NAME);
     interceptRepositoryFetch().then(({ body }) => {

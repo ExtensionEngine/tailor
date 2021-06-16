@@ -4,10 +4,6 @@ function login(user = getActor()) {
   cy.visit('/');
 }
 
-function logout() {
-  return cy.getStore().invoke('dispatch', 'logout');
-}
-
 function loginWithUI(user = getActor()) {
   cy.findByLabelText(/email/i)
     .type(user.email);
@@ -15,6 +11,10 @@ function loginWithUI(user = getActor()) {
     .type(user.password);
   cy.findByText(/log in/i)
     .click();
+}
+
+function logout() {
+  return cy.getStore().invoke('dispatch', 'logout');
 }
 
 const getActor = () => ({

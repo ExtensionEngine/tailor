@@ -1,14 +1,14 @@
-const { login, loginWithUI } = require('./utils');
+const { login, loginWithUI, logout } = require('./utils');
 
 const assertHomepageAccess = () => {
-  cy.visit('/');
-  cy.getRoute()
-    .then(route => expect(route.name).to.equal('catalog'));
+  cy.location().should(loc => expect(loc.hash).to.eq('#/'));
 };
 
 describe('auth', () => {
+  beforeEach(() => cy.visit('/'));
+  afterEach(() => logout());
+
   it('should login an existing user using login view', () => {
-    cy.visit('/');
     loginWithUI();
     assertHomepageAccess();
   });
