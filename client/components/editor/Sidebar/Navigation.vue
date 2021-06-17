@@ -20,7 +20,7 @@
       :search="search"
       open-all
       class="pt-4">
-      <template v-slot:label="{ item: { id, name, selectable } }">
+      <template v-slot:label="{ item: { id, repositoryId, name, selectable } }">
         <div
           @click.stop="navigateTo(id)"
           :class="{ selectable, selected: isSelected(id) }"
@@ -28,12 +28,33 @@
           <span class="primary--text text--darken-4 text-truncate">
             {{ name }}
           </span>
-          <v-icon
-            v-if="selectable"
-            color="primary darken-4"
-            class="ml-2 mr-3 open-icon">
-            mdi-page-next-outline
-          </v-icon>
+          <div>
+            <v-icon
+              v-if="selectable"
+              color="primary darken-4"
+              class="ml-2 mr-3 open-icon">
+              mdi-page-next-outline
+            </v-icon>
+            <v-tooltip open-delay="800" bottom>
+              <template v-slot:activator="{ attrs, on }">
+                <v-btn
+                  v-clipboard:copy="getActivityLink(id, repositoryId)"
+                  v-clipboard:success="() => {
+                    $snackbar.show('Link copied to the clipboard', { immediate: true })
+                  }"
+                  v-clipboard:error="() => $snackbar.show('Not able to copy the link')"
+                  v-on="on"
+                  @click.stop=""
+                  v-bind="attrs"
+                  color="primary darken-4"
+                  text
+                  class="px-0 copy-btn">
+                  <v-icon>mdi-link</v-icon>
+                </v-btn>
+              </template>
+              <span>Copy link to clipboard</span>
+            </v-tooltip>
+          </div>
         </div>
       </template>
     </v-treeview>
@@ -92,6 +113,9 @@ export default {
     },
     isSelected(activityId) {
       return this.selected.id === activityId;
+    },
+    getActivityLink(id, repositoryId) {
+      return `${window.location.origin}/#/repository/${repositoryId}/editor/${id}`;
     }
   },
   watch: {
@@ -145,6 +169,7 @@ export default {
 .tree-node {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   min-height: 3rem;
 
   &::before {
@@ -165,8 +190,6 @@ export default {
   }
 
   &.selectable {
-    justify-content: space-between;
-
     .open-icon {
       transition: opacity 0.15s ease 0.1s;
       opacity: 0;
@@ -183,6 +206,15 @@ export default {
         opacity: 1;
       }
     }
+  }
+
+  .copy-btn {
+    transition: opacity 0.15s ease 0.1s;
+    opacity: 0;
+  }
+
+  &:hover .copy-btn {
+    opacity: 1;
   }
 }
 </style>
