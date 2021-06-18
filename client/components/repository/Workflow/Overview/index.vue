@@ -112,7 +112,7 @@ $row-background: var(--v-primary-lighten4);
 .overview ::v-deep {
   thead.v-data-table-header {
     tr th {
-      background: transparent;
+      background: #eceff1;
     }
   }
 
