@@ -7,8 +7,11 @@
     item-class="class"
     disable-pagination hide-default-footer fixed-header
     class="overview primary lighten-5">
-    <template #item.name="item">
-      <overview-name v-bind="item" />
+    <template #item.name="{ item, value }">
+      <div class="d-flex">
+        <overview-name :value="value" />
+        <publishing-badge v-if="isAdmin || isRepositoryAdmin" :activity="item" />
+      </div>
     </template>
     <template #item.status="{ value }">
       <overview-status v-bind="value" />
@@ -21,10 +24,6 @@
     </template>
     <template #item.dueDate="{ value }">
       <overview-due-date v-if="value" :value="value" />
-    </template>
-    <template v-if="isAdmin || isRepositoryAdmin" #item.publishedAt="{ item }">
-      <publishing-badge :activity="item" />
-      <span>{{ item.publishedAt ? 'Published' : 'Not published' }}</span>
     </template>
   </v-data-table>
 </template>
@@ -68,16 +67,14 @@ export default {
       }, {
         text: 'Due date',
         value: 'dueDate'
-      }, {
-        text: 'Publish state',
-        value: 'publishedAt'
       }];
     },
     items() {
-      return this.activities.map(({ id, data, publishedAt, status, type }) => ({
+      return this.activities.map(({ id, data, modifiedAt, publishedAt, status, type }) => ({
         ...status,
         id,
         name: data.name,
+        modifiedAt,
         publishedAt,
         type,
         status: this.getStatusById(status.status),
