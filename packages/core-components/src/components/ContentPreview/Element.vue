@@ -1,5 +1,5 @@
 <template>
-  <div :class="elementWidth" class="element-preview-container float-none">
+  <v-col :cols="cols" class="element-preview-container float-none">
     <v-checkbox
       v-if="selectable"
       @click="toggleSelection"
@@ -30,7 +30,7 @@
         </v-tooltip>
       </div>
     </v-hover>
-  </div>
+  </v-col>
 </template>
 
 <script>
@@ -47,7 +47,7 @@ export default {
   },
   computed: {
     disabled: vm => vm.selectionDisabled && !vm.isSelected,
-    elementWidth: vm => `col-xs-${get(vm.element, 'data.width', 12)}`
+    cols: vm => get(vm.element, 'data.width', 12)
   },
   methods: {
     toggleSelection() {
