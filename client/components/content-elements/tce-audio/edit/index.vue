@@ -87,9 +87,16 @@ export default {
   justify-content: center;
   position: relative;
   min-height: 4.5rem;
+  z-index: 999;
 
-  ::v-deep .element-placeholder {
-    padding: 0.5rem !important;
+  ::v-deep {
+    .element-placeholder {
+      padding: 0.5rem !important;
+    }
+
+    .plyr__menu__container {
+      background: #fff;
+    }
   }
 
   .audio-container {
