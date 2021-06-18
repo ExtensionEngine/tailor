@@ -48,7 +48,6 @@ export default {
       return { element, isDisabled, isDragged, isHovered, dense, ...attrs };
     },
     cols() {
-      console.log('ahaha');
       const { element, setWidth } = this;
       return setWidth ? get(element, 'data.width', 12) : '';
     }
