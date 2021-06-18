@@ -7,7 +7,7 @@
       expanded,
       diff: $editorState.isPublishDiff
     }]"
-    class="assessment-item elevation-1">
+    class="assessment-item elevation-2">
     <span v-if="draggable" class="drag-handle">
       <v-icon>mdi-drag-vertical</v-icon>
     </span>
