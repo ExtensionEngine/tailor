@@ -15,6 +15,10 @@ function getDomain() {
 }
 
 module.exports = (storage, proxy) => {
+  if (IPV4_REGEX.test(config.hostname) && config.storage.proxy.provider === 'cloudfront') {
+    throw new Error('CloudFront storage proxy cannot be used alongside IPv4 host name');
+  }
+
   function getFile(req, res, next) {
     const key = req.params[0];
     const hasValidCookies = proxy.verifyCookies(req.cookies, key);
