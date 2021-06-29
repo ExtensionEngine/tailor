@@ -1,29 +1,35 @@
 <template>
   <v-data-table
-    @click:row="selectActivity($event.id)"
     :headers="headers"
     :items="items"
     height="100%"
-    item-class="class"
     disable-pagination hide-default-footer fixed-header
     class="overview primary lighten-5">
-    <template #item.name="{ item, value }">
-      <div class="d-flex">
-        <overview-name :value="value" />
-        <publishing-badge v-if="isAdmin || isRepositoryAdmin" :activity="item" />
-      </div>
-    </template>
-    <template #item.status="{ value }">
-      <overview-status v-bind="value" />
-    </template>
-    <template #item.assignee="{ value }">
-      <overview-assignee v-bind="value" />
-    </template>
-    <template #item.priority="{ value }">
-      <overview-priority v-bind="value" />
-    </template>
-    <template #item.dueDate="{ value }">
-      <overview-due-date v-if="value" :value="value" />
+    <template v-slot:body="props">
+      <v-virtual-scroll :items="props.items" item-height="46">
+        <template v-slot:default="{ item }">
+          <v-row
+            @click="selectActivity(item.id)"
+            :class="{ selected: isActivitySelected(item.id) }">
+            <v-col class="name d-flex text-left">
+              <overview-name :value="item.name" />
+              <publishing-badge v-if="isAdmin || isRepositoryAdmin" :activity="item" />
+            </v-col>
+            <div class="status d-flex align-center text-left">
+              <overview-status v-bind="item.status" />
+            </div>
+            <div class="assignee d-flex align-center text-left">
+              <overview-assignee v-bind="item.assignee" />
+            </div>
+            <div class="priority d-flex align-center text-left">
+              <overview-priority v-bind="item.priority" />
+            </div>
+            <div class="date d-flex align-center text-left">
+              <overview-due-date v-if="item.dueDate" :value="item.dueDate" />
+            </div>
+          </v-row>
+        </template>
+      </v-virtual-scroll>
     </template>
   </v-data-table>
 </template>
@@ -78,12 +84,14 @@ export default {
         publishedAt,
         type,
         status: this.getStatusById(status.status),
-        priority: getPriority(status.priority),
-        class: this.isActivitySelected(id) && 'selected'
+        priority: getPriority(status.priority)
       }));
     }
   },
   methods: {
+    selectItem(id) {
+      this.selectedItemId = id;
+    },
     isActivitySelected(id) {
       return this.selectedActivity && this.selectedActivity.id === id;
     },
@@ -116,33 +124,74 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$row-background: var(--v-primary-lighten4);
+$row-background: var(--v-primary-lighten5);
+$row-hover-background: var(--v-primary-lighten4);
+$status-max-width: 180px;
+$assignee-max-width: 340px;
+$priority-max-width: 180px;
+$date-max-width: 160px;
 
 .overview ::v-deep {
-  thead.v-data-table-header {
-    tr th {
-      background: #eceff1;
+  table {
+    table-layout: fixed;
+
+    th:nth-of-type(1), .name {
+      max-width: calc(100% - #{$status-max-width} - #{$assignee-max-width} - #{$priority-max-width} - #{$date-max-width});
+    }
+
+    .name .v-badge {
+      padding-left: 8px;
+    }
+
+    th:nth-of-type(2), .status {
+      width: $status-max-width;
+    }
+
+    th:nth-of-type(3), .assignee {
+      width: $assignee-max-width;
+    }
+
+    th:nth-of-type(4), .priority {
+      width: $priority-max-width;
+    }
+
+    th:nth-of-type(5), .date {
+      width: $date-max-width;
     }
   }
 
-  .column-name {
-    max-width: 17.75rem;
+  thead.v-data-table-header {
+    tr th {
+      background: $row-background;
+    }
+
+    tr:hover {
+      th {
+        background: $row-hover-background !important;
+      }
+    }
   }
 
-  .column-assignee {
-    max-width: 11.5rem;
-  }
+  .row {
+    margin: 0;
+    background-color: $row-background;
+    border-bottom: thin solid rgba(0, 0, 0, 0.12);
 
-  tr:hover {
-    background: $row-background !important;
+    &:hover {
+      background-color: $row-hover-background;
+    }
+
+    &.selected {
+      background: $row-hover-background;
+    }
 
     &:not(.selected) {
       cursor: pointer;
     }
   }
 
-  .selected {
-    background: $row-background;
+  .v-virtual-scroll {
+    display: table-row-group;
   }
 }
 </style>
