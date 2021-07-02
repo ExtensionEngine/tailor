@@ -36,6 +36,7 @@
 import { mapActions, mapGetters } from 'vuex';
 import debounce from 'lodash/debounce';
 import loader from '@/components/common/loader';
+import { mapRequests } from '@/plugins/radio';
 
 const HEADERS = ['User', 'Email', 'Full Name', 'Role', ''];
 
@@ -44,7 +45,10 @@ export default {
     roles: { type: Array, required: true }
   },
   data() {
-    return { isLoading: true };
+    return {
+      isLoading: true,
+      confirmation: null
+    };
   },
   computed: {
     ...mapGetters('repository', ['users']),
@@ -54,13 +58,19 @@ export default {
   },
   methods: {
     ...mapActions('repository', ['getUsers', 'upsertUser', 'removeUser']),
+    ...mapRequests('app', ['showConfirmationModal']),
     changeRole(email, role) {
       const { repositoryId } = this.$route.params;
       debounce(this.upsertUser, 500)({ repositoryId, email, role });
     },
     remove(user) {
       const { repositoryId } = this.$route.params;
-      this.removeUser({ userId: user.id, repositoryId });
+      this.confirmation = {
+        title: 'Remove user',
+        message: `Are you sure you want to remove user "${user.email}" from this repository?`,
+        action: () => this.removeUser({ userId: user.id, repositoryId })
+      };
+      this.showConfirmationModal(this.confirmation);
     }
   },
   created: loader(function () {
