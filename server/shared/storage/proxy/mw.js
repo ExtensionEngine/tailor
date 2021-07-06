@@ -2,23 +2,18 @@
 
 const config = require('../../../../config/server');
 const { FORBIDDEN } = require('http-status-codes');
+const isIp = require('is-ip');
 const miss = require('mississippi');
 const path = require('path');
 const router = require('express').Router();
 const psl = require('psl');
 
-const IPV4_REGEX = /^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])(\.(?!$)|$)){4}$/;
-
 function getDomain() {
-  if (IPV4_REGEX.test(config.hostname)) return null;
+  if (isIp.v4(config.hostname)) return null;
   return psl.parse(config.hostname).domain;
 }
 
 module.exports = (storage, proxy) => {
-  if (IPV4_REGEX.test(config.hostname) && config.storage.proxy.provider === 'cloudfront') {
-    throw new Error('CloudFront storage proxy cannot be used alongside IPv4 host name');
-  }
-
   function getFile(req, res, next) {
     const key = req.params[0];
     const hasValidCookies = proxy.verifyCookies(req.cookies, key);
