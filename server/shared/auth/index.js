@@ -51,7 +51,7 @@ auth.deserializeUser((user, done) => done(null, user));
 module.exports = auth;
 
 function verifyJWT(payload, done) {
-  return User.findByPk(payload.id)
+  return User.unscoped().findByPk(payload.id)
     .then(user => done(null, user || false))
     .error(err => done(err, false));
 }
@@ -72,7 +72,7 @@ function extractJwtFromCookie(req) {
 
 function secretOrKeyProvider(_, rawToken, done) {
   const { id } = jwt.decode(rawToken) || {};
-  return User.findByPk(id, { rejectOnEmpty: true })
+  return User.unscoped().findByPk(id, { rejectOnEmpty: true })
     .then(user => user.getTokenSecret())
     .then(secret => done(null, secret))
     .catch(err => done(err));
@@ -84,9 +84,9 @@ function apiUrl(pathname) {
 
 function findOrCreateOIDCUser({ email, firstName, lastName }) {
   if (!config.oidc.enableSignup) {
-    return User.findOne({ where: { email }, rejectOnEmpty: true });
+    return User.unscoped().findOne({ where: { email }, rejectOnEmpty: true });
   }
   const defaults = { firstName, lastName, role: config.oidc.defaultRole };
-  return User.findOrCreate({ where: { email }, defaults })
+  return User.unscoped().findOrCreate({ where: { email }, defaults })
     .then(([user]) => user);
 }
