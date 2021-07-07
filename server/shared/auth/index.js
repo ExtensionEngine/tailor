@@ -17,7 +17,7 @@ const options = {
 };
 
 auth.use(new LocalStrategy(options, (email, password, done) => {
-  return User.findOne({ where: { email } })
+  return User.unscoped().findOne({ where: { email } })
     .then(user => user && user.authenticate(password))
     .then(user => done(null, user || false))
     .error(err => done(err, false));
