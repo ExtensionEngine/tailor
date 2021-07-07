@@ -45,10 +45,7 @@ export default {
     roles: { type: Array, required: true }
   },
   data() {
-    return {
-      isLoading: true,
-      confirmation: null
-    };
+    return { isLoading: true };
   },
   computed: {
     ...mapGetters('repository', ['users']),
@@ -65,12 +62,11 @@ export default {
     },
     remove(user) {
       const { repositoryId } = this.$route.params;
-      this.confirmation = {
+      this.showConfirmationModal({
         title: 'Remove user',
         message: `Are you sure you want to remove user "${user.email}" from this repository?`,
         action: () => this.removeUser({ userId: user.id, repositoryId })
-      };
-      this.showConfirmationModal(this.confirmation);
+      });
     }
   },
   created: loader(function () {
