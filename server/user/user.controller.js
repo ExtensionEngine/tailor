@@ -31,7 +31,7 @@ function remove({ params: { id } }, res) {
 
 function forgotPassword({ body }, res) {
   const { email } = body;
-  return User.findOne({ where: { email } })
+  return User.unscoped().findOne({ where: { email } })
     .then(user => user || createError(NOT_FOUND, 'User not found'))
     .then(user => user.sendResetToken())
     .then(() => res.end());
