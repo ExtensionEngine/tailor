@@ -29,7 +29,7 @@
       </validation-provider>
       <div>
         <v-btn
-          :disabled="showMessage"
+          v-if="!showMessage"
           type="submit"
           color="primary darken-4"
           block depressed rounded dark>
