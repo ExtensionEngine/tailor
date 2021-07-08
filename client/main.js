@@ -16,8 +16,8 @@ import {
 } from 'vee-validate';
 import FileFilter from '@/directives/file-filter';
 import OidcClient from './OidcClient';
-import { sync } from 'vuex-router-sync';
 import Radio from '@extensionengine/vue-radio';
+import { sync } from 'vuex-router-sync';
 import Timeago from 'vue-timeago';
 import Vue from 'vue';
 import VueClipboard from 'vue-clipboard2';
@@ -58,7 +58,7 @@ Promise.all([getStore(), contentPluginRegistry.initialize()])
     const router = getRouter();
     sync(store, router);
     /* eslint-disable no-new */
-    new Vue({
+    const app = new Vue({
       router,
       store,
       vuetify,
@@ -75,4 +75,5 @@ Promise.all([getStore(), contentPluginRegistry.initialize()])
         };
       }
     });
+    if (window.Cypress) window.__app__ = app;
   });

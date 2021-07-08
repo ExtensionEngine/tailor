@@ -11,6 +11,10 @@ logs
 *.log
 npm-debug.log*
 
+# Cypress
+cypress/videos
+cypress/screenshots
+
 # Configuration
 .env
 ecosystem.*

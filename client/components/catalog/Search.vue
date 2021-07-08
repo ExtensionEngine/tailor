@@ -10,6 +10,7 @@
         :background-color="`primary darken-${expanded ? 2 : 4}`"
         prepend-inner-icon="mdi-magnify"
         placeholder="Search..."
+        data-testid="catalog__searchInput"
         clearable hide-details solo dark
         class="pb-5" />
     </div>
