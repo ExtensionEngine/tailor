@@ -84,9 +84,9 @@ function apiUrl(pathname) {
 
 function findOrCreateOIDCUser({ email, firstName, lastName }) {
   if (!config.oidc.enableSignup) {
-    return User.unscoped().findOne({ where: { email }, rejectOnEmpty: true });
+    return User.findOne({ where: { email }, rejectOnEmpty: true });
   }
   const defaults = { firstName, lastName, role: config.oidc.defaultRole };
-  return User.unscoped().findOrCreate({ where: { email }, defaults })
+  return User.findOrCreate({ where: { email }, defaults })
     .then(([user]) => user);
 }
