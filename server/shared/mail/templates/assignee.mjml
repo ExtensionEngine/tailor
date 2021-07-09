@@ -27,5 +27,16 @@
         </mj-button>
       </mj-column>
     </mj-section>
+    <mj-section padding="20px 10px 0">
+      <mj-column>
+        <mj-text align="center">
+          You can
+          <a href="{{unsubscribeLink}}">
+            Unsubscribe
+          </a>
+          from assignment notifications in the profile page.
+        </mj-text>
+      </mj-column>
+    </mj-section>
   </mj-body>
 </mjml>

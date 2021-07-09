@@ -37,7 +37,8 @@ exports.add = (ActivityStatus, Hooks, { Activity }) => {
     });
     const isUnchanged = previousStatus.assigneeId === status.assigneeId;
     const isSelfAssign = status.assigneeId === userId;
-    if (isUnchanged || isSelfAssign) return;
+    const isDisabled = !status.assignee.notifications.assignment;
+    if (isUnchanged || isSelfAssign || isDisabled) return;
     sendEmailNotification(activity);
   }
 

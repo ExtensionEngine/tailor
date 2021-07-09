@@ -30,6 +30,7 @@ const elementUrl = ({ repositoryId, activityId, elementUid }) => {
   const query = `${activityId}?elementId=${elementUid}`;
   return urlJoin(origin, '/#/repository', `${repositoryId}/editor`, query);
 };
+const settingsUrl = () => urlJoin(origin, '/#/settings');
 
 module.exports = {
   send,
@@ -81,6 +82,7 @@ function sendCommentNotification(users, comment) {
   const data = {
     href,
     origin,
+    unsubscribeLink: settingsUrl(),
     getInitials: () => (text, render) => render(text).substr(0, 2).toUpperCase(),
     ...comment
   };
@@ -101,6 +103,7 @@ function sendAssigneeNotification(assignee, activity) {
   const data = {
     ...activity,
     origin,
+    unsubscribeLink: settingsUrl(),
     href: activityStatusUrl(activity.repositoryId, activity.id)
   };
   const html = renderHtml(path.join(templatesDir, 'assignee.mjml'), data);
