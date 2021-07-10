@@ -6,9 +6,7 @@
     class="px-4">
     <template v-if="isTrackedActivity">
       <sidebar-header
-        v-bind="selectedActivity"
-        :name="selectedActivity.data.name"
-        :updated-at="selectedActivity.status.updatedAt"
+        :activity="selectedActivity"
         class="pt-4" />
       <status-field-group
         @update="updateStatus"

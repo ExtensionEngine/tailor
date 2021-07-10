@@ -1,6 +1,6 @@
 <template>
   <span class="publish-container">
-    <v-menu offset-y left>
+    <v-menu v-if="!hidePublish" offset-y left>
       <template v-slot:activator="{ on }">
         <v-btn
           v-on="on"
@@ -43,7 +43,8 @@ export default {
   mixins: [publishMixin],
   props: {
     activity: { type: Object, required: true },
-    outlineActivities: { type: Array, required: true }
+    outlineActivities: { type: Array, required: true },
+    hidePublish: { type: Boolean, default: false }
   },
   computed: {
     config: vm => getLevel(vm.activity.type),

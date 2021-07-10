@@ -7,8 +7,11 @@
     item-class="class"
     disable-pagination hide-default-footer fixed-header
     class="overview primary lighten-5">
-    <template #item.name="item">
-      <overview-name v-bind="item" />
+    <template #item.name="{ item, value }">
+      <div class="d-flex">
+        <overview-name :value="value" />
+        <publishing-badge v-if="isAdmin || isRepositoryAdmin" :activity="item" />
+      </div>
     </template>
     <template #item.status="{ value }">
       <overview-status v-bind="value" />
@@ -33,6 +36,7 @@ import OverviewDueDate from './DueDate';
 import OverviewName from './Name';
 import OverviewPriority from './Priority';
 import OverviewStatus from './Status';
+import PublishingBadge from '@/components/repository/common/Sidebar/Badge';
 import selectActivity from '@/components/repository/common/selectActivity';
 
 export default {
@@ -42,7 +46,8 @@ export default {
     activities: { type: Array, default: () => [] }
   },
   computed: {
-    ...mapGetters('repository', ['workflow']),
+    ...mapGetters(['isAdmin']),
+    ...mapGetters('repository', ['isRepositoryAdmin', 'workflow']),
     headers() {
       return [{
         text: 'Name',
@@ -65,10 +70,13 @@ export default {
       }];
     },
     items() {
-      return this.activities.map(({ id, data, status }) => ({
+      return this.activities.map(({ id, data, modifiedAt, publishedAt, status, type }) => ({
         ...status,
         id,
         name: data.name,
+        modifiedAt,
+        publishedAt,
+        type,
         status: this.getStatusById(status.status),
         priority: getPriority(status.priority),
         class: this.isActivitySelected(id) && 'selected'
@@ -97,6 +105,7 @@ export default {
     }
   },
   components: {
+    PublishingBadge,
     OverviewAssignee,
     OverviewDueDate,
     OverviewName,
