@@ -33,7 +33,7 @@ import pick from 'lodash/pick';
 import Promise from 'bluebird';
 
 const WITHOUT_STATICS = [
-  'JODIT_HTML', 'BRIGHTCOVE_VIDEO', 'EMBED', 'BREAK', 'HTML'
+  'TIPTAP_HTML', 'BRIGHTCOVE_VIDEO', 'EMBED', 'BREAK', 'HTML'
 ];
 
 export default {

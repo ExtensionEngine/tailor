@@ -3,7 +3,7 @@
 const CONTENT_CONTAINERS = [{
   type: 'INTRO',
   label: 'Introduction',
-  types: ['JODIT_HTML', 'IMAGE', 'VIDEO', 'HTML'],
+  types: ['TIPTAP_HTML', 'IMAGE', 'VIDEO', 'HTML'],
   displayHeading: true
 }, {
   type: 'PAGE',

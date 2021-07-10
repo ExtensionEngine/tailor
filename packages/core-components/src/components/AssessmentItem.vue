@@ -67,7 +67,7 @@ import map from 'lodash/map';
 import PublishDiffChip from './PublishDiffChip.vue';
 import TceQuestionContainer from './QuestionContainer/index.vue';
 
-const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
+const TEXT_CONTAINERS = ['TIPTAP_HTML', 'HTML'];
 const blankRegex = /(@blank)/g;
 const htmlRegex = /(<\/?[^>]+(>|$))|&nbsp;/g;
 

@@ -70,7 +70,7 @@ import Question from './Question.vue';
 const resolveComponentName = type => getComponentName(processAnswerType(type));
 
 const WITH_FEEDBACK = ['MC', 'SC', 'TF'];
-const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
+const TEXT_CONTAINERS = ['TIPTAP_HTML', 'HTML'];
 const validationOptions = { recursive: true, abortEarly: false };
 
 export default {

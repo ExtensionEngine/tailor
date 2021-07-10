@@ -5,7 +5,7 @@
       @update="$emit('reorder:element', $event)"
       :elements="introductionElements"
       :activity="group"
-      :supported-types="['JODIT_HTML', 'IMAGE', 'VIDEO', 'EMBED', 'HTML']"
+      :supported-types="['TIPTAP_HTML', 'IMAGE', 'VIDEO', 'EMBED', 'HTML']"
       :layout="true">
       <template v-slot:list-item="{ element, dragged }">
         <contained-content

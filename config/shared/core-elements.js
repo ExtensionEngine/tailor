@@ -2,6 +2,7 @@
 
 module.exports = [
   'tce-jodit',
+  'tce-tiptap',
   'tce-image',
   'tce-video',
   'tce-embed',
