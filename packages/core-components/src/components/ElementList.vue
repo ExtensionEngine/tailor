@@ -1,5 +1,5 @@
 <template>
-  <div class="list-group">
+  <v-container class="list-group">
     <draggable
       @start="dragElementIndex = $event.oldIndex"
       @end="dragElementIndex = -1"
@@ -7,13 +7,13 @@
       :list="elements"
       v-bind="options"
       :disabled="isDisabled"
-      class="row">
-      <div
+      tag="v-row">
+      <v-col
         v-for="(element, index) in elements"
         :key="getElementId(element)"
         @dragstart="onDragStart(index)"
         @dragend="onDragEnd(element)"
-        :class="`col-xs-${get(element, 'data.width', 12)}`"
+        :cols="get(element, 'data.width', 12)"
         class="pr-5">
         <slot
           :element="element"
@@ -21,7 +21,7 @@
           :position="index"
           name="list-item">
         </slot>
-      </div>
+      </v-col>
     </draggable>
     <template v-if="enableAdd && !isDisabled">
       <slot
@@ -42,7 +42,7 @@
           class="mt-1" />
       </slot>
     </template>
-  </div>
+  </v-container>
 </template>
 
 <script>

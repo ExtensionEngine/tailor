@@ -182,6 +182,7 @@ export default {
   }
 
   &::before {
+    content: " ";
     position: absolute;
     top: 0;
     left: 0;
@@ -202,7 +203,7 @@ export default {
   }
 }
 
-.spinner, .no-results {
+.spinner,.no-results {
   margin-top: 40px;
 }
 

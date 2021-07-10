@@ -15,12 +15,6 @@
   text-align: left !important;
 }
 
-// Patches in order for vuetify to work alongside bootstrap
-.v-input input, .v-input textarea, .v-input input[type=text][readonly] {
-  box-shadow: inherit;
-  border: inherit;
-}
-
 .v-text-field input {
   padding: 0.5rem 0;
 }
