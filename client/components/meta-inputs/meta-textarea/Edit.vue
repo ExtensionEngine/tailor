@@ -37,7 +37,6 @@ export default {
     async onChange() {
       const { valid } = await this.$refs.validator.validate();
       if (!valid) return;
-      if (this.value === this.meta.value) return;
       this.$emit('update', this.meta.key, this.value);
     }
   }

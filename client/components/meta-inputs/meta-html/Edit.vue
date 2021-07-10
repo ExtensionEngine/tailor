@@ -39,12 +39,10 @@ export default {
   props: {
     meta: { type: Object, default: () => ({ value: null }) }
   },
-  data() {
-    return {
-      content: this.meta.value,
-      editing: false
-    };
-  },
+  data: vm => ({
+    content: vm.meta.value,
+    editing: false
+  }),
   computed: {
     options: ({ meta }) => ({ ...defaultOptions(), ...meta.editorOptions })
   },
