@@ -36,7 +36,7 @@
 import { mapActions, mapGetters } from 'vuex';
 import debounce from 'lodash/debounce';
 import { loader } from '@tailor-cms/core-components';
-import { mapRequests } from '@/plugins/radio';
+import { mapRequests } from '@extensionengine/vue-radio';
 
 const HEADERS = ['User', 'Email', 'Full Name', 'Role', ''];
 
