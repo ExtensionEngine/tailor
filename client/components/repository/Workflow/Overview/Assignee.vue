@@ -1,7 +1,7 @@
 <template>
   <v-tooltip open-delay="800" bottom>
     <template #activator="{ on }">
-      <div v-on="on" class="column-assignee d-flex align-center">
+      <div v-on="on" class="column-assignee">
         <assignee-avatar
           :label="label"
           :img-url="imgUrl"
