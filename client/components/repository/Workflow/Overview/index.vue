@@ -1,29 +1,39 @@
 <template>
   <v-data-table
-    @click:row="selectActivity($event.id)"
     :headers="headers"
     :items="items"
     height="100%"
     item-class="class"
     disable-pagination hide-default-footer fixed-header
     class="overview primary lighten-5">
-    <template #item.name="{ item, value }">
-      <div class="d-flex">
-        <overview-name :value="value" />
-        <publishing-badge v-if="isAdmin || isRepositoryAdmin" :activity="item" />
-      </div>
-    </template>
-    <template #item.status="{ value }">
-      <overview-status v-bind="value" />
-    </template>
-    <template #item.assignee="{ value }">
-      <overview-assignee v-bind="value" />
-    </template>
-    <template #item.priority="{ value }">
-      <overview-priority v-bind="value" />
-    </template>
-    <template #item.dueDate="{ value }">
-      <overview-due-date v-if="value" :value="value" />
+    <template v-slot:item="{ item }">
+      <v-lazy
+        v-model="itemVisibility[item.id]"
+        @click="selectActivity(item.id)"
+        :class="{ selected: isActivitySelected(item.id) }"
+        tag="tr"
+        style="height: 48px;">
+        <div style="display: contents;">
+          <td class="text-left">
+            <v-col class="d-flex text-left">
+              <overview-name :value="item.name" />
+              <publishing-badge v-if="isAdmin || isRepositoryAdmin" :activity="item" />
+            </v-col>
+          </td>
+          <td class="text-left">
+            <overview-status v-bind="item.status" />
+          </td>
+          <td class="text-left">
+            <overview-assignee v-bind="item.assignee" />
+          </td>
+          <td class="text-left">
+            <overview-priority v-bind="item.priority" />
+          </td>
+          <td class="text-left">
+            <overview-due-date v-if="item.dueDate" :value="item.dueDate" />
+          </td>
+        </div>
+      </v-lazy>
     </template>
   </v-data-table>
 </template>
@@ -45,6 +55,9 @@ export default {
   props: {
     activities: { type: Array, default: () => [] }
   },
+  data: () => ({
+    itemVisibility: {}
+  }),
   computed: {
     ...mapGetters(['isAdmin']),
     ...mapGetters('repository', ['isRepositoryAdmin', 'workflow']),
@@ -116,12 +129,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$row-background: var(--v-primary-lighten4);
+$row-background: var(--v-primary-lighten5);
+$row-hover-background: var(--v-primary-lighten4);
 
 .overview ::v-deep {
   thead.v-data-table-header {
     tr th {
-      background: #eceff1;
+      background: $row-hover-background;
     }
   }
 
@@ -133,16 +147,25 @@ $row-background: var(--v-primary-lighten4);
     max-width: 11.5rem;
   }
 
-  tr:hover {
-    background: $row-background !important;
+  .v-lazy {
+    background-color: $row-background;
+    border-bottom: thin solid rgba(0, 0, 0, 0.12);
+
+    &:hover {
+      background-color: $row-hover-background !important;
+    }
+
+    &.selected {
+      background: $row-hover-background !important;
+    }
 
     &:not(.selected) {
       cursor: pointer;
     }
-  }
 
-  .selected {
-    background: $row-background;
+    td {
+      height: 48px;
+    }
   }
 }
 </style>

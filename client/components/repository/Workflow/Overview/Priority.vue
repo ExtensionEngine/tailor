@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex align-center">
+  <div>
     <v-icon class="priority-icon mr-2">
       {{ `$vuetify.icons.${icon}` }}
     </v-icon>
