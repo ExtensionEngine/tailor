@@ -187,7 +187,7 @@
     "copy-webpack-plugin": "^6.0.0",
     "dargs": "^7.0.0",
     "del-cli": "^3.0.1",
-    "eslint": "^7.12.0",
+    "eslint": "^7.16.0",
     "eslint-config-semistandard": "^15.0.1",
     "eslint-config-standard": "^15.0.0",
     "eslint-plugin-import": "^2.20.1",
