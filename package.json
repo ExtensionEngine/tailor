@@ -207,7 +207,7 @@
     "sass-loader": "^7.3.1",
     "sequelize-cli": "^6.2.0",
     "sql-log-prettifier": "^0.1.1",
-    "stylelint": "^13.8.0",
+    "stylelint": "^14.0.0",
     "umzug": "^2.2.0",
     "val-loader": "^1.1.1",
     "vue-template-compiler": "^2.6.11"
