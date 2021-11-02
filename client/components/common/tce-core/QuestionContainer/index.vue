@@ -6,7 +6,7 @@
       dark
       class="mb-5 px-0 elevation-2 text-left">
       <v-icon color="secondary lighten-2" size="18" class="mr-2">mdi-help</v-icon>
-      <span class="subtitle-2">{{ conifg.name }}</span>
+      <span class="subtitle-2">{{ config.name }}</span>
     </v-toolbar>
     <slot :isEditing="isEditing"></slot>
     <question
@@ -92,9 +92,9 @@ export default {
     alert: {}
   }),
   computed: {
-    conifg: vm => vm.$teRegistry.get(vm.answerType),
+    config: vm => vm.$teRegistry.get(vm.answerType),
     schema() {
-      const elementSchema = this.conifg.schema;
+      const elementSchema = this.config.schema;
       return yup.object().shape({
         ...baseSchema,
         ...this.isGraded ? elementSchema : omit(elementSchema, ['correct'])
@@ -103,7 +103,7 @@ export default {
     hasErrors: vm => !!vm.errors.length,
     answerType: vm => vm.element.data.type,
     isGraded: vm => vm.element.type === 'ASSESSMENT',
-    showFeedback: vm => WITH_FEEDBACK.includes(vm.answerType),
+    showFeedback: vm => vm.config.feedback || WITH_FEEDBACK.includes(vm.answerType),
     hintError: vm => vm.errors.includes('hint')
   },
   methods: {
