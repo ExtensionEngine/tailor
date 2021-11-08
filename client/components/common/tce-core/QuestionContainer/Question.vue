@@ -5,7 +5,8 @@
       <draggable v-model="question" v-bind="dragOptions" class="row">
         <contained-content
           v-for="element in question" :key="element.id"
-          @save="updateElement(element, $event)"
+          @save="updateElement(element, 'data', $event)"
+          @save:meta="updateElement(element, 'meta', $event)"
           @delete="deleteElement(element)"
           :element="element"
           :is-disabled="!isEditing"
@@ -62,12 +63,12 @@ export default {
       const question = cloneDeep(this.assessment.data.question);
       this.$emit('update', { question: question.concat(element) });
     },
-    updateElement(element, data) {
+    updateElement(element, type, data) {
       if (!this.isEditing) return;
       const question = cloneDeep(this.assessment.data.question);
       const index = findIndex(question, { id: element.id });
       if (index === -1) return;
-      element = { ...question[index], data };
+      element = { ...question[index], [type]: data };
       this.$emit('update', { question: set(question, index, element) });
     },
     deleteElement(element) {
