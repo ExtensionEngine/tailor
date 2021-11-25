@@ -6,6 +6,7 @@ const { requestLimiter } = require('../shared/request/mw');
 const ONE_HOUR_IN_MS = 60 * 60 * 1000;
 
 const loginRequestLimiter = requestLimiter({
+  namespace: 'login-request-limiter',
   windowMs: ONE_HOUR_IN_MS,
   keyGenerator: req => req.userKey
 });

@@ -4,16 +4,19 @@ const rateLimit = require('express-rate-limit');
 const Tapster = require('@extensionengine/tapster');
 const { provider, ...options } = require('../../../config/server').store;
 
-const DEFAULT_WINDOW_MS = 15 * 60 * 1000; // every 15 minutes
+const DEFAULT_STORE_NAMESPACE = 'default-request-limiter';
+const DEFAULT_WINDOW_MINUTES = 5;
+const DEFAULT_WINDOW_MS = DEFAULT_WINDOW_MINUTES * 60 * 1000;
 
 // Store must be implemented using the following interface:
 // https://github.com/nfriedly/express-rate-limit/blob/master/README.md#store
 class Store {
-  constructor() {
+  constructor(namespace, ttlMs) {
     this.cache = new Tapster({
       ...options[provider],
       store: provider,
-      namespace: 'request-limiter'
+      namespace,
+      ttl: ttlMs / 1000 // Tapster expects input in seconds
     });
   }
 
@@ -37,14 +40,22 @@ class Store {
   }
 }
 
-const defaultStore = new Store();
+const defaultStore = new Store(DEFAULT_STORE_NAMESPACE, DEFAULT_WINDOW_MS);
 
-function requestLimiter({
-  max = 10,
-  windowMs = DEFAULT_WINDOW_MS,
-  store = defaultStore,
-  ...opts
-} = {}) {
+function requestLimiter({ max = 10, namespace, windowMs, ...opts } = {}) {
+  let store;
+  // If namespace and windowMs are not provided, use the default store
+  if (!namespace && !windowMs) {
+    store = defaultStore;
+    windowMs = DEFAULT_WINDOW_MS;
+  } else if (namespace && windowMs) {
+    store = new Store(namespace, windowMs);
+  } else {
+    throw new Error(`
+      Namespace and windowMs are required to create a custom store.
+      Omit both for default store with ${DEFAULT_WINDOW_MINUTES}min window.`);
+  }
+
   return rateLimit({ max, windowMs, store, ...opts });
 }
 
