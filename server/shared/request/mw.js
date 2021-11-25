@@ -56,7 +56,7 @@ function requestLimiter({ max = 10, namespace, windowMs, ...opts } = {}) {
     store = new Store(namespace, windowMs);
   } else {
     throw new Error(`
-      Namespace and windowMs are required to create a custom store.
+      namespace and windowMs are required to create a custom store.
       Omit both for default store with ${DEFAULT_WINDOW_MINUTES}min window.`);
   }
 
