@@ -18,6 +18,7 @@ const toPairs = require('lodash/toPairs');
 
 const ASSET_PATH_REGEX = /(?<directory>repository\/assets\/(?<fileName>[^?]*))/;
 const CHUNK_SIZE = 2000;
+const IMAGE_ELEMENT_TYPE = 'IMAGE';
 
 const ENTITIES = {
   REPOSITORY: 'REPOSITORY',
@@ -154,7 +155,7 @@ class RepositoryMigration {
 
   async migrateContentElementData(element) {
     const { type, data } = element;
-    if (type === 'IMAGE') return this.imageMigrationHandler(element);
+    if (type === IMAGE_ELEMENT_TYPE) return this.imageMigrationHandler(element);
     const embeds = data.embeds && (await this.embedsMigrationHandler(element));
     const assets = data.assets && (await this.defaultMigrationHandler(element));
     return { ...data, ...embeds, ...assets };
