@@ -11,12 +11,16 @@ const DEFAULT_WINDOW_MS = DEFAULT_WINDOW_MINUTES * 60 * 1000;
 // Store must be implemented using the following interface:
 // https://github.com/nfriedly/express-rate-limit/blob/master/README.md#store
 class Store {
-  constructor(namespace, ttlMs) {
+  /**
+   * @param {string} namespace namespace for the keys that need to be stored
+   * @param {number} windowMs ttl in milliseconds
+   */
+  constructor(namespace, windowMs) {
     this.cache = new Tapster({
       ...options[provider],
       store: provider,
       namespace,
-      ttl: ttlMs / 1000 // Tapster expects input in seconds
+      ttl: windowMs / 1000 // Tapster expects input in seconds
     });
   }
 
