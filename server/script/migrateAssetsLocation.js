@@ -10,14 +10,13 @@ const {
 const get = require('lodash/get');
 const getFileMetas = require('../shared/util/getFileMetas');
 const Listr = require('listr');
-const path = require('path');
 const Promise = require('bluebird');
 const { protocol } = require('../../config/server/storage');
+const resolveNewURL = require('../shared/util/resolveNewURL');
 const { SCHEMAS } = require('../../config/shared/activities');
 const storage = require('../repository/storage');
 const toPairs = require('lodash/toPairs');
 
-const ASSET_PATH_REGEX = /(?<directory>repository\/assets\/(?<fileName>[^?]*))/;
 const CHUNK_SIZE = 2000;
 const IMAGE_ELEMENT_TYPE = 'IMAGE';
 
@@ -252,13 +251,4 @@ class RepositoryMigration {
     }, {});
     return { ...metaInputs, ...newMeta };
   }
-}
-
-function resolveNewURL(assetUrl, targetDir) {
-  if (assetUrl.startsWith(protocol)) assetUrl = assetUrl.substr(protocol.length);
-  const result = assetUrl.match(ASSET_PATH_REGEX);
-  if (!result) return;
-  const { groups: { directory, fileName } } = result;
-  const newKey = path.join(targetDir, fileName);
-  return { key: directory, newKey };
 }
