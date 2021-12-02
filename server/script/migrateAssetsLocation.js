@@ -7,19 +7,16 @@ const {
   Revision,
   sequelize
 } = require('../shared/database');
+const cloneContentElement = require('../shared/util/cloneContentElement');
 const cloneFileMeta = require('../shared/util/cloneFileMeta');
 const get = require('lodash/get');
 const getFileMetas = require('../shared/util/getFileMetas');
 const Listr = require('listr');
 const Promise = require('bluebird');
-const { protocol } = require('../../config/server/storage');
-const resolveNewURL = require('../shared/util/resolveNewURL');
 const { SCHEMAS } = require('../../config/shared/activities');
 const storage = require('../repository/storage');
-const toPairs = require('lodash/toPairs');
 
 const CHUNK_SIZE = 2000;
-const IMAGE_ELEMENT_TYPE = 'IMAGE';
 
 const ENTITIES = {
   REPOSITORY: 'REPOSITORY',
@@ -30,7 +27,7 @@ const ENTITIES = {
 const mapEntityToAction = {
   [ENTITIES.REPOSITORY]: 'migrateRepository',
   [ENTITIES.ACTIVITY]: 'migrateActivity',
-  [ENTITIES.CONTENT_ELEMENT]: 'migrateContentElement'
+  [ENTITIES.CONTENT_ELEMENT]: 'cloneContentElement'
 };
 
 migrate()
@@ -143,29 +140,9 @@ class RepositoryMigration {
       { transaction }
     );
     return Promise.each(contentElements, async it => {
-      const payload = await this.migrateContentElement(it);
+      const payload = await cloneContentElement(it, this.repositoryAssetsPath, this.metaByElementType);
       return it.update(payload, { transaction });
     });
-  }
-
-  async migrateContentElement(element) {
-    const data = await this.migrateContentElementData(element);
-    const meta = await this.migrateContentElementMeta(element);
-    return { data, meta };
-  }
-
-  async migrateContentElementData(element) {
-    const { type, data } = element;
-    if (type === IMAGE_ELEMENT_TYPE) return this.imageMigrationHandler(element);
-    const embeds = data.embeds && (await this.embedsMigrationHandler(element));
-    const assets = data.assets && (await this.defaultMigrationHandler(element));
-    return { ...data, ...embeds, ...assets };
-  }
-
-  async migrateContentElementMeta(element) {
-    const { type, meta: metaInputs } = element;
-    const metaConfigs = get(this.metaByElementType, type, []);
-    return this.migrateFileMeta(metaInputs, metaConfigs);
   }
 
   async migrateRevisions(entity) {
@@ -200,35 +177,5 @@ class RepositoryMigration {
     const handler = mapEntityToAction[entity];
     const payload = await (this[handler] && this[handler](state));
     return { state: { ...state, ...payload } };
-  }
-
-  async imageMigrationHandler({ data }) {
-    const url = get(data, 'url');
-    if (!url) return data;
-    const { key, newKey } = resolveNewURL(url, this.repositoryAssetsPath) || {};
-    if (!key || !newKey) return data;
-    await storage.copyFile(key, newKey);
-    return { ...data, url: newKey };
-  }
-
-  async embedsMigrationHandler(element) {
-    const { repositoryId, data } = element;
-    const embeds = await Promise.reduce(Object.entries(data.embeds), async (acc, [id, embed]) => {
-      const payload = await this.migrateContentElement({ repositoryId, ...embed });
-      return { ...acc, [id]: { ...embed, ...payload } };
-    }, {});
-    return { embeds };
-  }
-
-  async defaultMigrationHandler({ data }) {
-    const updatedAssets = await Promise
-      .filter(toPairs(data.assets), ([_, value]) => value.startsWith(protocol))
-      .reduce(async (acc, [key, value]) => {
-        const { key: oldKey, newKey } = resolveNewURL(value, this.repositoryAssetsPath) || {};
-        if (!oldKey || !newKey) return { ...acc, [key]: value };
-        await storage.copyFile(oldKey, newKey);
-        return { ...acc, [key]: `${protocol}${newKey}` };
-      }, {});
-    return { assets: { ...data.assets, ...updatedAssets } };
   }
 }
