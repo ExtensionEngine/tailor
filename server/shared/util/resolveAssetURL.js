@@ -25,13 +25,13 @@ const NEW_ASSET_PATH_REGEX = /(?<directory>repository\/\d+\/assets\/(?<fileName>
  * contains `targetDir`, meaning they already have the same path.
  * @param {string} assetUrl The current URL of an asset.
  * @param {string} targetDir The target directory in which an asset should be stored.
- * @return {Object} An object containing old and new directory path, or an `undefined` value if `assetUrl` includes
+ * @return {Object} An object containing old and new directory path, or an `undefined` value if `assetUrl` starts with
  * `targetDir` or if `assetsUrl` can't be matched with either regular expression.
  * @public
  */
 module.exports = (assetUrl, targetDir) => {
   if (assetUrl.startsWith(protocol)) assetUrl = assetUrl.slice(protocol.length);
-  if (assetUrl.includes(targetDir)) return;
+  if (assetUrl.startsWith(targetDir)) return;
   const result = assetUrl.match(OLD_ASSET_PATH_REGEX) || assetUrl.match(NEW_ASSET_PATH_REGEX);
   if (!result) return;
   const { groups: { directory, fileName } } = result;

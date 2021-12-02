@@ -22,7 +22,7 @@ function getFileMetaKeys(meta = []) {
   return meta.filter(it => it.type === FILE_ELEMENT_TYPE).map(it => it.key);
 }
 
-module.exports = function (schemas) {
+module.exports = schemas => {
   return schemas.reduce((acc, { id, meta, structure, elementMeta }) => {
     return {
       ...acc,
