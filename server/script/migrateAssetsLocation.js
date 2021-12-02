@@ -7,6 +7,7 @@ const {
   Revision,
   sequelize
 } = require('../shared/database');
+const cloneFileMeta = require('../shared/util/cloneFileMeta');
 const get = require('lodash/get');
 const getFileMetas = require('../shared/util/getFileMetas');
 const Listr = require('listr');
@@ -108,7 +109,7 @@ class RepositoryMigration {
 
   async migrateRepository() {
     const { repository, repositoryMeta: metaConfigs } = this;
-    const data = await this.migrateFileMeta(repository.data, metaConfigs);
+    const data = await cloneFileMeta(repository.data, metaConfigs, this.repositoryAssetsPath);
     return { data };
   }
 
@@ -130,7 +131,7 @@ class RepositoryMigration {
   async migrateActivity(activity) {
     const { type, data: metaInputs } = activity;
     const metaConfigs = get(this.metaByActivityType, type, []);
-    const data = await this.migrateFileMeta(metaInputs, metaConfigs);
+    const data = await cloneFileMeta(metaInputs, metaConfigs, this.repositoryAssetsPath);
     return { data };
   }
 
@@ -229,26 +230,5 @@ class RepositoryMigration {
         return { ...acc, [key]: `${protocol}${newKey}` };
       }, {});
     return { assets: { ...data.assets, ...updatedAssets } };
-  }
-
-  async migrateFileMeta(metaInputs, metaConfigs) {
-    const newMeta = await Promise.reduce(metaConfigs, async (acc, metaKey) => {
-      const meta = get(metaInputs, metaKey);
-      if (!meta) return acc;
-      const url = get(meta, 'url');
-      if (!url) return acc;
-      const { key, newKey } = resolveNewURL(url, this.repositoryAssetsPath) || {};
-      if (!key || !newKey) return acc;
-      await storage.copyFile(key, newKey);
-      return {
-        ...acc,
-        [metaKey]: {
-          ...meta,
-          key: newKey,
-          url: `${protocol}${newKey}`
-        }
-      };
-    }, {});
-    return { ...metaInputs, ...newMeta };
   }
 }
