@@ -108,7 +108,7 @@ function insertActivities(activities, depth, { context, transaction }) {
   const activityRecords = map(activities, it => {
     const parentId = context.activityIdMap[it.parentId];
     if (!parentId && depth) throw new Error('Invalid parent id');
-    Object.assign(it, { parentId, repositoryId });
+    Object.assign(it, { parentId, repositoryId, publishedAt: null });
     return omit(it, IGNORE_ATTRS);
   });
   const options = { context: { userId }, returning: true, transaction };
