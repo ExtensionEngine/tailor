@@ -5,7 +5,7 @@
     :elements="embeds"
     :supported-types="types"
     :enable-add="!isDisabled && enableAdd">
-    <template v-slot:list-item="{ element, isDragged }">
+    <template v-slot:list-item="{ element, isDragged, position }">
       <contained-content
         @save="save(element, 'data', $event)"
         @save:meta="save(element, 'meta', $event)"
@@ -13,6 +13,7 @@
         :element="element"
         :is-dragged="isDragged"
         :is-disabled="isDisabled"
+        :position="position"
         v-bind="$attrs" />
     </template>
   </element-list>
