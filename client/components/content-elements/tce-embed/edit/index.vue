@@ -9,20 +9,18 @@
       icon="mdi-iframe"
       active-placeholder="Use toolbar to enter the url"
       active-icon="mdi-arrow-up" />
-    <template v-else>
-      <div class="content">
-        <preview-overlay :show="!isDisabled && !isFocused" />
-        <!-- Dragging iframes is not supported inside sortablejs container! -->
-        <iframe
-          v-if="!isDragged"
-          ref="frame"
-          :src="url"
-          frameborder="0"
-          sandbox="allow-forms allow-same-origin allow-scripts"
-          class="content">
-        </iframe>
-      </div>
-    </template>
+    <div v-else class="content">
+      <preview-overlay :show="!isDisabled && !isFocused" />
+      <!-- Dragging iframes is not supported inside sortablejs container! -->
+      <iframe
+        v-if="!isDragged"
+        ref="frame"
+        :src="url"
+        frameborder="0"
+        sandbox="allow-forms allow-same-origin allow-scripts"
+        class="content">
+      </iframe>
+    </div>
   </div>
 </template>
 
