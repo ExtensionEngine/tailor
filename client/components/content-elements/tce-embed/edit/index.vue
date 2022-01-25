@@ -9,7 +9,7 @@
       icon="mdi-iframe"
       active-placeholder="Use toolbar to enter the url"
       active-icon="mdi-arrow-up" />
-    <div v-else>
+    <template v-else>
       <div class="content">
         <preview-overlay :show="!isDisabled && !isFocused" />
         <!-- Dragging iframes is not supported inside sortablejs container! -->
@@ -22,7 +22,7 @@
           class="content">
         </iframe>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
@@ -67,11 +67,6 @@ export default {
 }
 
 .content {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
   width: 100%;
   height: 100%;
 }

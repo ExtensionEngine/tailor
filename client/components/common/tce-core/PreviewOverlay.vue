@@ -1,6 +1,7 @@
 <template functional>
   <v-overlay
     :value="props.show"
+    z-index="0"
     opacity="0.9"
     absolute>
     <button class="message pa-2 grey--text text--lighten-2">
