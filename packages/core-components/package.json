@@ -55,7 +55,7 @@
     "eslint-plugin-require-sort": "^1.2.2",
     "eslint-plugin-standard": "^5.0.0",
     "eslint-plugin-vue": "6.2.2",
-    "node-sass": "^6.0.0",
+    "node-sass": "^7.0.0",
     "rollup-plugin-copy": "^3.3.0",
     "rollup-plugin-visualizer": "^4.2.0",
     "rollup-plugin-vue": "4.3.2",
