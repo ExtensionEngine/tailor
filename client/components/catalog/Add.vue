@@ -8,7 +8,7 @@
       <v-btn
         v-on="on"
         color="secondary"
-        data-testid="catalog__createRepositoryBtn"
+        aria-label="Add repository"
         fab dark absolute
         class="add-repo">
         <v-icon>mdi-plus</v-icon>

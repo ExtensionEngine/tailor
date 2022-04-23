@@ -1,7 +1,6 @@
 const sel = {
   list: 'catalog__repositories',
   card: 'catalog__repositoryCard',
-  createBtn: 'catalog__createRepositoryBtn',
   createDialog: 'catalog__createRepositoryDialog',
   settings: 'catalog__repositorySettingsBtn',
   searchInput: 'catalog__searchInput'
@@ -14,7 +13,7 @@ function findRepositoryByName(name) {
 }
 
 function createRepository(name, description) {
-  cy.findByTestId(sel.createBtn).click();
+  cy.findByRole('button', { name: 'Add repository' }).click();
   cy.findByTestId(sel.createDialog).within(() => {
     cy.findByLabelText(/name/i)
       .type(name);
