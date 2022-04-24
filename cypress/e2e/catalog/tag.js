@@ -6,7 +6,7 @@ const sel = {
 
 function addTag(repositorySelector, tagName) {
   cy.get(repositorySelector)
-    .findByTestId(sel.addTagBtn)
+    .findByRole('button', { name: 'Add tag' })
     .click();
   cy.root()
     .findByTestId(sel.addTagDialog)
