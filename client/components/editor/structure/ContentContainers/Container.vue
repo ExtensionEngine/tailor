@@ -19,8 +19,8 @@
       Click the button below to create content.
     </v-alert>
     <element-list
-      @add="addElement"
-      @insert="insert"
+      @add="addElements"
+      @insert="insertElements"
       @update="reorder"
       :list="contentElements"
       :activity="container"
@@ -41,6 +41,7 @@ import ContentElement from '../../ContentElement';
 import ElementList from '../ElementList';
 import filter from 'lodash/filter';
 import { mapActions } from 'vuex';
+import Promise from 'bluebird';
 import sortBy from 'lodash/sortBy';
 
 export default {
@@ -64,12 +65,20 @@ export default {
       insertElement: 'insert',
       addElement: 'save'
     }),
+    addElements(data) {
+      const elements = data.length ? data : [data];
+      return Promise.each(elements, element => this.addElement(element));
+    },
     reorder({ newIndex: newPosition }) {
       const items = this.contentElements;
       const element = items[newPosition];
       const isFirstChild = newPosition === 0;
       const context = { items, newPosition, isFirstChild };
       this.reorderElements({ element, context });
+    },
+    insertElements(data) {
+      const elements = data.length ? data : [data];
+      return Promise.each(elements, element => this.insert(element));
     },
     insert(element) {
       const items = this.contentElements;

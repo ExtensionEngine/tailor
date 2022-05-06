@@ -29,7 +29,7 @@
       <add-element
         v-if="enableAdd"
         @hidden="onHiddenElementDrawer"
-        @add="addElement"
+        @add="addContent"
         :include="types"
         :activity="activity"
         :position="insertPosition"
@@ -91,9 +91,10 @@ export default {
       if (this.enableAdd) classes.push('insertable');
       return classes;
     },
-    addElement(element) {
-      const type = element.position === this.lastPosition ? 'add' : 'insert';
-      this.$emit(type, element);
+    addContent(data) {
+      const first = data.length ? data[0] : data;
+      const type = first.position === this.lastPosition ? 'add' : 'insert';
+      this.$emit(type, data);
     }
   },
   watch: {

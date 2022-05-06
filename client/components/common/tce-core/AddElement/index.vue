@@ -16,63 +16,83 @@
       color="blue-grey darken-3">
       <v-icon>{{ icon }}</v-icon>
     </v-btn>
-    <v-bottom-sheet v-model="isVisible" max-width="1240" inset>
-      <div class="element-container">
-        <v-toolbar
-          v-if="layout"
-          color="blue-grey darken-4"
-          dense
-          class="mb-2 elevation-1">
-          <v-spacer />
-          <v-divider vertical />
-          <v-btn-toggle
-            v-model="elementWidth"
-            active-class="blue-grey darken-2"
-            background-color="transparent"
-            dark tile borderless mandatory>
-            <v-btn :value="100" icon>
-              <v-icon>mdi-square-outline</v-icon>
+    <template v-if="isVisible">
+      <select-element
+        v-if="showElementBrowser"
+        @selected="addElements"
+        @close="showElementBrowser = false"
+        :allowed-types="allowedTypes"
+        submit-label="Copy"
+        heading="Copy elements"
+        header-icon="mdi-content-duplicate"
+        multiple />
+      <v-bottom-sheet v-else v-model="isVisible" max-width="1240" inset>
+        <div class="element-container">
+          <v-toolbar
+            color="blue-grey darken-4"
+            dense
+            class="mb-2 elevation-1">
+            <v-btn @click="showElementBrowser = true">
+              Copy existing
             </v-btn>
-            <v-btn :value="50" icon>
-              <v-icon>mdi-select-compare</v-icon>
-            </v-btn>
-          </v-btn-toggle>
-          <v-divider class="mr-3" vertical />
-          <div class="width-label px-1 subtitle-1 grey--text text--lighten-4">
-            Element width
-            <span class="px-1">{{ elementWidth }}</span>%
-          </div>
-        </v-toolbar>
-        <div
-          v-for="group in library"
-          :key="group.name">
-          <div class="group-heading blue-grey--text text--darken-4">
-            <span>{{ group.name }}</span>
-          </div>
-          <div class="group-elements">
-            <button
-              v-for="element in group.elements"
-              :key="element.position"
-              @click.stop="add(element)"
-              :disabled="isElementDisabled(element)"
-              class="element">
-              <v-icon v-if="element.ui.icon">{{ element.ui.icon }}</v-icon>
-              <h5 class="body-2">{{ element.name }}</h5>
-            </button>
+            <template v-if="layout">
+              <v-spacer />
+              <v-divider vertical />
+              <v-btn-toggle
+                v-model="elementWidth"
+                active-class="blue-grey darken-2"
+                background-color="transparent"
+                dark tile borderless mandatory>
+                <v-btn :value="100" icon>
+                  <v-icon>mdi-square-outline</v-icon>
+                </v-btn>
+                <v-btn :value="50" icon>
+                  <v-icon>mdi-select-compare</v-icon>
+                </v-btn>
+              </v-btn-toggle>
+              <v-divider class="mr-3" vertical />
+              <div class="width-label px-1 subtitle-1 grey--text text--lighten-4">
+                Element width
+                <span class="px-1">{{ elementWidth }}</span>%
+              </div>
+            </template>
+          </v-toolbar>
+          <div
+            v-for="group in library"
+            :key="group.name">
+            <div class="group-heading blue-grey--text text--darken-4">
+              <span>{{ group.name }}</span>
+            </div>
+            <div class="group-elements">
+              <button
+                v-for="element in group.elements"
+                :key="element.position"
+                @click.stop="addElements(element)"
+                :disabled="isElementDisabled(element)"
+                class="element">
+                <v-icon v-if="element.ui.icon">{{ element.ui.icon }}</v-icon>
+                <h5 class="body-2">{{ element.name }}</h5>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    </v-bottom-sheet>
+      </v-bottom-sheet>
+    </template>
   </div>
 </template>
 
 <script>
 import cuid from 'cuid';
 import filter from 'lodash/filter';
+import flatMap from 'lodash/flatMap';
 import get from 'lodash/get';
+import intersection from 'lodash/intersection';
 import { isQuestion } from '../utils';
 import reduce from 'lodash/reduce';
+import reject from 'lodash/reject';
 import sortBy from 'lodash/sortBy';
+
+const SelectElement = () => import('components/common/SelectElement');
 
 const DEFAULT_ELEMENT_WIDTH = 100;
 const LAYOUT = { HALF_WIDTH: 6, FULL_WIDTH: 12 };
@@ -98,7 +118,8 @@ export default {
   data() {
     return {
       isVisible: false,
-      elementWidth: DEFAULT_ELEMENT_WIDTH
+      elementWidth: DEFAULT_ELEMENT_WIDTH,
+      showElementBrowser: false
     };
   },
   computed: {
@@ -137,15 +158,34 @@ export default {
     },
     processedWidth() {
       return this.elementWidth === 50 ? LAYOUT.HALF_WIDTH : LAYOUT.FULL_WIDTH;
+    },
+    allowedTypes() {
+      const { elementWidth, include, layout, library } = this;
+      const elements = flatMap(library, 'elements');
+      if (!layout) return include || [];
+      const allowedElements = elementWidth === DEFAULT_ELEMENT_WIDTH
+        ? elements
+        : reject(elements, 'ui.forceFullWidth');
+      const allowedTypes = allowedElements.map(it => it.type);
+      return include ? intersection(include, allowedTypes) : allowedTypes;
     }
   },
   methods: {
-    add({ type, subtype, initState = () => ({}) }) {
-      const element = { type, data: { width: this.processedWidth } };
+    addElements(data) {
+      let position = this.position;
+      data = data.length
+        ? data.map(element => this.add(element, position++))
+        : this.add(data, position);
+
+      this.$emit('add', data);
+      this.isVisible = false;
+    },
+    add({ type, data, subtype, initState = () => ({}) }, position) {
+      const element = { type, data: { width: this.processedWidth, ...data } };
       // If content element within activity
       if (this.activity) {
         element.activityId = this.activity.id;
-        element.position = this.position;
+        element.position = position;
       } else {
         // If embed, assign id
         element.id = cuid();
@@ -158,8 +198,7 @@ export default {
       }
       element.data = { ...element.data, ...initState() };
       if (element.type === 'REFLECTION') delete element.data.correct;
-      this.$emit('add', element);
-      this.isVisible = false;
+      return element;
     },
     isElementDisabled(element) {
       if (this.elementWidth === DEFAULT_ELEMENT_WIDTH) return false;
@@ -177,7 +216,8 @@ export default {
     isVisible(val, oldVal) {
       if (!val && oldVal) this.onHidden();
     }
-  }
+  },
+  components: { SelectElement }
 };
 </script>
 

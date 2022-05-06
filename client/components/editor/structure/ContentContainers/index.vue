@@ -15,8 +15,8 @@
       @addSubcontainer="save"
       @updateSubcontainer="update"
       @deleteSubcontainer="requestContainerDeletion"
-      @addElement="addElement"
-      @saveElement="saveContentElement"
+      @addElement="addElements"
+      @saveElement="saveContentElements"
       @updateElement="updateElement"
       @reorderElement="reorderContentElements"
       @deleteElement="requestElementDeletion"
@@ -45,6 +45,7 @@ import get from 'lodash/get';
 import { getContainerName } from 'tce-core/utils';
 import isEmpty from 'lodash/isEmpty';
 import maxBy from 'lodash/maxBy';
+import Promise from 'bluebird';
 import throttle from 'lodash/throttle';
 
 const appChannel = EventBus.channel('app');
@@ -89,12 +90,19 @@ export default {
       reorderElements: 'reorder',
       deleteElement: 'remove'
     }),
+    addElements(data) {
+      const elements = data.length ? data : [data];
+      return Promise.each(elements, element => this.addElement(element));
+    },
     addContainer() {
       const { type, parentId, nextPosition: position } = this;
       this.save({ type, parentId, position });
     },
-    saveContentElement(element) {
-      return this.saveElement(element).then(() => this.showNotification());
+    saveContentElements(data) {
+      const elements = data.length ? data : [data];
+      return Promise
+        .each(elements, element => this.addElement(element))
+        .then(() => this.showNotification());
     },
     reorderContentElements({ newPosition, items }) {
       const element = items[newPosition];
