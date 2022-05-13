@@ -205,7 +205,7 @@
     "rewrite-lockfile": "^1.0.1",
     "sass": "^1.26.10",
     "sass-loader": "^7.3.1",
-    "sequelize-cli": "^6.2.0",
+    "sequelize-cli": "^6.3.0",
     "sql-log-prettifier": "^0.1.1",
     "stylelint": "^13.8.0",
     "umzug": "^2.2.0",
