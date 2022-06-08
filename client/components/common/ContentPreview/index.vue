@@ -37,10 +37,14 @@ export default {
     processedContainers() {
       const { contentContainers: containers, allowedTypes } = this;
       if (!allowedTypes.length) return containers;
-      return containers.map(container => ({
-        ...container,
-        elements: container.elements.filter(it => allowedTypes.includes(it.type))
-      }));
+      return containers.map(container => {
+        const elements = container
+          .elements
+          .filter(it => allowedTypes.includes(it.type))
+          .map(it => ({ ...it, subtype: it.data.type }));
+
+        return { ...container, elements };
+      });
     },
     elements() {
       const { processedContainers: containers } = this;
