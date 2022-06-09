@@ -47,7 +47,13 @@
         <v-icon dense class="mr-2">mdi-arrow-left</v-icon>Back
       </v-btn>
       <v-btn @click="close" text class="ml-1">Cancel</v-btn>
-      <v-btn @click="save" text class="mr-2">{{ submitLabel }}</v-btn>
+      <v-btn
+        @click="save"
+        :disabled="isSaveDisabled"
+        text
+        class="mr-2">
+        {{ submitLabel }}
+      </v-btn>
     </template>
   </tailor-dialog>
 </template>
@@ -125,6 +131,9 @@ export default {
       if (!multiple || !selection.activity || !elements.length) return;
       const { SELECT, DESELECT } = TOGGLE_BUTTON;
       return allElementsSelected ? DESELECT : SELECT;
+    },
+    isSaveDisabled() {
+      return !this.selection.elements.length;
     }
   },
   methods: {
