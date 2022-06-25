@@ -101,7 +101,7 @@ export default {
     saveContentElements(data) {
       const elements = data.length ? data : [data];
       return Promise
-        .each(elements, element => this.addElement(element))
+        .each(elements, element => this.saveElement(element))
         .then(() => this.showNotification());
     },
     reorderContentElements({ newPosition, items }) {
