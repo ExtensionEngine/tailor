@@ -26,8 +26,8 @@
     "lint:scss": "stylelint \"**/*.vue\" \"**/*.scss\""
   },
   "dependencies": {
-    "@extensionengine/vue-radio": "^0.1.5",
-    "@tailor-cms/utils": "^0.1.5",
+    "@extensionengine/vue-radio": "^0.1.6",
+    "@tailor-cms/utils": "^0.1.6",
     "lodash": "^4.17.21",
     "p-min-delay": "^3.1.0",
     "pluralize": "^8.0.0",
@@ -55,7 +55,7 @@
     "eslint-plugin-require-sort": "^1.2.2",
     "eslint-plugin-standard": "^5.0.0",
     "eslint-plugin-vue": "6.2.2",
-    "node-sass": "^6.0.0",
+    "node-sass": "^7.0.1",
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-visualizer": "^4.2.0",
     "rollup-plugin-vue": "4.3.2",
