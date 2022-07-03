@@ -47,17 +47,13 @@ export default {
   props: {
     meta: { type: Object, default: () => ({ value: null }) }
   },
-  data() {
-    return {
-      showInput: false,
-      colors: this.meta.colors || DEFAULT_COLORS,
-      value: this.meta.value
-    };
-  },
+  data: ({ meta }) => ({
+    showInput: false,
+    colors: meta.colors || DEFAULT_COLORS,
+    value: meta.value
+  }),
   computed: {
-    selected() {
-      return this.value || get(this.colors, '[0][0]', '#000000');
-    }
+    selected: vm => vm.value || get(vm.colors, '[0][0]', '#000000')
   },
   methods: {
     select(color) {
@@ -74,25 +70,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$size: 18px;
-$gutter: 5px;
+$size: 1.125rem;
+$gutter: 0.3125rem;
 
 .control-group {
-  margin: 5px 0;
+  margin: 0.3125rem 0;
   color: #333;
   font-weight: normal;
-  line-height: 24px;
+  line-height: 1.5rem;
   word-wrap: break-word;
 }
 
 .picker {
-  padding: 10px;
+  padding: 0.625rem;
 
   .title {
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 0.625rem;
     color: #808080;
-    font-size: 14px !important;
+    font-size: 0.875rem !important;
     font-weight: normal;
     line-height: 1rem;
   }

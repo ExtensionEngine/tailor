@@ -16,16 +16,14 @@ export default {
     meta: { type: Object, default: () => ({ value: null }) }
   },
   computed: {
-    options() {
-      return {
-        id: this.meta.key,
-        fileKey: get(this.meta, 'value.key', ''),
-        fileName: get(this.meta, 'value.name', ''),
-        validate: this.meta.validate,
-        label: this.meta.label,
-        placeholder: this.meta.placeholder
-      };
-    }
+    options: ({ meta }) => ({
+      id: meta.key,
+      fileKey: get(meta, 'value.key', ''),
+      fileName: get(meta, 'value.name', ''),
+      validate: meta.validate,
+      label: meta.label,
+      placeholder: meta.placeholder
+    })
   },
   components: { FileInput }
 };
