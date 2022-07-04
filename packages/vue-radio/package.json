@@ -1,6 +1,6 @@
 {
   "name": "@extensionengine/vue-radio",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Vue radio plugin",
   "homepage": "https://github.com/ExtensionEngine/tailor#readme",
   "bugs": {
@@ -13,7 +13,7 @@
   "license": "MIT",
   "author": "ExtensionEngine <info@extensionengine.com>",
   "main": "dist/vue-radio.js",
-  "module": "dist/vue-radio.esm.js",
+  "module": "dist/vue-radio.es.js",
   "files": [
     "dist"
   ],
