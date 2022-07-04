@@ -1,6 +1,6 @@
 {
   "name": "@tailor-cms/utils",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Tailor utility functions",
   "keywords": [],
   "homepage": "https://github.com/ExtensionEngine/tailor#readme",
@@ -14,7 +14,7 @@
   "license": "MIT",
   "author": "ExtensionEngine <info@extensionengine.com>",
   "main": "dist/tailor-utils.js",
-  "module": "dist/tailor-utils.esm.js",
+  "module": "dist/tailor-utils.es.js",
   "files": [
     "dist"
   ],
