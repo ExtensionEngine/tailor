@@ -2,11 +2,11 @@
 
 module.exports = {
   root: true,
-  extends: '@extensionengine/eslint-config',
+  extends: '@extensionengine/eslint-config/base',
   overrides: [{
-    files: ['src/**'],
+    files: ['src/**', 'vite.config.js'],
     parserOptions: {
-      parser: '@babel/eslint-parser',
+      ecmaVersion: 'latest',
       sourceType: 'module'
     }
   }]
