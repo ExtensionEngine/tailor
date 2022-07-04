@@ -4,7 +4,7 @@
   "author": "ExtensionEngine <info@extensionengine.com>",
   "license": "MIT",
   "type": "module",
-  "version": "1.0.0.beta1",
+  "version": "1.0.0-beta.1",
   "main": "dist/tailor-utils.js",
   "module": "dist/tailor-utils.es.js",
   "files": [
