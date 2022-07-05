@@ -8,6 +8,7 @@ const config = {
     lib: {
       entry: './src/index.js',
       name: 'TailorUtils',
+      fileName: format => `tailor-utils.${format}.js`,
       formats: ['es', 'cjs']
     }
   }
