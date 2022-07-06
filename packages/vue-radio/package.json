@@ -30,7 +30,7 @@
     "lint": "eslint --ext .js ."
   },
   "devDependencies": {
-    "@extensionengine/eslint-config": "^2.0.0",
+    "@extensionengine/eslint-config": "^3.0.1",
     "del-cli": "^4.0.1",
     "eslint": "^8.19.0",
     "eslint-config-semistandard": "^16.0.0",
