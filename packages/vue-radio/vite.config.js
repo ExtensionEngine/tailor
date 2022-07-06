@@ -9,6 +9,11 @@ const config = {
       entry: './src/index.js',
       name: 'VueRadio',
       formats: ['es', 'cjs', 'umd']
+    },
+    rollupOptions: {
+      output: {
+        exports: 'named'
+      }
     }
   }
 };
