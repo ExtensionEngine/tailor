@@ -4,7 +4,7 @@
   "author": "ExtensionEngine <info@extensionengine.com>",
   "license": "MIT",
   "type": "module",
-  "version": "1.0.0-beta.17",
+  "version": "1.0.0-beta.18",
   "files": ["dist"],
   "main": "./dist/utils.cjs.js",
   "umd:main": "./dist/utils.umd.js",
