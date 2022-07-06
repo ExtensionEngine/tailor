@@ -1,4 +1,9 @@
 import { defineConfig } from 'vite';
+import { fileURLToPath } from 'url';
+import path from 'path';
+
+const _filename = fileURLToPath(import.meta.url);
+const _dirname = path.dirname(_filename);
 
 /**
  * @type {import('vite').UserConfig}
@@ -6,10 +11,9 @@ import { defineConfig } from 'vite';
 const config = {
   build: {
     lib: {
-      entry: './src/index.js',
+      entry: path.join(_dirname, './src/index.js'),
       name: 'TailorUtils',
-      fileName: format => `tailor-utils.${format}.js`,
-      formats: ['es', 'cjs']
+      formats: ['es', 'cjs', 'umd']
     }
   }
 };

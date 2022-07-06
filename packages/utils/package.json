@@ -4,12 +4,17 @@
   "author": "ExtensionEngine <info@extensionengine.com>",
   "license": "MIT",
   "type": "module",
-  "version": "1.0.0-beta.2",
-  "main": "dist/tailor-utils.js",
-  "module": "dist/tailor-utils.es.js",
-  "files": [
-    "dist"
-  ],
+  "version": "1.0.0-beta.17",
+  "files": ["dist"],
+  "main": "./dist/utils.cjs.js",
+  "umd:main": "./dist/utils.umd.js",
+  "module": "./dist/utils.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/utils.es.js",
+      "require": "./dist/utils.cjs.js"
+    }
+  },
   "keywords": [],
   "homepage": "https://github.com/ExtensionEngine/tailor#readme",
   "bugs": {
@@ -32,7 +37,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@extensionengine/eslint-config": "^2.0.0",
+    "@extensionengine/eslint-config": "^3.0.1",
     "del-cli": "^4.0.1",
     "eslint": "^8.19.0",
     "eslint-config-semistandard": "^16.0.0",
