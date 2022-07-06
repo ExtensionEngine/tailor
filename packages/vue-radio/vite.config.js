@@ -8,7 +8,7 @@ const config = {
     lib: {
       entry: './src/index.js',
       name: 'VueRadio',
-      formats: ['es', 'cjs']
+      formats: ['es', 'cjs', 'umd']
     }
   }
 };

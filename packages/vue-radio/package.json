@@ -4,12 +4,17 @@
   "author": "ExtensionEngine <info@extensionengine.com>",
   "license": "MIT",
   "type": "module",
-  "version": "1.0.0-beta.1",
-  "main": "dist/vue-radio.js",
-  "module": "dist/vue-radio.es.js",
-  "files": [
-    "dist"
-  ],
+  "version": "1.0.0-beta.2",
+  "files": ["dist"],
+  "main": "./dist/vue-radio.cjs.js",
+  "umd:main": "./dist/vue-radio.umd.js",
+  "module": "./dist/vue-radio.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/vue-radio.es.js",
+      "require": "./dist/vue-radio.cjs.js"
+    }
+  },
   "homepage": "https://github.com/ExtensionEngine/tailor#readme",
   "bugs": {
     "url": "https://github.com/ExtensionEngine/tailor/issues"
@@ -22,7 +27,7 @@
     "prebuild": "del-cli dist",
     "build": "vite build",
     "release": "npx np",
-    "lint": "eslint --ext .js,.vue ."
+    "lint": "eslint --ext .js ."
   },
   "devDependencies": {
     "@extensionengine/eslint-config": "^2.0.0",
