@@ -35,7 +35,7 @@
 <script>
 import get from 'lodash/get';
 import uniqueId from 'lodash/uniqueId';
-import { upload as uploadMixin } from '@tailor-cms/core-components';
+import { upload as uploadMixin } from '../';
 
 export default {
   name: 'file-input',
