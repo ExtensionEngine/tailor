@@ -200,7 +200,7 @@
     "exports-loader": "^0.7.0",
     "imports-loader": "^0.8.0",
     "lerna": "^4.0.0",
-    "nodemon": "^2.0.18",
+    "nodemon": "^2.0.19",
     "poi": "^12.10.3",
     "rewrite-lockfile": "^1.0.1",
     "sass": "^1.53.0",
