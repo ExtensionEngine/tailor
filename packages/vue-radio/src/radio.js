@@ -13,10 +13,10 @@ class Channel {
 
   eventName = event => this._id ? [this._id, event].join('/') : event;
 
-  emit = delegateBus('$emit')
-  on = delegateBus('$on')
-  once = delegateBus('$once')
-  off = delegateBus('$off')
+  emit = delegateBus('$emit');
+  on = delegateBus('$on');
+  once = delegateBus('$once');
+  off = delegateBus('$off');
 
   request(id, ...args) {
     const onReply = isFunction(last(args)) ? args.pop() : noop;
