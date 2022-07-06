@@ -4,7 +4,7 @@
   "author": "ExtensionEngine <info@extensionengine.com>",
   "license": "MIT",
   "type": "module",
-  "version": "1.0.0-beta.2",
+  "version": "1.0.0-beta.3",
   "files": ["dist"],
   "main": "./dist/vue-radio.cjs.js",
   "umd:main": "./dist/vue-radio.umd.js",
