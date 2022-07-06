@@ -28,7 +28,7 @@
     "prebuild": "del-cli dist",
     "build": "vite build",
     "release": "npx np",
-    "lint": "eslint --ext .js,.vue ."
+    "lint": "eslint --ext .js ."
   },
   "dependencies": {
     "cuid": "^2.1.8",
