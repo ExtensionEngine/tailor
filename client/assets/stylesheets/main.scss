@@ -15,12 +15,14 @@ $web-font-path: web-fonts-url(
 
 // MDI
 $mdi-font-path: '~@mdi/font/fonts';
-
 @import '~@mdi/font/scss/materialdesignicons';
 
 // Common stylesheets
 @import 'common/all';
 @import 'common/assessments/all';
+
+// Tailor core components
+@import "~@tailor-cms/core-components/dist/style.css";
 
 // Vuetify
 @import "~vuetify/dist/vuetify.css";

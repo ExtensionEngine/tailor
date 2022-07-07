@@ -57,7 +57,7 @@ const getAnswerType = isGraded => isGraded ? 'Answer' : 'Option';
 const getButtonLabel = isExpanded => isExpanded ? 'hide' : 'show';
 
 export default {
-  name: 'feedback',
+  name: 'question-feedback',
   props: {
     answers: { type: [Array, Boolean], default: null },
     feedback: { type: Object, default: () => ({}) },
