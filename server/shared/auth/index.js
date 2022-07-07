@@ -17,7 +17,7 @@ const options = {
 };
 
 auth.use(new LocalStrategy(options, (email, password, done) => {
-  return User.findOne({ where: { email } })
+  return User.unscoped().findOne({ where: { email } })
     .then(user => user && user.authenticate(password))
     .then(user => done(null, user || false))
     .error(err => done(err, false));
@@ -51,7 +51,7 @@ auth.deserializeUser((user, done) => done(null, user));
 module.exports = auth;
 
 function verifyJWT(payload, done) {
-  return User.findByPk(payload.id)
+  return User.unscoped().findByPk(payload.id)
     .then(user => done(null, user || false))
     .error(err => done(err, false));
 }
@@ -72,7 +72,7 @@ function extractJwtFromCookie(req) {
 
 function secretOrKeyProvider(_, rawToken, done) {
   const { id } = jwt.decode(rawToken) || {};
-  return User.findByPk(id, { rejectOnEmpty: true })
+  return User.unscoped().findByPk(id, { rejectOnEmpty: true })
     .then(user => user.getTokenSecret())
     .then(secret => done(null, secret))
     .catch(err => done(err));

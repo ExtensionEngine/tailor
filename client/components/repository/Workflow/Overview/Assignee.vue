@@ -19,6 +19,7 @@ import AssigneeAvatar from '@/components/repository/common/AssigneeAvatar';
 
 export default {
   name: 'overview-assignee',
+  inheritAttrs: false,
   props: {
     label: { type: String, default: 'Unassigned' },
     imgUrl: { type: String, default: null }

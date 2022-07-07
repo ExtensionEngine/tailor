@@ -62,7 +62,7 @@ const DRAG_OPTIONS = {
 };
 
 export default {
-  name: 'question',
+  name: 'question-input',
   props: {
     assessment: { type: Object, required: true },
     errors: { type: Array, default: () => ([]) },
