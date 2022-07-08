@@ -104,7 +104,6 @@
     "jsonwebtoken": "^8.5.1",
     "jszip": "^3.10.0",
     "listr": "^0.14.3",
-    "loaders.css": "^0.1.2",
     "lodash": "^4.17.21",
     "lru-cache": "^6.0.0",
     "luxon": "^1.19.3",
