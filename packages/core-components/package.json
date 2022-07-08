@@ -3,8 +3,10 @@
   "description": "Reusable Tailor UI components",
   "author": "ExtensionEngine <info@extensionengine.com>",
   "license": "MIT",
-  "version": "1.0.0-beta.2",
-  "files": ["dist"],
+  "version": "1.0.0-beta.6",
+  "files": [
+    "dist"
+  ],
   "main": "./dist/core-components.cjs.js",
   "umd:main": "./dist/core-components.umd.js",
   "module": "./dist/core-components.es.js",
@@ -59,7 +61,7 @@
   },
   "peerDependencies": {
     "vee-validate": "^3.4.5",
-    "vuetify": "^2.3.21"
+    "vuetify": "^2.6.7"
   },
   "publishConfig": {
     "access": "public"
