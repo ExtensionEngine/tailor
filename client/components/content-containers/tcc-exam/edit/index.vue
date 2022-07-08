@@ -14,7 +14,7 @@
       </v-chip>
     </div>
     <div v-else>
-      <div class="align-baseline header d-flex justify-space-between">
+      <div class="header d-flex justify-space-between align-baseline">
         <h3 class="text-left">{{ title }}</h3>
         <div class="actions">
           <v-btn @click="collapsed = true" text>

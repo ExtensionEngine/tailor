@@ -203,7 +203,7 @@ export default {
   }
 }
 
-.spinner,.no-results {
+.spinner, .no-results {
   margin-top: 40px;
 }
 

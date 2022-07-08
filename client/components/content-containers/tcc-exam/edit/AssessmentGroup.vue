@@ -35,10 +35,11 @@
       :elements="elements" />
     <h4>Questions</h4>
     <v-alert
-      :value="!hasAssessments" color="blue-grey darken-3"
+      :value="!hasAssessments"
+      color="blue-grey darken-3"
       icon="mdi-information-variant"
       text>
-      Click the button below to create  sment.
+      Click the button below to Create first Assessment.
     </v-alert>
     <element-list
       @add="addAssessments"
