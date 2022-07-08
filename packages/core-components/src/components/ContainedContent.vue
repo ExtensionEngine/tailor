@@ -5,7 +5,7 @@
     @dragstart="$emit('dragstart')"
     @dragend="$emit('dragend')"
     @dragover="scrollContainer"
-    :cols="cols"
+    :cols="elementWidth"
     :class="[{ disabled: isDisabled, hovered: isHovered }]"
     class="contained-content">
     <span v-if="!isDisabled" class="drag-handle">
@@ -45,7 +45,7 @@ export default {
     },
     elementWidth() {
       const { element, setWidth } = this;
-      return setWidth ? get(element, 'data.width', 12) : '';
+      return setWidth ? get(element, 'data.width', 12) : undefined;
     }
   },
   methods: {
