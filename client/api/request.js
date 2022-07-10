@@ -8,7 +8,7 @@ Axios.prototype.submitForm = function (url, fields, options) {
 };
 
 const config = {
-  baseURL: process.env.API_PATH,
+  baseURL: import.meta.env.API_PATH,
   withCredentials: true,
   headers: { 'Content-Type': 'application/json' }
 };

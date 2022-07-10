@@ -49,5 +49,5 @@ class RepositoryFeed {
 }
 
 export default new RepositoryFeed({
-  baseUrl: process.env.API_PATH
+  baseUrl: import.meta.env.API_PATH
 });
