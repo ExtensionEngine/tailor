@@ -1,8 +1,8 @@
-import PriorityCritical from './PriorityCritical';
-import PriorityHigh from './PriorityHigh';
-import PriorityLow from './PriorityLow';
-import PriorityMedium from './PriorityMedium';
-import PriorityTrivial from './PriorityTrivial';
+import PriorityCritical from './PriorityCritical.vue';
+import PriorityHigh from './PriorityHigh.vue';
+import PriorityLow from './PriorityLow.vue';
+import PriorityMedium from './PriorityMedium.vue';
+import PriorityTrivial from './PriorityTrivial.vue';
 
 export default {
   PriorityCritical,

@@ -34,8 +34,8 @@
 import { getElementId, isQuestion } from '@tailor-cms/utils';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import commentEventListeners from 'components/common/mixins/commentEventListeners';
-import ContentContainers from './ContainerList';
-import ContentLoader from './Loader';
+import ContentContainers from './ContainerList.vue';
+import ContentLoader from './Loader.vue';
 import differenceBy from 'lodash/differenceBy';
 import find from 'lodash/find';
 import get from 'lodash/get';
@@ -43,7 +43,7 @@ import isEqual from 'lodash/isEqual';
 import { loader } from '@tailor-cms/core-components';
 import { mapChannels } from '@extensionengine/vue-radio';
 import max from 'lodash/max';
-import PublishDiffProvider from './PublishDiffProvider';
+import PublishDiffProvider from './PublishDiffProvider.vue';
 import throttle from 'lodash/throttle';
 import transform from 'lodash/transform';
 

@@ -30,9 +30,9 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import ActivityDiscussion from '@/components/repository/common/ActivityDiscussion';
-import SidebarHeader from './Header';
-import StatusFieldGroup from './FieldGroup';
+import ActivityDiscussion from '@/components/repository/common/ActivityDiscussion.vue';
+import SidebarHeader from './Header.vue';
+import StatusFieldGroup from './FieldGroup.vue';
 
 export default {
   props: {

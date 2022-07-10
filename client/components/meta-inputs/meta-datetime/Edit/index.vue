@@ -26,7 +26,7 @@
 <script>
 import { DatePicker } from '@tailor-cms/core-components';
 import set from 'date-fns/set';
-import TimePicker from './TimePicker';
+import TimePicker from './TimePicker.vue';
 
 export default {
   props: {

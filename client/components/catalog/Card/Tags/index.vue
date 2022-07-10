@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import AddTag from './AddTag';
+import AddTag from './AddTag.vue';
 import clamp from 'lodash/clamp';
 import get from 'lodash/get';
 import map from 'lodash/map';

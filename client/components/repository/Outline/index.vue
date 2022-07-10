@@ -57,19 +57,19 @@
 </template>
 
 <script>
-import Activity from './Activity';
+import Activity from './Activity.vue';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import map from 'lodash/map';
 import { mapGetters } from 'vuex';
-import OutlineFooter from './OutlineFooter';
+import OutlineFooter from './OutlineFooter.vue';
 import reorderMixin from './reorderMixin';
-import SearchResult from './SearchResult';
+import SearchResult from './SearchResult.vue';
 import selectActivity from '@/components/repository/common/selectActivity';
-import Sidebar from '../common/Sidebar';
-import StructureToolbar from './Toolbar';
-import TreeView from './TreeView';
+import Sidebar from '../common/Sidebar/index.vue';
+import StructureToolbar from './Toolbar.vue';
+import TreeView from './TreeView/index.vue';
 
 export default {
   mixins: [reorderMixin, selectActivity],

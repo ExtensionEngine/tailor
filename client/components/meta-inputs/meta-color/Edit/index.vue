@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import ColorInput from './ColorInput';
+import ColorInput from './ColorInput.vue';
 import get from 'lodash/get';
 
 const DEFAULT_COLORS = [

@@ -60,7 +60,7 @@
 
 <script>
 import { activity as activityUtils, numberToLetter } from '@tailor-cms/utils';
-import AssessmentGroup from './AssessmentGroup';
+import AssessmentGroup from './AssessmentGroup.vue';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';

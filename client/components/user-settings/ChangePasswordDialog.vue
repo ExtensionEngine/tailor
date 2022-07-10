@@ -78,7 +78,7 @@
 
 <script>
 import { mapActions } from 'vuex';
-import TailorDialog from '@/components/common/TailorDialog';
+import TailorDialog from '@/components/common/TailorDialog.vue';
 
 const defaultData = () => ({
   currentPassword: null,

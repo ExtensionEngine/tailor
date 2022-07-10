@@ -34,8 +34,8 @@ import { mapActions, mapGetters } from 'vuex';
 import { repository as api } from '@/api';
 import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
-import Meta from '@/components/common/MetaInput';
-import RepositoryNameField from '../common/RepositoryNameField';
+import Meta from '@/components/common/MetaInput.vue';
+import RepositoryNameField from '../common/RepositoryNameField.vue';
 import set from 'lodash/set';
 
 export default {

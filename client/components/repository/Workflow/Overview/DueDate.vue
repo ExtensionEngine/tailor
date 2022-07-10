@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import WorkflowDueDate from '@/components/repository/common/WorkflowDueDate';
+import WorkflowDueDate from '@/components/repository/common/WorkflowDueDate.vue';
 
 export default {
   name: 'overview-due-date',

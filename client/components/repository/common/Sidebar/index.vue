@@ -19,8 +19,8 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import SidebarBody from './Body';
-import SidebarHeader from './Header';
+import SidebarBody from './Body.vue';
+import SidebarHeader from './Header.vue';
 
 export default {
   props: {

@@ -47,11 +47,11 @@
 </template>
 
 <script>
-import AssigneeAvatar from '@/components/repository/common/AssigneeAvatar';
+import AssigneeAvatar from '@/components/repository/common/AssigneeAvatar.vue';
 import find from 'lodash/find';
 import { mapGetters } from 'vuex';
 import { workflow } from '@tailor-cms/config';
-import WorkflowDueDate from '@/components/repository/common/WorkflowDueDate';
+import WorkflowDueDate from '@/components/repository/common/WorkflowDueDate.vue';
 
 export default {
   name: 'activity-status-card',

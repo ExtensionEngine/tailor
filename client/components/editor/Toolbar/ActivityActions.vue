@@ -27,7 +27,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import { activity as api } from '@/api';
-import publishMixin from 'components/common/mixins/publish';
+import publishMixin from 'components/common/mixins/publish.vue';
 
 export default {
   name: 'activity-actions',

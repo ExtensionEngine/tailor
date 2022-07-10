@@ -21,7 +21,7 @@ import filter from 'lodash/filter';
 import filterConfigs from '../repositoryFilterConfigs';
 import flatMap from 'lodash/flatMap';
 import { mapState } from 'vuex';
-import SelectedFilter from './SelectedFilter';
+import SelectedFilter from './SelectedFilter.vue';
 
 export default {
   name: 'repository-filter-selection',

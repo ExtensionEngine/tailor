@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import TailorDialog from '@/components/common/TailorDialog';
+import TailorDialog from '@/components/common/TailorDialog.vue';
 
 const AVATAR_OPTS = { compressionRate: 0.6, mimetype: 'image/jpeg' };
 

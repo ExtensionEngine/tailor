@@ -20,10 +20,10 @@
 </template>
 
 <script>
-import ActivityOptions from '@/components/repository/common/ActivityOptions/Menu';
+import ActivityOptions from '@/components/repository/common/ActivityOptions/Menu.vue';
 import get from 'lodash/get';
 import { mapGetters } from 'vuex';
-import Publishing from './Publishing';
+import Publishing from './Publishing.vue';
 
 export default {
   name: 'activity-sidebar-header',

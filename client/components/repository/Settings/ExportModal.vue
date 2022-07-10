@@ -20,7 +20,7 @@
 <script>
 import { mapGetters, mapState } from 'vuex';
 import { repository as api } from '@/api';
-import TailorDialog from '@/components/common/TailorDialog';
+import TailorDialog from '@/components/common/TailorDialog.vue';
 
 const STATUS = {
   INIT: {

@@ -52,8 +52,8 @@
 <script>
 import { mapGetters, mapState } from 'vuex';
 import { ActiveUsers } from '@tailor-cms/core-components';
-import ActivityActions from './ActivityActions';
-import ElementToolbar from './ElementToolbar';
+import ActivityActions from './ActivityActions.vue';
+import ElementToolbar from './ElementToolbar.vue';
 import { getElementId } from '@tailor-cms/utils';
 
 export default {

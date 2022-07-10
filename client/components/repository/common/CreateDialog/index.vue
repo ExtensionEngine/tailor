@@ -43,9 +43,9 @@
 <script>
 import { InsertLocation } from '@tailor-cms/utils';
 import { mapActions } from 'vuex';
-import MetaInput from '@/components/common/MetaInput';
-import TailorDialog from '@/components/common/TailorDialog';
-import TypeSelect from './TypeSelect';
+import MetaInput from '@/components/common/MetaInput.vue';
+import TailorDialog from '@/components/common/TailorDialog.vue';
+import TypeSelect from './TypeSelect.vue';
 
 const initActivityState = (repositoryId, levels) => ({
   repositoryId,

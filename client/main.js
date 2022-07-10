@@ -26,7 +26,7 @@ import vuetify from '@/plugins/vuetify';
 
 import getStore from './store';
 import getRouter from './router';
-import App from './App';
+import App from './App.vue';
 
 Vue.component('tce-question-container', QuestionContainer);
 Vue.component('ValidationObserver', ValidationObserver);

@@ -49,10 +49,10 @@
 </template>
 
 <script>
-import ActivityDiscussion from '@/components/repository/common/ActivityDiscussion';
-import ActivityNavigation from './Navigation';
+import ActivityDiscussion from '@/components/repository/common/ActivityDiscussion.vue';
+import ActivityNavigation from './Navigation.vue';
 import debounce from 'lodash/debounce';
-import ElementSidebar from './ElementSidebar';
+import ElementSidebar from './ElementSidebar/index.vue';
 import get from 'lodash/get';
 import { getElementId } from '@tailor-cms/utils';
 import { mapGetters } from 'vuex';
