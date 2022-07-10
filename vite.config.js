@@ -56,7 +56,7 @@ export default defineConfig(({ mode }) => {
     OIDC_ENABLED: yn(env.OIDC_ENABLED),
     OIDC_LOGOUT_ENABLED: yn(env.OIDC_LOGOUT_ENABLED),
     OIDC_LOGIN_TEXT: `"${env.OIDC_LOGIN_TEXT}"`,
-    'process.env': {} // Patch due to being elimated
+    'process.env': {} // Patch due to being eliminated
   }
   const server = {
     host: env.HOSTNAME || '0.0.0.0',
