@@ -52,10 +52,12 @@ export default class ComponentRegistry {
     const { position = _registry.length, isExtension } = options;
     const element = isExtension
       ? (await import(
+        /* @vite-ignore */
         /* webpackExclude: /server\/.*$/ */
         `extensions/${_type}s/${path}`
       )).default
       : (await import(
+        /* @vite-ignore */
         /* webpackExclude: /server\/.*$/ */
         `components/${_type}s/${path}`
       )).default;
@@ -81,6 +83,7 @@ export default class ComponentRegistry {
 
   loadExtensionList() {
     return import(
+      /* @vite-ignore */
       /* webpackExclude: /server\/.*$/ */
       `extensions/${this._type}s/${EXTENSIONS_LIST}`
     )
