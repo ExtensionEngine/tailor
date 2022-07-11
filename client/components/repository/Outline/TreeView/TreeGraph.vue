@@ -262,6 +262,8 @@ function rangeToArray(start, end, size) {
 </script>
 
 <style lang="scss">
+@import '@/assets/stylesheets/common/variables';
+
 $font: 0.875rem $font-family-secondary;
 $text-color: #263238;
 $node-color: #b9b9b9;

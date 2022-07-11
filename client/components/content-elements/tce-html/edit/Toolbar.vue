@@ -64,6 +64,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '@/assets/stylesheets/common/variables';
+
 $icon-color: #333;
 $icon-accent-color: #ff6590;
 $icon-size: 1.125rem;

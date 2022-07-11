@@ -58,6 +58,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/stylesheets/common/variables';
+
 ::v-deep .title {
   color: #808080;
   font-family: $font-family-secondary;
