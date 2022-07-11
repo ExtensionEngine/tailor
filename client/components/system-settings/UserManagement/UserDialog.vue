@@ -89,7 +89,7 @@ import map from 'lodash/map';
 import { role } from 'shared/role';
 import TailorDialog from '@/components/common/TailorDialog.vue';
 
-const { user: roles } = role
+const { user: roles } = role;
 
 const resetUser = () => ({
   email: '',
