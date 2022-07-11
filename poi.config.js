@@ -50,7 +50,6 @@ const extensions = ['.vue'];
 /** @type {import('poi').Config} */
 module.exports = {
   plugins: [
-    '@poi/eslint',
     '@poi/bundle-report',
     require.resolve('./build/plugins/stats'),
     {
