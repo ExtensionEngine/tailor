@@ -1,27 +1,27 @@
 /* eslint-disable sort-imports */
 import { numeric as numericParser } from 'client/utils/paramsParser';
 import Router from 'vue-router';
-import { role } from '@/../config/shared';
+import { role } from '../config/shared';
 import Vue from 'vue';
 
-import Auth from './components/auth/Container';
-import Catalog from './components/catalog/Container';
-import Repository from './components/repository';
-import RepositoryRevisions from './components/repository/Revisions';
-import RepositorySettings from './components/repository/Settings';
-import Editor from './components/editor';
-import ForgotPassword from './components/auth/ForgotPassword';
-import General from './components/repository/Settings/General';
-import InstalledElements from './components/system-settings/ContentElements';
-import InstalledSchemas from './components/system-settings/StructureTypes';
-import Login from './components/auth/Login';
-import Outline from './components/repository/Outline';
-import RepoUserManagement from './components/repository/Settings/UserManagement';
-import ResetPassword from './components/auth/ResetPassword';
-import SystemSettings from './components/system-settings';
-import SystemUserManagement from './components/system-settings/UserManagement';
-import UserSettings from './components/user-settings';
-import Workflow from './components/repository/Workflow';
+import Auth from './components/auth/Container.vue';
+import Catalog from './components/catalog/Container.vue';
+import Repository from './components/repository/index.vue';
+import RepositoryRevisions from './components/repository/Revisions/index.vue';
+import RepositorySettings from './components/repository/Settings/index.vue';
+import Editor from './components/editor/index.vue';
+import ForgotPassword from './components/auth/ForgotPassword.vue';
+import General from './components/repository/Settings/General.vue';
+import InstalledElements from './components/system-settings/ContentElements.vue';
+import InstalledSchemas from './components/system-settings/StructureTypes.vue';
+import Login from './components/auth/Login.vue';
+import Outline from './components/repository/Outline/index.vue';
+import RepoUserManagement from './components/repository/Settings/UserManagement/index.vue';
+import ResetPassword from './components/auth/ResetPassword.vue';
+import SystemSettings from './components/system-settings/index.vue';
+import SystemUserManagement from './components/system-settings/UserManagement/index.vue';
+import UserSettings from './components/user-settings/index.vue';
+import Workflow from './components/repository/Workflow/index.vue';
 
 Vue.use(Router);
 
