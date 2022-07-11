@@ -44,7 +44,7 @@
   "dependencies": {
     "@extensionengine/tapster": "github:ExtensionEngine/tapster#53ccb222c757948d322c33087620453ddf5e70ed",
     "@extensionengine/tce-jodit": "github:extensionengine/tce-jodit#c5464cd",
-    "@extensionengine/tce-scorm": "github:ExtensionEngine/tce-scorm#85d39a8d73f303f",
+    "@extensionengine/tce-scorm": "^0.0.1",
     "@extensionengine/vue-radio": "^1.0.0-beta.4",
     "@mdi/font": "^4.8.95",
     "@tailor-cms/config": "^1.0.0-beta.17",
