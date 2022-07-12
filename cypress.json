@@ -1,6 +1,0 @@
-{
-  "integrationFolder": "cypress/e2e",
-  "testFiles": "**/*.spec.js",
-  "viewportWidth": 1400,
-  "viewportHeight": 800
-}
