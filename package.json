@@ -100,7 +100,7 @@
     "is-localhost": "0.0.2",
     "is-safari": "^1.0.0",
     "is-url": "^1.2.4",
-    "joycon": "^2.2.5",
+    "joycon": "^3.1.1",
     "jsonwebtoken": "^8.5.1",
     "jszip": "^3.10.0",
     "listr": "^0.14.3",
