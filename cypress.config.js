@@ -7,7 +7,7 @@ module.exports = defineConfig({
   viewportHeight: 800,
   e2e: {
     baseUrl: 'http://localhost:3000',
-    specPattern: 'cypress/e2e/**/*.spec.js',
+    specPattern: 'cypress/e2e/**/*.cy.js',
     setupNodeEvents(on, config) {
       return require('./cypress/plugins/index.js')(on, config);
     }
