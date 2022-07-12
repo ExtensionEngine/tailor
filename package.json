@@ -173,7 +173,7 @@
     "@extensionengine/stylelint-config": "^1.1.1",
     "@poi/plugin-bundle-report": "^12.1.2",
     "@types/babel-core": "^6.25.7",
-    "@types/eslint": "^7.2.4",
+    "@types/eslint": "^8.4.5",
     "@types/poi": "^12.5.5",
     "@types/webpack": "^4.41.0",
     "bili": "^5.0.5",
