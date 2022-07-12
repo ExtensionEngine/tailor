@@ -46,6 +46,9 @@ Adaptive course authoring platform.
   enter configuration details.
 - Initialize database by running `npm run db migrate`
 - Enable default repository schema by setting env variable `ENABLE_DEFAULT_SCHEMA=1` or define a custom one (more details below).
+- Configure Tailor by following the steps [in the configuration section](#content-repository-structure), specifically creating a `tailor.config.js` out of `tailor.config.js.example`.
+- Generate a value for `STORAGE_PROXY_PRIVATE_KEY` located in Tailor's `.env` file. You can use `openssl genrsa -out private-key.pem 2048` to generate a 2048-bit private key and then replace new line with `\n` characters to get a value in the following format:
+`-----BEGIN RSA PRIVATE KEY-----\ncomponent\ncomponent\ncomponent\n-----END RSA PRIVATE KEY-----`
 - You can create admin user by running `npm run add:admin <email> <password>`
 - App branding is configured via values set in a file named `.brandrc` (or
   `.brandrc.js`). Use the `.brandrc.example` file as a template: `cp
