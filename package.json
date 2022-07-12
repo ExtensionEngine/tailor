@@ -50,7 +50,7 @@
     "@tailor-cms/config": "1.0.0-beta.17",
     "@tailor-cms/core-components": "1.0.0-beta.6",
     "@tailor-cms/utils": "^1.0.0-beta.18",
-    "@ungap/global-this": "^0.4.0",
+    "@ungap/global-this": "^0.4.4",
     "JSONStream": "^1.3.5",
     "auto-bind": "^3.0.0",
     "aws-sdk": "^2.1172.0",
