@@ -50,7 +50,6 @@ const extensions = ['.vue'];
 /** @type {import('poi').Config} */
 module.exports = {
   plugins: [
-    '@poi/eslint',
     '@poi/bundle-report',
     require.resolve('./build/plugins/stats'),
     {
@@ -111,13 +110,6 @@ module.exports = {
   chainWebpack(config, { mode }) {
     config.resolve.alias.merge(aliases);
     config.resolve.extensions.merge(extensions);
-
-    config.module.rule('bootstrap')
-      .test(/bootstrap-sass[/\\]assets[/\\]javascripts[/\\]/)
-      .post()
-      .use('imports-loader')
-      .loader(require.resolve('imports-loader'))
-      .options({ jQuery: 'jquery' });
 
     config.module.rule('event-source-polyfill')
       .test(require.resolve('event-source-polyfill'))

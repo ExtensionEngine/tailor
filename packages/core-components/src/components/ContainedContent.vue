@@ -1,11 +1,12 @@
 <template>
-  <div
+  <v-col
     @mouseover="isHovered = true"
     @mouseleave="isHovered = false"
     @dragstart="$emit('dragstart')"
     @dragend="$emit('dragend')"
     @dragover="scrollContainer"
-    :class="[widthClass, { disabled: isDisabled, hovered: isHovered }]"
+    :cols="elementWidth"
+    :class="[{ disabled: isDisabled, hovered: isHovered }]"
     class="contained-content">
     <span v-if="!isDisabled" class="drag-handle">
       <span class="mdi mdi-drag-vertical"></span>
@@ -16,7 +17,7 @@
       @save:meta="$emit('save:meta', $event)"
       @delete="$emit('delete')"
       v-bind="bindings" />
-  </div>
+  </v-col>
 </template>
 
 <script>
@@ -42,9 +43,9 @@ export default {
       } = this;
       return { element, isDisabled, isDragged, isHovered, dense, ...attrs };
     },
-    widthClass() {
+    elementWidth() {
       const { element, setWidth } = this;
-      return setWidth ? `col-xs-${get(element, 'data.width', 12)}` : '';
+      return setWidth ? get(element, 'data.width', 12) : undefined;
     }
   },
   methods: {

@@ -3,8 +3,9 @@
     @click:row="selectActivity($event.id)"
     :headers="headers"
     :items="items"
+    height="100%"
     item-class="class"
-    disable-pagination hide-default-footer
+    disable-pagination hide-default-footer fixed-header
     class="overview primary lighten-5">
     <template #item.name="item">
       <overview-name v-bind="item" />
@@ -109,6 +110,12 @@ export default {
 $row-background: var(--v-primary-lighten4);
 
 .overview ::v-deep {
+  thead.v-data-table-header {
+    tr th {
+      background: #eceff1;
+    }
+  }
+
   .column-name {
     max-width: 17.75rem;
   }

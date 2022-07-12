@@ -98,6 +98,7 @@ class Amazon {
   // API docs: https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#deleteObjects-property
   deleteFiles(keys, options = {}) {
     const objects = keys.map(key => ({ Key: key }));
+    if (!keys.length) return Promise.resolve();
     const params = Object.assign(options, { Bucket: this.bucket, Delete: { Objects: objects } });
     return this.client.deleteObjects(params).promise();
   }

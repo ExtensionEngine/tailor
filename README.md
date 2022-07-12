@@ -1,8 +1,8 @@
 <div align="center">
-  <img width="100" src="./client/assets/img/default-logo-full.svg">
+  <img width="180" src="./client/assets/img/default-logo-compact.svg">
 </div>
 
-# Tailor
+# Tailor CMS
 
 [![CircleCI build
 status](https://badgen.net/circleci/github/ExtensionEngine/tailor/develop?icon)](https://circleci.com/gh/ExtensionEngine/tailor)
@@ -21,12 +21,12 @@ style](https://badgen.net/badge/stylelint/@extensionengine/black)](https://githu
 [![Open Source
 Love](https://badgen.net/badge/Open%20Source/%E2%9D%A4/3eaf8e)](https://github.com/ellerbrock/open-source-badge/)
 
-Adaptive course authoring platform.
+Configurable headless CMS for complex content structures.
 
 ## Dependencies
 
-- Node.js (>= 12.13.0)
-- npm (>= 6.11.0)
+- Node.js (>= 16.16.0)
+- npm (>= 8.11.0)
 - PostgreSQL (>= 9.4)
 
 ## Installation

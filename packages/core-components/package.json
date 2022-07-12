@@ -1,8 +1,21 @@
 {
   "name": "@tailor-cms/core-components",
-  "version": "0.1.4",
-  "description": "",
-  "keywords": [],
+  "description": "Reusable Tailor UI components",
+  "author": "ExtensionEngine <info@extensionengine.com>",
+  "license": "MIT",
+  "version": "1.0.0-beta.6",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/core-components.cjs.js",
+  "umd:main": "./dist/core-components.umd.js",
+  "module": "./dist/core-components.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/core-components.es.js",
+      "require": "./dist/core-components.cjs.js"
+    }
+  },
   "homepage": "https://github.com/ExtensionEngine/tailor#readme",
   "bugs": {
     "url": "https://github.com/ExtensionEngine/tailor/issues"
@@ -11,61 +24,44 @@
     "type": "git",
     "url": "git+https://github.com/ExtensionEngine/tailor.git"
   },
-  "license": "MIT",
-  "author": "ExtensionEngine <info@extensionengine.com>",
-  "main": "dist/tailor-core-components.js",
-  "module": "dist/tailor-core-components.es.js",
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "prebuild": "del-cli dist",
-    "build": "bili",
+    "build": "vite build",
     "lint": "npm run lint:js && npm run lint:scss",
     "lint:js": "eslint --ext .js,.vue .",
     "lint:scss": "stylelint \"**/*.vue\" \"**/*.scss\""
   },
   "dependencies": {
-    "@extensionengine/vue-radio": "^0.1.3",
-    "@tailor-cms/utils": "^0.1.3",
-    "lodash": "^4.17.20",
-    "p-min-delay": "^3.1.0",
+    "@extensionengine/vue-radio": "^1.0.0-beta.4",
+    "@tailor-cms/utils": "^1.0.0-beta.18",
+    "lodash": "^4.17.21",
+    "p-min-delay": "^4.0.1",
     "pluralize": "^8.0.0",
     "vue-quill-editor": "^2.3.3",
     "vuedraggable": "^2.24.3",
     "yup": "^0.32.9"
   },
   "devDependencies": {
-    "@babel/core": "^7.13.8",
-    "@babel/eslint-parser": "^7.13.8",
-    "@babel/eslint-plugin": "^7.13.0",
-    "@extensionengine/eslint-config": "^2.0.0",
+    "@extensionengine/eslint-config": "^3.0.1",
     "@extensionengine/stylelint-config": "^1.1.1",
-    "@rollup/plugin-alias": "^3.1.1",
-    "@vue/compiler-sfc": "^3.0.4",
-    "babel-eslint": "^10.1.0",
-    "bili": "^5.0.5",
-    "del-cli": "^3.0.1",
-    "eslint": "^7.15.0",
-    "eslint-config-semistandard": "^15.0.1",
-    "eslint-config-standard": "^16.0.2",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-require-sort": "^1.2.2",
-    "eslint-plugin-standard": "^5.0.0",
-    "eslint-plugin-vue": "6.2.2",
-    "node-sass": "^6.0.0",
-    "rollup-plugin-copy": "^3.3.0",
-    "rollup-plugin-visualizer": "^4.2.0",
-    "rollup-plugin-vue": "4.3.2",
+    "@vue/compiler-sfc": "^3.2.37",
+    "del-cli": "^4.0.1",
+    "eslint": "^8.19.0",
+    "eslint-config-semistandard": "^16.0.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.4",
+    "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-vue": "9.1.1",
+    "sass": "^1.53.0",
     "stylelint": "^13.8.0",
-    "vue-runtime-helpers": "^1.1.2",
-    "vue-template-compiler": "^2.6.12"
+    "vite": "^2.9.13",
+    "vite-plugin-vue2": "^2.0.1",
+    "vue-template-compiler": "^2.7.1"
   },
   "peerDependencies": {
     "vee-validate": "^3.4.5",
-    "vuetify": "^2.3.21"
+    "vuetify": "^2.6.7"
   },
   "publishConfig": {
     "access": "public"

@@ -109,6 +109,7 @@ $font-color: #333;
 .app-brand {
   display: flex;
   padding-bottom: 0.125rem;
+  text-decoration: none;
   cursor: pointer;
 
   .app-name {
