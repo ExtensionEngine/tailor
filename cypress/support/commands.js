@@ -28,6 +28,17 @@ Cypress.Commands.add('getApp', () => cy.window().its('__app__'));
 Cypress.Commands.add('getStore', () => cy.getApp().then(app => app.$store));
 Cypress.Commands.add('getRoute', () => cy.getApp().then(app => app.$route));
 
+// Auth actions via store
+Cypress.Commands.add('login', () =>
+  cy.getStore()
+    .invoke('dispatch', 'login', {
+      email: Cypress.env('USERNAME'),
+      password: Cypress.env('PASSWORD')
+    }));
+
+Cypress.Commands.add('logout', () =>
+  cy.getStore().invoke('dispatch', 'logout'));
+
 // Manage cookies
 Cypress.Commands.add('preserveSession', () => {
   Cypress.Cookies.defaults({
