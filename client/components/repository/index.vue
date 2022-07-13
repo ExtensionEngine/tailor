@@ -12,6 +12,7 @@
           :key="tab.name"
           :to="{ name: tab.route, query: tab.query }"
           active-class="tab-active"
+          exact-path
           ripple
           class="px-4">
           <v-icon class="pr-2">mdi-{{ tab.icon }}</v-icon>{{ tab.name }}

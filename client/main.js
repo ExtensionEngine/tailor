@@ -21,7 +21,6 @@ import Timeago from 'vue-timeago';
 import Vue from 'vue';
 import VueClipboard from 'vue-clipboard2';
 import VueCroppa from 'vue-croppa';
-import VueHotkey from 'v-hotkey';
 import vuetify from '@/plugins/vuetify';
 
 import getStore from './store';
@@ -38,7 +37,6 @@ Vue.filter('truncate', truncate);
 
 Vue.use(Radio);
 Vue.use(FileFilter);
-Vue.use(VueHotkey);
 Vue.use(VueClipboard);
 Vue.use(VueCroppa);
 Vue.use(Timeago, {

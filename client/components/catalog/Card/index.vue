@@ -40,7 +40,7 @@
                 color="primary darken-1"
                 icon
                 class="repo-info mr-2">
-                <v-icon>mdi-settings</v-icon>
+                <v-icon>mdi-cog</v-icon>
               </v-btn>
             </template>
             Open settings
