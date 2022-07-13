@@ -1,6 +1,6 @@
 <template>
-  <v-footer height="46" color="primary darken-4" absolute>
-    <v-row align="center" justify="center" class="body-2 grey--text text--lighten-4">
+  <v-footer class="align-center" height="46" color="primary darken-4" absolute>
+    <div class="d-flex flex-grow-1 align-center justify-center body-2 grey--text text--lighten-4">
       <img :src="logo" width="30px" height="30px" alt="Logo" class="py-1 mx-1">
       <v-chip
         color="grey lighten-4"
@@ -10,7 +10,7 @@
       </v-chip>
       Built with <v-icon color="pink">mdi-heart</v-icon>
       Extension Engine
-    </v-row>
+    </div>
   </v-footer>
 </template>
 
