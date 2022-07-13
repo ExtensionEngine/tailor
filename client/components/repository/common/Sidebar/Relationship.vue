@@ -131,15 +131,13 @@ export default {
     margin-right: 1rem;
   }
 
-  .v-input__slot .v-select__slot {
-    .v-input__append-inner {
-      margin-top: 1.375rem;
-    }
+  .v-input__slot .v-select__slot input[disabled] {
+    opacity: 0.7;
+    border-bottom: unset;
+  }
 
-    input[disabled] {
-      opacity: 0.7;
-      border-bottom: unset;
-    }
+  .v-select.v-select--chips:not(.v-text-field--single).v-text-field--enclosed .v-select__selections {
+    min-height: 2.625rem;
   }
 }
 </style>
