@@ -45,10 +45,11 @@ Adaptive course authoring platform.
   `.env`. Use the `.env.example` file as a template: `cp .env.example .env` and
   enter configuration details.
 - Initialize database by running `npm run db migrate`
-- Enable default repository schema by setting env variable `ENABLE_DEFAULT_SCHEMA=1` or define a custom one (more details below).
-- Configure Tailor by following the steps [in the configuration section](#content-repository-structure),
-specifically creating a `tailor.config.js` out of `tailor.config.js.example`.
-- Configure asset storage proxy by following the steps [in this guide](https://extensionengine.github.io/tailor-docs/tailor/developer-guide/storage-proxy.html) based on your environment.
+- To enable demo repository schema configuration copy `tailor.config.js.example`
+  into `tailor.config.js.`. For more details about the custom schema configuration
+  please refer [to this guide](https://extensionengine.github.io/tailor-docs/tailor/developer-guide/configuration.html).
+- Configure asset storage proxy by following the steps [in this guide](https://extensionengine.github.io/tailor-docs/tailor/developer-guide/storage-proxy.html)
+  based on your environment.
 - You can create admin user by running `npm run add:admin <email> <password>`
 - App branding is configured via values set in a file named `.brandrc` (or
   `.brandrc.js`). Use the `.brandrc.example` file as a template: `cp
