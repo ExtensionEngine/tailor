@@ -25,11 +25,12 @@ const app = express();
 
 config.auth.oidc.enabled && (() => {
   const consolidate = require('consolidate');
-  const session = require('express-session');
   app.engine('mustache', consolidate.mustache);
   app.set('view engine', 'mustache');
-  app.use(session(config.auth.session));
 })();
+
+const session = require('express-session');
+app.use(session(config.auth.session));
 
 app.use(helmet());
 app.use(cors({ origin: config.auth.corsAllowedOrigins, credentials: true }));
