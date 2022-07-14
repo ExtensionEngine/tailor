@@ -12,7 +12,7 @@
           :disabled="name.length === truncatedName.length"
           open-delay="100"
           bottom>
-          <template v-slot:activator="{ on }">
+          <template #activator="{ on }">
             <span v-on="on">{{ truncatedName }}</span>
           </template>
           <span>{{ name }}</span>
@@ -20,7 +20,7 @@
       </v-chip>
     </div>
     <v-tooltip v-if="!exceededTagLimit" open-delay="400" bottom>
-      <template v-slot:activator="{ on }">
+      <template #activator="{ on }">
         <v-btn
           v-on="on"
           @click.stop="showTagDialog = true"

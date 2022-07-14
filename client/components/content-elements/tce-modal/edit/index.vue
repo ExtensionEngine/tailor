@@ -5,7 +5,7 @@
       color="grey darken-3"
       dark
       class="text-left elevation-5">
-      <span class="subtitle-2 mr-4">Modal</span>
+      <span class="text-subtitle-2 mr-4">Modal</span>
       <span v-if="!isDisabled" class="text-truncate">
         Use toolbar to toggle between edit and preview state
       </span>
@@ -49,7 +49,7 @@ export default {
     isDisabled: { type: Boolean, default: false }
   },
   data() {
-    return { isEditing: !this.hasElements };
+    return { isEditing: false };
   },
   computed: {
     title: vm => vm.element.data.title || 'Open modal',
@@ -64,6 +64,14 @@ export default {
       const data = cloneDeep(this.element.data);
       delete data.embeds[item.id];
       this.$emit('save', data);
+    }
+  },
+  watch: {
+    hasElements: {
+      handler(hasElements) {
+        this.isEditing = !hasElements;
+      },
+      immediate: true
     }
   },
   created() {

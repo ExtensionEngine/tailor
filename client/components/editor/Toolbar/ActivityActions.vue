@@ -6,7 +6,7 @@
         :key="title"
         color="primary darken-3"
         bottom>
-        <template v-slot:activator="{ on }">
+        <template #activator="{ on }">
           <v-btn
             v-on="on"
             @click.stop="action"

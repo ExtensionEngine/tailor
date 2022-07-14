@@ -7,9 +7,9 @@
     min-width="300"
     transition="slide-y-transition"
     left offset-y attach>
-    <template v-slot:activator="{ on: menu }">
+    <template #activator="{ on: menu }">
       <v-tooltip open-delay="800" left>
-        <template v-slot:activator="{ on: tooltip }">
+        <template #activator="{ on: tooltip }">
           <v-btn
             v-on="{ ...menu, ...tooltip }"
             :class="activator.class"

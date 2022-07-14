@@ -2,7 +2,7 @@
   <v-toolbar color="transparent" class="tce-table-toolbar elevation-0">
     <v-toolbar-items>
       <v-menu bottom>
-        <template v-slot:activator="{ on }">
+        <template #activator="{ on }">
           <v-btn v-on="on" text>
             Table options
             <v-icon>mdi-chevron-down</v-icon>

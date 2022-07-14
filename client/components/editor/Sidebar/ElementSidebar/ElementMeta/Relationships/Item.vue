@@ -1,12 +1,12 @@
 <template>
   <v-list-item class="px-1">
     <v-list-item-content>
-      <v-list-item-title v-text="label" />
-      <v-list-item-subtitle v-text="overview" />
+      <v-list-item-title>{{ label }}</v-list-item-title>
+      <v-list-item-subtitle>{{ overview }}</v-list-item-subtitle>
     </v-list-item-content>
     <v-list-item-action>
       <v-tooltip bottom>
-        <template v-slot:activator="{ on }">
+        <template #activator="{ on }">
           <v-btn
             v-on="on"
             @click="showElementBrowser = true"
@@ -18,7 +18,7 @@
         <span>{{ placeholder || defaultPlaceholder }}</span>
       </v-tooltip>
       <v-tooltip v-if="hasRelationships" bottom>
-        <template v-slot:activator="{ on }">
+        <template #activator="{ on }">
           <v-btn
             v-on="on"
             @click="removeAll"

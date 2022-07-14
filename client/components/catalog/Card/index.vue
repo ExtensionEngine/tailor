@@ -1,5 +1,5 @@
 <template>
-  <v-hover v-slot:default="{ hover: isCardHovered }">
+  <v-hover v-slot="{ hover: isCardHovered }">
     <v-card
       @click="navigateTo()"
       :elevation="isCardHovered ? 24 : 1"
@@ -11,7 +11,7 @@
         <div class="d-flex align-center ml-4">
           <v-chip :color="repository.data.color" x-small class="readonly px-1" />
           <v-tooltip :disabled="!isSchemaTruncated" open-delay="300" top>
-            <template v-slot:activator="{ on }">
+            <template #activator="{ on }">
               <span
                 ref="schemaName"
                 v-on="on"
@@ -22,7 +22,7 @@
             {{ schema }}
           </v-tooltip>
           <v-tooltip open-delay="100" top>
-            <template v-slot:activator="{ on }">
+            <template #activator="{ on }">
               <span v-on="on">
                 <v-badge
                   :color="hasUnpublishedChanges ? 'orange' : 'green'"
@@ -33,7 +33,7 @@
             {{ publishingInfo }}
           </v-tooltip>
           <v-tooltip v-if="repository.hasAdminAccess" open-delay="400" top>
-            <template v-slot:activator="{ on }">
+            <template #activator="{ on }">
               <v-btn
                 v-on="on"
                 @click.stop="navigateTo('repository-info')"
@@ -54,18 +54,18 @@
             <img :src="lastActivity.user.imgUrl">
           </v-avatar>
           <div class="ml-3 overflow-hidden">
-            <div class="caption">
+            <div class="text-aption">
               Edited
               <timeago :datetime="lastActivity.createdAt" :auto-update="60" />
               by
             </div>
-            <div class="body-2 text-truncate">{{ lastActivity.user.label }}</div>
+            <div class="text-body-2 text-truncate">{{ lastActivity.user.label }}</div>
           </div>
         </div>
       </div>
       <v-card-actions class="pb-2 px-2">
         <v-tooltip open-delay="400" bottom>
-          <template v-slot:activator="{ on }">
+          <template #activator="{ on }">
             <v-btn
               v-on="on"
               @click.stop="pin({ id: repository.id, pin: !isPinned })"
@@ -94,6 +94,7 @@ const getPublishingInfo = hasChanges => hasChanges
   : 'Published.';
 
 export default {
+  name: 'catalog-card',
   inject: ['$schemaService'],
   props: {
     repository: { type: Object, required: true }

@@ -1,9 +1,9 @@
 <template>
   <span>
     <v-menu offset-y>
-      <template v-slot:activator="{ on: menu }">
+      <template #activator="{ on: menu }">
         <v-tooltip open-delay="800" top>
-          <template v-slot:activator="{ on: tooltip }">
+          <template #activator="{ on: tooltip }">
             <v-btn
               v-on="{ ...menu, ...tooltip }"
               color="primary lighten-2"
@@ -26,7 +26,7 @@
       </v-list>
     </v-menu>
     <v-tooltip open-delay="800" top>
-      <template v-slot:activator="{ on }">
+      <template #activator="{ on }">
         <v-btn
           v-on="on"
           @click="toggleOrder"

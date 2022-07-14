@@ -7,7 +7,7 @@
       <img :src="logo" width="36px" height="36px" alt="Logo" class="pt-2">
       <v-toolbar-title class="app-name">
         {{ title }}
-        <span class="caption">author</span>
+        <span class="text-caption">author</span>
       </v-toolbar-title>
     </router-link>
     <v-spacer />
@@ -28,7 +28,7 @@
       transition="slide-y-transition"
       offset-y
       z-index="1000">
-      <template v-slot:activator="{ on }">
+      <template #activator="{ on }">
         <v-btn v-on="on" icon class="mr-2">
           <v-avatar size="36" color="teal accent-4">
             <img :src="user.imgUrl">

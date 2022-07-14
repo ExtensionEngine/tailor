@@ -20,7 +20,7 @@
             :activity="{ id, uid, repositoryId, parentId, type, position, data }"
             class="options-toolbar my-auto" />
           <v-tooltip bottom>
-            <template v-slot:activator="{ on }">
+            <template #activator="{ on }">
               <v-btn
                 v-show="hasSubtypes"
                 v-on="on"
@@ -67,7 +67,7 @@ import selectActivity from '@/components/repository/common/selectActivity';
 import size from 'lodash/size';
 
 export default {
-  name: 'activity',
+  name: 'repository-outline-activity',
   mixins: [reorderMixin, selectActivity],
   inheritAttrs: false,
   inject: ['$schemaService'],

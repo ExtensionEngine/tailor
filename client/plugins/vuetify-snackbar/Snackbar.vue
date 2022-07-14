@@ -1,7 +1,7 @@
 <template>
   <v-snackbar v-model="snackbar" v-bind="context" multi-line>
     {{ context.message }}
-    <template v-slot:action>
+    <template #action>
       <v-btn
         @click="close"
         color="secondary lighten-2"
@@ -21,6 +21,7 @@ const initialData = () => ({
 });
 
 export default {
+  name: 'snack-bar',
   data: () => ({
     showRequest: null,
     snackbar: false,

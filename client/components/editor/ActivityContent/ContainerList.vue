@@ -1,6 +1,6 @@
 <template>
   <div class="content-containers">
-    <h2 v-if="displayHeading" class="headline">{{ name | capitalize }}</h2>
+    <h2 v-if="displayHeading" class="text-h5">{{ name | capitalize }}</h2>
     <v-alert
       :value="!containerGroup.length"
       color="primary darken-4"
@@ -78,7 +78,7 @@ export default {
   inheritAttrs: false,
   inject: ['$schemaService', '$ccRegistry'],
   props: {
-    containerGroup: { type: Array, default: () => ({}) },
+    containerGroup: { type: Array, default: () => [] },
     processedElements: { type: Object, required: true },
     processedActivities: { type: Object, required: true },
     type: { type: String, required: true },

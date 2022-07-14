@@ -1,6 +1,6 @@
 <template>
   <div class="add-element-container">
-    <slot :addElement="showElementPicker">
+    <slot :add-element="showElementPicker">
       <v-btn
         v-if="large"
         @click.stop="showElementPicker"
@@ -33,7 +33,7 @@
         @add="addElements"
         :library="library"
         :allowed-types="allowedTypes">
-        <template v-slot:header>
+        <template #header>
           <div v-if="layout" class="mr-6">
             <div class="pb-1 caption text-left">Element width</div>
             <v-btn-toggle
