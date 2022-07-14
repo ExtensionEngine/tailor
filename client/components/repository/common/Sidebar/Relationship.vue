@@ -18,6 +18,7 @@
       :disabled="!options.length"
       :error-messages="errors"
       :class="{ required: !allowEmpty }"
+      :height="42"
       item-value="id"
       item-text="data.name"
       deletable-chips return-object outlined>
@@ -134,10 +135,6 @@ export default {
   .v-input__slot .v-select__slot input[disabled] {
     opacity: 0.7;
     border-bottom: unset;
-  }
-
-  .v-select.v-select--chips:not(.v-text-field--single).v-text-field--enclosed .v-select__selections {
-    min-height: 2.625rem;
   }
 }
 </style>
