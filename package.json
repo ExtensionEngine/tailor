@@ -48,7 +48,7 @@
     "@extensionengine/vue-radio": "1.0.0-beta.4",
     "@mdi/font": "^6.9.96",
     "@tailor-cms/config": "1.0.0-beta.17",
-    "@tailor-cms/core-components": "1.0.0-beta.7",
+    "@tailor-cms/core-components": "1.0.0-beta.11",
     "@tailor-cms/utils": "^1.0.0-beta.18",
     "@ungap/global-this": "^0.4.4",
     "JSONStream": "^1.3.5",
