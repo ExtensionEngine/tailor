@@ -51,7 +51,7 @@
 import EditorLink from '@/components/EditorLink.vue';
 
 const getOptions = () => ({
-  resolve: { action: 'resolve', icon: 'check-box-outline', color: 'teal accent-4' },
+  resolve: { action: 'resolve', icon: 'checkbox-outline', color: 'teal accent-4' },
   edit: { action: 'toggleEdit', icon: 'pencil-outline', color: 'grey' },
   remove: { action: 'remove', icon: 'trash-can-outline', color: 'grey' }
 });
