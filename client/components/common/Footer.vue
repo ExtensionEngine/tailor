@@ -8,7 +8,7 @@
         class="readonly mr-3 grey--text text--darken-4">
         v{{ version }} {{ codename }}
       </v-chip>
-      Built with <v-icon color="pink">mdi-heart</v-icon>
+      Built with <v-icon class="mx-1" color="pink">mdi-heart</v-icon>
       Extension Engine
     </div>
   </v-footer>
