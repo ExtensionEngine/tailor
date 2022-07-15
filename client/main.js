@@ -3,7 +3,7 @@ import './polyfills';
 import '@/utils/validation';
 
 import { asset as assetApi, exposedApi } from '@/api';
-import { schema } from '@tailor-cms/config';
+import { SCHEMAS, schema } from '@tailor-cms/config';
 import { QuestionContainer } from '@tailor-cms/core-components';
 import ContentPluginRegistry from './content-plugins';
 
@@ -72,5 +72,8 @@ Promise.all([getStore(), contentPluginRegistry.initialize()])
         };
       }
     });
-    if (window.Cypress) window.__app__ = app;
+    if (window.Cypress) {
+      window.__app__ = app;
+      window.__test_schema_id__ = SCHEMAS[0].id;
+    }
   });
