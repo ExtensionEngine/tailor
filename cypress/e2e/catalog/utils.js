@@ -5,6 +5,7 @@ export const sel = {
   searchInput: 'catalog__searchInput'
 };
 
-export function findRepositoryByName(name) {
-  return cy.contains(`[data-testid="${sel.card}"]`, name);
-}
+const toTestIdAttr = val => `[data-testid="${val}"]`
+
+export const findRepositoryCard = val => cy.contains(toTestIdAttr(sel.card), val);
+export const getCreateDialog = () => cy.findByTestId(sel.createDialog);

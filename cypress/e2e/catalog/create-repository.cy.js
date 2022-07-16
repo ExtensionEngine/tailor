@@ -1,4 +1,4 @@
-import { findRepositoryByName, sel } from './utils';
+import { findRepositoryCard, sel } from './utils';
 
 describe('create repository', () => {
   before(() => cy.visit('/'));
@@ -20,6 +20,6 @@ describe('create repository', () => {
       cy.findByText(/create/i)
         .click();
     });
-    findRepositoryByName(repositoryName);
+    findRepositoryCard(repositoryName);
   });
 });
