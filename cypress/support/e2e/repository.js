@@ -1,12 +1,13 @@
-const generateRepositoryName = () => `Test repository - ${new Date.getTime()}`;
+const generateRepositoryName = () => `Test repository - ${(new Date).getTime()}`;
 
 Cypress.Commands.add('createRepository', (name = generateRepositoryName()) => {
-  cy.getSchema().as('schema');
-  return cy.getStore()
-    .invoke('dispatch', 'repositories/create', {
-      schema: this.schema.id,
-      name,
-      description: 'Test repository'
+  return cy.getTestSchema()
+    .then(schema => {
+      return cy.getStore()
+        .invoke('dispatch', 'repositories/create', {
+          schema: schema.id,
+          name,
+          description: 'Test repository'
+        })
     })
-    .then(() => name)
 });

@@ -39,7 +39,7 @@
                 v-on="on"
                 @click.stop="navigateTo('repository-info')"
                 color="primary darken-1"
-                data-testid="catalog__repositorySettingsBtn"
+                aria-label="Repository settings"
                 icon
                 class="repo-info mr-2">
                 <v-icon>mdi-settings</v-icon>

@@ -3,7 +3,7 @@ Cypress.Commands.add('getTestSchemaId', () => {
 });
 
 Cypress.Commands.add('getSchemaService', () => {
-  return cy.getApp().then(app => app.$schemaService);
+  return cy.getApp().then(app => app._provided.$schemaService);
 });
 
 Cypress.Commands.add('getTestSchema', () => {
