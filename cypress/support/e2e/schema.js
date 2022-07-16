@@ -10,6 +10,3 @@ Cypress.Commands.add('getTestSchema', () => {
   return cy.getSchemaService()
     .then(service => cy.getTestSchemaId().then(service.getSchema));
 });
-
-
-
