@@ -5,12 +5,13 @@ describe('ability to search and filter repository catalog', () => {
 
   beforeEach(() => {
     cy.login();
+    cy.createRepository().its('name').as('name')
     cy.visit('#/');
     cy.assertRoute('catalog');
   });
 
   it('should be able to search for the repository', () => {
-    cy.createRepository().then(name => {
+    cy.get('@name').then(name => {
       searchRepository(name);
       findRepositoryCard(name).should('have.length', 1);
     });
