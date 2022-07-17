@@ -8,8 +8,8 @@ describe('Sign in view', () => {
       .type(Cypress.env('PASSWORD'));
     cy.findByRole('button', { name: /Log In$/i })
       .click();
-    cy.visit('/')
-      .then(() => cy.assertRoute('catalog'));
+    cy.location()
+      .should(location => expect(location.hash).to.eq('#/'));
   });
 
   it('should sign in an existing user by dispatching an action', () => {
