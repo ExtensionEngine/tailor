@@ -33,6 +33,10 @@ const get = ({ commit }, id) => {
   });
 };
 
+const create = (_, { schema, name, description }) => {
+  return repositoryApi.save({ schema, name, description });
+};
+
 const clone = ({ dispatch }, { id, name, description }) => {
   return api.post(`/${id}/clone`, { name, description }).then(response => {
     const { data: repository } = response.data;
@@ -64,6 +68,7 @@ const removeTag = ({ commit }, { tagId, repositoryId }) => {
 
 export {
   clone,
+  create,
   fetch,
   fetchTags,
   addTag,

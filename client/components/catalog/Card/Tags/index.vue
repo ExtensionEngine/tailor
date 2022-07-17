@@ -6,6 +6,7 @@
         :key="id"
         @click:close="showDeleteConfirmation(id, name)"
         color="primary darken-1"
+        close-label="Remove tag"
         label close small
         class="mr-2 mb-1">
         <v-tooltip
@@ -25,6 +26,7 @@
           v-on="on"
           @click.stop="showTagDialog = true"
           color="primary lighten-3"
+          aria-label="Add tag"
           icon>
           <v-icon dense>mdi-tag-plus</v-icon>
         </v-btn>

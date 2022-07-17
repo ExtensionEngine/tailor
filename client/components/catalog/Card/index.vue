@@ -5,9 +5,10 @@
       :elevation="isCardHovered ? 24 : 1"
       :ripple="false"
       color="primary darken-4"
+      data-testid="catalog__repositoryCard"
       dark
       class="repository-card d-flex flex-column justify-space-between text-left">
-      <div @click="navigateTo()" class="card-body">
+      <div class="card-body">
         <div class="d-flex align-center ml-4">
           <v-chip :color="repository.data.color" x-small class="readonly px-1" />
           <v-tooltip :disabled="!isSchemaTruncated" open-delay="300" top>
@@ -38,6 +39,7 @@
                 v-on="on"
                 @click.stop="navigateTo('repository-info')"
                 color="primary darken-1"
+                aria-label="Repository settings"
                 icon
                 class="repo-info mr-2">
                 <v-icon>mdi-cog</v-icon>
