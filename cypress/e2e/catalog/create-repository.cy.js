@@ -9,7 +9,7 @@ describe('create repository', () => {
     cy.assertRoute('catalog');
   });
 
-  it('should be able to create a repository using the create dialog', () => {
+  it('should create a new repository using the create dialog', () => {
     const repositoryName = `Test_repository_${(new Date).getTime()}`
     cy.findByRole('button', { name: 'Add repository' }).click();
     getCreateDialog().within(() => {
