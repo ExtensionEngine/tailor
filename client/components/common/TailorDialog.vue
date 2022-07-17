@@ -2,8 +2,7 @@
   <v-dialog
     v-on="$listeners"
     :width="width"
-    v-bind="$attrs"
-    data-testid="app__tailorDialog">
+    v-bind="$attrs">
     <template v-for="(_, slot) in $scopedSlots" v-slot:[slot]="scope">
       <slot :name="slot" v-bind="scope"></slot>
     </template>
