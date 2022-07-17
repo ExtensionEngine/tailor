@@ -17,7 +17,7 @@ describe('create repository', () => {
         .type(repositoryName);
       cy.findByLabelText(/description/i)
         .type('Test description');
-      cy.findByText(/create/i)
+      cy.findByRole('button', { name: /create/i })
         .click();
     });
     findRepositoryCard(repositoryName);
