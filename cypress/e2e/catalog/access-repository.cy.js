@@ -5,7 +5,7 @@ describe('ability to access repository', () => {
 
   beforeEach(() => {
     cy.login();
-    cy.createRepository().its('name').as('name')
+    cy.createRepository().its('name').as('name');
     cy.visit('#/');
     cy.assertRoute('catalog');
   });

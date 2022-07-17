@@ -24,7 +24,7 @@ describe('ability to tag repository', () => {
 
   beforeEach(() => {
     cy.login();
-    cy.createRepository().its('name').as('name')
+    cy.createRepository().its('name').as('name');
     cy.visit('#/');
     cy.assertRoute('catalog');
   });
@@ -34,7 +34,7 @@ describe('ability to tag repository', () => {
       findRepositoryCard(name).as('repositoryCard');
       addTag('@repositoryCard', TAG_NAME);
       cy.get('@repositoryCard').findByText(TAG_NAME);
-    })
+    });
   });
 
   it('should delete a tag from the repository', () => {

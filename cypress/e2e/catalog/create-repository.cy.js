@@ -12,7 +12,7 @@ describe('create repository', () => {
   });
 
   it('should create a new repository using the create dialog', () => {
-    const repositoryName = `Test_repository_${(new Date).getTime()}`
+    const repositoryName = `Test_repository_${((new Date()).getTime())}`;
     cy.findByRole('button', { name: 'Add repository' }).click();
     getDialog().within(() => {
       cy.findByLabelText(/name/i)

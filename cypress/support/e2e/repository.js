@@ -1,4 +1,4 @@
-const generateName = () => `Test repository - ${(new Date).getTime()}`;
+const generateName = () => `Test repository - ${(new Date()).getTime()}`;
 
 Cypress.Commands.add('createRepository', (name = generateName()) => {
   return cy.getTestSchema().then(schema => {

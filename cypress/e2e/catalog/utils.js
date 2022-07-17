@@ -1,4 +1,4 @@
-const toTestIdAttr = val => `[data-testid="${val}"]`
+const toTestIdAttr = val => `[data-testid="${val}"]`;
 
 export const sel = {
   card: 'catalog__repositoryCard'
