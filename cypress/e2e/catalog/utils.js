@@ -1,8 +1,7 @@
 const toTestIdAttr = val => `[data-testid="${val}"]`
 
 export const sel = {
-  card: 'catalog__repositoryCard',
-  searchInput: 'catalog__searchInput'
+  card: 'catalog__repositoryCard'
 };
 
 export const findRepositoryCard = val => cy.contains(toTestIdAttr(sel.card), val);
