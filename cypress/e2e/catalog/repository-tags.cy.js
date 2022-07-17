@@ -19,7 +19,7 @@ function removeTag(cardAlias, tagName) {
     .click();
 }
 
-describe('ability to access repository', () => {
+describe('ability to tag repository', () => {
   before(() => cy.visit('/'));
 
   beforeEach(() => {
