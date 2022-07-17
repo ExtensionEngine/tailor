@@ -8,13 +8,13 @@ describe('Sign in view', () => {
       .type(Cypress.env('PASSWORD'));
     cy.findByRole('button', { name: /Log In$/i })
       .click();
-    cy.visit('/');
-    cy.assertRoute('catalog');
+    cy.visit('/')
+      .then(() => cy.assertRoute('catalog'));
   });
 
   it('should sign in an existing user by dispatching an action', () => {
     cy.login();
-    cy.visit('/');
-    cy.assertRoute('catalog');
+    cy.visit('/')
+      .then(() => cy.assertRoute('catalog'));
   });
 });
