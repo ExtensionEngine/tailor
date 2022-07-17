@@ -1,9 +1,5 @@
 import { findRepositoryCard } from './utils';
 
-const sel = {
-  tagChip: 'catalog__tagChip'
-};
-
 const TAG_NAME = '___Test tag___';
 
 function addTag(cardAlias, tagName) {
@@ -18,7 +14,7 @@ function addTag(cardAlias, tagName) {
 function removeTag(cardAlias, tagName) {
   cy.get(cardAlias)
     .findByText(tagName)
-    .closest(`[data-testid="${sel.tagChip}"]`)
+    .closest('.v-chip')
     .findByRole('button', { name: /remove/i })
     .click();
 }
