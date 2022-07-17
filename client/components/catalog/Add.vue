@@ -29,7 +29,6 @@
         ref="form"
         @submit.prevent="$refs.form.handleSubmit(submit)"
         tag="form"
-        data-testid="catalog__createRepositoryDialog"
         novalidate
         class="mt-4 pa-4">
         <v-alert

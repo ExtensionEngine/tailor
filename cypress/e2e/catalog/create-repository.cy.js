@@ -1,4 +1,6 @@
-import { findRepositoryCard, getCreateDialog } from './utils';
+import { findRepositoryCard } from './utils';
+
+const getDialog = () => cy.findByRole('dialog');
 
 describe('create repository', () => {
   before(() => cy.visit('/'));
@@ -12,7 +14,7 @@ describe('create repository', () => {
   it('should create a new repository using the create dialog', () => {
     const repositoryName = `Test_repository_${(new Date).getTime()}`
     cy.findByRole('button', { name: 'Add repository' }).click();
-    getCreateDialog().within(() => {
+    getDialog().within(() => {
       cy.findByLabelText(/name/i)
         .type(repositoryName);
       cy.findByLabelText(/description/i)
