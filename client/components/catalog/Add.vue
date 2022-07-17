@@ -110,9 +110,9 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import { repository as api } from '@/api';
 import { loader } from '@tailor-cms/core-components';
-import { mapGetters } from 'vuex';
 import RepositoryNameField from '../repository/common/RepositoryNameField';
 import { SCHEMAS } from '@tailor-cms/config';
 import TailorDialog from '@/components/common/TailorDialog';
@@ -141,6 +141,7 @@ export default {
     schemas: () => SCHEMAS
   },
   methods: {
+    ...mapActions('repositories', { createRepository: 'create' }),
     submit: loader(async function () {
       const action = this.isCreate ? 'create' : 'import';
       return this[action]()
@@ -148,7 +149,7 @@ export default {
         .catch(() => (this.serverError = 'An error has occurred!'));
     }, 'showLoader'),
     create() {
-      return api.save(this.repository);
+      return this.createRepository(this.repository);
     },
     import() {
       const { archive, repository } = this;
