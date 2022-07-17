@@ -7,7 +7,6 @@
         @click:close="showDeleteConfirmation(id, name)"
         color="primary darken-1"
         close-label="Remove tag"
-        data-testid="catalog__tagChip"
         label close small
         class="mr-2 mb-1">
         <v-tooltip
