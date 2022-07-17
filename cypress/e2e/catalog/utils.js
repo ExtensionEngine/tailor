@@ -8,4 +8,4 @@ export const sel = {
 
 export const findRepositoryCard = val => cy.contains(toTestIdAttr(sel.card), val);
 export const getCreateDialog = () => cy.findByTestId(sel.createDialog);
-export const searchRepository = text => cy.findByTestId(sel.searchInput).type(text);
+export const searchRepository = val => cy.findByPlaceholderText(/search/i).type(val);
