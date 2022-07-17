@@ -1,28 +1,25 @@
 import { findRepositoryCard } from './utils';
 
 const sel = {
-  addTagBtn: 'catalog__addTagBtn',
-  addTagDialog: 'catalog__addTagDialog',
   tagChip: 'catalog__tagChip'
 };
 
 const TAG_NAME = '___Test tag___';
 
-function addTag(repositorySelector, tagName) {
-  cy.get(repositorySelector)
+function addTag(cardAlias, tagName) {
+  cy.get(cardAlias)
     .findByRole('button', { name: 'Add tag' })
     .click();
-  cy.root()
-    .findByTestId(sel.addTagDialog)
+  cy.findByRole('dialog')
     .findByLabelText(/select a tag or add a new one/i)
     .type(`${tagName}{enter}`);
 }
 
-function removeTag(repositorySelector, tagName) {
-  cy.get(repositorySelector)
+function removeTag(cardAlias, tagName) {
+  cy.get(cardAlias)
     .findByText(tagName)
     .closest(`[data-testid="${sel.tagChip}"]`)
-    .findByRole('button')
+    .findByRole('button', { name: /remove/i })
     .click();
 }
 
