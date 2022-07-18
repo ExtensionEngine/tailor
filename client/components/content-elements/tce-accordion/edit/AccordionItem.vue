@@ -27,7 +27,7 @@
             <span>Edit heading</span>
           </v-tooltip>
           <v-tooltip bottom>
-            <template #ctivator="{ on }">
+            <template #activator="{ on }">
               <v-btn v-on="on" @click.stop="deleteItem" icon>
                 <v-icon>mdi-delete</v-icon>
               </v-btn>

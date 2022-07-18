@@ -28,7 +28,7 @@
 
 <script>
 export default {
-  name: 'waves-preview',
+  name: 'wave-animation',
   props: {
     color: { type: String, default: '255,255,255' },
     height: { type: String, default: '6rem' },

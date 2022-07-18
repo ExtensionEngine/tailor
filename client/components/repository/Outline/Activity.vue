@@ -67,7 +67,7 @@ import selectActivity from '@/components/repository/common/selectActivity';
 import size from 'lodash/size';
 
 export default {
-  name: 'repository-outline-activity',
+  name: 'outline-activity',
   mixins: [reorderMixin, selectActivity],
   inheritAttrs: false,
   inject: ['$schemaService'],

@@ -41,7 +41,7 @@ import publishMixin from 'components/common/mixins/publish';
 const { getDescendants } = activityUtils;
 
 export default {
-  name: 'repository-publishing',
+  name: 'activity-publishing',
   inject: ['$schemaService'],
   mixins: [publishMixin],
   props: {

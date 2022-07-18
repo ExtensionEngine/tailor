@@ -59,7 +59,7 @@ const getTabItems = ({ hasWorkflow, hasSettingsAvailable, hasActivities, query }
 ].filter(Boolean).map(tab => ({ ...tab, query }));
 
 export default {
-  name: 'repository-container',
+  name: 'repository-page',
   mixins: [selectActivity, withUserTracking],
   props: {
     repositoryId: { type: Number, required: true }

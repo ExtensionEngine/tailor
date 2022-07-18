@@ -28,11 +28,6 @@ jobs:
           name: Lint codebase
           command: npm run lint
 
-      # Disabling for now since we don't have an npm script for executing tests
-      # - run:
-      #     name: Run tests
-      #     command: npm test
-
       - run:
           name: Run build
           command: npm run build

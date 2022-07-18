@@ -66,17 +66,10 @@ export default {
       this.$emit('save', data);
     }
   },
-  watch: {
-    hasElements: {
-      handler(hasElements) {
-        this.isEditing = !hasElements;
-      },
-      immediate: true
-    }
-  },
   created() {
     this.$elementBus.on('toggleEdit', () => (this.isEditing = !this.isEditing));
     this.$elementBus.on('save', data => this.$emit('save', data));
+    this.isEditing = !this.hasElements;
   },
   components: { EmbeddedContainer, Preview }
 };

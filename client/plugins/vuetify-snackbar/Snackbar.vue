@@ -21,7 +21,7 @@ const initialData = () => ({
 });
 
 export default {
-  name: 'snack-bar',
+  name: 't-snackbar',
   data: () => ({
     showRequest: null,
     snackbar: false,

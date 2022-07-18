@@ -54,7 +54,7 @@
             <img :src="lastActivity.user.imgUrl">
           </v-avatar>
           <div class="ml-3 overflow-hidden">
-            <div class="text-aption">
+            <div class="text-caption">
               Edited
               <timeago :datetime="lastActivity.createdAt" :auto-update="60" />
               by
