@@ -38,6 +38,9 @@ jobs:
           name: Setup environment variables
           command: source ./.circleci/setup-env.sh
       - run:
+          name: Setup tailor config
+          command: cp ./tailor.config.js.example ./tailor.config.js
+      - run:
           name: Build client
           command: npm run build
       - run:
