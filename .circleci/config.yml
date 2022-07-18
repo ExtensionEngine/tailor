@@ -1,37 +1,84 @@
-# Javascript Node CircleCI 2.0 configuration file
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
 version: 2.1
-jobs:
-  build:
+
+executors:
+  default-executor: &default-executor
     docker:
-      - image: circleci/node:lts-browsers
+      - image: cimg/node:16.16.0
+  machine-executor: &machine-executor
+    machine:
+      image: ubuntu-2004:202107-02
 
-    working_directory: ~/tailor
+default_directory: &default-directory
+  working_directory: ~/deploy/tailor
 
+orbs:
+  node: circleci/node@5.0.2
+  shellcheck: circleci/shellcheck@3.1.1
+
+dev-env-defaults: &dev-env-defaults
+  context: tailor-dev
+
+jobs:
+  lint:
+    <<: *default-executor
+    <<: *default-directory
     steps:
       - checkout
-
-      - restore_cache:
-          keys:
-            - dependency-cache-{{ checksum "package-lock.json" }}
-
+      - node/install-packages
       - run:
-          name: Install dependencies
-          command: npm install
-
-      - save_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
-          paths:
-            - node_modules
-
-      - run:
-          name: Lint codebase
+          name: Lint
           command: npm run lint
-
+  e2e-test:
+    <<: *machine-executor
+    <<: *default-directory
+    steps:
+      - checkout
+      - node/install-packages
       - run:
-          name: Run tests
-          command: npm test
-
+          name: Setup environment variables
+          command: source ./.circleci/setup-env.sh
       - run:
-          name: Run build
+          name: Build client
           command: npm run build
+      - run:
+          name: Install cypress dependencies
+          command: |
+            sudo apt-get update
+            sudo apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
+      - run:
+          name: Run postgres container
+          command: |
+            docker run --name postgres -e POSTGRES_USER=${DATABASE_USER} -e POSTGRES_DB=${DATABASE_NAME} -e POSTGRES_PASSWORD=${DATABASE_PASSWORD} -p 5432:5432 -d postgres:13.3
+      - run:
+          name: Run migration
+          command: npm run db migrate
+      - run:
+          name: Seed the DB
+          command: npm run db:seed
+      - run:
+          name: Run e2e tests
+          command: npm run ci:e2e
+      - store_artifacts:
+          path: ./cypress/screenshots
+      - store_artifacts:
+          path: ./cypress/videos
+workflows:
+  lint-and-test:
+    jobs:
+      - lint
+      - shellcheck/check:
+          pre-steps:
+            - run:
+                name: "Install git and SSH client"
+                command: |
+                  apk add \
+                    --update \
+                    --no-progress \
+                    git \
+                    openssh-client
+      - e2e-test:
+          <<: *dev-env-defaults
+          requires:
+            - shellcheck/check
+          context:
+            -tailor-dev
