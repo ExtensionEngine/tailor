@@ -33,6 +33,8 @@ jobs:
     <<: *default-directory
     steps:
       - checkout
+      - node/install:
+          node-version: '16.16'
       - node/install-packages
       - run:
           name: Setup environment variables
