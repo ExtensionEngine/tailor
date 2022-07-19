@@ -77,4 +77,4 @@ workflows:
           requires:
             - shellcheck/check
           context:
-            -tailor-dev
+            - tailor-dev
