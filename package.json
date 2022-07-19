@@ -12,7 +12,6 @@
   "scripts": {
     "postinstall": "if [ $BUILD_ASSETS ]; then npm run build; fi",
     "postshrinkwrap": "rewrite-lockfile package-lock.json",
-    "prestart": "npm run build",
     "start": "node -r ./server/script/preflight ./server",
     "dev:client": "poi --serve",
     "build": "del-cli node_modules/.cache/vue-loader && poi --prod",
