@@ -69,16 +69,7 @@ workflows:
   lint-and-test:
     jobs:
       - lint
-      - shellcheck/check:
-          pre-steps:
-            - run:
-                name: "Install git and SSH client"
-                command: |
-                  apk add \
-                    --update \
-                    --no-progress \
-                    git \
-                    openssh-client
+      - shellcheck/check
       - e2e-test:
           <<: *dev-env-defaults
           requires:
