@@ -5,9 +5,9 @@ import urlJoin from 'url-join';
 const noop = () => {};
 
 class RepositoryFeed {
-  baseUrl
-  _connection
-  _repositoryId
+  baseUrl;
+  _connection;
+  _repositoryId;
 
   constructor({ baseUrl }) {
     this.baseUrl = baseUrl;
@@ -25,7 +25,7 @@ class RepositoryFeed {
     this._connection.once('open', () => cb(this._connection));
     this._repositoryId = repositoryId;
     return this;
-  }
+  };
 
   _buildUrl(repositoryId) {
     return urlJoin(this.baseUrl, api.urls.subscribe(repositoryId));

@@ -9,7 +9,7 @@
         color="primary lighten-3"
         text-color="black"
         small
-        class="readonly ml-1 px-7 body-2">
+        class="readonly ml-1 px-7 text-body-2">
         Profile
       </v-chip>
     </v-toolbar>

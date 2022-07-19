@@ -1,7 +1,7 @@
 <template>
   <span class="publish-container">
     <v-menu offset-y left>
-      <template v-slot:activator="{ on }">
+      <template #activator="{ on }">
         <v-btn
           v-on="on"
           :loading="isPublishing"
@@ -41,6 +41,7 @@ import publishMixin from 'components/common/mixins/publish';
 const { getDescendants } = activityUtils;
 
 export default {
+  name: 'activity-publishing',
   inject: ['$schemaService'],
   mixins: [publishMixin],
   props: {

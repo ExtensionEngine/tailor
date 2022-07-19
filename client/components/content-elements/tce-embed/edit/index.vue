@@ -6,7 +6,7 @@
       :is-disabled="isDisabled"
       :dense="dense"
       name="Embed component"
-      icon="mdi-iframe"
+      icon="mdi-application-brackets"
       active-placeholder="Use toolbar to enter the url"
       active-icon="mdi-arrow-up" />
     <div v-else>

@@ -21,6 +21,7 @@ import debounce from 'lodash/debounce';
 import focus from 'vue-focus';
 
 export default {
+  name: 'catalog-search',
   props: {
     value: { type: String, default: null }
   },

@@ -7,7 +7,7 @@
       :activity="group"
       :supported-types="['JODIT_HTML', 'IMAGE', 'VIDEO', 'EMBED', 'HTML']"
       :layout="true">
-      <template v-slot:list-item="{ element, dragged }">
+      <template #list-item="{ element, dragged }">
         <contained-content
           @save="save(element, $event)"
           @delete="$emit('delete:element', element)"

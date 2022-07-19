@@ -15,7 +15,7 @@
       :open="expandedActivityIds"
       transition open-on-click
       class="py-3 px-1 treeview">
-      <template v-slot:label="{ item: { id, data } }">
+      <template #label="{ item: { id, data } }">
         {{ data.name }}
         <v-chip
           v-if="groupedSelection[id]"
@@ -24,7 +24,7 @@
           {{ getChipLabel(groupedSelection[id]) }}
         </v-chip>
       </template>
-      <template v-slot:append="{ item }">
+      <template #append="{ item }">
         <v-btn
           v-if="hasContentContainers(item.type)"
           @click="$emit('selected', item)"

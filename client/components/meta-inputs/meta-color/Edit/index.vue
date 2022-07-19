@@ -1,6 +1,6 @@
 <template>
   <div class="picker control my-2">
-    <span class="title">{{ meta.label }}</span>
+    <span class="text-h6">{{ meta.label }}</span>
     <color-input @input="select" :value="selected" />
     <ul class="colors control-group pl-0">
       <li

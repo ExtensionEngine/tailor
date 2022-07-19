@@ -6,7 +6,7 @@
     <div class="info-container">
       <div class="d-flex align-center">
         <v-tooltip right>
-          <template v-slot:activator="{ on }">
+          <template #activator="{ on }">
             <span v-on="on" class="author text-truncate">{{ author.label }}</span>
           </template>
           {{ author.label }}
@@ -15,7 +15,7 @@
       </div>
       <div class="d-flex align-center">
         <v-tooltip right>
-          <template v-slot:activator="{ on }">
+          <template #activator="{ on }">
             <span v-on="on">
               <timeago
                 :datetime="comment.createdAt"

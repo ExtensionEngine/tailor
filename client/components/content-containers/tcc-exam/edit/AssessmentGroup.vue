@@ -18,7 +18,7 @@
             type="number"
             step="15"
             persistent-hint>
-            <template v-slot:append-outer>
+            <template #append-outer>
               <v-icon @click="$emit('delete')">mdi-delete</v-icon>
             </template>
           </v-text-field>
@@ -47,7 +47,7 @@
       :elements="assessments"
       :activity="group"
       :supported-types="['ASSESSMENT']">
-      <template v-slot:list-item="{ element }">
+      <template #list-item="{ element }">
         <assessment-item
           @save="saveAssessment"
           @delete="deleteAssessment(element)"

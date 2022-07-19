@@ -4,7 +4,7 @@
       v-if="showPlaceholder"
       v-bind="{ isFocused, isDisabled }"
       name="PDF component"
-      icon="mdi-file-pdf"
+      icon="mdi-file-pdf-box"
       active-placeholder="Use toolbar to upload the pdf"
       active-icon="mdi-arrow-up" />
     <div v-show="!showPlaceholder">

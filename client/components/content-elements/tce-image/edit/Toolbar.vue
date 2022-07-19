@@ -31,6 +31,7 @@ import isEmpty from 'lodash/isEmpty';
 import UploadBtn from './UploadBtn';
 
 export default {
+  name: 'tce-image-toolbar',
   inject: ['$elementBus'],
   props: {
     element: { type: Object, required: true }

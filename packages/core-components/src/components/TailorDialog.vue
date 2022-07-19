@@ -3,7 +3,7 @@
     v-on="$listeners"
     :width="width"
     v-bind="$attrs">
-    <template v-for="(_, slot) in $scopedSlots" v-slot:[slot]="scope">
+    <template v-for="(_, slot) in $scopedSlots" #[slot]="scope">
       <slot :name="slot" v-bind="scope"></slot>
     </template>
     <v-card>

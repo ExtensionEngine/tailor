@@ -8,7 +8,7 @@
               <img :src="logo" alt="Logo" class="logo">
             </div>
           </v-avatar>
-          <h1 class="ma-2 headline">{{ title }}</h1>
+          <h1 class="ma-2 text-h5">{{ title }}</h1>
         </div>
         <div class="auth-body">
           <router-view />
@@ -25,6 +25,7 @@
 import Waves from '@/components/common/Waves';
 
 export default {
+  name: 'auth-container',
   computed: {
     title: () => BRAND_CONFIG.TITLE,
     logo: () => BRAND_CONFIG.LOGO_FULL

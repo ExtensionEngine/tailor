@@ -2,14 +2,14 @@
   <tailor-dialog
     v-model="visible"
     header-icon="mdi-folder-plus-outline">
-    <template v-if="showActivator" v-slot:activator="{ on }">
+    <template v-if="showActivator" #activator="{ on }">
       <v-btn v-on="on" :color="activatorColor" text class="px-1">
         <v-icon class="pr-1">{{ activatorIcon }}</v-icon>
         {{ activatorLabel || defaultLabel }}
       </v-btn>
     </template>
-    <template v-slot:header>{{ heading || defaultLabel }}</template>
-    <template v-slot:body>
+    <template #header>{{ heading || defaultLabel }}</template>
+    <template #body>
       <validation-observer
         :key="visible"
         ref="form"

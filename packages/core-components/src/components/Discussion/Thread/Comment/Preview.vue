@@ -3,7 +3,7 @@
     <div v-if="isResolved" class="resolvement-options">
       <span class="font-italic mr-1">Marked as resolved.</span>
       <v-tooltip open-delay="800" right>
-        <template v-slot:activator="{ on }">
+        <template #activator="{ on }">
           <v-btn
             v-on="on"
             @click="$listeners.unresolve"

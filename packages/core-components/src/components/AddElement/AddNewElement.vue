@@ -16,7 +16,7 @@
           <v-hover
             v-for="element in group.elements"
             :key="element.position"
-            v-slot:default="{ hover }">
+            v-slot="{ hover }">
             <v-btn
               @click.stop="$emit('add', [element])"
               :disabled="!isAllowed(element.type)"

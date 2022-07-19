@@ -1,6 +1,6 @@
 <template>
   <v-tooltip open-delay="100" max-width="300" left>
-    <template v-slot:activator="{ on }">
+    <template #activator="{ on }">
       <span v-on="on">
         <v-badge :color="badgeColor" inline dot />
       </span>

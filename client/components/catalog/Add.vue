@@ -4,7 +4,7 @@
     v-model="isVisible"
     header-icon="mdi-folder-plus-outline"
     paddingless persistent>
-    <template v-slot:activator="{ on }">
+    <template #activator="{ on }">
       <v-btn
         v-on="on"
         color="secondary"
@@ -14,8 +14,8 @@
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </template>
-    <template v-slot:header>Add</template>
-    <template v-slot:body>
+    <template #header>Add</template>
+    <template #body>
       <v-tabs
         v-model="selectedTab"
         background-color="primary darken-3"

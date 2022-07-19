@@ -28,8 +28,8 @@ import getRouter from './router';
 import App from './App';
 
 Vue.component('tce-question-container', QuestionContainer);
-Vue.component('ValidationObserver', ValidationObserver);
-Vue.component('ValidationProvider', ValidationProvider);
+Vue.component('validation-observer', ValidationObserver);
+Vue.component('validation-provider', ValidationProvider);
 setInteractionMode('eager');
 
 Vue.filter('formatDate', formatDate);
