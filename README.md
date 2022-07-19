@@ -6,8 +6,7 @@
 
 [![CircleCI build
 status](https://badgen.net/circleci/github/ExtensionEngine/tailor/develop?icon)](https://circleci.com/gh/ExtensionEngine/tailor)
-[![Codacy
-Badge](https://badgen.net/codacy/grade/d6d198f9c56b4ca799b4624c5bb3e16c/develop)](https://app.codacy.com/manual/ExtensionEngine/tailor)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/f3eab80316244b7b959b7bbf3d7c3ace)](https://www.codacy.com/gh/ExtensionEngine/tailor/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ExtensionEngine/tailor&amp;utm_campaign=Badge_Grade)
 [![Known
 Vulnerabilities](https://badgen.net/snyk/ExtensionEngine/tailor/develop)](https://snyk.io/test/github/ExtensionEngine/tailor)
 [![GitHub package
