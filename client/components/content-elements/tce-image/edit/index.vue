@@ -33,7 +33,7 @@
         :aspect-ratio="aspectRatio"
         :max-width="elementWidth"
         class="mx-auto">
-        <template v-slot:placeholder>
+        <template #placeholder>
           <v-row
             align="center"
             justify="center"

@@ -1,7 +1,7 @@
 <template>
   <div class="editor-link">
     <v-tooltip right>
-      <template v-slot:activator="{ on }">
+      <template #activator="{ on }">
         <router-link v-slot="{ navigate, isExactActive }" :to="editorRoute">
           <v-btn
             v-on="on"

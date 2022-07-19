@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-menu max-width="350" offset-y left>
-      <template v-slot:activator="{ on }">
+      <template #activator="{ on }">
         <v-btn v-on="on" color="primary darken-3" icon tile>
           <v-icon>mdi-dots-vertical</v-icon>
         </v-btn>

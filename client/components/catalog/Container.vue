@@ -10,7 +10,7 @@
         </v-col>
         <v-col md="3" sm="1" class="text-sm-left pl-2">
           <v-tooltip open-delay="800" top>
-            <template v-slot:activator="{ on }">
+            <template #activator="{ on }">
               <v-btn
                 v-on="on"
                 @click="onFilterChange(togglePinned)"

@@ -5,8 +5,8 @@ import { EventEmitter } from 'events';
 const debug = createDebug('sse-client');
 
 export default class SSEConnection extends EventEmitter {
-  _id
-  _connection
+  _id;
+  _connection;
 
   constructor(url, options = {}) {
     super();
@@ -53,7 +53,7 @@ export default class SSEConnection extends EventEmitter {
     if (e.target !== this._connection) return;
     const payload = e.data ? JSON.parse(e.data) : e;
     return this.emit(e.type, payload);
-  }
+  };
 
   addListener(event, listener) {
     super.addListener(event, listener);

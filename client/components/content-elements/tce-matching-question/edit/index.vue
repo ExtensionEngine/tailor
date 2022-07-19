@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="subtitle-2 pb-2">Answers</div>
+    <div class="text-subtitle-2 pb-2">Answers</div>
     <v-row>
       <v-col cols="4" offset="1">
         <v-text-field
@@ -83,6 +83,7 @@ import shuffle from 'lodash/shuffle';
 import size from 'lodash/size';
 
 export default {
+  name: 'tce-matching-question',
   props: {
     assessment: { type: Object, default: assessment.defaults.MQ },
     errors: { type: Array, default: () => ([]) },

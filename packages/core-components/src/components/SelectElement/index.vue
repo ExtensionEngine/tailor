@@ -5,8 +5,8 @@
     :header-icon="headerIcon"
     width="650"
     scrollable>
-    <template v-slot:header>{{ heading }}</template>
-    <template v-slot:body>
+    <template #header>{{ heading }}</template>
+    <template #body>
       <template v-if="!selection.activity">
         <select-repository
           @selected="selectRepository"
@@ -38,7 +38,7 @@
           selectable />
       </template>
     </template>
-    <template v-slot:actions>
+    <template #actions>
       <v-btn
         v-if="selection.activity"
         @click="deselectActivity"

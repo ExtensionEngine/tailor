@@ -1,7 +1,7 @@
 <template>
   <div class="resolve-btn-container">
     <v-tooltip open-delay="800" left>
-      <template v-slot:activator="{ on }">
+      <template #activator="{ on }">
         <v-btn
           v-on="{ ...$listeners, ...on }"
           color="teal accent-4"

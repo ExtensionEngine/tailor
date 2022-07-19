@@ -18,7 +18,7 @@
       :element="assessment"
       :is-disabled="isDisabled"
       class="question-container">
-      <template v-slot:default="{ isEditing }">
+      <template #default="{ isEditing }">
         <div class="px-6 d-flex justify-end">
           <v-btn
             @click="$emit('selected')"
@@ -29,7 +29,7 @@
           </v-btn>
         </div>
         <div class="d-flex pb-4 px-6">
-          <slot :isEditing="isEditing" name="header"></slot>
+          <slot :is-editing="isEditing" name="header"></slot>
         </div>
       </template>
     </tce-question-container>

@@ -1,6 +1,6 @@
 <template>
   <div class="mt-2 mb-4">
-    <div class="d-flex justify-space-between subtitle-2">
+    <div class="d-flex justify-space-between text-subtitle-2">
       <span v-if="isGraded">Answers</span>
       <span v-else-if="isEditing">{{ blankCountInfo }}</span>
       <span v-if="isEditing">
@@ -98,6 +98,7 @@ const getBlankCount = question => {
 const getCountInfo = count => `${count} ${pluralize('blank', count)} detected.`;
 
 export default {
+  name: 'tce-fill-blank',
   props: {
     assessment: { type: Object, default: assessment.defaults.FB },
     errors: { type: Array, default: () => ([]) },

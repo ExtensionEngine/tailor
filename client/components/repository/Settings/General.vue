@@ -39,6 +39,7 @@ import RepositoryNameField from '../common/RepositoryNameField';
 import set from 'lodash/set';
 
 export default {
+  name: 'repository-general-settings',
   inject: ['$schemaService'],
   props: {
     repositoryId: { type: Number, required: true }

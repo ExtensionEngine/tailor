@@ -20,7 +20,7 @@
       :search="search"
       transition open-all dense
       class="px-1 py-3 treeview">
-      <template v-slot:prepend="{ item }">
+      <template #prepend="{ item }">
         <v-icon
           v-if="item.selectable"
           @click="toggleSelection(item)"

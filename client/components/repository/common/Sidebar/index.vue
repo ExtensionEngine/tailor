@@ -23,6 +23,7 @@ import SidebarBody from './Body';
 import SidebarHeader from './Header';
 
 export default {
+  name: 'repository-sidebar',
   props: {
     emptyMessage: {
       type: String,
