@@ -5,7 +5,7 @@
 # Tailor CMS
 
 [![CircleCI build
-status](https://badgen.net/circleci/github/ExtensionEngine/tailor/develop?icon)](https://circleci.com/gh/ExtensionEngine/tailor)
+status](https://badgen.net/circleci/github/ExtensionEngine/tailor/develop?style=svg)](https://circleci.com/gh/ExtensionEngine/tailor)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/f3eab80316244b7b959b7bbf3d7c3ace)](https://www.codacy.com/gh/ExtensionEngine/tailor/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ExtensionEngine/tailor&amp;utm_campaign=Badge_Grade)
 [![Known
 Vulnerabilities](https://badgen.net/snyk/ExtensionEngine/tailor/develop)](https://snyk.io/test/github/ExtensionEngine/tailor)
