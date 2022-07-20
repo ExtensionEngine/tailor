@@ -6,7 +6,7 @@ executors:
       - image: cimg/node:16.16.0
   machine-executor: &machine-executor
     machine:
-      image: ubuntu-2004:202107-02
+      image: ubuntu-2204:2022.04.1
 
 default_directory: &default-directory
   working_directory: ~/deploy/tailor
