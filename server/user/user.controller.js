@@ -64,7 +64,7 @@ function changePassword({ user, body }, res) {
 }
 
 function reinvite({ params }, res) {
-  return User.findByPk(params.id)
+  return User.unscoped().findByPk(params.id)
     .then(user => user || createError(NOT_FOUND, 'User does not exist!'))
     .then(user => User.sendInvitation(user))
     .then(() => res.status(ACCEPTED).end());
