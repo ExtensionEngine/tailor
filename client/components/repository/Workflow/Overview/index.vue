@@ -10,7 +10,12 @@
     <template #item.name="{ item, value }">
       <div class="d-flex">
         <overview-name :value="value" />
-        <publishing-badge v-if="isAdmin || isRepositoryAdmin" :activity="item" />
+        <publishing
+          v-if="isAdmin || isRepositoryAdmin"
+          :activity="item"
+          :outline-activities="outlineActivities"
+          hide-publish
+          hide-details />
       </div>
     </template>
     <template #item.status="{ value }">
@@ -36,7 +41,7 @@ import OverviewDueDate from './DueDate';
 import OverviewName from './Name';
 import OverviewPriority from './Priority';
 import OverviewStatus from './Status';
-import PublishingBadge from '@/components/repository/common/Sidebar/Badge';
+import Publishing from '@/components/repository/common/Sidebar/Publishing';
 import selectActivity from '@/components/repository/common/selectActivity';
 
 export default {
@@ -47,7 +52,7 @@ export default {
   },
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters('repository', ['isRepositoryAdmin', 'workflow']),
+    ...mapGetters('repository', ['isRepositoryAdmin', 'workflow', 'outlineActivities']),
     headers() {
       return [{
         text: 'Name',
@@ -105,7 +110,7 @@ export default {
     }
   },
   components: {
-    PublishingBadge,
+    Publishing,
     OverviewAssignee,
     OverviewDueDate,
     OverviewName,
