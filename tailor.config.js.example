@@ -233,56 +233,29 @@ const TEST_WORKFLOW = {
   ]
 };
 
+// ----------------------------------------------------
+// Schema definition
+// ----------------------------------------------------
+
+const TEST_SCHEMA = {
+  id: 'TEST_SCHEMA',
+  workflowId: TEST_WORKFLOW.id,
+  name: 'Test course structure',
+  structure: [
+    getModuleActivityConfig(),
+    getLessonActivityConfig(),
+    getKnowledgeCheckActivityConfig(),
+    getPageActivityConfig()
+  ],
+  contentContainers: [
+    getSectionContainer(),
+    getIntroContainer(),
+    getExamContainer(),
+    getAssessmentPoolContainer()
+  ]
+};
+
 module.exports = {
-  SCHEMAS: [{
-    id: 'COURSE',
-    name: 'Example Course',
-    workflowId: 'EXAMPLE_WORKFLOW',
-    structure: [{
-      type: 'GOAL',
-      label: 'Goal',
-      color: '#ff6590',
-      rootLevel: true,
-      isTrackedInWorkflow: true,
-      meta: [{
-        key: 'description',
-        type: 'INPUT',
-        label: 'Description',
-        placeholder: 'Click to add...',
-        validate: { required: false, max: 23 }
-      }],
-      contentContainers: ['PAGE'],
-      relationships: [{
-        type: 'prerequisites',
-        label: 'Prerequisites',
-        multiple: true,
-        searchable: true,
-        allowEmpty: true,
-        placeholder: 'Click to select',
-        allowCircularLinks: false,
-        allowInsideLineage: false,
-        allowedTypes: ['GOAL']
-      }, {
-        type: 'replacements',
-        label: 'replacements'
-      }]
-    }],
-    contentContainers: [{
-      type: 'PAGE',
-      label: 'Page',
-      multiple: false,
-      publishedAs: 'Page',
-      required: false
-    }]
-  }],
-  WORKFLOWS: [{
-    id: 'EXAMPLE_WORKFLOW',
-    dueDateWarningThreshold: { days: 2 },
-    statuses: [
-      { id: 'TODO', label: 'Todo', color: '#0388a6', default: true },
-      { id: 'IN_PROGRESS', label: 'In progress', color: '#0396a6' },
-      { id: 'REVIEW', label: 'Review', color: '#48d9d9' },
-      { id: 'DONE', label: 'Done', color: '#f24949' }
-    ]
-  }]
+  SCHEMAS: [TEST_SCHEMA],
+  WORKFLOWS: [TEST_WORKFLOW]
 };
