@@ -178,9 +178,7 @@ const getModuleActivityConfig = () => ({
     allowedTypes: [ACTIVITY_TYPE.MODULE]
   }],
   contentContainers: [
-    ACTIVITY_TYPE.INTRO,
-    ACTIVITY_TYPE.CONTENT_SECTION,
-    ACTIVITY_TYPE.ASSESSMENT_POOL
+    ACTIVITY_TYPE.INTRO
   ],
   subLevels: [
     ACTIVITY_TYPE.MODULE,
