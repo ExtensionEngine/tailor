@@ -219,6 +219,20 @@ const getKnowledgeCheckActivityConfig = () => ({
   contentContainers: [ACTIVITY_TYPE.EXAM]
 });
 
+// ----------------------------------------------------
+// Workflow configuration
+// ----------------------------------------------------
+
+const TEST_WORKFLOW = {
+  id: 'TEST_WORKFLOW',
+  statuses: [
+    { id: 'TODO', label: 'Todo', default: true, color: '#E91E63' },
+    { id: 'IN_PROGRESS', label: 'In progress', color: '#039BE5' },
+    { id: 'REVIEW', label: 'Review', color: '#00BFA5' },
+    { id: 'DONE', label: 'Done', color: '#00BFA5' }
+  ]
+};
+
 module.exports = {
   SCHEMAS: [{
     id: 'COURSE',
