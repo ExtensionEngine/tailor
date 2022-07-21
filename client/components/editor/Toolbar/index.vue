@@ -5,7 +5,7 @@
       :class="[showPublishDiff ? 'darken-4' : 'darken-3']"
       class="activity-toolbar primary">
       <activity-actions class="d-flex flex-grow-0" />
-      <h1 class="pt-2 headline text-truncate">
+      <h1 class="pt-2 text-h5 text-truncate">
         <span>{{ config.label }}</span>
         <span class="px-2 grey--text">|</span>
         <span class="secondary--text text--lighten-2">

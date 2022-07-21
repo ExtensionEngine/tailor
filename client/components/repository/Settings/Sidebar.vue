@@ -16,7 +16,7 @@
         <v-list-item-title>{{ label }}</v-list-item-title>
       </v-list-item>
       <v-list-group :value="true">
-        <template v-slot:activator>
+        <template #activator>
           <v-list-item class="pl-0">
             <v-list-item-title>Actions</v-list-item-title>
           </v-list-item>
@@ -41,6 +41,7 @@
 
 <script>
 export default {
+  name: 'repository-settings-sidebar',
   computed: {
     routes() {
       const { query } = this.$route;

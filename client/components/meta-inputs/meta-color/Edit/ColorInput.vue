@@ -2,7 +2,7 @@
   <v-menu
     v-model="menu"
     :close-on-content-click="false">
-    <template v-slot:activator="{ on }">
+    <template #activator="{ on }">
       <div v-on="on" class="preview">
         <div :style="{ background: value }" class="selected">
           <span class="mdi mdi-eyedropper eyedropper"></span>

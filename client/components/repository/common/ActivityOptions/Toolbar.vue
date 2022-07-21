@@ -4,7 +4,7 @@
       v-for="it in options"
       :key="it.name"
       bottom>
-      <template v-slot:activator="{ on }">
+      <template #activator="{ on }">
         <v-btn
           v-on="on"
           @click.stop="it.action()"

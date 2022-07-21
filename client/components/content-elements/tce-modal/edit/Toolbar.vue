@@ -22,6 +22,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
 
 export default {
+  name: 'tce-modal-toolbar',
   inject: ['$elementBus'],
   props: {
     element: { type: Object, required: true }

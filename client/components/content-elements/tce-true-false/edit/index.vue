@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="subtitle-2">{{ title }}</div>
+    <div class="text-subtitle-2">{{ title }}</div>
     <v-radio-group v-model="correct" :error-messages="correctErrors" class="mb-2">
       <v-radio
         v-for="(answer, index) in [true, false]"
@@ -23,6 +23,7 @@ const getTitle = isGraded => isGraded ? 'Select correct answer' : 'Options';
 const getLabel = answer => capital(answer.toString());
 
 export default {
+  name: 'tce-true-false',
   props: {
     assessment: { type: Object, default: assessment.defaults.TF },
     errors: { type: Array, default: () => ([]) },

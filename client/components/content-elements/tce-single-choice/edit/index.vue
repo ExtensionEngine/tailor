@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="subtitle-2">{{ title }}</div>
+    <div class="text-subtitle-2">{{ title }}</div>
     <v-radio-group v-model="correct" :error="!!correctError" hide-details>
       <v-text-field
         v-for="(answer, idx) in answers" :key="idx"
@@ -17,7 +17,7 @@
             :value="idx"
             :disabled="disabled"
             :color="color" />
-          <v-avatar v-else :color="color" size="24" class="subtitle-2 mr-2">
+          <v-avatar v-else :color="color" size="24" class="text-subtitle-2 mr-2">
             {{ idx + 1 }}
           </v-avatar>
         </template>
@@ -60,6 +60,7 @@ const getPlaceholder = isGraded => isGraded ? 'Answer...' : 'Option...';
 const getButtonLabel = isGraded => isGraded ? 'Add answer' : 'Add option';
 
 export default {
+  name: 'tce-single-choice',
   props: {
     assessment: { type: Object, default: assessment.defaults.SC },
     errors: { type: Array, default: () => ([]) },

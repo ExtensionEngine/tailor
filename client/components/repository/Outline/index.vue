@@ -72,6 +72,7 @@ import StructureToolbar from './Toolbar';
 import TreeView from './TreeView';
 
 export default {
+  name: 'repository-outline',
   mixins: [reorderMixin, selectActivity],
   props: {
     showLoader: { type: Boolean, default: false }

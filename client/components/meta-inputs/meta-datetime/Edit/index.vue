@@ -29,6 +29,7 @@ import set from 'date-fns/set';
 import TimePicker from './TimePicker';
 
 export default {
+  name: 'meta-datetime',
   props: {
     meta: { type: Object, default: () => ({ value: null }) }
   },

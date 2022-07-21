@@ -8,7 +8,7 @@
       <v-icon color="secondary lighten-2" size="18" class="mr-2">mdi-help</v-icon>
       <span class="subtitle-2">{{ config.name }}</span>
     </v-toolbar>
-    <slot :isEditing="isEditing"></slot>
+    <slot :is-editing="isEditing"></slot>
     <div class="content">
       <question
         @update="update"

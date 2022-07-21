@@ -18,6 +18,7 @@
       :disabled="!options.length"
       :error-messages="errors"
       :class="{ required: !allowEmpty }"
+      :height="42"
       item-value="id"
       item-text="data.name"
       deletable-chips return-object outlined>
@@ -131,15 +132,9 @@ export default {
     margin-right: 1rem;
   }
 
-  .v-input__slot .v-select__slot {
-    .v-input__append-inner {
-      margin-top: 1.375rem;
-    }
-
-    input[disabled] {
-      opacity: 0.7;
-      border-bottom: unset;
-    }
+  .v-input__slot .v-select__slot input[disabled] {
+    opacity: 0.7;
+    border-bottom: unset;
   }
 }
 </style>

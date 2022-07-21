@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="subtitle-2">Answer groups</div>
+    <div class="text-subtitle-2">Answer groups</div>
     <v-card
       v-for="(groupName, groupKey, i) in groups" :key="groupKey"
       class="pt-4 transparent elevation-0">
@@ -83,6 +83,7 @@ import pull from 'lodash/pull';
 import size from 'lodash/size';
 
 export default {
+  name: 'tce-drag-drop',
   props: {
     assessment: { type: Object, default: assessment.defaults.DD },
     errors: { type: Array, default: () => ([]) },

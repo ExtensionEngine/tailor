@@ -8,6 +8,7 @@ const prefix = message => `Are you sure you want to publish ${message}`;
 const initialStatus = () => ({ progress: 0, message: '' });
 
 export default {
+  name: 'publish-mixin',
   data: () => ({ publishStatus: initialStatus() }),
   computed: {
     isPublishing: ({ publishStatus }) => publishStatus.progress > 0

@@ -6,7 +6,7 @@
     <div class="info-container">
       <div class="d-flex align-center">
         <v-tooltip right>
-          <template v-slot:activator="{ on }">
+          <template #activator="{ on }">
             <span v-on="on" class="author text-truncate">{{ author.label }}</span>
           </template>
           {{ author.label }}
@@ -15,7 +15,7 @@
       </div>
       <div class="d-flex align-center">
         <v-tooltip right>
-          <template v-slot:activator="{ on }">
+          <template #activator="{ on }">
             <span v-on="on">
               <timeago
                 :datetime="comment.createdAt"
@@ -51,7 +51,7 @@
 import EditorLink from '@/components/EditorLink.vue';
 
 const getOptions = () => ({
-  resolve: { action: 'resolve', icon: 'check-box-outline', color: 'teal accent-4' },
+  resolve: { action: 'resolve', icon: 'checkbox-outline', color: 'teal accent-4' },
   edit: { action: 'toggleEdit', icon: 'pencil-outline', color: 'grey' },
   remove: { action: 'remove', icon: 'trash-can-outline', color: 'grey' }
 });
