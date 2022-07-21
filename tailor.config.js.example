@@ -91,6 +91,23 @@ const getHtmlMeta = () => ({
   label: 'Test html input'
 });
 
+// ----------------------------------------------------
+// Activity type definition
+// ----------------------------------------------------
+
+const ACTIVITY_TYPE = {
+  // Outline
+  MODULE: 'MODULE',
+  LESSON: 'LESSON',
+  PAGE: 'PAGE',
+  KNOWLEDGE_CHECK: 'KNOWLEDGE_CHECK',
+  // Content containers
+  INTRO: 'INTRO',
+  CONTENT_SECTION: 'CONTENT_SECTION',
+  ASSESSMENT_POOL: 'ASSESSMENT_POOL',
+  EXAM: 'EXAM'
+};
+
 module.exports = {
   SCHEMAS: [{
     id: 'COURSE',
