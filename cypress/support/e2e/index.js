@@ -30,3 +30,4 @@ import './schema';
 import './api';
 import './auth';
 import './repository';
+import './vuetify';
