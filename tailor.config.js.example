@@ -1,5 +1,96 @@
 'use strict';
 
+// ----------------------------------------------------
+// Meta inputs
+// ----------------------------------------------------
+
+const getInputMeta = () => ({
+  type: 'INPUT',
+  key: 'inputField',
+  label: 'Test input',
+  placeholder: 'Click to edit...',
+  validate: { rules: { required: false } }
+});
+
+const getTextareaMeta = () => ({
+  type: 'TEXTAREA',
+  key: 'textareaField',
+  label: 'Test textarea',
+  placeholder: 'Click to edit...',
+  validate: { rules: { max: 250 } }
+});
+
+const getSelectMeta = () => ({
+  type: 'SELECT',
+  key: 'selectField',
+  label: 'Test select',
+  placeholder: 'Select...',
+  options: [{
+    label: '15min',
+    value: 15
+  }, {
+    label: '30min',
+    value: 30
+  }, {
+    label: '45min',
+    value: 45
+  }]
+});
+
+const getMultiselectMeta = () => ({
+  type: 'MULTISELECT',
+  key: 'multiselectField',
+  label: 'Test multiselect',
+  options: [
+    { value: 'OPT1', label: 'Option 1' },
+    { value: 'OPT2', label: 'Option 2' },
+    { value: 'OPT3', label: 'Option 3' }
+  ]
+});
+
+const getSwitchMeta = () => ({
+  type: 'SWITCH',
+  key: 'switchField',
+  label: 'Test switch'
+});
+
+const getCheckboxMeta = () => ({
+  type: 'CHECKBOX',
+  key: 'checkboxField',
+  label: 'Test checkbox',
+  description: 'Option selected'
+});
+
+const getFileMeta = () => ({
+  type: 'FILE',
+  key: 'fileField',
+  label: 'Test file attachment',
+  placeholder: 'Click to upload the image',
+  validate: {
+    rules: {
+      ext: ['jpg', 'jpeg', 'png']
+    }
+  }
+});
+
+const getDatetimeMeta = () => ({
+  type: 'DATETIME',
+  key: 'datetimeField',
+  label: 'Test date selection'
+});
+
+const getColorMeta = () => ({
+  type: 'COLOR',
+  key: 'colorField',
+  label: 'Test color selection'
+});
+
+const getHtmlMeta = () => ({
+  type: 'HTML',
+  key: 'htmlField',
+  label: 'Test html input'
+});
+
 module.exports = {
   SCHEMAS: [{
     id: 'COURSE',
