@@ -44,7 +44,7 @@
         @update="data => reorder(data, children)"
         :list="children"
         v-bind="{ handle: '.activity' }">
-        <activity
+        <outline-activity
           v-for="(subActivity, childIndex) in children"
           :key="subActivity.uid"
           v-bind="subActivity"
