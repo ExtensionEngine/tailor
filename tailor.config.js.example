@@ -108,6 +108,42 @@ const ACTIVITY_TYPE = {
   EXAM: 'EXAM'
 };
 
+// ----------------------------------------------------
+// Content containers
+// ----------------------------------------------------
+
+const getSectionContainer = () => ({
+  type: ACTIVITY_TYPE.CONTENT_SECTION,
+  label: 'Section',
+  multiple: true,
+  types: [
+    'JODIT_HTML', 'IMAGE', 'VIDEO', 'EMBED', 'PDF', 'AUDIO',
+    'SCORM', 'BREAK', 'ASSESSMENT', 'ACCORDION', 'CAROUSEL',
+    'MODAL', 'HTML'
+  ]
+});
+
+const getIntroContainer = () => ({
+  type: ACTIVITY_TYPE.INTRO,
+  label: 'Intro',
+  types: ['JODIT_HTML', 'IMAGE', 'VIDEO', 'EMBED']
+});
+
+const getExamContainer = () => ({
+  type: ACTIVITY_TYPE.EXAM,
+  label: 'Exam',
+  displayHeading: true,
+  multiple: true,
+  required: false,
+  publishedAs: 'exam'
+});
+
+const getAssessmentPoolContainer = () => ({
+  type: ACTIVITY_TYPE.ASSESSMENT_POOL,
+  label: 'Assessments',
+  publishedAs: 'assessments'
+});
+
 module.exports = {
   SCHEMAS: [{
     id: 'COURSE',
