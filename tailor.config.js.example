@@ -126,6 +126,7 @@ const getSectionContainer = () => ({
 const getIntroContainer = () => ({
   type: ACTIVITY_TYPE.INTRO,
   label: 'Intro',
+  layout: false,
   types: ['JODIT_HTML', 'IMAGE', 'VIDEO', 'EMBED']
 });
 
