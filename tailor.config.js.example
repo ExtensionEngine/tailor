@@ -154,7 +154,7 @@ const getModuleActivityConfig = () => ({
   label: 'Module',
   rootLevel: true,
   isTrackedInWorkflow: true,
-  color: '#5187C7',
+  color: '#536DFE',
   meta: [
     getInputMeta(),
     getTextareaMeta(),
@@ -192,7 +192,7 @@ const getModuleActivityConfig = () => ({
 const getLessonActivityConfig = () => ({
   type: ACTIVITY_TYPE.LESSON,
   label: 'Lesson',
-  color: '#08A9AD',
+  color: '#FFA000',
   isTrackedInWorkflow: true,
   contentContainers: [
     ACTIVITY_TYPE.INTRO,
@@ -205,7 +205,7 @@ const getPageActivityConfig = () => ({
   type: ACTIVITY_TYPE.PAGE,
   label: 'Page',
   rootLevel: true,
-  color: '#1DE9B6',
+  color: '#00BFA5',
   isTrackedInWorkflow: true,
   contentContainers: [ACTIVITY_TYPE.CONTENT_SECTION]
 });
@@ -214,7 +214,7 @@ const getKnowledgeCheckActivityConfig = () => ({
   type: ACTIVITY_TYPE.KNOWLEDGE_CHECK,
   label: 'Knowledge check',
   isTrackedInWorkflow: true,
-  color: '#E64A19',
+  color: '#E91E63',
   contentContainers: [ACTIVITY_TYPE.EXAM]
 });
 
