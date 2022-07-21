@@ -144,6 +144,81 @@ const getAssessmentPoolContainer = () => ({
   publishedAs: 'assessments'
 });
 
+// ----------------------------------------------------
+// Activity outline configuration
+// ----------------------------------------------------
+
+const getModuleActivityConfig = () => ({
+  type: ACTIVITY_TYPE.MODULE,
+  label: 'Module',
+  rootLevel: true,
+  isTrackedInWorkflow: true,
+  color: '#5187C7',
+  meta: [
+    getInputMeta(),
+    getTextareaMeta(),
+    getSelectMeta(),
+    getMultiselectMeta(),
+    getSwitchMeta(),
+    getCheckboxMeta(),
+    getFileMeta(),
+    getDatetimeMeta(),
+    getHtmlMeta(),
+    getColorMeta()
+  ],
+  relationships: [{
+    type: 'prerequisites',
+    label: 'Prerequisites',
+    multiple: true,
+    searchable: true,
+    allowEmpty: true,
+    placeholder: 'Click to select',
+    allowCircularLinks: false,
+    allowInsideLineage: true,
+    allowedTypes: [ACTIVITY_TYPE.MODULE]
+  }],
+  contentContainers: [
+    ACTIVITY_TYPE.INTRO,
+    ACTIVITY_TYPE.CONTENT_SECTION,
+    ACTIVITY_TYPE.ASSESSMENT_POOL
+  ],
+  subLevels: [
+    ACTIVITY_TYPE.MODULE,
+    ACTIVITY_TYPE.LESSON,
+    ACTIVITY_TYPE.KNOWLEDGE_CHECK,
+    ACTIVITY_TYPE.PAGE
+  ]
+});
+
+const getLessonActivityConfig = () => ({
+  type: ACTIVITY_TYPE.LESSON,
+  label: 'Lesson',
+  color: '#08A9AD',
+  isTrackedInWorkflow: true,
+  contentContainers: [
+    ACTIVITY_TYPE.INTRO,
+    ACTIVITY_TYPE.CONTENT_SECTION,
+    ACTIVITY_TYPE.ASSESSMENT_POOL
+  ]
+});
+
+const getPageActivityConfig = () => ({
+  type: ACTIVITY_TYPE.PAGE,
+  label: 'Page',
+  rootLevel: true,
+  color: '#1DE9B6',
+  isTrackedInWorkflow: true,
+  contentContainers: [ACTIVITY_TYPE.CONTENT_SECTION]
+});
+
+const getKnowledgeCheckActivityConfig = () => ({
+  type: ACTIVITY_TYPE.KNOWLEDGE_CHECK,
+  label: 'Knowledge check',
+  isTrackedInWorkflow: true,
+  color: '#E64A19',
+  contentContainers: [ACTIVITY_TYPE.EXAM]
+});
+
 module.exports = {
   SCHEMAS: [{
     id: 'COURSE',
