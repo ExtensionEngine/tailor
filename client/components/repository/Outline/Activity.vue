@@ -6,6 +6,7 @@
         :id="`activity_${uid}`"
         :style="{ 'border-left-color': config.color }"
         :class="{ selected: isSelected, highlighted: hover }"
+        data-testid="repository__structureActivity"
         class="activity">
         <v-btn
           v-if="hasSubtypes"

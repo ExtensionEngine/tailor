@@ -1,4 +1,4 @@
-const toTestIdAttr = val => `[data-testid="${val}"]`;
+import { toTestIdAttr } from '../../utils';
 
 export const sel = {
   card: 'catalog__repositoryCard'

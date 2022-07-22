@@ -8,6 +8,7 @@
         <v-btn
           v-on="on"
           @click.stop="it.action()"
+          :aria-label="it.name"
           color="primary darken-4"
           icon
           class="mr-2">
