@@ -5,6 +5,7 @@ Cypress.Commands.add('vSelect', (inputLabel, optionLabels) => {
   // Show the dropdown menu
   cy.findByLabelText(inputLabel)
     .as('vSelectLabel')
+    .closest("div[role='button']")
     .click({ force: true });
   // TODO: Consider implementation with attach attr to improve scoping
   optionLabels.forEach(optionLabel =>
