@@ -12,7 +12,7 @@ function createActivity(name, type) {
   });
 }
 
-describe('ability to create an outline', () => {
+describe('ability to create root activities', () => {
   before(function () {
     cy.visit('/');
     cy.login();
@@ -27,7 +27,7 @@ describe('ability to create an outline', () => {
   });
 
   ROOT_ACTIVIY_TYPES.forEach(type => {
-    it(`should create a "${type}" using the add button`, function () {
+    it(`create a "${type}" using the add button`, function () {
       const name = generateActivityName(type);
       createActivity(name, type);
       cy.findAllByText(name);
@@ -35,7 +35,7 @@ describe('ability to create an outline', () => {
   });
 
   CHILD_ACTIVIY_TYPES.forEach(type => {
-    it(`should not be able to create a "${type}" using the add button`, () => {
+    it(`not able to create a "${type}" using the add button`, () => {
       cy.findByRole('button', { name: /add/i }).click();
       cy.findByRole('dialog').within(() => {
         cy.findByLabelText('Type').click();
