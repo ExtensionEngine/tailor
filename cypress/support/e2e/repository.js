@@ -9,3 +9,8 @@ Cypress.Commands.add('createRepository', (name = generateName()) => {
     });
   });
 });
+
+Cypress.Commands.add('openRepository', repositoryId => {
+  return cy.getRouter()
+    .then(router => router.push({ name: 'repository', params: { repositoryId } }));
+});
