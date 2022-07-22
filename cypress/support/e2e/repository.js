@@ -1,3 +1,5 @@
+const toTestIdAttr = val => `[data-testid="${val}"]`;
+
 const generateName = () => `Test repository - ${(new Date()).getTime()}`;
 
 Cypress.Commands.add('createRepository', (name = generateName()) => {
@@ -13,4 +15,8 @@ Cypress.Commands.add('createRepository', (name = generateName()) => {
 Cypress.Commands.add('openRepository', repositoryId => {
   return cy.getRouter()
     .then(router => router.push({ name: 'repository', params: { repositoryId } }));
+});
+
+Cypress.Commands.add('findActivityItem', name => {
+  return cy.contains(toTestIdAttr('repository__structureActivity'), name);
 });
