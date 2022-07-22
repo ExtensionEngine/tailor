@@ -6,7 +6,7 @@
     <template v-for="(_, slot) in $scopedSlots" #[slot]="scope">
       <slot :name="slot" v-bind="scope"></slot>
     </template>
-    <v-card>
+    <v-card :data-testid="dataTestid">
       <v-card-title primary-title class="dialog-title primary darken-3">
         <v-avatar
           v-if="headerIcon"
@@ -36,7 +36,8 @@ export default {
   props: {
     headerIcon: { type: String, default: null },
     width: { type: [Number, String], default: 500 },
-    paddingless: { type: Boolean, default: false }
+    paddingless: { type: Boolean, default: false },
+    dataTestid: { type: String, default: undefined }
   }
 };
 </script>
