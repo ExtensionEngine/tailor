@@ -2,12 +2,14 @@ import { toTestIdAttr } from '../../../utils';
 
 const sel = {
   activityItem: 'repository__structureActivity',
+  addDialog: 'repository__createActivityDialog',
   addRootDialog: 'repository__createRootActivityDialog',
   addRootBtn: 'repository__createRootActivityBtn'
 };
 
 export const generateActivityName = type => `${type} - ${(new Date()).getTime()}`;
 
+export const getActivityDialog = () => cy.findByTestId(sel.addDialog);
 export const getRootActivityDialog = () => cy.findByTestId(sel.addRootDialog);
 
 export function createRootActivity(name, type) {
