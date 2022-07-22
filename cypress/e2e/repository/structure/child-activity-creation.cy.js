@@ -5,7 +5,7 @@ import {
 } from './utils';
 
 const PARENT_TYPE = 'Module';
-const CHILD_ACTIVIY_TYPES = ['Module', 'Lesson', 'Knowledge check', 'Page'];
+const CHILD_ACTIVITY_TYPES = ['Module', 'Lesson', 'Knowledge check', 'Page'];
 
 describe('ability to create child activities', () => {
   before(function () {
@@ -24,7 +24,7 @@ describe('ability to create child activities', () => {
     findActivityItem(name).as('parent');
   });
 
-  CHILD_ACTIVIY_TYPES.forEach(type => {
+  CHILD_ACTIVITY_TYPES.forEach(type => {
     it(`create a "${type}" within "${PARENT_TYPE}" using the add into button`, function () {
       cy.get(this.parent).findByRole('button', { name: /add item into/i }).click();
       const name = generateActivityName(type);

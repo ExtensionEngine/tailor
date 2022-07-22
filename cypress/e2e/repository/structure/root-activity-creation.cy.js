@@ -6,7 +6,7 @@ import {
 } from './utils';
 
 const ROOT_ACTIVIY_TYPES = ['Module', 'Page'];
-const CHILD_ACTIVIY_TYPES = ['Lesson', 'Knowledge check'];
+const CHILD_ACTIVITY_TYPES = ['Lesson', 'Knowledge check'];
 
 describe('ability to create root activities', () => {
   before(function () {
@@ -30,7 +30,7 @@ describe('ability to create root activities', () => {
     });
   });
 
-  CHILD_ACTIVIY_TYPES.forEach(type => {
+  CHILD_ACTIVITY_TYPES.forEach(type => {
     it(`should not be able to create a "${type}" using the add button`, () => {
       cy.findByTestId('repository__createRootActivityBtn').click();
       getRootActivityDialog().within(() => {
