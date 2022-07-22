@@ -1,5 +1,6 @@
 import {
   createRootActivity,
+  findActivityItem,
   generateActivityName,
   getRootActivityDialog
 } from './utils';
@@ -25,7 +26,7 @@ describe('ability to create root activities', () => {
     it(`should create a "${type}" using the add button`, function () {
       const name = generateActivityName(type);
       createRootActivity(name, type);
-      cy.findAllByText(name);
+      findActivityItem(name);
     });
   });
 

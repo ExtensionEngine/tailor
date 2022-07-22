@@ -1,4 +1,8 @@
-import { createRootActivity, generateActivityName } from './utils';
+import {
+  createRootActivity,
+  findActivityItem,
+  generateActivityName
+} from './utils';
 
 const PARENT_TYPE = 'Module';
 const CHILD_ACTIVIY_TYPES = ['Module', 'Lesson', 'Knowledge check', 'Page'];
@@ -17,7 +21,7 @@ describe('ability to create child activities', () => {
     cy.assertRoute('repository');
     const name = generateActivityName(PARENT_TYPE);
     createRootActivity(name, PARENT_TYPE);
-    cy.findActivityItem(name).as('parent');
+    findActivityItem(name).as('parent');
   });
 
   CHILD_ACTIVIY_TYPES.forEach(type => {
@@ -29,7 +33,7 @@ describe('ability to create child activities', () => {
         cy.findByLabelText('Name').type(`${name}{enter}`);
         cy.findByRole('button', { name: /create/i }).click();
       });
-      cy.findActivityItem(name);
+      findActivityItem(name);
     });
   });
 });
