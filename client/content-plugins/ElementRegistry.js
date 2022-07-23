@@ -1,6 +1,6 @@
 import ComponentRegistry from './ComponentRegistry';
 import elementList from 'shared/core-elements';
-import { getComponentName as getName } from 'tce-core/utils';
+import { getComponentName as getName } from '@tailor-cms/utils';
 
 const getCondition = type => it => it.subtype === type || it.type === type;
 

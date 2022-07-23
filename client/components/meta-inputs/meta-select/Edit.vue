@@ -13,11 +13,11 @@
     item-value="value"
     deletable-chips
     outlined>
-    <template v-if="hasImgProp" v-slot:item="{ item }">
+    <template v-if="hasImgProp" #item="{ item }">
       <img v-if="item.img" :src="item.img" :alt="item.label" class="img">
       <span>{{ item.label }}</span>
     </template>
-    <template v-if="hasImgProp" v-slot:selection="{ item }">
+    <template v-if="hasImgProp" #selection="{ item }">
       <component :is="meta.multiple ? 'v-chip' : 'div'">
         <img v-if="item.img" :src="item.img" :alt="item.label" class="img">
         <span>{{ item.label }}</span>

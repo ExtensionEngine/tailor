@@ -10,7 +10,7 @@
         </v-col>
         <v-col md="3" sm="1" class="text-sm-left pl-2">
           <v-tooltip open-delay="800" top>
-            <template v-slot:activator="{ on }">
+            <template #activator="{ on }">
               <v-btn
                 v-on="on"
                 @click="onFilterChange(togglePinned)"
@@ -71,12 +71,12 @@ import filterConfigs from './repositoryFilterConfigs';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import InfiniteLoading from 'vue-infinite-loading';
-import loader from '@/components/common/loader';
+import { loader } from '@tailor-cms/core-components';
 import map from 'lodash/map';
 import RepositoryCard from './Card';
 import RepositoryFilter from './RepositoryFilter';
 import RepositoryFilterSelection from './RepositoryFilterSelection';
-import { SCHEMAS } from 'shared/activities';
+import { SCHEMAS } from '@tailor-cms/config';
 import Search from './Search';
 import SelectOrder from './SelectOrder';
 
@@ -182,6 +182,7 @@ export default {
   }
 
   &::before {
+    content: " ";
     position: absolute;
     top: 0;
     left: 0;

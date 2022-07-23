@@ -1,7 +1,7 @@
 <template>
   <span class="publish-container">
     <v-menu offset-y left>
-      <template v-slot:activator="{ on }">
+      <template #activator="{ on }">
         <v-btn
           v-on="on"
           :loading="isPublishing"
@@ -32,21 +32,24 @@
 </template>
 
 <script>
+import { activity as activityUtils } from '@tailor-cms/utils';
 import fecha from 'fecha';
-import { getDescendants } from 'utils/activity';
-import { getLevel } from 'shared/activities';
 import { mapActions } from 'vuex';
 import PublishingBadge from './Badge';
 import publishMixin from 'components/common/mixins/publish';
 
+const { getDescendants } = activityUtils;
+
 export default {
+  name: 'activity-publishing',
+  inject: ['$schemaService'],
   mixins: [publishMixin],
   props: {
     activity: { type: Object, required: true },
     outlineActivities: { type: Array, required: true }
   },
   computed: {
-    config: vm => getLevel(vm.activity.type),
+    config: vm => vm.$schemaService.getLevel(vm.activity.type),
     publishedAtMessage() {
       const { publishedAt } = this.activity;
       return publishedAt

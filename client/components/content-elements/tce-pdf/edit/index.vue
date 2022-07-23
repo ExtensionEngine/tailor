@@ -4,7 +4,7 @@
       v-if="showPlaceholder"
       v-bind="{ isFocused, isDisabled }"
       name="PDF component"
-      icon="mdi-file-pdf"
+      icon="mdi-file-pdf-box"
       active-placeholder="Use toolbar to upload the pdf"
       active-icon="mdi-arrow-up" />
     <div v-show="!showPlaceholder">
@@ -34,12 +34,11 @@
 </template>
 
 <script>
+import { ElementPlaceholder, PreviewOverlay } from '@tailor-cms/core-components';
 import CircularProgress from './CircularProgress';
-import { ElementPlaceholder } from 'tce-core';
 import get from 'lodash/get';
 import isIE from 'is-iexplorer';
 import isSafari from 'is-safari';
-import PreviewOverlay from 'tce-core/PreviewOverlay';
 
 const ERR_TIMEOUT = 10000;
 const TYPE = 'application/pdf';

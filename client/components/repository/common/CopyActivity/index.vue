@@ -4,17 +4,17 @@
     header-icon="mdi-content-copy"
     width="650"
     persistent>
-    <template v-if="showActivator" v-slot:activator="{ on }">
+    <template v-if="showActivator" #activator="{ on }">
       <v-btn v-on="on" color="grey darken-3" text class="px-1">
         <v-icon class="pr-1">mdi-content-copy</v-icon>Copy
       </v-btn>
     </template>
-    <template v-slot:header>
+    <template #header>
       Copy items from {{ schema.name | pluralize }}
     </template>
-    <template v-slot:body>
+    <template #body>
       <div v-if="isCopyingActivities" class="ma-4">
-        <div class="subtitle-1 text-center mb-2">
+        <div class="text-subtitle-1 text-center mb-2">
           Copying {{ selectedActivities.length }} items...
         </div>
         <v-progress-linear color="primary darken-2" indeterminate />
@@ -38,7 +38,7 @@
         :supported-levels="levels"
         :activities="selectedRepository.activities || []" />
     </template>
-    <template v-slot:actions>
+    <template #actions>
       <v-btn @click="close" :disabled="isCopyingActivities" text>Cancel</v-btn>
       <v-btn
         @click="copySelection"
@@ -53,19 +53,21 @@
 </template>
 
 <script>
+import {
+  activity as activityApi,
+  repository as repositoryApi
+} from '@/api';
 import { mapActions, mapGetters } from 'vuex';
-import activityApi from 'client/api/activity';
 import debounce from 'lodash/debounce';
 import find from 'lodash/find';
 import head from 'lodash/head';
 import InsertLocation from '@/utils/InsertLocation';
 import last from 'lodash/last';
-import loader from '@/components/common/loader';
+import { loader } from '@tailor-cms/core-components';
 import pluralize from 'pluralize';
 import Promise from 'bluebird';
-import repositoryApi from 'client/api/repository';
 import RepositoryTree from './RepositoryTree';
-import { SCHEMAS } from 'shared/activities';
+import { SCHEMAS } from '@tailor-cms/config';
 import sortBy from 'lodash/sortBy';
 import TailorDialog from '@/components/common/TailorDialog';
 

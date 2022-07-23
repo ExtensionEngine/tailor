@@ -1,7 +1,7 @@
 <template>
   <tailor-dialog v-model="show" header-icon="mdi-account">
-    <template v-slot:header>{{ userData ? 'Edit' : 'Create' }} User</template>
-    <template v-slot:body>
+    <template #header>{{ userData ? 'Edit' : 'Create' }} User</template>
+    <template #body>
       <v-btn
         v-if="userData"
         @click="reinvite"
@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import api from '@/api/user';
+import { user as api } from '@/api';
 import cloneDeep from 'lodash/cloneDeep';
 import humanize from 'humanize-string';
 import isEmpty from 'lodash/isEmpty';

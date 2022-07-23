@@ -12,7 +12,7 @@
       item-text="label"
       open-all open-on-click
       class="pt-3">
-      <template v-slot:prepend="{ item, open }">
+      <template #prepend="{ item, open }">
         <v-icon color="primary darken-3">
           {{ open ? 'mdi-folder-open' : 'mdi-folder' }}
         </v-icon>
@@ -24,7 +24,7 @@
 
 <script>
 import cuid from 'cuid';
-import { SCHEMAS } from 'shared/activities';
+import { SCHEMAS } from '@tailor-cms/config';
 import without from 'lodash/without';
 
 const buildTree = (type, structure) => {

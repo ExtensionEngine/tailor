@@ -159,8 +159,6 @@ $icon-size: 1.125rem;
   border-radius: 0;
   user-select: none;
   cursor: default;
-  // TODO: Remove this after bootstrap gets removed!
-  opacity: initial;
 
   &-arrow {
     position: absolute;
@@ -181,8 +179,6 @@ $icon-size: 1.125rem;
     font-family: $font-family-secondary;
     font-weight: 500;
     text-align: center;
-    // TODO: Remove this after bootstrap gets removed!
-    background: initial;
   }
 }
 </style>

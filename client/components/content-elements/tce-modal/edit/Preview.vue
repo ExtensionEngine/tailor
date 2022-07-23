@@ -1,6 +1,6 @@
 <template>
   <v-dialog v-model="visible" width="800">
-    <template v-slot:activator="{ on }">
+    <template #activator="{ on }">
       <v-btn
         v-on="on"
         :disabled="isDisabled || !elements.length"
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { ContentElement } from 'tce-core';
+import { ContentElement } from '@tailor-cms/core-components';
 
 export default {
   name: 'tce-modal-preview',

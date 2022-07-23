@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-menu max-width="350" offset-y left>
-      <template v-slot:activator="{ on }">
+      <template #activator="{ on }">
         <v-btn v-on="on" color="primary darken-3" icon tile>
           <v-icon>mdi-dots-vertical</v-icon>
         </v-btn>
@@ -47,7 +47,7 @@ import find from 'lodash/find';
 import first from 'lodash/first';
 import InsertLocation from '@/utils/InsertLocation';
 import { mapActions } from 'vuex';
-import { mapRequests } from '@/plugins/radio';
+import { mapRequests } from '@extensionengine/vue-radio';
 import optionsMixin from './common';
 import sortBy from 'lodash/sortBy';
 

@@ -1,13 +1,13 @@
 <template>
   <div class="body">
     <v-sheet color="transparent" class="d-flex align-center my-5 pa-1">
-      <div class="d-flex body-2 font-weight-bold">
+      <div class="d-flex text-body-2 font-weight-bold">
         <v-icon :color="config.color" size="21" class="mr-1">mdi-label</v-icon>
         <span>{{ config.label.toUpperCase() }}</span>
       </div>
       <v-divider vertical class="my-2 mx-3 grey darken-2" />
       <v-tooltip open-delay="500" bottom>
-        <template v-slot:activator="{ on }">
+        <template #activator="{ on }">
           <label-chip v-on="on">{{ activity.shortId }}</label-chip>
         </template>
         {{ config.label }} ID
@@ -61,16 +61,16 @@
 </template>
 
 <script>
-import { getActivityMetadata, getLevel } from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex';
 import ActivityDiscussion from '../ActivityDiscussion';
 import ActivityStatus from './Status';
 import LabelChip from '@/components/repository/common/LabelChip';
-import MetaInput from 'tce-core/MetaInput';
+import MetaInput from '@/components/common/MetaInput';
 import Relationship from './Relationship';
 
 export default {
   name: 'activity-sidebar-body',
+  inject: ['$schemaService'],
   props: {
     activity: { type: Object, required: true }
   },
@@ -78,8 +78,8 @@ export default {
     ...mapGetters(['isAdmin']),
     ...mapGetters('repository', ['isRepositoryAdmin']),
     activityUrl: () => window.location.href,
-    config: vm => getLevel(vm.activity.type),
-    metadata: vm => getActivityMetadata(vm.activity)
+    config: vm => vm.$schemaService.getLevel(vm.activity.type),
+    metadata: vm => vm.$schemaService.getActivityMetadata(vm.activity)
   },
   methods: {
     ...mapActions('repository/activities', ['update']),

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="subtitle-2 pb-2">Answers</div>
+    <div class="text-subtitle-2 pb-2">Answers</div>
     <v-row>
       <v-col cols="4" offset="1">
         <v-text-field
@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import { defaults, getErrorMessages } from 'utils/assessment';
+import { assessment } from '@tailor-cms/utils';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
 import find from 'lodash/find';
@@ -83,8 +83,9 @@ import shuffle from 'lodash/shuffle';
 import size from 'lodash/size';
 
 export default {
+  name: 'tce-matching-question',
   props: {
-    assessment: { type: Object, default: defaults.MQ },
+    assessment: { type: Object, default: assessment.defaults.MQ },
     errors: { type: Array, default: () => ([]) },
     isEditing: { type: Boolean, default: false }
   },
@@ -150,13 +151,13 @@ export default {
       this.$emit('update', data);
     },
     headingErrors(type) {
-      return getErrorMessages(this.errors, `headings.${type}`);
+      return assessment.getErrorMessages(this.errors, `headings.${type}`);
     },
     answerErrors(key, type) {
       const index = type === 'premises'
         ? this.premises.indexOf(this.getPremiseItem(key))
         : this.responses.indexOf(this.getResponseItem(key));
-      return getErrorMessages(this.errors, `${type}[${index}]`);
+      return assessment.getErrorMessages(this.errors, `${type}[${index}]`);
     }
   }
 };

@@ -9,7 +9,7 @@
     <v-alert :value="!hasAssessments" color="white" icon="mdi-information-variant">
       Click the button below to create first assessment.
     </v-alert>
-    <ul class="list-group pl-0">
+    <div class="pl-0">
       <assessment-item
         v-for="it in assessments"
         :key="it.uid"
@@ -19,7 +19,7 @@
         :assessment="it"
         :expanded="isSelected(it)"
         :is-disabled="isDisabled" />
-    </ul>
+    </div>
     <add-element
       v-if="!isDisabled"
       @add="addAssessments"
@@ -34,11 +34,10 @@
 </template>
 
 <script>
-import AddElement from 'tce-core/AddElement';
-import AssessmentItem from 'tce-core/AssessmentItem';
+import { AddElement, AssessmentItem } from '@tailor-cms/core-components';
 import filter from 'lodash/filter';
 import sortBy from 'lodash/sortBy';
-import uuid from '@/utils/uuid';
+import { uuid } from '@tailor-cms/utils';
 
 export default {
   name: 'assessment-pool',

@@ -4,7 +4,7 @@
     color="transparent"
     class="tce-video-toolbar elevation-0">
     <v-toolbar-title class="pl-1">Video component</v-toolbar-title>
-    <input-asset
+    <asset-input
       @input="save"
       :url="url"
       :public-url="publicUrl"
@@ -15,9 +15,9 @@
 </template>
 
 <script>
+import { AssetInput } from '@tailor-cms/core-components';
 import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
-import InputAsset from '@/components/common/InputAsset';
 import set from 'lodash/set';
 
 export default {
@@ -37,7 +37,7 @@ export default {
       this.$elementBus.emit('save', element);
     }
   },
-  components: { InputAsset }
+  components: { AssetInput }
 };
 </script>
 

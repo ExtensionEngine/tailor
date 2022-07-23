@@ -1,9 +1,11 @@
+import {
+  repository as repositoryApi,
+  tag as tagApi
+} from '@/api';
 import find from 'lodash/find';
 import forEach from 'lodash/forEach';
 import generateActions from '@/store/helpers/actions';
 import getVal from 'lodash/get';
-import repositoryApi from '../../../api/repository';
-import tagApi from '@/api/tag';
 
 const {
   api,
@@ -29,6 +31,10 @@ const get = ({ commit }, id) => {
     processRepository(repository);
     commit('save', repository);
   });
+};
+
+const create = (_, { schema, name, description }) => {
+  return repositoryApi.save({ schema, name, description });
 };
 
 const clone = ({ dispatch }, { id, name, description }) => {
@@ -62,6 +68,7 @@ const removeTag = ({ commit }, { tagId, repositoryId }) => {
 
 export {
   clone,
+  create,
   fetch,
   fetchTags,
   addTag,

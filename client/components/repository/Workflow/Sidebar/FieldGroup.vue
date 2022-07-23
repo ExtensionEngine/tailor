@@ -67,13 +67,13 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import DatePicker from '@/components/common/DatePicker';
+import { DatePicker } from '@tailor-cms/core-components';
 import EditorField from '@/components/common/EditorField';
-import { priorities } from 'shared/workflow';
 import SelectPriority from '@/components/repository/common/SelectPriority';
 import SelectStatus from '../SelectStatus';
+import { workflow } from '@tailor-cms/config';
 
-const defaultPriority = priorities.find(it => it.default);
+const defaultPriority = workflow.priorities.find(it => it.default);
 
 export default {
   name: 'status-field-group',
@@ -90,7 +90,7 @@ export default {
   data: () => ({ showDatePicker: false }),
   computed: {
     ...mapGetters('repository', ['users', 'workflow']),
-    priorities: () => priorities
+    priorities: () => workflow.priorities
   },
   methods: {
     ...mapActions('repository', ['getUsers']),

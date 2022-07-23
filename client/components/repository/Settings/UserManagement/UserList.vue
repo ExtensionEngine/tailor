@@ -6,7 +6,7 @@
     no-data-text="No assigned users."
     hide-default-footer
     class="grey lighten-4">
-    <template v-slot:item="{ item }">
+    <template #item="{ item }">
       <tr>
         <td class="text-left">
           <v-avatar size="40">
@@ -35,8 +35,8 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import debounce from 'lodash/debounce';
-import loader from '@/components/common/loader';
-import { mapRequests } from '@/plugins/radio';
+import { loader } from '@tailor-cms/core-components';
+import { mapRequests } from '@extensionengine/vue-radio';
 
 const HEADERS = ['User', 'Email', 'Full Name', 'Role', ''];
 

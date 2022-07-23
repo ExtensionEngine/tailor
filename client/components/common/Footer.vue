@@ -1,20 +1,16 @@
 <template>
   <v-footer height="46" color="primary darken-4" absolute>
-    <v-row justify="center" no-gutters>
-      <v-col
-        cols="12"
-        class="body-2 grey--text text--lighten-4">
-        <img :src="logo" width="30px" height="30px" alt="Logo" class="py-1 mx-1">
-        <v-chip
-          color="grey lighten-4"
-          label small
-          class="readonly mr-3 grey--text text--darken-4">
-          v{{ version }} {{ codename }}
-        </v-chip>
-        Built with <v-icon color="pink">mdi-heart</v-icon>
-        Extension Engine
-      </v-col>
-    </v-row>
+    <div class="d-flex flex-grow-1 align-center justify-center text-body-2 grey--text text--lighten-4">
+      <img :src="logo" width="30px" height="30px" alt="Logo" class="py-1 mx-1">
+      <v-chip
+        color="grey lighten-4"
+        label small
+        class="readonly mr-3 grey--text text--darken-4">
+        v{{ version }} {{ codename }}
+      </v-chip>
+      Built with <v-icon class="mx-1" color="pink">mdi-heart</v-icon>
+      Extension Engine
+    </div>
   </v-footer>
 </template>
 

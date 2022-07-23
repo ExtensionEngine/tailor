@@ -1,12 +1,12 @@
 <template>
   <tailor-dialog v-model="show" @click:outside="close" header-icon="mdi-alert">
-    <template v-slot:header>{{ context.title }}</template>
-    <template v-slot:body>
-      <div class="body-1 primary--text text--darken-4 text-left">
+    <template #header>{{ context.title }}</template>
+    <template #body>
+      <div class="text-body-1 primary--text text--darken-4 text-left">
         {{ context.message }}
       </div>
     </template>
-    <template v-slot:actions>
+    <template #actions>
       <v-btn @click="close" text>Close</v-btn>
       <v-btn v-focus="show" @click="confirm" color="secondary" text>Confirm</v-btn>
     </template>
@@ -16,7 +16,7 @@
 <script>
 import { focus } from 'vue-focus';
 import invoke from 'lodash/invoke';
-import { mapChannels } from '@/plugins/radio';
+import { mapChannels } from '@extensionengine/vue-radio';
 import TailorDialog from '@/components/common/TailorDialog';
 
 const createContext = () => ({

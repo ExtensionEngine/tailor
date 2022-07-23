@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="subtitle-2">Answer groups</div>
+    <div class="text-subtitle-2">Answer groups</div>
     <v-card
       v-for="(groupName, groupKey, i) in groups" :key="groupKey"
       class="pt-4 transparent elevation-0">
@@ -73,18 +73,19 @@
 </template>
 
 <script>
-import { defaults, getErrorMessages } from 'utils/assessment';
+import { assessment } from '@tailor-cms/utils';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
 import forEach from 'lodash/forEach';
-import { mapRequests } from '@/plugins/radio';
+import { mapRequests } from '@extensionengine/vue-radio';
 import pick from 'lodash/pick';
 import pull from 'lodash/pull';
 import size from 'lodash/size';
 
 export default {
+  name: 'tce-drag-drop',
   props: {
-    assessment: { type: Object, default: defaults.DD },
+    assessment: { type: Object, default: assessment.defaults.DD },
     errors: { type: Array, default: () => ([]) },
     isEditing: { type: Boolean, default: false }
   },
@@ -160,7 +161,7 @@ export default {
       this.$emit('update', data);
     },
     errorMessages(key) {
-      return getErrorMessages(this.errors, key);
+      return assessment.getErrorMessages(this.errors, key);
     }
   }
 };

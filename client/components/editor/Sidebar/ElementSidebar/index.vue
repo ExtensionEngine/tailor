@@ -1,13 +1,13 @@
 <template>
   <div class="element-sidebar">
-    <h3 class="body-1">Additional settings</h3>
+    <h3 class="text-body-1">Additional settings</h3>
     <element-meta :element="element" v-bind="metadata" />
   </div>
 </template>
 
 <script>
 import ElementMeta from './ElementMeta';
-import { getElementId } from 'tce-core/utils';
+import { getElementId } from '@tailor-cms/utils';
 
 export default {
   name: 'element-sidebar',

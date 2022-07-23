@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="subtitle-2 pb-4">{{ title }}</div>
+    <div class="text-subtitle-2 pb-4">{{ title }}</div>
     <v-textarea
       @change="correct = $event"
       :value="correct"
@@ -12,13 +12,14 @@
 </template>
 
 <script>
-import { defaults, getErrorMessages } from 'utils/assessment';
+import { assessment } from '@tailor-cms/utils';
 
 const getTitle = isGraded => isGraded ? 'Answer' : 'Response';
 
 export default {
+  name: 'tce-text-response',
   props: {
-    assessment: { type: Object, default: defaults.TR },
+    assessment: { type: Object, default: assessment.defaults.TR },
     errors: { type: Array, default: () => ([]) },
     isEditing: { type: Boolean, default: false },
     isGraded: { type: Boolean, default: false }
@@ -30,7 +31,7 @@ export default {
     },
     title: vm => getTitle(vm.isGraded),
     answerDisabled: vm => !vm.isEditing || !vm.isGraded,
-    correctErrors: vm => getErrorMessages(vm.errors, 'correct')
+    correctErrors: vm => assessment.getErrorMessages(vm.errors, 'correct')
   }
 };
 </script>

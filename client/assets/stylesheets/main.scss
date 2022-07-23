@@ -5,13 +5,9 @@ $web-font-path: web-fonts-url(
   ('Roboto': (300, 400, 500, 700)),
   ('Poppins': (300, 400, 500, 700))
 );
-/* stylelint-enable */
 
-// Bootstrap files
-@import 'vendor/bootstrap';
-@import '~bootswatch/paper/variables';
-@import '~bootswatch/paper/bootswatch';
-@import '~loaders.css/loaders';
+@import url($web-font-path);
+/* stylelint-enable */
 
 // MDI
 $mdi-font-path: '~@mdi/font/fonts';
@@ -21,6 +17,9 @@ $mdi-font-path: '~@mdi/font/fonts';
 // Common stylesheets
 @import 'common/all';
 @import 'common/assessments/all';
+
+// Tailor core components
+@import "~@tailor-cms/core-components/dist/style.css";
 
 // Vuetify
 @import "~vuetify/dist/vuetify.css";

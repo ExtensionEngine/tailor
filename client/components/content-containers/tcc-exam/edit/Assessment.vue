@@ -6,7 +6,7 @@
     :assessment="assessment"
     :expanded="expanded"
     :draggable="true">
-    <template v-slot:header="{ isEditing }">
+    <template #header="{ isEditing }">
       <v-row v-if="objectives.length" justify="end" no-gutters class="mt-2">
         <v-col cols="5">
           <v-autocomplete
@@ -23,12 +23,13 @@
 </template>
 
 <script>
-import AssessmentItem from 'tce-core/AssessmentItem';
+import { AssessmentItem } from '@tailor-cms/core-components';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import set from 'lodash/set';
 
 export default {
+  name: 'tcc-exam-assessment',
   props: {
     assessment: { type: Object, required: true },
     objectives: { type: Array, required: true },

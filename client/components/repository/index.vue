@@ -12,6 +12,7 @@
           :key="tab.name"
           :to="{ name: tab.route, query: tab.query }"
           active-class="tab-active"
+          exact-path
           ripple
           class="px-4">
           <v-icon class="pr-2">mdi-{{ tab.icon }}</v-icon>{{ tab.name }}
@@ -27,7 +28,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import ActiveUsers from 'tce-core/ActiveUsers';
+import { ActiveUsers } from '@tailor-cms/core-components';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
 import selectActivity from '@/components/repository/common/selectActivity';
@@ -58,6 +59,7 @@ const getTabItems = ({ hasWorkflow, hasSettingsAvailable, hasActivities, query }
 ].filter(Boolean).map(tab => ({ ...tab, query }));
 
 export default {
+  name: 'repository-page',
   mixins: [selectActivity, withUserTracking],
   props: {
     repositoryId: { type: Number, required: true }
@@ -85,6 +87,14 @@ export default {
     }
   },
   methods: mapActions('repository', ['initialize', 'expandParents']),
+  provide() {
+    const self = this;
+    return {
+      get $repository() {
+        return { ...self.repository, activities: self.activities };
+      }
+    };
+  },
   watch: {
     selectedActivity: {
       handler(val) {

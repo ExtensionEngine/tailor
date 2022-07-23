@@ -1,0 +1,69 @@
+{
+  "name": "@tailor-cms/core-components",
+  "description": "Reusable Tailor UI components",
+  "author": "ExtensionEngine <info@extensionengine.com>",
+  "license": "MIT",
+  "version": "1.0.0-beta.12",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/core-components.cjs.js",
+  "umd:main": "./dist/core-components.umd.js",
+  "module": "./dist/core-components.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/core-components.es.js",
+      "require": "./dist/core-components.cjs.js"
+    }
+  },
+  "homepage": "https://github.com/ExtensionEngine/tailor#readme",
+  "bugs": {
+    "url": "https://github.com/ExtensionEngine/tailor/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ExtensionEngine/tailor.git"
+  },
+  "scripts": {
+    "prebuild": "del-cli dist",
+    "build": "vite build",
+    "lint": "npm run lint:js && npm run lint:scss",
+    "lint:js": "eslint --ext .js,.vue .",
+    "lint:scss": "stylelint \"**/*.vue\" \"**/*.scss\""
+  },
+  "dependencies": {
+    "@extensionengine/vue-radio": "^1.0.0-beta.4",
+    "@tailor-cms/utils": "^1.0.0-beta.18",
+    "lodash": "^4.17.21",
+    "p-min-delay": "^4.0.1",
+    "pluralize": "^8.0.0",
+    "vue-quill-editor": "^2.3.3",
+    "vuedraggable": "^2.24.3",
+    "yup": "^0.32.9"
+  },
+  "devDependencies": {
+    "@extensionengine/eslint-config": "^3.0.1",
+    "@extensionengine/stylelint-config": "^1.1.1",
+    "@vue/compiler-sfc": "^3.2.37",
+    "del-cli": "^4.0.1",
+    "eslint": "^8.19.0",
+    "eslint-config-semistandard": "^16.0.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.4",
+    "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-vue": "9.1.1",
+    "sass": "^1.53.0",
+    "stylelint": "^13.8.0",
+    "vite": "^2.9.13",
+    "vite-plugin-vue2": "^2.0.1",
+    "vue-template-compiler": "^2.7.1"
+  },
+  "peerDependencies": {
+    "vee-validate": "^3.4.5",
+    "vuetify": "^2.6.7"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
