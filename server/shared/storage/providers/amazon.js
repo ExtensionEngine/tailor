@@ -77,8 +77,13 @@ class Amazon {
 
   // API docs: https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#copyObject-property
   copyFile(key, newKey, options = {}) {
+    const { base, ...rest } = path.parse(key);
+    const encodedSource = path.format({
+      base: encodeURIComponent(base),
+      ...rest
+    });
     const params = Object.assign(options, { Bucket: this.bucket }, {
-      CopySource: this.path(`/${key}`),
+      CopySource: this.path(`/${encodedSource}`),
       Key: newKey
     });
     return this.client.copyObject(params).promise();
