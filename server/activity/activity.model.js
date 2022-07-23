@@ -154,11 +154,11 @@ class Activity extends Model {
     return Events;
   }
 
-  static async cloneActivities(src, dstRepositoryId, dstParentId, opts) {
+  static async cloneActivities(src, dstRepository, dstParentId, opts) {
     if (!opts.idMappings) opts.idMappings = {};
     const { idMappings, context, transaction } = opts;
     const dstActivities = await Activity.bulkCreate(map(src, it => ({
-      repositoryId: dstRepositoryId,
+      repositoryId: dstRepository.id,
       parentId: dstParentId,
       ...pick(it, ['type', 'position', 'data', 'refs', 'modifiedAt'])
     })), { returning: true, context, transaction });
@@ -168,18 +168,18 @@ class Activity extends Model {
       acc[it.id] = parent.id;
       const where = { activityId: it.id, detached: false };
       const elements = await ContentElement.findAll({ where, transaction });
-      await ContentElement.cloneElements(elements, parent, { context, transaction });
+      await ContentElement.cloneElements(elements, parent, dstRepository, { context, transaction });
       const children = await it.getChildren({ where: { detached: false } });
       if (!children.length) return acc;
-      return Activity.cloneActivities(children, dstRepositoryId, parent.id, opts);
+      return Activity.cloneActivities(children, dstRepository, parent.id, opts);
     }, idMappings);
   }
 
-  clone(repositoryId, parentId, position, context) {
+  async clone(repository, parentId, position, context) {
     return this.sequelize.transaction(transaction => {
       if (position) this.position = position;
       return Activity.cloneActivities(
-        [this], repositoryId, parentId, { context, transaction }
+        [this], repository, parentId, { context, transaction }
       );
     });
   }

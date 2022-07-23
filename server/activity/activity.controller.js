@@ -1,10 +1,10 @@
 'use strict';
 
+const { Activity, Repository } = require('../shared/database');
 const {
   getOutlineLevels,
   isOutlineActivity
 } = require('../../config/shared/activities');
-const { Activity } = require('../shared/database');
 const { fetchActivityContent } = require('../shared/publishing/helpers');
 const find = require('lodash/find');
 const get = require('lodash/get');
@@ -66,13 +66,15 @@ function publish({ activity }, res) {
     .then(data => res.json({ data }));
 }
 
-function clone({ activity, body, user }, res) {
+async function clone({ activity, body, user }, res) {
   const { repositoryId, parentId, position } = body;
+  // req.repository can not be used as it is an origin repository
+  const repository = await Repository.findByPk(repositoryId);
   const context = { userId: user.id };
-  return activity.clone(repositoryId, parentId, position, context).then(mappings => {
-    const opts = { where: { id: Object.values(mappings) } };
-    return Activity.findAll(opts).then(data => res.json({ data }));
-  });
+  const mappings = await activity.clone(repository, parentId, position, context);
+  const opts = { where: { id: Object.values(mappings) } };
+  const activities = await Activity.findAll(opts);
+  return res.json({ data: activities });
 }
 
 function getPreviewUrl({ activity }, res) {

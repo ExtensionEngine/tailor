@@ -6,8 +6,11 @@ const {
   Repository,
   RepositoryUser
 } = require('../../database');
+const cloneContentElement = require('../../util/cloneContentElement');
 const filter = require('lodash/filter');
 const forEach = require('lodash/forEach');
+const get = require('lodash/get');
+const getFileMetas = require('../../util/getFileMetas');
 const isEmpty = require('lodash/isEmpty');
 const last = require('lodash/last');
 const map = require('lodash/map');
@@ -70,10 +73,11 @@ async function processRepository(repository, _enc, { context, transaction }) {
   Object.assign(repository, { description, name });
   const options = { context: { userId }, transaction };
   const repositoryRecord = omit(repository, IGNORE_ATTRS);
-  const { id } = await Repository.create(repositoryRecord, options);
+  const { id, schema } = await Repository.create(repositoryRecord, options);
   const userRecord = { userId, repositoryId: id, role: ADMIN };
   await RepositoryUser.create(userRecord, { transaction });
   context.repositoryId = id;
+  context.repoSchema = schema;
 }
 
 async function processActivities(activities, _enc, options) {
@@ -129,15 +133,19 @@ function remapActivityRefs(activity, { context, transaction }) {
   return activity.save({ transaction });
 }
 
-function insertElements(elements, { context, transaction }) {
-  const { activityIdMap, repositoryId, userId } = context;
+async function insertElements(elements, { context, storage, transaction }) {
+  const { activityIdMap, repositoryId, repoSchema, userId } = context;
   if (!repositoryId) throw new Error('Invalid repository id');
-  const elementRecords = map(elements, it => {
+  const metaBySchemaType = getFileMetas(SCHEMAS);
+  const metaByElementType = get(metaBySchemaType, [repoSchema, 'element']);
+  const repositoryAssetsPath = storage.getPath(repositoryId);
+  const elementRecords = await Promise.all(map(elements, async it => {
     const activityId = activityIdMap[it.activityId];
     if (!activityId) throw new Error('Invalid activity id');
-    Object.assign(it, { activityId, repositoryId });
+    const { data, meta } = await cloneContentElement(it, repositoryAssetsPath, metaByElementType);
+    Object.assign(it, { activityId, data, meta, repositoryId });
     return omit(it, IGNORE_ATTRS);
-  });
+  }));
   const options = { context: { userId }, returning: true, transaction };
   return ContentElement.bulkCreate(elementRecords, options);
 }

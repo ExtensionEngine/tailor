@@ -131,7 +131,7 @@ class Repository extends Model {
       const src = await Activity.findAll({
         where: { repositoryId: this.id, parentId: null }, transaction
       });
-      const idMap = await Activity.cloneActivities(src, dst.id, null, { context, transaction });
+      const idMap = await Activity.cloneActivities(src, dst, null, { context, transaction });
       await dst.mapClonedReferences(idMap, transaction);
       return dst;
     });

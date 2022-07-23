@@ -2,10 +2,15 @@
 
 const { Model, Op } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
+const cloneContentElement = require('../shared/util/cloneContentElement');
 const { ContentElement: Events } = require('../../common/sse');
+const get = require('lodash/get');
+const getFileMetas = require('../shared/util/getFileMetas');
 const hooks = require('./hooks');
 const isNumber = require('lodash/isNumber');
 const pick = require('lodash/pick');
+const { SCHEMAS } = require('../../config/shared/activities');
+const storage = require('../repository/storage');
 
 class ContentElement extends Model {
   static fields(DataTypes) {
@@ -115,20 +120,18 @@ class ContentElement extends Model {
       : ContentElement.findAll(opt).map(hooks.applyFetchHooks);
   }
 
-  static cloneElements(src, container, options) {
+  static async cloneElements(src, container, repository, options) {
     const { id: activityId, repositoryId } = container;
     const { context, transaction } = options;
-    return this.bulkCreate(src.map(it => {
-      return Object.assign(pick(it, [
-        'type',
-        'position',
-        'data',
-        'contentId',
-        'contentSignature',
-        'refs',
-        'meta'
-      ]), { activityId, repositoryId });
-    }), { returning: true, context, transaction });
+    const repositoryAssetsPath = storage.getPath(repository.id);
+    const metaBySchemaType = getFileMetas(SCHEMAS);
+    const metaByElementType = get(metaBySchemaType, [repository.schema, 'element']);
+    const elements = await Promise.all(src.map(async it => {
+      const element = pick(it, ['type', 'position', 'data', 'contentId', 'contentSignature', 'refs', 'meta']);
+      const { data, meta } = await cloneContentElement(element, repositoryAssetsPath, metaByElementType);
+      return Object.assign(element, { activityId, data, meta, repositoryId });
+    }));
+    return this.bulkCreate(elements, { returning: true, context, transaction });
   }
 
   /**
