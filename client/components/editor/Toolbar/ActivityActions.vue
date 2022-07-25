@@ -6,7 +6,7 @@
         :key="title"
         color="primary darken-3"
         bottom>
-        <template v-slot:activator="{ on }">
+        <template #activator="{ on }">
           <v-btn
             v-on="on"
             @click.stop="action"
@@ -26,7 +26,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
-import activityApi from '@/api/activity';
+import { activity as api } from '@/api';
 import publishMixin from 'components/common/mixins/publish';
 
 export default {
@@ -74,7 +74,7 @@ export default {
     ...mapActions('repository/activities', { publishActivity: 'publish' }),
     preview() {
       const { repositoryId, id } = this.activity;
-      return activityApi.createPreview(repositoryId, id)
+      return api.createPreview(repositoryId, id)
         .then(location => window.open(location));
     }
   }

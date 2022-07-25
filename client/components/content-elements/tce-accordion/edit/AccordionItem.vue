@@ -19,7 +19,7 @@
         </div>
         <div v-else class="actions">
           <v-tooltip bottom>
-            <template v-slot:activator="{ on }">
+            <template #activator="{ on }">
               <v-btn v-on="on" @click.stop="editHeader" icon>
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
@@ -27,7 +27,7 @@
             <span>Edit heading</span>
           </v-tooltip>
           <v-tooltip bottom>
-            <template v-slot:activator="{ on }">
+            <template #activator="{ on }">
               <v-btn v-on="on" @click.stop="deleteItem" icon>
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
@@ -57,10 +57,10 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
-import { EmbeddedContainer } from 'tce-core';
+import { EmbeddedContainer } from '@tailor-cms/core-components';
 import forEach from 'lodash/forEach';
 import isEmpty from 'lodash/isEmpty';
-import { mapRequests } from '@/plugins/radio';
+import { mapRequests } from '@extensionengine/vue-radio';
 
 export default {
   name: 'accordion-item',

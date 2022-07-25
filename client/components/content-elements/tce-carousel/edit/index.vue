@@ -6,7 +6,7 @@
       color="grey darken-3"
       dark
       class="text-left elevation-5">
-      <span class="subtitle-2 mr-4">Carousel</span>
+      <span class="text-subtitle-2 mr-4">Carousel</span>
       <span class="text-truncate">
         Use the bottom navigation to switch to the next item
       </span>
@@ -38,7 +38,7 @@
 <script>
 import CarouselItem from './CarouselItem';
 import cloneDeep from 'lodash/cloneDeep';
-import { ElementPlaceholder } from 'tce-core';
+import { ElementPlaceholder } from '@tailor-cms/core-components';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import last from 'lodash/last';

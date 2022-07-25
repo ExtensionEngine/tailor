@@ -33,6 +33,7 @@ import SidebarHeader from './Header';
 import StatusFieldGroup from './FieldGroup';
 
 export default {
+  name: 'workflow-sidebar',
   props: {
     emptyMessage: {
       type: String,

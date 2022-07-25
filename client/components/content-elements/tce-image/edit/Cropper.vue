@@ -10,7 +10,7 @@ import omit from 'lodash/omit';
 // Forked from https://github.com/Agontuk/vue-cropperjs/blob/master/VueCropper.js
 // Cropperjs docs: https://github.com/fengyuanchen/cropperjs
 export default {
-  name: 'cropper',
+  name: 'tce-image-cropper',
   props: {
     containerStyle: { type: Object, default: null },
     data: { type: Object, default: null },

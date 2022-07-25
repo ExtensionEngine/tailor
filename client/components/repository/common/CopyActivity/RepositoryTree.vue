@@ -20,7 +20,7 @@
       :search="search"
       transition open-all dense
       class="px-1 py-3 treeview">
-      <template v-slot:prepend="{ item }">
+      <template #prepend="{ item }">
         <v-icon
           v-if="item.selectable"
           @click="toggleSelection(item)"
@@ -36,10 +36,13 @@
 </template>
 
 <script>
-import { toTreeFormat } from 'utils/activity';
+import { activity as activityUtils } from '@tailor-cms/utils';
 import xorBy from 'lodash/xorBy';
 
+const { toTreeFormat } = activityUtils;
+
 export default {
+  inject: ['$schemaService'],
   props: {
     schemaName: { type: String, required: true },
     activities: { type: Array, required: true },
@@ -47,7 +50,17 @@ export default {
   },
   data: () => ({ selected: [], search: '' }),
   computed: {
-    activityTree: vm => toTreeFormat(vm.activities, vm.supportedLevels),
+    attachActivityAttrs() {
+      return activity => ({
+        selectable: this.supportedLevels.some(it => it.type === activity.type)
+      });
+    },
+    activityTree() {
+      return toTreeFormat(this.activities, {
+        filterNodesFn: this.$schemaService.filterOutlineActivities,
+        processNodeFn: this.attachActivityAttrs
+      });
+    },
     hasSearchResults() {
       if (!this.search || !this.$refs) return true;
       const { excludedItems, nodes } = this.$refs.treeview;

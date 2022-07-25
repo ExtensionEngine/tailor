@@ -31,22 +31,23 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import api from '@/api/repository';
+import { repository as api } from '@/api';
 import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
-import { getRepositoryMetadata } from 'shared/activities';
-import Meta from 'tce-core/MetaInput';
+import Meta from '@/components/common/MetaInput';
 import RepositoryNameField from '../common/RepositoryNameField';
 import set from 'lodash/set';
 
 export default {
+  name: 'repository-general-settings',
+  inject: ['$schemaService'],
   props: {
     repositoryId: { type: Number, required: true }
   },
   data: () => ({ publishing: false }),
   computed: {
     ...mapGetters('repository', ['repository']),
-    metadata: vm => getRepositoryMetadata(vm.repository),
+    metadata: vm => vm.$schemaService.getRepositoryMetadata(vm.repository),
     descriptionMeta: ({ repository }) => ({
       key: 'description',
       value: repository.description,

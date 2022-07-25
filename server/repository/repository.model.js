@@ -1,9 +1,11 @@
 'use strict';
 
-const { getRepositoryRelationships, getSchema } = require('../../config/shared/activities');
 const { Model } = require('sequelize');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
+const { schema } = require('@tailor-cms/config');
+
+const { getRepositoryRelationships, getSchema } = schema;
 
 class Repository extends Model {
   static fields(DataTypes) {

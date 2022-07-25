@@ -4,12 +4,12 @@
     @update:return-value="search = ''"
     :close-on-content-click="false"
     offset-y>
-    <template v-slot:activator="{ on: menu, value }">
+    <template #activator="{ on: menu, value }">
       <v-tooltip
         :disabled="value"
         open-delay="800"
         top>
-        <template v-slot:activator="{ on: tooltip }">
+        <template #activator="{ on: tooltip }">
           <v-btn v-on="{ ...menu, ...tooltip }" color="primary lighten-2" icon>
             <v-icon>{{ icon }}</v-icon>
           </v-btn>

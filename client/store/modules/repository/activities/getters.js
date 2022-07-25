@@ -1,8 +1,10 @@
-import {
-  getDescendants as getDeepChildren,
-  getAncestors as getParents
-} from 'utils/activity';
+import { activity as activityUtils } from '@tailor-cms/utils';
 import find from 'lodash/find';
+
+const {
+  getDescendants: getDeepChildren,
+  getAncestors: getParents
+} = activityUtils;
 
 export const activities = state => state.items;
 

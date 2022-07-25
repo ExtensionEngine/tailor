@@ -25,7 +25,7 @@
       :layout="layout"
       :is-disabled="isDisabled"
       class="element-list">
-      <template v-slot:list-item="{ element, isDragged, position }">
+      <template #list-item="{ element, isDragged, position }">
         <inline-activator
           @click="showElementDrawer(position)"
           :disabled="isDisabled" />
@@ -36,7 +36,7 @@
           v-bind="{ element, isDragged, isDisabled, setWidth: false }"
           show-discussion />
       </template>
-      <template v-slot:list-add="{ position: lastPosition, ...slotProps }">
+      <template #list-add="{ position: lastPosition, ...slotProps }">
         <div class="add-element-container mt-5">
           <add-element
             @add="$emit('save:element', $event)"
@@ -54,11 +54,13 @@
 </template>
 
 <script>
-import AddElement from 'tce-core/AddElement';
-import ContainedContent from 'tce-core/ContainedContent';
-import ElementList from 'tce-core/ElementList';
+import {
+  AddElement,
+  ContainedContent,
+  ElementList,
+  InlineActivator
+} from '@tailor-cms/core-components';
 import filter from 'lodash/filter';
-import InlineActivator from 'tce-core/AddElement/InlineActivator';
 import sortBy from 'lodash/sortBy';
 
 export default {

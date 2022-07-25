@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import { getPriority, priorities } from 'shared/workflow';
 import { mapGetters } from 'vuex';
 import OverviewAssignee from './Assignee';
 import OverviewDueDate from './DueDate';
@@ -43,6 +42,7 @@ import OverviewPriority from './Priority';
 import OverviewStatus from './Status';
 import Publishing from '@/components/repository/common/Sidebar/Publishing';
 import selectActivity from '@/components/repository/common/selectActivity';
+import { workflow } from '@tailor-cms/config';
 
 export default {
   name: 'workflow-overview',
@@ -83,7 +83,7 @@ export default {
         publishedAt,
         type,
         status: this.getStatusById(status.status),
-        priority: getPriority(status.priority),
+        priority: workflow.getPriority(status.priority),
         class: this.isActivitySelected(id) && 'selected'
       }));
     }
@@ -105,7 +105,7 @@ export default {
       return first.label.localeCompare(second.label);
     },
     comparePriorities(first, second) {
-      const priorityIds = priorities.map(it => it.id);
+      const priorityIds = workflow.priorities.map(it => it.id);
       return priorityIds.indexOf(second.id) - priorityIds.indexOf(first.id);
     }
   },

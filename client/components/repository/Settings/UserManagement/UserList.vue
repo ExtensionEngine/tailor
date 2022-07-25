@@ -6,7 +6,7 @@
     no-data-text="No assigned users."
     hide-default-footer
     class="grey lighten-4">
-    <template v-slot:item="{ item }">
+    <template #item="{ item }">
       <tr>
         <td class="text-left">
           <v-avatar size="40">
@@ -35,7 +35,8 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import debounce from 'lodash/debounce';
-import loader from '@/components/common/loader';
+import { loader } from '@tailor-cms/core-components';
+import { mapRequests } from '@extensionengine/vue-radio';
 
 const HEADERS = ['User', 'Email', 'Full Name', 'Role', ''];
 
@@ -54,13 +55,18 @@ export default {
   },
   methods: {
     ...mapActions('repository', ['getUsers', 'upsertUser', 'removeUser']),
+    ...mapRequests('app', ['showConfirmationModal']),
     changeRole(email, role) {
       const { repositoryId } = this.$route.params;
       debounce(this.upsertUser, 500)({ repositoryId, email, role });
     },
     remove(user) {
       const { repositoryId } = this.$route.params;
-      this.removeUser({ userId: user.id, repositoryId });
+      this.showConfirmationModal({
+        title: 'Remove user',
+        message: `Are you sure you want to remove user "${user.email}" from this repository?`,
+        action: () => this.removeUser({ userId: user.id, repositoryId })
+      });
     }
   },
   created: loader(function () {

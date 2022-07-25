@@ -1,7 +1,7 @@
 <template>
   <span class="publish-container">
     <v-menu v-if="!hidePublish" offset-y left>
-      <template v-slot:activator="{ on }">
+      <template #activator="{ on }">
         <v-btn
           v-on="on"
           :loading="isPublishing"
@@ -42,10 +42,10 @@
 
 <script>
 import { getDescendants, getLabel, isChanged } from '@/utils/activity';
+import { activity as activityUtils } from '@tailor-cms/utils';
 import countBy from 'lodash/countBy';
 import fecha from 'fecha';
-import filter from 'lodash/filter';
-import { getLevel } from 'shared/activities';
+import filter from 'lodash/filter';o
 import map from 'lodash/map';
 import { mapActions } from 'vuex';
 import pluralize from 'pluralize';
@@ -59,7 +59,11 @@ const getDescendantsInfo = (descendants, count, label) => {
     unpublished changes.`;
 };
 
+const { getDescendants } = activityUtils;
+
 export default {
+  name: 'activity-publishing',
+  inject: ['$schemaService'],
   mixins: [publishMixin],
   props: {
     activity: { type: Object, required: true },
@@ -68,7 +72,7 @@ export default {
     hidePublish: { type: Boolean, default: false }
   },
   computed: {
-    config: vm => getLevel(vm.activity.type),
+    config: vm => vm.$schemaService.getLevel(vm.activity.type),
     publishedAtMessage() {
       const { publishedAt } = this.activity;
       return publishedAt

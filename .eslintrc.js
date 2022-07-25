@@ -10,21 +10,16 @@ module.exports = {
   rules: {
     'vuetify/no-deprecated-classes': 'error',
     'vuetify/grid-unknown-attributes': 'error',
-    'vuetify/no-legacy-grid': 'error'
+    'vuetify/no-legacy-grid': 'error',
+    'vue/valid-v-slot': ['error', {
+      allowModifiers: true
+    }]
   },
   overrides: [
     {
       files: ['client/components/content-elements/**/server/**'],
       parserOptions: {
         sourceType: 'script'
-      }
-    },
-    {
-      files: ['extensions/**'],
-      excludedFiles: ['extensions/content-elements/**/server/**'],
-      parserOptions: {
-        parser: '@babel/eslint-parser',
-        sourceType: 'module'
       }
     }
   ],

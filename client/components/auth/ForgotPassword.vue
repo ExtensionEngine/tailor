@@ -29,7 +29,7 @@
       </validation-provider>
       <div>
         <v-btn
-          :disabled="showMessage"
+          v-if="!showMessage"
           type="submit"
           color="primary darken-4"
           block depressed rounded dark>
@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import api from '@/api/auth';
+import { auth as api } from '@/api';
 import { delay } from 'bluebird';
 
 const getDefaultData = () => ({

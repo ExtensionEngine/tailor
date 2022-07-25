@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="subtitle-2 pb-4">{{ title }}</div>
+    <div class="text-subtitle-2 pb-4">{{ title }}</div>
     <v-text-field
       v-for="(answer, idx) in answers" :key="idx"
       @change="updateAnswer($event, idx)"
@@ -20,7 +20,7 @@
           :color="color"
           hide-details
           class="pt-0 mt-0" />
-        <v-avatar v-else :color="color" size="24" class="subtitle-2 mr-2">
+        <v-avatar v-else :color="color" size="24" class="text-subtitle-2 mr-2">
           {{ idx + 1 }}
         </v-avatar>
       </template>
@@ -48,10 +48,10 @@
 </template>
 
 <script>
-import { defaults, getErrorMessages } from 'utils/assessment';
+import { assessment } from '@tailor-cms/utils';
 import cloneDeep from 'lodash/cloneDeep';
 import head from 'lodash/head';
-import { InputError } from 'tce-core';
+import { InputError } from '@tailor-cms/core-components';
 import range from 'lodash/range';
 import set from 'lodash/set';
 
@@ -62,8 +62,9 @@ const getPlaceholder = isGraded => isGraded ? 'Answer...' : 'Option...';
 const getButtonLabel = isGraded => isGraded ? 'Add answer' : 'Add option';
 
 export default {
+  name: 'tce-multiple-choice',
   props: {
-    assessment: { type: Object, default: defaults.MC },
+    assessment: { type: Object, default: assessment.defaults.MC },
     errors: { type: Array, default: () => ([]) },
     isEditing: { type: Boolean, default: false },
     isGraded: { type: Boolean, default: false }
@@ -81,7 +82,7 @@ export default {
     placeholder: vm => getPlaceholder(vm.isGraded),
     addButtonLabel: vm => getButtonLabel(vm.isGraded),
     allowRemoval: vm => vm.isEditing && vm.answers.length > MIN_ANSWER_COUNT,
-    correctError: vm => head(getErrorMessages(vm.errors, 'correct'))
+    correctError: vm => head(assessment.getErrorMessages(vm.errors, 'correct'))
   },
   methods: {
     addAnswer() {
@@ -115,7 +116,7 @@ export default {
       this.update({ answers, correct, feedback });
     },
     answerErrors(index) {
-      return getErrorMessages(this.errors, `answers[${index}]`);
+      return assessment.getErrorMessages(this.errors, `answers[${index}]`);
     },
     update(data) {
       this.$emit('update', data);

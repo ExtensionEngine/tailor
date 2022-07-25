@@ -45,7 +45,7 @@
         <v-icon class="pr-2">mdi-link</v-icon>
         Copy link
       </v-btn>
-      <div class="mt-1 caption grey--text text--darken-1">
+      <div class="mt-1 text-caption grey--text text--darken-1">
         Created at {{ activity.createdAt | formatDate }}
         <template v-if="isUpdated">
           <span class="mx-1">|</span>
@@ -59,20 +59,21 @@
 <script>
 import ActivityCard from './ActivityCard';
 import fecha from 'fecha';
-import { getLevel } from 'shared/activities';
 import isBefore from 'date-fns/isBefore';
 import LabelChip from '@/components/repository/common/LabelChip';
 import { mapGetters } from 'vuex';
 import Publishing from '@/components/repository/common/Sidebar/Publishing';
 
 export default {
+  name: 'workflow-sidebar-header',
+  inject: ['$schemaService'],
   props: {
     activity: { type: Object, required: true }
   },
   computed: {
     ...mapGetters(['isAdmin']),
     ...mapGetters('repository', ['structure', 'outlineActivities', 'isRepositoryAdmin']),
-    activityConfig: ({ activity }) => getLevel(activity.type),
+    activityConfig: vm => vm.$schemaService.getLevel(vm.type),
     isUpdated() {
       const { activity } = this;
       if (!activity.status.updatedAt) return false;

@@ -6,7 +6,7 @@
       color="grey darken-3"
       dark
       class="text-left elevation-5">
-      <span class="subtitle-2 mr-4">Accordion</span>
+      <span class="text-subtitle-2 mr-4">Accordion</span>
       <span>Click on the item to expand</span>
     </v-toolbar>
     <v-expansion-panels multiple tile hover>
@@ -46,7 +46,7 @@
 import AccordionItem from './AccordionItem';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
-import { ElementPlaceholder } from 'tce-core';
+import { ElementPlaceholder } from '@tailor-cms/core-components';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import omit from 'lodash/omit';

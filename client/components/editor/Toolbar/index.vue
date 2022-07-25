@@ -5,7 +5,7 @@
       :class="[showPublishDiff ? 'darken-4' : 'darken-3']"
       class="activity-toolbar primary">
       <activity-actions class="d-flex flex-grow-0" />
-      <h1 class="pt-2 headline text-truncate">
+      <h1 class="pt-2 text-h5 text-truncate">
         <span>{{ config.label }}</span>
         <span class="px-2 grey--text">|</span>
         <span class="secondary--text text--lighten-2">
@@ -51,14 +51,14 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-import ActiveUsers from 'tce-core/ActiveUsers';
+import { ActiveUsers } from '@tailor-cms/core-components';
 import ActivityActions from './ActivityActions';
-import { ElementToolbar } from 'tce-core';
-import { getElementId } from 'tce-core/utils';
-import { getLevel } from 'shared/activities';
+import ElementToolbar from './ElementToolbar';
+import { getElementId } from '@tailor-cms/utils';
 
 export default {
   name: 'editor-toolbar',
+  inject: ['$schemaService'],
   props: {
     element: { type: Object, default: null },
     activeUsers: { type: Array, default: () => [] }
@@ -67,7 +67,7 @@ export default {
     ...mapState('editor', ['showPublishDiff']),
     ...mapGetters('editor', ['activity']),
     config() {
-      return getLevel(this.activity.type);
+      return this.$schemaService.getLevel(this.activity.type);
     }
   },
   methods: {

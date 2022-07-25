@@ -111,6 +111,14 @@ class User extends Model {
     });
   }
 
+  static scopes() {
+    return {
+      defaultScope: {
+        attributes: { exclude: ['password'] }
+      }
+    };
+  }
+
   static hooks(Hooks) {
     return {
       [Hooks.beforeCreate](user) {

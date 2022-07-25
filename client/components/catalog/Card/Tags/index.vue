@@ -6,13 +6,14 @@
         :key="id"
         @click:close="showDeleteConfirmation(id, name)"
         color="primary darken-1"
+        close-label="Remove tag"
         label close small
         class="mr-2 mb-1">
         <v-tooltip
           :disabled="name.length === truncatedName.length"
           open-delay="100"
           bottom>
-          <template v-slot:activator="{ on }">
+          <template #activator="{ on }">
             <span v-on="on">{{ truncatedName }}</span>
           </template>
           <span>{{ name }}</span>
@@ -20,11 +21,12 @@
       </v-chip>
     </div>
     <v-tooltip v-if="!exceededTagLimit" open-delay="400" bottom>
-      <template v-slot:activator="{ on }">
+      <template #activator="{ on }">
         <v-btn
           v-on="on"
           @click.stop="showTagDialog = true"
           color="primary lighten-3"
+          aria-label="Add tag"
           icon>
           <v-icon dense>mdi-tag-plus</v-icon>
         </v-btn>
@@ -44,7 +46,7 @@ import clamp from 'lodash/clamp';
 import get from 'lodash/get';
 import map from 'lodash/map';
 import { mapActions } from 'vuex';
-import { mapRequests } from '@/plugins/radio';
+import { mapRequests } from '@extensionengine/vue-radio';
 import truncate from 'lodash/truncate';
 
 const TAG_LIMIT = 3;

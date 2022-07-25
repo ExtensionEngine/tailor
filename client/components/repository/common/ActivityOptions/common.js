@@ -2,7 +2,6 @@ import { mapGetters, mapMutations } from 'vuex';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import InsertLocation from '@/utils/InsertLocation';
-import { isEditable } from 'shared/activities';
 import selectActivity from '@/components/repository/common/selectActivity';
 import uniqBy from 'lodash/uniqBy';
 
@@ -10,10 +9,11 @@ const { ADD_AFTER, ADD_BEFORE, ADD_INTO } = InsertLocation;
 
 export default {
   mixins: [selectActivity],
+  inject: ['$schemaService'],
   computed: {
     ...mapGetters('repository', ['structure', 'activities']),
     parent: vm => find(vm.activities, { id: vm.activity.parentId }),
-    isEditable: vm => isEditable(vm.activity.type),
+    isEditable: vm => vm.$schemaService.isEditable(vm.activity.type),
     levels: vm => uniqBy(vm.sameLevel.concat(vm.subLevels), 'type'),
     sameLevel() {
       if (!this.parent) return this.structure.filter(it => it.rootLevel);

@@ -1,55 +1,260 @@
 'use strict';
 
-module.exports = {
-  SCHEMAS: [{
-    id: 'COURSE',
-    name: 'Example Course',
-    workflowId: 'EXAMPLE_WORKFLOW',
-    structure: [{
-      type: 'GOAL',
-      label: 'Goal',
-      color: '#ff6590',
-      rootLevel: true,
-      isTrackedInWorkflow: true,
-      meta: [{
-        key: 'description',
-        type: 'INPUT',
-        label: 'Description',
-        placeholder: 'Click to add...',
-        validate: { required: false, max: 23 }
-      }],
-      contentContainers: ['PAGE'],
-      relationships: [{
-        type: 'prerequisites',
-        label: 'Prerequisites',
-        multiple: true,
-        searchable: true,
-        allowEmpty: true,
-        placeholder: 'Click to select',
-        allowCircularLinks: false,
-        allowInsideLineage: false,
-        allowedTypes: ['GOAL']
-      }, {
-        type: 'replacements',
-        label: 'replacements'
-      }]
-    }],
-    contentContainers: [{
-      type: 'PAGE',
-      label: 'Page',
-      multiple: false,
-      publishedAs: 'Page',
-      required: false
-    }]
-  }],
-  WORKFLOWS: [{
-    id: 'EXAMPLE_WORKFLOW',
-    dueDateWarningThreshold: { days: 2 },
-    statuses: [
-      { id: 'TODO', label: 'Todo', color: '#0388a6', default: true },
-      { id: 'IN_PROGRESS', label: 'In progress', color: '#0396a6' },
-      { id: 'REVIEW', label: 'Review', color: '#48d9d9' },
-      { id: 'DONE', label: 'Done', color: '#f24949' }
-    ]
+// ----------------------------------------------------
+// Meta inputs
+// ----------------------------------------------------
+
+const getInputMeta = () => ({
+  type: 'INPUT',
+  key: 'inputField',
+  label: 'Test input',
+  placeholder: 'Click to edit...',
+  validate: { rules: { required: false } }
+});
+
+const getTextareaMeta = () => ({
+  type: 'TEXTAREA',
+  key: 'textareaField',
+  label: 'Test textarea',
+  placeholder: 'Click to edit...',
+  validate: { rules: { max: 250 } }
+});
+
+const getSelectMeta = () => ({
+  type: 'SELECT',
+  key: 'selectField',
+  label: 'Test select',
+  placeholder: 'Select...',
+  options: [{
+    label: '15min',
+    value: 15
+  }, {
+    label: '30min',
+    value: 30
+  }, {
+    label: '45min',
+    value: 45
   }]
+});
+
+const getMultiselectMeta = () => ({
+  type: 'MULTISELECT',
+  key: 'multiselectField',
+  label: 'Test multiselect',
+  options: [
+    { value: 'OPT1', label: 'Option 1' },
+    { value: 'OPT2', label: 'Option 2' },
+    { value: 'OPT3', label: 'Option 3' }
+  ]
+});
+
+const getSwitchMeta = () => ({
+  type: 'SWITCH',
+  key: 'switchField',
+  label: 'Test switch'
+});
+
+const getCheckboxMeta = () => ({
+  type: 'CHECKBOX',
+  key: 'checkboxField',
+  label: 'Test checkbox',
+  description: 'Option selected'
+});
+
+const getFileMeta = () => ({
+  type: 'FILE',
+  key: 'fileField',
+  label: 'Test file attachment',
+  placeholder: 'Click to upload the image',
+  validate: {
+    rules: {
+      ext: ['jpg', 'jpeg', 'png']
+    }
+  }
+});
+
+const getDatetimeMeta = () => ({
+  type: 'DATETIME',
+  key: 'datetimeField',
+  label: 'Test date selection'
+});
+
+const getColorMeta = () => ({
+  type: 'COLOR',
+  key: 'colorField',
+  label: 'Test color selection'
+});
+
+const getHtmlMeta = () => ({
+  type: 'HTML',
+  key: 'htmlField',
+  label: 'Test html input'
+});
+
+// ----------------------------------------------------
+// Activity type definition
+// ----------------------------------------------------
+
+const ACTIVITY_TYPE = {
+  // Outline
+  MODULE: 'MODULE',
+  LESSON: 'LESSON',
+  PAGE: 'PAGE',
+  KNOWLEDGE_CHECK: 'KNOWLEDGE_CHECK',
+  // Content containers
+  INTRO: 'INTRO',
+  CONTENT_SECTION: 'CONTENT_SECTION',
+  ASSESSMENT_POOL: 'ASSESSMENT_POOL',
+  EXAM: 'EXAM'
+};
+
+// ----------------------------------------------------
+// Content containers
+// ----------------------------------------------------
+
+const getSectionContainer = () => ({
+  type: ACTIVITY_TYPE.CONTENT_SECTION,
+  label: 'Section',
+  multiple: true,
+  types: [
+    'JODIT_HTML', 'IMAGE', 'VIDEO', 'EMBED', 'PDF', 'AUDIO',
+    'SCORM', 'BREAK', 'ASSESSMENT', 'ACCORDION', 'CAROUSEL',
+    'MODAL', 'HTML'
+  ]
+});
+
+const getIntroContainer = () => ({
+  type: ACTIVITY_TYPE.INTRO,
+  label: 'Intro',
+  layout: false,
+  types: ['JODIT_HTML', 'IMAGE', 'VIDEO', 'EMBED']
+});
+
+const getExamContainer = () => ({
+  type: ACTIVITY_TYPE.EXAM,
+  label: 'Exam',
+  displayHeading: true,
+  multiple: true,
+  required: false,
+  publishedAs: 'exam'
+});
+
+const getAssessmentPoolContainer = () => ({
+  type: ACTIVITY_TYPE.ASSESSMENT_POOL,
+  label: 'Assessments',
+  publishedAs: 'assessments'
+});
+
+// ----------------------------------------------------
+// Activity outline configuration
+// ----------------------------------------------------
+
+const getModuleActivityConfig = () => ({
+  type: ACTIVITY_TYPE.MODULE,
+  label: 'Module',
+  rootLevel: true,
+  isTrackedInWorkflow: true,
+  color: '#536DFE',
+  meta: [
+    getInputMeta(),
+    getTextareaMeta(),
+    getSelectMeta(),
+    getMultiselectMeta(),
+    getSwitchMeta(),
+    getCheckboxMeta(),
+    getFileMeta(),
+    getDatetimeMeta(),
+    getHtmlMeta(),
+    getColorMeta()
+  ],
+  relationships: [{
+    type: 'prerequisites',
+    label: 'Prerequisites',
+    multiple: true,
+    searchable: true,
+    allowEmpty: true,
+    placeholder: 'Click to select',
+    allowCircularLinks: false,
+    allowInsideLineage: true,
+    allowedTypes: [ACTIVITY_TYPE.MODULE]
+  }],
+  contentContainers: [
+    ACTIVITY_TYPE.INTRO
+  ],
+  subLevels: [
+    ACTIVITY_TYPE.MODULE,
+    ACTIVITY_TYPE.LESSON,
+    ACTIVITY_TYPE.KNOWLEDGE_CHECK,
+    ACTIVITY_TYPE.PAGE
+  ]
+});
+
+const getLessonActivityConfig = () => ({
+  type: ACTIVITY_TYPE.LESSON,
+  label: 'Lesson',
+  color: '#FFA000',
+  isTrackedInWorkflow: true,
+  contentContainers: [
+    ACTIVITY_TYPE.INTRO,
+    ACTIVITY_TYPE.CONTENT_SECTION,
+    ACTIVITY_TYPE.ASSESSMENT_POOL
+  ]
+});
+
+const getPageActivityConfig = () => ({
+  type: ACTIVITY_TYPE.PAGE,
+  label: 'Page',
+  rootLevel: true,
+  color: '#00BFA5',
+  isTrackedInWorkflow: true,
+  contentContainers: [ACTIVITY_TYPE.CONTENT_SECTION]
+});
+
+const getKnowledgeCheckActivityConfig = () => ({
+  type: ACTIVITY_TYPE.KNOWLEDGE_CHECK,
+  label: 'Knowledge check',
+  isTrackedInWorkflow: true,
+  color: '#E91E63',
+  contentContainers: [ACTIVITY_TYPE.EXAM]
+});
+
+// ----------------------------------------------------
+// Workflow configuration
+// ----------------------------------------------------
+
+const TEST_WORKFLOW = {
+  id: 'TEST_WORKFLOW',
+  statuses: [
+    { id: 'TODO', label: 'Todo', default: true, color: '#E91E63' },
+    { id: 'IN_PROGRESS', label: 'In progress', color: '#039BE5' },
+    { id: 'REVIEW', label: 'Review', color: '#00BFA5' },
+    { id: 'DONE', label: 'Done', color: '#00BFA5' }
+  ]
+};
+
+// ----------------------------------------------------
+// Schema definition
+// ----------------------------------------------------
+
+const TEST_SCHEMA = {
+  id: 'TEST_SCHEMA',
+  workflowId: TEST_WORKFLOW.id,
+  name: 'Test course structure',
+  structure: [
+    getModuleActivityConfig(),
+    getLessonActivityConfig(),
+    getKnowledgeCheckActivityConfig(),
+    getPageActivityConfig()
+  ],
+  contentContainers: [
+    getSectionContainer(),
+    getIntroContainer(),
+    getExamContainer(),
+    getAssessmentPoolContainer()
+  ]
+};
+
+module.exports = {
+  SCHEMAS: [TEST_SCHEMA],
+  WORKFLOWS: [TEST_WORKFLOW]
 };

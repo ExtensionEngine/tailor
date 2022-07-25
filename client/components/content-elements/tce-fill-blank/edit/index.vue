@@ -1,6 +1,6 @@
 <template>
   <div class="mt-2 mb-4">
-    <div class="d-flex justify-space-between subtitle-2">
+    <div class="d-flex justify-space-between text-subtitle-2">
       <span v-if="isGraded">Answers</span>
       <span v-else-if="isEditing">{{ blankCountInfo }}</span>
       <span v-if="isEditing">
@@ -67,12 +67,12 @@
 </template>
 
 <script>
-import { defaults, getErrorMessages } from 'utils/assessment';
+import { assessment } from '@tailor-cms/utils';
 import cloneDeep from 'lodash/cloneDeep';
 import Draggable from 'vuedraggable';
 import get from 'lodash/get';
-import { InputError } from 'tce-core';
-import { mapRequests } from '@/plugins/radio';
+import { InputError } from '@tailor-cms/core-components';
+import { mapRequests } from '@extensionengine/vue-radio';
 import pluralize from 'pluralize';
 import pullAt from 'lodash/pullAt';
 import reduce from 'lodash/reduce';
@@ -98,8 +98,9 @@ const getBlankCount = question => {
 const getCountInfo = count => `${count} ${pluralize('blank', count)} detected.`;
 
 export default {
+  name: 'tce-fill-blank',
   props: {
-    assessment: { type: Object, default: defaults.FB },
+    assessment: { type: Object, default: assessment.defaults.FB },
     errors: { type: Array, default: () => ([]) },
     isEditing: { type: Boolean, default: false },
     isGraded: { type: Boolean, default: false }
@@ -157,7 +158,7 @@ export default {
     },
     answerErrors(groupIndex, answerIndex) {
       const path = `correct[${groupIndex}][${answerIndex}]`;
-      return getErrorMessages(this.errors, path);
+      return assessment.getErrorMessages(this.errors, path);
     }
   },
   watch: {

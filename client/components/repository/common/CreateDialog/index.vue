@@ -1,21 +1,28 @@
 <template>
   <tailor-dialog
     v-model="visible"
+    :data-testid="`${testIdPrefix}Dialog`"
     header-icon="mdi-folder-plus-outline">
-    <template v-if="showActivator" v-slot:activator="{ on }">
-      <v-btn v-on="on" :color="activatorColor" text class="px-1">
+    <template v-if="showActivator" #activator="{ on }">
+      <v-btn
+        v-on="on"
+        :color="activatorColor"
+        :data-testid="`${testIdPrefix}Btn`"
+        text
+        class="px-1">
         <v-icon class="pr-1">{{ activatorIcon }}</v-icon>
         {{ activatorLabel || defaultLabel }}
       </v-btn>
     </template>
-    <template v-slot:header>{{ heading || defaultLabel }}</template>
-    <template v-slot:body>
+    <template #header>{{ heading || defaultLabel }}</template>
+    <template #body>
       <validation-observer
         :key="visible"
         ref="form"
         @submit.prevent="$refs.form.handleSubmit(submit)"
         tag="form">
         <type-select
+          :key="visible"
           v-model="activity.type"
           :options="levels"
           :disabled="hasSingleOption" />
@@ -41,10 +48,9 @@
 </template>
 
 <script>
-import { getActivityMetadata } from 'shared/activities';
-import InsertLocation from '@/utils/InsertLocation';
+import { InsertLocation } from '@tailor-cms/utils';
 import { mapActions } from 'vuex';
-import MetaInput from 'tce-core/MetaInput';
+import MetaInput from '@/components/common/MetaInput';
 import TailorDialog from '@/components/common/TailorDialog';
 import TypeSelect from './TypeSelect';
 
@@ -57,6 +63,7 @@ const { ADD_AFTER, ADD_INTO } = InsertLocation;
 
 export default {
   name: 'create-activity-dialog',
+  inject: ['$schemaService'],
   props: {
     repositoryId: { type: Number, required: true },
     levels: { type: Array, required: true },
@@ -66,7 +73,8 @@ export default {
     showActivator: { type: Boolean, default: false },
     activatorLabel: { type: String, default: '' },
     activatorColor: { type: String, default: 'grey darken-3' },
-    activatorIcon: { type: String, default: 'mdi-folder-plus' }
+    activatorIcon: { type: String, default: 'mdi-folder-plus' },
+    testIdPrefix: { type: String, default: 'repository__createActivity' }
   },
   data() {
     return {
@@ -78,7 +86,7 @@ export default {
   computed: {
     metadata() {
       if (!this.activity.type) return null;
-      return getActivityMetadata(this.activity);
+      return this.$schemaService.getActivityMetadata(this.activity);
     },
     hasSingleOption: vm => vm.levels.length === 1,
     defaultLabel: vm => vm.hasSingleOption ? `Add ${vm.levels[0].label}` : 'Add'

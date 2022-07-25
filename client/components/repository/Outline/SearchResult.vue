@@ -11,17 +11,17 @@
         <v-chip
           :color="color"
           label small dark
-          class="readonly mr-2 body-2">
+          class="readonly mr-2 text-body-2">
           {{ typeLabel }}
         </v-chip>
         <v-chip
           color="primary darken-2"
           label small dark
-          class="readonly px-4 subtitle-2">
+          class="readonly px-4 text-subtitle-2">
           {{ activity.shortId }}
         </v-chip>
       </v-card-subtitle>
-      <v-card-title class="py-1 headline">
+      <v-card-title class="py-1 text-h5">
         {{ activity.data.name }}
       </v-card-title>
       <v-card-actions class="py-1">
