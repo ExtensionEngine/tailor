@@ -75,7 +75,7 @@ export default {
 .meta-quill-input {
   position: relative;
   margin: 0 0 1.25rem 0;
-  padding: 0.625rem 0.5rem;
+  padding: 0.625rem 0.5rem 0;
   border: 1px solid rgba(0, 0, 0, 0.6);
   border-radius: 0.125rem;
   cursor: pointer;
@@ -99,8 +99,15 @@ export default {
   }
 
   .ql-container {
-    max-height: 15rem;
-    overflow: auto;
+    min-height: 10rem;
+
+    .ql-editor {
+      width: 100%;
+      height: 100%;
+      padding-bottom: 0;
+      word-break: break-all;
+      overflow-y: overlay;
+    }
   }
 
   .ql-tooltip {
