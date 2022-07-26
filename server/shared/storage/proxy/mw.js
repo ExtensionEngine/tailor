@@ -2,10 +2,16 @@
 
 const config = require('../../../../config/server');
 const { FORBIDDEN } = require('http-status-codes');
+const isIp = require('is-ip');
 const miss = require('mississippi');
 const path = require('path');
 const router = require('express').Router();
 const psl = require('psl');
+
+function getDomain() {
+  if (isIp.v4(config.hostname)) return null;
+  return psl.parse(config.hostname).domain;
+}
 
 module.exports = (storage, proxy) => {
   function getFile(req, res, next) {
@@ -24,7 +30,7 @@ module.exports = (storage, proxy) => {
     if (proxy.hasCookies(req.cookies, repositoryId)) return next();
     const maxAge = 1000 * 60 * 60; // 1 hour in ms
     const cookies = proxy.getSignedCookies(repositoryId, maxAge);
-    const { domain } = psl.parse(config.hostname);
+    const domain = getDomain();
     const cookieOptions = { domain, maxAge, httpOnly: true };
     Object.entries(cookies).forEach(([cookie, value]) => {
       res.cookie(cookie, value, cookieOptions);

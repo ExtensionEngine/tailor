@@ -2,6 +2,7 @@
 
 const auth = require('./auth');
 const consumer = require('./consumer');
+const isIp = require('is-ip');
 const isLocalhost = require('is-localhost');
 const mail = require('./mail');
 const parse = require('url-parse');
@@ -14,6 +15,8 @@ const protocol = resolveProtocol(hostname);
 const port = resolvePort();
 const origin = resolveOrigin(hostname, protocol, port);
 const previewUrl = process.env.PREVIEW_URL;
+
+validateStorageProxy(storage.proxy, hostname);
 
 module.exports = {
   protocol,
@@ -57,4 +60,10 @@ function resolveOriginPort(hostname) {
   if (!REVERSE_PROXY_PORT) return `:${port}`;
   if (REVERSE_PROXY_PORT === '80' || REVERSE_PROXY_PORT === '443') return '';
   return `:${REVERSE_PROXY_PORT}`;
+}
+
+function validateStorageProxy(proxy, hostname) {
+  if (isIp.v4(hostname) && /cloudfront/i.test(proxy.provider)) {
+    throw new Error('CloudFront storage proxy cannot be used alongside IPv4 host name');
+  }
 }
