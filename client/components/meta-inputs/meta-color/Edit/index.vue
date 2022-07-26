@@ -119,7 +119,7 @@ ul {
   margin: 0 $gutter $gutter 0;
   list-style: none;
   cursor: pointer;
-  border-radius: 0.25rem;
+  border-radius: 2px;
   box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);
 
   &:last-child {
