@@ -1,4 +1,4 @@
-import { findRepositoryCard } from './utils';
+import { findRepositoryCard } from '../../utils/catalog.js';
 
 describe('ability to access repository', () => {
   before(() => cy.visit('/'));
