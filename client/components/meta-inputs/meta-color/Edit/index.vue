@@ -95,6 +95,7 @@ $gutter: 0.375rem;
     font-size: 0.875rem;
     font-weight: normal;
     line-height: 1rem;
+    text-align: left;
   }
 }
 
