@@ -3,7 +3,7 @@ import {
   findActivityItem,
   generateActivityName,
   getRootActivityDialog
-} from './utils';
+} from '../../../utils/repository';
 
 const ROOT_ACTIVIY_TYPES = ['Module', 'Page'];
 const CHILD_ACTIVITY_TYPES = ['Lesson', 'Knowledge check'];
@@ -23,10 +23,16 @@ describe('ability to create root activities', () => {
   });
 
   ROOT_ACTIVIY_TYPES.forEach(type => {
-    it(`should create a "${type}" using the add button`, function () {
+    it(`should create and delete a "${type}" activity using the add into button`, function () {
       const name = generateActivityName(type);
       createRootActivity(name, type);
-      findActivityItem(name);
+      findActivityItem(name).within(() => {
+        cy.get('div[class="options-menu"]').click();
+      });
+      cy.findAllByRole('menuitem').contains('Remove')
+        .click();
+      cy.confirmAction('Delete item?');
+      findActivityItem(name).should('not.exist');
     });
   });
 
