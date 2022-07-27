@@ -1,8 +1,10 @@
-import { findRepositoryCard } from './utils';
+import { findRepositoryCard } from '../../utils/catalog';
+import { generateRepositoryName } from '../../support/e2e/repository';
 
 const getDialog = () => cy.findByRole('dialog');
+const repositoryName = generateRepositoryName();
 
-describe('create repository', () => {
+describe('create and delete repository', () => {
   before(() => cy.visit('/'));
 
   beforeEach(() => {
@@ -11,7 +13,6 @@ describe('create repository', () => {
   });
 
   it('should create a new repository using the create dialog', () => {
-    const repositoryName = `Test_repository_${(new Date()).getTime()}`;
     cy.findByRole('button', { name: 'Add repository' }).click();
     getDialog().within(() => {
       cy.findByLabelText(/name/i)
@@ -22,5 +23,18 @@ describe('create repository', () => {
         .click();
     });
     findRepositoryCard(repositoryName);
+  });
+
+  it('should delete previously created repository', () => {
+    findRepositoryCard(repositoryName)
+      .findByRole('button', { name: 'Repository settings' })
+      .click();
+    cy.assertRoute('repository-info');
+    cy.findAllByRole('listitem').contains('Delete')
+      .click();
+    cy.confirmAction('Delete repository?');
+    cy.assertRoute('catalog');
+    cy.visit('/');
+    findRepositoryCard(repositoryName).should('not.exist');
   });
 });
