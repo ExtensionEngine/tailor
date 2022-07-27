@@ -1,1 +1,3 @@
-export const toTestIdAttr = val => `[data-testid="${val}"]`;
+import './catalog';
+import './repository';
+import './utils';
