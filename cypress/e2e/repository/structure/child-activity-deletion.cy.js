@@ -32,7 +32,7 @@ describe('ability to delete child activities', () => {
     });
   });
 
-  it(`delete all child activities within "${PARENT_TYPE}" activity using the remove button`, function () {
+  it(`should delete all child activities within "${PARENT_TYPE}" activity using the remove button`, function () {
     for (let i = 0; i < createdActivities.length; i++) {
       findActivityItem(createdActivities[i]).click().within(() => {
         cy.get('div[class="options-menu"]').click();
@@ -40,6 +40,7 @@ describe('ability to delete child activities', () => {
       cy.findAllByRole('menuitem').contains('Remove')
         .click();
       cy.confirmAction('Delete item?');
+      findActivityItem(createdActivities[i]).should('not.exist');
     }
   });
 });
