@@ -33,14 +33,14 @@ describe('ability to delete child activities', () => {
   });
 
   it(`should delete all child activities within "${PARENT_TYPE}" activity using the remove button`, function () {
-    for (let i = 0; i < createdActivities.length; i++) {
-      findActivityItem(createdActivities[i]).click().within(() => {
+    createdActivities.forEach(it => {
+      findActivityItem(it).click().within(() => {
         cy.get('div[class="options-menu"]').click();
       });
       cy.findAllByRole('menuitem').contains('Remove')
         .click();
       cy.confirmAction('Delete item?');
-      findActivityItem(createdActivities[i]).should('not.exist');
-    }
+      findActivityItem(it).should('not.exist');
+    });
   });
 });

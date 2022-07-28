@@ -27,14 +27,14 @@ describe('ability to create root activities', () => {
   });
 
   it('should delete all root activities', function () {
-    for (let i = 0; i < createdActivities.length; i++) {
-      findActivityItem(createdActivities[i]).click().within(() => {
+    createdActivities.forEach(it => {
+      findActivityItem(it).click().within(() => {
         cy.get('div[class="options-menu"]').click();
       });
       cy.findAllByRole('menuitem').contains('Remove')
         .click();
       cy.confirmAction('Delete item?');
-      findActivityItem(createdActivities[i]).should('not.exist');
-    }
+      findActivityItem(it).should('not.exist');
+    });
   });
 });
