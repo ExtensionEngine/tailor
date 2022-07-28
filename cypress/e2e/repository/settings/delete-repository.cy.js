@@ -14,7 +14,7 @@ describe('delete repository', () => {
   it('should delete the repository from settings page', function () {
     cy.visit('/#/repository/' + this.repositoryId + '/settings');
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(5);
+    cy.wait(10);
     cy.findAllByRole('listitem')
       .contains('Delete')
       .click('left');
