@@ -1,10 +1,8 @@
-import { findRepositoryCard } from '../../utils/catalog';
-import { generateRepositoryName } from '../../support/e2e/repository';
+import { findRepositoryCard } from './utils';
 
 const getDialog = () => cy.findByRole('dialog');
-const repositoryName = generateRepositoryName();
 
-describe('create and delete repository', () => {
+describe('create repository', () => {
   before(() => cy.visit('/'));
 
   beforeEach(() => {
@@ -13,7 +11,9 @@ describe('create and delete repository', () => {
   });
 
   it('should create a new repository using the create dialog', () => {
-    cy.findByRole('button', { name: 'Add repository' }).click();
+    const repositoryName = `Test_repository_${(new Date()).getTime()}`;
+    cy.findByRole('button', { name: 'Add repository' })
+      .click();
     getDialog().within(() => {
       cy.findByLabelText(/name/i)
         .type(repositoryName);
@@ -23,18 +23,5 @@ describe('create and delete repository', () => {
         .click();
     });
     findRepositoryCard(repositoryName);
-  });
-
-  it('should delete previously created repository', () => {
-    findRepositoryCard(repositoryName)
-      .findByRole('button', { name: 'Repository settings' })
-      .click();
-    cy.assertRoute('repository-info');
-    cy.findAllByRole('listitem').contains('Delete')
-      .click();
-    cy.confirmAction('Delete repository?');
-    cy.assertRoute('catalog');
-    cy.visit('/');
-    findRepositoryCard(repositoryName).should('not.exist');
   });
 });
