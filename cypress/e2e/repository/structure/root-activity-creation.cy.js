@@ -23,16 +23,10 @@ describe('ability to create root activities', () => {
   });
 
   ROOT_ACTIVIY_TYPES.forEach(type => {
-    it(`should create and delete a "${type}" activity using the add into button`, function () {
+    it(`should create a "${type}" activity using the add into button`, function () {
       const name = generateActivityName(type);
       createRootActivity(name, type);
-      findActivityItem(name).within(() => {
-        cy.get('div[class="options-menu"]').click();
-      });
-      cy.findAllByRole('menuitem').contains('Remove')
-        .click();
-      cy.confirmAction('Delete item?');
-      findActivityItem(name).should('not.exist');
+      findActivityItem(name).should('exist');
     });
   });
 
