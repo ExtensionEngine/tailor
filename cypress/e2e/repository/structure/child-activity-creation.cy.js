@@ -3,7 +3,7 @@ import {
   findActivityItem,
   generateActivityName,
   getActivityDialog
-} from '../../../utils/repository';
+} from './utils';
 
 const PARENT_TYPE = 'Module';
 const CHILD_ACTIVITY_TYPES = ['Module', 'Lesson', 'Knowledge check', 'Page'];

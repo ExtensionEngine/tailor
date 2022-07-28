@@ -3,7 +3,7 @@ import {
   findActivityItem,
   generateActivityName,
   getRootActivityDialog
-} from '../../../utils/repository';
+} from './utils';
 
 const ROOT_ACTIVIY_TYPES = ['Module', 'Page'];
 const CHILD_ACTIVITY_TYPES = ['Lesson', 'Knowledge check'];

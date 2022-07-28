@@ -1,4 +1,4 @@
-import { findRepositoryCard, searchRepository } from '../../utils/catalog';
+import { findRepositoryCard, searchRepository } from './utils';
 
 describe('ability to search and filter repository catalog', () => {
   before(() => cy.visit('/'));

@@ -1,4 +1,4 @@
-import { findRepositoryCard } from '../../utils/catalog';
+import { findRepositoryCard } from './utils';
 
 const TAG_NAME = '___Test tag___';
 
