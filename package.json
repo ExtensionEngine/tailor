@@ -63,6 +63,7 @@
     "body-parser": "^1.20.0",
     "boxen": "^4.1.0",
     "bunyan": "^1.8.15",
+    "chance": "^1.1.8",
     "change-case": "^4.1.2",
     "cheerio": "^1.0.0-rc.12",
     "consolidate": "^0.16.0",
