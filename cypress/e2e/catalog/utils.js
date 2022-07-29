@@ -1,4 +1,4 @@
-import { toTestIdAttr } from '../../utils/utils';
+import { toTestIdAttr } from '../../utils';
 
 export const sel = {
   card: 'catalog__repositoryCard'

@@ -1,4 +1,4 @@
-import { toTestIdAttr } from '../../../utils/utils';
+import { toTestIdAttr } from '../../../utils';
 
 const sel = {
   activityItem: 'repository__structureActivity',

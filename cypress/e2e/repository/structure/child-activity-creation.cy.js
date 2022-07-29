@@ -27,14 +27,16 @@ describe('ability to create child activities', () => {
 
   CHILD_ACTIVITY_TYPES.forEach(type => {
     it(`create a "${type}" activity within "${PARENT_TYPE}" activity using the add into button`, function () {
-      cy.get(this.parent).findByRole('button', { name: /add item into/i }).click();
+      cy.get(this.parent)
+        .findByRole('button', { name: /add item into/i })
+        .click();
       const name = generateActivityName(type);
       getActivityDialog().within(() => {
         cy.vSelect('Type', type);
         cy.findByLabelText('Name').type(`${name}{enter}`);
         cy.findByRole('button', { name: /create/i }).click();
       });
-      findActivityItem(name).should('exist');
+      findActivityItem(name).should('be.visible');
     });
   });
 });

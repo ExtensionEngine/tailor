@@ -26,7 +26,7 @@ describe('ability to create root activities', () => {
     it(`should create a "${type}" activity using the add into button`, function () {
       const name = generateActivityName(type);
       createRootActivity(name, type);
-      findActivityItem(name).should('exist');
+      findActivityItem(name).should('be.visible');
     });
   });
 
