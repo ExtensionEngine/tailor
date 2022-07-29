@@ -5,6 +5,14 @@ Cypress.Commands.add('getRouter', () => cy.getApp().its('$router'));
 Cypress.Commands.add('getRoute', () => cy.getApp().its('$route'));
 Cypress.Commands.add('getRouteName', () => cy.getRoute().its('name'));
 Cypress.Commands.add('assertRoute', name => cy.getRouteName().should('eq', name));
+Cypress.Commands.add('navigateTo', route => cy.getRouter().then(router => {
+  router.replace(route).then(route => {
+    // TODO: Find a better way to make sure the components are loaded
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(1);
+    return route;
+  });
+}));
 
 // Confirmation dialog actions
 Cypress.Commands.add('confirmAction', dialogTitle => {
@@ -20,7 +28,7 @@ Cypress.Commands.add('cancelAction', dialogTitle => {
 
 const getDialogByTitle = dialogTitle => {
   return cy.root()
-    .findAllByRole('document')
+    .findAllByRole('dialog')
     .filter(`:contains("${dialogTitle}")`)
     .eq(0);
 };
