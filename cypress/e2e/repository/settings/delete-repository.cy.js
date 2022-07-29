@@ -7,21 +7,23 @@ describe('delete repository', () => {
 
   beforeEach(function () {
     cy.login();
-    cy.visit('/').then(() => cy.assertRoute('catalog'));
-    cy.createRepository().its('id').as('repositoryId');
+    cy.createRepository()
+      .as('repository')
+      .then(({ id: repositoryId }) => {
+        cy.navigateTo({
+          name: 'repository-info',
+          params: { repositoryId }
+        });
+      });
   });
 
   it('should delete the repository from settings page', function () {
-    cy.visit('/#/repository/' + this.repositoryId + '/settings');
-    // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(10);
-    cy.findAllByRole('listitem')
-      .contains('Delete')
-      .click('left');
+    cy.findByRole('button', { name: 'delete' }).click();
     cy.confirmAction('Delete repository?');
     cy.assertRoute('catalog');
     cy.visit('/');
-    findRepositoryCard(this.repositoryName)
-      .should('not.exist');
+    cy.get('@repository').then(({ name: repositoryName }) => {
+      findRepositoryCard(repositoryName).should('not.exist');
+    });
   });
 });
