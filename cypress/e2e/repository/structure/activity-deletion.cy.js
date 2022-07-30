@@ -21,14 +21,8 @@ describe('ability to delete child activities', () => {
     cy.createRepository()
       .as('repository')
       .then(({ id: repositoryId }) => {
-        cy.navigateTo({
-          name: 'repository-info',
-          params: { repositoryId }
-        });
+        cy.openRepository(repositoryId);
       });
-    cy.get('@repository').then(({ id: repositoryId }) => {
-      cy.openRepository(repositoryId);
-    });
     ROOT_ACTIVIY_TYPES.forEach(type => {
       const rootName = generateActivityName(type);
       createRootActivity(rootName, type);
