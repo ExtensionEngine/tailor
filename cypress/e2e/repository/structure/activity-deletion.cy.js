@@ -14,16 +14,21 @@ const createdChild = [];
 describe('ability to delete child activities', () => {
   before(function () {
     cy.visit('/');
-    cy.login();
-    cy.createRepository().its('id').as('repositoryId');
   });
 
   beforeEach(function () {
-    cy.visit('/');
     cy.login();
-    cy.openRepository(this.repositoryId);
-    cy.assertRoute('repository');
-
+    cy.createRepository()
+      .as('repository')
+      .then(({ id: repositoryId }) => {
+        cy.navigateTo({
+          name: 'repository-info',
+          params: { repositoryId }
+        });
+      });
+    cy.get('@repository').then(({ id: repositoryId }) => {
+      cy.openRepository(repositoryId);
+    });
     ROOT_ACTIVIY_TYPES.forEach(type => {
       const rootName = generateActivityName(type);
       createRootActivity(rootName, type);
