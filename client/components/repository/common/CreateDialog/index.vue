@@ -27,6 +27,14 @@
           v-model="activity.type"
           :options="levels"
           :disabled="hasSingleOption" />
+        <v-alert
+          v-if="!metadata"
+          color="primary"
+          icon="mdi-information"
+          text prominent
+          class="ma-1">
+          Please select the item type you want to add
+        </v-alert>
         <meta-input
           v-for="input in metadata"
           :key="input.key"
