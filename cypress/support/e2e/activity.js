@@ -11,8 +11,8 @@ const SET_ENDPOINT_ACTION = 'repository/activities/setEndpoint';
 
 Cypress.Commands.add('createActivity',
   (repositoryId, type, name = generateName(), parentId) => {
-    const enpointUrl = `repositories/${repositoryId}/activities`;
-    cy.getStore().invoke('dispatch', SET_ENDPOINT_ACTION, enpointUrl);
+    const endpointUrl = `repositories/${repositoryId}/activities`;
+    cy.getStore().invoke('dispatch', SET_ENDPOINT_ACTION, endpointUrl);
     return cy.getStore().invoke('dispatch', SAVE_ACTIVITY_ACTION, {
       repositoryId,
       parentId,
@@ -23,9 +23,9 @@ Cypress.Commands.add('createActivity',
   });
 
 Cypress.Commands.add('seedActivities', repositoryId => {
-  cy.createActivity(repositoryId, ACTIVITY_TYPES.MODULE, generateName('Module'))
+  return cy.createActivity(repositoryId, ACTIVITY_TYPES.MODULE, generateName('Module'))
     .then(module => {
-      cy.createActivity(
+      return cy.createActivity(
         repositoryId,
         ACTIVITY_TYPES.LESSON,
         generateName('Lesson'),
