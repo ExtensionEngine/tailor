@@ -29,11 +29,11 @@
           :disabled="hasSingleOption" />
         <v-alert
           v-if="!metadata"
-          color="primary"
+          color="primary darken-2"
           icon="mdi-information"
           text prominent
           class="my-3">
-          Please select the item type you want to add
+          Please select the item type you want to add to edit its properties
         </v-alert>
         <meta-input
           v-for="input in metadata"
