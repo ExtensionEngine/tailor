@@ -30,4 +30,5 @@ import './auth';
 import './common';
 import './repository';
 import './schema';
+import './activity';
 import './vuetify';
