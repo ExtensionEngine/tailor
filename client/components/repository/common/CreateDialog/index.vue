@@ -31,8 +31,7 @@
           v-if="!metadata"
           color="primary"
           icon="mdi-information"
-          text prominent
-          class="ma-1">
+          text prominent>
           Please select the item type you want to add
         </v-alert>
         <meta-input
@@ -143,5 +142,6 @@ export default {
   display: flex;
   flex-direction: column;
   min-height: 17rem;
+  padding-top: 0.5rem;
 }
 </style>
