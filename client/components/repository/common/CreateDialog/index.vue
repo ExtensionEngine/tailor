@@ -31,7 +31,8 @@
           v-if="!metadata"
           color="primary"
           icon="mdi-information"
-          text prominent>
+          text prominent
+          class="my-3">
           Please select the item type you want to add
         </v-alert>
         <meta-input
