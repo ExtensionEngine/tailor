@@ -9,7 +9,7 @@
       :items="options"
       :error-messages="errors"
       :disabled="disabled"
-      :menu-props="{ bottom: true, offsetY: true }"
+      :menu-props="{ bottom: true, offsetY: true, maxHeight: 220 }"
       item-value="type"
       item-text="label"
       name="type"

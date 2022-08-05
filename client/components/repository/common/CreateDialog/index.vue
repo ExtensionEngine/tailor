@@ -20,18 +20,28 @@
         :key="visible"
         ref="form"
         @submit.prevent="$refs.form.handleSubmit(submit)"
-        tag="form">
+        tag="form"
+        class="activity-form">
         <type-select
           :key="visible"
           v-model="activity.type"
           :options="levels"
           :disabled="hasSingleOption" />
+        <v-alert
+          v-if="!metadata"
+          color="primary darken-2"
+          icon="mdi-information"
+          text prominent
+          class="my-3">
+          Please select the item type you want to add to edit its properties
+        </v-alert>
         <meta-input
           v-for="input in metadata"
           :key="input.key"
           @update="setMetaValue"
           :meta="input" />
-        <div class="d-flex justify-end">
+        <v-spacer />
+        <div class="d-flex justify-end pt-5 pb-3">
           <v-btn @click="visible = false" text>Cancel</v-btn>
           <v-btn
             :disabled="submitting"
@@ -127,3 +137,12 @@ export default {
   components: { MetaInput, TailorDialog, TypeSelect }
 };
 </script>
+
+<style lang="scss" scoped>
+.activity-form {
+  display: flex;
+  flex-direction: column;
+  min-height: 17rem;
+  padding-top: 0.5rem;
+}
+</style>
