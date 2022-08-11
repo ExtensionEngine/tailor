@@ -3,7 +3,7 @@ import './polyfills';
 import '@/utils/validation';
 
 import { asset as assetApi, exposedApi } from '@/api';
-import { schema } from '@tailor-cms/config';
+import { schema } from 'tailor-config';
 import { QuestionContainer } from '@tailor-cms/core-components';
 import ContentPluginRegistry from './content-plugins';
 

@@ -8,7 +8,7 @@ import { Activity as Events } from '@/../common/sse';
 import feed from '../feed';
 import findIndex from 'lodash/findIndex';
 import generateActions from '@/store/helpers/actions';
-import { schema } from '@tailor-cms/config';
+import { schema } from 'tailor-config';
 
 const { getDescendants } = activityUtils;
 const { api, fetch, get, reset, save, setEndpoint, update } = generateActions();

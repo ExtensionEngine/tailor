@@ -38,6 +38,9 @@ const config = {
     }, {
       find: 'shared/',
       replacement: path.join(_dirname, 'config/shared/')
+    }, {
+      find: 'tailor-config',
+      replacement: path.join(_dirname, 'config/shared/tailor.loader.mjs')
     }]
   },
   plugins: [

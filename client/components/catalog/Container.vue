@@ -76,7 +76,7 @@ import map from 'lodash/map';
 import RepositoryCard from './Card/index.vue';
 import RepositoryFilter from './RepositoryFilter.vue';
 import RepositoryFilterSelection from './RepositoryFilterSelection/index.vue';
-import { SCHEMAS } from '@tailor-cms/config';
+import { SCHEMAS } from 'tailor-config';
 import Search from './Search.vue';
 import SelectOrder from './SelectOrder.vue';
 
