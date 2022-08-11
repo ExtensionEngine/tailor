@@ -9,7 +9,7 @@
         color="primary lighten-3"
         text-color="black"
         small
-        class="ml-1 px-8 body-2 readonly">
+        class="ml-1 px-8 text-body-2 readonly">
         Admin
       </v-chip>
     </v-toolbar>
@@ -32,6 +32,7 @@ import AdminSidebar from './Sidebar.vue';
 import AppFooter from '@/components/common/Footer.vue';
 
 export default {
+  name: 'system-settings',
   components: { AdminSidebar, AppFooter }
 };
 </script>

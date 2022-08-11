@@ -30,6 +30,7 @@ import publishMixin from '@/components/common/mixins/publish.vue';
 import Sidebar from './Sidebar.vue';
 
 export default {
+  name: 'repository-settings',
   mixins: [publishMixin],
   props: {
     repositoryId: { type: Number, required: true }

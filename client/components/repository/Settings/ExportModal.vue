@@ -1,10 +1,10 @@
 <template>
   <tailor-dialog :value="true" header-icon="mdi-export" persistent>
-    <template v-slot:header>Export {{ repository.name }}</template>
-    <template v-slot:body>
+    <template #header>Export {{ repository.name }}</template>
+    <template #body>
       <v-alert v-bind="status" prominent>{{ status.message }}</v-alert>
     </template>
-    <template v-slot:actions>
+    <template #actions>
       <v-btn @click="close" text>Cancel</v-btn>
       <v-btn
         @click="exportRepository"

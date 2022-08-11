@@ -1,7 +1,7 @@
 <template>
   <div class="navigation-container">
     <v-sheet color="grey lighten-5" tile class="navigation-header">
-      <v-hover v-slot:default="{ hover }">
+      <v-hover v-slot="{ hover }">
         <v-text-field
           v-model="search"
           label="Search..."
@@ -20,7 +20,7 @@
       :search="search"
       open-all
       class="pt-4">
-      <template v-slot:label="{ item: { id, name, selectable } }">
+      <template #label="{ item: { id, name, selectable } }">
         <div
           @click.stop="navigateTo(id)"
           :class="{ selectable, selected: isSelected(id) }"

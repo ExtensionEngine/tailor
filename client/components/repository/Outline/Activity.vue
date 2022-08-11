@@ -6,6 +6,7 @@
         :id="`activity_${uid}`"
         :style="{ 'border-left-color': config.color }"
         :class="{ selected: isSelected, highlighted: hover }"
+        data-testid="repository__structureActivity"
         class="activity">
         <v-btn
           v-if="hasSubtypes"
@@ -20,7 +21,7 @@
             :activity="{ id, uid, repositoryId, parentId, type, position, data }"
             class="options-toolbar my-auto" />
           <v-tooltip bottom>
-            <template v-slot:activator="{ on }">
+            <template #activator="{ on }">
               <v-btn
                 v-show="hasSubtypes"
                 v-on="on"
@@ -44,7 +45,7 @@
         @update="data => reorder(data, children)"
         :list="children"
         v-bind="{ handle: '.activity' }">
-        <activity
+        <outline-activity
           v-for="(subActivity, childIndex) in children"
           :key="subActivity.uid"
           v-bind="subActivity"
@@ -67,7 +68,7 @@ import selectActivity from '@/components/repository/common/selectActivity';
 import size from 'lodash/size';
 
 export default {
-  name: 'activity',
+  name: 'outline-activity',
   mixins: [reorderMixin, selectActivity],
   inheritAttrs: false,
   inject: ['$schemaService'],

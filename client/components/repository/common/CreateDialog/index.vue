@@ -1,30 +1,47 @@
 <template>
   <tailor-dialog
     v-model="visible"
+    :data-testid="`${testIdPrefix}Dialog`"
     header-icon="mdi-folder-plus-outline">
-    <template v-if="showActivator" v-slot:activator="{ on }">
-      <v-btn v-on="on" :color="activatorColor" text class="px-1">
+    <template v-if="showActivator" #activator="{ on }">
+      <v-btn
+        v-on="on"
+        :color="activatorColor"
+        :data-testid="`${testIdPrefix}Btn`"
+        text
+        class="px-1">
         <v-icon class="pr-1">{{ activatorIcon }}</v-icon>
         {{ activatorLabel || defaultLabel }}
       </v-btn>
     </template>
-    <template v-slot:header>{{ heading || defaultLabel }}</template>
-    <template v-slot:body>
+    <template #header>{{ heading || defaultLabel }}</template>
+    <template #body>
       <validation-observer
         :key="visible"
         ref="form"
         @submit.prevent="$refs.form.handleSubmit(submit)"
-        tag="form">
+        tag="form"
+        class="activity-form">
         <type-select
+          :key="visible"
           v-model="activity.type"
           :options="levels"
           :disabled="hasSingleOption" />
+        <v-alert
+          v-if="!metadata"
+          color="primary darken-2"
+          icon="mdi-information"
+          text prominent
+          class="my-3">
+          Please select the item type you want to add to edit its properties
+        </v-alert>
         <meta-input
           v-for="input in metadata"
           :key="input.key"
           @update="setMetaValue"
           :meta="input" />
-        <div class="d-flex justify-end">
+        <v-spacer />
+        <div class="d-flex justify-end pt-5 pb-3">
           <v-btn @click="visible = false" text>Cancel</v-btn>
           <v-btn
             :disabled="submitting"
@@ -66,7 +83,8 @@ export default {
     showActivator: { type: Boolean, default: false },
     activatorLabel: { type: String, default: '' },
     activatorColor: { type: String, default: 'grey darken-3' },
-    activatorIcon: { type: String, default: 'mdi-folder-plus' }
+    activatorIcon: { type: String, default: 'mdi-folder-plus' },
+    testIdPrefix: { type: String, default: 'repository__createActivity' }
   },
   data() {
     return {
@@ -119,3 +137,12 @@ export default {
   components: { MetaInput, TailorDialog, TypeSelect }
 };
 </script>
+
+<style lang="scss" scoped>
+.activity-form {
+  display: flex;
+  flex-direction: column;
+  min-height: 17rem;
+  padding-top: 0.5rem;
+}
+</style>

@@ -6,7 +6,7 @@
       :input-value="isSelected"
       :disabled="disabled"
       color="primary darken-4" />
-    <v-hover v-slot:default="{ hover }">
+    <v-hover v-slot="{ hover }">
       <div class="element-wrapper flex-grow-1">
         <content-element
           v-bind="$attrs"
@@ -15,7 +15,7 @@
           :class="{ selected: isSelected }"
           class="content-element" />
         <v-tooltip open-delay="400" top>
-          <template v-slot:activator="{ on }">
+          <template #activator="{ on }">
             <v-btn
               v-on="on"
               @click.stop="$emit('element:open', element.uid)"

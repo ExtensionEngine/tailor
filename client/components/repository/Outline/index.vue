@@ -72,6 +72,7 @@ import StructureToolbar from './Toolbar.vue';
 import TreeView from './TreeView/index.vue';
 
 export default {
+  name: 'repository-outline',
   mixins: [reorderMixin, selectActivity],
   props: {
     showLoader: { type: Boolean, default: false }

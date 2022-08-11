@@ -4,17 +4,18 @@
     v-model="isVisible"
     header-icon="mdi-folder-plus-outline"
     paddingless persistent>
-    <template v-slot:activator="{ on }">
+    <template #activator="{ on }">
       <v-btn
         v-on="on"
         color="secondary"
+        aria-label="Add repository"
         fab dark absolute
         class="add-repo">
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </template>
-    <template v-slot:header>Add</template>
-    <template v-slot:body>
+    <template #header>Add</template>
+    <template #body>
       <v-tabs
         v-model="selectedTab"
         background-color="primary darken-3"
@@ -108,6 +109,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import { repository as api } from '@/api';
 import { loader } from '@tailor-cms/core-components';
 import { mapGetters } from 'vuex';
@@ -139,6 +141,7 @@ export default {
     schemas: () => SCHEMAS
   },
   methods: {
+    ...mapActions('repositories', { createRepository: 'create' }),
     submit: loader(async function () {
       const action = this.isCreate ? 'create' : 'import';
       return this[action]()
@@ -146,7 +149,7 @@ export default {
         .catch(() => (this.serverError = 'An error has occurred!'));
     }, 'showLoader'),
     create() {
-      return api.save(this.repository);
+      return this.createRepository(this.repository);
     },
     import() {
       const { archive, repository } = this;

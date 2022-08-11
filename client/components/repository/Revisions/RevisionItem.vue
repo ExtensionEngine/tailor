@@ -6,11 +6,11 @@
       :class="{ expanded, expandable: isContentElement }"
       class="revision">
       <v-avatar size="42" color="primary darken-4">
-        <span :style="{ color }" class="headline">{{ acronym }}</span>
+        <span :style="{ color }" class="text-h5">{{ acronym }}</span>
       </v-avatar>
       <div class="content ml-3">
         <div class="text-truncate">{{ description }}</div>
-        <div class="body-2">{{ date }} {{ revision.user.label }}</div>
+        <div class="text-body-2">{{ date }} {{ revision.user.label }}</div>
       </div>
     </div>
     <entity-revisions

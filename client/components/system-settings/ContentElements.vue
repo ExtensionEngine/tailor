@@ -16,7 +16,7 @@
         :key="groupName"
         color="primary darken-4"
         value="true">
-        <template v-slot:activator>
+        <template #activator>
           <v-list-item color="primary darken-4">
             <v-list-item-title>{{ groupName | parseName }}</v-list-item-title>
           </v-list-item>
@@ -30,7 +30,7 @@
             <v-icon color="primary darken-4" large>{{ ui.icon }}</v-icon>
           </v-list-item-avatar>
           <v-list-item-content>
-            <v-list-item-title v-text="name" />
+            <v-list-item-title>{{ name }}</v-list-item-title>
             <v-list-item-subtitle>Version {{ version }}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>

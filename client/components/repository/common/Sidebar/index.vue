@@ -23,6 +23,7 @@ import SidebarBody from './Body.vue';
 import SidebarHeader from './Header.vue';
 
 export default {
+  name: 'repository-sidebar',
   props: {
     emptyMessage: {
       type: String,

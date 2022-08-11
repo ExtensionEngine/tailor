@@ -1,6 +1,6 @@
 <template>
   <tailor-dialog v-model="isVisible" header-icon="mdi-lock">
-    <template v-slot:activator="{ on }">
+    <template #activator="{ on }">
       <v-btn
         v-on="on"
         color="primary darken-3"
@@ -8,8 +8,8 @@
         <v-icon small class="mr-1">mdi-lock</v-icon>Change Password
       </v-btn>
     </template>
-    <template v-slot:header>Change Password</template>
-    <template v-slot:body>
+    <template #header>Change Password</template>
+    <template #body>
       <validation-observer
         ref="form"
         v-slot="{ pristine, invalid }"

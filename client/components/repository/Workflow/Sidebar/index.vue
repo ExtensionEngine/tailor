@@ -35,6 +35,7 @@ import SidebarHeader from './Header.vue';
 import StatusFieldGroup from './FieldGroup.vue';
 
 export default {
+  name: 'workflow-sidebar',
   props: {
     emptyMessage: {
       type: String,

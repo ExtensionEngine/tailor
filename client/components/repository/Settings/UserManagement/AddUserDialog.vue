@@ -4,7 +4,7 @@
     v-model="isVisible"
     header-icon="mdi-account"
     persistent>
-    <template v-slot:activator="{ on }">
+    <template #activator="{ on }">
       <v-btn
         v-on="on"
         color="primary darken-3"
@@ -12,8 +12,8 @@
         <v-icon class="mr-2">mdi-account-plus</v-icon>Add User
       </v-btn>
     </template>
-    <template v-slot:header>Add user</template>
-    <template v-slot:body>
+    <template #header>Add user</template>
+    <template #body>
       <validation-observer
         ref="form"
         @submit.prevent="submit"

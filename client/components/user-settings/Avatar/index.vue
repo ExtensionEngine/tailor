@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center" class="pb-3">
     <v-speed-dial direction="right">
-      <template v-slot:activator>
+      <template #activator>
         <v-avatar size="150">
           <div class="img-container">
             <img :src="image">

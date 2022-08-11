@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="subtitle-2 pb-2">Answers</div>
+    <div class="text-subtitle-2 pb-2">Answers</div>
     <v-row v-for="(answer, idx) in correct" :key="idx">
       <v-col cols="3">
         <v-text-field
@@ -64,6 +64,7 @@ import pullAt from 'lodash/pullAt';
 import toNumber from 'lodash/toNumber';
 
 export default {
+  name: 'tce-numerical-response',
   props: {
     assessment: { type: Object, default: assessment.defaults.NR },
     errors: { type: Array, default: () => ([]) },

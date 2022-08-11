@@ -4,8 +4,8 @@
     width="640"
     header-icon="mdi-image"
     eager>
-    <template v-slot:header>Change Avatar</template>
-    <template v-slot:body>
+    <template #header>Change Avatar</template>
+    <template #body>
       <v-row justify="center">
         <croppa
           ref="croppa"
@@ -14,7 +14,7 @@
           prevent-white-space />
       </v-row>
     </template>
-    <template v-slot:actions>
+    <template #actions>
       <v-btn @click="close" text>Cancel</v-btn>
       <v-btn @click="confirm" color="primary darken-4" text>
         Update

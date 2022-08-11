@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="subtitle-2 pb-4">{{ title }}</div>
+    <div class="text-subtitle-2 pb-4">{{ title }}</div>
     <v-text-field
       v-for="(answer, idx) in answers" :key="idx"
       @change="updateAnswer($event, idx)"
@@ -20,7 +20,7 @@
           :color="color"
           hide-details
           class="pt-0 mt-0" />
-        <v-avatar v-else :color="color" size="24" class="subtitle-2 mr-2">
+        <v-avatar v-else :color="color" size="24" class="text-subtitle-2 mr-2">
           {{ idx + 1 }}
         </v-avatar>
       </template>
@@ -62,6 +62,7 @@ const getPlaceholder = isGraded => isGraded ? 'Answer...' : 'Option...';
 const getButtonLabel = isGraded => isGraded ? 'Add answer' : 'Add option';
 
 export default {
+  name: 'tce-multiple-choice',
   props: {
     assessment: { type: Object, default: assessment.defaults.MC },
     errors: { type: Array, default: () => ([]) },

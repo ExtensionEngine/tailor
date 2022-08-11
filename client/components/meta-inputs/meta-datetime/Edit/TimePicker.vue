@@ -5,7 +5,7 @@
     min-width="260px"
     max-width="260px"
     transition="scale-transition">
-    <template v-slot:activator="{ on }">
+    <template #activator="{ on }">
       <v-text-field
         v-on="on"
         :value="value | formatDate('hh:mm a')"

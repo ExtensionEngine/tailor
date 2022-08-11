@@ -13,6 +13,7 @@
         :repository-id="repository.id"
         :levels="levels"
         :anchor="anchor"
+        test-id-prefix="repository__createRootActivity"
         show-activator />
     </v-col>
   </v-row>

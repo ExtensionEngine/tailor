@@ -6,7 +6,7 @@
       color="grey darken-3"
       dark
       class="text-left elevation-5">
-      <span class="subtitle-2 mr-4">Carousel</span>
+      <span class="text-subtitle-2 mr-4">Carousel</span>
       <span class="text-truncate">
         Use the bottom navigation to switch to the next item
       </span>

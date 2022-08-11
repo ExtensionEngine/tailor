@@ -1,6 +1,6 @@
 <template>
   <div class="element-sidebar">
-    <h3 class="body-1">Additional settings</h3>
+    <h3 class="text-body-1">Additional settings</h3>
     <element-meta :element="element" v-bind="metadata" />
   </div>
 </template>

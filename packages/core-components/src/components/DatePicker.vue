@@ -4,7 +4,7 @@
     :close-on-content-click="false"
     min-width="290px"
     transition="scale-transition">
-    <template v-slot:activator="{ on }">
+    <template #activator="{ on }">
       <v-text-field
         ref="textField"
         v-on="on"

@@ -9,11 +9,12 @@
       :items="options"
       :error-messages="errors"
       :disabled="disabled"
+      :menu-props="{ bottom: true, offsetY: true, maxHeight: 220 }"
       item-value="type"
       item-text="label"
       name="type"
       label="Type"
-      outlined
+      outlined attach
       class="required">
       <template slot="item" slot-scope="{ item }">
         <div class="black--text">

@@ -7,7 +7,7 @@
       color="pink accent-2"
       class="avatar">
       <v-tooltip bottom>
-        <template v-slot:activator="{ on }">
+        <template #activator="{ on }">
           <img
             v-if="imgUrl"
             v-on="on"

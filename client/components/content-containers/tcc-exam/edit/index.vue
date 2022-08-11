@@ -69,7 +69,7 @@ import pluralize from 'pluralize';
 const { getDescendants } = activityUtils;
 
 export default {
-  name: 'exam',
+  name: 'tcc-exam',
   props: {
     container: { type: Object, required: true },
     position: { type: Number, required: true },

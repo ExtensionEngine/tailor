@@ -1,7 +1,7 @@
 <template>
   <tailor-dialog :value="show" header-icon="mdi-content-copy" persistent>
-    <template v-slot:header>Clone {{ schema.toLowerCase() }}</template>
-    <template v-slot:body>
+    <template #header>Clone {{ schema.toLowerCase() }}</template>
+    <template #body>
       <validation-observer
         ref="form"
         @submit.prevent="$refs.form.handleSubmit(submit)"

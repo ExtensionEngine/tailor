@@ -6,7 +6,7 @@
     no-data-text="No assigned users."
     hide-default-footer
     class="grey lighten-4">
-    <template v-slot:item="{ item }">
+    <template #item="{ item }">
       <tr>
         <td class="text-left">
           <v-avatar size="40">

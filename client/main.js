@@ -3,7 +3,7 @@ import './polyfills';
 import '@/utils/validation';
 
 import { asset as assetApi, exposedApi } from '@/api';
-import { schema } from 'tailor-config';
+import { SCHEMAS, schema } from 'tailor-config';
 import { QuestionContainer } from '@tailor-cms/core-components';
 import ContentPluginRegistry from './content-plugins';
 
@@ -15,13 +15,12 @@ import {
 } from 'vee-validate';
 import FileFilter from '@/directives/file-filter';
 import OidcClient from './OidcClient';
-import { sync } from 'vuex-router-sync';
 import Radio from '@extensionengine/vue-radio';
+import { sync } from 'vuex-router-sync';
 import Timeago from 'vue-timeago';
 import Vue from 'vue';
 import VueClipboard from 'vue-clipboard2';
 import VueCroppa from 'vue-croppa';
-import VueHotkey from 'v-hotkey';
 import vuetify from '@/plugins/vuetify';
 
 import getStore from './store';
@@ -29,8 +28,8 @@ import getRouter from './router';
 import App from './App.vue';
 
 Vue.component('tce-question-container', QuestionContainer);
-Vue.component('ValidationObserver', ValidationObserver);
-Vue.component('ValidationProvider', ValidationProvider);
+Vue.component('validation-observer', ValidationObserver);
+Vue.component('validation-provider', ValidationProvider);
 setInteractionMode('eager');
 
 Vue.filter('formatDate', formatDate);
@@ -38,7 +37,6 @@ Vue.filter('truncate', truncate);
 
 Vue.use(Radio);
 Vue.use(FileFilter);
-Vue.use(VueHotkey);
 Vue.use(VueClipboard);
 Vue.use(VueCroppa);
 Vue.use(Timeago, {
@@ -57,7 +55,7 @@ Promise.all([getStore(), contentPluginRegistry.initialize()])
     const router = getRouter();
     sync(store, router);
     /* eslint-disable no-new */
-    new Vue({
+    const app = new Vue({
       router,
       store,
       vuetify,
@@ -74,4 +72,8 @@ Promise.all([getStore(), contentPluginRegistry.initialize()])
         };
       }
     });
+    if (window.Cypress) {
+      window.__app__ = app;
+      window.__test_schema_id__ = SCHEMAS[0].id;
+    }
   });

@@ -16,6 +16,7 @@ import { title as titleCase } from 'to-case';
 import UserList from './UserList.vue';
 
 export default {
+  name: 'repository-user-management',
   computed: {
     roles: () => map(role.repository, value => ({ text: titleCase(value), value }))
   },

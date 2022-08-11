@@ -23,7 +23,7 @@
         :element="selectedElement"
         :metadata="metadata" />
     </div>
-    <template v-slot:append>
+    <template #append>
       <v-tabs
         :value="selectedTabIndex"
         background-color="primary darken-4"

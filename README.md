@@ -1,13 +1,12 @@
 <div align="center">
-  <img width="100" src="./client/assets/img/default-logo-full.svg">
+  <img width="180" src="./client/assets/img/default-logo-compact.svg">
 </div>
 
-# Tailor
+# Tailor CMS
 
 [![CircleCI build
-status](https://badgen.net/circleci/github/ExtensionEngine/tailor/develop?icon)](https://circleci.com/gh/ExtensionEngine/tailor)
-[![Codacy
-Badge](https://badgen.net/codacy/grade/d6d198f9c56b4ca799b4624c5bb3e16c/develop)](https://app.codacy.com/manual/ExtensionEngine/tailor)
+status](https://badgen.net/circleci/github/ExtensionEngine/tailor/develop?style=svg)](https://circleci.com/gh/ExtensionEngine/tailor)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/f3eab80316244b7b959b7bbf3d7c3ace)](https://www.codacy.com/gh/ExtensionEngine/tailor/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ExtensionEngine/tailor&amp;utm_campaign=Badge_Grade)
 [![Known
 Vulnerabilities](https://badgen.net/snyk/ExtensionEngine/tailor/develop)](https://snyk.io/test/github/ExtensionEngine/tailor)
 [![GitHub package
@@ -21,12 +20,12 @@ style](https://badgen.net/badge/stylelint/@extensionengine/black)](https://githu
 [![Open Source
 Love](https://badgen.net/badge/Open%20Source/%E2%9D%A4/3eaf8e)](https://github.com/ellerbrock/open-source-badge/)
 
-Adaptive course authoring platform.
+Configurable headless CMS for complex content structures.
 
 ## Dependencies
 
-- Node.js (>= 12.13.0)
-- npm (>= 6.11.0)
+- Node.js (>= 16.16.0)
+- npm (>= 8.11.0)
 - PostgreSQL (>= 9.4)
 
 ## Installation
@@ -45,7 +44,11 @@ Adaptive course authoring platform.
   `.env`. Use the `.env.example` file as a template: `cp .env.example .env` and
   enter configuration details.
 - Initialize database by running `npm run db migrate`
-- Enable default repository schema by setting env variable `ENABLE_DEFAULT_SCHEMA=1` or define a custom one (more details below).
+- To enable demo repository schema configuration copy `tailor.config.js.example`
+  into `tailor.config.js.`. For more details about the custom schema configuration
+  please refer [to this guide](https://extensionengine.github.io/tailor-docs/tailor/developer-guide/configuration.html).
+- Configure asset storage proxy by following the steps [in this guide](https://extensionengine.github.io/tailor-docs/tailor/developer-guide/storage-proxy.html)
+  based on your environment.
 - You can create admin user by running `npm run add:admin <email> <password>`
 - App branding is configured via values set in a file named `.brandrc` (or
   `.brandrc.js`). Use the `.brandrc.example` file as a template: `cp
