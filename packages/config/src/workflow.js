@@ -1,8 +1,5 @@
-'use strict';
-
-const find = require('lodash/find');
-const validateWorkflow = require('./workflow-validation');
-const { WORKFLOWS } = require('./activities-rc.load')();
+import find from 'lodash/find';
+import validateWorkflow from './workflow-validation';
 
 const priorities = [
   { id: 'CRITICAL', label: 'Critical', icon: 'priorityCritical' },
@@ -12,8 +9,8 @@ const priorities = [
   { id: 'TRIVIAL', label: 'Trivial', icon: 'priorityTrivial' }
 ];
 
-module.exports = schema => {
-  validateWorkflow(WORKFLOWS);
+export default (workflows, schemaAPI) => {
+  validateWorkflow(workflows);
 
   return {
     priorities,
@@ -24,7 +21,7 @@ module.exports = schema => {
   };
 
   function getWorkflow(id) {
-    return find(WORKFLOWS, { id });
+    return find(workflows, { id });
   }
 
   function getPriority(id) {
@@ -39,9 +36,9 @@ module.exports = schema => {
   }
 
   function getDefaultActivityStatus(type) {
-    const schemaId = schema.getSchemaId(type);
+    const schemaId = schemaAPI.getSchemaId(type);
     if (!schemaId) return;
-    const { workflowId } = schema.getSchema(schemaId);
+    const { workflowId } = schemaAPI.getSchema(schemaId);
     if (!workflowId) return;
     return getDefaultWorkflowStatus(workflowId);
   }

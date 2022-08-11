@@ -1,19 +1,17 @@
-'use strict';
+import castArray from 'lodash/castArray';
+import filter from 'lodash/filter';
+import find from 'lodash/find';
+import first from 'lodash/first';
+import flatMap from 'lodash/flatMap';
+import get from 'lodash/get';
+import isString from 'lodash/isString';
+import map from 'lodash/map';
+import reduce from 'lodash/reduce';
+import sortBy from 'lodash/sortBy';
+import union from 'lodash/union';
+import uniq from 'lodash/uniq';
 
-const castArray = require('lodash/castArray');
-const filter = require('lodash/filter');
-const find = require('lodash/find');
-const first = require('lodash/first');
-const flatMap = require('lodash/flatMap');
-const get = require('lodash/get');
-const isString = require('lodash/isString');
-const map = require('lodash/map');
-const reduce = require('lodash/reduce');
-const sortBy = require('lodash/sortBy');
-const union = require('lodash/union');
-const uniq = require('lodash/uniq');
-
-module.exports = (schemas, defaultConfiguration) => {
+export default (schemas, defaultConfiguration) => {
   return {
     getSchemaId,
     getSchema,

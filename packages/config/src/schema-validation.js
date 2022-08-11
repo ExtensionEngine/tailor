@@ -1,6 +1,4 @@
-'use strict';
-
-const yup = require('yup');
+import * as yup from 'yup';
 
 const activityType = yup.string().min(2).max(50);
 
@@ -55,7 +53,7 @@ const schema = yup.object().shape({
 
 const schemas = yup.array().of(schema).min(1);
 
-module.exports = function (config) {
+export default function (config) {
   try {
     schemas.validateSync(config);
   } catch (err) {

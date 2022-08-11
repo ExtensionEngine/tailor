@@ -1,10 +1,8 @@
-'use strict';
-
-const find = require('lodash/find');
-const get = require('lodash/get');
-const map = require('lodash/map');
-const transform = require('lodash/transform');
-const validate = require('./schema-validation');
+import find from 'lodash/find';
+import get from 'lodash/get';
+import map from 'lodash/map';
+import transform from 'lodash/transform';
+import validate from './schema-validation';
 
 const LABEL_COLORS = [
   ['#F44336', '#E91E63'],
@@ -18,7 +16,7 @@ const LABEL_COLORS = [
 // Validate schemas
 // Prefix activity types with schema id; SCHEMA_ID/TYPE
 // Process meta
-module.exports = function parse(schemas = []) {
+export default function parse(schemas = []) {
   validate(schemas);
   schemas.forEach(schema => {
     processRepositoryConfig(schema);
