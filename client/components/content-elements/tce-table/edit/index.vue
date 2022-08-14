@@ -24,7 +24,7 @@ import forEach from 'lodash/forEach';
 import last from 'lodash/last';
 import size from 'lodash/size';
 import sortBy from 'lodash/sortBy';
-import TableCell from './TableCell';
+import TableCell from './TableCell.vue';
 
 const MIN_ROWS = 1;
 const MIN_COLUMNS = 1;

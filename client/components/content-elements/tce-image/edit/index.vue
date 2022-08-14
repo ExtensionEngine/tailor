@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import Cropper from './Cropper';
+import Cropper from './Cropper.vue';
 import { ElementPlaceholder } from '@tailor-cms/core-components';
 import { imgSrcToDataURL } from 'blob-util';
 import isEmpty from 'lodash/isEmpty';

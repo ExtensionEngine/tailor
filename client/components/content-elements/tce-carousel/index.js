@@ -1,5 +1,5 @@
-import Edit from './edit';
-import Toolbar from './edit/Toolbar';
+import Edit from './edit/index.vue';
+import Toolbar from './edit/Toolbar.vue';
 
 const initState = () => {
   return {

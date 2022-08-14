@@ -1,8 +1,8 @@
 import { addCell, addEmbed } from './edit/utils';
 import cuid from 'cuid';
-import Edit from './edit';
+import Edit from './edit/index.vue';
 import times from 'lodash/times';
-import Toolbar from './edit/Toolbar';
+import Toolbar from './edit/Toolbar.vue';
 
 const initState = () => {
   const tableId = cuid();

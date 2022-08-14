@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 import cuid from 'cuid';
-import Edit from './edit';
+import Edit from './edit/index.vue';
 import times from 'lodash/times';
 
 const createValidator = label => yup.object().shape({

@@ -1,5 +1,5 @@
-import Edit from './edit';
-import info from './info';
+import Edit from './edit/index.vue';
+import info from './info.js';
 
 export default {
   ...info,

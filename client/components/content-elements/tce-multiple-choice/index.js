@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import Edit from './edit';
+import Edit from './edit/index.vue';
 
 const MESSAGE = 'Please choose at least one correct answer';
 
