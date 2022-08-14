@@ -1,4 +1,4 @@
-import path from 'path';
+import path from 'path-browserify';
 import request from './request';
 
 const urls = {

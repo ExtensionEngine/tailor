@@ -37,7 +37,7 @@
 
 <script>
 import { ElementPlaceholder, PreviewOverlay } from '@tailor-cms/core-components';
-import { extname } from 'path';
+import { extname } from 'path-browserify';
 import get from 'lodash/get';
 import { PlyrueComponent as Plyrue } from 'plyrue';
 
