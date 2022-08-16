@@ -1,11 +1,13 @@
-import { createVuePlugin } from 'vite-plugin-vue2';
 import { defineConfig, loadEnv } from 'vite';
+import Components from 'unplugin-vue-components/vite';
+import EnvironmentPlugin from 'vite-plugin-environment';
 import { fileURLToPath } from 'url';
-import legacy from '@vitejs/plugin-legacy'
 import merge from 'lodash/merge';
-import path from 'path';
+import path from 'path-browserify';
 import viteCompression from 'vite-plugin-compression';
-import yn from 'yn';
+import vue from '@vitejs/plugin-vue2';
+import { VuetifyResolver } from 'unplugin-vue-components/resolvers';
+// import legacy from '@vitejs/plugin-legacy'
 
 const _filename = fileURLToPath(import.meta.url);
 const _dirname = path.dirname(_filename);
@@ -41,11 +43,38 @@ const config = {
     }, {
       find: 'tailor-config',
       replacement: path.join(_dirname, 'config/shared/tailor.loader.mjs')
+    }, {
+      find: /^~.+/,
+      replacement: val => val.replace(/^~/, '')
     }]
   },
   plugins: [
-    createVuePlugin(),
-    legacy({ targets: ['defaults'] }),
+    vue(),
+    Components({
+      // generate `components.d.ts` global declarations
+      // https://github.com/antfu/unplugin-vue-components#typescript
+      dts: false,
+      // auto import for directives
+      directives: false,
+      // resolvers for custom components
+      resolvers: [
+        // Vuetify
+        VuetifyResolver(),
+      ],
+      // https://github.com/antfu/unplugin-vue-components#types-for-global-registered-components
+      types: [{
+        from: 'vue-router',
+        names: ['RouterLink', 'RouterView'],
+      }],
+    }),
+    EnvironmentPlugin({
+      API_PATH: '/api',
+      ENABLE_DEFAULT_SCHEMA: false,
+      OIDC_ENABLED: false,
+      OIDC_LOGOUT_ENABLED: false,
+      OIDC_LOGIN_TEXT: 'Login with OIDC'
+    }),
+    // legacy({ targets: ['defaults'] }),
     viteCompression()
   ],
   rollupOptions: {}
@@ -54,11 +83,6 @@ const config = {
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const define = {
-    API_PATH: "'/api'",
-    ENABLE_DEFAULT_SCHEMA: yn(env.ENABLE_DEFAULT_SCHEMA),
-    OIDC_ENABLED: yn(env.OIDC_ENABLED),
-    OIDC_LOGOUT_ENABLED: yn(env.OIDC_LOGOUT_ENABLED),
-    OIDC_LOGIN_TEXT: `"${env.OIDC_LOGIN_TEXT}"`,
     'process.env': {} // Patch due to being eliminated
   }
   const server = {
