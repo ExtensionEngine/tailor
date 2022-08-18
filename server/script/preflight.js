@@ -1,10 +1,10 @@
-'use strict';
 
-const boxen = require('boxen');
-const { packageJson: pkg } = require('read-pkg-up').sync();
-const semver = require('semver');
+import 'dotenv/config';
+import boxen from 'boxen';
+import { readPackageUp } from 'read-pkg-up';
+import semver from 'semver';
 
-require('dotenv').config();
+const pkg = await readPackageUp();
 
 (function preflight() {
   const engines = pkg.engines || {};
