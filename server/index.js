@@ -1,28 +1,29 @@
-'use strict';
+import app from './app.js';
+import boxen from 'boxen';
+import contentPluginRegistry from './shared/content-plugins/index.js';
+import pkg from '../package.json' assert { type: 'json' };
+import Promise from 'bluebird';
+import { promisify } from 'util';
+import toCase from 'to-case';
 
-const app = require('./app');
-const boxen = require('boxen');
-const capitalize = require('to-case').capital;
-const contentPluginRegistry = require('./shared/content-plugins');
-const pkg = require('../package.json');
-const Promise = require('bluebird');
-const { promisify } = require('util');
+const capitalize = toCase.capital;
 
 // NOTE: This needs to be done before db models get loaded!
 const isProduction = process.env.NODE_ENV === 'production';
 Promise.config({ longStackTraces: !isProduction });
 
-/* eslint-disable require-sort/require-sort */
-const config = require('../config/server');
-const database = require('./shared/database');
-const logger = require('./shared/logger')();
+/* eslint-disable */
+import config from '../config/server/index.js';
+import database from './shared/database/index.js';
+import getLogger from './shared/logger.js';
+const logger = getLogger();
 /* eslint-enable */
 
 const runApp = promisify(app.listen.bind(app));
 
 database.initialize()
   .then(() => logger.info('Database initialized'))
-  .then(() => require('@tailor-cms/config'))
+  .then(() => import('@tailor-cms/config'))
   .then(() => contentPluginRegistry.initialize())
   .then(() => runApp(config.port))
   .then(() => {
