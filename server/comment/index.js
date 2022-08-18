@@ -1,11 +1,11 @@
-'use strict';
+import { Comment, Sequelize, User } from '../shared/database/index.js';
+import { FORBIDDEN, NOT_FOUND } from 'http-status-codes';
+import { createError } from '../shared/error/helpers.js';
+import ctrl from './comment.controller.js';
+import express from 'express';
+import processQuery from '../shared/util/processListQuery.js';
 
-const { Comment, Sequelize, User } = require('../shared/database');
-const { FORBIDDEN, NOT_FOUND } = require('http-status-codes');
-const { createError } = require('../shared/error/helpers');
-const ctrl = require('./comment.controller');
-const processQuery = require('../shared/util/processListQuery');
-const router = require('express').Router();
+const router = express.Router();
 const { EmptyResultError } = Sequelize;
 
 const defaultListQuery = {
@@ -45,7 +45,7 @@ function canEdit({ user, comment }, _res, next) {
   next();
 }
 
-module.exports = {
+export default {
   path: '/comments',
   router
 };

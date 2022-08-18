@@ -1,13 +1,11 @@
-'use strict';
+import mail from '../shared/mail/index.js';
+import map from 'lodash/map';
+import pick from 'lodash/pick';
+import { schema } from '@tailor-cms/config';
+import sse from '../shared/sse/index.js';
+import without from 'lodash/without';
 
-const mail = require('../shared/mail');
-const map = require('lodash/map');
-const pick = require('lodash/pick');
-const { schema } = require('@tailor-cms/config');
-const sse = require('../shared/sse');
-const without = require('lodash/without');
-
-exports.add = (Comment, Hooks, db) => {
+export const add = (Comment, Hooks, db) => {
   const { Events } = Comment;
   const { Repository, RepositoryUser, Activity, ContentElement, User } = db;
 
