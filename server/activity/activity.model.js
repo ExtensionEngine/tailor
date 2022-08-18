@@ -1,14 +1,12 @@
-'use strict';
-
-const { Model, Op } = require('sequelize');
-const { schema, workflow } = require('@tailor-cms/config');
-const calculatePosition = require('../shared/util/calculatePosition');
-const { Activity: Events } = require('../../common/sse');
-const hooks = require('./hooks');
-const isEmpty = require('lodash/isEmpty');
-const map = require('lodash/map');
-const pick = require('lodash/pick');
-const Promise = require('bluebird');
+import { Model, Op } from 'sequelize';
+import { schema, workflow } from '@tailor-cms/config';
+import calculatePosition from '../shared/util/calculatePosition.js';
+import { Activity as Events } from '../../common/sse.js';
+import hooks from './hooks.js';
+import isEmpty from 'lodash/isEmpty';
+import map from 'lodash/map';
+import pick from 'lodash/pick';
+import Promise from 'bluebird';
 
 const { getSiblingTypes, isOutlineActivity, isTrackedInWorkflow } = schema;
 const { getDefaultActivityStatus } = workflow;
@@ -284,4 +282,4 @@ function getDefaultStatus({ id, type }) {
   return { ...defaultStatus, activityId: id };
 }
 
-module.exports = Activity;
+export default Activity;

@@ -1,13 +1,11 @@
-'use strict';
+import forEach from 'lodash/forEach';
+import get from 'lodash/get';
+import mail from '../shared/mail/index.js';
+import { Op } from 'sequelize';
+import { schema } from '@tailor-cms/config';
+import sse from '../shared/sse/index.js';
 
-const forEach = require('lodash/forEach');
-const get = require('lodash/get');
-const mail = require('../shared/mail');
-const { Op } = require('sequelize');
-const { schema } = require('@tailor-cms/config');
-const sse = require('../shared/sse');
-
-exports.add = (ActivityStatus, Hooks, { Activity }) => {
+export const add = (ActivityStatus, Hooks, { Activity }) => {
   const { Events } = ActivityStatus;
 
   const mappings = {

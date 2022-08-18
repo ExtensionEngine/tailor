@@ -1,15 +1,11 @@
-'use strict';
-
-const forEach = require('lodash/forEach');
-const groupBy = require('lodash/groupBy');
-const { schema } = require('@tailor-cms/config');
-const sse = require('../shared/sse');
+import forEach from 'lodash/forEach';
+import groupBy from 'lodash/groupBy';
+import { schema } from '@tailor-cms/config';
+import sse from '../shared/sse/index.js';
 
 const { isOutlineActivity } = schema;
 
-module.exports = { add };
-
-function add(Activity, Hooks, Models) {
+export function add(Activity, Hooks, Models) {
   const { Events } = Activity;
 
   const mappings = {

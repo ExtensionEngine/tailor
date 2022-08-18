@@ -1,9 +1,7 @@
-'use strict';
-
-const { Activity: Events } = require('../../common/sse');
-const hooks = require('./status.hooks');
-const { Model } = require('sequelize');
-const { workflow } = require('@tailor-cms/config');
+import { Activity as Events } from '../../common/sse.js';
+import hooks from './status.hooks';
+import { Model } from 'sequelize';
+import { workflow } from '@tailor-cms/config';
 
 const { priorities } = workflow;
 const priorityIds = priorities.map(it => it.id);
@@ -77,4 +75,4 @@ class ActivityStatus extends Model {
   }
 }
 
-module.exports = ActivityStatus;
+export default ActivityStatus;

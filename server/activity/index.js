@@ -1,11 +1,11 @@
-'use strict';
+import { Activity } from '../shared/database/index.js';
+import { createError } from '../shared/error/helpers.js';
+import ctrl from './activity.controller.js';
+import express from 'express';
+import { NOT_FOUND } from 'http-status-codes';
+import processListQuery from '../shared/util/processListQuery.js';
 
-const { Activity } = require('../shared/database');
-const { createError } = require('../shared/error/helpers');
-const ctrl = require('./activity.controller');
-const { NOT_FOUND } = require('http-status-codes');
-const processListQuery = require('../shared/util/processListQuery');
-const router = require('express').Router();
+const router = express.Router();
 
 const processQuery = processListQuery({ order: [['position']] });
 
@@ -36,7 +36,7 @@ function getActivity(req, _res, next, activityId) {
     });
 }
 
-module.exports = {
+export default {
   path: '/activities',
   router
 };

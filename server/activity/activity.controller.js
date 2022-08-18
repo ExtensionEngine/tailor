@@ -1,14 +1,12 @@
-'use strict';
-
-const { Activity } = require('../shared/database');
-const { fetchActivityContent } = require('../shared/publishing/helpers');
-const find = require('lodash/find');
-const get = require('lodash/get');
-const pick = require('lodash/pick');
-const { previewUrl } = require('../../config/server');
-const publishingService = require('../shared/publishing/publishing.service');
-const request = require('axios');
-const { schema } = require('@tailor-cms/config');
+import { Activity } from '../shared/database/index.js';
+import { fetchActivityContent } from '../shared/publishing/helpers.js';
+import find from 'lodash/find';
+import get from 'lodash/get';
+import pick from 'lodash/pick';
+import { previewUrl } from '../../config/server/index.js';
+import publishingService from '../shared/publishing/publishing.service.js';
+import request from 'axios';
+import { schema } from '@tailor-cms/config';
 
 const { getOutlineLevels, isOutlineActivity } = schema;
 
@@ -103,7 +101,7 @@ function updatePublishingStatus(repository, activity) {
   return publishingService.updatePublishingStatus(repository);
 }
 
-module.exports = {
+export default {
   create,
   show,
   list,
