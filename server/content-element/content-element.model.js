@@ -1,11 +1,9 @@
-'use strict';
-
-const { Model, Op } = require('sequelize');
-const calculatePosition = require('../shared/util/calculatePosition');
-const { ContentElement: Events } = require('../../common/sse');
-const hooks = require('./hooks');
-const isNumber = require('lodash/isNumber');
-const pick = require('lodash/pick');
+import { Model, Op } from 'sequelize';
+import calculatePosition from '../shared/util/calculatePosition.js';
+import { ContentElement as Events } from '../../common/sse.js';
+import hooks from './hooks.js';
+import isNumber from 'lodash/isNumber';
+import pick from 'lodash/pick';
 
 class ContentElement extends Model {
   static fields(DataTypes) {
@@ -169,4 +167,4 @@ class ContentElement extends Model {
   }
 }
 
-module.exports = ContentElement;
+export default ContentElement;

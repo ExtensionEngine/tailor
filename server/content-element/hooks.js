@@ -1,16 +1,14 @@
-'use strict';
+import elementHooks from '../shared/content-plugins/elementHooks.js';
+import { elementRegistry } from '../shared/content-plugins/index.js';
+import forEach from 'lodash/forEach';
+import get from 'lodash/get';
+import hash from 'hash-obj';
+import Promise from 'bluebird';
+import { resolveStatics } from '../shared/storage/helpers.js';
+import { schema } from '@tailor-cms/config';
+import sse from '../shared/sse/index.js';
 
-const elementHooks = require('../shared/content-plugins/elementHooks');
-const { elementRegistry } = require('../shared/content-plugins');
-const forEach = require('lodash/forEach');
-const get = require('lodash/get');
-const hash = require('hash-obj');
-const Promise = require('bluebird');
-const { resolveStatics } = require('../shared/storage/helpers');
-const { schema } = require('@tailor-cms/config');
-const sse = require('../shared/sse');
-
-module.exports = { add, applyFetchHooks };
+export default { add, applyFetchHooks };
 
 function add(ContentElement, Hooks, Models) {
   const { Events } = ContentElement;
