@@ -1,9 +1,7 @@
-'use strict';
-
-const { Model } = require('sequelize');
-const pick = require('lodash/pick');
-const Promise = require('bluebird');
-const { schema } = require('@tailor-cms/config');
+import { Model } from 'sequelize';
+import pick from 'lodash/pick';
+import Promise from 'bluebird';
+import { schema } from '@tailor-cms/config';
 
 const { getRepositoryRelationships, getSchema } = schema;
 
@@ -149,4 +147,4 @@ class Repository extends Model {
   }
 }
 
-module.exports = Repository;
+export default Repository;

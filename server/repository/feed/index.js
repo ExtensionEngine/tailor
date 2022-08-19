@@ -1,8 +1,8 @@
-'use strict';
+import ctrl from './controller.js';
+import express from 'express';
+import { middleware as sse } from '../../shared/sse/index.js';
 
-const ctrl = require('./controller');
-const { middleware: sse } = require('../../shared/sse');
-const router = require('express').Router();
+const router = express.Router();
 
 router.get('/subscribe', sse, ctrl.subscribe);
 
@@ -11,7 +11,7 @@ router.route('/')
   .post(ctrl.addUserActivity)
   .delete(ctrl.removeUserActivity);
 
-module.exports = {
+export default {
   path: '/feed',
   router
 };

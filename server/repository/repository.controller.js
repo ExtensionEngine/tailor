@@ -1,7 +1,5 @@
-'use strict';
-
-const { NO_CONTENT, NOT_FOUND } = require('http-status-codes');
-const {
+import { NO_CONTENT, NOT_FOUND } from 'http-status-codes';
+import {
   Repository,
   RepositoryTag,
   RepositoryUser,
@@ -9,23 +7,25 @@ const {
   sequelize,
   Tag,
   User
-} = require('../shared/database');
-const { createError } = require('../shared/error/helpers');
-const getVal = require('lodash/get');
-const map = require('lodash/map');
-const { Op } = require('sequelize');
-const pick = require('lodash/pick');
-const Promise = require('bluebird');
-const publishingService = require('../shared/publishing/publishing.service');
-const { repository: role } = require('../../config/shared').role;
-const sample = require('lodash/sample');
-const { schema } = require('@tailor-cms/config');
-const { snakeCase } = require('change-case');
-const TransferService = require('../shared/transfer/transfer.service');
+} from '../shared/database/index.js';
+import config from '../../config/shared/index.js';
+import { createError } from '../shared/error/helpers.js';
+import getVal from 'lodash/get';
+import map from 'lodash/map';
+import { Op } from 'sequelize';
+import pick from 'lodash/pick';
+import Promise from 'bluebird';
+import publishingService from '../shared/publishing/publishing.service.js';
+import sample from 'lodash/sample';
+import { schema } from '@tailor-cms/config';
+import { snakeCase } from 'change-case';
+import TransferService from '../shared/transfer/transfer.service.js';
 
-const fs = Promise.promisifyAll(require('fs'));
-const miss = Promise.promisifyAll(require('mississippi'));
-const tmp = Promise.promisifyAll(require('tmp'), { multiArgs: true });
+const { repository: role } = config.role;
+
+const fs = Promise.promisifyAll(import('fs'));
+const miss = Promise.promisifyAll(import('mississippi'));
+const tmp = Promise.promisifyAll(import('tmp'), { multiArgs: true });
 
 const DEFAULT_COLORS = ['#689F38', '#FF5722', '#2196F3'];
 const lowercaseName = sequelize.fn('lower', sequelize.col('repository.name'));
@@ -227,7 +227,7 @@ function importRepository({ body, file, user }, res) {
     });
 }
 
-module.exports = {
+export default {
   index,
   create,
   get,

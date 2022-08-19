@@ -1,7 +1,7 @@
-'use strict';
+import config from '../../config/shared/index.js';
+import { Model } from 'sequelize';
 
-const { repository: role } = require('../../config/shared').role;
-const { Model } = require('sequelize');
+const { repository: role } = config.role;
 
 class RepositoryUser extends Model {
   static fields({ BOOLEAN, DATE, ENUM, INTEGER }) {
@@ -58,4 +58,4 @@ class RepositoryUser extends Model {
   }
 }
 
-module.exports = RepositoryUser;
+export default RepositoryUser;
