@@ -1,6 +1,4 @@
-'use strict';
-
-const httpError = require('http-errors');
+import httpError from 'http-errors';
 
 function validationError(err) {
   const code = 400;
@@ -11,7 +9,7 @@ function createError(code = 400, message = 'An error has occured') {
   return Promise.reject(httpError(code, message, { custom: true }));
 }
 
-module.exports = {
+export default {
   createError,
   validationError
 };
