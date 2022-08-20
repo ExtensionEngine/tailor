@@ -1,9 +1,7 @@
-'use strict';
-
-const dargs = require('dargs');
-const minimist = require('minimist');
-const path = require('path');
-const safeRequire = require('safe-require');
+import dargs from 'dargs';
+import minimist from 'minimist';
+import path from 'node:path';
+import safeRequire from 'safe-require';
 
 const actions = [
   'migrate',
@@ -33,7 +31,7 @@ process.argv.push(...dargs(options));
 
 // Make it rain!
 // eslint-disable-next-line require-sort/require-sort
-require('sequelize-cli/lib/sequelize');
+import('sequelize-cli/lib/sequelize');
 
 function getArgs(argv) {
   let [cmd, ...args] = argv._;
