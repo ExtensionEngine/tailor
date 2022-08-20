@@ -1,16 +1,15 @@
-'use strict';
+import { Op, Sequelize, Utils } from 'sequelize';
+import get from 'lodash/get';
+import has from 'lodash/has';
+import inRange from 'lodash/inRange';
+import last from 'lodash/last';
+import mapValues from 'lodash/mapValues';
 
-const { Sequelize, Utils: { SequelizeMethod }, Op } = require('sequelize');
-const get = require('lodash/get');
-const has = require('lodash/has');
-const inRange = require('lodash/inRange');
-const last = require('lodash/last');
-const mapValues = require('lodash/mapValues');
-
+const { SequelizeMethod } = Utils;
 const isFunction = arg => typeof arg === 'function';
 const notEmpty = input => input.length > 0;
 
-module.exports = {
+export default {
   sql: { concat, where },
   getValidator,
   setLogging,
