@@ -1,14 +1,14 @@
-'use strict';
+import { authenticate, logout } from '../shared/auth/index.js';
+import { loginRequestLimiter, resetLoginAttempts, setLoginLimitKey } from './mw.js';
+import { ACCEPTED } from 'http-status-codes';
+import { authorize } from '../shared/auth/mw.js';
+import ctrl from './user.controller.js';
+import express from 'express';
+import { processPagination } from '../shared/database/pagination.js';
+import { requestLimiter } from '../shared/request/mw.js';
+import { User } from '../shared/database/index.js';
 
-const { authenticate, logout } = require('../shared/auth');
-const { loginRequestLimiter, resetLoginAttempts, setLoginLimitKey } = require('./mw');
-const { ACCEPTED } = require('http-status-codes');
-const { authorize } = require('../shared/auth/mw');
-const ctrl = require('./user.controller');
-const { processPagination } = require('../shared/database/pagination');
-const { requestLimiter } = require('../shared/request/mw');
-const router = require('express').Router();
-const { User } = require('../shared/database');
+const router = express.Router();
 
 // Public routes:
 router
@@ -37,7 +37,7 @@ router
   .delete('/:id', authorize(), ctrl.remove)
   .post('/:id/reinvite', authorize(), ctrl.reinvite);
 
-module.exports = {
+export default {
   path: '/users',
   router
 };

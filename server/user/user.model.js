@@ -1,18 +1,16 @@
-'use strict';
-
-const Audience = require('../shared/auth/audience');
-const bcrypt = require('bcrypt');
-const config = require('../../config/server');
-const gravatar = require('gravatar');
-const jwt = require('jsonwebtoken');
-const mail = require('../shared/mail');
-const map = require('lodash/map');
-const { Model } = require('sequelize');
-const omit = require('lodash/omit');
-const pick = require('lodash/pick');
-const Promise = require('bluebird');
-const randomstring = require('randomstring');
-const { role: roles } = require('../../config/shared');
+import Audience from '../shared/auth/audience.js';
+import bcrypt from 'bcrypt';
+import config from '../../config/server/index.js';
+import gravatar from 'gravatar';
+import jwt from 'jsonwebtoken';
+import mail from '../shared/mail/index.js';
+import map from 'lodash/map';
+import { Model } from 'sequelize';
+import omit from 'lodash/omit';
+import pick from 'lodash/pick';
+import Promise from 'bluebird';
+import randomstring from 'randomstring';
+import { role as roles } from '../../config/shared/index.js';
 
 const { user: { ADMIN, USER, INTEGRATION } } = roles;
 const gravatarConfig = { size: 130, default: 'identicon' };
@@ -218,4 +216,4 @@ class User extends Model {
   }
 }
 
-module.exports = User;
+export default User;
