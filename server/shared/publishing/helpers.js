@@ -1,28 +1,28 @@
-'use strict';
-
-const {
+import {
   Activity,
   ContentElement,
-  Sequelize: { Op },
+  Sequelize,
   sequelize
-} = require('../database');
-const { containerRegistry } = require('../content-plugins');
-const differenceWith = require('lodash/differenceWith');
-const filter = require('lodash/filter');
-const find = require('lodash/find');
-const findIndex = require('lodash/findIndex');
-const get = require('lodash/get');
-const hash = require('hash-obj');
-const keys = require('lodash/keys');
-const map = require('lodash/map');
-const omit = require('lodash/omit');
-const pick = require('lodash/pick');
-const Promise = require('bluebird');
-const reduce = require('lodash/reduce');
-const { resolveStatics } = require('../storage/helpers');
-const { schema } = require('@tailor-cms/config');
-const storage = require('../../repository/storage');
-const without = require('lodash/without');
+} from '../database/index.js';
+import { containerRegistry } from '../content-plugins/index.js';
+import differenceWith from 'lodash/differenceWith';
+import filter from 'lodash/filter';
+import find from 'lodash/find';
+import findIndex from 'lodash/findIndex';
+import get from 'lodash/get';
+import hash from 'hash-obj';
+import keys from 'lodash/keys';
+import map from 'lodash/map';
+import omit from 'lodash/omit';
+import pick from 'lodash/pick';
+import Promise from 'bluebird';
+import reduce from 'lodash/reduce';
+import { resolveStatics } from '../storage/helpers.js';
+import { schema } from '@tailor-cms/config';
+import storage from '../../repository/storage.js';
+import without from 'lodash/without';
+
+const { Op } = Sequelize;
 
 const {
   getLevelRelationships,
@@ -313,7 +313,7 @@ async function updatePublishingStatus(repository, activity) {
   return repository.update({ hasUnpublishedChanges: !!unpublishedCount });
 }
 
-module.exports = {
+export default {
   getRepositoryCatalog,
   publishActivity,
   unpublishActivity,

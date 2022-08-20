@@ -1,14 +1,12 @@
-'use strict';
-
-const {
+import {
   publishActivity,
   publishRepositoryDetails,
   unpublishActivity,
   updatePublishingStatus,
   updateRepositoryCatalog
-} = require('./helpers');
-const PromiseQueue = require('promise-queue');
-const webhook = require('../webhookProvider');
+} from './helpers.js';
+import PromiseQueue from 'promise-queue';
+import webhook from '../webhookProvider.js';
 
 class PublishingService {
   constructor() {
@@ -36,7 +34,7 @@ class PublishingService {
   }
 }
 
-module.exports = new PublishingService();
+export default new PublishingService();
 
 function createPublishJob(action, payload) {
   return async () => {
