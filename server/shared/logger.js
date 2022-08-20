@@ -1,8 +1,6 @@
-'use strict';
-
-const Bunyan = require('bunyan');
-const pkg = require('../../package.json');
-const safeRequire = require('safe-require');
+import Bunyan from 'bunyan';
+import pkg from '../../package.json';
+import safeRequire from 'safe-require';
 
 const isProduction = process.env.NODE_ENV === 'production';
 const isWin32 = process.platform === 'win32';
@@ -34,7 +32,7 @@ function createLogger(name, options = {}) {
 
 Object.assign(createLogger, Logger, { Level, createLogger, enabled: true });
 
-module.exports = createLogger;
+export default createLogger;
 
 function uppercaseLevelNames(levels) {
   const keys = Object.keys(levels);
