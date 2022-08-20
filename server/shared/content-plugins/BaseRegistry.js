@@ -1,13 +1,11 @@
-'use strict';
-
-const Promise = require('bluebird');
+import Promise from 'bluebird';
 
 const PATHS = {
   DEFAULT: '../../../client/components',
   EXTENSION: '../../../extensions'
 };
 
-module.exports = class {
+export default class {
   constructor(type, extensions, basePath) {
     this._registry = [];
     this._type = type;
@@ -23,7 +21,7 @@ module.exports = class {
 
   async load(path, isExtension) {
     try {
-      this._registry.push(await require(this.getFullPath(path, isExtension)));
+      this._registry.push(await import(this.getFullPath(path, isExtension)));
     } catch (err) {
       console.info(`${path} does not have a custom statics method.`);
     }
@@ -36,10 +34,10 @@ module.exports = class {
 
   loadExtensionList() {
     try {
-      return require(this._basePath);
+      return import(this._basePath);
     } catch (err) {
       console.log(`No ${this._type} extensions loaded!`);
       return [];
     }
   }
-};
+}
