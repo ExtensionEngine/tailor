@@ -1,4 +1,3 @@
-
 import 'dotenv/config';
 import boxen from 'boxen';
 import { readPackageUp } from 'read-pkg-up';
