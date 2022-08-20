@@ -1,9 +1,8 @@
-'use strict';
+import rateLimit from 'express-rate-limit';
+import serverConfig from '../../../config/server/index.js';
+import Tapster from '@extensionengine/tapster';
 
-const rateLimit = require('express-rate-limit');
-const Tapster = require('@extensionengine/tapster');
-const { provider, ...options } = require('../../../config/server').store;
-
+const { provider, ...options } = serverConfig.store;
 const DEFAULT_WINDOW_MS = 15 * 60 * 1000; // every 15 minutes
 
 // Store must be implemented using the following interface:
@@ -48,4 +47,4 @@ function requestLimiter({
   return rateLimit({ max, windowMs, store, ...opts });
 }
 
-module.exports = { requestLimiter };
+export default { requestLimiter };
