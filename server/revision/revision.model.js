@@ -1,10 +1,8 @@
-'use strict';
-
-const { Model, Sequelize } = require('sequelize');
-const { applyFetchHooks } = require('../content-element/hooks');
-const hooks = require('./hooks');
-const isNumber = require('lodash/isNumber');
-const Promise = require('bluebird');
+import { Model, Sequelize } from 'sequelize';
+import { applyFetchHooks } from '../content-element/hooks.js';
+import hooks from './hooks.js';
+import isNumber from 'lodash/isNumber';
+import Promise from 'bluebird';
 
 const { literal } = Sequelize;
 
@@ -100,4 +98,4 @@ class Revision extends Model {
   }
 }
 
-module.exports = Revision;
+export default Revision;

@@ -1,7 +1,5 @@
-'use strict';
-
-const { Revision, Sequelize } = require('../shared/database');
-const map = require('lodash/map');
+import { Revision, Sequelize } from '../shared/database/index.js';
+import map from 'lodash/map';
 
 const { Op } = Sequelize;
 
@@ -41,7 +39,7 @@ function getLastState(ids, activityIds, beforeTimestamp) {
   });
 }
 
-module.exports = { getEntityRemovesSinceMoment, getLastState };
+export default { getEntityRemovesSinceMoment, getLastState };
 
 async function getRemovesGroupedByEntity(ids, where) {
   const [activities, elements] = await Promise.all([

@@ -1,19 +1,16 @@
-'use strict';
+import { Revision, User } from '../shared/database/index.js';
+import { createError } from '../shared/error/helpers.js';
+import ctrl from './revision.controller.js';
+import defaultsDeep from 'lodash/defaultsDeep';
+import express from 'express';
+import { NOT_FOUND } from 'http-status-codes';
+import pick from 'lodash/pick';
+import processListQuery from '../shared/util/processListQuery.js';
 
-const { Revision, User } = require('../shared/database');
-const { createError } = require('../shared/error/helpers');
-const ctrl = require('./revision.controller');
-const defaultsDeep = require('lodash/defaultsDeep');
-const { NOT_FOUND } = require('http-status-codes');
-const pick = require('lodash/pick');
-const processListQuery = require('../shared/util/processListQuery');
-const router = require('express').Router();
-
+const router = express.Router();
 router.param('revisionId', getRevision);
 
-const defaultListQuery = {
-  order: [['createdAt', 'DESC']]
-};
+const defaultListQuery = { order: [['createdAt', 'DESC']] };
 
 router
   .get('/time-travel', processQuery({ elementIds: [] }), ctrl.getStateAtMoment)
@@ -31,7 +28,7 @@ function getRevision(req, _res, next, revisionId) {
     });
 }
 
-module.exports = {
+export default {
   path: '/revisions',
   router
 };

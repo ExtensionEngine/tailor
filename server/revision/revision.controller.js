@@ -1,8 +1,6 @@
-'use strict';
-
-const { Activity, Revision, User } = require('../shared/database');
-const { getEntityRemovesSinceMoment, getLastState } = require('./revision.service.js');
-const map = require('lodash/map');
+import { Activity, Revision, User } from '../shared/database/index.js';
+import { getEntityRemovesSinceMoment, getLastState } from './revision.service.js';
+import map from 'lodash/map';
 
 function index({ repository, query, opts }, res) {
   const { entity, entityId } = query;
@@ -34,7 +32,7 @@ function get({ revision }, res) {
   return res.json(revision);
 }
 
-module.exports = {
+export default {
   index,
   getStateAtMoment,
   get
