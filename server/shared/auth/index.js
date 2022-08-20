@@ -1,15 +1,13 @@
-'use strict';
-
-const { auth: config, origin } = require('../../../config/server');
-const { ExtractJwt, Strategy: JwtStrategy } = require('passport-jwt');
-const Audience = require('./audience');
-const auth = require('./authenticator');
-const get = require('lodash/get');
-const jwt = require('jsonwebtoken');
-const LocalStrategy = require('passport-local');
-const OIDCStrategy = require('./oidc');
-const path = require('path');
-const { User } = require('../database');
+import { auth as config, origin } from '../../../config/server/index.js';
+import { ExtractJwt, Strategy as JwtStrategy } from 'passport-jwt';
+import Audience from './audience.js';
+import auth from './authenticator.js';
+import get from 'lodash/get';
+import jwt from 'jsonwebtoken';
+import LocalStrategy from 'passport-local';
+import OIDCStrategy from './oidc.js';
+import path from 'node:path';
+import { User } from '../database/index.js';
 
 const options = {
   usernameField: 'email',
@@ -48,7 +46,7 @@ config.oidc.enabled && auth.use('oidc', new OIDCStrategy({
 auth.serializeUser((user, done) => done(null, user));
 auth.deserializeUser((user, done) => done(null, user));
 
-module.exports = auth;
+export default auth;
 
 function verifyJWT(payload, done) {
   return User.unscoped().findByPk(payload.id)
