@@ -1,6 +1,4 @@
-'use strict';
-
-const { EventEmitter } = require('events');
+import { EventEmitter } from 'events';
 
 const channels = new Map();
 
@@ -33,7 +31,7 @@ class Channel extends EventEmitter {
   }
 }
 
-module.exports = {
+export default {
   getChannel,
   addConnection,
   removeConnection
