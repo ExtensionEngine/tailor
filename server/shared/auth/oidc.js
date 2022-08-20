@@ -45,7 +45,7 @@ export default class OIDCStrategy extends BaseOIDCStrategy {
       res.redirect(this.logoutUrl({ ...params, oidcData }));
     };
   }
-};
+}
 
 function createIssuer(options) {
   return new Issuer({
