@@ -1,6 +1,4 @@
-'use strict';
-
-const { Model } = require('sequelize');
+import { Model } from 'sequelize';
 
 class RepositoryTag extends Model {
   static fields({ INTEGER, DATE }) {
@@ -39,4 +37,4 @@ class RepositoryTag extends Model {
   }
 }
 
-module.exports = RepositoryTag;
+export default RepositoryTag;
