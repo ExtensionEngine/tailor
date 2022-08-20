@@ -1,15 +1,15 @@
-'use strict';
+import { mail as config, origin } from '../../../config/server/index.js';
+import { createLogger, Level } from '../../shared/logger.js';
+import { renderHtml, renderText } from './render.js';
+import email from 'emailjs';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
+import pick from 'lodash/pick';
+import { promisify } from 'util';
+import { URL } from 'url';
+import urlJoin from 'url-join';
 
-const { mail: config, origin } = require('../../../config/server');
-const { createLogger, Level } = require('../../shared/logger');
-const { renderHtml, renderText } = require('./render');
-const email = require('emailjs');
-const path = require('path');
-const pick = require('lodash/pick');
-const { promisify } = require('util');
-const { URL } = require('url');
-const urlJoin = require('url-join');
-
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const logger = createLogger('mailer', { level: Level.DEBUG });
 
 const from = `${config.sender.name} <${config.sender.address}>`;
@@ -31,7 +31,7 @@ const elementUrl = ({ repositoryId, activityId, elementUid }) => {
   return urlJoin(origin, '/#/repository', `${repositoryId}/editor`, query);
 };
 
-module.exports = {
+export default {
   send,
   invite,
   resetPassword,
