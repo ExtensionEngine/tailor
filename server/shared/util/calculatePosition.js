@@ -1,8 +1,6 @@
-'use strict';
+import findIndex from 'lodash/findIndex';
 
-const findIndex = require('lodash/findIndex');
-
-module.exports = function (id, index, siblings) {
+export default function (id, index, siblings) {
   let newpos;
 
   if (!index) {
@@ -18,4 +16,4 @@ module.exports = function (id, index, siblings) {
   }
 
   return newpos;
-};
+}

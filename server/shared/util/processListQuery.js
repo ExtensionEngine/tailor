@@ -1,9 +1,7 @@
-'use strict';
-
-const assign = require('lodash/assign');
-const defaultsDeep = require('lodash/defaultsDeep');
-const { Op } = require('sequelize');
-const pick = require('lodash/pick');
+import assign from 'lodash/assign';
+import defaultsDeep from 'lodash/defaultsDeep';
+import { Op } from 'sequelize';
+import pick from 'lodash/pick';
 
 const filter = {
   where: {},
@@ -13,7 +11,7 @@ const filter = {
   paranoid: true
 };
 
-module.exports = function (defaults) {
+export default function (defaults) {
   return function (req, res, next) {
     const order = [[req.query.sortBy, req.query.sortOrder]];
     const query = assign(pick(req.query, ['offset', 'limit', 'paranoid']), { order });
@@ -30,4 +28,4 @@ module.exports = function (defaults) {
 
     next();
   };
-};
+}
