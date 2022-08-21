@@ -1,10 +1,8 @@
-'use strict';
-
-const miss = require('mississippi');
-const path = require('path');
-const S3 = require('aws-sdk/clients/s3');
-const { validateConfig } = require('../validation');
-const yup = require('yup');
+import * as yup from 'yup';
+import miss from 'mississippi';
+import path from 'node:path';
+import S3 from 'aws-sdk/clients/s3';
+import { validateConfig } from '../validation.js';
 
 const noop = () => {};
 const isNotFound = err => err.code === 'NoSuchKey';
@@ -131,7 +129,7 @@ class Amazon {
   }
 }
 
-module.exports = {
+export default {
   schema,
   create: Amazon.create
 };

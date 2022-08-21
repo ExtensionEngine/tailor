@@ -1,16 +1,13 @@
-'use strict';
+import * as yup from 'yup';
+import config from '../../../../config/server/index.js';
+import exists from 'path-exists';
+import expandPath from 'untildify';
+import mkdirp from 'mkdirp';
+import path from 'node:path';
+import Promise from 'bluebird';
+import { validateConfig } from '../validation.js';
 
-const config = require('../../../../config/server');
-const exists = require('path-exists');
-const expandPath = require('untildify');
-const mkdirp = require('mkdirp');
-const path = require('path');
-const Promise = require('bluebird');
-const { validateConfig } = require('../validation');
-const yup = require('yup');
-
-const fs = Promise.promisifyAll(require('fs'));
-
+const fs = Promise.promisifyAll(import('fs'));
 const isNotFound = err => err.code === 'ENOENT';
 const resolvePath = str => path.resolve(expandPath(str));
 
@@ -97,7 +94,7 @@ class FilesystemStorage {
   }
 }
 
-module.exports = {
+export default {
   schema,
   create: FilesystemStorage.create
 };
