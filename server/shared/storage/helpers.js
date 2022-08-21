@@ -1,14 +1,13 @@
-'use strict';
+import { elementRegistry } from '../content-plugins/index.js';
+import get from 'lodash/get';
+import Promise from 'bluebird';
+import proxy from '../../repository/proxy.js';
+import serverConfig from '../../../config/server/index.js';
+import set from 'lodash/set';
+import toPairs from 'lodash/toPairs';
+import values from 'lodash/values';
 
-const { elementRegistry } = require('../content-plugins');
-const get = require('lodash/get');
-const config = require('../../../config/server').storage;
-const Promise = require('bluebird');
-const proxy = require('../../repository/proxy');
-const set = require('lodash/set');
-const toPairs = require('lodash/toPairs');
-const values = require('lodash/values');
-
+const config = serverConfig.storage;
 const isPrimitive = element => !get(element, 'data.embeds');
 const isQuestion = element => get(element, 'data.question');
 
@@ -63,4 +62,4 @@ async function resolveComposite(composite) {
     .then(() => composite);
 }
 
-module.exports = { resolveStatics };
+export default { resolveStatics };

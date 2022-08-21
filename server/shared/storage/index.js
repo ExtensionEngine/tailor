@@ -1,9 +1,10 @@
-'use strict';
+import autobind from 'auto-bind';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
 
-const autobind = require('auto-bind');
-const path = require('path');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-class Storage {
+export default class Storage {
   constructor(config) {
     this.provider = Storage.createProvider(config);
     autobind(this);
@@ -66,11 +67,9 @@ class Storage {
   }
 }
 
-module.exports = Storage;
-
 function loadProvider(name) {
   try {
-    return require(path.join(__dirname, './providers/', name));
+    return import(path.join(__dirname, './providers/', name));
   } catch (err) {
     if (err.code === 'MODULE_NOT_FOUND') throw new Error('Unsupported provider');
     throw err;
