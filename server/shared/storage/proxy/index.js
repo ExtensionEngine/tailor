@@ -1,7 +1,8 @@
-'use strict';
+import autobind from 'auto-bind';
+import { fileURLToPath } from 'node:url';
+import path from 'path';
 
-const autobind = require('auto-bind');
-const path = require('path');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 class Proxy {
   constructor(config) {
@@ -51,11 +52,11 @@ class Proxy {
   }
 }
 
-module.exports = Proxy;
+export default Proxy;
 
 function loadProvider(name) {
   try {
-    return require(path.join(__dirname, './providers', name));
+    return import(path.join(__dirname, './providers', name));
   } catch (err) {
     if (err.code === 'MODULE_NOT_FOUND') throw new Error('Unsupported proxy provider');
     throw err;

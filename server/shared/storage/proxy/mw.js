@@ -1,13 +1,13 @@
-'use strict';
+import config from '../../../../config/server/index.js';
+import express from 'express';
+import { FORBIDDEN } from 'http-status-codes';
+import miss from 'mississippi';
+import path from 'node:path';
+import psl from 'psl';
 
-const config = require('../../../../config/server');
-const { FORBIDDEN } = require('http-status-codes');
-const miss = require('mississippi');
-const path = require('path');
-const router = require('express').Router();
-const psl = require('psl');
+const router = express.Router();
 
-module.exports = (storage, proxy) => {
+export default (storage, proxy) => {
   function getFile(req, res, next) {
     const key = req.params[0];
     const hasValidCookies = proxy.verifyCookies(req.cookies, key);
