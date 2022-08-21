@@ -1,6 +1,6 @@
 import { auth as authConfig } from '../../../config/server/index.js';
 import { createError } from '../error/helpers.js';
-import get from 'lodash/get';
+import get from 'lodash/get.js';
 import { user as role } from '../../../config/shared/role.js';
 import { UNAUTHORIZED } from 'http-status-codes';
 

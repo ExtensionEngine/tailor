@@ -1,5 +1,5 @@
 import { Activity as Events } from '../../common/sse.js';
-import hooks from './status.hooks';
+import hooks from './status.hooks.js';
 import { Model } from 'sequelize';
 import { workflow } from '@tailor-cms/config';
 

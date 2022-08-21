@@ -1,8 +1,8 @@
 import cheerio from 'cheerio';
 import fs from 'fs';
 import { html } from './formatters.js';
-import map from 'lodash/map';
-import mapKeys from 'lodash/mapKeys';
+import map from 'lodash/map.js';
+import mapKeys from 'lodash/mapKeys.js';
 import mjml2html from 'mjml';
 import mustache from 'mustache';
 import { paramCase } from 'change-case';

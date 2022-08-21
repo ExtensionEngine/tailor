@@ -1,8 +1,8 @@
 import { Activity } from '../shared/database/index.js';
 import { fetchActivityContent } from '../shared/publishing/helpers.js';
 import find from 'lodash/find';
-import get from 'lodash/get';
-import pick from 'lodash/pick';
+import get from 'lodash/get.js';
+import pick from 'lodash/pick.js';
 import { previewUrl } from '../../config/server/index.js';
 import publishingService from '../shared/publishing/publishing.service.js';
 import request from 'axios';

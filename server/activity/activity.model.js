@@ -3,9 +3,9 @@ import { schema, workflow } from '@tailor-cms/config';
 import calculatePosition from '../shared/util/calculatePosition.js';
 import { Activity as Events } from '../../common/sse.js';
 import hooks from './hooks.js';
-import isEmpty from 'lodash/isEmpty';
-import map from 'lodash/map';
-import pick from 'lodash/pick';
+import isEmpty from 'lodash/isEmpty.js';
+import map from 'lodash/map.js';
+import pick from 'lodash/pick.js';
 import Promise from 'bluebird';
 
 const { getSiblingTypes, isOutlineActivity, isTrackedInWorkflow } = schema;

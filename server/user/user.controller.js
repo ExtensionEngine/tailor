@@ -1,6 +1,6 @@
 import { ACCEPTED, BAD_REQUEST, CONFLICT, NO_CONTENT, NOT_FOUND } from 'http-status-codes';
 import { createError, validationError } from '../shared/error/helpers.js';
-import map from 'lodash/map';
+import map from 'lodash/map.js';
 import { Op } from 'sequelize';
 import { User } from '../shared/database/index.js';
 

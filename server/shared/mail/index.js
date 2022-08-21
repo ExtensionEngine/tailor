@@ -4,7 +4,7 @@ import { renderHtml, renderText } from './render.js';
 import email from 'emailjs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import pick from 'lodash/pick';
+import pick from 'lodash/pick.js';
 import { promisify } from 'util';
 import { URL } from 'url';
 import urlJoin from 'url-join';

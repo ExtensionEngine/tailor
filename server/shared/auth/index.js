@@ -2,7 +2,7 @@ import { auth as config, origin } from '../../../config/server/index.js';
 import { ExtractJwt, Strategy as JwtStrategy } from 'passport-jwt';
 import Audience from './audience.js';
 import auth from './authenticator.js';
-import get from 'lodash/get';
+import get from 'lodash/get.js';
 import jwt from 'jsonwebtoken';
 import LocalStrategy from 'passport-local';
 import OIDCStrategy from './oidc.js';

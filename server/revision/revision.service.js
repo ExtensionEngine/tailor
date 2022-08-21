@@ -1,5 +1,5 @@
 import { Revision, Sequelize } from '../shared/database/index.js';
-import map from 'lodash/map';
+import map from 'lodash/map.js';
 
 const { Op } = Sequelize;
 

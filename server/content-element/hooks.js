@@ -1,7 +1,7 @@
 import elementHooks from '../shared/content-plugins/elementHooks.js';
 import { elementRegistry } from '../shared/content-plugins/index.js';
-import forEach from 'lodash/forEach';
-import get from 'lodash/get';
+import forEach from 'lodash/forEach.js';
+import get from 'lodash/get.js';
 import hash from 'hash-obj';
 import Promise from 'bluebird';
 import { resolveStatics } from '../shared/storage/helpers.js';

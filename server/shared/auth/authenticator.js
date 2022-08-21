@@ -1,4 +1,4 @@
-import addDays from 'date-fns/addDays';
+import addDays from 'date-fns/addDays/index.js';
 import Audience from './audience.js';
 import { Authenticator } from 'passport';
 import autobind from 'auto-bind';

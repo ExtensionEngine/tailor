@@ -2,8 +2,8 @@ import { Model, Op } from 'sequelize';
 import calculatePosition from '../shared/util/calculatePosition.js';
 import { ContentElement as Events } from '../../common/sse.js';
 import hooks from './hooks.js';
-import isNumber from 'lodash/isNumber';
-import pick from 'lodash/pick';
+import isNumber from 'lodash/isNumber.js';
+import pick from 'lodash/pick.js';
 
 class ContentElement extends Model {
   static fields(DataTypes) {

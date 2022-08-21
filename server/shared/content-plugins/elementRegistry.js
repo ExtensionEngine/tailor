@@ -4,7 +4,7 @@ import dedent from 'dedent';
 import depd from 'depd';
 import elementsList from '../../../config/shared/core-elements.js';
 import hooks from './elementHooks.js';
-import pick from 'lodash/pick';
+import pick from 'lodash/pick.js';
 import storage from '../../repository/storage.js';
 import storageProxy from '../../repository/proxy.js';
 import toCase from 'to-case';

@@ -1,11 +1,11 @@
 import config from './config.js';
 import createLogger from '../logger.js';
-import forEach from 'lodash/forEach';
+import forEach from 'lodash/forEach.js';
 import Hooks from './hooks.js';
-import invoke from 'lodash/invoke';
+import invoke from 'lodash/invoke.js';
 import { migrationsPath } from '../../../sequelize.config.js';
-import pick from 'lodash/pick';
-import pkg from '../../../package.json';
+import pick from 'lodash/pick.js';
+import pkg from '../../../package.json' assert { type: 'json' };
 import Promise from 'bluebird';
 import semver from 'semver';
 import Sequelize from 'sequelize';

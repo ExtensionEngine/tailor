@@ -2,7 +2,7 @@ import { authenticate, logout } from '../shared/auth/index.js';
 import { BAD_REQUEST } from 'http-status-codes';
 import express from 'express';
 import { fileURLToPath } from 'node:url';
-import get from 'lodash/get';
+import get from 'lodash/get.js';
 import { errors as OIDCError } from 'openid-client';
 import path from 'node:path';
 import { URL } from 'url';

@@ -1,5 +1,5 @@
 import Bunyan from 'bunyan';
-import pkg from '../../package.json';
+import pkg from '../../package.json' assert { type: 'json' };
 import safeRequire from 'safe-require';
 
 const isProduction = process.env.NODE_ENV === 'production';

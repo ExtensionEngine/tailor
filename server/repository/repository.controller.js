@@ -10,10 +10,10 @@ import {
 } from '../shared/database/index.js';
 import config from '../../config/shared/index.js';
 import { createError } from '../shared/error/helpers.js';
-import getVal from 'lodash/get';
-import map from 'lodash/map';
+import getVal from 'lodash/get.js';
+import map from 'lodash/map.js';
 import { Op } from 'sequelize';
-import pick from 'lodash/pick';
+import pick from 'lodash/pick.js';
 import Promise from 'bluebird';
 import publishingService from '../shared/publishing/publishing.service.js';
 import sample from 'lodash/sample';

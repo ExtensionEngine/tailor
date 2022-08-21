@@ -8,19 +8,19 @@ import { containerRegistry } from '../content-plugins/index.js';
 import differenceWith from 'lodash/differenceWith';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
-import findIndex from 'lodash/findIndex';
-import get from 'lodash/get';
+import findIndex from 'lodash/findIndex.js';
+import get from 'lodash/get.js';
 import hash from 'hash-obj';
 import keys from 'lodash/keys';
-import map from 'lodash/map';
-import omit from 'lodash/omit';
-import pick from 'lodash/pick';
+import map from 'lodash/map.js';
+import omit from 'lodash/omit.js';
+import pick from 'lodash/pick.js';
 import Promise from 'bluebird';
 import reduce from 'lodash/reduce';
 import { resolveStatics } from '../storage/helpers.js';
 import { schema } from '@tailor-cms/config';
 import storage from '../../repository/storage.js';
-import without from 'lodash/without';
+import without from 'lodash/without.js';
 
 const { Op } = Sequelize;
 

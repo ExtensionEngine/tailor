@@ -1,5 +1,5 @@
 import { Model } from 'sequelize';
-import pick from 'lodash/pick';
+import pick from 'lodash/pick.js';
 import Promise from 'bluebird';
 import { schema } from '@tailor-cms/config';
 

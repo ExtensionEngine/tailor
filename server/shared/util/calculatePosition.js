@@ -1,4 +1,4 @@
-import findIndex from 'lodash/findIndex';
+import findIndex from 'lodash/findIndex.js';
 
 export default function (id, index, siblings) {
   let newpos;

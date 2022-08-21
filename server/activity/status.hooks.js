@@ -1,5 +1,5 @@
-import forEach from 'lodash/forEach';
-import get from 'lodash/get';
+import forEach from 'lodash/forEach.js';
+import get from 'lodash/get.js';
 import mail from '../shared/mail/index.js';
 import { Op } from 'sequelize';
 import { schema } from '@tailor-cms/config';

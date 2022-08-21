@@ -4,7 +4,7 @@ import ctrl from './revision.controller.js';
 import defaultsDeep from 'lodash/defaultsDeep';
 import express from 'express';
 import { NOT_FOUND } from 'http-status-codes';
-import pick from 'lodash/pick';
+import pick from 'lodash/pick.js';
 import processListQuery from '../shared/util/processListQuery.js';
 
 const router = express.Router();

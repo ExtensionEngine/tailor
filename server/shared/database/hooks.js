@@ -1,5 +1,5 @@
-import { hooks } from 'sequelize/lib/hooks.js';
-import mapValues from 'lodash/mapValues';
+import { hooks } from 'sequelize/lib/hooks';
+import mapValues from 'lodash/mapValues.js';
 
 const Hooks = mapValues(hooks, (_, key) => key);
 

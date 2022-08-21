@@ -1,9 +1,9 @@
 import { Op, Sequelize, Utils } from 'sequelize';
-import get from 'lodash/get';
-import has from 'lodash/has';
-import inRange from 'lodash/inRange';
-import last from 'lodash/last';
-import mapValues from 'lodash/mapValues';
+import get from 'lodash/get.js';
+import has from 'lodash/has.js';
+import inRange from 'lodash/inRange.js';
+import last from 'lodash/last.js';
+import mapValues from 'lodash/mapValues.js';
 
 const { SequelizeMethod } = Utils;
 const isFunction = arg => typeof arg === 'function';

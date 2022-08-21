@@ -1,6 +1,6 @@
 import { Activity, Revision, User } from '../shared/database/index.js';
 import { getEntityRemovesSinceMoment, getLastState } from './revision.service.js';
-import map from 'lodash/map';
+import map from 'lodash/map.js';
 
 function index({ repository, query, opts }, res) {
   const { entity, entityId } = query;

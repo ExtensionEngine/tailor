@@ -1,7 +1,7 @@
 import assign from 'lodash/assign';
 import defaultsDeep from 'lodash/defaultsDeep';
 import { Op } from 'sequelize';
-import pick from 'lodash/pick';
+import pick from 'lodash/pick.js';
 
 const filter = {
   where: {},

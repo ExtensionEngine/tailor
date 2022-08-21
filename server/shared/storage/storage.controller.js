@@ -5,7 +5,7 @@ import fromPairs from 'lodash/fromPairs';
 import JSZip from 'jszip';
 import mime from 'mime-types';
 import path from 'node:path';
-import pickBy from 'lodash/pickBy';
+import pickBy from 'lodash/pickBy.js';
 import serverConfig from '../../../config/server/index.js';
 
 const config = serverConfig.storage;
