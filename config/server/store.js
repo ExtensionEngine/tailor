@@ -1,6 +1,4 @@
-'use strict';
-
-module.exports = {
+export default {
   provider: process.env.STORE_PROVIDER || 'memory',
   ttl: parseInt(process.env.STORE_TTL, 10) || 0,
   memory: {},

@@ -1,6 +1,4 @@
-'use strict';
-
-const camelCase = require('lodash/camelCase');
+import camelCase from 'lodash/camelCase.js';
 
 const tceConfig = Object.keys(process.env)
   .map(it => it.match(/^TCE_(.*)/))
@@ -10,4 +8,4 @@ const tceConfig = Object.keys(process.env)
     [camelCase(key)]: process.env[prefixedKey]
   }), {});
 
-module.exports = tceConfig;
+export default tceConfig;

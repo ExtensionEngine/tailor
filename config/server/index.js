@@ -1,13 +1,11 @@
-'use strict';
-
-const auth = require('./auth');
-const consumer = require('./consumer');
-const isLocalhost = require('is-localhost');
-const mail = require('./mail');
-const parse = require('url-parse');
-const storage = require('./storage');
-const store = require('./store');
-const tce = require('./tce');
+import auth from './auth.js';
+import consumer from './consumer.js';
+import isLocalhost from 'is-localhost';
+import mail from './mail.js';
+import parse from 'url-parse';
+import storage from './storage.js';
+import store from './store.js';
+import tce from './tce.js';
 
 const hostname = resolveHostname();
 const protocol = resolveProtocol(hostname);
@@ -15,7 +13,7 @@ const port = resolvePort();
 const origin = resolveOrigin(hostname, protocol, port);
 const previewUrl = process.env.PREVIEW_URL;
 
-module.exports = {
+export default {
   protocol,
   hostname,
   port,

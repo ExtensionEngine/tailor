@@ -1,8 +1,6 @@
-'use strict';
+import yn from 'yn';
 
-const yn = require('yn');
-
-module.exports = {
+export default {
   sender: {
     name: process.env.EMAIL_SENDER_NAME,
     address: process.env.EMAIL_SENDER_ADDRESS

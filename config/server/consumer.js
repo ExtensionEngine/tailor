@@ -1,8 +1,6 @@
-'use strict';
-
 const { env } = process;
 
-module.exports = {
+export default {
   webhookUrl: env.CONSUMER_WEBHOOK_URL,
   clientId: env.CONSUMER_CLIENT_ID,
   clientSecret: env.CONSUMER_CLIENT_SECRET,

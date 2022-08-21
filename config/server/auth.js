@@ -1,16 +1,15 @@
-'use strict';
-
-const { role: { user: role } } = require('../shared');
-const yn = require('yn');
+import sharedConfig from '../shared/role.js';
+import yn from 'yn';
 
 const { env } = process;
+const { role: { user: role } } = sharedConfig;
 
 const corsAllowedOrigins = (env.CORS_ALLOWED_ORIGINS || '')
   .split(',')
   .filter(s => s)
   .map(s => s.trim());
 
-module.exports = {
+export default {
   saltRounds: parseInt(env.AUTH_SALT_ROUNDS, 10) || 10,
   corsAllowedOrigins,
   jwt: {
