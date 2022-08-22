@@ -1,5 +1,5 @@
-'use strict';
+import * as role from './role.js';
 
-module.exports = {
-  role: require('./role')
+export {
+  role
 };
