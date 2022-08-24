@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-menu max-width="350" offset-y left>
+    <v-menu max-width="350" offset-y left aria-label="additional options">
       <template #activator="{ on }">
         <v-btn v-on="on" color="primary darken-3" icon tile>
           <v-icon>mdi-dots-vertical</v-icon>

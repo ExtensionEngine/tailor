@@ -17,13 +17,10 @@ describe('delete repository', () => {
       });
   });
 
-  it('should delete the repository from settings page', function () {
+  it('should be able to delete the repository', function () {
     cy.findByRole('button', { name: 'delete' }).click();
     cy.confirmAction('Delete repository?');
     cy.assertRoute('catalog');
-    cy.visit('/');
-    cy.get('@repository').then(({ name: repositoryName }) => {
-      findRepositoryCard(repositoryName).should('not.exist');
-    });
+    findRepositoryCard(this.repository.name).should('not.exist');
   });
 });

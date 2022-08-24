@@ -23,17 +23,6 @@ export function createRootActivity(name, type) {
   });
 }
 
-export function createChildActivity(parentName, name, type) {
-  findActivityItem(parentName).as('parent');
-  cy.get('@parent').click()
-    .findByRole('button', { name: /add item into/i }).click();
-  return getActivityDialog().within(() => {
-    cy.vSelect('Type', type);
-    cy.findByLabelText('Name').type(`${name}`);
-    cy.findByRole('button', { name: /create/i }).click();
-  });
-}
-
 export function findActivityItem(name) {
   return cy.contains(toTestIdAttr(sel.activityItem), name, { timeout: 6000 });
 }
