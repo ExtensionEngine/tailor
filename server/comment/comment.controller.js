@@ -1,8 +1,10 @@
 import { BAD_REQUEST, NO_CONTENT } from 'http-status-codes';
-import { Comment, ContentElement, User } from '../shared/database/index.js';
 import { createError } from '../shared/error/helpers.js';
+import db from '../shared/database/index.js';
 import pick from 'lodash/pick.js';
 import pickBy from 'lodash/pickBy.js';
+
+const { Comment, ContentElement, User } = db;
 
 const author = {
   model: User,

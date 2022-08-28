@@ -1,7 +1,7 @@
 import mail from '../shared/mail/index.js';
 import map from 'lodash/map.js';
 import pick from 'lodash/pick.js';
-import { schema } from '@tailor-cms/config';
+import { schema } from '../../config/shared/tailor.loader.js';
 import sse from '../shared/sse/index.js';
 import without from 'lodash/without.js';
 
@@ -83,3 +83,5 @@ export const add = (Comment, Hooks, db) => {
     if (recipients.length) mail.sendCommentNotification(recipients, data);
   }
 };
+
+export default { add };

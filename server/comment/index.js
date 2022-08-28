@@ -1,10 +1,11 @@
-import { Comment, Sequelize, User } from '../shared/database/index.js';
+import db from '../shared/database/index.js';
 import { FORBIDDEN, NOT_FOUND } from 'http-status-codes';
 import { createError } from '../shared/error/helpers.js';
 import ctrl from './comment.controller.js';
 import express from 'express';
 import processQuery from '../shared/util/processListQuery.js';
 
+const { Comment, Sequelize, User } = db;
 const router = express.Router();
 const { EmptyResultError } = Sequelize;
 
