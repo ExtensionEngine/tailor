@@ -1,13 +1,14 @@
-import { Activity } from '../shared/database/index.js';
+import db from '../shared/database/index.js';
 import { fetchActivityContent } from '../shared/publishing/helpers.js';
-import find from 'lodash/find';
+import find from 'lodash/find.js';
 import get from 'lodash/get.js';
 import pick from 'lodash/pick.js';
 import { previewUrl } from '../../config/server/index.js';
 import publishingService from '../shared/publishing/publishing.service.js';
 import request from 'axios';
-import { schema } from '@tailor-cms/config';
+import { schema } from '../../config/shared/tailor.loader.js';
 
+const { Activity } = db;
 const { getOutlineLevels, isOutlineActivity } = schema;
 
 function list({ repository, query, opts }, res) {

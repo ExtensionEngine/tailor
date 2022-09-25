@@ -1,11 +1,11 @@
 import forEach from 'lodash/forEach.js';
 import groupBy from 'lodash/groupBy.js';
-import { schema } from '@tailor-cms/config';
+import { schema } from '../../config/shared/tailor.loader.js';
 import sse from '../shared/sse/index.js';
 
 const { isOutlineActivity } = schema;
 
-export function add(Activity, Hooks, Models) {
+function add(Activity, Hooks, Models) {
   const { Events } = Activity;
 
   const mappings = {
@@ -63,4 +63,8 @@ export function add(Activity, Hooks, Models) {
 const afterTransaction = method => (type, opts) => {
   if (!opts.transaction) return method(type, opts);
   opts.transaction.afterCommit(() => method(type, opts));
+};
+
+export default {
+  add
 };

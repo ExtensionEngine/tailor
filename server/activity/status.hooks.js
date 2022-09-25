@@ -2,10 +2,10 @@ import forEach from 'lodash/forEach.js';
 import get from 'lodash/get.js';
 import mail from '../shared/mail/index.js';
 import { Op } from 'sequelize';
-import { schema } from '@tailor-cms/config';
+import { schema } from '../../config/shared/tailor.loader.js';
 import sse from '../shared/sse/index.js';
 
-export const add = (ActivityStatus, Hooks, { Activity }) => {
+const add = (ActivityStatus, Hooks, { Activity }) => {
   const { Events } = ActivityStatus;
 
   const mappings = {
@@ -58,4 +58,8 @@ async function sendEmailNotification(activity) {
 const afterTransaction = method => (type, status, opts) => {
   if (!opts.transaction) return method(type, status, opts);
   opts.transaction.afterCommit(() => method(type, status, opts));
+};
+
+export default {
+  add
 };
