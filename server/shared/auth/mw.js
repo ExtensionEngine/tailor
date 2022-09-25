@@ -1,8 +1,10 @@
 import { auth as authConfig } from '../../../config/server/index.js';
 import { createError } from '../error/helpers.js';
 import get from 'lodash/get.js';
-import { user as role } from '../../../config/shared/role.js';
+import roleConfig from '../../../config/shared/role.js';
 import { UNAUTHORIZED } from 'http-status-codes';
+
+const { user: role } = roleConfig;
 
 function authorize(...allowed) {
   allowed.push(role.ADMIN);
@@ -18,7 +20,7 @@ function extractAuthData(req, res, next) {
   return next();
 }
 
-export default {
+export {
   authorize,
   extractAuthData
 };
