@@ -1,11 +1,10 @@
 import values from 'lodash/values.js';
 
-const role = {
-  user: { USER: 'USER', ADMIN: 'ADMIN' },
-  repository: { ADMIN: 'ADMIN', AUTHOR: 'AUTHOR' }
-};
+export const user = { USER: 'USER', ADMIN: 'ADMIN', INTEGRATION: 'INTEGRATION' };
+export const repository = { ADMIN: 'ADMIN', AUTHOR: 'AUTHOR' };
 
 export default {
-  ...role,
+  user,
+  repository,
   getRoleValues: type => values(role[type] || {})
 };

@@ -1,31 +1,19 @@
-import auth from './auth.js';
-import consumer from './consumer.js';
+import 'dotenv/config';
+
+import * as auth from './auth.js';
+import * as consumer from './consumer.js';
+import * as mail from './mail.js';
+import * as storage from './storage.js';
+import * as store from './store.js';
+import * as tce from './tce.js';
 import isLocalhost from 'is-localhost';
-import mail from './mail.js';
 import parse from 'url-parse';
-import storage from './storage.js';
-import store from './store.js';
-import tce from './tce.js';
 
 const hostname = resolveHostname();
 const protocol = resolveProtocol(hostname);
 const port = resolvePort();
 const origin = resolveOrigin(hostname, protocol, port);
 const previewUrl = process.env.PREVIEW_URL;
-
-export default {
-  protocol,
-  hostname,
-  port,
-  origin,
-  auth,
-  mail,
-  storage,
-  previewUrl,
-  consumer,
-  store,
-  tce
-};
 
 // Legacy config support
 function resolveHostname() {
@@ -56,3 +44,31 @@ function resolveOriginPort(hostname) {
   if (REVERSE_PROXY_PORT === '80' || REVERSE_PROXY_PORT === '443') return '';
   return `:${REVERSE_PROXY_PORT}`;
 }
+
+export {
+  protocol,
+  hostname,
+  port,
+  origin,
+  auth,
+  mail,
+  storage,
+  previewUrl,
+  consumer,
+  store,
+  tce
+};
+
+export default {
+  protocol,
+  hostname,
+  port,
+  origin,
+  auth,
+  mail,
+  storage,
+  previewUrl,
+  consumer,
+  store,
+  tce
+};

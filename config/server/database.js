@@ -5,8 +5,6 @@ const config = {
   dialect: 'postgres'
 };
 
-export default {
-  development: config,
-  test: config,
-  production: config
-};
+export const development = config;
+export const test = config;
+export const production = config;
