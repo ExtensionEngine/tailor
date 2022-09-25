@@ -2,6 +2,7 @@ import { NOT_FOUND, UNAUTHORIZED } from 'http-status-codes';
 import { authorize } from '../shared/auth/mw.js';
 import { createError } from '../shared/error/helpers.js';
 import ctrl from './repository.controller.js';
+import db from '../shared/database/index.js';
 import express from 'express';
 import feed from './feed/index.js';
 import multer from 'multer';
@@ -9,9 +10,9 @@ import path from 'node:path';
 import processQuery from '../shared/util/processListQuery.js';
 import proxy from './proxy.js';
 import proxyMW from '../shared/storage/proxy/mw.js';
-import { Repository } from '../shared/database/index.js';
 import storage from './storage.js';
 
+const { Repository } = db;
 const router = express.Router();
 const { setSignedCookies } = proxyMW(storage, proxy);
 

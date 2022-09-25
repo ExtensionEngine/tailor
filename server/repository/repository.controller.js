@@ -1,5 +1,19 @@
 import { NO_CONTENT, NOT_FOUND } from 'http-status-codes';
-import {
+import { createError } from '../shared/error/helpers.js';
+import db from '../shared/database/index.js';
+import getVal from 'lodash/get.js';
+import map from 'lodash/map.js';
+import { Op } from 'sequelize';
+import pick from 'lodash/pick.js';
+import Promise from 'bluebird';
+import publishingService from '../shared/publishing/publishing.service.js';
+import { role as roleConfig } from '../../config/shared/index.js';
+import sample from 'lodash/sample.js';
+import { schema } from '../../config/shared/tailor.loader.js';
+import { snakeCase } from 'change-case';
+import TransferService from '../shared/transfer/transfer.service.js';
+
+const {
   Repository,
   RepositoryTag,
   RepositoryUser,
@@ -7,21 +21,8 @@ import {
   sequelize,
   Tag,
   User
-} from '../shared/database/index.js';
-import config from '../../config/shared/index.js';
-import { createError } from '../shared/error/helpers.js';
-import getVal from 'lodash/get.js';
-import map from 'lodash/map.js';
-import { Op } from 'sequelize';
-import pick from 'lodash/pick.js';
-import Promise from 'bluebird';
-import publishingService from '../shared/publishing/publishing.service.js';
-import sample from 'lodash/sample';
-import { schema } from '@tailor-cms/config';
-import { snakeCase } from 'change-case';
-import TransferService from '../shared/transfer/transfer.service.js';
-
-const { repository: role } = config.role;
+} = db;
+const { repository: role } = roleConfig;
 
 const fs = Promise.promisifyAll(import('fs'));
 const miss = Promise.promisifyAll(import('mississippi'));

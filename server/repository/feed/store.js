@@ -42,4 +42,4 @@ async function findOrCreate(user) {
   return store.get(user.id);
 }
 
-export default { addContext, removeContext, getActiveUsers };
+export { addContext, removeContext, getActiveUsers };

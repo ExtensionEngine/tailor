@@ -1,7 +1,7 @@
-import config from '../../config/shared/index.js';
 import { Model } from 'sequelize';
+import { role as roleConfig } from '../../config/shared/index.js';
 
-const { repository: role } = config.role;
+const { repository: role } = roleConfig;
 
 class RepositoryUser extends Model {
   static fields({ BOOLEAN, DATE, ENUM, INTEGER }) {

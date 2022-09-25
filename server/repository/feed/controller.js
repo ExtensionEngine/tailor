@@ -1,5 +1,5 @@
 import { addContext, getActiveUsers, removeContext } from './store.js';
-import isEqual from 'lodash/isEqual';
+import isEqual from 'lodash/isEqual.js';
 import pick from 'lodash/pick.js';
 import sse from '../../shared/sse/index.js';
 import { UserActivity } from '../../../common/sse.js';

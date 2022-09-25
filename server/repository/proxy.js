@@ -1,8 +1,6 @@
 import BaseProxy from '../shared/storage/proxy/index.js';
-import config from '../../config/server/index.js';
 import path from 'node:path';
-
-const { proxy: proxyConfig } = config.storage;
+import { storage } from '../../config/server/index.js';
 
 const storageCookies = {
   REPOSITORY: 'Storage-Repository'
@@ -31,4 +29,5 @@ class Proxy extends BaseProxy {
   }
 }
 
-export default new Proxy(proxyConfig);
+const proxy = new Proxy(storage.proxy);
+export default proxy;
