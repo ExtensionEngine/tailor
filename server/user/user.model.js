@@ -1,6 +1,6 @@
 import Audience from '../shared/auth/audience.js';
+import { auth as authConfig } from '../../config/server/index.js';
 import bcrypt from 'bcrypt';
-import config from '../../config/server/index.js';
 import gravatar from 'gravatar';
 import jwt from 'jsonwebtoken';
 import mail from '../shared/mail/index.js';
@@ -182,7 +182,7 @@ class User extends Model {
   }
 
   encrypt(val) {
-    return bcrypt.hash(val, config.auth.saltRounds);
+    return bcrypt.hash(val, authConfig.saltRounds);
   }
 
   encryptPassword() {
@@ -195,7 +195,7 @@ class User extends Model {
   createToken(options = {}) {
     const payload = { id: this.id, email: this.email };
     Object.assign(options, {
-      issuer: config.auth.jwt.issuer,
+      issuer: authConfig.jwt.issuer,
       audience: options.audience || Audience.Scope.Access
     });
     return jwt.sign(payload, this.getTokenSecret(options.audience), options);
@@ -210,7 +210,7 @@ class User extends Model {
   }
 
   getTokenSecret(audience) {
-    const { secret } = config.auth.jwt;
+    const { secret } = authConfig.jwt;
     if (audience === Audience.Scope.Access) return secret;
     return [secret, this.password, this.createdAt.getTime()].join('');
   }

@@ -19,4 +19,4 @@ function resetLoginAttempts(req, res, next) {
     .then(() => next());
 }
 
-export default { loginRequestLimiter, setLoginLimitKey, resetLoginAttempts };
+export { loginRequestLimiter, setLoginLimitKey, resetLoginAttempts };
