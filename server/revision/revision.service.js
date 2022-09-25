@@ -1,6 +1,7 @@
-import { Revision, Sequelize } from '../shared/database/index.js';
+import db from '../shared/database/index.js';
 import map from 'lodash/map.js';
 
+const { Revision, Sequelize } = db;
 const { Op } = Sequelize;
 
 async function getEntityRemovesSinceMoment(activity, timestamp) {
@@ -39,7 +40,7 @@ function getLastState(ids, activityIds, beforeTimestamp) {
   });
 }
 
-export default { getEntityRemovesSinceMoment, getLastState };
+export { getEntityRemovesSinceMoment, getLastState };
 
 async function getRemovesGroupedByEntity(ids, where) {
   const [activities, elements] = await Promise.all([

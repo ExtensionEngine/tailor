@@ -1,16 +1,18 @@
-import { Revision, User } from '../shared/database/index.js';
 import { createError } from '../shared/error/helpers.js';
 import ctrl from './revision.controller.js';
-import defaultsDeep from 'lodash/defaultsDeep';
+import db from '../shared/database/index.js';
+import defaultsDeep from 'lodash/defaultsDeep.js';
 import express from 'express';
 import { NOT_FOUND } from 'http-status-codes';
 import pick from 'lodash/pick.js';
 import processListQuery from '../shared/util/processListQuery.js';
 
-const router = express.Router();
-router.param('revisionId', getRevision);
+const { Revision, User } = db;
 
+const router = express.Router();
 const defaultListQuery = { order: [['createdAt', 'DESC']] };
+
+router.param('revisionId', getRevision);
 
 router
   .get('/time-travel', processQuery({ elementIds: [] }), ctrl.getStateAtMoment)

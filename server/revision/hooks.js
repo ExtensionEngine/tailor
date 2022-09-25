@@ -1,11 +1,11 @@
-import { constant } from 'to-case';
 import createLogger from '../shared/logger.js';
 import forEach from 'lodash/forEach.js';
+import toCase from 'to-case';
 
 const logger = createLogger('db');
 const castArray = arg => Array.isArray(arg) ? arg : [arg];
 
-export function add(Revision, Hooks, { Repository, Activity, ContentElement }) {
+function add(Revision, Hooks, { Repository, Activity, ContentElement }) {
   const hooks = {
     [Hooks.afterCreate]: 'CREATE',
     [Hooks.afterUpdate]: 'UPDATE',
@@ -40,7 +40,7 @@ export function add(Revision, Hooks, { Repository, Activity, ContentElement }) {
   function getRevision(hookType, instance, context = {}) {
     if (!context.userId) return;
     const repositoryId = isRepository(instance) ? instance.id : instance.repositoryId;
-    const entity = constant(instance.constructor.name);
+    const entity = toCase.constant(instance.constructor.name);
     const operation = hooks[hookType];
     logger.info(`[Revision] ${entity}#${hookType}`, { entity, operation, id: instance.id, repositoryId });
     return {
@@ -52,3 +52,6 @@ export function add(Revision, Hooks, { Repository, Activity, ContentElement }) {
     };
   }
 }
+
+export { add };
+export default { add };
