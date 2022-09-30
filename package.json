@@ -142,7 +142,7 @@
     "sequelize": "^6.21.3",
     "sequelize-replace-enum-postgres": "^1.6.0",
     "simple-oauth2": "^4.3.0",
-    "snyk": "^1.985.0",
+    "snyk": "^1.996.0",
     "strip-json-comments": "^3.0.1",
     "tar-fs": "^2.1.1",
     "to-case": "^2.0.0",
