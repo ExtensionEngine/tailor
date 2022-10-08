@@ -1,14 +1,15 @@
-import { getFileUrl, getPath, saveFile } from '../../repository/storage.js';
 import { readFile, sha256 } from './util.js';
 import fecha from 'fecha';
-import fromPairs from 'lodash/fromPairs';
+import fromPairs from 'lodash/fromPairs.js';
 import JSZip from 'jszip';
 import mime from 'mime-types';
 import path from 'node:path';
 import pickBy from 'lodash/pickBy.js';
 import serverConfig from '../../../config/server/index.js';
+import Storage from '../../repository/storage.js';
 
 const config = serverConfig.storage;
+const { getFileUrl, getPath, saveFile } = Storage;
 const getStorageUrl = key => `${config.protocol}${key}`;
 
 function getUrl(req, res) {

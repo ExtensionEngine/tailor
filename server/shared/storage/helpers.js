@@ -1,15 +1,15 @@
-import { elementRegistry } from '../content-plugins/index.js';
+import { storage as config } from '../../../config/server/index.js';
 import get from 'lodash/get.js';
+import PluginRegistry from '../content-plugins/index.js';
 import Promise from 'bluebird';
 import proxy from '../../repository/proxy.js';
-import serverConfig from '../../../config/server/index.js';
 import set from 'lodash/set.js';
 import toPairs from 'lodash/toPairs.js';
 import values from 'lodash/values.js';
 
-const config = serverConfig.storage;
 const isPrimitive = element => !get(element, 'data.embeds');
 const isQuestion = element => get(element, 'data.question');
+const { elementRegistry } = PluginRegistry;
 
 // TODO: Temp patch until asset embeding is unified
 function resolveStatics(item) {
@@ -62,4 +62,4 @@ async function resolveComposite(composite) {
     .then(() => composite);
 }
 
-export default { resolveStatics };
+export { resolveStatics };

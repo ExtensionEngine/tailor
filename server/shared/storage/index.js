@@ -63,13 +63,14 @@ export default class Storage {
 
     // Load provider module & create provider instance.
     const config = options[providerName];
-    return loadProvider(providerName).create(config);
+    return loadProvider(providerName)
+      .then(provider => provider.create(config));
   }
 }
 
 function loadProvider(name) {
   try {
-    return import(path.join(__dirname, './providers/', name));
+    return import(path.join(__dirname, './providers/', `${name}.js`));
   } catch (err) {
     if (err.code === 'MODULE_NOT_FOUND') throw new Error('Unsupported provider');
     throw err;

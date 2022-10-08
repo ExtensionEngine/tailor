@@ -12,7 +12,7 @@ yup.addMethod(yup.string, 'pkcs1', function () {
   return this.test('format', 'Invalid private key format', isValid);
 });
 
-export default {
+export {
   validateConfig
 };
 

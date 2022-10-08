@@ -11,7 +11,7 @@ const fs = Promise.promisifyAll(import('fs'));
 const isNotFound = err => err.code === 'ENOENT';
 const resolvePath = str => path.resolve(expandPath(str));
 
-const schema = yup.object().shape({
+export const schema = yup.object().shape({
   path: yup.string().required()
 });
 
@@ -94,7 +94,4 @@ class FilesystemStorage {
   }
 }
 
-export default {
-  schema,
-  create: FilesystemStorage.create
-};
+export const create = FilesystemStorage.create.bind(FilesystemStorage);

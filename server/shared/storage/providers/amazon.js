@@ -8,7 +8,7 @@ const noop = () => {};
 const isNotFound = err => err.code === 'NoSuchKey';
 const DEFAULT_EXPIRATION_TIME = 3600; // seconds
 
-const schema = yup.object().shape({
+export const schema = yup.object().shape({
   region: yup.string().required(),
   bucket: yup.string().required(),
   key: yup.string().required(),
@@ -129,7 +129,4 @@ class Amazon {
   }
 }
 
-export default {
-  schema,
-  create: Amazon.create
-};
+export const create = Amazon.create.bind(Amazon);

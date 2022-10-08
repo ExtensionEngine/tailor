@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import every from 'lodash/every';
+import every from 'lodash/every.js';
 import NodeRSA from 'node-rsa';
 import { origin } from '../../../../../config/server/index.js';
 import urlJoin from 'url-join';
@@ -60,7 +60,7 @@ class Local {
   }
 }
 
-export default { create: Local.create.bind(Local) };
+export const create = Local.create.bind(Local);
 
 function getExpirationTime(maxAge) {
   // Expiration unix timestamp in ms

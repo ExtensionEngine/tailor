@@ -16,7 +16,8 @@ class Proxy {
     if (!config) {
       throw new Error(`Unable to find config for "${providerName}" proxy.`);
     }
-    return loadProvider(options.provider).create(config);
+    return loadProvider(options.provider)
+      .then(provider => provider.create(config));
   }
 
   get isSelfHosted() {
@@ -56,7 +57,7 @@ export default Proxy;
 
 function loadProvider(name) {
   try {
-    return import(path.join(__dirname, './providers', name));
+    return import(path.join(__dirname, './providers', `${name}.js`));
   } catch (err) {
     if (err.code === 'MODULE_NOT_FOUND') throw new Error('Unsupported proxy provider');
     throw err;

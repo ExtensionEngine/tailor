@@ -12,4 +12,4 @@ function readFile(file) {
   return fs.readFile(file.path);
 }
 
-export default { sha256, readFile };
+export { sha256, readFile };

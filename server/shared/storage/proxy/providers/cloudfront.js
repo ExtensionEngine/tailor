@@ -53,7 +53,7 @@ class CloudFront {
   }
 }
 
-export default { create: CloudFront.create.bind(CloudFront) };
+export const create = CloudFront.create.bind(CloudFront);
 
 function createPolicy(resource, expires) {
   return JSON.stringify({
