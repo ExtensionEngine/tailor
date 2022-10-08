@@ -1,7 +1,9 @@
-import { Activity, ContentElement } from '../shared/database/index.js';
 import { createError } from '../shared/error/helpers.js';
+import db from '../shared/database/index.js';
 import { NOT_FOUND } from 'http-status-codes';
 import pick from 'lodash/pick.js';
+
+const { Activity, ContentElement } = db;
 
 function list({ query, opts }, res) {
   const { detached, ids } = query;

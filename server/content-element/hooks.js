@@ -1,14 +1,14 @@
 import elementHooks from '../shared/content-plugins/elementHooks.js';
-import { elementRegistry } from '../shared/content-plugins/index.js';
 import forEach from 'lodash/forEach.js';
 import get from 'lodash/get.js';
 import hash from 'hash-obj';
+import PluginRegistry from '../shared/content-plugins/index.js';
 import Promise from 'bluebird';
 import { resolveStatics } from '../shared/storage/helpers.js';
-import { schema } from '@tailor-cms/config';
+import { schema } from '../../config/shared/tailor.loader.js';
 import sse from '../shared/sse/index.js';
 
-export default { add, applyFetchHooks };
+const { elementRegistry } = PluginRegistry;
 
 function add(ContentElement, Hooks, Models) {
   const { Events } = ContentElement;
@@ -109,3 +109,6 @@ function resolveOutlineActivity(element) {
       : activity.getOutlineParent();
   });
 }
+
+export { add, applyFetchHooks };
+export default { add, applyFetchHooks };
