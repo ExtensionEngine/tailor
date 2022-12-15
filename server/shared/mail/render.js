@@ -7,7 +7,7 @@ import mjml2html from 'mjml';
 import mustache from 'mustache';
 import { paramCase } from 'change-case';
 
-export default {
+export {
   renderHtml,
   renderText
 };

@@ -4,4 +4,4 @@ function html() {
   return (text, render) => htmlToText.fromString(render(text));
 }
 
-export default { html };
+export { html };
