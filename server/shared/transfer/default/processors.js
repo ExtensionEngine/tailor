@@ -1,25 +1,25 @@
-'use strict';
+import db from '../../database/index.js';
+import filter from 'lodash/filter.js';
+import forEach from 'lodash/forEach.js';
+import isEmpty from 'lodash/isEmpty.js';
+import last from 'lodash/last.js';
+import map from 'lodash/map.js';
+import miss from 'mississippi';
+import omit from 'lodash/omit.js';
+import { parse } from 'JSONStream';
+import Promise from 'bluebird';
+import reduce from 'lodash/reduce.js';
+import roleConfig from '../../../../config/shared/role.js';
+import { SCHEMAS } from '../../../../config/shared/tailor.loader.js';
+import zipObject from 'lodash/zipObject.js';
 
 const {
   Activity,
   ContentElement,
   Repository,
   RepositoryUser
-} = require('../../database');
-const filter = require('lodash/filter');
-const forEach = require('lodash/forEach');
-const isEmpty = require('lodash/isEmpty');
-const last = require('lodash/last');
-const map = require('lodash/map');
-const miss = require('mississippi');
-const omit = require('lodash/omit');
-const { parse } = require('JSONStream');
-const Promise = require('bluebird');
-const reduce = require('lodash/reduce');
-const { repository: role } = require('../../../../config/shared/role');
-const { SCHEMAS } = require('@tailor-cms/config');
-const zipObject = require('lodash/zipObject');
-
+} = db;
+const { repository: role } = roleConfig;
 const noop = Function.prototype;
 
 const { ADMIN } = role;
@@ -49,7 +49,7 @@ function createAssetProcessor({ storage, filename }) {
   return storage.createWriteStream(filename);
 }
 
-module.exports = {
+export default {
   createRepositoryProcessor,
   createActivitiesProcessor,
   createElementsProcessor,

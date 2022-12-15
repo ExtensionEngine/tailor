@@ -1,12 +1,11 @@
-'use strict';
+import db from '../../database/index.js';
+import mapKeys from 'lodash/mapKeys.js';
+import miss from 'mississippi';
+import QueryStream from 'pg-query-stream';
+import { schema } from '../../../../config/shared/tailor.loader.js';
+import { stringify } from 'JSONStream';
 
-const { Activity, ContentElement, Repository } = require('../../database');
-const mapKeys = require('lodash/mapKeys');
-const miss = require('mississippi');
-const QueryStream = require('pg-query-stream');
-const { schema } = require('@tailor-cms/config');
-const { stringify } = require('JSONStream');
-
+const { Activity, ContentElement, Repository } = db;
 const reStorage = /^storage:\/\//;
 
 const isString = arg => typeof arg === 'string';
@@ -47,7 +46,7 @@ function createAssetResolver({ filename, storage }) {
   return storage.createReadStream(filename);
 }
 
-module.exports = {
+export default {
   createRepositoryResolver,
   createActivitiesResolver,
   createElementsResolver,
