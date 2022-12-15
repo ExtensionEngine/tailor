@@ -47,4 +47,4 @@ function requestLimiter({
   return rateLimit({ max, windowMs, store, ...opts });
 }
 
-export default { requestLimiter };
+export { requestLimiter };

@@ -1,5 +1,5 @@
-import assign from 'lodash/assign';
-import defaultsDeep from 'lodash/defaultsDeep';
+import assign from 'lodash/assign.js';
+import defaultsDeep from 'lodash/defaultsDeep.js';
 import { Op } from 'sequelize';
 import pick from 'lodash/pick.js';
 

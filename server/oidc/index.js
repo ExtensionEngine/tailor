@@ -45,7 +45,7 @@ router
   .get('/callback', idpCallbackHandler, (_, res) => res.redirect('/'))
   .use(accessDeniedHandler, defaultErrorHandler);
 
-export default {
+export {
   path: '/oidc',
   router
 };
