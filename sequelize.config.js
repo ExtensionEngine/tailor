@@ -1,10 +1,15 @@
-'use strict';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
+import('dotenv/config');
 
-require('dotenv').config();
-const path = require('path');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-module.exports = {
-  config: path.join(__dirname, './server/shared/database/config.js'),
-  seedersPath: path.join(__dirname, './server/shared/database/seeds'),
-  migrationsPath: path.join(__dirname, './server/shared/database/migrations')
+export const config = path.join(__dirname, './server/shared/database/config.js');
+export const seedersPath = path.join(__dirname, './server/shared/database/seeds');
+export const migrationsPath = path.join(__dirname, './server/shared/database/migrations');
+
+export default {
+  config,
+  seedersPath,
+  migrationsPath
 };
