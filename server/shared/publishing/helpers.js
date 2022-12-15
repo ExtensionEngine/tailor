@@ -1,27 +1,29 @@
-import {
+import db from '../database/index.js';
+import differenceWith from 'lodash/differenceWith.js';
+import filter from 'lodash/filter.js';
+import find from 'lodash/find.js';
+import findIndex from 'lodash/findIndex.js';
+import get from 'lodash/get.js';
+import hash from 'hash-obj';
+import keys from 'lodash/keys.js';
+import map from 'lodash/map.js';
+import omit from 'lodash/omit.js';
+import pick from 'lodash/pick.js';
+import PluginRegistry from '../content-plugins/index.js';
+import Promise from 'bluebird';
+import reduce from 'lodash/reduce.js';
+import { resolveStatics } from '../storage/helpers.js';
+import { schema } from '../../../config/shared/tailor.loader.js';
+import storage from '../../repository/storage.js';
+import without from 'lodash/without.js';
+
+const {
   Activity,
   ContentElement,
   Sequelize,
   sequelize
-} from '../database/index.js';
-import { containerRegistry } from '../content-plugins/index.js';
-import differenceWith from 'lodash/differenceWith';
-import filter from 'lodash/filter';
-import find from 'lodash/find';
-import findIndex from 'lodash/findIndex.js';
-import get from 'lodash/get.js';
-import hash from 'hash-obj';
-import keys from 'lodash/keys';
-import map from 'lodash/map.js';
-import omit from 'lodash/omit.js';
-import pick from 'lodash/pick.js';
-import Promise from 'bluebird';
-import reduce from 'lodash/reduce';
-import { resolveStatics } from '../storage/helpers.js';
-import { schema } from '@tailor-cms/config';
-import storage from '../../repository/storage.js';
-import without from 'lodash/without.js';
-
+} = db;
+const { containerRegistry } = PluginRegistry;
 const { Op } = Sequelize;
 
 const {
@@ -313,7 +315,7 @@ async function updatePublishingStatus(repository, activity) {
   return repository.update({ hasUnpublishedChanges: !!unpublishedCount });
 }
 
-export default {
+export {
   getRepositoryCatalog,
   publishActivity,
   unpublishActivity,
