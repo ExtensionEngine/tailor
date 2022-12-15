@@ -8,18 +8,22 @@ import mapValues from 'lodash/mapValues.js';
 const { SequelizeMethod } = Utils;
 const isFunction = arg => typeof arg === 'function';
 const notEmpty = input => input.length > 0;
+const sql = { concat, where };
 
-export default {
-  sql: { concat, where },
+export {
+  sql,
   getValidator,
   setLogging,
   wrapMethods,
-  parsePath,
-  build: Model => ({
+  parsePath
+};
+
+export function build(Model) {
+  return {
     column: (col, model) => dbColumn(col, model || Model),
     ...mapValues(sqlFunctions, it => buildSqlFunc(it, Model))
-  })
-};
+  };
+}
 
 const dbColumn = (col, Model) => {
   if (col instanceof SequelizeMethod) return col;

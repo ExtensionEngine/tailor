@@ -5,12 +5,15 @@ import Hooks from './hooks.js';
 import invoke from 'lodash/invoke.js';
 import { migrationsPath } from '../../../sequelize.config.js';
 import pick from 'lodash/pick.js';
-import pkg from '../../../package.json' assert { type: 'json' };
 import Promise from 'bluebird';
 import semver from 'semver';
 import Sequelize from 'sequelize';
 import Umzug from 'umzug';
 import { wrapMethods } from './helpers.js';
+
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const pkg = require("../../../package.json");
 
 // Require models.
 /* eslint-disable */
@@ -111,18 +114,9 @@ function addScopes(model, models) {
   forEach(scopes, (it, name) => model.addScope(name, it, { override: true }));
 }
 
-const db = {
-  Sequelize,
-  sequelize,
-  initialize,
-  ...models
-};
-
 wrapMethods(Sequelize.Model, Promise);
 // Patch Sequelize#method to support getting models by class name.
 sequelize.model = name => sequelize.models[name] || db[name];
-
-export default db;
 
 function createConnection(config) {
   if (!config.url) return new Sequelize(config);
@@ -154,3 +148,17 @@ function checkPostgreVersion(sequelize) {
     return Promise.reject(err);
   });
 }
+
+export {
+  Sequelize,
+  sequelize,
+  initialize,
+  models
+}
+
+export default {
+  Sequelize,
+  sequelize,
+  initialize,
+  ...models
+};

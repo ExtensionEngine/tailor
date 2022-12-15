@@ -20,6 +20,6 @@ function processPagination(Model) {
   };
 }
 
-export default {
+export {
   processPagination
 };
