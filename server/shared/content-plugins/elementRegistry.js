@@ -1,9 +1,9 @@
+import * as config from '../../../config/server/index.js';
+import * as hooks from './elementHooks.js';
 import BaseRegistry from './BaseRegistry.js';
-import config from '../../../config/server/index.js';
 import dedent from 'dedent';
 import depd from 'depd';
 import elementsList from '../../../config/shared/core-elements.js';
-import hooks from './elementHooks.js';
 import pick from 'lodash/pick.js';
 import storage from '../../repository/storage.js';
 import storageProxy from '../../repository/proxy.js';
