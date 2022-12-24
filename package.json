@@ -122,7 +122,7 @@
     "node-rsa": "^1.1.1",
     "openid-client": "^5.1.8",
     "passport": "^0.4.1",
-    "passport-jwt": "^4.0.0",
+    "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "path-exists": "^4.0.0",
     "pg": "^8.7.3",
