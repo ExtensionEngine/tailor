@@ -109,6 +109,9 @@ module.exports = {
   getPreviewUrl
 };
 
+/* This method is used temporarily to base64 encode content that is posted
+for previewing in the LMS. It is used while the production LMS firewall's
+rules are updated to stop false positives. */
 function _encodeContent(content) {
   const base64Encode = string => Buffer.from(string, 'utf8').toString('base64');
   return base64Encode(JSON.stringify(content));
