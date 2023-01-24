@@ -80,9 +80,11 @@ function getPreviewUrl({ activity }, res) {
       const body = {
         ...pick(activity, ['id', 'uid', 'type']),
         repositoryId: activity.repositoryId,
-        meta: activity.data,
-        ...content
+        meta: activity.data
       };
+      if (process.env.ENCODE_PREVIEW_CONTENT) {
+        body.encodedContent = _encodeContent(content);
+      } else Object.assign(body, content);
       return request.post(previewUrl, body);
     })
     .then(({ data: { url } }) => {
@@ -106,3 +108,8 @@ module.exports = {
   publish,
   getPreviewUrl
 };
+
+function _encodeContent(content) {
+  const base64Encode = string => Buffer.from(string, 'utf8').toString('base64');
+  return base64Encode(JSON.stringify(content));
+}
