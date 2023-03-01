@@ -139,7 +139,7 @@
     "safe-require": "^1.0.4",
     "sass-web-fonts": "^2.1.0",
     "semver": "^7.3.7",
-    "sequelize": "^6.21.3",
+    "sequelize": "^6.29.0",
     "sequelize-replace-enum-postgres": "^1.6.0",
     "simple-oauth2": "^4.3.0",
     "snyk": "^1.985.0",
