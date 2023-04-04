@@ -23,6 +23,7 @@ class Auth extends Authenticator {
   }
 
   authenticate(strategy, ...args) {
+    args[0] = { session: false, ...args[0] };
     const [options, callback] = parseAuthenticateOptions(args);
     // NOTE: Setup passport to forward errors down the middleware chain
     // https://github.com/jaredhanson/passport/blob/ad5fe1df/lib/middleware/authenticate.js#L171
