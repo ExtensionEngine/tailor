@@ -53,6 +53,7 @@ function authRequestHandler(req, res, next) {
   const strategy = req.passport.strategy('oidc');
   if (isLogoutRequest(req)) return strategy.logout()(req, res, next);
   const params = {
+    session: true,
     scope,
     ...getPromptParams(req),
     ...getSilentAuthParams(req)
@@ -84,6 +85,7 @@ function defaultErrorHandler(err, _req, res, _next) {
 
 function login(req, res, next) {
   const params = {
+    session: true,
     setCookie: true,
     ...(isSilentAuth(req) && getSilentAuthParams(req))
   };

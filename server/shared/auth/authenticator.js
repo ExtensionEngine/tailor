@@ -24,6 +24,9 @@ class Auth extends Authenticator {
 
   authenticate(strategy, ...args) {
     const [options, callback] = parseAuthenticateOptions(args);
+    // The passport started to be explicit about the session from v0.6.0, and since most of our
+    // authentication strategies are stateless, we are opting to avoid session by default
+    if (options.session === undefined) options.session = false;
     // NOTE: Setup passport to forward errors down the middleware chain
     // https://github.com/jaredhanson/passport/blob/ad5fe1df/lib/middleware/authenticate.js#L171
     if (options.failWithError !== false) options.failWithError = true;
