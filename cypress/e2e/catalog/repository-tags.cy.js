@@ -20,11 +20,12 @@ function removeTag(cardAlias, tagName) {
 }
 
 describe('ability to tag repository', () => {
-  before(() => cy.visit('/'));
-
   beforeEach(() => {
+    cy.visit('/');
     cy.login();
-    cy.createRepository().its('name').as('name');
+    cy.createRepository().then(repo => {
+      cy.wrap(repo).its('name').as('name');
+    });
     cy.visit('/').then(() => cy.assertRoute('catalog'));
   });
 

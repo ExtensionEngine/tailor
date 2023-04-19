@@ -1,11 +1,12 @@
 import { findRepositoryCard, searchRepository } from './utils.js';
 
 describe('ability to search and filter repository catalog', () => {
-  before(() => cy.visit('/'));
-
   beforeEach(() => {
+    cy.visit('/');
     cy.login();
-    cy.createRepository().its('name').as('name');
+    cy.createRepository().then(repo => {
+      cy.wrap(repo).its('name').as('name');
+    });
     cy.visit('/').then(() => cy.assertRoute('catalog'));
   });
 

@@ -3,9 +3,8 @@ import { findRepositoryCard } from './utils';
 const getDialog = () => cy.findByRole('dialog');
 
 describe('create repository', () => {
-  before(() => cy.visit('/'));
-
   beforeEach(() => {
+    cy.visit('/');
     cy.login();
     cy.visit('/').then(() => cy.assertRoute('catalog'));
   });

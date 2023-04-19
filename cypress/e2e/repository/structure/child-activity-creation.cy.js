@@ -12,7 +12,9 @@ describe('ability to create child activities', () => {
   before(function () {
     cy.visit('/');
     cy.login();
-    cy.createRepository().its('id').as('repositoryId');
+    cy.createRepository().then(repo => {
+      cy.wrap(repo).its('id').as('repositoryId');
+    });
   });
 
   beforeEach(function () {
