@@ -17,8 +17,8 @@ const mdiIcons = {
   'code-block': 'code-tags',
   color: 'format-color-text',
   direction: {
-    '': 'format-textdirection-l-to-r',
-    rtl: 'format-textdirection-r-to-l'
+    '': 'format-pilcrow-arrow-right',
+    rtl: 'format-pilcrow-arrow-left'
   },
   formula: 'function-variant',
   header: {
