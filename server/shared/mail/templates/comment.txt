@@ -11,4 +11,8 @@ View {{activityLabel}} by clicking the URL below:
 
 Or copy and paste this URL into your browser.
 
+You can unsubscribe from comment notifications in the profile page by visiting the link:
+
+{{unsubscribeLink}}
+
 -------------------------------------------------
