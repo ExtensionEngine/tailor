@@ -1,7 +1,7 @@
 'use strict';
 
+const { createSign } = require('crypto');
 const every = require('lodash/every');
-const { Signer } = require('aws-sdk/clients/cloudfront');
 const urlJoin = require('url-join');
 const { validateConfig } = require('../../validation');
 const yup = require('yup');
@@ -22,7 +22,8 @@ class CloudFront {
   constructor(config) {
     config = validateConfig(config, schema);
 
-    this.signer = new Signer(config.keyPairId, config.privateKey);
+    this.privateKey = config.privateKey;
+    this.keyPairId = config.keyPairId;
     this.host = config.host;
   }
 
@@ -35,7 +36,12 @@ class CloudFront {
     const expires = getExpirationTime(maxAge);
     const resource = urlJoin(this.host, path, '*');
     const policy = createPolicy(resource, expires);
-    return this.signer.getSignedCookie({ policy });
+    const signature = signPolicy(policy, this.privateKey);
+    return {
+      [storageCookies.POLICY]: policy,
+      [storageCookies.SIGNATURE]: signature,
+      [storageCookies.KEY_PAIR_ID]: this.keyPairId
+    };
   }
 
   verifyCookies() {
@@ -66,6 +72,13 @@ function createPolicy(resource, expires) {
       }
     }]
   });
+}
+
+function signPolicy(policy, privateKey) {
+  const sign = createSign('RSA-SHA1');
+  sign.update(policy);
+  const signature = sign.sign(privateKey, 'base64');
+  return signature;
 }
 
 function getExpirationTime(maxAge) {
