@@ -45,6 +45,10 @@
     "fixRevisionUrls": "node -r ./server/script/preflight ./server/script/fixRevisionUrls.js"
   },
   "dependencies": {
+    "@aws-sdk/s3-request-presigner" : "^3.306.0",
+    "@aws-sdk/client-s3": "^3.306.0",
+    "@aws-sdk/lib-storage": "3.306.0",
+    "@aws-sdk/util-format-url": "3.306.0",
     "@extensionengine/tapster": "github:ExtensionEngine/tapster#53ccb222c757948d322c33087620453ddf5e70ed",
     "@extensionengine/tce-jodit": "github:extensionengine/tce-jodit#c5464cd",
     "@extensionengine/tce-scorm": "^0.0.1",
@@ -55,7 +59,6 @@
     "@tailor-cms/utils": "^1.0.0-beta.18",
     "@ungap/global-this": "^0.4.4",
     "auto-bind": "^3.0.0",
-    "aws-sdk": "^2.1350.0",
     "axios": "^0.27.2",
     "bcrypt": "^5.1.0",
     "blob-util": "^2.0.2",

@@ -81,10 +81,10 @@ class DefaultAdapter {
 
 module.exports = useTar(DefaultAdapter);
 
-function exportFile(blobStore, filename, { context, transaction } = {}) {
+async function exportFile(blobStore, filename, { context, transaction } = {}) {
   const options = { context, filename, storage, transaction };
   const createResolvingStream = resolverLookup[filename] || resolverLookup.default;
-  const srcStream = createResolvingStream(options);
+  const srcStream = await createResolvingStream(options);
   const destStream = blobStore.createWriteStream(filename);
   return miss.pipeAsync(srcStream, destStream);
 }

@@ -8,12 +8,13 @@ const router = require('express').Router();
 const psl = require('psl');
 
 module.exports = (storage, proxy) => {
-  function getFile(req, res, next) {
+  async function getFile(req, res, next) {
     const key = req.params[0];
     const hasValidCookies = proxy.verifyCookies(req.cookies, key);
     if (!hasValidCookies) return res.status(FORBIDDEN).end();
     res.type(path.extname(key));
-    miss.pipe(storage.createReadStream(key), res, err => {
+    const stream = await storage.createReadStream(key);
+    miss.pipe(stream, res, err => {
       if (err) return next(err);
       res.end();
     });
