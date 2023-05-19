@@ -83,13 +83,11 @@ export default {
       addLighten(defs, lightenFactor);
 
       const g = svg.append('g');
-      this.zoomHandler.on('zoom', () => {
-        const e = d3.event;
+      this.zoomHandler.on('zoom', e => {
         // Apply translate & scale transformation.
         g.attr('transform', e.transform);
       })
-      .on('start end', () => {
-        const e = d3.event;
+      .on('start end', e => {
         // Hanlde pan.
         if (isDragStart(e)) {
           this.grabbing = true;
