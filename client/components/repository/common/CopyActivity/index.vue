@@ -67,7 +67,7 @@ import { loader } from '@tailor-cms/core-components';
 import pluralize from 'pluralize';
 import Promise from 'bluebird';
 import RepositoryTree from './RepositoryTree';
-import { SCHEMAS } from '@tailor-cms/config';
+import { SCHEMAS } from 'tailor-config';
 import sortBy from 'lodash/sortBy';
 import TailorDialog from '@/components/common/TailorDialog';
 

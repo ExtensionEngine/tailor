@@ -5,7 +5,7 @@ import flatMap from 'lodash/flatMap';
 import get from 'lodash/get';
 import map from 'lodash/map';
 import reduce from 'lodash/reduce';
-import { schema } from '@tailor-cms/config';
+import { schema } from 'tailor-config';
 import uniqBy from 'lodash/uniqBy';
 import without from 'lodash/without';
 
