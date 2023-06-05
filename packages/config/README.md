@@ -18,31 +18,13 @@ Love](https://badgen.net/badge/Open%20Source/%E2%9D%A4/3eaf8e)](https://github.c
 ## Usage
 
 ```js
-const { SCHEMAS, schema, workflow } = require('@tailor-cms/config');
+const { getSchemaApi, getWorkflowApi, processSchemas } = require('@tailor-cms/config');
 ```
 
 ## API
 
-### SCHEMAS
-> Default configuration merged with custom configuration.
-
-```
-SCHEMAS: ISchemaInterface[]
-```
-
-```
-interface ISchemaInterface {
-  id: string;
-  name: string;
-  meta: array;
-  structure: array;
-  contentContainers: array;
-  elementMeta: array;
-};
-```
-
-### schema
-> The object containing schema helper methods.
+### getSchemaApi(SCHEMAS)
+> The method returning an object containing schema helper methods.
 
 Methods:
 - getSchemaId
@@ -64,8 +46,8 @@ Methods:
 - getContainerTemplateId
 - isEditable
 
-### workflow
-> The object containing workflow properties and methods.
+### getWorkflowApi(WORKFLOWS, schemaApi)
+> The method returning an object containing workflow properties and methods.
 
 Properties:
 - priorities
@@ -75,3 +57,7 @@ Methods:
 - getPriority
 - getDefaultWorkflowStatus
 - getDefaultActivityStatus
+
+### processSchemas(SCHEMAS)
+> The method which validates schemas, prefixes activity types with schema ID, e.g. `SCHEMA_ID/TYPE`, 
+and processes meta.
