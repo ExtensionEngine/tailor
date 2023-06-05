@@ -4,7 +4,7 @@ const { Activity, ContentElement, Repository } = require('../../database');
 const mapKeys = require('lodash/mapKeys');
 const miss = require('mississippi');
 const QueryStream = require('pg-query-stream');
-const { schema } = require('@tailor-cms/config');
+const { schema } = require('../../../../config/shared/tailor.loader');
 const { stringify } = require('JSONStream');
 
 const reStorage = /^storage:\/\//;

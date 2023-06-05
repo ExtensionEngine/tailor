@@ -19,7 +19,7 @@ const Promise = require('bluebird');
 const publishingService = require('../shared/publishing/publishing.service');
 const { repository: role } = require('../../config/shared').role;
 const sample = require('lodash/sample');
-const { schema } = require('@tailor-cms/config');
+const { schema } = require('../../config/shared/tailor.loader');
 const { snakeCase } = require('change-case');
 const TransferService = require('../shared/transfer/transfer.service');
 

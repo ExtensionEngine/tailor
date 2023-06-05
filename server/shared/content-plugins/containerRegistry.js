@@ -2,7 +2,7 @@
 
 const BaseRegistry = require('./BaseRegistry');
 const containerList = require('../../../config/shared/core-containers');
-const { schema } = require('@tailor-cms/config');
+const { schema } = require('../../../config/shared/tailor.loader');
 
 const { getContainerTemplateId: getId } = schema;
 const EXTENSIONS_LIST = '../../../extensions/content-containers/index';
