@@ -73,13 +73,8 @@ This project uses a monorepo setup. In order to contribute to [packages](./packa
 
 ## Content repository structure
 
-Repository structure can be altered using tailor configuration file. Recognized
-configuration filenames are (sorted by priority):
-
-- `tailor.config.js`
-- `.tailorrc.js`
-- `.tailorrc`
-- `.tailorrc.json`
+Repository structure can be altered using tailor configuration file, which must be placed inside the root
+directory and named `tailor.config.js`.
 
 Use the `tailor.config.js.example` file as a template:
 
@@ -87,20 +82,8 @@ Use the `tailor.config.js.example` file as a template:
 $ cp tailor.config.js.example tailor.config.js
 ```
 
-and enter the configuration details. By default, the configuration file is
-searched inside the current working directory. If a custom location or a custom
-name is needed, it can be provided through the `--config` flag passed to target
-npm script:
-
-```
-$ npm run dev:client -- --config=path/to/custom/tailor/config.js
-```
-
-alternatively `TAILOR_CONFIG` environment variable can be used:
-
-```
-$ TAILOR_CONFIG=path/to/custom/tailor/config.js npm run dev:server
-```
+and enter the configuration details. At the current time, it is not possible to override the filename or
+location of the configuration file.
 
 Content repository structures are defined using the following properties:
 
