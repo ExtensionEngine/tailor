@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@aws-sdk/s3-request-presigner" : "^3.306.0",
-    "@aws-sdk/client-s3": "^3.306.0",
+    "@aws-sdk/client-s3": "^3.347.1",
     "@aws-sdk/lib-storage": "3.306.0",
     "@aws-sdk/util-format-url": "3.306.0",
     "@extensionengine/tapster": "github:ExtensionEngine/tapster#53ccb222c757948d322c33087620453ddf5e70ed",
