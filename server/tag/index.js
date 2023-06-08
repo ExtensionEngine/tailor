@@ -1,12 +1,12 @@
-'use strict';
+import ctrl from './tag.controller.js';
+import express from 'express';
 
-const ctrl = require('./tag.controller');
-const router = require('express').Router();
+const router = express.Router();
 
 router
   .get('/', ctrl.list);
 
-module.exports = {
+export default {
   path: '/tags',
   router
 };
