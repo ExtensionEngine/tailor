@@ -1,12 +1,13 @@
-'use strict';
+import { authenticate, logout } from '../shared/auth/index.js';
+import { fileURLToPath, URL } from 'node:url';
+import { BAD_REQUEST } from 'http-status-codes';
+import express from 'express';
+import get from 'lodash/get.js';
+import { errors as OIDCError } from 'openid-client';
+import path from 'node:path';
 
-const { authenticate, logout } = require('../shared/auth');
-const { BAD_REQUEST } = require('http-status-codes');
-const get = require('lodash/get');
-const { errors: OIDCError } = require('openid-client');
-const path = require('path');
-const router = require('express').Router();
-const { URL } = require('url');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const router = express.Router();
 
 const ACCESS_DENIED_ROUTE = '/#/login?accessDenied=';
 
@@ -43,7 +44,7 @@ router
   .get('/callback', idpCallbackHandler, (_, res) => res.redirect('/'))
   .use(accessDeniedHandler, defaultErrorHandler);
 
-module.exports = {
+export default {
   path: '/oidc',
   router
 };
