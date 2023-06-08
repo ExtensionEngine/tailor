@@ -1,8 +1,9 @@
-'use strict';
+import ctrl from './content-element.controller.js';
+import express from 'express';
+import processListQuery from '../shared/util/processListQuery.js';
 
-const ctrl = require('./content-element.controller');
-const processQuery = require('../shared/util/processListQuery')();
-const router = require('express').Router();
+const processQuery = processListQuery();
+const router = express.Router();
 
 router.route('/')
   .get(processQuery, ctrl.list)
@@ -16,7 +17,7 @@ router.route('/:elementId')
 router
   .post('/:elementId/reorder', ctrl.reorder);
 
-module.exports = {
+export default {
   path: '/content-elements',
   router
 };

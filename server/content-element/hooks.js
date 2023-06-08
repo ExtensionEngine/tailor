@@ -1,16 +1,14 @@
-'use strict';
+import elementHooks from '../shared/content-plugins/elementHooks.js';
+import forEach from 'lodash/forEach.js';
+import get from 'lodash/get.js';
+import hash from 'hash-obj';
+import PluginRegistry from '../shared/content-plugins/index.js';
+import Promise from 'bluebird';
+import { resolveStatics } from '../shared/storage/helpers.js';
+import { schema } from '../../config/shared/tailor.loader.js';
+import sse from '../shared/sse/index.js';
 
-const elementHooks = require('../shared/content-plugins/elementHooks');
-const { elementRegistry } = require('../shared/content-plugins');
-const forEach = require('lodash/forEach');
-const get = require('lodash/get');
-const hash = require('hash-obj');
-const Promise = require('bluebird');
-const { resolveStatics } = require('../shared/storage/helpers');
-const { schema } = require('../../config/shared/tailor.loader');
-const sse = require('../shared/sse');
-
-module.exports = { add, applyFetchHooks };
+const { elementRegistry } = PluginRegistry;
 
 function add(ContentElement, Hooks, Models) {
   const { Events } = ContentElement;
@@ -111,3 +109,13 @@ function resolveOutlineActivity(element) {
       : activity.getOutlineParent();
   });
 }
+
+export {
+  add,
+  applyFetchHooks
+};
+
+export default {
+  add,
+  applyFetchHooks
+};
