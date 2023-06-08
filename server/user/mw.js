@@ -1,7 +1,5 @@
-'use strict';
-
-const crypto = require('crypto');
-const { requestLimiter } = require('../shared/request/mw');
+import crypto from 'crypto';
+import { requestLimiter } from '../shared/request/mw.js';
 
 const ONE_HOUR_IN_MS = 60 * 60 * 1000;
 
@@ -21,4 +19,8 @@ function resetLoginAttempts(req, res, next) {
     .then(() => next());
 }
 
-module.exports = { loginRequestLimiter, setLoginLimitKey, resetLoginAttempts };
+export {
+  loginRequestLimiter,
+  setLoginLimitKey,
+  resetLoginAttempts
+};
