@@ -1,7 +1,6 @@
 'use strict';
 
 const path = require('path');
-const serverPort = require('./config/server').port;
 const yn = require('yn');
 
 const {
@@ -10,10 +9,13 @@ const {
   STORAGE_PATH,
   OIDC_ENABLED,
   OIDC_LOGOUT_ENABLED,
-  OIDC_LOGIN_TEXT
+  OIDC_LOGIN_TEXT,
+  PORT,
+  SERVER_PORT
 } = process.env;
 const imagesPath = 'assets/img';
 const isProduction = NODE_ENV === 'production';
+const serverPort = PORT || SERVER_PORT || 3000;
 const serverUrl = `http://127.0.0.1:${serverPort}`;
 
 const aliases = {
