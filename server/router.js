@@ -1,13 +1,12 @@
-'use strict';
+import { auth as authConfig } from '../config/server/index.js';
+import authenticator from './shared/auth/index.js';
+import express from 'express';
+import { extractAuthData } from './shared/auth/mw.js';
+import repository from './repository/index.js';
+import tag from './tag/index.js';
+import user from './user/index.js';
 
-const { auth: authConfig } = require('../config/server');
-const { authenticate } = require('./shared/auth');
-const express = require('express');
-const { extractAuthData } = require('./shared/auth/mw');
-const repository = require('./repository');
-const tag = require('./tag');
-const user = require('./user');
-
+const { authenticate } = authenticator;
 const router = express.Router();
 router.use(processBody);
 router.use(extractAuthData);
@@ -16,8 +15,8 @@ router.use(extractAuthData);
 router.use(user.path, user.router);
 
 // SSO routes:
-authConfig.oidc.enabled && (() => {
-  const oidc = require('./oidc');
+authConfig.oidc.enabled && await (async () => {
+  const { default: oidc } = await import('./oidc/index.js');
   router.use(oidc.path, oidc.router);
 })();
 
@@ -26,7 +25,7 @@ router.use(authenticate('jwt'));
 router.use(repository.path, repository.router);
 router.use(tag.path, tag.router);
 
-module.exports = router;
+export default router;
 
 function processBody(req, _res, next) {
   const { body } = req;
