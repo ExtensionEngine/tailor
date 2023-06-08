@@ -1,16 +1,18 @@
-'use strict';
+import yn from 'yn';
 
-const yn = require('yn');
-
-module.exports = {
-  sender: {
-    name: process.env.EMAIL_SENDER_NAME,
-    address: process.env.EMAIL_SENDER_ADDRESS
-  },
-  user: process.env.EMAIL_USER,
-  password: process.env.EMAIL_PASSWORD,
-  host: process.env.EMAIL_HOST,
-  port: process.env.EMAIL_PORT || null,
-  ssl: yn(process.env.EMAIL_SSL),
-  tls: yn(process.env.EMAIL_TLS)
+export const sender = {
+  name: process.env.EMAIL_SENDER_NAME,
+  address: process.env.EMAIL_SENDER_ADDRESS
 };
+
+export const user = process.env.EMAIL_USER;
+
+export const password = process.env.EMAIL_PASSWORD;
+
+export const host = process.env.EMAIL_HOST;
+
+export const port = process.env.EMAIL_PORT || null;
+
+export const ssl = yn(process.env.EMAIL_SSL);
+
+export const tls = yn(process.env.EMAIL_TLS);
