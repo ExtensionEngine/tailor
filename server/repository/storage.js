@@ -1,8 +1,6 @@
-'use strict';
-
-const BaseStorage = require('../shared/storage');
-const config = require('../../config/server').storage;
-const path = require('path');
+import BaseStorage from '../shared/storage/index.js';
+import { storage as config } from '../../config/server/index.js';
+import path from 'node:path';
 
 class Storage extends BaseStorage {
   getPath(repositoryId) {
@@ -10,4 +8,4 @@ class Storage extends BaseStorage {
   }
 }
 
-module.exports = new Storage(config);
+export default await Storage.create(config);

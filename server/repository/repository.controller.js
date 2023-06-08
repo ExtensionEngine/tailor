@@ -1,6 +1,23 @@
-'use strict';
+import * as fs from 'node:fs';
+import * as fsp from 'node:fs/promises';
+import { NO_CONTENT, NOT_FOUND } from 'http-status-codes';
+import { createError } from '../shared/error/helpers.js';
+import db from '../shared/database/index.js';
+import getVal from 'lodash/get.js';
+import map from 'lodash/map.js';
+import { Op } from 'sequelize';
+import pick from 'lodash/pick.js';
+import Promise from 'bluebird';
+import publishingService from '../shared/publishing/publishing.service.js';
+import sample from 'lodash/sample.js';
+import { schema } from '../../config/shared/tailor.loader.js';
+import { snakeCase } from 'change-case';
+import TransferService from '../shared/transfer/transfer.service.js';
 
-const { NO_CONTENT, NOT_FOUND } = require('http-status-codes');
+const { default: { role: { repository: role } } } = await import('../../config/shared/index.js');
+const miss = Promise.promisifyAll((await import('mississippi')).default);
+const tmp = Promise.promisifyAll((await import('tmp')).default, { multiArgs: true });
+
 const {
   Repository,
   RepositoryTag,
@@ -9,23 +26,7 @@ const {
   sequelize,
   Tag,
   User
-} = require('../shared/database');
-const { createError } = require('../shared/error/helpers');
-const getVal = require('lodash/get');
-const map = require('lodash/map');
-const { Op } = require('sequelize');
-const pick = require('lodash/pick');
-const Promise = require('bluebird');
-const publishingService = require('../shared/publishing/publishing.service');
-const { repository: role } = require('../../config/shared').role;
-const sample = require('lodash/sample');
-const { schema } = require('../../config/shared/tailor.loader');
-const { snakeCase } = require('change-case');
-const TransferService = require('../shared/transfer/transfer.service');
-
-const fs = Promise.promisifyAll(require('fs'));
-const miss = Promise.promisifyAll(require('mississippi'));
-const tmp = Promise.promisifyAll(require('tmp'), { multiArgs: true });
+} = db;
 
 const DEFAULT_COLORS = ['#689F38', '#FF5722', '#2196F3'];
 const lowercaseName = sequelize.fn('lower', sequelize.col('repository.name'));
@@ -196,7 +197,7 @@ async function initiateExportJob({ repository }, res) {
       res.json({ data: job.id });
     })
     .catch(() => {
-      fs.unlinkAsync(outFile);
+      fsp.unlink(outFile);
       return createError(NOT_FOUND);
     });
 }
@@ -210,7 +211,7 @@ function exportRepository({ repository, params }, res) {
   return miss.pipeAsync(exportStream, res)
     .then(() => {
       JobCache.delete(jobId);
-      return fs.unlinkAsync(job.filepath);
+      return fsp.unlink(job.filepath);
     });
 }
 
@@ -222,12 +223,12 @@ function importRepository({ body, file, user }, res) {
     .createImportJob(path, options)
     .toPromise()
     .finally(() => {
-      fs.unlinkAsync(path);
+      fs.unlink(path);
       res.end();
     });
 }
 
-module.exports = {
+export default {
   index,
   create,
   get,

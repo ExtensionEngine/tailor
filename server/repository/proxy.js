@@ -1,8 +1,6 @@
-'use strict';
-
-const BaseProxy = require('../shared/storage/proxy');
-const { proxy: config } = require('../../config/server').storage;
-const path = require('path');
+import BaseProxy from '../shared/storage/proxy/index.js';
+import { storage as config } from '../../config/server/index.js';
+import path from 'node:path';
 
 const storageCookies = {
   REPOSITORY: 'Storage-Repository'
@@ -31,4 +29,4 @@ class Proxy extends BaseProxy {
   }
 }
 
-module.exports = new Proxy(config);
+export default await Proxy.create(config.proxy);

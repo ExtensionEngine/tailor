@@ -1,8 +1,8 @@
-'use strict';
+import config from '../../../config/server/index.js';
+import Promise from 'bluebird';
+import Tapster from '@extensionengine/tapster';
 
-const Promise = require('bluebird');
-const Tapster = require('@extensionengine/tapster');
-const { provider, ...options } = require('../../../config/server').store;
+const { provider, ...options } = config.store;
 
 const store = new Tapster({
   ...options[provider],
@@ -42,4 +42,4 @@ async function findOrCreate(user) {
   return store.get(user.id);
 }
 
-module.exports = { addContext, removeContext, getActiveUsers };
+export { addContext, removeContext, getActiveUsers };

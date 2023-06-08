@@ -1,26 +1,28 @@
-'use strict';
+import { NOT_FOUND, UNAUTHORIZED } from 'http-status-codes';
+import { authorize } from '../shared/auth/mw.js';
+import { createError } from '../shared/error/helpers.js';
+import ctrl from './repository.controller.js';
+import db from '../shared/database/index.js';
+import express from 'express';
+import feed from './feed/index.js';
+import multer from 'multer';
+import path from 'node:path';
+import processQuery from '../shared/util/processListQuery.js';
+import proxy from './proxy.js';
+import proxyMw from '../shared/storage/proxy/mw.js';
+import storage from './storage.js';
 
-const { NOT_FOUND, UNAUTHORIZED } = require('http-status-codes');
-const { authorize } = require('../shared/auth/mw');
-const { createError } = require('../shared/error/helpers');
-const ctrl = require('./repository.controller');
-const feed = require('./feed');
-const multer = require('multer');
-const path = require('path');
-const processQuery = require('../shared/util/processListQuery');
-const proxy = require('./proxy');
-const { Repository } = require('../shared/database');
-const router = require('express').Router();
-const storage = require('./storage');
-const { setSignedCookies } = require('../shared/storage/proxy/mw')(storage, proxy);
-
-/* eslint-disable require-sort/require-sort */
-const activity = require('../activity');
-const comment = require('../comment');
-const revision = require('../revision');
-const contentElement = require('../content-element');
-const storageRouter = require('../shared/storage/storage.router');
+/* eslint-disable */
+import activity from '../activity/index.js';
+import comment from '../comment/index.js';
+import revision from '../revision/index.js';
+import contentElement from '../content-element/index.js';
+import storageRouter from '../shared/storage/storage.router.js';
 /* eslint-enable */
+
+const { Repository } = db;
+const router = express.Router();
+const { setSignedCookies } = proxyMw(storage, proxy);
 
 // NOTE: disk storage engine expects an object to be passed as the first argument
 // https://github.com/expressjs/multer/blob/6b5fff5/storage/disk.js#L17-L18
@@ -85,7 +87,7 @@ function hasAccess(req, _res, next) {
     });
 }
 
-module.exports = {
+export default {
   path: '/repositories',
   router
 };
