@@ -1,9 +1,14 @@
-'use strict';
+import 'dotenv/config';
+import createLogger from '../shared/logger.js';
+import Promise from 'bluebird';
+import { SCHEMAS } from '../../config/shared/tailor.loader.js';
 
-const { Activity, ContentElement, sequelize } = require('../shared/database');
-const Promise = require('bluebird');
-const { SCHEMAS } = require('../../config/shared/activities');
+createLogger.enabled = false;
 
+// Dynamic import is needed in order for the `enabled` flag to be respected
+const { default: db } = await import('../shared/database/index.js');
+
+const { Activity, ContentElement, sequelize } = db;
 const DEFAULTS = { data: {}, type: 'ASSESSMENT_POOL' };
 
 const types = extractAssessedTypes(SCHEMAS);

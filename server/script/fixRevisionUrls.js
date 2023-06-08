@@ -1,11 +1,14 @@
-'use strict';
+import 'dotenv/config';
+import createLogger from '../shared/logger.js';
+import get from 'lodash/get.js';
+import Promise from 'bluebird';
 
-require('dotenv').config();
-require('../shared/logger').enabled = false;
+createLogger.enabled = false;
 
-const { Revision, sequelize } = require('../shared/database');
-const get = require('lodash/get');
-const Promise = require('bluebird');
+// Dynamic import is needed in order for the `enabled` flag to be respected
+const { default: db } = await import('../shared/database/index.js');
+
+const { Revision, sequelize } = db;
 
 /**
  * This regex tries to find both possible versions of the url:
