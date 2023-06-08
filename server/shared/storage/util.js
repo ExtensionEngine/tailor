@@ -1,7 +1,5 @@
-'use strict';
-
-const crypto = require('crypto');
-const fs = require('fs');
+import * as fsp from 'node:fs/promises';
+import crypto from 'node:crypto';
 
 function sha256(...args) {
   const hash = crypto.createHash('sha256');
@@ -11,7 +9,10 @@ function sha256(...args) {
 
 function readFile(file) {
   if (file.buffer) return Promise.resolve(file.buffer);
-  return fs.readFile(file.path);
+  return fsp.readFile(file.path);
 }
 
-module.exports = { sha256, readFile };
+export {
+  sha256,
+  readFile
+};

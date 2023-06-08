@@ -1,6 +1,5 @@
-'use strict';
+import * as yup from 'yup';
 
-const yup = require('yup');
 const { ValidationError } = yup;
 
 yup.addMethod(yup.string, 'pkcs1', function () {
@@ -13,7 +12,7 @@ yup.addMethod(yup.string, 'pkcs1', function () {
   return this.test('format', 'Invalid private key format', isValid);
 });
 
-module.exports = {
+export {
   validateConfig
 };
 

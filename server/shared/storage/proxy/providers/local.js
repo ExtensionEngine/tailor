@@ -1,11 +1,9 @@
-'use strict';
-
-const every = require('lodash/every');
-const NodeRSA = require('node-rsa');
-const { origin } = require('../../../../../config/server');
-const urlJoin = require('url-join');
-const { validateConfig } = require('../../validation');
-const yup = require('yup');
+import * as yup from 'yup';
+import every from 'lodash/every.js';
+import NodeRSA from 'node-rsa';
+import { origin } from '../../../../../config/server/index.js';
+import urlJoin from 'url-join';
+import { validateConfig } from '../../validation.js';
 
 const PROXY_PATH = '/proxy';
 const storageCookies = {
@@ -62,7 +60,7 @@ class Local {
   }
 }
 
-module.exports = { create: Local.create.bind(Local) };
+export const create = Local.create.bind(Local);
 
 function getExpirationTime(maxAge) {
   // Expiration unix timestamp in ms

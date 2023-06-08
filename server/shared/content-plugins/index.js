@@ -1,8 +1,6 @@
-'use strict';
-
-const containerRegistry = require('./containerRegistry');
-const elementRegistry = require('./elementRegistry');
-const Promise = require('bluebird');
+import containerRegistry from './containerRegistry.js';
+import elementRegistry from './elementRegistry.js';
+import Promise from 'bluebird';
 
 class ContentPluginRegistry {
   constructor() {
@@ -16,4 +14,4 @@ class ContentPluginRegistry {
   }
 }
 
-module.exports = new ContentPluginRegistry();
+export default new ContentPluginRegistry();

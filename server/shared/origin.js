@@ -1,11 +1,10 @@
-'use strict';
+import createLogger from './logger.js';
+import { hostname } from '../../config/server/index.js';
 
-const { hostname } = require('../../config/server');
-const logger = require('./logger')();
-
+const logger = createLogger();
 const isProduction = process.env.NODE_ENV === 'production';
 
-module.exports = () => {
+export default () => {
   if (hostname) return middleware;
   const message = 'Origin: "HOSTNAME" is not set, using "Host" HTTP header.';
   isProduction ? logger.warn('⚠️ ', message) : logger.info(message);

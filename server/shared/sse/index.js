@@ -1,8 +1,6 @@
-'use strict';
-
-const channels = require('./channels');
-const cuid = require('cuid');
-const { EventEmitter } = require('events');
+import channels from './channels.js';
+import cuid from 'cuid';
+import { EventEmitter } from 'events';
 
 const SSE_TIMEOUT_MARGIN = 0.10;
 const SSE_DEFAULT_TIMEOUT = 60000; /* ms */
@@ -120,10 +118,9 @@ class SSEConnection extends EventEmitter {
   }
 }
 
-module.exports = SSEConnection;
-module.exports.middleware = middleware;
+export default SSEConnection;
 
-function middleware(_req, res, next) {
+export function middleware(_req, res, next) {
   res.sse = SSEConnection.create(res);
   next();
 }

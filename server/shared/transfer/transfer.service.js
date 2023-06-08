@@ -1,8 +1,8 @@
-'use strict';
+import { ExportJob, ImportJob } from './job.js';
+import createLogger from '../logger.js';
+import PromiseQueue from 'promise-queue';
 
-const { ExportJob, ImportJob } = require('./job');
-const logger = require('../logger')();
-const PromiseQueue = require('promise-queue');
+const logger = createLogger();
 
 class TransferService {
   constructor() {
@@ -24,7 +24,7 @@ class TransferService {
   }
 }
 
-module.exports = new TransferService();
+export default new TransferService();
 
 function setupLogging(job) {
   job.once('success', () => logger.info({ job: job.toJSON() }, 'Job completed successfully'));

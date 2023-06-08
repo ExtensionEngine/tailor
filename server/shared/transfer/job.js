@@ -1,12 +1,10 @@
-'use strict';
+import BlobStore from 'fs-blob-store';
+import cuid from 'cuid';
+import DefaultAdapter from './default/index.js';
+import EventEmitter from 'events';
+import Promise from 'bluebird';
 
-const BlobStore = require('fs-blob-store');
-const cuid = require('cuid');
-const DefaultAdapter = require('./default');
-const EventEmitter = require('events');
-const Promise = require('bluebird');
-
-const tmp = Promise.promisifyAll(require('tmp'), { multiArgs: true });
+const tmp = Promise.promisifyAll((await import('tmp')).default, { multiArgs: true });
 
 const adapters = {
   default: DefaultAdapter
@@ -68,7 +66,10 @@ class ImportJob extends TransferJob {
   }
 }
 
-module.exports = { ExportJob, ImportJob };
+export {
+  ExportJob,
+  ImportJob
+};
 
 async function createBlobStore() {
   const options = { unsafeCleanup: true };

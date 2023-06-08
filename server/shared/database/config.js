@@ -1,22 +1,27 @@
-'use strict';
-
-const { createLogger, Level } = require('../logger');
+import 'dotenv/config';
+import { createLogger, Level } from '../logger.js';
 
 const isProduction = process.env.NODE_ENV === 'production';
 const logger = createLogger('db', { level: Level.DEBUG });
 
-module.exports = {
-  ...readConfig(),
-  migrationStorageTableName: 'sequelize_meta',
-  benchmark: !isProduction,
-  logging(query, time) {
-    const info = { query };
-    if (time) info.duration = `${time}ms`;
-    return logger.debug(info);
-  }
+const config = parseConfig();
+const migrationStorageTableName = 'sequelize_meta';
+const benchmark = !isProduction;
+
+function logging(query, time) {
+  const info = { query };
+  if (time) info.duration = `${time}ms`;
+  return logger.debug(info);
+}
+
+export default {
+  ...config,
+  migrationStorageTableName,
+  benchmark,
+  logging
 };
 
-function readConfig(config = process.env) {
+function parseConfig(config = process.env) {
   const DATABASE_URI = config.DATABASE_URI || config.POSTGRES_URI;
   if (DATABASE_URI) return { url: DATABASE_URI };
   if (!config.DATABASE_NAME) {

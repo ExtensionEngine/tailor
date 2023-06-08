@@ -1,12 +1,11 @@
-'use strict';
+import addDays from 'date-fns/addDays/index.js';
+import Audience from './audience.js';
+import { Authenticator } from 'passport';
+import autobind from 'auto-bind';
+import { auth as config } from '../../../config/server/index.js';
+import { IncomingMessage } from 'http';
+import storageProxy from '../../repository/proxy.js';
 
-const addDays = require('date-fns/addDays');
-const Audience = require('./audience');
-const { Authenticator } = require('passport');
-const autobind = require('auto-bind');
-const { auth: config } = require('../../../config/server');
-const { IncomingMessage } = require('http');
-const storageProxy = require('../../repository/proxy');
 const isFunction = arg => typeof arg === 'function';
 
 class Auth extends Authenticator {
@@ -77,7 +76,7 @@ class Auth extends Authenticator {
   }
 }
 
-module.exports = new Auth();
+export default new Auth();
 
 function parseAuthenticateOptions(args) {
   if (isFunction(args[0])) return [{}, args[0]];

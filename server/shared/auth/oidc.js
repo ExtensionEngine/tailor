@@ -1,9 +1,7 @@
-'use strict';
+import { Strategy as BaseOIDCStrategy, Issuer } from 'openid-client';
+import { URL } from 'node:url';
 
-const { Strategy: BaseOIDCStrategy, Issuer } = require('openid-client');
-const { URL } = require('url');
-
-module.exports = class OIDCStrategy extends BaseOIDCStrategy {
+export default class OIDCStrategy extends BaseOIDCStrategy {
   constructor(options, verify) {
     const issuer = createIssuer(options);
     const client = createClient(issuer, options);
@@ -47,7 +45,7 @@ module.exports = class OIDCStrategy extends BaseOIDCStrategy {
       res.redirect(this.logoutUrl({ ...params, oidcData }));
     };
   }
-};
+}
 
 function createIssuer(options) {
   return new Issuer({

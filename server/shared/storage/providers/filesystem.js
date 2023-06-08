@@ -1,20 +1,18 @@
-'use strict';
-
-const config = require('../../../../config/server');
-const exists = require('path-exists');
-const expandPath = require('untildify');
-const mkdirp = require('mkdirp');
-const path = require('path');
-const Promise = require('bluebird');
-const { validateConfig } = require('../validation');
-const yup = require('yup');
-
-const fs = Promise.promisifyAll(require('fs'));
+import * as fs from 'node:fs';
+import * as fsp from 'node:fs/promises';
+import * as yup from 'yup';
+import config from '../../../../config/server/index.js';
+import exists from 'path-exists';
+import expandPath from 'untildify';
+import mkdirp from 'mkdirp';
+import path from 'node:path';
+import Promise from 'bluebird';
+import { validateConfig } from '../validation.js';
 
 const isNotFound = err => err.code === 'ENOENT';
 const resolvePath = str => path.resolve(expandPath(str));
 
-const schema = yup.object().shape({
+export const schema = yup.object().shape({
   path: yup.string().required()
 });
 
@@ -34,7 +32,7 @@ class FilesystemStorage {
   }
 
   getFile(key, options = {}) {
-    return fs.readFileAsync(this.path(key), options)
+    return fsp.readFile(this.path(key), options)
       .catch(err => {
         if (isNotFound(err)) return null;
         return Promise.reject(err);
@@ -48,7 +46,7 @@ class FilesystemStorage {
   saveFile(key, data, options = {}) {
     const filePath = this.path(key);
     return mkdirp(path.dirname(filePath))
-      .then(() => fs.writeFileAsync(filePath, data, options));
+      .then(() => fsp.writeFile(filePath, data, options));
   }
 
   createWriteStream(key, options = {}) {
@@ -63,7 +61,7 @@ class FilesystemStorage {
     const src = this.path(key);
     const dest = this.path(newKey);
     return mkdirp(path.dirname(dest))
-      .then(() => fs.copyFileAsync(src, dest));
+      .then(() => fsp.copyFile(src, dest));
   }
 
   moveFile(key, newKey) {
@@ -72,7 +70,7 @@ class FilesystemStorage {
   }
 
   deleteFile(key) {
-    return fs.unlinkAsync(this.path(key));
+    return fsp.unlink(this.path(key));
   }
 
   deleteFiles(keys) {
@@ -80,7 +78,7 @@ class FilesystemStorage {
   }
 
   listFiles(key, options = {}) {
-    return fs.readdirAsync(this.path(key), options)
+    return fsp.readdir(this.path(key), options)
       .map(fileName => `${key}/${fileName}`)
       .catch(err => {
         if (isNotFound(err)) return null;
@@ -97,7 +95,4 @@ class FilesystemStorage {
   }
 }
 
-module.exports = {
-  schema,
-  create: FilesystemStorage.create
-};
+export const create = FilesystemStorage.create.bind(FilesystemStorage);

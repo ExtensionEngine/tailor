@@ -1,35 +1,38 @@
-'use strict';
-
-const config = require('./config');
-const forEach = require('lodash/forEach');
-const Hooks = require('./hooks');
-const invoke = require('lodash/invoke');
-const logger = require('../logger')('db');
-const { migrationsPath } = require('../../../sequelize.config');
-const pick = require('lodash/pick');
-const pkg = require('../../../package.json');
-const Promise = require('bluebird');
-const semver = require('semver');
-const Sequelize = require('sequelize');
-const Umzug = require('umzug');
-const { wrapMethods } = require('./helpers');
+import config from './config.js';
+import createLogger from '../logger.js';
+import { createRequire } from 'node:module';
+import forEach from 'lodash/forEach.js';
+import Hooks from './hooks.js';
+import invoke from 'lodash/invoke.js';
+import pick from 'lodash/pick.js';
+import Promise from 'bluebird';
+import semver from 'semver';
+import Sequelize from 'sequelize';
+import sequelizeConfig from '../../../sequelize.config.js';
+import Umzug from 'umzug';
+import { wrapMethods } from './helpers.js';
 
 // Require models.
-/* eslint-disable require-sort/require-sort */
-const User = require('../../user/user.model');
-const Repository = require('../../repository/repository.model');
-const RepositoryTag = require('../../tag/repositoryTag.model');
-const RepositoryUser = require('../../repository/repositoryUser.model');
-const ActivityStatus = require('../../activity/status.model');
-const Activity = require('../../activity/activity.model');
-const ContentElement = require('../../content-element/content-element.model');
-const Revision = require('../../revision/revision.model');
-const Comment = require('../../comment/comment.model');
-const Tag = require('../../tag/tag.model');
+/* eslint-disable */
+import User from '../../user/user.model.js';
+import Repository from '../../repository/repository.model.js';
+import RepositoryTag from '../../tag/repositoryTag.model.js';
+import RepositoryUser from '../../repository/repositoryUser.model.js';
+import ActivityStatus from '../../activity/status.model.js';
+import Activity from '../../activity/activity.model.js';
+import ContentElement from '../../content-element/content-element.model.js';
+import Revision from '../../revision/revision.model.js';
+import Comment from '../../comment/comment.model.js';
+import Tag from '../../tag/tag.model.js';
 /* eslint-enable */
 
+const require = createRequire(import.meta.url);
+const pkg = require('../../../package.json');
+
+const logger = createLogger('db');
 const isProduction = process.env.NODE_ENV === 'production';
 const sequelize = createConnection(config);
+const { migrationsPath } = sequelizeConfig;
 
 function initialize() {
   const umzug = new Umzug({
@@ -123,8 +126,6 @@ wrapMethods(Sequelize.Model, Promise);
 // Patch Sequelize#method to support getting models by class name.
 sequelize.model = name => sequelize.models[name] || db[name];
 
-module.exports = db;
-
 function createConnection(config) {
   if (!config.url) return new Sequelize(config);
   return new Sequelize(config.url, config);
@@ -155,3 +156,12 @@ function checkPostgreVersion(sequelize) {
     return Promise.reject(err);
   });
 }
+
+export {
+  Sequelize,
+  sequelize,
+  initialize,
+  models
+};
+
+export default db;

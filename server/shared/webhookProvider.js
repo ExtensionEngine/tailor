@@ -1,9 +1,7 @@
-'use strict';
-
-const { ClientCredentials } = require('simple-oauth2');
-const config = require('../../config/server/consumer');
-const request = require('axios');
-const yup = require('yup');
+import { ClientCredentials } from 'simple-oauth2';
+import config from '../../config/server/consumer.js';
+import request from 'axios';
+import yup from 'yup';
 
 const schema = yup.object().shape({
   webhookUrl: yup.string().url().required(),
@@ -49,4 +47,4 @@ function createWebhookProvider() {
   }
 }
 
-module.exports = createWebhookProvider();
+export default createWebhookProvider();

@@ -1,26 +1,29 @@
-'use strict';
+import { Op, Sequelize, Utils } from 'sequelize';
+import get from 'lodash/get.js';
+import has from 'lodash/has.js';
+import inRange from 'lodash/inRange.js';
+import last from 'lodash/last.js';
+import mapValues from 'lodash/mapValues.js';
 
-const { Sequelize, Utils: { SequelizeMethod }, Op } = require('sequelize');
-const get = require('lodash/get');
-const has = require('lodash/has');
-const inRange = require('lodash/inRange');
-const last = require('lodash/last');
-const mapValues = require('lodash/mapValues');
-
+const { SequelizeMethod } = Utils;
 const isFunction = arg => typeof arg === 'function';
 const notEmpty = input => input.length > 0;
+const sql = { concat, where };
 
-module.exports = {
-  sql: { concat, where },
+export {
+  sql,
   getValidator,
   setLogging,
   wrapMethods,
-  parsePath,
-  build: Model => ({
+  parsePath
+};
+
+export function build(Model) {
+  return {
     column: (col, model) => dbColumn(col, model || Model),
     ...mapValues(sqlFunctions, it => buildSqlFunc(it, Model))
-  })
-};
+  };
+}
 
 const dbColumn = (col, Model) => {
   if (col instanceof SequelizeMethod) return col;

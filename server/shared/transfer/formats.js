@@ -1,11 +1,9 @@
-'use strict';
+import { createGunzip, createGzip } from 'zlib';
+import { createReadStream, createWriteStream } from 'node:fs';
+import { pack as createTar, extract as createUntar } from 'tar-fs';
+import Promise from 'bluebird';
 
-const { createGunzip, createGzip } = require('zlib');
-const { createReadStream, createWriteStream } = require('fs');
-const { pack: createTar, extract: createUntar } = require('tar-fs');
-const Promise = require('bluebird');
-
-const miss = Promise.promisifyAll(require('mississippi'));
+const miss = Promise.promisifyAll((await import('mississippi')).default);
 
 const useTar = Adapter => class extends Adapter {
   static pack(blobStore, outFile, { gzip = true } = {}) {
@@ -25,4 +23,6 @@ const useTar = Adapter => class extends Adapter {
   }
 };
 
-module.exports = { useTar };
+export {
+  useTar
+};

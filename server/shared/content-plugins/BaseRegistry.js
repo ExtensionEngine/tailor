@@ -1,13 +1,12 @@
-'use strict';
-
-const Promise = require('bluebird');
+import path from 'node:path';
+import Promise from 'bluebird';
 
 const PATHS = {
   DEFAULT: '../../../client/components',
   EXTENSION: '../../../extensions'
 };
 
-module.exports = class {
+export default class {
   constructor(type, extensions, basePath) {
     this._registry = [];
     this._type = type;
@@ -18,12 +17,14 @@ module.exports = class {
   async initialize() {
     await Promise.map(this._extensions, path => this.load(path));
     const extensions = await this.loadExtensionList();
-    await Promise.map(extensions, path => this.load(path, true));
+    await Promise.map(extensions, dir => {
+      return this.load(path.join(dir, 'index.js'), true);
+    });
   }
 
   async load(path, isExtension) {
     try {
-      this._registry.push(await require(this.getFullPath(path, isExtension)));
+      this._registry.push(await import(this.getFullPath(path, isExtension)));
     } catch (err) {
       console.info(`${path} does not have a custom statics method.`);
     }
@@ -31,15 +32,16 @@ module.exports = class {
 
   getFullPath(path, isExtension) {
     const basePath = isExtension ? PATHS.EXTENSION : PATHS.DEFAULT;
-    return `${basePath}/content-${this._type}s/${path}/server`;
+    return `${basePath}/content-${this._type}s/${path}/server.js`;
   }
 
-  loadExtensionList() {
+  async loadExtensionList() {
     try {
-      return require(this._basePath);
+      const { default: list } = await import(this._basePath);
+      return list;
     } catch (err) {
       console.log(`No ${this._type} extensions loaded!`);
       return [];
     }
   }
-};
+}
