@@ -8,9 +8,7 @@ processSchemas(SCHEMAS);
 const schema = getSchemaApi(SCHEMAS);
 const workflow = getWorkflowApi(WORKFLOWS, schema);
 
-module.exports = {
-  SCHEMAS,
-  WORKFLOWS,
-  schema,
-  workflow
-};
+exports.SCHEMAS = SCHEMAS;
+exports.WORKFLOWS = WORKFLOWS;
+exports.schema = schema;
+exports.workflow = workflow;
