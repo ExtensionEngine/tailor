@@ -1,13 +1,11 @@
-'use strict';
+import forEach from 'lodash/forEach.js';
+import get from 'lodash/get.js';
+import mail from '../shared/mail/index.js';
+import { Op } from 'sequelize';
+import { schema } from '../../config/shared/tailor.loader.js';
+import sse from '../shared/sse/index.js';
 
-const forEach = require('lodash/forEach');
-const get = require('lodash/get');
-const mail = require('../shared/mail');
-const { Op } = require('sequelize');
-const { schema } = require('../../config/shared/tailor.loader');
-const sse = require('../shared/sse');
-
-exports.add = (ActivityStatus, Hooks, { Activity }) => {
+const add = (ActivityStatus, Hooks, { Activity }) => {
   const { Events } = ActivityStatus;
 
   const mappings = {
@@ -60,4 +58,8 @@ async function sendEmailNotification(activity) {
 const afterTransaction = method => (type, status, opts) => {
   if (!opts.transaction) return method(type, status, opts);
   opts.transaction.afterCommit(() => method(type, status, opts));
+};
+
+export default {
+  add
 };
