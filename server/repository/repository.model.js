@@ -3,7 +3,7 @@
 const { Model } = require('sequelize');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
-const { schema } = require('@tailor-cms/config');
+const { schema } = require('../../config/shared/tailor.loader');
 
 const { getRepositoryRelationships, getSchema } = schema;
 

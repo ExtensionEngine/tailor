@@ -3,9 +3,20 @@
   "description": "Access parsed Tailor config",
   "author": "ExtensionEngine <info@extensionengine.com>",
   "license": "MIT",
-  "version": "1.0.0-beta.17",
-  "files": ["src"],
-  "main": "./src/index.js",
+  "version": "1.0.0-beta.25",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/config.cjs",
+  "umd:main": "./dist/config.umd.cjs",
+  "module": "./dist/config.js",
+  "exports": {
+    ".": {
+      "import": "./dist/config.js",
+      "require": "./dist/config.cjs"
+    }
+  },
   "homepage": "https://github.com/ExtensionEngine/tailor#readme",
   "bugs": {
     "url": "https://github.com/ExtensionEngine/tailor/issues"
@@ -15,24 +26,24 @@
     "url": "git+https://github.com/ExtensionEngine/tailor.git"
   },
   "scripts": {
+    "prebuild": "del-cli dist",
+    "build": "vite build",
+    "release": "npx np",
     "lint": "eslint --ext .js ."
   },
   "dependencies": {
-    "dedent": "^0.7.0",
-    "depd": "^2.0.0",
-    "joycon": "^3.1.1",
     "lodash": "^4.17.21",
-    "minimist": "^1.2.6",
-    "strip-json-comments": "^3.1.1",
     "yup": "^0.32.11"
   },
   "devDependencies": {
     "@extensionengine/eslint-config": "^3.0.1",
+    "del-cli": "^5.0.0",
     "eslint": "^8.19.0",
     "eslint-config-semistandard": "^16.0.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-promise": "^6.0.0"
+    "eslint-plugin-promise": "^6.0.0",
+    "vite": "^4.3.9"
   },
   "publishConfig": {
     "access": "public"

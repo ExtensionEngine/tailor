@@ -8,7 +8,7 @@ const pick = require('lodash/pick');
 const { previewUrl } = require('../../config/server');
 const publishingService = require('../shared/publishing/publishing.service');
 const request = require('axios');
-const { schema } = require('@tailor-cms/config');
+const { schema } = require('../../config/shared/tailor.loader');
 
 const { getOutlineLevels, isOutlineActivity } = schema;
 

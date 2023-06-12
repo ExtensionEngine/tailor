@@ -33,7 +33,7 @@ import OverviewName from './Name';
 import OverviewPriority from './Priority';
 import OverviewStatus from './Status';
 import selectActivity from '@/components/repository/common/selectActivity';
-import { workflow } from '@tailor-cms/config';
+import { workflow } from 'tailor-config';
 
 export default {
   name: 'workflow-overview',

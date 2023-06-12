@@ -25,7 +25,8 @@ const aliases = {
   utils: '@/utils',
   shared: path.join(__dirname, 'config/shared'),
   tce: path.join(__dirname, 'content-elements'),
-  extensions: path.join(__dirname, 'extensions')
+  extensions: path.join(__dirname, 'extensions'),
+  'tailor-config': path.join(__dirname, './config/shared/tailor.loader.js')
 };
 
 const copy = [{ from: 'client/assets/img', to: imagesPath }];
@@ -104,7 +105,8 @@ module.exports = {
       // NOTE: Packages do NOT contain transpiled code.
       'humanize-string', 'decamelize',
       // NOTE: Unclear why is this necessary :/
-      'vue-quill-editor'
+      'vue-quill-editor',
+      '@tailor-cms/config'
     ]
   },
   chainWebpack(config, { mode }) {

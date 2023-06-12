@@ -20,7 +20,7 @@ const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const reduce = require('lodash/reduce');
 const { resolveStatics } = require('../storage/helpers');
-const { schema } = require('@tailor-cms/config');
+const { schema } = require('../../../config/shared/tailor.loader');
 const storage = require('../../repository/storage');
 const without = require('lodash/without');
 

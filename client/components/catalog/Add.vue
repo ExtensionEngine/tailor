@@ -113,7 +113,7 @@ import { mapActions, mapGetters } from 'vuex';
 import { repository as api } from '@/api';
 import { loader } from '@tailor-cms/core-components';
 import RepositoryNameField from '../repository/common/RepositoryNameField';
-import { SCHEMAS } from '@tailor-cms/config';
+import { SCHEMAS } from 'tailor-config';
 import TailorDialog from '@/components/common/TailorDialog';
 
 const NEW_TAB = 0;

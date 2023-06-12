@@ -1,6 +1,4 @@
-'use strict';
-
-const yup = require('yup');
+import * as yup from 'yup';
 
 const workflowStatus = yup.object().shape({
   id: yup.string().required(),
@@ -23,7 +21,7 @@ const workflow = yup.object().shape({
 
 const workflows = yup.array().of(workflow);
 
-module.exports = function (config) {
+export default config => {
   try {
     workflows.validateSync(config);
   } catch (err) {
