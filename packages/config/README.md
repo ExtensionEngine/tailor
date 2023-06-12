@@ -60,4 +60,4 @@ Methods:
 
 ### processSchemas(SCHEMAS)
 > The method which validates schemas, prefixes activity types with schema ID, e.g. `SCHEMA_ID/TYPE`, 
-and processes meta.
+> and processes meta.
