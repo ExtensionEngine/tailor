@@ -1,10 +1,8 @@
 {
   "root": true,
   "extends": "@extensionengine/eslint-config/base",
-  "overrides": [{
-    "files": ["src/**"],
-    "parserOptions": {
-      "ecmaVersion": "latest"
-    }
-  }]
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  }
 }
