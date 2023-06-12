@@ -105,7 +105,8 @@ module.exports = {
       // NOTE: Packages do NOT contain transpiled code.
       'humanize-string', 'decamelize',
       // NOTE: Unclear why is this necessary :/
-      'vue-quill-editor'
+      'vue-quill-editor',
+      '@tailor-cms/config'
     ]
   },
   chainWebpack(config, { mode }) {
