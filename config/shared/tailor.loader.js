@@ -1,3 +1,5 @@
+'use strict';
+
 const { getSchemaApi, getWorkflowApi, processSchemas } = require('@tailor-cms/config');
 const { SCHEMAS, WORKFLOWS } = require('../../tailor.config.js');
 
