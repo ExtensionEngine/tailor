@@ -1,10 +1,9 @@
-import { createVuePlugin } from 'vite-plugin-vue2';
 import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue2';
 import { fileURLToPath } from 'url';
 import path from 'path';
 
-const _filename = fileURLToPath(import.meta.url);
-const _dirname = path.dirname(_filename);
+const _dirname = fileURLToPath(new URL('.', import.meta.url));
 
 /**
  * @type {import('vite').UserConfig}
@@ -23,7 +22,7 @@ const config = {
       replacement: path.join(_dirname, './src/')
     }]
   },
-  plugins: [createVuePlugin()],
+  plugins: [vue()],
   rollupOptions: {
     // Externalize deps that shouldn't be bundled
     external: ['vue', 'vuetify', 'vee-validate']
