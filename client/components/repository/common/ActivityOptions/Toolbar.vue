@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import CreateDialog from '@/components/repository/common/CreateDialog';
+import CreateDialog from '@/components/repository/common/CreateDialog/index.vue';
 import InsertLocation from '@/utils/InsertLocation';
 import isEqual from 'lodash/isEqual';
 import optionsMixin from './common';

@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 import cuid from 'cuid';
-import Edit from './edit';
+import Edit from './edit/index.vue';
 import map from 'lodash/map';
 import times from 'lodash/times';
 import toPairs from 'lodash/toPairs';

@@ -26,11 +26,11 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
-import ActivityContent from './ActivityContent';
+import ActivityContent from './ActivityContent/index.vue';
 import get from 'lodash/get';
 import { getElementId } from '@tailor-cms/utils';
-import Sidebar from './Sidebar';
-import Toolbar from './Toolbar';
+import Sidebar from './Sidebar/index.vue';
+import Toolbar from './Toolbar/index.vue';
 import withUserTracking from 'components/common/mixins/userTracking';
 
 export default {

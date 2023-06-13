@@ -1,10 +1,10 @@
-import auth from './modules/auth';
-import createLogger from 'vuex/dist/logger';
-import editor from './modules/editor';
-import plugins from './plugins';
-import repositories from './modules/repositories';
-import repository from './modules/repository';
-import settings from '../settings';
+import auth from './modules/auth/index.js';
+import createLogger from 'vuex/dist/logger.js';
+import editor from './modules/editor/index.js';
+import plugins from './plugins/index.js';
+import repositories from './modules/repositories/index.js';
+import repository from './modules/repository/index.js';
+import settings from '../settings.js';
 import Vue from 'vue';
 import Vuex from 'vuex';
 

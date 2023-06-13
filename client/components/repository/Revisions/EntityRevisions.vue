@@ -25,7 +25,7 @@ import {
   revision as revisionApi
 } from '@/api';
 import { ContentElement } from '@tailor-cms/core-components';
-import EntitySidebar from './EntitySidebar';
+import EntitySidebar from './EntitySidebar.vue';
 import first from 'lodash/first';
 import get from 'lodash/get';
 import includes from 'lodash/includes';

@@ -61,13 +61,13 @@
 
 <script>
 import { numberToLetter, uuid } from '@tailor-cms/utils';
-import AssessmentItem from './Assessment';
+import AssessmentItem from './Assessment.vue';
 import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
 import { ElementList } from '@tailor-cms/core-components';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
-import GroupIntroduction from './GroupIntroduction';
+import GroupIntroduction from './GroupIntroduction.vue';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 import pickBy from 'lodash/pickBy';

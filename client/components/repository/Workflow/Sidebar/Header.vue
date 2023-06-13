@@ -52,10 +52,10 @@
 </template>
 
 <script>
-import ActivityCard from './ActivityCard';
+import ActivityCard from './ActivityCard.vue';
 import fecha from 'fecha';
 import isBefore from 'date-fns/isBefore';
-import LabelChip from '@/components/repository/common/LabelChip';
+import LabelChip from '@/components/repository/common/LabelChip.vue';
 import { mapGetters } from 'vuex';
 
 export default {

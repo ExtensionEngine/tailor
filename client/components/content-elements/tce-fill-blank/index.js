@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import Edit from './edit';
+import Edit from './edit/index.vue';
 import find from 'lodash/find';
 
 const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];

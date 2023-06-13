@@ -66,10 +66,10 @@ import last from 'lodash/last';
 import { loader } from '@tailor-cms/core-components';
 import pluralize from 'pluralize';
 import Promise from 'bluebird';
-import RepositoryTree from './RepositoryTree';
+import RepositoryTree from './RepositoryTree.vue';
 import { SCHEMAS } from 'tailor-config';
 import sortBy from 'lodash/sortBy';
-import TailorDialog from '@/components/common/TailorDialog';
+import TailorDialog from '@/components/common/TailorDialog.vue';
 
 const { ADD_INTO, ADD_AFTER } = InsertLocation;
 

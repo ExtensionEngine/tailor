@@ -61,8 +61,8 @@
 import { mapGetters, mapMutations } from 'vuex';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
-import OptionsMenu from '../common/ActivityOptions/Menu';
-import OptionsToolbar from '../common/ActivityOptions/Toolbar';
+import OptionsMenu from '../common/ActivityOptions/Menu.vue';
+import OptionsToolbar from '../common/ActivityOptions/Toolbar.vue';
 import reorderMixin from './reorderMixin';
 import selectActivity from '@/components/repository/common/selectActivity';
 import size from 'lodash/size';

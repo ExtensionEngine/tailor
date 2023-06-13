@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import AccordionItem from './AccordionItem';
+import AccordionItem from './AccordionItem.vue';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
 import { ElementPlaceholder } from '@tailor-cms/core-components';

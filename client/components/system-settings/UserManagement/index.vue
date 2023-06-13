@@ -83,7 +83,7 @@ import { loader } from '@tailor-cms/core-components';
 import { mapRequests } from '@extensionengine/vue-radio';
 import { mapState } from 'vuex';
 import throttle from 'lodash/throttle';
-import UserDialog from './UserDialog';
+import UserDialog from './UserDialog.vue';
 
 const defaultPage = () => ({
   sortBy: ['updatedAt'],

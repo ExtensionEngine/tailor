@@ -62,11 +62,11 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import ActivityDiscussion from '../ActivityDiscussion';
-import ActivityStatus from './Status';
-import LabelChip from '@/components/repository/common/LabelChip';
-import MetaInput from '@/components/common/MetaInput';
-import Relationship from './Relationship';
+import ActivityDiscussion from '../ActivityDiscussion.vue';
+import ActivityStatus from './Status/index.vue';
+import LabelChip from '@/components/repository/common/LabelChip.vue';
+import MetaInput from '@/components/common/MetaInput.vue';
+import Relationship from './Relationship.vue';
 
 export default {
   name: 'activity-sidebar-body',

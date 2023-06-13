@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import ElementMeta from './ElementMeta';
+import ElementMeta from './ElementMeta/index.vue';
 import { getElementId } from '@tailor-cms/utils';
 
 export default {

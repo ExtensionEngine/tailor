@@ -65,7 +65,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import { user as api } from '@/api';
-import TailorDialog from '@/components/common/TailorDialog';
+import TailorDialog from '@/components/common/TailorDialog.vue';
 import throttle from 'lodash/throttle';
 
 function getDefaultData(roles) {

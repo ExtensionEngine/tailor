@@ -35,7 +35,7 @@
 
 <script>
 import { ElementPlaceholder, PreviewOverlay } from '@tailor-cms/core-components';
-import CircularProgress from './CircularProgress';
+import CircularProgress from './CircularProgress.vue';
 import get from 'lodash/get';
 import isIE from 'is-iexplorer';
 import isSafari from 'is-safari';

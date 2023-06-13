@@ -35,8 +35,8 @@
 </template>
 
 <script>
-import AssigneeFilter from './Assignee';
-import SelectStatus from '../SelectStatus';
+import AssigneeFilter from './Assignee.vue';
+import SelectStatus from '../SelectStatus.vue';
 
 export default {
   name: 'workflow-filters',

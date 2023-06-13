@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import AssigneeAvatar from '@/components/repository/common/AssigneeAvatar';
+import AssigneeAvatar from '@/components/repository/common/AssigneeAvatar.vue';
 
 export default {
   name: 'overview-assignee',

@@ -9,10 +9,10 @@
 </template>
 
 <script>
-import ConfirmationModal from 'components/common/ConfirmationModal';
+import ConfirmationModal from 'components/common/ConfirmationModal.vue';
 import isIexplorer from 'is-iexplorer';
 import { mapState } from 'vuex';
-import Navbar from 'components/common/Navbar';
+import Navbar from 'components/common/Navbar.vue';
 
 if (isIexplorer) document.body.classList.add('ie');
 
@@ -29,7 +29,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '~@/assets/stylesheets/main';
+@import '@/assets/stylesheets/main';
 
 html, body {
   width: 100%;

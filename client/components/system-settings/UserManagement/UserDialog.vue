@@ -87,7 +87,7 @@ import humanize from 'humanize-string';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 import { user as roles } from 'shared/role';
-import TailorDialog from '@/components/common/TailorDialog';
+import TailorDialog from '@/components/common/TailorDialog.vue';
 
 const resetUser = () => ({
   email: '',

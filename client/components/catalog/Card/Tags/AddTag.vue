@@ -42,7 +42,7 @@ import { tag as api } from '@/api';
 import differenceBy from 'lodash/differenceBy';
 import map from 'lodash/map';
 import { mapActions } from 'vuex';
-import TailorDialog from '@/components/common/TailorDialog';
+import TailorDialog from '@/components/common/TailorDialog.vue';
 
 export default {
   name: 'add-tag',

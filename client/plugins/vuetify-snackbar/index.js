@@ -1,6 +1,6 @@
 import debounce from 'lodash/debounce';
 import Queue from 'promise-queue';
-import Snackbar from './Snackbar';
+import Snackbar from './Snackbar.vue';
 
 const queue = new Queue(1, Infinity);
 

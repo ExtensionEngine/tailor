@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import Waves from '@/components/common/Waves';
+import Waves from '@/components/common/Waves.vue';
 
 export default {
   name: 'auth-container',

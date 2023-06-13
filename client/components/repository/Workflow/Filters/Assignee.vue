@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import AssigneeAvatar from '@/components/repository/common/AssigneeAvatar';
+import AssigneeAvatar from '@/components/repository/common/AssigneeAvatar.vue';
 import xor from 'lodash/xor';
 
 export default {

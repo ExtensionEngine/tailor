@@ -28,8 +28,8 @@
 </template>
 
 <script>
-import AdminSidebar from './Sidebar';
-import AppFooter from '@/components/common/Footer';
+import AdminSidebar from './Sidebar.vue';
+import AppFooter from '@/components/common/Footer.vue';
 
 export default {
   name: 'system-settings',

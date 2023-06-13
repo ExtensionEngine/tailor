@@ -23,10 +23,10 @@ import { mapActions, mapGetters } from 'vuex';
 import conforms from 'lodash/conforms';
 import isAfter from 'date-fns/isAfter';
 import overEvery from 'lodash/overEvery';
-import Sidebar from './Sidebar';
+import Sidebar from './Sidebar/index.vue';
 import sub from 'date-fns/sub';
-import WorkflowFilters from './Filters';
-import WorkflowOverview from './Overview';
+import WorkflowFilters from './Filters/index.vue';
+import WorkflowOverview from './Overview/index.vue';
 
 const RECENCY_THRESHOLD = { days: 2 };
 const SEARCH_TEXT_LENGTH_THRESHOLD = 2;

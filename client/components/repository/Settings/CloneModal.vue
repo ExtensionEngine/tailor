@@ -51,7 +51,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import pick from 'lodash/pick';
-import TailorDialog from '@/components/common/TailorDialog';
+import TailorDialog from '@/components/common/TailorDialog.vue';
 
 const getDefaultState = () => ({
   inProgress: false,
