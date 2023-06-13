@@ -1,4 +1,4 @@
-const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = process.env['NODE_ENV'] === 'production';
 
 const isString = arg => typeof arg === 'string';
 const isFileInput = el => el.tagName === 'INPUT' || el.type === 'file';

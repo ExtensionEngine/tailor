@@ -1,15 +1,14 @@
-import path from 'path';
 import request from './request';
 
 const urls = {
   root: '/users',
-  login: () => path.join(urls.root, 'login'),
-  logout: () => path.join(urls.root, 'logout'),
-  forgotPassword: () => path.join(urls.root, 'forgot-password'),
-  resetPassword: () => path.join(urls.root, 'reset-password'),
-  resetTokenStatus: () => path.join(urls.resetPassword(), 'token-status'),
-  profile: () => path.join(urls.root, 'me'),
-  changePassword: () => path.join(urls.profile(), 'change-password')
+  login: () => `${urls.root}/login`,
+  logout: () => `${urls.root}/logout`,
+  forgotPassword: () => `${urls.root}/forgot-password`,
+  resetPassword: () => `${urls.root}/reset-password`,
+  resetTokenStatus: () => `${urls.resetPassword()}/token-status`,
+  profile: () => `${urls.root}/me`,
+  changePassword: () => `${urls.profile()}/change-password`
 };
 
 function login(credentials) {
