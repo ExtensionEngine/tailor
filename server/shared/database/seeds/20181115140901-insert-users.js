@@ -1,8 +1,8 @@
 'use strict';
 
 const bcrypt = require('bcrypt');
-const { auth: config } = require('../../../../config/server');
 const Promise = require('bluebird');
+
 const times = (length, cb) => Array.from({ length }, (_, i) => cb(i));
 
 const now = new Date();
@@ -21,7 +21,10 @@ times(5, i => {
 
 module.exports = {
   up(queryInterface) {
-    return Promise.map(users, user => encryptPassword(user))
+    return import('../../../../config/server/index.js')
+      .then(({ auth: config }) => (
+        Promise.map(users, user => encryptPassword(user, config.saltRounds))
+      ))
       .then(users => queryInterface.bulkInsert('user', users));
   },
   down(queryInterface) {
@@ -29,8 +32,8 @@ module.exports = {
   }
 };
 
-function encryptPassword(user) {
-  return bcrypt.hash(user.password, config.saltRounds)
+function encryptPassword(user, saltRounds) {
+  return bcrypt.hash(user.password, saltRounds)
     .then(password => (user.password = password))
     .then(() => user);
 }
