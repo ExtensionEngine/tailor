@@ -30,7 +30,7 @@ $fab-font-size: 18px;
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-($fab-font-size / 2), -($fab-font-size / 2));
+      transform: translate(calc($fab-font-size / -2), calc($fab-font-size / -2));
       width: $fab-font-size;
       line-height: $fab-font-size;
     }
