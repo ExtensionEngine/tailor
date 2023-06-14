@@ -1,6 +1,4 @@
-'use strict';
-
-module.exports = [
+export default [
   'tce-jodit',
   'tce-image',
   'tce-video',
