@@ -254,7 +254,6 @@ const TEST_SCHEMA = {
   ]
 };
 
-module.exports = {
-  SCHEMAS: [TEST_SCHEMA],
-  WORKFLOWS: [TEST_WORKFLOW]
-};
+export const SCHEMAS = [TEST_SCHEMA];
+
+export const WORKFLOWS = [TEST_WORKFLOW];
