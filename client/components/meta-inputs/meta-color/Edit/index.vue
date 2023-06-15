@@ -134,8 +134,8 @@ ul {
   right: 0;
   bottom: 0;
   left: 0;
-  width: $size/3;
-  height: $size/3;
+  width: calc($size / 3);
+  height: calc($size / 3);
   margin: auto;
   border-radius: 50%;
   opacity: 1;
