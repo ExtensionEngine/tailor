@@ -45,14 +45,14 @@ Configurable headless CMS for complex content structures.
   enter configuration details.
 - Initialize database by running `npm run db migrate`
 - To enable demo repository schema configuration copy `tailor.config.js.example`
-  into `tailor.config.js.`. For more details about the custom schema configuration
+  into `tailor.config.mjs.`. For more details about the custom schema configuration
   please refer [to this guide](https://extensionengine.github.io/tailor-docs/tailor/developer-guide/configuration.html).
 - Configure asset storage proxy by following the steps [in this guide](https://extensionengine.github.io/tailor-docs/tailor/developer-guide/storage-proxy.html)
   based on your environment.
 - You can create admin user by running `npm run add:admin <email> <password>`
-- App branding is configured via values set in a file named `.brandrc` (or
-  `.brandrc.js`). Use the `.brandrc.example` file as a template: `cp
-  .brandrc.example .brandrc` and enter configuration details (Optional).
+- App branding is configured via values set in a file named `.brandrc.mjs`. 
+  Use the `.brandrc.js.example` file as a template: `cp
+  .brandrc.js.example .brandrc.mjs` and enter configuration details.
 
 ## Launch
 
@@ -74,12 +74,12 @@ This project uses a monorepo setup. In order to contribute to [packages](./packa
 ## Content repository structure
 
 Repository structure can be altered using tailor configuration file, which must be placed inside the root
-directory and named `tailor.config.js`.
+directory and named `tailor.config.mjs`.
 
 Use the `tailor.config.js.example` file as a template:
 
 ```
-$ cp tailor.config.js.example tailor.config.js
+$ cp tailor.config.js.example tailor.config.mjs
 ```
 
 and enter the configuration details. At the current time, it is not possible to override the filename or
