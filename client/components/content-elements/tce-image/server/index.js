@@ -1,10 +1,8 @@
-'use strict';
-
-const crypto = require('crypto');
-const info = require('../info');
-const isString = require('lodash/isString');
-const isUrl = require('is-url');
-const mime = require('mime-types');
+import crypto from 'crypto';
+import info from '../info.js';
+import isString from 'lodash/isString';
+import isUrl from 'is-url';
+import mime from 'mime-types';
 
 const DEFAULT_IMAGE_EXTENSION = 'png';
 

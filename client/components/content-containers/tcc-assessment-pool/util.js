@@ -1,6 +1,6 @@
-const info = require('./info');
-const pick = require('lodash/pick');
-const Promise = require('bluebird');
+import info from './info';
+import pick from 'lodash/pick';
+import Promise from 'bluebird';
 
 const ATTRS = [
   'id', 'uid', 'type', 'position', 'parentId', 'createdAt', 'updatedAt'
