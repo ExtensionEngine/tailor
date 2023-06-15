@@ -39,7 +39,7 @@
     "lodash": "^4.17.21",
     "p-min-delay": "^4.0.1",
     "pluralize": "^8.0.0",
-    "vue-quill-editor": "^2.3.3",
+    "vue-quill-editor": "^3.0.6",
     "vuedraggable": "^2.24.3",
     "yup": "^0.32.9"
   },
