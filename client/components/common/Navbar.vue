@@ -52,6 +52,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import { brandConfig } from 'brand-config';
 
 export default {
   name: 'main-toolbar',
@@ -61,8 +62,8 @@ export default {
   computed: {
     ...mapGetters(['isAdmin', 'isOidcActive']),
     ...mapGetters('repository', ['repository']),
-    title: () => BRAND_CONFIG.TITLE,
-    logo: () => BRAND_CONFIG.LOGO_FULL,
+    title: () => brandConfig.title,
+    logo: () => brandConfig.logo.full,
     routes() {
       const items = [
         { name: 'Catalog', to: { name: 'catalog' } },

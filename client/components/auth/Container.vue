@@ -23,12 +23,13 @@
 
 <script>
 import Waves from '@/components/common/Waves.vue';
+import { brandConfig } from 'brand-config';
 
 export default {
   name: 'auth-container',
   computed: {
-    title: () => BRAND_CONFIG.TITLE,
-    logo: () => BRAND_CONFIG.LOGO_FULL
+    title: () => brandConfig.title,
+    logo: () => brandConfig.logo.full
   },
   components: { Waves }
 };
