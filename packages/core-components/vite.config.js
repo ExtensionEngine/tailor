@@ -14,7 +14,11 @@ const config = {
       entry: './src/index.js',
       name: 'TailorCoreComponents',
       formats: ['es', 'cjs', 'umd']
-    }
+    },
+    rollupOptions: {
+      // Externalize deps that shouldn't be bundled
+      external: ['vue', 'vuetify', 'vee-validate'],
+    },
   },
   resolve: {
     alias: [{
@@ -23,10 +27,6 @@ const config = {
     }]
   },
   plugins: [vue()],
-  rollupOptions: {
-    // Externalize deps that shouldn't be bundled
-    external: ['vue', 'vuetify', 'vee-validate']
-  }
 };
 
 export default () => defineConfig(config);
