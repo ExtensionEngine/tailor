@@ -7,13 +7,14 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/core-components.js",
-  "umd:main": "./dist/core-components.umd.js",
-  "module": "./dist/core-components.mjs",
+  "type": "module",
+  "main": "./dist/core-components.cjs",
+  "umd:main": "./dist/core-components.umd.cjs",
+  "module": "./dist/core-components.js",
   "exports": {
     ".": {
-      "import": "./dist/core-components.mjs",
-      "require": "./dist/core-components.js"
+      "import": "./dist/core-components.js",
+      "require": "./dist/core-components.cjs"
     },
     "./style.css": "./dist/style.css"
   },

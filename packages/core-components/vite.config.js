@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue2';
 import { fileURLToPath } from 'url';
 import path from 'path';
+import vue from '@vitejs/plugin-vue2';
 
 const _dirname = fileURLToPath(new URL('.', import.meta.url));
 
@@ -17,8 +17,8 @@ const config = {
     },
     rollupOptions: {
       // Externalize deps that shouldn't be bundled
-      external: ['vue', 'vuetify', 'vee-validate'],
-    },
+      external: ['vue', 'vuetify', 'vee-validate']
+    }
   },
   resolve: {
     alias: [{
@@ -26,7 +26,7 @@ const config = {
       replacement: path.join(_dirname, './src/')
     }]
   },
-  plugins: [vue()],
+  plugins: [vue()]
 };
 
 export default () => defineConfig(config);
