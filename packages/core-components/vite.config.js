@@ -1,6 +1,5 @@
-import { defineConfig } from 'vite';
-import { fileURLToPath } from 'url';
-import path from 'path';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
 import vue from '@vitejs/plugin-vue2';
 
 const _dirname = fileURLToPath(new URL('.', import.meta.url));
@@ -8,7 +7,7 @@ const _dirname = fileURLToPath(new URL('.', import.meta.url));
 /**
  * @type {import('vite').UserConfig}
  */
-const config = {
+export default {
   build: {
     lib: {
       entry: './src/index.js',
@@ -28,5 +27,3 @@ const config = {
   },
   plugins: [vue()]
 };
-
-export default () => defineConfig(config);
