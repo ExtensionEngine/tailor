@@ -10,7 +10,7 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
-const isDevEnv = process.env['NODE_ENV'] !== 'production';
+const isDevEnv = process.env.NODE_ENV !== 'production';
 const middlewares = settings.debug.state && isDevEnv ? [createLogger()] : [];
 
 const modules = {

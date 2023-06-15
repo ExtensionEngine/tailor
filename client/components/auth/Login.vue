@@ -91,7 +91,7 @@ export default {
   }),
   computed: {
     oidcEnabled: vm => vm.$oidc.enabled,
-    oidcLoginText: () => process.env['OIDC_LOGIN_TEXT'] || 'Login with OAuth',
+    oidcLoginText: () => process.env.OIDC_LOGIN_TEXT || 'Login with OAuth',
     accessDenied: vm => vm.$route.query.accessDenied,
     oidcError: vm => vm.accessDenied && getOidcErrorMessage(vm.accessDenied, vm.oidcLoginText),
     errorMessage: vm => vm.oidcError || vm.localError
