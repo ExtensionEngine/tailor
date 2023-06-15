@@ -4,9 +4,9 @@ import MetaRegistry from './MetaRegistry';
 
 export default class ContentRepository {
   constructor(Vue) {
-    this.containerRegistry = new ContainerRegistry(Vue);
-    this.elementRegistry = new ElementRegistry(Vue);
-    this.metaRegistry = new MetaRegistry(Vue);
+    this.containerRegistry = ContainerRegistry(Vue);
+    this.elementRegistry = ElementRegistry(Vue);
+    this.metaRegistry = MetaRegistry(Vue);
   }
 
   initialize() {
