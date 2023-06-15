@@ -1,21 +1,21 @@
-{
-  "title": "Tailor Author",
+export default {
+  title: 'Tailor',
   // Logo files in /client/assets/img
   // Filenames must contain 'logo' verbiage
-  "logo": {
+  logo: {
     // Compact, navbar logo
-    "compact": "my-logo-compact.svg",
+    compact: 'default-logo-compact.svg',
     // Full, login screen logo
-    "full": "my-logo-full.svg"
+    full: 'default-logo-full.svg'
   },
   // Favicon file in /client/assets/img
   // Filename must contain 'favicon' verbiage
-  "favicon": "my-favicon.ico",
+  favicon: 'default-favicon.ico',
   // Style constants
-  "style": {
+  style: {
     // Primary brand color
-    "brandColor": "#3949AB",
+    brandColor: '#0D47A0',
     // Secondary brand color
-    "altBrandColor": "#5C6BC0"
+    altBrandColor: '#5C6BC0'
   }
-}
+};
