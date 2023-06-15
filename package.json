@@ -48,7 +48,7 @@
     "@extensionengine/vue-radio": "1.0.0-beta.4",
     "@mdi/font": "^7.2.96",
     "@tailor-cms/config": "1.0.0-beta.25",
-    "@tailor-cms/core-components": "1.0.0-beta.12",
+    "@tailor-cms/core-components": "1.0.0-beta.15",
     "@tailor-cms/utils": "^1.0.0-beta.18",
     "@ungap/global-this": "^0.4.4",
     "auto-bind": "^3.0.0",
