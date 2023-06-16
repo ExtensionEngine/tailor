@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { origin as serverUrl } from './config/server/index.js';
 import vue from '@vitejs/plugin-vue2';
-import yn  from 'yn';
+import yn from 'yn';
 
 const _dirname = fileURLToPath(new URL('.', import.meta.url));
 
@@ -14,7 +14,7 @@ const getDefine = env => ({
   'process.env.ENABLE_DEFAULT_SCHEMA': yn(env.ENABLE_DEFAULT_SCHEMA),
   'process.env.OIDC_ENABLED': yn(env.OIDC_ENABLED),
   'process.env.OIDC_LOGOUT_ENABLED': yn(env.OIDC_LOGOUT_ENABLED),
-  'process.env.OIDC_LOGIN_TEXT': JSON.stringify(env.OIDC_LOGIN_TEXT),
+  'process.env.OIDC_LOGIN_TEXT': JSON.stringify(env.OIDC_LOGIN_TEXT)
 });
 const getServer = env => ({
   host: env.HOSTNAME || '0.0.0.0',
@@ -22,6 +22,7 @@ const getServer = env => ({
   hrm: true,
   proxy: {
     // Needs to exclude files from `cilent/api` folder, as they shouldn't be proxied
+    // eslint-disable-next-line no-useless-escape
     '^\/api\/(?![A-Za-z]+\.js)': serverUrl,
     '/proxy': serverUrl,
     ...(env.STORAGE_PATH ? { '/repository': serverUrl } : {})
@@ -45,7 +46,7 @@ const alias = [
     replacement: path.join(_dirname, 'client/components/')
   },
   {
-   find: 'utils/',
+    find: 'utils/',
     replacement: path.join(_dirname, 'client/utils/')
   },
   {
@@ -82,7 +83,7 @@ export default defineConfig(({ mode }) => {
     base: './',
     root: path.join(_dirname, 'client'),
     build: {
-      outDir: '../dist',
+      outDir: '../dist'
     },
     resolve: {
       alias
@@ -94,7 +95,7 @@ export default defineConfig(({ mode }) => {
           additionalData: `
             @import '@/assets/stylesheets/common/_variables.scss';
             ${brandStyles}
-          `,
+          `
         }
       }
     },

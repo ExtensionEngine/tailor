@@ -1,8 +1,8 @@
-import map from 'lodash/map.js';
 import config from '../../.brandrc.mjs';
+import map from 'lodash/map.js';
 
 const IMAGES_PATH = 'assets/img';
-const toScssVariable = (value, name) => `$${name}: ${value};`
+const toScssVariable = (value, name) => `$${name}: ${value};`;
 
 export const brandConfig = {
   title: config.title,
@@ -14,5 +14,3 @@ export const brandConfig = {
 };
 
 export const brandStyles = map({ ...config.styles }, toScssVariable).join('\n');
-
-

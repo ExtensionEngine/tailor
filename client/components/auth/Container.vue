@@ -22,8 +22,8 @@
 </template>
 
 <script>
-import Waves from '@/components/common/Waves.vue';
 import { brandConfig } from 'brand-config';
+import Waves from '@/components/common/Waves.vue';
 
 export default {
   name: 'auth-container',

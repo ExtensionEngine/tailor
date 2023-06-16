@@ -5,8 +5,8 @@
 <script>
 import * as d3 from 'd3-selection';
 import { hierarchy, tree } from 'd3-hierarchy';
-import { line as createLine } from 'd3-shape';
 import clamp from 'lodash/clamp';
+import { line as createLine } from 'd3-shape';
 import flatten from 'lodash/flatten';
 import get from 'lodash/get';
 import isEqual from 'lodash/isEqual';

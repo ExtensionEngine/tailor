@@ -17,13 +17,12 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['client/components/content-elements/**/server/**'],
+      files: ['client/**', 'vite.config.js'],
       parserOptions: {
-        sourceType: 'script'
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        requireConfigFile: false
       }
     }
-  ],
-  globals: {
-    BRAND_CONFIG: true
-  }
+  ]
 };
