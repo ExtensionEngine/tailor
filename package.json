@@ -10,7 +10,7 @@
     "postshrinkwrap": "rewrite-lockfile package-lock.json",
     "start": "node -r ./server/script/preflight.cjs ./server/index.js",
     "dev:client": "vite serve",
-    "build": "del-cli node_modules/.cache/vue-loader && vite build",
+    "build": "del-cli node_modules/.vite && vite build",
     "packages:bootstrap": "lerna bootstrap",
     "packages:build": "lerna run build --",
     "packages:link": "npm link ./packages/*",
