@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import info from '../info.js';
-import isString from 'lodash/isString';
+import isString from 'lodash/isString.js';
 import isUrl from 'is-url';
 import mime from 'mime-types';
 
@@ -48,7 +48,7 @@ function saveFile(key, file, storage) {
   return storage.saveFile(key, file, options);
 }
 
-module.exports = {
+export default {
   ...info,
   beforeSave: processImage,
   afterLoaded: resolveImage
