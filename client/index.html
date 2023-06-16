@@ -2,17 +2,16 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" href="<%= favicon %>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Tailor</title>
-    <meta name="description" content="<%- description %>" />
-    <meta name="version" content="<%- version %>" />
-    <link rel="icon" href="/default-favicon.ico" />
+    <title><%= title %></title>
+    <meta name="description" content="<%= description %>" />
+    <meta name="version" content="<%= version %>" />
   </head>
   <body>
     <noscript>
-      We're sorry but Tailor doesn't work properly without JavaScript enabled.
+      We're sorry but <%= title %> doesn't work properly without JavaScript enabled.
       Please enable it to continue.
     </noscript>
     <div id="app" role="main"></div>

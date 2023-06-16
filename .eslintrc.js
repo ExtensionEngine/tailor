@@ -17,7 +17,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['client/**', 'vite.config.js'],
+      files: ['client/**', 'build/plugins/vite/**', 'vite.config.js'],
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',

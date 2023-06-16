@@ -1,6 +1,7 @@
+import { brandConfig, brandStyles } from './config/client/brand.loader.js';
 import { defineConfig, loadEnv } from 'vite';
-import { brandStyles } from './config/client/brand.loader.js';
 import { fileURLToPath } from 'node:url';
+import htmlReplace from './build/plugins/vite/html-replace.js';
 import path from 'node:path';
 import { origin as serverUrl } from './config/server/index.js';
 import vue from '@vitejs/plugin-vue2';
@@ -71,7 +72,11 @@ const alias = [
   }
 ];
 const plugins = [
-  vue()
+  vue(),
+  htmlReplace({
+    defaults: true,
+    replacements: { ...brandConfig }
+  })
 ];
 
 export default defineConfig(({ mode }) => {
