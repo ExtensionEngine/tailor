@@ -58,6 +58,10 @@ const alias = [
     replacement: path.join(_dirname, 'config/shared/')
   },
   {
+    find: 'extensions/',
+    replacement: path.join(_dirname, 'extensions/')
+  },
+  {
     find: 'tailor-config',
     replacement: path.join(_dirname, 'config/shared/tailor.loader.js')
   },
