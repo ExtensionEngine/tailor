@@ -85,6 +85,7 @@ export default defineConfig(({ mode }) => {
    */
   return {
     base: './',
+    publicDir: 'assets/img',
     root: path.join(_dirname, 'client'),
     build: {
       outDir: '../dist'

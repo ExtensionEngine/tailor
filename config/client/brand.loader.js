@@ -1,15 +1,14 @@
 import config from '../../.brandrc.mjs';
 import map from 'lodash/map.js';
 
-const IMAGES_PATH = 'assets/img';
 const toScssVariable = (value, name) => `$${name}: ${value};`;
 
 export const brandConfig = {
   title: config.title,
-  favicon: `${IMAGES_PATH}/${config.favicon}`,
+  favicon: `/${config.favicon}`,
   logo: {
-    compact: `${IMAGES_PATH}/${config.logo.compact}`,
-    full: `${IMAGES_PATH}/${config.logo.full}`
+    compact: `/${config.logo.compact}`,
+    full: `/${config.logo.full}`
   }
 };
 
