@@ -1,15 +1,13 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
 import { defineConfig, loadEnv } from 'vite';
+import { brandStyles } from './config/client/brand.loader.js';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
+import { origin as serverUrl } from './config/server/index.js';
 import vue from '@vitejs/plugin-vue2';
-// import legacy from '@vitejs/plugin-legacy';
-import Components from 'unplugin-vue-components/vite';
-import { VuetifyResolver } from 'unplugin-vue-components/resolvers';
-// import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import yn  from 'yn';
-// import pathBrowserify from 'path-browserify';
 
 const _dirname = fileURLToPath(new URL('.', import.meta.url));
+
 const getDefine = env => ({
   'process.env.NODE_ENV': JSON.stringify(env.NODE_ENV),
   'process.env.API_PATH': JSON.stringify('/api'),
@@ -20,7 +18,14 @@ const getDefine = env => ({
 });
 const getServer = env => ({
   host: env.HOSTNAME || '0.0.0.0',
-  port: env.REVERSE_PROXY_PORT || 8080
+  port: env.REVERSE_PROXY_PORT || 8080,
+  hrm: true,
+  proxy: {
+    // Needs to exclude files from `cilent/api` folder, as they shouldn't be proxied
+    '^\/api\/(?![A-Za-z]+\.js)': serverUrl,
+    '/proxy': serverUrl,
+    ...(env.STORAGE_PATH ? { '/repository': serverUrl } : {})
+  }
 });
 const alias = [
   {
@@ -53,7 +58,11 @@ const alias = [
   },
   {
     find: 'tailor-config',
-    replacement: path.join(_dirname, 'config/shared/tailor.loader.mjs')
+    replacement: path.join(_dirname, 'config/shared/tailor.loader.js')
+  },
+  {
+    find: 'brand-config',
+    replacement: path.join(_dirname, 'config/client/brand.loader.js')
   },
   {
     find: /^~.+/,
@@ -61,29 +70,7 @@ const alias = [
   }
 ];
 const plugins = [
-  vue(),
-  Components({
-    // generate `components.d.ts` global declarations
-    // https://github.com/antfu/unplugin-vue-components#typescript
-    dts: false,
-    // auto import for directives
-    directives: false,
-    // resolvers for custom components
-    resolvers: [
-      // Vuetify
-      VuetifyResolver(),
-    ],
-    // https://github.com/antfu/unplugin-vue-components#types-for-global-registered-components
-    types: [
-      {
-        from: 'vue-router',
-        names: ['RouterLink', 'RouterView'],
-      }
-    ],
-  })//,
-  // legacy({
-  //   targets: ['last 2 versions', 'ie 11'],
-  // })
+  vue()
 ];
 
 export default defineConfig(({ mode }) => {
@@ -92,10 +79,10 @@ export default defineConfig(({ mode }) => {
    * @type {import('vite').UserConfig}
    */
   return {
-    base: '',
-    root: path.join(_dirname, 'client/'),
+    base: './',
+    root: path.join(_dirname, 'client'),
     build: {
-      outDir: "../dist-new"
+      outDir: '../dist',
     },
     resolve: {
       alias
@@ -104,7 +91,10 @@ export default defineConfig(({ mode }) => {
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: `@import '@/assets/stylesheets/common/_variables.scss';`,
+          additionalData: `
+            @import '@/assets/stylesheets/common/_variables.scss';
+            ${brandStyles}
+          `,
         }
       }
     },
