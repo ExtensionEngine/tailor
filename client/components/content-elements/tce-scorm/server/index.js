@@ -11,7 +11,7 @@ import server from '@extensionengine/tce-scorm/dist/server/index.js';
 const { beforeSave } = server;
 
 export default {
-  /*type: options.type,*/
+  /* type: options.type, */
   type: 'SCORM', // Replace with the above version when build is fixed
   beforeSave
 };
