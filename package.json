@@ -110,6 +110,7 @@
     "micromatch": "^4.0.5",
     "mime-types": "^2.1.35",
     "minimist": "^1.2.8",
+    "mississippi": "^4.0.0",
     "mjml": "^4.14.0",
     "mkdirp": "^1.0.4",
     "morgan": "^1.10.0",
