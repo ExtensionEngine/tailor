@@ -17,11 +17,27 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['client/**', 'build/plugins/vite/**', 'vite.config.js'],
+      files: [
+        'build/plugins/vite/**',
+        'client/**',
+        'common/**',
+        'config/**',
+        'server/**',
+        'vite.config.js'
+      ],
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
         requireConfigFile: false
+      }
+    },
+    {
+      files: [
+        'server/shared/database/migrations/**',
+        'server/shared/database/seeds/**'
+      ],
+      parserOptions: {
+        sourceType: 'script'
       }
     }
   ]
