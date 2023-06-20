@@ -15,7 +15,11 @@ const getDefine = env => ({
   'process.env.ENABLE_DEFAULT_SCHEMA': yn(env.ENABLE_DEFAULT_SCHEMA),
   'process.env.OIDC_ENABLED': yn(env.OIDC_ENABLED),
   'process.env.OIDC_LOGOUT_ENABLED': yn(env.OIDC_LOGOUT_ENABLED),
-  'process.env.OIDC_LOGIN_TEXT': JSON.stringify(env.OIDC_LOGIN_TEXT)
+  'process.env.OIDC_LOGIN_TEXT': JSON.stringify(env.OIDC_LOGIN_TEXT),
+  'BRAND_CONFIG.TITLE': JSON.stringify(brandConfig.title),
+  'BRAND_CONFIG.FAVICON': JSON.stringify(brandConfig.favicon),
+  'BRAND_CONFIG.LOGO_COMPACT': JSON.stringify(brandConfig.logo.compact),
+  'BRAND_CONFIG.LOGO_FULL': JSON.stringify(brandConfig.logo.full)
 });
 const getServer = env => ({
   host: env.HOSTNAME || '0.0.0.0',
@@ -63,10 +67,6 @@ const alias = [
     replacement: path.join(_dirname, 'config/shared/tailor.loader.js')
   },
   {
-    find: 'brand-config',
-    replacement: path.join(_dirname, 'config/client/brand.loader.js')
-  },
-  {
     find: /^~.+/,
     replacement: val => val.replace(/^~/, '')
   }
@@ -88,8 +88,14 @@ export default defineConfig(({ mode }) => {
     base: './',
     publicDir: 'assets/img',
     root: path.join(_dirname, 'client'),
+    optimizeDeps: {
+      include: ['tailor-config'],
+    },
     build: {
-      outDir: '../dist'
+      outDir: '../dist',
+      commonjsOptions: {
+        include: [/tailor\.config\.js/, /node_modules/]
+      }
     },
     resolve: {
       alias

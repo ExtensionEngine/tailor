@@ -22,8 +22,7 @@ module.exports = {
         'client/**',
         'common/**',
         'config/**',
-        'server/**',
-        'vite.config.js'
+        'server/**'
       ],
       parserOptions: {
         ecmaVersion: 'latest',
@@ -40,5 +39,8 @@ module.exports = {
         sourceType: 'script'
       }
     }
-  ]
+  ],
+  globals: {
+    BRAND_CONFIG: true
+  }
 };

@@ -1,5 +1,7 @@
 import { getSchemaApi, getWorkflowApi, processSchemas } from '@tailor-cms/config';
-import { SCHEMAS, WORKFLOWS } from '../../tailor.config.mjs';
+import config from '../../tailor.config.js';
+
+const { SCHEMAS, WORKFLOWS } = config;
 
 processSchemas(SCHEMAS);
 

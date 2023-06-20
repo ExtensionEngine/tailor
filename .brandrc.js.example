@@ -1,4 +1,6 @@
-export default {
+'use strict';
+
+module.exports = {
   title: 'Tailor',
   // Logo files in /client/assets/img
   // Filenames must contain 'logo' verbiage

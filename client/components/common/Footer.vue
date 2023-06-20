@@ -16,7 +16,6 @@
 
 <script>
 import { codename, version } from '@/../package.json';
-import { brandConfig } from 'brand-config';
 
 const capitalize = str => str.charAt(0).toUpperCase() + str.substr(1);
 
@@ -25,7 +24,7 @@ export default {
   computed: {
     version: () => version,
     codename: () => capitalize(codename),
-    logo: () => brandConfig.logo.compact
+    logo: () => BRAND_CONFIG.LOGO_COMPACT
   }
 };
 </script>
