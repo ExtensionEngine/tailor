@@ -1,15 +1,14 @@
-'use strict';
+import { readFile, sha256 } from './util.js';
+import { storage as config } from '../../../config/server/index.js';
+import fecha from 'fecha';
+import fromPairs from 'lodash/fromPairs.js';
+import JSZip from 'jszip';
+import mime from 'mime-types';
+import path from 'node:path';
+import pickBy from 'lodash/pickBy.js';
+import Storage from '../../repository/storage.js';
 
-const { getFileUrl, getPath, saveFile } = require('../../repository/storage');
-const { readFile, sha256 } = require('./util');
-const config = require('../../../config/server').storage;
-const fecha = require('fecha');
-const fromPairs = require('lodash/fromPairs');
-const JSZip = require('jszip');
-const mime = require('mime-types');
-const path = require('path');
-const pickBy = require('lodash/pickBy');
-
+const { getFileUrl, getPath, saveFile } = Storage;
 const getStorageUrl = key => `${config.protocol}${key}`;
 
 function getUrl(req, res) {
@@ -30,7 +29,10 @@ async function upload({ file, body, user, repository }, res) {
   return res.json(asset);
 }
 
-module.exports = { getUrl, upload };
+export default {
+  getUrl,
+  upload
+};
 
 async function uploadFile(repositoryId, file, name) {
   const buffer = await readFile(file);

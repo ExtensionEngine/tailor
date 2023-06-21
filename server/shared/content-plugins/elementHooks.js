@@ -1,6 +1,4 @@
-'use strict';
-
-module.exports = {
+export default {
   BEFORE_SAVE: 'beforeSave',
   AFTER_SAVE: 'afterSave',
   AFTER_RETRIEVE: 'afterRetrieve',

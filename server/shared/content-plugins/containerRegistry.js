@@ -1,11 +1,9 @@
-'use strict';
-
-const BaseRegistry = require('./BaseRegistry');
-const containerList = require('../../../config/shared/core-containers');
-const { schema } = require('../../../config/shared/tailor.loader');
+import BaseRegistry from './BaseRegistry.js';
+import containerList from '../../../config/shared/core-containers.js';
+import { schema } from '../../../config/shared/tailor.loader.js';
 
 const { getContainerTemplateId: getId } = schema;
-const EXTENSIONS_LIST = '../../../extensions/content-containers/index';
+const EXTENSIONS_LIST = '../../../extensions/content-containers/index.js';
 
 class ContainerRegistry extends BaseRegistry {
   constructor() {
@@ -43,4 +41,4 @@ class ContainerRegistry extends BaseRegistry {
   }
 }
 
-module.exports = new ContainerRegistry();
+export default new ContainerRegistry();

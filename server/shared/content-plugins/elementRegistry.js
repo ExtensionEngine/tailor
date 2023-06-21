@@ -1,17 +1,15 @@
-'use strict';
+import BaseRegistry from './BaseRegistry.js';
+import config from '../../../config/server/index.js';
+import dedent from 'dedent';
+import depd from 'depd';
+import elementsList from '../../../config/shared/core-elements.js';
+import hooks from './elementHooks.js';
+import pick from 'lodash/pick.js';
+import storage from '../../repository/storage.js';
+import storageProxy from '../../repository/proxy.js';
+import toCase from 'to-case';
 
-const BaseRegistry = require('./BaseRegistry');
-const config = require('../../../config/server');
-const dedent = require('dedent');
-const depd = require('depd');
-const elementsList = require('../../../config/shared/core-elements');
-const hooks = require('./elementHooks');
-const pick = require('lodash/pick');
-const storage = require('../../repository/storage');
-const storageProxy = require('../../repository/proxy');
-const toCase = require('to-case');
-
-const EXTENSIONS_LIST = '../../../extensions/content-elements/index';
+const EXTENSIONS_LIST = '../../../extensions/content-elements/index.js';
 
 class ElementsRegistry extends BaseRegistry {
   constructor() {
@@ -58,7 +56,7 @@ class ElementsRegistry extends BaseRegistry {
   }
 }
 
-module.exports = new ElementsRegistry();
+export default new ElementsRegistry();
 
 function deprecateHandleStatics(element) {
   const name = `tce-${toCase.slug(element.type)}`;

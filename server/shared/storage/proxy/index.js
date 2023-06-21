@@ -1,21 +1,28 @@
-'use strict';
+import autobind from 'auto-bind';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
 
-const autobind = require('auto-bind');
-const path = require('path');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 class Proxy {
-  constructor(config) {
-    this.provider = Proxy.createProvider(config);
+  constructor(provider) {
+    this.provider = provider;
     autobind(this);
   }
 
-  static createProvider(options) {
+  static async create(config) {
+    const provider = await Proxy.createProvider(config);
+    return new this(provider);
+  }
+
+  static async createProvider(options) {
     const providerName = options.provider;
     const config = options[providerName];
     if (!config) {
       throw new Error(`Unable to find config for "${providerName}" proxy.`);
     }
-    return loadProvider(options.provider).create(config);
+    const Provider = await loadProvider(options.provider);
+    return Provider.create(config);
   }
 
   get isSelfHosted() {
@@ -51,11 +58,12 @@ class Proxy {
   }
 }
 
-module.exports = Proxy;
+export default Proxy;
 
-function loadProvider(name) {
+async function loadProvider(name) {
   try {
-    return require(path.join(__dirname, './providers', name));
+    const Provider = await import(path.join(__dirname, './providers', `${name}.js`));
+    return Provider;
   } catch (err) {
     if (err.code === 'MODULE_NOT_FOUND') throw new Error('Unsupported proxy provider');
     throw err;

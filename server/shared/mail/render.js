@@ -1,15 +1,13 @@
-'use strict';
+import * as fs from 'node:fs';
+import cheerio from 'cheerio';
+import { html } from './formatters.js';
+import map from 'lodash/map.js';
+import mapKeys from 'lodash/mapKeys.js';
+import mjml2html from 'mjml';
+import mustache from 'mustache';
+import { paramCase } from 'change-case';
 
-const cheerio = require('cheerio');
-const fs = require('fs');
-const { html } = require('./formatters');
-const map = require('lodash/map');
-const mapKeys = require('lodash/mapKeys');
-const mjml2html = require('mjml');
-const mustache = require('mustache');
-const { paramCase } = require('change-case');
-
-module.exports = {
+export {
   renderHtml,
   renderText
 };

@@ -1,10 +1,10 @@
-'use strict';
+import { auth as authConfig } from '../../../config/server/index.js';
+import { createError } from '../error/helpers.js';
+import get from 'lodash/get.js';
+import roleConfig from '../../../config/shared/role.js';
+import { UNAUTHORIZED } from 'http-status-codes';
 
-const { auth: authConfig } = require('../../../config/server');
-const { createError } = require('../error/helpers');
-const get = require('lodash/get');
-const { user: role } = require('../../../config/shared/role');
-const { UNAUTHORIZED } = require('http-status-codes');
+const { user: role } = roleConfig;
 
 function authorize(...allowed) {
   allowed.push(role.ADMIN);
@@ -20,7 +20,7 @@ function extractAuthData(req, res, next) {
   return next();
 }
 
-module.exports = {
+export {
   authorize,
   extractAuthData
 };

@@ -25,9 +25,7 @@ const UserActivity = {
   EndSession: 'user_activity:end_session'
 };
 
-module.exports = {
-  Activity,
-  Comment,
-  ContentElement,
-  UserActivity
-};
+exports.Activity = Activity;
+exports.Comment = Comment;
+exports.ContentElement = ContentElement;
+exports.UserActivity = UserActivity;

@@ -1,11 +1,10 @@
-'use strict';
+import { ACCEPTED, BAD_REQUEST, CONFLICT, NO_CONTENT, NOT_FOUND } from 'http-status-codes';
+import { createError, validationError } from '../shared/error/helpers.js';
+import db from '../shared/database/index.js';
+import map from 'lodash/map.js';
+import { Op } from 'sequelize';
 
-const { ACCEPTED, BAD_REQUEST, CONFLICT, NO_CONTENT, NOT_FOUND } = require('http-status-codes');
-const { createError, validationError } = require('../shared/error/helpers');
-const map = require('lodash/map');
-const { Op } = require('sequelize');
-const { User } = require('../shared/database');
-
+const { User } = db;
 const createFilter = q => map(['email', 'firstName', 'lastName'],
   it => ({ [it]: { [Op.iLike]: `%${q}%` } }));
 
@@ -70,7 +69,7 @@ function reinvite({ params }, res) {
     .then(() => res.status(ACCEPTED).end());
 }
 
-module.exports = {
+export default {
   list,
   upsert,
   remove,

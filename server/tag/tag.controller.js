@@ -1,7 +1,7 @@
-'use strict';
+import db from '../shared/database/index.js';
+import yn from 'yn';
 
-const { Tag } = require('../shared/database');
-const yn = require('yn');
+const { Tag } = db;
 
 async function list({ user, query: { associated } }, res) {
   const tags = await (yn(associated)
@@ -10,6 +10,6 @@ async function list({ user, query: { associated } }, res) {
   return res.json({ data: tags });
 }
 
-module.exports = {
+export default {
   list
 };

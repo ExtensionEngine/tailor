@@ -1,7 +1,5 @@
-'use strict';
-
-const { parsePath } = require('./helpers');
-const pick = require('lodash/pick');
+import { parsePath } from './helpers.js';
+import pick from 'lodash/pick.js';
 
 const parseOptions = ({ limit, offset, sortOrder }) => ({
   limit: parseInt(limit, 10) || 100,
@@ -22,6 +20,6 @@ function processPagination(Model) {
   };
 }
 
-module.exports = {
+export {
   processPagination
 };

@@ -1,9 +1,9 @@
-'use strict';
+import { createError } from '../shared/error/helpers.js';
+import db from '../shared/database/index.js';
+import { NOT_FOUND } from 'http-status-codes';
+import pick from 'lodash/pick.js';
 
-const { Activity, ContentElement } = require('../shared/database');
-const { createError } = require('../shared/error/helpers');
-const { NOT_FOUND } = require('http-status-codes');
-const pick = require('lodash/pick');
+const { Activity, ContentElement } = db;
 
 function list({ query, opts }, res) {
   const { detached, ids } = query;
@@ -59,7 +59,7 @@ function reorder({ body, params: { elementId } }, res) {
     .then(asset => res.json({ data: asset }));
 }
 
-module.exports = {
+export default {
   list,
   show,
   create,

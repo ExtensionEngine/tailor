@@ -1,11 +1,8 @@
-'use strict';
+import 'dotenv/config';
+import { defineConfig } from 'cypress';
+import serverConfig from './config/server/index.js';
 
-require('dotenv').config();
-
-const { defineConfig } = require('cypress');
-const serverConfig = require('./config/server');
-
-module.exports = defineConfig({
+export default defineConfig({
   env: {
     USERNAME: process.env.CYPRESS_USERNAME,
     PASSWORD: process.env.CYPRESS_PASSWORD

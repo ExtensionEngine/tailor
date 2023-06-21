@@ -1,4 +1,18 @@
-'use strict';
+import 'dotenv/config';
+import createLogger from '../shared/logger.js';
+import get from 'lodash/get.js';
+import Listr from 'listr';
+import path from 'node:path';
+import Promise from 'bluebird';
+import { protocol } from '../../config/server/storage.js';
+import { SCHEMAS } from '../../config/shared/tailor.loader.js';
+import storage from '../repository/storage.js';
+import toPairs from 'lodash/toPairs.js';
+
+createLogger.enabled = false;
+
+// Dynamic import is needed in order for the `enabled` flag to be respected
+const { default: db } = await import('../shared/database/index.js');
 
 const {
   Activity,
@@ -6,15 +20,7 @@ const {
   Repository,
   Revision,
   sequelize
-} = require('../shared/database');
-const get = require('lodash/get');
-const Listr = require('listr');
-const path = require('path');
-const Promise = require('bluebird');
-const { protocol } = require('../../config/server/storage');
-const { SCHEMAS } = require('../../config/shared/activities');
-const storage = require('../repository/storage');
-const toPairs = require('lodash/toPairs');
+} = db;
 
 const ASSET_PATH_REGEX = /(?<directory>repository\/assets\/(?<fileName>[^?]*))/;
 const CHUNK_SIZE = 2000;

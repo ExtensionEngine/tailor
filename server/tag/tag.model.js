@@ -1,6 +1,4 @@
-'use strict';
-
-const { Model } = require('sequelize');
+import { Model } from 'sequelize';
 
 class Tag extends Model {
   static fields({ STRING, UUID, UUIDV4 }) {
@@ -53,4 +51,4 @@ class Tag extends Model {
   }
 }
 
-module.exports = Tag;
+export default Tag;

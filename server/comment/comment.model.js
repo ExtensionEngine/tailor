@@ -1,8 +1,6 @@
-'use strict';
-
-const { Comment: Events } = require('../../common/sse');
-const hooks = require('./hooks');
-const { Model } = require('sequelize');
+import { Comment as Events } from '../../common/sse.js';
+import hooks from './hooks.js';
+import { Model } from 'sequelize';
 
 class Comment extends Model {
   static fields(DataTypes) {
@@ -82,4 +80,4 @@ class Comment extends Model {
   }
 }
 
-module.exports = Comment;
+export default Comment;

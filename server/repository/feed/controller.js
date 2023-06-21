@@ -1,10 +1,8 @@
-'use strict';
-
-const { addContext, getActiveUsers, removeContext } = require('./store');
-const isEqual = require('lodash/isEqual');
-const pick = require('lodash/pick');
-const sse = require('../../shared/sse');
-const { UserActivity } = require('../../../common/sse');
+import { addContext, getActiveUsers, removeContext } from './store.js';
+import isEqual from 'lodash/isEqual.js';
+import pick from 'lodash/pick.js';
+import sse from '../../shared/sse/index.js';
+import { UserActivity } from '../../../common/sse.js';
 
 const USER_ATTRS = [
   'id', 'email', 'firstName', 'lastName', 'fullName', 'label', 'imgUrl'
@@ -42,7 +40,7 @@ async function removeUserActivity({ user, body: { context } }, res) {
   sse.channel(context.repositoryId).send(UserActivity.End, { user, context });
 }
 
-module.exports = {
+export default {
   subscribe,
   fetchUserActivities,
   addUserActivity,

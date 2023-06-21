@@ -1,29 +1,30 @@
-'use strict';
+import db from '../database/index.js';
+import differenceWith from 'lodash/differenceWith.js';
+import filter from 'lodash/filter.js';
+import find from 'lodash/find.js';
+import findIndex from 'lodash/findIndex.js';
+import get from 'lodash/get.js';
+import hash from 'hash-obj';
+import keys from 'lodash/keys.js';
+import map from 'lodash/map.js';
+import omit from 'lodash/omit.js';
+import pick from 'lodash/pick.js';
+import PluginRegistry from '../content-plugins/index.js';
+import Promise from 'bluebird';
+import reduce from 'lodash/reduce.js';
+import { resolveStatics } from '../storage/helpers.js';
+import { schema } from '../../../config/shared/tailor.loader.js';
+import storage from '../../repository/storage.js';
+import without from 'lodash/without.js';
 
 const {
   Activity,
   ContentElement,
-  Sequelize: { Op },
+  Sequelize,
   sequelize
-} = require('../database');
-const { containerRegistry } = require('../content-plugins');
-const differenceWith = require('lodash/differenceWith');
-const filter = require('lodash/filter');
-const find = require('lodash/find');
-const findIndex = require('lodash/findIndex');
-const get = require('lodash/get');
-const hash = require('hash-obj');
-const keys = require('lodash/keys');
-const map = require('lodash/map');
-const omit = require('lodash/omit');
-const pick = require('lodash/pick');
-const Promise = require('bluebird');
-const reduce = require('lodash/reduce');
-const { resolveStatics } = require('../storage/helpers');
-const { schema } = require('../../../config/shared/tailor.loader');
-const storage = require('../../repository/storage');
-const without = require('lodash/without');
-
+} = db;
+const { containerRegistry } = PluginRegistry;
+const { Op } = Sequelize;
 const {
   getLevelRelationships,
   getOutlineLevels,
@@ -313,7 +314,7 @@ async function updatePublishingStatus(repository, activity) {
   return repository.update({ hasUnpublishedChanges: !!unpublishedCount });
 }
 
-module.exports = {
+export {
   getRepositoryCatalog,
   publishActivity,
   unpublishActivity,

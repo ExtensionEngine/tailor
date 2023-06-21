@@ -1,14 +1,12 @@
-'use strict';
-
-require('dotenv').config();
+import 'dotenv/config';
 
 const config = {
   url: process.env.POSTGRES_URI,
   dialect: 'postgres'
 };
 
-module.exports = {
-  development: config,
-  test: config,
-  production: config
-};
+export const development = config;
+
+export const test = config;
+
+export const production = config;

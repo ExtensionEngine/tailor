@@ -1,13 +1,11 @@
-'use strict';
+import mail from '../shared/mail/index.js';
+import map from 'lodash/map.js';
+import pick from 'lodash/pick.js';
+import { schema } from '../../config/shared/tailor.loader.js';
+import sse from '../shared/sse/index.js';
+import without from 'lodash/without.js';
 
-const mail = require('../shared/mail');
-const map = require('lodash/map');
-const pick = require('lodash/pick');
-const { schema } = require('../../config/shared/tailor.loader');
-const sse = require('../shared/sse');
-const without = require('lodash/without');
-
-exports.add = (Comment, Hooks, db) => {
+const add = (Comment, Hooks, db) => {
   const { Events } = Comment;
   const { Repository, RepositoryUser, Activity, ContentElement, User } = db;
 
@@ -84,4 +82,8 @@ exports.add = (Comment, Hooks, db) => {
     const recipients = without(collaborators, author.email);
     if (recipients.length) mail.sendCommentNotification(recipients, data);
   }
+};
+
+export default {
+  add
 };

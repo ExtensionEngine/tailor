@@ -1,9 +1,10 @@
-'use strict';
+import { createRequire } from 'node:module';
+import dargs from 'dargs';
+import minimist from 'minimist';
+import path from 'node:path';
+import safeRequire from 'safe-require';
 
-const dargs = require('dargs');
-const minimist = require('minimist');
-const path = require('path');
-const safeRequire = require('safe-require');
+const require = createRequire(import.meta.url);
 
 const actions = [
   'migrate',
@@ -32,7 +33,7 @@ const options = Object.assign({}, config, getOptions(argv));
 process.argv.push(...dargs(options));
 
 // Make it rain!
-// eslint-disable-next-line require-sort/require-sort
+// eslint-disable-next-line
 require('sequelize-cli/lib/sequelize');
 
 function getArgs(argv) {

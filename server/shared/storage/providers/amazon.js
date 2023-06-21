@@ -1,6 +1,5 @@
-'use strict';
-
-const {
+import * as yup from 'yup';
+import {
   CopyObjectCommand,
   DeleteObjectCommand,
   DeleteObjectsCommand,
@@ -9,19 +8,18 @@ const {
   ListObjectsV2Command,
   PutObjectCommand,
   S3Client
-} = require('@aws-sdk/client-s3');
-const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
-const miss = require('mississippi');
-const path = require('path');
-const { Upload } = require('@aws-sdk/lib-storage');
-const { validateConfig } = require('../validation');
-const yup = require('yup');
+} from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import miss from 'mississippi';
+import path from 'node:path';
+import { Upload } from '@aws-sdk/lib-storage';
+import { validateConfig } from '../validation.js';
 
 const noop = () => {};
 const isNotFound = err => err.Code === 'NoSuchKey';
 const DEFAULT_EXPIRATION_TIME = 3600; // seconds
 
-const schema = yup.object().shape({
+export const schema = yup.object().shape({
   region: yup.string().required(),
   bucket: yup.string().required(),
   key: yup.string().required(),
@@ -153,7 +151,4 @@ class Amazon {
   }
 }
 
-module.exports = {
-  schema,
-  create: Amazon.create
-};
+export const create = Amazon.create.bind(Amazon);

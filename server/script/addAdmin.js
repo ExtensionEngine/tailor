@@ -1,10 +1,14 @@
-'use strict';
+import 'dotenv/config';
+import createLogger from '../shared/logger.js';
+import roleConfig from '../../config/shared/role.js';
 
-require('dotenv').config();
-require('../shared/logger').enabled = false;
+createLogger.enabled = false;
 
-const { User } = require('../shared/database');
-const { user: role } = require('../../config/shared').role;
+// Dynamic import is needed in order for the `enabled` flag to be respected
+const { default: db } = await import('../shared/database/index.js');
+
+const { User } = db;
+const { user: role } = roleConfig;
 
 const args = process.argv.slice(2);
 if (args.length !== 2) {

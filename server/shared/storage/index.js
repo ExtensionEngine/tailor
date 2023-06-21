@@ -1,11 +1,12 @@
-'use strict';
+import autobind from 'auto-bind';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
 
-const autobind = require('auto-bind');
-const path = require('path');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 class Storage {
-  constructor(config) {
-    this.provider = Storage.createProvider(config);
+  constructor(provider) {
+    this.provider = provider;
     autobind(this);
   }
 
@@ -53,7 +54,12 @@ class Storage {
     return this.provider.copyFile(key, newKey, options);
   }
 
-  static createProvider(options) {
+  static async create(config) {
+    const provider = await Storage.createProvider(config);
+    return new this(provider);
+  }
+
+  static async createProvider(options) {
     // Validate provider name.
     const providerName = options.provider;
     if (!options[providerName]) {
@@ -62,15 +68,17 @@ class Storage {
 
     // Load provider module & create provider instance.
     const config = options[providerName];
-    return loadProvider(providerName).create(config);
+    const Provider = await loadProvider(providerName);
+    return Provider.create(config);
   }
 }
 
-module.exports = Storage;
+export default Storage;
 
-function loadProvider(name) {
+async function loadProvider(name) {
   try {
-    return require(path.join(__dirname, './providers/', name));
+    const Provider = await import(path.join(__dirname, './providers/', `${name}.js`));
+    return Provider;
   } catch (err) {
     if (err.code === 'MODULE_NOT_FOUND') throw new Error('Unsupported provider');
     throw err;

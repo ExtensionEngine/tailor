@@ -1,10 +1,8 @@
-'use strict';
-
-const { createSign } = require('crypto');
-const every = require('lodash/every');
-const urlJoin = require('url-join');
-const { validateConfig } = require('../../validation');
-const yup = require('yup');
+import * as yup from 'yup';
+import { createSign } from 'node:crypto';
+import every from 'lodash/every.js';
+import urlJoin from 'url-join';
+import { validateConfig } from '../../validation.js';
 
 const storageCookies = {
   SIGNATURE: 'CloudFront-Signature',
@@ -61,7 +59,7 @@ class CloudFront {
   }
 }
 
-module.exports = { create: CloudFront.create.bind(CloudFront) };
+export const create = CloudFront.create.bind(CloudFront);
 
 function createPolicy(resource, expires) {
   return JSON.stringify({

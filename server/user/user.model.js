@@ -1,18 +1,16 @@
-'use strict';
-
-const Audience = require('../shared/auth/audience');
-const bcrypt = require('bcrypt');
-const config = require('../../config/server');
-const gravatar = require('gravatar');
-const jwt = require('jsonwebtoken');
-const mail = require('../shared/mail');
-const map = require('lodash/map');
-const { Model } = require('sequelize');
-const omit = require('lodash/omit');
-const pick = require('lodash/pick');
-const Promise = require('bluebird');
-const randomstring = require('randomstring');
-const { role: roles } = require('../../config/shared');
+import Audience from '../shared/auth/audience.js';
+import { auth as authConfig } from '../../config/server/index.js';
+import bcrypt from 'bcrypt';
+import gravatar from 'gravatar';
+import jwt from 'jsonwebtoken';
+import mail from '../shared/mail/index.js';
+import map from 'lodash/map.js';
+import { Model } from 'sequelize';
+import omit from 'lodash/omit.js';
+import pick from 'lodash/pick.js';
+import Promise from 'bluebird';
+import randomstring from 'randomstring';
+import { role as roles } from '../../config/shared/index.js';
 
 const { user: { ADMIN, USER, INTEGRATION } } = roles;
 const gravatarConfig = { size: 130, default: 'identicon' };
@@ -184,7 +182,7 @@ class User extends Model {
   }
 
   encrypt(val) {
-    return bcrypt.hash(val, config.auth.saltRounds);
+    return bcrypt.hash(val, authConfig.saltRounds);
   }
 
   encryptPassword() {
@@ -197,7 +195,7 @@ class User extends Model {
   createToken(options = {}) {
     const payload = { id: this.id, email: this.email };
     Object.assign(options, {
-      issuer: config.auth.jwt.issuer,
+      issuer: authConfig.jwt.issuer,
       audience: options.audience || Audience.Scope.Access
     });
     return jwt.sign(payload, this.getTokenSecret(options.audience), options);
@@ -212,10 +210,10 @@ class User extends Model {
   }
 
   getTokenSecret(audience) {
-    const { secret } = config.auth.jwt;
+    const { secret } = authConfig.jwt;
     if (audience === Audience.Scope.Access) return secret;
     return [secret, this.password, this.createdAt.getTime()].join('');
   }
 }
 
-module.exports = User;
+export default User;

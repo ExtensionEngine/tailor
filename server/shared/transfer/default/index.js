@@ -1,14 +1,12 @@
-'use strict';
+import * as yup from 'yup';
+import processors from './processors.js';
+import Promise from 'bluebird';
+import resolvers from './resolvers.js';
+import { sequelize } from '../../database/index.js';
+import storage from '../../../repository/storage.js';
+import { useTar } from '../formats.js';
 
-const processors = require('./processors');
-const Promise = require('bluebird');
-const resolvers = require('./resolvers');
-const { sequelize } = require('../../database');
-const storage = require('../../../repository/storage');
-const { useTar } = require('../formats');
-const yup = require('yup');
-
-const miss = Promise.promisifyAll(require('mississippi'));
+const miss = Promise.promisifyAll((await import('mississippi')).default);
 
 const Filename = {
   REPOSITORY: 'repository.json',
@@ -79,7 +77,7 @@ class DefaultAdapter {
   }
 }
 
-module.exports = useTar(DefaultAdapter);
+export default useTar(DefaultAdapter);
 
 async function exportFile(blobStore, filename, { context, transaction } = {}) {
   const options = { context, filename, storage, transaction };

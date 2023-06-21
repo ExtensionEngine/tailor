@@ -1,12 +1,11 @@
-'use strict';
+import { createError } from '../error/helpers.js';
+import ctrl from './storage.controller.js';
+import express from 'express';
+import { FORBIDDEN } from 'http-status-codes';
+import multer from 'multer';
+import storage from '../../repository/storage.js';
 
-const { createError } = require('../error/helpers');
-const ctrl = require('./storage.controller');
-const { FORBIDDEN } = require('http-status-codes');
-const multer = require('multer');
-const router = require('express').Router();
-const storage = require('../../repository/storage');
-
+const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
 router
@@ -22,7 +21,7 @@ function validateAssetRepository(req, res, next) {
   next();
 }
 
-module.exports = {
+export default {
   path: '/assets',
   router
 };

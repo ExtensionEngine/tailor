@@ -1,33 +1,17 @@
-'use strict';
-
-const auth = require('./auth');
-const consumer = require('./consumer');
-const isLocalhost = require('is-localhost');
-const mail = require('./mail');
-const parse = require('url-parse');
-const storage = require('./storage');
-const store = require('./store');
-const tce = require('./tce');
+import * as auth from './auth.js';
+import * as consumer from './consumer.js';
+import * as mail from './mail.js';
+import * as storage from './storage.js';
+import * as store from './store.js';
+import * as tce from './tce.js';
+import isLocalhost from 'is-localhost';
+import parse from 'url-parse';
 
 const hostname = resolveHostname();
 const protocol = resolveProtocol(hostname);
 const port = resolvePort();
 const origin = resolveOrigin(hostname, protocol, port);
 const previewUrl = process.env.PREVIEW_URL;
-
-module.exports = {
-  protocol,
-  hostname,
-  port,
-  origin,
-  auth,
-  mail,
-  storage,
-  previewUrl,
-  consumer,
-  store,
-  tce
-};
 
 // Legacy config support
 function resolveHostname() {
@@ -58,3 +42,31 @@ function resolveOriginPort(hostname) {
   if (REVERSE_PROXY_PORT === '80' || REVERSE_PROXY_PORT === '443') return '';
   return `:${REVERSE_PROXY_PORT}`;
 }
+
+export {
+  protocol,
+  hostname,
+  port,
+  origin,
+  auth,
+  mail,
+  storage,
+  previewUrl,
+  consumer,
+  store,
+  tce
+};
+
+export default {
+  protocol,
+  hostname,
+  port,
+  origin,
+  auth,
+  mail,
+  storage,
+  previewUrl,
+  consumer,
+  store,
+  tce
+};

@@ -1,8 +1,6 @@
-'use strict';
-
-const Scope = {
-  Access: 'scope:access',
-  Setup: 'scope:setup'
+export default {
+  Scope: {
+    Access: 'scope:access',
+    Setup: 'scope:setup'
+  }
 };
-
-module.exports = { Scope };

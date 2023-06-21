@@ -1,9 +1,12 @@
-'use strict';
+import 'dotenv/config';
+import createLogger from '../shared/logger.js';
 
-require('dotenv').config();
-require('../shared/logger').enabled = false;
+createLogger.enabled = false;
 
-const { User } = require('../shared/database');
+// Dynamic import is needed in order for the `enabled` flag to be respected
+const { default: db } = await import('../shared/database/index.js');
+
+const { User } = db;
 
 User.findOne({ where: { role: 'INTEGRATION' } })
   .then(user => user.createToken({}))

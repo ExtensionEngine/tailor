@@ -1,15 +1,14 @@
-'use strict';
+import db from '../shared/database/index.js';
+import { fetchActivityContent } from '../shared/publishing/helpers.js';
+import find from 'lodash/find.js';
+import get from 'lodash/get.js';
+import pick from 'lodash/pick.js';
+import { previewUrl } from '../../config/server/index.js';
+import publishingService from '../shared/publishing/publishing.service.js';
+import request from 'axios';
+import { schema } from '../../config/shared/tailor.loader.js';
 
-const { Activity } = require('../shared/database');
-const { fetchActivityContent } = require('../shared/publishing/helpers');
-const find = require('lodash/find');
-const get = require('lodash/get');
-const pick = require('lodash/pick');
-const { previewUrl } = require('../../config/server');
-const publishingService = require('../shared/publishing/publishing.service');
-const request = require('axios');
-const { schema } = require('../../config/shared/tailor.loader');
-
+const { Activity } = db;
 const { getOutlineLevels, isOutlineActivity } = schema;
 
 function list({ repository, query, opts }, res) {
@@ -103,7 +102,7 @@ function updatePublishingStatus(repository, activity) {
   return publishingService.updatePublishingStatus(repository);
 }
 
-module.exports = {
+export default {
   create,
   show,
   list,

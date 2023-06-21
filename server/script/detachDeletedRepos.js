@@ -1,14 +1,20 @@
-'use strict';
+import 'dotenv/config';
+import createLogger from '../shared/logger.js';
+import each from 'lodash/each.js';
+import find from 'lodash/find.js';
+import omit from 'lodash/omit.js';
 
-require('dotenv').config();
-require('../shared/logger').enabled = false;
+createLogger.enabled = false;
 
-const { getRepositoryAttrs, getRepositoryCatalog } = require('../shared/publishing/helpers');
-const each = require('lodash/each');
-const find = require('lodash/find');
-const omit = require('lodash/omit');
-const { Repository } = require('../shared/database');
-const storage = require('../repository/storage');
+// Dynamic imports are needed in order for the `enabled` flag to be respected
+const {
+  getRepositoryAttrs,
+  getRepositoryCatalog
+} = await import('../shared/publishing/helpers.js');
+const { default: db } = await import('../shared/database/index.js');
+const { default: storage } = await import('../repository/storage.js');
+
+const { Repository } = db;
 
 Repository.findAll({ paranoid: false })
   .then(repositories => repositories.length && updateRepositoryCatalog(repositories))

@@ -1,12 +1,10 @@
-'use strict';
-
-const { constant } = require('to-case');
-const forEach = require('lodash/forEach');
-const logger = require('../shared/logger')('db');
+import createLogger from '../shared/logger.js';
+import forEach from 'lodash/forEach.js';
+import toCase from 'to-case';
 
 const castArray = arg => Array.isArray(arg) ? arg : [arg];
-
-module.exports = { add };
+const { constant } = toCase;
+const logger = createLogger('db');
 
 function add(Revision, Hooks, { Repository, Activity, ContentElement }) {
   const hooks = {
@@ -55,3 +53,7 @@ function add(Revision, Hooks, { Repository, Activity, ContentElement }) {
     };
   }
 }
+
+export default {
+  add
+};

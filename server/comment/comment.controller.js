@@ -1,10 +1,10 @@
-'use strict';
+import { BAD_REQUEST, NO_CONTENT } from 'http-status-codes';
+import { createError } from '../shared/error/helpers.js';
+import db from '../shared/database/index.js';
+import pick from 'lodash/pick.js';
+import pickBy from 'lodash/pickBy.js';
 
-const { BAD_REQUEST, NO_CONTENT } = require('http-status-codes');
-const { Comment, ContentElement, User } = require('../shared/database');
-const { createError } = require('../shared/error/helpers');
-const pick = require('lodash/pick');
-const pickBy = require('lodash/pickBy');
+const { Comment, ContentElement, User } = db;
 
 const author = {
   model: User,
@@ -55,7 +55,7 @@ function updateResolvement({ repository, body }, res) {
     .then(() => res.sendStatus(NO_CONTENT));
 }
 
-module.exports = {
+export default {
   list,
   create,
   patch,

@@ -1,13 +1,9 @@
-'use strict';
-
-const forEach = require('lodash/forEach');
-const groupBy = require('lodash/groupBy');
-const { schema } = require('../../config/shared/tailor.loader');
-const sse = require('../shared/sse');
+import forEach from 'lodash/forEach.js';
+import groupBy from 'lodash/groupBy.js';
+import { schema } from '../../config/shared/tailor.loader.js';
+import sse from '../shared/sse/index.js';
 
 const { isOutlineActivity } = schema;
-
-module.exports = { add };
 
 function add(Activity, Hooks, Models) {
   const { Events } = Activity;
@@ -67,4 +63,8 @@ function add(Activity, Hooks, Models) {
 const afterTransaction = method => (type, opts) => {
   if (!opts.transaction) return method(type, opts);
   opts.transaction.afterCommit(() => method(type, opts));
+};
+
+export default {
+  add
 };
