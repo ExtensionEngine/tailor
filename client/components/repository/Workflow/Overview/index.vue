@@ -7,8 +7,16 @@
     item-class="class"
     disable-pagination hide-default-footer fixed-header
     class="overview primary lighten-5">
-    <template #item.name="item">
-      <overview-name v-bind="item" />
+    <template #item.name="{ item, value }">
+      <div class="d-flex">
+        <overview-name :value="value" />
+        <publishing
+          v-if="isAdmin || isRepositoryAdmin"
+          :activity="item"
+          :outline-activities="outlineActivities"
+          hide-publish
+          hide-details />
+      </div>
     </template>
     <template #item.status="{ value }">
       <overview-status v-bind="value" />
@@ -32,6 +40,7 @@ import OverviewDueDate from './DueDate';
 import OverviewName from './Name';
 import OverviewPriority from './Priority';
 import OverviewStatus from './Status';
+import Publishing from '@/components/repository/common/Sidebar/Publishing';
 import selectActivity from '@/components/repository/common/selectActivity';
 import { workflow } from 'tailor-config';
 
@@ -42,7 +51,8 @@ export default {
     activities: { type: Array, default: () => [] }
   },
   computed: {
-    ...mapGetters('repository', ['workflow']),
+    ...mapGetters(['isAdmin']),
+    ...mapGetters('repository', ['isRepositoryAdmin', 'workflow', 'outlineActivities']),
     headers() {
       return [{
         text: 'Name',
@@ -65,10 +75,13 @@ export default {
       }];
     },
     items() {
-      return this.activities.map(({ id, data, status }) => ({
+      return this.activities.map(({ id, data, modifiedAt, publishedAt, status, type }) => ({
         ...status,
         id,
         name: data.name,
+        modifiedAt,
+        publishedAt,
+        type,
         status: this.getStatusById(status.status),
         priority: workflow.getPriority(status.priority),
         class: this.isActivitySelected(id) && 'selected'
@@ -97,6 +110,7 @@ export default {
     }
   },
   components: {
+    Publishing,
     OverviewAssignee,
     OverviewDueDate,
     OverviewName,
