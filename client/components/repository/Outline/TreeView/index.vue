@@ -14,7 +14,7 @@ import { mapGetters } from 'vuex';
 import reduce from 'lodash/reduce';
 import selectActivity from '@/components/repository/common/selectActivity';
 import sortBy from 'lodash/sortBy';
-import TreeGraph from './TreeGraph';
+import TreeGraph from './TreeGraph.vue';
 
 const isActivityNode = node => node.depth > 0;
 

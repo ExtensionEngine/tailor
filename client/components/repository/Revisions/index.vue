@@ -26,7 +26,7 @@ import InfiniteLoading from 'vue-infinite-loading';
 import { isSameInstance } from 'utils/revision';
 import last from 'lodash/last';
 import reduce from 'lodash/reduce';
-import RevisionItem from './RevisionItem';
+import RevisionItem from './RevisionItem.vue';
 
 export default {
   name: 'repository-revisions',

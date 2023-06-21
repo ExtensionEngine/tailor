@@ -1,4 +1,4 @@
-const get = require('lodash/get');
+import get from 'lodash/get';
 
 const REPOSITORY_COLORS = ['#689F38', '#FF5722', '#2196F3'];
 

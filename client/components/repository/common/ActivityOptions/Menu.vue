@@ -40,8 +40,8 @@
 </template>
 
 <script>
-import CopyDialog from '@/components/repository/common/CopyActivity';
-import CreateDialog from '@/components/repository/common/CreateDialog';
+import CopyDialog from '@/components/repository/common/CopyActivity/index.vue';
+import CreateDialog from '@/components/repository/common/CreateDialog/index.vue';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import first from 'lodash/first';

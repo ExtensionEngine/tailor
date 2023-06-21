@@ -36,6 +36,10 @@
 </template>
 
 <script>
+import 'quill/dist/quill.core.css';
+import 'quill/dist/quill.snow.css';
+import 'quill/dist/quill.bubble.css';
+
 import isArray from 'lodash/isArray';
 import { quillEditor as QuillEditor } from 'vue-quill-editor';
 import some from 'lodash/some';

@@ -89,7 +89,7 @@
 import first from 'lodash/first';
 import get from 'lodash/get';
 import { mapActions } from 'vuex';
-import Tags from './Tags';
+import Tags from './Tags/index.vue';
 
 const getPublishingInfo = hasChanges => hasChanges
   ? 'Has unpublished changes.'

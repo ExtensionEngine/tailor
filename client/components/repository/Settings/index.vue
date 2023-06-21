@@ -21,13 +21,13 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import AppFooter from '@/components/common/Footer';
-import CloneModal from './CloneModal';
-import ExportModal from './ExportModal';
+import AppFooter from '@/components/common/Footer.vue';
+import CloneModal from './CloneModal.vue';
+import ExportModal from './ExportModal.vue';
 import { mapRequests } from '@extensionengine/vue-radio';
-import ProgressDialog from '@/components/common/ProgressDialog';
-import publishMixin from '@/components/common/mixins/publish';
-import Sidebar from './Sidebar';
+import ProgressDialog from '@/components/common/ProgressDialog.vue';
+import publishMixin from '@/components/common/mixins/publish.vue';
+import Sidebar from './Sidebar.vue';
 
 export default {
   name: 'repository-settings',

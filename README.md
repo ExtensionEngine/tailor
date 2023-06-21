@@ -50,9 +50,9 @@ Configurable headless CMS for complex content structures.
 - Configure asset storage proxy by following the steps [in this guide](https://extensionengine.github.io/tailor-docs/tailor/developer-guide/storage-proxy.html)
   based on your environment.
 - You can create admin user by running `npm run add:admin <email> <password>`
-- App branding is configured via values set in a file named `.brandrc` (or
-  `.brandrc.js`). Use the `.brandrc.example` file as a template: `cp
-  .brandrc.example .brandrc` and enter configuration details (Optional).
+- App branding is configured via values set in a file named `.brandrc.js`. 
+  Use the `.brandrc.js.example` file as a template: `cp
+  .brandrc.js.example .brandrc.js` and enter configuration details (Optional).
 
 ## Launch
 

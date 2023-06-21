@@ -9,11 +9,11 @@
 </template>
 
 <script>
-import AddUserDialog from './AddUserDialog';
+import AddUserDialog from './AddUserDialog.vue';
 import map from 'lodash/map';
 import { role } from 'shared';
 import { title as titleCase } from 'to-case';
-import UserList from './UserList';
+import UserList from './UserList.vue';
 
 export default {
   name: 'repository-user-management',

@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import Edit from './edit';
+import Edit from './edit/index.vue';
 
 const schema = {
   correct: yup.string().trim().max(7000).required().label('Answer')

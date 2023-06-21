@@ -29,9 +29,9 @@
 </template>
 
 <script>
-import ChangePasswordDialog from './ChangePasswordDialog';
-import UserAvatar from './Avatar';
-import UserInfo from './Info';
+import ChangePasswordDialog from './ChangePasswordDialog.vue';
+import UserAvatar from './Avatar/index.vue';
+import UserInfo from './Info.vue';
 
 export default {
   name: 'user-settings',

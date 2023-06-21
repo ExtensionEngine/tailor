@@ -19,6 +19,7 @@ cypress/screenshots
 .env
 ecosystem.*
 tailor.config.js
+tailor.config.mjs
 .tailorrc*
 # TODO: Deprecate legacy configuration files
 activities.config.js

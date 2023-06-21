@@ -10,7 +10,7 @@
 
 <script>
 import { getElementId } from '@tailor-cms/utils';
-import MetaInput from '@/components/common/MetaInput';
+import MetaInput from '@/components/common/MetaInput.vue';
 
 export default {
   name: 'element-meta-inputs',

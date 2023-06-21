@@ -28,7 +28,7 @@
 <script>
 import capitalize from 'lodash/capitalize';
 import isEmpty from 'lodash/isEmpty';
-import UploadBtn from './UploadBtn';
+import UploadBtn from './UploadBtn.vue';
 
 export default {
   name: 'tce-image-toolbar',

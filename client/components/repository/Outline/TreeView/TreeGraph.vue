@@ -6,6 +6,7 @@
 import * as d3 from 'd3-selection';
 import { hierarchy, tree } from 'd3-hierarchy';
 import clamp from 'lodash/clamp';
+import { line as createLine } from 'd3-shape';
 import flatten from 'lodash/flatten';
 import get from 'lodash/get';
 import isEqual from 'lodash/isEqual';
@@ -13,7 +14,7 @@ import range from 'lodash/range';
 import { zoom } from 'd3-zoom';
 
 const hasNodes = tree => !tree.children || !tree.children.length;
-const line = require('d3-shape').line();
+const line = createLine();
 
 const isNativeEvent = (e, type) => get(e.sourceEvent, 'type') === type;
 const isDragStart = e => e.type === 'start' && isNativeEvent(e, 'mousedown');

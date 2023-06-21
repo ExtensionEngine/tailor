@@ -9,12 +9,12 @@ import { Op } from 'sequelize';
 import pick from 'lodash/pick.js';
 import Promise from 'bluebird';
 import publishingService from '../shared/publishing/publishing.service.js';
+import { repository as role } from '../../config/shared/role.js';
 import sample from 'lodash/sample.js';
 import { schema } from '../../config/shared/tailor.loader.js';
 import { snakeCase } from 'change-case';
 import TransferService from '../shared/transfer/transfer.service.js';
 
-const { default: { role: { repository: role } } } = await import('../../config/shared/index.js');
 const miss = Promise.promisifyAll((await import('mississippi')).default);
 const tmp = Promise.promisifyAll((await import('tmp')).default, { multiArgs: true });
 

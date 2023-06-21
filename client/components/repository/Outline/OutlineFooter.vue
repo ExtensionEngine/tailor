@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import CreateDialog from '@/components/repository/common/CreateDialog';
+import CreateDialog from '@/components/repository/common/CreateDialog/index.vue';
 import last from 'lodash/last';
 import { mapGetters } from 'vuex';
 

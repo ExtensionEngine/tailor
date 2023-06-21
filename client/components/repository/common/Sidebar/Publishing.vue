@@ -35,8 +35,8 @@
 import { activity as activityUtils } from '@tailor-cms/utils';
 import fecha from 'fecha';
 import { mapActions } from 'vuex';
-import PublishingBadge from './Badge';
-import publishMixin from 'components/common/mixins/publish';
+import PublishingBadge from './Badge.vue';
+import publishMixin from 'components/common/mixins/publish.vue';
 
 const { getDescendants } = activityUtils;
 

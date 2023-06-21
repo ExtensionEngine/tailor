@@ -66,19 +66,19 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
-import AddRepository from './Add';
+import AddRepository from './Add.vue';
 import filterConfigs from './repositoryFilterConfigs';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import InfiniteLoading from 'vue-infinite-loading';
 import { loader } from '@tailor-cms/core-components';
 import map from 'lodash/map';
-import RepositoryCard from './Card';
-import RepositoryFilter from './RepositoryFilter';
-import RepositoryFilterSelection from './RepositoryFilterSelection';
+import RepositoryCard from './Card/index.vue';
+import RepositoryFilter from './RepositoryFilter.vue';
+import RepositoryFilterSelection from './RepositoryFilterSelection/index.vue';
 import { SCHEMAS } from 'tailor-config';
-import Search from './Search';
-import SelectOrder from './SelectOrder';
+import Search from './Search.vue';
+import SelectOrder from './SelectOrder.vue';
 
 export default {
   name: 'catalog-container',

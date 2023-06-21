@@ -1,6 +1,4 @@
-'use strict';
-
-module.exports = [
+export default [
   'meta-checkbox',
   'meta-color',
   'meta-combobox',

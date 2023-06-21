@@ -37,7 +37,7 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 import { EmbeddedContainer } from '@tailor-cms/core-components';
-import Preview from './Preview';
+import Preview from './Preview.vue';
 import values from 'lodash/values';
 
 export default {

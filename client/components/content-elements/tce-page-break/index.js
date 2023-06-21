@@ -1,4 +1,4 @@
-import Edit from './edit';
+import Edit from './edit/index.vue';
 
 const initState = () => ({});
 

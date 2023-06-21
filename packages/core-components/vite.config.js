@@ -1,20 +1,22 @@
-import { createVuePlugin } from 'vite-plugin-vue2';
-import { defineConfig } from 'vite';
-import { fileURLToPath } from 'url';
-import path from 'path';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
+import vue from '@vitejs/plugin-vue2';
 
-const _filename = fileURLToPath(import.meta.url);
-const _dirname = path.dirname(_filename);
+const _dirname = fileURLToPath(new URL('.', import.meta.url));
 
 /**
  * @type {import('vite').UserConfig}
  */
-const config = {
+export default {
   build: {
     lib: {
       entry: './src/index.js',
       name: 'TailorCoreComponents',
       formats: ['es', 'cjs', 'umd']
+    },
+    rollupOptions: {
+      // Externalize deps that shouldn't be bundled
+      external: ['vue', 'vuetify', 'vee-validate']
     }
   },
   resolve: {
@@ -23,11 +25,5 @@ const config = {
       replacement: path.join(_dirname, './src/')
     }]
   },
-  plugins: [createVuePlugin()],
-  rollupOptions: {
-    // Externalize deps that shouldn't be bundled
-    external: ['vue', 'vuetify', 'vee-validate']
-  }
+  plugins: [vue()]
 };
-
-export default () => defineConfig(config);

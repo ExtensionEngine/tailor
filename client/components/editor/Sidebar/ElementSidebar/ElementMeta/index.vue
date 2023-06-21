@@ -12,8 +12,8 @@
 </template>
 
 <script>
-import ElementInputs from './Inputs';
-import ElementRelationships from './Relationships';
+import ElementInputs from './Inputs.vue';
+import ElementRelationships from './Relationships/index.vue';
 
 export default {
   name: 'element-metadata',

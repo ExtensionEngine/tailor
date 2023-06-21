@@ -43,7 +43,7 @@ import get from 'lodash/get';
 import groupBy from 'lodash/groupBy';
 import includes from 'lodash/includes';
 import isEmpty from 'lodash/isEmpty';
-import LabelChip from '../LabelChip';
+import LabelChip from '../LabelChip.vue';
 import lowerCase from 'lodash/lowerCase';
 import map from 'lodash/map';
 import pluralize from 'pluralize';

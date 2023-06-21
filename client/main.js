@@ -23,9 +23,10 @@ import VueClipboard from 'vue-clipboard2';
 import VueCroppa from 'vue-croppa';
 import vuetify from '@/plugins/vuetify';
 
+import enUsLocale from '@/assets/locales/timeago-en-US-short.json';
 import getStore from './store';
 import getRouter from './router';
-import App from './App';
+import App from './App.vue';
 
 Vue.component('tce-question-container', QuestionContainer);
 Vue.component('validation-observer', ValidationObserver);
@@ -42,7 +43,7 @@ Vue.use(VueCroppa);
 Vue.use(Timeago, {
   locale: 'en-US',
   locales: {
-    'en-US': require('@/assets/locales/timeago-en-US-short.json')
+    'en-US': enUsLocale
   }
 });
 

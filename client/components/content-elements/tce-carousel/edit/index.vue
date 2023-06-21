@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import CarouselItem from './CarouselItem';
+import CarouselItem from './CarouselItem.vue';
 import cloneDeep from 'lodash/cloneDeep';
 import { ElementPlaceholder } from '@tailor-cms/core-components';
 import get from 'lodash/get';

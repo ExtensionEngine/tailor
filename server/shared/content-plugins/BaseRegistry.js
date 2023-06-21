@@ -1,4 +1,3 @@
-import path from 'node:path';
 import Promise from 'bluebird';
 
 const PATHS = {
@@ -17,9 +16,7 @@ export default class {
   async initialize() {
     await Promise.map(this._extensions, path => this.load(path));
     const extensions = await this.loadExtensionList();
-    await Promise.map(extensions, dir => {
-      return this.load(path.join(dir, 'index.js'), true);
-    });
+    await Promise.map(extensions, path => this.load(path, true));
   }
 
   async load(path, isExtension) {
@@ -32,7 +29,7 @@ export default class {
 
   getFullPath(path, isExtension) {
     const basePath = isExtension ? PATHS.EXTENSION : PATHS.DEFAULT;
-    return `${basePath}/content-${this._type}s/${path}/server.js`;
+    return `${basePath}/content-${this._type}s/${path}/server/index.js`;
   }
 
   async loadExtensionList() {

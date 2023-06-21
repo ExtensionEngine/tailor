@@ -37,7 +37,6 @@
 
 <script>
 import { ElementPlaceholder, PreviewOverlay } from '@tailor-cms/core-components';
-import { extname } from 'path';
 import get from 'lodash/get';
 import { PlyrueComponent as Plyrue } from 'plyrue';
 
@@ -105,8 +104,11 @@ export default {
 function isShareLink({ hostname }) {
   return VIDEO_HOSTING.some(re => re.test(hostname));
 }
+function getExt(pathname) {
+  return pathname.split('.').pop();
+}
 function mimetype({ pathname }) {
-  const ext = extname(pathname).replace(/^\./, '');
+  const ext = getExt(pathname);
   if (MIMETYPE[ext]) return MIMETYPE[ext];
   return `video/${ext}`;
 }

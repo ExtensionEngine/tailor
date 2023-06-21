@@ -1,6 +1,5 @@
 import { Model } from 'sequelize';
-
-const { default: { role: { repository: role } } } = await import('../../config/shared/index.js');
+import { repository as role } from '../../config/shared/role.js';
 
 class RepositoryUser extends Model {
   static fields({ BOOLEAN, DATE, ENUM, INTEGER }) {

@@ -10,7 +10,7 @@
 
 <script>
 import { mapActions } from 'vuex';
-import RelationshipType from './Item';
+import RelationshipType from './Item.vue';
 
 export default {
   name: 'element-meta-relationships',

@@ -22,7 +22,7 @@
 
 <script>
 import { ElementPlaceholder, PreviewOverlay } from '@tailor-cms/core-components';
-import BrightcovePlayer from './Player';
+import BrightcovePlayer from './Player.vue';
 import get from 'lodash/get';
 
 export default {

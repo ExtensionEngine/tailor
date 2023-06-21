@@ -1,6 +1,6 @@
-import AddAbove from './AddAbove';
-import AddBelow from './AddBelow';
-import AddInto from './AddInto';
+import AddAbove from './AddAbove.vue';
+import AddBelow from './AddBelow.vue';
+import AddInto from './AddInto.vue';
 
 export default {
   AddAbove,

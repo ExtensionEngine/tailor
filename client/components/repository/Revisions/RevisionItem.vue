@@ -25,7 +25,7 @@ import {
   getRevisionAcronym,
   getRevisionColor
 } from 'utils/revision';
-import EntityRevisions from './EntityRevisions';
+import EntityRevisions from './EntityRevisions.vue';
 import fecha from 'fecha';
 import find from 'lodash/find';
 import { mapGetters } from 'vuex';

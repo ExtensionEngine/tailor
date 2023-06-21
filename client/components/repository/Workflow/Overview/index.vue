@@ -27,11 +27,11 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import OverviewAssignee from './Assignee';
-import OverviewDueDate from './DueDate';
-import OverviewName from './Name';
-import OverviewPriority from './Priority';
-import OverviewStatus from './Status';
+import OverviewAssignee from './Assignee.vue';
+import OverviewDueDate from './DueDate.vue';
+import OverviewName from './Name.vue';
+import OverviewPriority from './Priority.vue';
+import OverviewStatus from './Status.vue';
 import selectActivity from '@/components/repository/common/selectActivity';
 import { workflow } from 'tailor-config';
 
