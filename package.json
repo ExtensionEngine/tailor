@@ -200,8 +200,8 @@
     "vue-template-compiler": "^2.7.14"
   },
   "engines": {
-    "node": ">= 16.16.0",
-    "npm": ">= 8.11.0",
+    "node": ">= 20.3.1",
+    "npm": ">= 9.6.0",
     "postgres": ">= 9.4"
   }
 }
