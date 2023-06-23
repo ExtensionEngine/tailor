@@ -1,7 +1,7 @@
-import htmlToText from 'html-to-text';
+import { htmlToText } from 'html-to-text';
 
 function html() {
-  return (text, render) => htmlToText.fromString(render(text));
+  return (text, render) => htmlToText(render(text));
 }
 
 export { html };

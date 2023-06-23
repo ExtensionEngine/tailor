@@ -30,7 +30,10 @@ config.auth.oidc.enabled && await (async () => {
   app.use(session(config.auth.session));
 })();
 
-app.use(helmet());
+app.use(helmet({
+  // TODO: Reevaluate and enable, for now, disabled as it breaks a lot of things
+  contentSecurityPolicy: false
+}));
 app.use(cors({ origin: config.auth.corsAllowedOrigins, credentials: true }));
 app.use(cookieParser(config.auth.jwt.cookie.secret));
 app.use(bodyParser.json({ limit: '50mb' }));

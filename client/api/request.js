@@ -1,6 +1,6 @@
 import axios, { Axios } from 'axios';
 import { FORBIDDEN, UNAUTHORIZED } from 'http-status-codes';
-import buildFullPath from 'axios/lib/core/buildFullPath';
+import buildFullPath from 'axios/unsafe/core/buildFullPath';
 
 Axios.prototype.submitForm = function (url, fields, options) {
   const action = buildFullPath(this.defaults.baseURL, url);
