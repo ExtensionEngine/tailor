@@ -2,22 +2,21 @@ import { mail as config, origin } from '../../../config/server/index.js';
 import { createLogger, Level } from '../../shared/logger.js';
 import { fileURLToPath, URL } from 'node:url';
 import { renderHtml, renderText } from './render.js';
-import email from 'emailjs';
 import path from 'node:path';
 import pick from 'lodash/pick.js';
-import { promisify } from 'node:util';
+import { SMTPClient } from 'emailjs';
 import urlJoin from 'url-join';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const logger = createLogger('mailer', { level: Level.DEBUG });
 
 const from = `${config.sender.name} <${config.sender.address}>`;
-const server = email.server.connect(config);
+const client = new SMTPClient(config);
 // NOTE: Enable SMTP tracing if DEBUG is set.
-server.smtp.debug(Number(Boolean(process.env.DEBUG)));
-logger.info(getConfig(server), '📧  SMTP client created');
+client.smtp.debug(Number(Boolean(process.env.DEBUG)));
+logger.info(getConfig(client), '📧  SMTP client created');
 
-const send = promisify(server.send.bind(server));
+const send = (...args) => client.sendAsync(...args);
 const templatesDir = path.join(__dirname, './templates/');
 
 const resetUrl = token => urlJoin(origin, '/#/reset-password/', token);
@@ -114,10 +113,10 @@ function sendAssigneeNotification(assignee, activity) {
   });
 }
 
-function getConfig(server) {
+function getConfig(client) {
   // NOTE: List public keys:
   // https://github.com/eleith/emailjs/blob/7fddabe/smtp/smtp.js#L86
-  return pick(server.smtp, [
+  return pick(client.smtp, [
     'host', 'port', 'domain',
     'authentication', 'ssl', 'tls',
     'timeout'

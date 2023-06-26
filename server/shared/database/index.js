@@ -1,15 +1,16 @@
+import { SequelizeStorage, Umzug } from 'umzug';
 import config from './config.js';
 import createLogger from '../logger.js';
 import { createRequire } from 'node:module';
 import forEach from 'lodash/forEach.js';
 import Hooks from './hooks.js';
 import invoke from 'lodash/invoke.js';
+import path from 'node:path';
 import pick from 'lodash/pick.js';
 import Promise from 'bluebird';
 import semver from 'semver';
 import Sequelize from 'sequelize';
 import sequelizeConfig from '../../../sequelize.config.js';
-import Umzug from 'umzug';
 import { wrapMethods } from './helpers.js';
 
 // Require models.
@@ -36,16 +37,15 @@ const { migrationsPath } = sequelizeConfig;
 
 function initialize() {
   const umzug = new Umzug({
-    storage: 'sequelize',
-    storageOptions: {
+    context: sequelize.getQueryInterface(),
+    storage: new SequelizeStorage({
       sequelize,
       tableName: config.migrationStorageTableName
-    },
+    }),
     migrations: {
-      params: [sequelize.getQueryInterface(), sequelize.Sequelize],
-      path: migrationsPath
+      glob: path.join(migrationsPath, '*.js')
     },
-    logging(message) {
+    logger: message => {
       if (message.startsWith('==')) return;
       if (message.startsWith('File:')) {
         const file = message.split(/\s+/g)[1];
@@ -66,7 +66,7 @@ function initialize() {
     .then(() => !isProduction && umzug.up())
     .then(() => umzug.executed())
     .then(migrations => {
-      const files = migrations.map(it => it.file);
+      const files = migrations.map(it => it.name);
       if (!files.length) return;
       logger.info({ migrations: files }, '🗄️  Executed migrations:\n', files.join('\n'));
     });
