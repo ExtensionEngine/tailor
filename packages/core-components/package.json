@@ -57,7 +57,7 @@
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-vue": "9.1.1",
     "sass": "^1.53.0",
-    "stylelint": "^13.8.0",
+    "stylelint": "^15.10.1",
     "vite": "^4.3.9",
     "vue-template-compiler": "^2.7.14"
   },
