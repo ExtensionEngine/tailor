@@ -86,10 +86,10 @@ export default {
 
 <style lang="scss" scoped>
 .treeview {
-  max-height: 19rem;
-  text-align: left;
-  background-color: #fcfcfc;
   border: 1px solid #eee;
+  max-height: 19rem;
+  background-color: #fcfcfc;
+  text-align: left;
   overflow-y: scroll;
 
   .v-chip.custom-chip {

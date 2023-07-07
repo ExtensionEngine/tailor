@@ -177,17 +177,17 @@ export default {
   .resolve-btn-container {
     display: flex;
     justify-content: flex-end;
-    margin: 0.5rem 0 0 0;
+    margin: 0.5rem 0 0;
   }
 
   .header {
-    margin: 0.875rem 0 1.625rem 0;
+    margin: 0.875rem 0 1.625rem;
     font-size: 1.125rem;
     font-weight: 400;
   }
 
   .comment-input {
-    margin: 0 0.25rem 0 0.25rem;
+    margin: 0 0.25rem;
   }
 
   .alert ::v-deep .v-icon {

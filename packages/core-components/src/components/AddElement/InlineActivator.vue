@@ -23,20 +23,20 @@ export default {
 
 <style lang="scss" scoped>
 .default-activator-state {
-  padding: 0 3.125rem;
   opacity: 0;
+  padding: 0 3.125rem;
 }
 
 .inline-activator {
   @extend .default-activator-state;
 
   display: flex;
-  align-items: center;
-  width: 100%;
-  margin: 0;
-  padding: 0 3.125rem;
   opacity: 0;
   transition: opacity 0.3s, padding 0.3s;
+  margin: 0;
+  width: 100%;
+  padding: 0 3.125rem;
+  align-items: center;
 
   &, .v-chip {
     cursor: pointer;
@@ -50,10 +50,10 @@ export default {
   }
 
   &:hover, &:focus {
-    padding: 0.75rem 0;
     opacity: 1;
-    outline: none;
     transition: opacity 0.3s 0.25s, padding 0.3s 0.1s;
+    padding: 0.75rem 0;
+    outline: none;
   }
 
   &.disabled, &.disabled:hover {

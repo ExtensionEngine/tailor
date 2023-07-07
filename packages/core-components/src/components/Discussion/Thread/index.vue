@@ -91,11 +91,11 @@ export default {
   width: 100%;
 
   &.scroll-container {
+    box-sizing: content-box;
     max-height: 31.25rem;
+    padding-right: 1.5rem;
     overflow-y: scroll;
     overflow-x: hidden;
-    padding-right: 1.5rem;
-    box-sizing: content-box;
   }
 
   .fade-enter-active, .fade-leave-active {

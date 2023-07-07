@@ -150,10 +150,10 @@ export default {
     $width: 0.125rem;
 
     content: '';
-    display: none;
     position: absolute;
     top: 0;
     right: -$width;
+    display: none;
     width: $width;
     height: 100%;
   }
@@ -178,24 +178,24 @@ export default {
 }
 
 .frame {
-  padding: 10px 20px;
   border: 1px solid #e1e1e1;
+  padding: 10px 20px;
 }
 
 .element-actions {
-  display: flex;
-  flex-direction: column;
   position: absolute;
   top: -0.0625rem;
   right: -1.25rem;
+  display: flex;
   width: 1.5rem;
   height: 100%;
   padding-left: 0.75rem;
+  flex-direction: column;
 
   > * {
-    min-height: 1.75rem;
     opacity: 0;
     transition: opacity 0.1s linear;
+    min-height: 1.75rem;
   }
 
   > .is-visible {

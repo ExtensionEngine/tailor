@@ -42,7 +42,7 @@ export default {
 
   .thread-list-item {
     .v-divider {
-      margin: 0 0.25rem 1rem 0.25rem;
+      margin: 0 0.25rem 1rem;
     }
 
     &:first-child .v-divider {

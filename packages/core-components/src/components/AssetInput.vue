@@ -140,8 +140,8 @@ export default {
 
 <style lang="scss" scoped>
 .v-text-field {
-  min-width: 21.875rem;
   margin: 0.5rem 0.75rem 0 1.75rem;
+  min-width: 21.875rem;
 }
 
 .action ::v-deep .v-btn__content {

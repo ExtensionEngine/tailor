@@ -45,11 +45,7 @@
     "@extensionengine/tapster": "github:ExtensionEngine/tapster#53ccb222c757948d322c33087620453ddf5e70ed",
     "@extensionengine/tce-jodit": "github:extensionengine/tce-jodit#c5464cd",
     "@extensionengine/tce-scorm": "^0.0.1",
-    "@extensionengine/vue-radio": "1.0.0-beta.4",
     "@mdi/font": "^7.2.96",
-    "@tailor-cms/config": "1.0.0-beta.25",
-    "@tailor-cms/core-components": "1.0.0-beta.15",
-    "@tailor-cms/utils": "^1.0.0-beta.19",
     "@ungap/global-this": "^0.4.4",
     "auto-bind": "^5.0.1",
     "axios": "^1.4.0",
@@ -165,8 +161,6 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@extensionengine/eslint-config": "^3.0.1",
-    "@extensionengine/stylelint-config": "^1.1.1",
     "@testing-library/cypress": "^9.0.0",
     "@types/eslint": "^8.40.2",
     "@vitejs/plugin-vue2": "^2.2.0",

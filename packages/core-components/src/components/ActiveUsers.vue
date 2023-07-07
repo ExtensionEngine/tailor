@@ -46,8 +46,8 @@ export default {
   }
 
   &:hover, &:focus-within {
-    transform: scale(1.1);
     z-index: 1;
+    transform: scale(1.1);
 
     img:focus {
       outline: none;

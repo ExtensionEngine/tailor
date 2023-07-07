@@ -118,39 +118,39 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$disabled-color: rgba(0, 0, 0, 0.38);
+$disabled-color: rgb(0 0 0 / 38%);
 $swing: cubic-bezier(0.25, 0.8, 0.5, 1);
 
 .question-container {
   position: relative;
+  transition: 0.3s $swing;
+  border-radius: 0.125rem;
   min-height: 8.75rem;
   padding: 1rem 3rem 0 2.5rem;
-  text-align: center;
   background: #ebebeb;
-  border-radius: 0.125rem;
-  transition: 0.3s $swing;
+  text-align: center;
 
   &::before, &::after {
     content: '';
     position: absolute;
     bottom: -1px;
     left: 0;
-    width: 100%;
     transition: 0.3s $swing;
+    width: 100%;
   }
 
   &::before {
     border-style: solid;
-    border-width: thin 0 0 0;
+    border-width: thin 0 0;
   }
 
   &::after {
     border-style: solid;
-    border-width: thin 0 thin 0;
+    border-width: thin 0;
     transform: scaleX(0);
   }
 
-  &:not(.focused):not(.disabled):not(.incorrect):hover {
+  &:not(.focused, .disabled, .incorrect):hover {
     background: #dcdcdc;
 
     ::v-deep .content-element {

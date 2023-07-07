@@ -121,10 +121,10 @@ export default {
     position: absolute;
     top: 0;
     left: -3px;
-    color: #888;
-    font-size: 28px;
     opacity: 0;
     cursor: move;
+    font-size: 28px;
+    color: #888;
   }
 
   &.hover .drag-handle {
@@ -140,10 +140,10 @@ export default {
       display: inline-block;
       max-width: 80%;
       min-height: 1.875rem;
-      color: #444;
       font-size: 1rem;
-      font-weight: 400;
       line-height: 2.125rem;
+      font-weight: 400;
+      color: #444;
     }
 
     .v-chip {
