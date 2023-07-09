@@ -187,7 +187,7 @@
     "eslint-plugin-vue": "9.15.0",
     "eslint-plugin-vuetify": "^1.1.0",
     "lerna": "^6.6.2",
-    "nodemon": "^2.0.22",
+    "nodemon": "^3.0.0",
     "rewrite-lockfile": "^1.0.1",
     "sass": "^1.63.6",
     "sequelize-cli": "^6.6.1",
