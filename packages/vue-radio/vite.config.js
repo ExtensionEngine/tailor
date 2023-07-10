@@ -1,9 +1,8 @@
 import { defineConfig } from 'vite';
-import { fileURLToPath } from 'url';
-import path from 'path';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
 
-const _filename = fileURLToPath(import.meta.url);
-const _dirname = path.dirname(_filename);
+const _dirname = fileURLToPath(new URL('.', import.meta.url));
 
 /**
  * @type {import('vite').UserConfig}
