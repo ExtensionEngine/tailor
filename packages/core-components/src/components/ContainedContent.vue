@@ -62,14 +62,14 @@ export default {
 <style lang="scss" scoped>
 .drag-handle {
   position: absolute;
-  left: -3px;
   z-index: 2;
-  width: 26px;
+  left: -3px;
   opacity: 0;
+  width: 26px;
 
   .mdi {
-    color: #888;
     font-size: 28px;
+    color: #888;
   }
 }
 

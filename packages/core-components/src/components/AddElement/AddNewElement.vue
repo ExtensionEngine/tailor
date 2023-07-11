@@ -55,19 +55,19 @@ export default {
 
 <style lang="scss" scoped>
 .element-container {
+  overflow: hidden;
   min-height: 20rem;
   padding: 0 0 1.875rem;
   border-top-left-radius: 0.5rem;
   border-top-right-radius: 0.5rem;
-  overflow: hidden;
 }
 
 .group-heading {
   margin: 0 2.5rem 0.375rem;
   padding-top: 0.5rem;
   font-size: 0.875rem;
-  font-weight: 500;
   line-height: 1rem;
+  font-weight: 500;
   text-align: left;
 }
 

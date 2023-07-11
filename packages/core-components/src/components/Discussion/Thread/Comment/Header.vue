@@ -93,21 +93,21 @@ export default {
 
   .info-container {
     display: flex;
+    margin-left: 0.125rem;
+    max-width: calc(100% - 8rem);
     flex-direction: column;
     flex: 0 100%;
-    max-width: calc(100% - 8rem);
-    margin-left: 0.125rem;
 
     .author {
       display: inline-block;
       max-width: 75%;
-      color: #000;
       font-size: 1rem;
+      color: #000;
     }
 
     .edited, .time {
-      color: #888;
       font-size: 0.75rem;
+      color: #888;
     }
 
     hr.v-divider--vertical {

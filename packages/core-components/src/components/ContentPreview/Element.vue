@@ -61,8 +61,8 @@ export default {
 
 <style lang="scss" scoped>
 .element-preview-container {
-  display: flex;
   position: relative;
+  display: flex;
   margin: 0.25rem 0;
 
   .v-input {

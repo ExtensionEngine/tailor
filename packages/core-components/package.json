@@ -3,11 +3,11 @@
   "description": "Reusable Tailor UI components",
   "author": "ExtensionEngine <info@extensionengine.com>",
   "license": "MIT",
-  "version": "1.0.0-beta.15",
+  "type": "module",
+  "version": "1.0.0-beta.16",
   "files": [
     "dist"
   ],
-  "type": "module",
   "main": "./dist/core-components.cjs",
   "umd:main": "./dist/core-components.umd.cjs",
   "module": "./dist/core-components.js",
@@ -34,36 +34,38 @@
     "lint:scss": "stylelint \"**/*.vue\" \"**/*.scss\""
   },
   "dependencies": {
-    "@extensionengine/vue-radio": "^1.0.0-beta.4",
-    "@tailor-cms/utils": "^1.0.0-beta.18",
+    "@extensionengine/vue-radio": "^1.0.0-beta.5",
+    "@tailor-cms/utils": "^1.0.0-beta.20",
     "lodash": "^4.17.21",
-    "p-min-delay": "^4.0.1",
+    "p-min-delay": "^4.0.2",
     "pluralize": "^8.0.0",
     "vue-quill-editor": "^3.0.6",
     "vuedraggable": "^2.24.3",
-    "yup": "^0.32.9"
+    "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@extensionengine/eslint-config": "^3.0.1",
-    "@extensionengine/stylelint-config": "^1.1.1",
+    "@extensionengine/eslint-config": "^4.0.1",
+    "@extensionengine/stylelint-config": "^3.0.0",
     "@vitejs/plugin-vue2": "^2.2.0",
     "@vue/compiler-sfc": "^2.7.14",
-    "del-cli": "^4.0.1",
-    "eslint": "^8.19.0",
-    "eslint-config-semistandard": "^16.0.0",
-    "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-n": "^15.2.4",
-    "eslint-plugin-promise": "^6.0.0",
-    "eslint-plugin-vue": "9.1.1",
-    "sass": "^1.53.0",
-    "stylelint": "^13.8.0",
-    "vite": "^4.3.9",
+    "del-cli": "^5.0.0",
+    "eslint": "^8.44.0",
+    "eslint-config-semistandard": "^17.0.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.7.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-vue": "9.15.1",
+    "postcss-html": "^1.5.0",
+    "postcss-scss": "^4.0.6",
+    "sass": "^1.63.6",
+    "stylelint": "^15.10.1",
+    "vite": "^4.4.2",
     "vue-template-compiler": "^2.7.14"
   },
   "peerDependencies": {
-    "vee-validate": "^3.4.5",
-    "vuetify": "^2.6.7"
+    "vee-validate": "^3.4.15",
+    "vuetify": "^2.7.0"
   },
   "publishConfig": {
     "access": "public"

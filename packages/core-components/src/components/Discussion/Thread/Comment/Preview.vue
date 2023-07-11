@@ -35,18 +35,19 @@ export default {
 }
 
 .content pre {
-  height: 100%;
+  overflow: hidden;
   margin: 0;
+  border: none;
+  height: 100%;
+
   // NOTE: Preventing glitches (height changes, vertical scrollbar)
   padding: 0 0.25rem 0.5rem 0;
+  background: inherit;
   font: inherit;
   white-space: pre-wrap;
   word-break: break-all;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  background: inherit;
-  border: none;
-  overflow: hidden;
 }
 
 .content.resolved {
