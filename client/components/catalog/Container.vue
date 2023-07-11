@@ -177,7 +177,7 @@ export default {
 }
 
 .catalog {
-  @media (min-width: 1264px) {
+  @media (width >= 1264px) {
     max-width: 1185px;
   }
 
@@ -186,13 +186,13 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
+    box-shadow:
+      0 3px 1px -2px rgb(0 0 0 / 20%),
+      0 2px 2px 0 rgb(0 0 0 / 14%),
+      0 1px 5px 0 rgb(0 0 0 / 12%);
     width: 100%;
     height: 230px;
     background: #37474f;
-    box-shadow:
-      0 3px 1px -2px rgba(0,0,0,0.2),
-      0 2px 2px 0 rgba(0,0,0,0.14),
-      0 1px 5px 0 rgba(0,0,0,0.12);
   }
 
   &.catalog-empty {

@@ -92,26 +92,26 @@ export default {
     .error--text {
       position: absolute;
       margin-top: 0.125rem;
-      padding: 0.5rem;
-      color: #fff !important;
-      background-color: #3a3a3a;
       border-radius: 4px;
+      padding: 0.5rem;
+      background-color: #3a3a3a;
+      color: #fff !important;
     }
   }
 }
 
 .activity-toolbar {
+  z-index: 999;
   display: flex;
   height: 3.5rem;
   padding: 0.25rem 0 0;
-  z-index: 999;
 
   h1 {
-    flex: 1;
     margin: 0;
-    color: #fff;
     font-size: 1.375rem;
     text-align: left;
+    color: #fff;
+    flex: 1;
   }
 }
 </style>

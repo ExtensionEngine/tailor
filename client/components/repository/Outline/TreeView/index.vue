@@ -85,11 +85,11 @@ $accent: #37474f;
 .tree ::v-deep {
   .selected {
     .circle-wrapper {
-      filter: url(#lighten);
+      filter: url("#lighten");
     }
 
     .circle {
-      filter: url(#drop-shadow);
+      filter: url("#drop-shadow");
       transform: scale(1.3);
       transition: transform 0.4s;
     }
@@ -101,7 +101,7 @@ $accent: #37474f;
   }
 
   .node .circle-wrapper:hover .circle {
-    filter: url(#drop-shadow);
+    filter: url("#drop-shadow");
   }
 
   // Disable all effects on root/repository node.

@@ -49,15 +49,15 @@ export default {
 
   h4 {
     padding: 0.5rem 0 1.125rem;
-    text-align: center;
     font-size: 1.25rem;
+    text-align: center;
   }
 
   .v-icon {
     float: left;
     padding: 0.375rem 1.25rem 0 0.75rem;
-    color: inherit;
     font-size: 2rem;
+    color: inherit;
   }
 
   .info-content {

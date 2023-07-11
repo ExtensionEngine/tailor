@@ -75,7 +75,7 @@ export default {
 
 .v-list-item .v-list-item__title {
   font-size: 0.875rem;
-  font-weight: 500;
   line-height: 1.3;
+  font-weight: 500;
 }
 </style>

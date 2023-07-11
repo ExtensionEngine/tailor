@@ -104,12 +104,12 @@ export default {
 
 .error {
   position: absolute;
+  z-index: 1;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.9);
-  z-index: 1;
+  background: rgb(0 0 0 / 90%);
 }
 
 .error .message {
@@ -117,9 +117,9 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: #fff;
   font-size: 1.125rem;
   font-weight: 500;
+  color: #fff;
 }
 
 .pdf-container {
@@ -128,13 +128,13 @@ export default {
 }
 
 .pdf {
-  display: block;
   position: absolute;
+  z-index: 2;
   top: 0;
   left: 0;
+  display: block;
   width: 100%;
   height: 100%;
-  z-index: 2;
 
   .ie & {
     background: #585858;

@@ -177,7 +177,7 @@ export default {
       margin-bottom: 0;
     }
 
-    input[type=checkbox] {
+    input[type="checkbox"] {
       position: absolute;
     }
   }

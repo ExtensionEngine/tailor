@@ -35,7 +35,7 @@
 
 // Fix precedence for disabled state
 .theme--light.v-text-field--outlined.v-input--is-disabled fieldset {
-  border-color: rgba(0, 0, 0, 0.26) !important;
+  border-color: rgb(0 0 0 / 26%) !important;
 }
 
 a:hover, a:active, a:visited, a:focus {

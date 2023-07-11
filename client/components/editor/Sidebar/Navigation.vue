@@ -156,13 +156,10 @@ export default {
   &::before {
     content: "";
     position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+    inset: 0;
     opacity: 0;
-    background-color: currentColor;
     transition: 0.1s cubic-bezier(0.25, 0.8, 0.5, 1);
+    background-color: currentcolor;
     pointer-events: none;
   }
 
@@ -174,8 +171,8 @@ export default {
     justify-content: space-between;
 
     .open-icon {
-      transition: opacity 0.15s ease 0.1s;
       opacity: 0;
+      transition: opacity 0.15s ease 0.1s;
     }
 
     &:not(.selected):hover {

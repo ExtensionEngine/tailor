@@ -222,8 +222,8 @@ export default {
   overflow-x: hidden;
 
   .content-containers-wrapper {
-    max-width: 68.75rem;
     margin: auto;
+    max-width: 68.75rem;
   }
 }
 

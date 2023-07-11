@@ -124,7 +124,7 @@ function mimetype({ pathname }) {
   z-index: 3;
   width: 100%;
   height: 100%;
-  background: rgba(16, 16, 16, 0.85);
+  background: rgb(16 16 16 / 85%);
 
   .message {
     position: relative;

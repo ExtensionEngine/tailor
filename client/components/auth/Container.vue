@@ -41,17 +41,17 @@ export default {
 
 .auth-container .auth-panel-container {
   position: relative;
+  margin: 4% auto;
   width: 26rem;
   min-height: 41rem;
-  margin: 4% auto;
 }
 
 .auth-container .auth-panel.v-sheet {
   position: absolute;
-  width: 100%;
-  background: rgba($color: #e1e1e1, $alpha: 0.3);
-  border: 1px dashed #777;
   z-index: 1;
+  border: 1px dashed #777;
+  width: 100%;
+  background: rgba($color: #e1e1e1, $alpha: 30%);
 
   .auth-header {
     padding-bottom: 0;
@@ -65,8 +65,8 @@ export default {
     padding: 0.25rem 1.5rem 2rem;
 
     a {
-      color: inherit;
       font-weight: 400;
+      color: inherit;
     }
   }
 }

@@ -175,9 +175,9 @@ export default {
   cursor: pointer;
 
   .mdi {
-    color: #888;
     font-size: 1.375rem;
     line-height: 1.5rem;
+    color: #888;
   }
 }
 </style>

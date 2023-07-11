@@ -73,8 +73,8 @@ export default {
   letter-spacing: inherit;
 
   &.active {
-    color: var(--v-secondary-darken1);
     background-color: var(--v-secondary-lighten5);
+    color: var(--v-secondary-darken1);
   }
 }
 </style>

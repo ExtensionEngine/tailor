@@ -79,9 +79,9 @@ $gutter: 0.375rem;
 
 .control-group {
   margin: 0.375rem 0;
-  color: #333;
-  font-weight: normal;
   line-height: 1.5rem;
+  font-weight: normal;
+  color: #333;
   word-wrap: break-word;
 }
 
@@ -91,11 +91,11 @@ $gutter: 0.375rem;
   &-title {
     display: block;
     margin-bottom: 0.625rem;
-    color: rgba(0,0,0,0.6);
     font-size: 0.875rem;
-    font-weight: normal;
     line-height: 1rem;
+    font-weight: normal;
     text-align: left;
+    color: rgb(0 0 0 / 60%);
   }
 }
 
@@ -115,13 +115,13 @@ ul {
 
 .tile {
   position: relative;
+  margin: 0 $gutter $gutter 0;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 10%);
+  border-radius: 2px;
   width: $size;
   height: $size;
-  margin: 0 $gutter $gutter 0;
-  list-style: none;
   cursor: pointer;
-  border-radius: 2px;
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);
+  list-style: none;
 
   &:last-child {
     margin-bottom: 0;
@@ -130,15 +130,12 @@ ul {
 
 .dot {
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  width: calc($size / 3);
-  height: calc($size / 3);
+  inset: 0;
+  opacity: 1;
   margin: auto;
   border-radius: 50%;
-  opacity: 1;
+  width: calc($size / 3);
+  height: calc($size / 3);
   background: #fff;
 
   .white & {

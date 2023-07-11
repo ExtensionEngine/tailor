@@ -57,8 +57,8 @@ export default {
 $revision-padding: 32px;
 
 @mixin selected-revision {
-  color: #fff;
   background-color: #37474f;
+  color: #fff;
 }
 
 .sidebar {
@@ -78,20 +78,20 @@ $revision-padding: 32px;
 }
 
 .revision {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
   position: relative;
+  display: flex;
+  overflow: hidden;
   height: 52px;
   padding-left: $revision-padding;
-  color: #656565;
-  font-size: 14px;
-  overflow: hidden;
   cursor: pointer;
+  font-size: 14px;
+  color: #656565;
+  flex-direction: row;
+  align-items: center;
 
   &:hover {
-    color: #333;
     background-color: #f1f1f1;
+    color: #333;
   }
 
   .description {
@@ -106,12 +106,12 @@ $revision-padding: 32px;
 .selected, .revision:hover {
   .rollback {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 32px;
-    height: 32px;
     margin-right: 8px;
     border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    justify-content: center;
+    align-items: center;
 
     &:hover {
       color: #222;
@@ -154,8 +154,8 @@ $revision-padding: 32px;
 }
 
 .progress-indicator {
-  width: 80px;
   animation: indeterminate 1.2s infinite;
+  width: 80px;
 }
 
 .selected {

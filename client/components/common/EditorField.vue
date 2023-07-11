@@ -79,16 +79,13 @@ export default {
   &::before {
     content: '';
     position: absolute;
-    top: 1px;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.38);
+    inset: 1px 0 0;
+    box-shadow: inset 0 0 0 1px rgb(0 0 0 / 38%);
     border-radius: 0.125rem;
   }
 
   &:hover::before {
-    box-shadow: inset 0 0 0 1px rgba(0, 0, 0);
+    box-shadow: inset 0 0 0 1px rgb(0 0 0);
   }
 
   .ql-editor {
@@ -117,8 +114,8 @@ export default {
     top: -0.5625rem;
     left: -0.25rem;
     padding: 0 0.25rem;
-    font-size: 0.75rem;
     background: #fff;
+    font-size: 0.75rem;
   }
 
   .editor {
@@ -127,7 +124,7 @@ export default {
   }
 
   .ql-toolbar.ql-snow {
-    border-bottom: 1px solid currentColor;
+    border-bottom: 1px solid currentcolor;
 
     button:hover, button:focus {
       color: var(--v-secondary-base);
@@ -135,8 +132,8 @@ export default {
   }
 
   .ql-container {
-    max-height: 15rem;
     overflow: auto;
+    max-height: 15rem;
   }
 
   .ql-tooltip {

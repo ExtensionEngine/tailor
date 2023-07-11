@@ -115,31 +115,31 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$background-color:  #eceff1;
+$background-color: #eceff1;
 
 .activity {
   display: flex;
-  height: 2.75rem;
+  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
   margin: 0.625rem 0;
-  padding: 0 0 0 0.375rem;
   border-radius: 2px;
+  height: 2.75rem;
+  padding: 0 0 0 0.375rem;
   background-color: $background-color;
   cursor: pointer;
   border-left-width: 4px;
   border-left-style: solid;
-  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
 
   &-name {
     padding: 0.125rem 0.75rem 0 0.375rem;
-    color: #222;
     font-size: 1rem !important;
-    font-weight: 400 !important;
     line-height: 2.5rem;
+    font-weight: 400 !important;
+    color: #222;
   }
 
   &.selected, &.highlighted {
     opacity: 1;
-    background-color: darken($background-color, 7);
+    background-color: color.adjust($background-color, $lightness: -7%);
 
     .activity-name {
       color: #111;
@@ -152,8 +152,8 @@ $background-color:  #eceff1;
 
   .actions {
     display: flex;
-    height: 100%;
     margin: 0 0 0 auto;
+    height: 100%;
     padding: 0;
 
     .v-btn {

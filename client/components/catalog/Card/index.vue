@@ -139,11 +139,11 @@ export default {
 
 <style lang="scss" scoped>
 .repository-card {
-  height: 14.75rem;
   transition: all 0.3s ease;
+  height: 14.75rem;
   cursor: pointer;
 
-  @media (max-width: 1263px) {
+  @media (width <= 1263px) {
     height: 17.25rem;
   }
 }
@@ -152,9 +152,9 @@ export default {
   padding: 0.375rem 0 0;
 
   .schema-name {
-    color: #fafafa;
     font-size: 0.75rem;
     font-weight: 500;
+    color: #fafafa;
     letter-spacing: 1px;
   }
 
@@ -167,7 +167,7 @@ export default {
   }
 }
 
-.repo-info.v-btn:not(.v-btn--text):not(.v-btn--outlined):hover::before {
+.repo-info.v-btn:not(.v-btn--text, .v-btn--outlined):hover::before {
   opacity: 0.2;
 }
 </style>

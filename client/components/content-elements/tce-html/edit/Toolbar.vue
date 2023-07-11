@@ -79,9 +79,9 @@ $icon-size: 1.125rem;
 .ql-toolbar .icon {
   width: $icon-size;
   height: $icon-size;
-  color: $icon-color;
   font-size: $icon-size;
   line-height: $icon-size;
+  color: $icon-color;
   vertical-align: top;
 }
 
@@ -105,8 +105,8 @@ $icon-size: 1.125rem;
   border: none;
 
   @mixin colorize($color, $background: none) {
-    color: $icon-accent-color;
     background: $background;
+    color: $icon-accent-color;
 
     .icon {
       color: inherit;
@@ -114,11 +114,11 @@ $icon-size: 1.125rem;
 
     // dropdown chevrons
     .ql-stroke {
-      stroke: currentColor;
+      stroke: currentcolor;
     }
 
     .ql-fill {
-      fill: currentColor;
+      fill: currentcolor;
     }
   }
 
@@ -148,37 +148,37 @@ $icon-size: 1.125rem;
   $offset: 0.125rem;
   $arrow-size: 0.375rem;
 
-  display: block;
   position: absolute;
   z-index: 999;
+  display: block;
   margin-top: $arrow-size + $offset;
-  padding: 0.375rem 0.75rem;
-  line-height: 1.42;
-  background: $background-color;
   border: 1px solid #fff;
   border-radius: 0;
-  user-select: none;
+  padding: 0.375rem 0.75rem;
+  background: $background-color;
   cursor: default;
+  line-height: 1.42;
+  user-select: none;
 
   &-arrow {
     position: absolute;
     top: -$arrow-size;
     left: calc(50% - #{$arrow-size});
-    width: 0;
-    height: 0;
     margin: 0 $arrow-size;
     border: $arrow-size solid transparent;
+    width: 0;
+    height: 0;
     border-top-width: 0;
     border-bottom-color: $background-color;
   }
 
   &-inner {
     padding: 0;
-    color: $text-color;
     font-size: 0.96rem;
     font-family: $font-family-secondary;
     font-weight: 500;
     text-align: center;
+    color: $text-color;
   }
 }
 </style>

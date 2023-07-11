@@ -62,7 +62,7 @@ export default {
   @for $index from 1 through length($durations) {
     use:nth-child(#{$index}) {
       animation-delay: -(1s + $index);
-      animation-duration: nth($durations, $index);
+      animation-duration: list.nth($durations, $index);
     }
   }
 }

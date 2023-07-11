@@ -50,13 +50,13 @@ export default {
   }
 
   &.active {
-    border: 2px solid $bg-color-default !important;
     box-shadow: var(--v-secondary-base) 0 0 0 2px;
+    border: 2px solid $bg-color-default !important;
   }
 
   &:hover {
-    transform: scale(1.1);
     z-index: 1;
+    transform: scale(1.1);
     cursor: pointer;
   }
 }
