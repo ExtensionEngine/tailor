@@ -90,7 +90,7 @@ export default {
   }
 
   &-editor.v-textarea {
-    margin: 0.75rem 0 0 0;
+    margin: 0.75rem 0 0;
 
     ::v-deep .v-input__slot {
       width: auto;

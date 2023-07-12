@@ -45,15 +45,15 @@ export default {
 
 <style lang="scss" scoped>
 .heading {
+  z-index: 2;
   width: 100%;
   text-align: left;
   text-transform: uppercase;
-  z-index: 2;
 }
 
 .user-panel {
   position: relative;
-  max-width: 50rem;
   margin-top: 3.5rem;
+  max-width: 50rem;
 }
 </style>

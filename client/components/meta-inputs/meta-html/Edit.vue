@@ -78,10 +78,10 @@ export default {
 <style lang="scss">
 .meta-quill-input {
   position: relative;
-  margin: 0 0 1.25rem 0;
-  padding: 0.625rem 0.5rem 0;
-  border: 1px solid rgba(0, 0, 0, 0.6);
+  margin: 0 0 1.25rem;
+  border: 1px solid rgb(0 0 0 / 60%);
   border-radius: 0.125rem;
+  padding: 0.625rem 0.5rem 0;
   cursor: pointer;
 
   &.editing {
@@ -99,7 +99,7 @@ export default {
   }
 
   .ql-toolbar.ql-snow {
-    border-bottom: 1px solid currentColor;
+    border-bottom: 1px solid currentcolor;
   }
 
   .ql-container {

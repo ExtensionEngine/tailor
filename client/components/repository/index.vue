@@ -135,16 +135,16 @@ export default {
 }
 
 .repo-toolbar {
-  display: flex;
-  justify-content: space-between;
-  height: 3.75rem;
   z-index: 2;
+  display: flex;
+  height: 3.75rem;
+  justify-content: space-between;
 }
 
 .v-tabs {
   ::v-deep .v-tabs-bar.theme--dark .v-tab {
     &.v-tab--active {
-      color: rgba(255, 255, 255, 0.6);
+      color: rgb(255 255 255 / 60%);
     }
 
     &:not(.v-tab--active) {

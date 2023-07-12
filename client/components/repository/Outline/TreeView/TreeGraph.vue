@@ -289,7 +289,7 @@ $link-color: #b0bec5;
     }
 
     &:hover .circle {
-      fill: darken($node-color, 10%);
+      fill: color.adjust($node-color, $lightness: -10%);
     }
 
     // Capture all mouse events on circle wrapper.

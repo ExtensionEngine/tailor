@@ -55,8 +55,8 @@ export default {
 
 <style lang="scss" scoped>
 .group-introduction {
-  min-height: 150px;
   margin: 30px 0;
+  min-height: 150px;
   padding: 5px 15px;
 }
 </style>

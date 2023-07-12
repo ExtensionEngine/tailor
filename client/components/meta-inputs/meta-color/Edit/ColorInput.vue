@@ -52,19 +52,19 @@ export default {
 }
 
 .selected {
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 15%);
+  border-radius: 50%;
   width: 40px;
   height: 40px;
-  text-align: center;
-  border-radius: 50%;
   cursor: pointer;
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.15);
+  text-align: center;
 
   .eyedropper {
-    color: #fff;
-    font-size: 18px;
-    line-height: 40px;
     opacity: 0;
     transition: opacity 0.3s ease;
+    font-size: 18px;
+    line-height: 40px;
+    color: #fff;
   }
 
   &:hover .eyedropper {

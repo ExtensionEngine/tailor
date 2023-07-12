@@ -114,12 +114,12 @@ $font-color: #333;
 
   .app-name {
     margin: 0.125rem 0 0 0.375rem;
-    color: #fafafa;
     font-size: 1.25rem;
-    font-weight: 400;
-    letter-spacing: 1px;
     line-height: $container-height;
+    font-weight: 400;
     text-transform: uppercase;
+    color: #fafafa;
+    letter-spacing: 1px;
   }
 }
 

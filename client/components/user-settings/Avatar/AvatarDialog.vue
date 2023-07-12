@@ -65,12 +65,12 @@ $image-width: 15rem;
 $image-height: 15rem;
 
 .croppa-container {
+  overflow: hidden;
+  border: $image-border;
+  border-radius: 50%;
   width: $image-width;
   height: $image-height;
   background-color: $image-bg-color;
-  border: $image-border;
-  border-radius: 50%;
-  overflow: hidden;
   cursor: pointer;
 
   &.croppa--has-target {

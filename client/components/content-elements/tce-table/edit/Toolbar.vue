@@ -53,8 +53,8 @@ export default {
 }
 
 .tce-table-toolbar.ql-toolbar.ql-snow {
-  padding: 0;
   border: none;
+  padding: 0;
   font-family: inherit;
 }
 </style>

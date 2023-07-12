@@ -164,7 +164,7 @@ function empty(el) {
 .error {
   position: relative;
   height: 100%;
-  background: rgba(0,0,0,0.9);
+  background: rgb(0 0 0 / 90%);
 }
 
 .error .message {
@@ -172,9 +172,9 @@ function empty(el) {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: #fff;
   font-size: 18px;
   font-weight: 500;
+  color: #fff;
   .mdi { font-size: 42px; }
 }
 

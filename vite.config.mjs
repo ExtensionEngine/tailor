@@ -105,6 +105,8 @@ export default defineConfig(({ mode }) => {
       preprocessorOptions: {
         scss: {
           additionalData: `
+            @use 'sass:color';
+            @use 'sass:list';
             @import '@/assets/stylesheets/common/_variables.scss';
             ${brandStyles}
           `

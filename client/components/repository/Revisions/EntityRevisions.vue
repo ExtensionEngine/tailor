@@ -106,19 +106,19 @@ export default {
   padding: 32px 8px;
 
   .preview {
-    flex-grow: 1;
+    margin-right: 16px;
     min-width: 300px;
     min-height: 500px;
-    margin-right: 16px;
     text-align: center;
+    flex-grow: 1;
   }
 }
 
 .slide-fade-enter-active, .slide-fade-leave-active {
   overflow: hidden;
+  transition: all 350ms cubic-bezier(0.165, 0.84, 0.44, 1);
   margin-top: 0;
   margin-bottom: 0;
-  transition: all 350ms cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 .slide-fade-enter, .slide-fade-leave-to {

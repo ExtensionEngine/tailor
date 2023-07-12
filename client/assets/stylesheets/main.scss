@@ -1,6 +1,7 @@
 // Google Web Fonts
-/* stylelint-disable function-comma-newline-after */
+/* stylelint-disable function-comma-newline-after, import-notation */
 @import '~sass-web-fonts/web-fonts';
+
 $web-font-path: web-fonts-url(
   ('Roboto': (300, 400, 500, 700)),
   ('Poppins': (300, 400, 500, 700))

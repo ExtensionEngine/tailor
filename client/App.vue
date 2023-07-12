@@ -41,15 +41,15 @@ html {
 }
 
 #app {
-  --text-color-default: rgba(0,0,0,0.87);
+  --text-color-default: rgb(0 0 0 / 87%);
 
+  overflow: hidden;
   height: 100vh;
-  color: var(--text-color-default);
   font-family: $font-family-primary;
+  text-align: center;
+  color: var(--text-color-default);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  overflow: hidden;
 }
 
 .application, .v-application--wrap, .v-main, .view {

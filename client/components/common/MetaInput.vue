@@ -59,9 +59,9 @@ export default {
 
 <style lang="scss" scoped>
 ::v-deep .title {
-  color: #808080;
-  font-family: $font-family-secondary;
   font-size: 14px !important;
+  font-family: $font-family-secondary;
   font-weight: normal;
+  color: #808080;
 }
 </style>

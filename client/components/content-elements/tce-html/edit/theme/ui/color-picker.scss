@@ -3,15 +3,15 @@
     $height: 30px;
     $icon-size: 18px;
 
-    display: inline-flex;
-    align-items: center;
-    vertical-align: middle;
     float: none;
+    display: inline-flex;
     width: 100%;
     height: $height;
     padding: 0 1px;
     line-height: $height;
     text-align: left;
+    align-items: center;
+    vertical-align: middle;
 
     .icon {
       vertical-align: top;

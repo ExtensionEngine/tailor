@@ -45,8 +45,8 @@ export default {
 }
 
 .heading {
+  z-index: 2;
   width: 100%;
   text-transform: uppercase;
-  z-index: 2;
 }
 </style>

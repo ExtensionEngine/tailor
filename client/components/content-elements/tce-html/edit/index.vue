@@ -120,8 +120,8 @@ export default {
 
 <style lang="scss">
 .ql-container.ql-snow {
-  font-size: 1rem;
   border: none;
+  font-size: 1rem;
 }
 
 .ql-editor {

@@ -16,7 +16,7 @@ export default {
 
 <style lang="scss" scoped>
 .tce-break {
-  color: #eee;
   font-size: 1.125rem;
+  color: #eee;
 }
 </style>

@@ -17,7 +17,7 @@ export default {
 
 <style lang="scss" scoped>
 .input-error {
-  color: var(--v-error-base);
   font-size: 0.75rem;
+  color: var(--v-error-base);
 }
 </style>

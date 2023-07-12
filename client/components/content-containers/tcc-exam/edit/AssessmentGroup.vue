@@ -156,16 +156,16 @@ export default {
 <style lang="scss" scoped>
 h3 {
   margin: 30px 5px;
-  color: #444;
   font-size: 18px;
   text-align: left;
+  color: #444;
 }
 
 h4 {
   margin: 20px 5px;
-  color: #444;
   font-size: 16px;
   text-align: left;
+  color: #444;
 }
 
 .assessment-group {
@@ -187,12 +187,12 @@ h4 {
 .remove {
   float: right;
   margin: 10px 5px;
-  color: #777;
   font-size: 22px;
+  color: #777;
 
   &:hover {
-    color: #444;
     cursor: pointer;
+    color: #444;
   }
 }
 

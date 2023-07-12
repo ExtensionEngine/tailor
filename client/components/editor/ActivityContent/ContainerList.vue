@@ -187,9 +187,9 @@ export default {
 }
 
 .content-container {
+  margin: 1.5rem 0;
   width: 100%;
   min-height: 15.5rem;
-  margin: 1.5rem 0;
   padding: 0.625rem;
   background-color: #fff;
 }

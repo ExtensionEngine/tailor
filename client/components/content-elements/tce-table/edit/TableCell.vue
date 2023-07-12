@@ -30,10 +30,10 @@ export default {
 <style lang="scss" scoped>
 .table-cell {
   display: table-cell;
+  border: 1px solid black;
   width: 312px;
   max-width: 312px;
   height: 100%;
-  border: 1px solid black;
 
   ::v-deep {
     .jodit_container, .ql-editor {

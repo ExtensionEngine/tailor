@@ -42,8 +42,8 @@ export default {
 <style lang="scss" scoped>
 .repo-search {
   > div {
-    margin: 0 auto;
     transition: width 0.3s ease;
+    margin: 0 auto;
   }
 }
 </style>

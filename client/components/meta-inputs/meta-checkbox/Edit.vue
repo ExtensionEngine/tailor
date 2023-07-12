@@ -29,10 +29,10 @@ export default {
   }
 
   &-label {
-    color: #0000008a;
     font-size: 0.875rem;
     font-weight: normal;
     text-align: left;
+    color: #0000008a;
   }
 }
 </style>

@@ -82,12 +82,12 @@ export default {
 
 <style lang="scss" scoped>
 .tce-audio {
+  position: relative;
+  z-index: 999;
   display: flex;
+  min-height: 4.5rem;
   align-items: center;
   justify-content: center;
-  position: relative;
-  min-height: 4.5rem;
-  z-index: 999;
 
   ::v-deep {
     .element-placeholder {
@@ -105,10 +105,10 @@ export default {
 
   .error {
     position: absolute;
+    opacity: 0.98;
     width: 100%;
     height: 100%;
     background-color: #333;
-    opacity: 0.98;
 
     .message {
       position: absolute;

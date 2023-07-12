@@ -8,7 +8,7 @@
     line-height: 26px;
   }
 
-  input[type=text] {
+  input[type="text"] {
     display: initial;
 
     &:focus {
@@ -17,8 +17,8 @@
   }
 
   .action {
+    transition: none;
     margin-left: 16px;
     padding-right: 8px;
-    transition: none;
   }
 }

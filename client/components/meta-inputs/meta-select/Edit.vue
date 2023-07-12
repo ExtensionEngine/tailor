@@ -65,9 +65,9 @@ export default {
 }
 
 .img {
+  margin-right: 0.75rem;
   width: 2rem;
   height: 2rem;
-  margin-right: 0.75rem;
 }
 
 .v-chip__content .img {

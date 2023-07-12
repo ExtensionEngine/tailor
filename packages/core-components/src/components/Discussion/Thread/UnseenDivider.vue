@@ -36,7 +36,7 @@ export default {
   }
 
   ::v-deep .v-chip.v-chip--outlined.v-chip {
-    margin: -1.5rem 0 0.5rem 0;
+    margin: -1.5rem 0 0.5rem;
     border-radius: 1rem !important;
     background-color: #fafafa !important;
 

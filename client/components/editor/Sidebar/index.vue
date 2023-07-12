@@ -130,8 +130,8 @@ export default {
 
   ::v-deep .activity-discussion {
     margin: 1rem 0;
-    padding: 1rem;
     border: none;
+    padding: 1rem;
   }
 }
 </style>

@@ -84,18 +84,18 @@ $image-height: 150px;
   }
 
   img, .v-icon {
-    background-color: $image-bg-color;
     border: $image-border;
     border-radius: 50%;
+    background-color: $image-bg-color;
   }
 
   .overlay {
     position: absolute;
     top: 0;
     left: 0;
+    opacity: 0.7;
     width: $image-width;
     background: #607d8b;
-    opacity: 0.7;
     cursor: pointer;
   }
 

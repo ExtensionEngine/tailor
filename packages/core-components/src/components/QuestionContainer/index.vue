@@ -163,9 +163,9 @@ const baseSchema = {
 
 <style lang="scss" scoped>
 .tce-question-container {
+  overflow: visible;
   min-height: 25rem;
   background-color: #fff;
-  overflow: visible;
   text-align: left;
 
   ::v-deep .title {
@@ -175,7 +175,7 @@ const baseSchema = {
   .content {
     margin: 0.5rem 1.625rem;
 
-    @media (max-width: 1263px) {
+    @media (width <= 1263px) {
       margin: 0.5rem;
     }
   }

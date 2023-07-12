@@ -94,7 +94,7 @@ export default {
 }
 
 .v-input.height-input {
-  max-width: 14rem;
   margin-right: 1.25rem;
+  max-width: 14rem;
 }
 </style>
