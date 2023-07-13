@@ -1,5 +1,5 @@
-import '@extensionengine/tce-scorm/dist/tce-scorm.css';
-import { Edit, options, Toolbar } from '@extensionengine/tce-scorm/dist/tce-scorm.umd';
+import '@extensionengine/tce-scorm/tce-scorm.css';
+import { Edit, options, Toolbar } from '@extensionengine/tce-scorm';
 
 export default {
   ...options,
