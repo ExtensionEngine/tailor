@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import cuid from 'cuid';
+import { createId as cuid } from '@paralleldrive/cuid2';
 import Edit from './edit/index.vue';
 import map from 'lodash/map';
 import times from 'lodash/times';

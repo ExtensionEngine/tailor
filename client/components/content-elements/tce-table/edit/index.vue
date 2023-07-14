@@ -17,7 +17,7 @@
 <script>
 import { addCell, addEmbed, removeCell, removeEmbed } from './utils';
 import cloneDeep from 'lodash/cloneDeep';
-import cuid from 'cuid';
+import { createId as cuid } from '@paralleldrive/cuid2';
 import find from 'lodash/find';
 import first from 'lodash/first';
 import forEach from 'lodash/forEach';

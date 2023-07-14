@@ -1,5 +1,5 @@
 import { addCell, addEmbed } from './edit/utils';
-import cuid from 'cuid';
+import { createId as cuid } from '@paralleldrive/cuid2';
 import Edit from './edit/index.vue';
 import times from 'lodash/times';
 import Toolbar from './edit/Toolbar.vue';

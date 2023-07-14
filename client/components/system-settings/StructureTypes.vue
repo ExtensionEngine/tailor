@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import cuid from 'cuid';
+import { createId as cuid } from '@paralleldrive/cuid2';
 import { SCHEMAS } from 'tailor-config';
 import without from 'lodash/without';
 

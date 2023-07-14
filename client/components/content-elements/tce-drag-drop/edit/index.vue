@@ -75,7 +75,7 @@
 <script>
 import { assessment } from '@tailor-cms/utils';
 import cloneDeep from 'lodash/cloneDeep';
-import cuid from 'cuid';
+import { createId as cuid } from '@paralleldrive/cuid2';
 import forEach from 'lodash/forEach';
 import { mapRequests } from '@extensionengine/vue-radio';
 import pick from 'lodash/pick';
