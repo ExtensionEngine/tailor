@@ -45,7 +45,7 @@
 <script>
 import AccordionItem from './AccordionItem.vue';
 import cloneDeep from 'lodash/cloneDeep';
-import cuid from 'cuid';
+import { createId as cuid } from '@paralleldrive/cuid2';
 import { ElementPlaceholder } from '@tailor-cms/core-components';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';

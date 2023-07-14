@@ -1,5 +1,5 @@
 import BlobStore from 'fs-blob-store';
-import cuid from 'cuid';
+import { createId as cuid } from '@paralleldrive/cuid2';
 import DefaultAdapter from './default/index.js';
 import EventEmitter from 'events';
 import Promise from 'bluebird';

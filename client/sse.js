@@ -1,5 +1,5 @@
 import createDebug from 'debug';
-import cuid from 'cuid';
+import { createId as cuid } from '@paralleldrive/cuid2';
 import { EventEmitter } from 'events';
 
 const debug = createDebug('sse-client');
