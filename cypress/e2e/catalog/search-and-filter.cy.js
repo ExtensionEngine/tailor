@@ -1,4 +1,4 @@
-import { findRepositoryCard, searchRepository } from './utils.js';
+import { findRepositoryCard, searchRepository } from './utils';
 
 describe('ability to search and filter repository catalog', () => {
   beforeEach(() => {

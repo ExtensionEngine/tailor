@@ -25,10 +25,10 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 import '@testing-library/cypress/add-commands';
-import './common';
-import './schema';
 import './api';
 import './auth';
+import './common';
 import './repository';
+import './schema';
 import './activity';
 import './vuetify';

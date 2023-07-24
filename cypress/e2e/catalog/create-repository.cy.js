@@ -1,6 +1,7 @@
 import { findRepositoryCard } from './utils';
 
 const getDialog = () => cy.findByRole('dialog');
+const chance = require('chance').Chance();
 
 describe('create repository', () => {
   beforeEach(() => {
@@ -10,15 +11,14 @@ describe('create repository', () => {
   });
 
   it('should create a new repository using the create dialog', () => {
-    const repositoryName = `Test_repository_${(new Date()).getTime()}`;
+    const repositoryName = `Repository - ${chance.sentence({ words: 5 })}`;
     cy.findByRole('button', { name: 'Add repository' }).click();
     getDialog().within(() => {
       cy.findByLabelText(/name/i)
         .type(repositoryName);
       cy.findByLabelText(/description/i)
         .type('Test description');
-      cy.findByRole('button', { name: /create/i })
-        .click();
+      cy.findByRole('button', { name: /create/i }).click();
     });
     findRepositoryCard(repositoryName);
   });

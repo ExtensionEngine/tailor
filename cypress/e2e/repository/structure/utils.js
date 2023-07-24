@@ -7,16 +7,18 @@ const sel = {
   addRootBtn: 'repository__createRootActivityBtn'
 };
 
-export const generateActivityName = type => `${type} - ${(new Date()).getTime()}`;
+const chance = require('chance').Chance();
 
 export const getActivityDialog = () => cy.findByTestId(sel.addDialog);
 export const getRootActivityDialog = () => cy.findByTestId(sel.addRootDialog);
+
+export const generateActivityName = type => `${type} - ${chance.sentence({ words: 5 })}`;
 
 export function createRootActivity(name, type) {
   cy.findByTestId(sel.addRootBtn).click();
   return getRootActivityDialog().within(() => {
     cy.vSelect('Type', type);
-    cy.findByLabelText('Name').type(`${name}{enter}`);
+    cy.findByLabelText('Name').type(`${name}`);
     cy.findByRole('button', { name: /create/i }).click();
   });
 }

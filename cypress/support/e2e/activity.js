@@ -1,10 +1,11 @@
-const generateName = (prefix = 'Activity') => `${prefix} - ${(new Date()).getTime()}`;
-
 const ACTIVITY_TYPES = {
   MODULE: 'TEST_SCHEMA/MODULE',
   LESSON: 'TEST_SCHEMA/LESSON',
   PAGE: 'TEST_SCHEMA/PAGE'
 };
+
+const chance = require('chance').Chance();
+const generateName = (prefix = 'Activity') => `${prefix} - ${chance.sentence({ words: 5 })}`;
 
 const SAVE_ACTIVITY_ACTION = 'repository/activities/save';
 const SET_ENDPOINT_ACTION = 'repository/activities/setEndpoint';
