@@ -171,7 +171,7 @@
     "@types/eslint": "^8.44.0",
     "@vitejs/plugin-vue2": "^2.2.0",
     "bunyan-pretty-cli": "^0.2.0",
-    "cypress": "^12.17.1",
+    "cypress": "^13.0.0",
     "dargs": "^8.1.0",
     "del-cli": "^5.0.0",
     "dotenv-cli": "^7.2.1",
