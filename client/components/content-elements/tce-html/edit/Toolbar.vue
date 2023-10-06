@@ -7,7 +7,13 @@
       </span>
       <span class="ql-formats">
         <select class="ql-font" data-title="Font"></select>
-        <select class="ql-header" data-title="Style"></select>
+        <select class="ql-header" data-title="Style">
+          <option value="1" data-title="Heading 1"></option>
+          <option value="2" data-title="Heading 2"></option>
+          <option value="3" data-title="Heading 3"></option>
+          <option value="4" data-title="Heading 4"></option>
+          <option selected="" data-title="Normal"></option>
+        </select>
       </span>
       <span class="ql-formats">
         <button class="ql-bold" data-title="Bold" type="button"></button>
