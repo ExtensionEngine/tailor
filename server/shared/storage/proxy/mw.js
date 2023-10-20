@@ -20,10 +20,9 @@ module.exports = (storage, proxy) => {
   }
 
   function setSignedCookies(req, res, next) {
-    const repositoryId = req.repository.id;
-    if (proxy.hasCookies(req.cookies, repositoryId)) return next();
+    if (proxy.hasCookies(req.cookies)) return next();
     const maxAge = 1000 * 60 * 60; // 1 hour in ms
-    const cookies = proxy.getSignedCookies(repositoryId, maxAge);
+    const cookies = proxy.getSignedCookies(maxAge);
     const { domain } = psl.parse(config.hostname);
     const cookieOptions = { domain, maxAge, httpOnly: true };
     Object.entries(cookies).forEach(([cookie, value]) => {
