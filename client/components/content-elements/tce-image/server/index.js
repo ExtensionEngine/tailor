@@ -9,6 +9,7 @@ const mime = require('mime-types');
 const DEFAULT_IMAGE_EXTENSION = 'png';
 
 function processImage(asset, { storage }) {
+  if (asset.data.parsedUrl) delete asset.data.parsedUrl;
   const image = asset.data.url;
   const base64Pattern = /^data:image\/(\w+);base64,/;
 
@@ -36,7 +37,7 @@ function resolveImage(asset, { storage, storageProxy }) {
   if (!asset.data || !asset.data.url) return Promise.resolve(asset);
 
   function getUrl(key) {
-    asset.data.url = storageProxy.getFileUrl(key);
+    asset.data.parsedUrl = storageProxy.getFileUrl(key);
     return asset;
   }
 

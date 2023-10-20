@@ -85,7 +85,7 @@ export default {
   data: () => ({ currentImage: null, persistedImage: null, showCropper: false }),
   computed: {
     showPlaceholder() {
-      const imageAvailable = !isEmpty(this.element.data.url);
+      const imageAvailable = !isEmpty(this.element.data.parsedUrl);
       if (imageAvailable) return false;
       if (this.$refs.cropper) this.$refs.cropper.destroy();
       return true;
@@ -116,12 +116,12 @@ export default {
       if (this.persistedImage !== this.currentImage) this.save(this.currentImage);
       if (this.currentImage) this.$refs.cropper.clear();
     },
-    'element.data.url'(imageUrl) {
+    'element.data.parsedUrl'(imageUrl) {
       toDataUrl(imageUrl).then(dataUrl => this.load(dataUrl));
     }
   },
   mounted() {
-    this.load(this.element.data.url);
+    this.load(this.element.data.parsedUrl);
 
     this.$elementBus.on('upload', dataUrl => {
       if (this.currentImage) this.$refs.cropper.replace(dataUrl);
