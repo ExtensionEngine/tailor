@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@extensionengine/tapster": "github:ExtensionEngine/tapster#53ccb222c757948d322c33087620453ddf5e70ed",
-    "@extensionengine/tce-jodit": "github:extensionengine/tce-jodit#a60d1cd",
+    "@extensionengine/tce-jodit": "github:extensionengine/tce-jodit#d82bbae5556da5aac09dc4d12d12ead062217ca6",
     "@extensionengine/tce-scorm": "github:ExtensionEngine/tce-scorm#85d39a8d73f303f",
     "@mdi/font": "^4.8.95",
     "@ungap/global-this": "^0.4.0",
