@@ -191,7 +191,7 @@
     "sass": "^1.63.6",
     "sequelize-cli": "^6.6.1",
     "sql-log-prettifier": "^0.1.2",
-    "start-server-and-test": "^2.0.0",
+    "start-server-and-test": "^2.0.3",
     "stylelint": "^15.10.1",
     "terser": "^5.19.0",
     "umzug": "^3.2.1",
