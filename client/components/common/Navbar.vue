@@ -63,11 +63,13 @@ export default {
     ...mapGetters('repository', ['repository']),
     title: () => BRAND_CONFIG.TITLE,
     logo: () => BRAND_CONFIG.LOGO_FULL,
+    isExternalAccessManagement: () => process.env.EXTERNAL_ACCESS_MANAGEMENT,
     routes() {
       const items = [
         { name: 'Catalog', to: { name: 'catalog' } },
         { name: 'Admin', to: { name: 'system-user-management' } }
       ];
+      if (this.isExternalAccessManagement) items.shift();
       if (!this.isAdmin) items.pop();
       if (this.repository) {
         items.unshift({

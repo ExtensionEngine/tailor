@@ -84,6 +84,7 @@ export default {
   name: 'catalog-container',
   data: () => ({ loading: true }),
   computed: {
+    isExternalAccessManagement: () => process.env.EXTERNAL_ACCESS_MANAGEMENT,
     ...mapState('repositories', {
       sortBy: state => state.$internals.sort,
       repositoryFilter: 'repositoryFilter',
@@ -153,6 +154,9 @@ export default {
     }
   },
   created() {
+    if (this.isExternalAccessManagement) {
+      this.$router.go(-1);
+    }
     // repositories must be reloaded for publishing badge to work properly
     // reset state manually to trigger "infinite" event in all cases
     this.resetPagination();

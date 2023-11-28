@@ -43,19 +43,28 @@
 export default {
   name: 'repository-settings-sidebar',
   computed: {
+    isExternalAccessManagement: () => process.env.EXTERNAL_ACCESS_MANAGEMENT,
     routes() {
       const { query } = this.$route;
-      return [
+      const entries = [
         { label: 'General', name: 'repository-info', icon: 'wrench' },
         { label: 'People', name: 'user-management', icon: 'account' }
       ].map(route => ({ ...route, query }));
+      if (this.isExternalAccessManagement) entries.pop();
+      return entries;
     },
     actions() {
-      return [
-        { label: 'Clone', icon: 'content-copy', name: 'clone' },
+      const defaultEntries = [
         { label: 'Publish', icon: 'upload', name: 'publish' },
         { label: 'Export', icon: 'export', name: 'export' },
         { label: 'Delete', icon: 'delete', name: 'delete', color: 'error' }
+      ];
+      const conditionalEntries = this.isExternallyManaged
+        ? []
+        : [{ label: 'Clone', icon: 'content-copy', name: 'clone' }];
+      return [
+        ...defaultEntries,
+        ...conditionalEntries
       ];
     }
   }
