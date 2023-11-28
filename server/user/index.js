@@ -7,9 +7,19 @@ import db from '../shared/database/index.js';
 import express from 'express';
 import { processPagination } from '../shared/database/pagination.js';
 import { requestLimiter } from '../shared/request/mw.js';
+import roleConfig from '../../config/shared/role.js';
 
 const { User } = db;
 const router = express.Router();
+const { user: role } = roleConfig;
+
+const {
+  EXTERNAL_ACCESS_MANAGEMENT: isExternalAccessManagement
+} = process.env;
+
+const authorizeAdminUser = isExternalAccessManagement
+  ? authorize(role.INTEGRATION)
+  : authorize();
 
 // Public routes:
 router
@@ -29,14 +39,14 @@ router
 // Protected routes:
 router
   .use(authService.authenticate('jwt'))
-  .get('/', authorize(), processPagination(User), ctrl.list)
-  .post('/', authorize(), ctrl.upsert)
+  .get('/', authorizeAdminUser, processPagination(User), ctrl.list)
+  .post('/', authorizeAdminUser, ctrl.upsert)
   .get('/logout', authService.logout())
   .get('/me', ctrl.getProfile)
   .patch('/me', ctrl.updateProfile)
   .post('/me/change-password', ctrl.changePassword)
-  .delete('/:id', authorize(), ctrl.remove)
-  .post('/:id/reinvite', authorize(), ctrl.reinvite);
+  .delete('/:id', authorizeAdminUser, ctrl.remove)
+  .post('/:id/reinvite', authorizeAdminUser, ctrl.reinvite);
 
 export default {
   path: '/users',
