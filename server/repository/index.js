@@ -46,7 +46,7 @@ router
 
 router.route('/')
   .get(processQuery({ limit: 100 }), ctrl.index)
-  .post(authorize(), ctrl.create);
+  .post(authorizeAdminUser, ctrl.create);
 
 router.route('/:repositoryId')
   .get(ctrl.get)
