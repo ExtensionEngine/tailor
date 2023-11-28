@@ -59,7 +59,7 @@ export default {
         { label: 'Export', icon: 'export', name: 'export' },
         { label: 'Delete', icon: 'delete', name: 'delete', color: 'error' }
       ];
-      const conditionalEntries = this.isExternallyManaged
+      const conditionalEntries = this.isExternalAccessManagement
         ? []
         : [{ label: 'Clone', icon: 'content-copy', name: 'clone' }];
       return [
