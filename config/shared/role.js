@@ -1,7 +1,7 @@
 import values from 'lodash/values.js';
 
 const role = {
-  user: { USER: 'USER', ADMIN: 'ADMIN' },
+  user: { USER: 'USER', ADMIN: 'ADMIN', INTEGRATION: 'INTEGRATION' },
   repository: { ADMIN: 'ADMIN', AUTHOR: 'AUTHOR' }
 };
 
