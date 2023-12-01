@@ -27,7 +27,8 @@ auth.use(new JwtStrategy({
   audience: Audience.Scope.Access,
   jwtFromRequest: ExtractJwt.fromExtractors([
     extractJwtFromCookie,
-    ExtractJwt.fromBodyField('token')
+    ExtractJwt.fromBodyField('token'),
+    ExtractJwt.fromHeader('access_token')
   ]),
   secretOrKey: config.jwt.secret
 }, verifyJWT));
