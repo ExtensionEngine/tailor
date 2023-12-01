@@ -4,11 +4,11 @@
 
 To add integration user run:
 
-`sh npm run integration:add`
+```sh npm run integration:add```
 
 to generate a integration token run:
 
-`sh npm run integration:token`
+```sh npm run integration:token```
 
 Use generated token to update `access_token` global variable for the provided
 Postman collection. Also make sure that the `base_url` variable is properly set.
