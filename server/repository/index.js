@@ -1,18 +1,15 @@
 'use strict';
 
-const { NOT_FOUND, UNAUTHORIZED } = require('http-status-codes');
 const { authorize } = require('../shared/auth/mw');
 const { createError } = require('../shared/error/helpers');
 const ctrl = require('./repository.controller');
 const feed = require('./feed');
 const multer = require('multer');
+const { NOT_FOUND } = require('http-status-codes');
 const path = require('path');
 const processQuery = require('../shared/util/processListQuery');
-const proxy = require('./proxy');
 const { Repository } = require('../shared/database');
 const router = require('express').Router();
-const storage = require('./storage');
-const { setSignedCookies } = require('../shared/storage/proxy/mw')(storage, proxy);
 
 /* eslint-disable require-sort/require-sort */
 const activity = require('../activity');
@@ -30,8 +27,7 @@ router
   .post('/import', authorize(), upload.single('archive'), ctrl.import);
 
 router
-  .param('repositoryId', getRepository)
-  .use('/:repositoryId', hasAccess, setSignedCookies);
+  .param('repositoryId', getRepository);
 
 router.route('/')
   .get(processQuery({ limit: 100 }), ctrl.index)
@@ -70,17 +66,6 @@ function getRepository(req, _res, next, repositoryId) {
     .then(repository => repository || createError(NOT_FOUND, 'Repository not found'))
     .then(repository => {
       req.repository = repository;
-      next();
-    });
-}
-
-function hasAccess(req, _res, next) {
-  const { user, repository } = req;
-  if (user.isAdmin()) return next();
-  return repository.getUser(user)
-    .then(user => user || createError(UNAUTHORIZED, 'Access restricted'))
-    .then(user => {
-      req.repositoryRole = user.repositoryUser.role;
       next();
     });
 }

@@ -8,7 +8,6 @@ const elementsList = require('../../../config/shared/core-elements');
 const hooks = require('./elementHooks');
 const pick = require('lodash/pick');
 const storage = require('../../repository/storage');
-const storageProxy = require('../../repository/proxy');
 const toCase = require('to-case');
 
 const EXTENSIONS_LIST = '../../../extensions/content-elements/index';
@@ -37,7 +36,7 @@ class ElementsRegistry extends BaseRegistry {
   getHook(type, hook) {
     const elementHooks = this._hooks[type];
     if (!elementHooks || !elementHooks[hook]) return;
-    const services = { config, storage, storageProxy };
+    const services = { config, storage };
     return (element, options) => elementHooks[hook](element, services, options);
   }
 

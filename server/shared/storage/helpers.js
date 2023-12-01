@@ -4,8 +4,8 @@ const { elementRegistry } = require('../content-plugins');
 const get = require('lodash/get');
 const config = require('../../../config/server').storage;
 const Promise = require('bluebird');
-const proxy = require('../../repository/proxy');
 const set = require('lodash/set');
+const storage = require('../../repository/storage');
 const toPairs = require('lodash/toPairs');
 const values = require('lodash/values');
 
@@ -28,11 +28,11 @@ function defaultStaticsResolver(item) {
 
 async function resolveAssetsMap(element) {
   if (!get(element, 'data.assets')) return element;
-  await Promise.map(toPairs(element.data.assets), ([key, url]) => {
+  await Promise.map(toPairs(element.data.assets), async ([key, url]) => {
     if (!url) return set(element.data, key, url);
     const isStorageResource = url.startsWith(config.protocol);
     const resolvedUrl = isStorageResource
-      ? proxy.getFileUrl(url.substr(config.protocol.length, url.length))
+      ? await storage.getFileUrl(url.substr(config.protocol.length, url.length))
       : url;
     set(element.data, key, resolvedUrl);
   });

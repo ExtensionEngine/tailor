@@ -9,7 +9,6 @@ const mime = require('mime-types');
 const DEFAULT_IMAGE_EXTENSION = 'png';
 
 function processImage(asset, { storage }) {
-  if (asset.data.parsedUrl) delete asset.data.parsedUrl;
   const image = asset.data.url;
   const base64Pattern = /^data:image\/(\w+);base64,/;
 
@@ -33,12 +32,13 @@ function processImage(asset, { storage }) {
   return saveFile(key, file, storage).then(() => asset);
 }
 
-function resolveImage(asset, { storage, storageProxy }) {
+function resolveImage(asset, { storage }) {
   if (!asset.data || !asset.data.url) return Promise.resolve(asset);
 
   function getUrl(key) {
-    asset.data.parsedUrl = storageProxy.getFileUrl(key);
-    return asset;
+    return storage.getFileUrl(key, { Expires: 3600 })
+      .then(url => (asset.data.url = url))
+      .then(() => asset);
   }
 
   return storage.fileExists(asset.data.url)
