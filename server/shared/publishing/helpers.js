@@ -11,6 +11,7 @@ const {
   getOutlineLevels,
   getSupportedContainers
 } = require('../../../config/shared/activities');
+const { applyFetchHooks } = require('../../content-element/hooks');
 const { containerRegistry } = require('../content-plugins');
 const differenceWith = require('lodash/differenceWith');
 const filter = require('lodash/filter');
@@ -24,7 +25,6 @@ const omit = require('lodash/omit');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const reduce = require('lodash/reduce');
-const { resolveStatics } = require('../storage/helpers');
 const storage = require('../../repository/storage');
 const without = require('lodash/without');
 
@@ -205,8 +205,8 @@ function unpublishDeletedContainers(parent, prevContainers, containers) {
 function resolveContainer(container) {
   const resolver = containerRegistry.getStaticsResolver(container);
   return resolver
-    ? resolver(container, resolveStatics)
-    : Promise.map(container.elements, resolveStatics).then(() => container);
+    ? resolver(container, applyFetchHooks)
+    : Promise.map(container.elements, applyFetchHooks).then(() => container);
 }
 
 function saveFile(parent, key, data) {
