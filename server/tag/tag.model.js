@@ -18,9 +18,13 @@ class Tag extends Model {
     };
   }
 
-  static associate({ Repository, RepositoryTag }) {
+  static associate({ Repository, RepositoryTag, User, UserTag }) {
     this.belongsToMany(Repository, {
       through: RepositoryTag,
+      foreignKey: { name: 'tagId', field: 'tag_id' }
+    });
+    this.belongsToMany(User, {
+      through: UserTag,
       foreignKey: { name: 'tagId', field: 'tag_id' }
     });
   }
@@ -36,9 +40,15 @@ class Tag extends Model {
       required: true
     };
     if (user && !user.isAdmin()) {
-      includeRepository.include = [{ model: User, attributes: ['id'], where: { id: user.id } }];
+      includeRepository.include = [{
+        model: User,
+        attributes: ['id'],
+        where: { id: user.id }
+      }];
     }
-    return Tag.findAll({ include: [includeRepository] });
+    return Tag.findAll({
+      include: [includeRepository]
+    });
   }
 
   static options() {
