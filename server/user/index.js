@@ -46,7 +46,9 @@ router
   .patch('/me', ctrl.updateProfile)
   .post('/me/change-password', ctrl.changePassword)
   .delete('/:id', authorizeAdminUser, ctrl.remove)
-  .post('/:id/reinvite', authorizeAdminUser, ctrl.reinvite);
+  .post('/:id/reinvite', authorizeAdminUser, ctrl.reinvite)
+  .post('/:id/tag', authorizeAdminUser, ctrl.addTag)
+  .delete('/:id/tag/:tagId', authorizeAdminUser, ctrl.removeTag);
 
 export default {
   path: '/users',

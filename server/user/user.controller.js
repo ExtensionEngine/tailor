@@ -4,7 +4,7 @@ import db from '../shared/database/index.js';
 import map from 'lodash/map.js';
 import { Op } from 'sequelize';
 
-const { User } = db;
+const { sequelize, Tag, User, UserTag } = db;
 const createFilter = q => map(['email', 'firstName', 'lastName'],
   it => ({ [it]: { [Op.iLike]: `%${q}%` } }));
 
@@ -69,6 +69,21 @@ function reinvite({ params }, res) {
     .then(() => res.status(ACCEPTED).end());
 }
 
+function addTag({ body: { name }, params: { id: userId } }, res) {
+  return sequelize.transaction(async transaction => {
+    const user = await User.findByPk(userId, { transaction });
+    const [tag] = await Tag.findOrCreate({ where: { name }, transaction });
+    await user.addTags([tag], { transaction });
+    return res.json({ data: tag });
+  });
+}
+
+async function removeTag({ params: { tagId, id: userId } }, res) {
+  const where = { tagId, userId };
+  await UserTag.destroy({ where });
+  return res.status(NO_CONTENT).send();
+}
+
 export default {
   list,
   upsert,
@@ -78,5 +93,7 @@ export default {
   getProfile,
   updateProfile,
   changePassword,
-  reinvite
+  reinvite,
+  addTag,
+  removeTag
 };
