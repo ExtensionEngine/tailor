@@ -16,6 +16,7 @@ import { wrapMethods } from './helpers.js';
 // Require models.
 /* eslint-disable */
 import User from '../../user/user.model.js';
+import UserTag from '../../user/userTag.model.js';
 import Repository from '../../repository/repository.model.js';
 import RepositoryTag from '../../tag/repositoryTag.model.js';
 import RepositoryUser from '../../repository/repositoryUser.model.js';
@@ -79,6 +80,7 @@ function initialize() {
  */
 const models = {
   User: defineModel(User),
+  UserTag: defineModel(UserTag),
   Repository: defineModel(Repository),
   RepositoryTag: defineModel(RepositoryTag),
   RepositoryUser: defineModel(RepositoryUser),
