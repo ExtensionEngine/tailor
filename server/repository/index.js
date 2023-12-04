@@ -77,7 +77,8 @@ function mount(router, mountPath, subrouter) {
 }
 
 function getRepository(req, _res, next, repositoryId) {
-  return Repository.findByPk(repositoryId, { paranoid: false })
+  return Repository
+    .findByPk(repositoryId, { include: ['repositoryTags'], paranoid: false })
     .then(repository => repository || createError(NOT_FOUND, 'Repository not found'))
     .then(repository => {
       req.repository = repository;
@@ -88,6 +89,8 @@ function getRepository(req, _res, next, repositoryId) {
 function hasAccess(req, _res, next) {
   const { user, repository } = req;
   if (user.isAdmin()) return next();
+  const repositoryTagIds = repository.repositoryTags?.map(it => it.tagId);
+  if (user.isAssociatedWithSomeTag(repositoryTagIds)) return next();
   return repository.getUser(user)
     .then(user => user || createError(UNAUTHORIZED, 'Access restricted'))
     .then(user => {
