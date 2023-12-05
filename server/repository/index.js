@@ -22,7 +22,7 @@ const { user: role } = roleConfig;
 import storageRouter from '../shared/storage/storage.router.js';
 /* eslint-enable */
 
-const { Repository } = db;
+const { Repository, Tag } = db;
 const router = express.Router();
 const { setSignedCookies } = proxyMw(storage, proxy);
 
@@ -42,7 +42,7 @@ router
 
 router
   .param('repositoryId', getRepository)
-  .use('/:repositoryId', hasAccess, setSignedCookies);
+  .use('/:repositoryId', hasAccess);
 
 router.route('/')
   .get(processQuery({ limit: 100 }), ctrl.index)
@@ -57,7 +57,7 @@ router
   .post('/:repositoryId/pin', ctrl.pin)
   .post('/:repositoryId/clone', authorizeAdminUser, ctrl.clone)
   .post('/:repositoryId/publish', ctrl.publishRepoInfo)
-  .get('/:repositoryId/users', authorizeAdminUser, ctrl.getUsers)
+  .get('/:repositoryId/users', ctrl.getUsers)
   .get('/:repositoryId/export/setup', ctrl.initiateExportJob)
   .post('/:repositoryId/export/:jobId', ctrl.export)
   .post('/:repositoryId/users', authorizeAdminUser, ctrl.upsertUser)
@@ -78,7 +78,7 @@ function mount(router, mountPath, subrouter) {
 
 function getRepository(req, _res, next, repositoryId) {
   return Repository
-    .findByPk(repositoryId, { include: ['repositoryTags'], paranoid: false })
+    .findByPk(repositoryId, { include: [{ model: Tag }], paranoid: false })
     .then(repository => repository || createError(NOT_FOUND, 'Repository not found'))
     .then(repository => {
       req.repository = repository;
@@ -89,8 +89,13 @@ function getRepository(req, _res, next, repositoryId) {
 function hasAccess(req, _res, next) {
   const { user, repository } = req;
   if (user.isAdmin()) return next();
-  const repositoryTagIds = repository.repositoryTags?.map(it => it.tagId);
-  if (user.isAssociatedWithSomeTag(repositoryTagIds)) return next();
+  const repositoryTagIds = repository.tags
+    ?.filter(it => it.isAccessTag)
+    .map(it => it.id);
+  if (repositoryTagIds.length && user.isAssociatedWithSomeTag(repositoryTagIds)) {
+    req.repositoryRole = role.ADMIN;
+    return next();
+  }
   return repository.getUser(user)
     .then(user => user || createError(UNAUTHORIZED, 'Access restricted'))
     .then(user => {
