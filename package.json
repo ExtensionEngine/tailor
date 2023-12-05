@@ -195,7 +195,7 @@
     "stylelint": "^15.10.1",
     "terser": "^5.19.0",
     "umzug": "^3.2.1",
-    "vite": "^4.4.4",
+    "vite": "^4.4.12",
     "vue-template-compiler": "^2.7.14"
   },
   "overrides": {
