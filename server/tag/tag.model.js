@@ -1,7 +1,7 @@
 import { Model } from 'sequelize';
 
 class Tag extends Model {
-  static fields({ STRING, UUID, UUIDV4 }) {
+  static fields({ BOOLEAN, STRING, UUID, UUIDV4 }) {
     return {
       uid: {
         type: UUID,
@@ -14,6 +14,11 @@ class Tag extends Model {
         allowNull: false,
         unique: true,
         validate: { notEmpty: true, len: [2, 20] }
+      },
+      isAccessTag: {
+        type: BOOLEAN,
+        field: 'is_access_tag',
+        defaultValue: false
       }
     };
   }
