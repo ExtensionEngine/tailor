@@ -1,6 +1,7 @@
 import * as fs from 'node:fs';
 import * as fsp from 'node:fs/promises';
-import { NO_CONTENT, NOT_FOUND } from 'http-status-codes';
+import { FORBIDDEN, NO_CONTENT, NOT_FOUND } from 'http-status-codes';
+import { repository as role, user as userRole } from '../../config/shared/role.js';
 import { createError } from '../shared/error/helpers.js';
 import db from '../shared/database/index.js';
 import getVal from 'lodash/get.js';
@@ -9,7 +10,6 @@ import { Op } from 'sequelize';
 import pick from 'lodash/pick.js';
 import Promise from 'bluebird';
 import publishingService from '../shared/publishing/publishing.service.js';
-import { repository as role } from '../../config/shared/role.js';
 import sample from 'lodash/sample.js';
 import { schema } from '../../config/shared/tailor.loader.js';
 import { snakeCase } from 'change-case';
@@ -171,15 +171,26 @@ function findOrCreateRole(repository, user, role) {
   .then(() => user);
 }
 
-function addTag({ body: { name }, repository }, res) {
+function addTag(
+  {
+    body: { name, isAccessTag = false },
+    user,
+    repository
+  },
+  res
+) {
   return sequelize.transaction(async transaction => {
-    const [tag] = await Tag.findOrCreate({ where: { name }, transaction });
+    const tag = await Tag.fetchOrCreate({ user, name, isAccessTag, transaction });
     await repository.addTags([tag], { transaction });
     return res.json({ data: tag });
   });
 }
 
-async function removeTag({ params: { tagId, repositoryId } }, res) {
+async function removeTag({ user, params: { tagId, repositoryId } }, res) {
+  const tag = await Tag.findByPk(tagId);
+  if (tag.isAccessTag && user.role !== userRole.INTEGRATION) {
+    return res.status(FORBIDDEN);
+  }
   const where = { tagId, repositoryId };
   await RepositoryTag.destroy({ where });
   return res.status(NO_CONTENT).send();

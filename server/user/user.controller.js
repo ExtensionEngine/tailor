@@ -1,8 +1,9 @@
-import { ACCEPTED, BAD_REQUEST, CONFLICT, NO_CONTENT, NOT_FOUND } from 'http-status-codes';
+import { ACCEPTED, BAD_REQUEST, CONFLICT, FORBIDDEN, NO_CONTENT, NOT_FOUND } from 'http-status-codes';
 import { createError, validationError } from '../shared/error/helpers.js';
 import db from '../shared/database/index.js';
 import map from 'lodash/map.js';
 import { Op } from 'sequelize';
+import { user as userRole } from '../../config/shared/role.js';
 
 const { sequelize, Tag, User, UserTag } = db;
 const createFilter = q => map(['email', 'firstName', 'lastName'],
@@ -69,16 +70,27 @@ function reinvite({ params }, res) {
     .then(() => res.status(ACCEPTED).end());
 }
 
-function addTag({ body: { name }, params: { id: userId } }, res) {
+function addTag(
+  {
+    user,
+    body: { name, isAccessTag },
+    params: { id: userId }
+  },
+  res
+) {
   return sequelize.transaction(async transaction => {
-    const user = await User.findByPk(userId, { transaction });
-    const [tag] = await Tag.findOrCreate({ where: { name }, transaction });
-    await user.addTags([tag], { transaction });
+    const tag = await Tag.fetchOrCreate({ user, name, isAccessTag, transaction });
+    const tagUser = await User.findByPk(userId, { transaction });
+    await tagUser.addTags([tag], { transaction });
     return res.json({ data: tag });
   });
 }
 
-async function removeTag({ params: { tagId, id: userId } }, res) {
+async function removeTag({ user, params: { tagId, id: userId } }, res) {
+  const tag = await Tag.findByPk(tagId);
+  if (tag.isAccessTag && user.role !== userRole.INTEGRATION) {
+    return res.status(FORBIDDEN);
+  }
   const where = { tagId, userId };
   await UserTag.destroy({ where });
   return res.status(NO_CONTENT).send();

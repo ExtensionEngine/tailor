@@ -1,4 +1,5 @@
 import { Model } from 'sequelize';
+import { user as userRole } from '../../config/shared/role.js';
 
 class Tag extends Model {
   static fields({ BOOLEAN, STRING, UUID, UUIDV4 }) {
@@ -32,6 +33,16 @@ class Tag extends Model {
       through: UserTag,
       foreignKey: { name: 'tagId', field: 'tag_id' }
     });
+  }
+
+  static async fetchOrCreate({ user, name, isAccessTag = false, transaction }) {
+    if (isAccessTag && user.role !== userRole.INTEGRATION) {
+      throw new Error('Only integration user can create access tags');
+    }
+    const tag = await Tag.findOne({ where: { name }, transaction });
+    if (!tag) return this.create({ name, isAccessTag }, { transaction });
+    if (tag && tag.isAccessTag === isAccessTag) return tag;
+    throw new Error('Cannot change tag type');
   }
 
   static getAssociated(user) {
