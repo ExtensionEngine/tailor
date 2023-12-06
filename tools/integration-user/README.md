@@ -19,7 +19,7 @@ Postman collection. Also make sure that the `base_url` variable is properly set.
 
 ## External access management
 
-To disable the ability for users to create repositories set 
-`EXTERNAL_ACCESS_MANAGEMENT` .env variable to true. This will lock
+To disable the ability for users to create repositories and manage access rights
+set `EXTERNAL_ACCESS_MANAGEMENT` .env variable to true. This will lock
 repository catalog UI access, remove the ability to clone repositories, and
-remove repository based user management UI.
+remove user management UI.
