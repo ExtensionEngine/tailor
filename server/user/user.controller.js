@@ -79,17 +79,21 @@ function addTag(
   res
 ) {
   return sequelize.transaction(async transaction => {
-    const tag = await Tag.fetchOrCreate({ user, name, isAccessTag, transaction });
     const tagUser = await User.findByPk(userId, { transaction });
+    if (!tagUser) return createError(NOT_FOUND, 'User not found');
+    const tag = await Tag.fetchOrCreate({ user, name, isAccessTag, transaction });
     await tagUser.addTags([tag], { transaction });
     return res.json({ data: tag });
   });
 }
 
 async function removeTag({ user, params: { tagId, id: userId } }, res) {
+  const tagUser = await User.findByPk(userId);
+  if (!tagUser) return createError(NOT_FOUND, 'User not found');
   const tag = await Tag.findByPk(tagId);
+  if (!tag) return createError(NOT_FOUND, 'Tag not found');
   if (tag.isAccessTag && user.role !== userRole.INTEGRATION) {
-    return res.status(FORBIDDEN);
+    return res.status(FORBIDDEN, 'Only integration users can remove access tags');
   }
   const where = { tagId, userId };
   await UserTag.destroy({ where });
