@@ -188,8 +188,9 @@ function addTag(
 
 async function removeTag({ user, params: { tagId, repositoryId } }, res) {
   const tag = await Tag.findByPk(tagId);
+  if (!tag) return createError(NOT_FOUND, 'Tag not found');
   if (tag.isAccessTag && user.role !== userRole.INTEGRATION) {
-    return res.status(FORBIDDEN);
+    return createError(FORBIDDEN, 'Can be removed only by integration users');
   }
   const where = { tagId, repositoryId };
   await RepositoryTag.destroy({ where });
