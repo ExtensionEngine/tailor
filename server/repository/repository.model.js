@@ -70,7 +70,6 @@ class Repository extends Model {
       foreignKey: { name: 'repositoryId', field: 'repository_id' }
     });
     this.hasMany(RepositoryTag, {
-      as: 'repositoryTags',
       foreignKey: { name: 'repositoryId', field: 'repository_id' }
     });
     this.belongsToMany(Tag, {
