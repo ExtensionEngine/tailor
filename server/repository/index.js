@@ -42,7 +42,7 @@ router
 
 router
   .param('repositoryId', getRepository)
-  .use('/:repositoryId', hasAccess);
+  .use('/:repositoryId', hasAccess, setSignedCookies);
 
 router.route('/')
   .get(processQuery({ limit: 100 }), ctrl.index)
