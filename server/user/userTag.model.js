@@ -2,7 +2,7 @@ import { Model } from 'sequelize';
 
 class UserTag extends Model {
   static fields({ INTEGER }) {
-    return {
+    return ({
       userId: {
         type: INTEGER,
         field: 'user_id',
@@ -15,7 +15,7 @@ class UserTag extends Model {
         primaryKey: true,
         unique: 'user_tag_pkey'
       }
-    };
+    });
   }
 
   static associate({ User, Tag }) {
