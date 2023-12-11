@@ -1,5 +1,5 @@
+import { authorize, authorizeIntegration } from '../shared/auth/mw.js';
 import { NOT_FOUND, UNAUTHORIZED } from 'http-status-codes';
-import { authorize } from '../shared/auth/mw.js';
 import { createError } from '../shared/error/helpers.js';
 import ctrl from './repository.controller.js';
 import db from '../shared/database/index.js';
@@ -30,15 +30,16 @@ const {
   EXTERNAL_ACCESS_MANAGEMENT: isExternalAccessManagement
 } = process.env;
 
-const authorizeAdminUser = isExternalAccessManagement
-  ? authorize(role.INTEGRATION)
+const authorizeUser = isExternalAccessManagement
+  ? authorizeIntegration
   : authorize();
+
 // NOTE: disk storage engine expects an object to be passed as the first argument
 // https://github.com/expressjs/multer/blob/6b5fff5/storage/disk.js#L17-L18
 const upload = multer({ storage: multer.diskStorage({}) });
 
 router
-  .post('/import', authorizeAdminUser, upload.single('archive'), ctrl.import);
+  .post('/import', authorizeUser, upload.single('archive'), ctrl.import);
 
 router
   .param('repositoryId', getRepository)
@@ -46,7 +47,7 @@ router
 
 router.route('/')
   .get(processQuery({ limit: 100 }), ctrl.index)
-  .post(authorizeAdminUser, ctrl.create);
+  .post(authorizeUser, ctrl.create);
 
 router.route('/:repositoryId')
   .get(ctrl.get)
@@ -55,15 +56,15 @@ router.route('/:repositoryId')
 
 router
   .post('/:repositoryId/pin', ctrl.pin)
-  .post('/:repositoryId/clone', authorizeAdminUser, ctrl.clone)
+  .post('/:repositoryId/clone', authorizeUser, ctrl.clone)
   .post('/:repositoryId/publish', ctrl.publishRepoInfo)
   .get('/:repositoryId/users', ctrl.getUsers)
   .get('/:repositoryId/export/setup', ctrl.initiateExportJob)
   .post('/:repositoryId/export/:jobId', ctrl.export)
-  .post('/:repositoryId/users', authorizeAdminUser, ctrl.upsertUser)
-  .delete('/:repositoryId/users/:userId', authorizeAdminUser, ctrl.removeUser)
-  .post('/:repositoryId/tags', authorizeAdminUser, ctrl.addTag)
-  .delete('/:repositoryId/tags/:tagId', authorizeAdminUser, ctrl.removeTag);
+  .post('/:repositoryId/users', authorizeUser, ctrl.upsertUser)
+  .delete('/:repositoryId/users/:userId', authorizeUser, ctrl.removeUser)
+  .post('/:repositoryId/tags', authorizeUser, ctrl.addTag)
+  .delete('/:repositoryId/tags/:tagId', authorizeUser, ctrl.removeTag);
 
 mount(router, '/:repositoryId', feed);
 mount(router, '/:repositoryId', activity);

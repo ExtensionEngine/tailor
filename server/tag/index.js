@@ -1,24 +1,20 @@
-import { authorize } from '../shared/auth/mw.js';
+import { authorizeIntegration } from '../shared/auth/mw.js';
 import { createError } from '../shared/error/helpers.js';
 import ctrl from './tag.controller.js';
 import db from '../shared/database/index.js';
 import express from 'express';
 import { NOT_FOUND } from 'http-status-codes';
-import roleConfig from '../../config/shared/role.js';
 
 const router = express.Router();
 const { Tag } = db;
-const { user: role } = roleConfig;
-
-const authorizeUser = authorize(role.INTEGRATION);
 
 router
   .get('/', ctrl.list)
-  .post('/', authorizeUser, ctrl.create);
+  .post('/', authorizeIntegration, ctrl.create);
 
 router
   .param('tagId', getTag)
-  .use('/:tagId', authorizeUser);
+  .use('/:tagId', authorizeIntegration);
 
 router.route('/:tagId')
   .get(ctrl.get)

@@ -14,6 +14,11 @@ function authorize(...allowed) {
   };
 }
 
+function authorizeIntegration({ user }, res, next) {
+  if (user && user.role === role.INTEGRATION) return next();
+  return createError(UNAUTHORIZED, 'Access restricted');
+}
+
 function extractAuthData(req, res, next) {
   const path = authConfig.jwt.cookie.signed ? 'signedCookies' : 'cookies';
   req.authData = get(req[path], 'auth', null);
@@ -22,5 +27,6 @@ function extractAuthData(req, res, next) {
 
 export {
   authorize,
+  authorizeIntegration,
   extractAuthData
 };
