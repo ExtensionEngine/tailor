@@ -33,7 +33,7 @@ function patch({ tag, body }, res) {
 
 function remove({ tag }, res) {
   return tag.destroy()
-    .then(data => res.status(NO_CONTENT).end());
+    .then(() => res.status(NO_CONTENT).end());
 }
 
 export default {
