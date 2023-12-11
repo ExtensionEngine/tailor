@@ -27,7 +27,7 @@ router.route('/:tagId')
 
 function getTag(req, _res, next, tagId) {
   return Tag
-    .findByPk(tagId, { paranoid: false })
+    .findByPk(tagId)
     .then(tag => tag || createError(NOT_FOUND, 'Tag not found'))
     .then(tag => {
       req.tag = tag;
