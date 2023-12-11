@@ -28,12 +28,12 @@ class UserTag extends Model {
   }
 
   static options() {
-    return {
+    return ({
       modelName: 'UserTag',
       tableName: 'user_tag',
       underscored: true,
       timestamps: false
-    };
+    });
   }
 }
 
