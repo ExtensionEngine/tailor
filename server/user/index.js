@@ -5,15 +5,12 @@ import authService from '../shared/auth/index.js';
 import ctrl from './user.controller.js';
 import db from '../shared/database/index.js';
 import express from 'express';
+import { isExternalAccessManagement } from '../../config/server/index.js';
 import { processPagination } from '../shared/database/pagination.js';
 import { requestLimiter } from '../shared/request/mw.js';
 
 const { User } = db;
 const router = express.Router();
-
-const {
-  EXTERNAL_ACCESS_MANAGEMENT: isExternalAccessManagement
-} = process.env;
 
 const authorizeUser = isExternalAccessManagement
   ? authorizeIntegration

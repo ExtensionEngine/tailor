@@ -5,6 +5,7 @@ import ctrl from './repository.controller.js';
 import db from '../shared/database/index.js';
 import express from 'express';
 import feed from './feed/index.js';
+import { isExternalAccessManagement } from '../../config/server/index.js';
 import multer from 'multer';
 import path from 'node:path';
 import processQuery from '../shared/util/processListQuery.js';
@@ -25,10 +26,6 @@ import storageRouter from '../shared/storage/storage.router.js';
 const { Repository, Tag } = db;
 const router = express.Router();
 const { setSignedCookies } = proxyMw(storage, proxy);
-
-const {
-  EXTERNAL_ACCESS_MANAGEMENT: isExternalAccessManagement
-} = process.env;
 
 const authorizeUser = isExternalAccessManagement
   ? authorizeIntegration
