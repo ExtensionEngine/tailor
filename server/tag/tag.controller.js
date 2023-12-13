@@ -1,6 +1,6 @@
+import { BAD_REQUEST, NO_CONTENT } from 'http-status-codes';
 import { createError } from '../shared/error/helpers.js';
 import db from '../shared/database/index.js';
-import { BAD_REQUEST, NO_CONTENT } from 'http-status-codes';
 import pick from 'lodash/pick.js';
 import yn from 'yn';
 
