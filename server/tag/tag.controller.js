@@ -1,5 +1,6 @@
+import { createError } from '../shared/error/helpers.js';
 import db from '../shared/database/index.js';
-import { NO_CONTENT } from 'http-status-codes';
+import { BAD_REQUEST, NO_CONTENT } from 'http-status-codes';
 import pick from 'lodash/pick.js';
 import yn from 'yn';
 
@@ -24,9 +25,11 @@ function create({ body }, res) {
 }
 
 function patch({ tag, body }, res) {
-  const attrs = ['name', 'isAccessTag'];
-  const payload = pick(body, attrs);
-  return tag.update(payload)
+  if (Object.hasOwn(body, 'isAccessTag')) {
+    return createError(BAD_REQUEST, 'isAccessTag cannot be updated!');
+  }
+  const { name } = body;
+  return tag.update({ name })
     .then(tag => tag.reload())
     .then(data => res.json({ data }));
 }
