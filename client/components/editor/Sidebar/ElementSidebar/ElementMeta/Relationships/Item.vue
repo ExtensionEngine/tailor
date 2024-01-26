@@ -72,8 +72,7 @@ export default {
     hasRelationships: vm => !!vm.value.length,
     defaultPlaceholder: vm => `Select element${vm.multiple ? 's' : ''}`,
     filteredTypes: ({ $teRegistry, allowedTypes }) => {
-      const registry = $teRegistry.all;
-      return registry.filter(({ type }) => allowedTypes.includes(type));
+      return $teRegistry.all.filter(({ type }) => allowedTypes.includes(type));
     },
     overview: ({ activities, value, hasRelationships }) => {
       return hasRelationships
