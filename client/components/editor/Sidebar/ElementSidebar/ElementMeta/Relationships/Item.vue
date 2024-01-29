@@ -89,7 +89,8 @@ export default {
       });
     },
     select(elements) {
-      this.save(elements);
+      this.save(elements); /* upon selection elements are added to the store so
+      element referencing them can easily access their data */
       const items = elements.map(it => {
         if (!it.activity) return it;
         const { id, activity, activityId: containerId } = it;
