@@ -12,6 +12,22 @@ const supportsEmoji = !isWin32 && (process.env.TERM === 'xterm-256color');
 const Level = uppercaseLevelNames(Bunyan.levelFromName);
 const loggers = {};
 
+function requestSerializer(req) {
+  if (!req || !req.connection) return req;
+  // Make sure to remove sensitive information from the request object
+  // eslint-disable-next-line
+  const { access_token, cookie, ...loggedHeaders } = req.headers;
+  return {
+    method: req.method,
+    // Accept `req.originalUrl` for expressjs usage.
+    // https://expressjs.com/en/api.html#req.originalUrl
+    url: req.originalUrl || req.url,
+    headers: { ...loggedHeaders },
+    remoteAddress: req.connection.remoteAddress,
+    remotePort: req.connection.remotePort
+  };
+}
+
 class Logger extends Bunyan {
   addStream(stream, defaultLevel) {
     if (!isProduction) stream = processOutputStream(stream);
@@ -25,7 +41,11 @@ class Logger extends Bunyan {
 
 function createLogger(name, options = {}) {
   name = [pkg.name, name].filter(Boolean).join(':');
-  const serializers = { ...Bunyan.stdSerializers, ...options.serializers };
+  const serializers = {
+    ...Bunyan.stdSerializers,
+    req: requestSerializer,
+    ...options.serializers
+  };
   if (!loggers[name]) {
     options.level = process.env.LOG_LEVEL || options.level;
     loggers[name] = new Logger({ ...options, name, serializers });
