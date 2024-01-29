@@ -37,7 +37,7 @@
       :selected="value"
       :heading="defaultPlaceholder"
       :multiple="multiple"
-      :allowed-types="allowedTypes"
+      :allowed-types="filteredTypes"
       header-icon="mdi-transit-connection-variant"
       only-current-repo />
   </v-list-item>
@@ -58,6 +58,7 @@ function getTotalsByActivity(activities, relationships) {
 
 export default {
   name: 'relationship-type',
+  inject: ['$teRegistry'],
   props: {
     value: { type: Array, default: () => [] },
     label: { type: String, required: true },
@@ -70,6 +71,9 @@ export default {
     ...mapGetters('repository', ['activities']),
     hasRelationships: vm => !!vm.value.length,
     defaultPlaceholder: vm => `Select element${vm.multiple ? 's' : ''}`,
+    filteredTypes: ({ $teRegistry, allowedTypes }) => {
+      return $teRegistry.all.filter(({ type }) => allowedTypes.includes(type));
+    },
     overview: ({ activities, value, hasRelationships }) => {
       return hasRelationships
         ? getTotalsByActivity(activities, value).join(', ')
