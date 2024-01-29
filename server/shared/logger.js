@@ -16,13 +16,13 @@ function requestSerializer(req) {
   if (!req || !req.connection) return req;
   // Make sure to remove sensitive information from the request object
   // eslint-disable-next-line
-  const { access_token, cookie, ...remainingHeaders } = req.headers;
+  const { access_token, cookie, ...loggedHeaders } = req.headers;
   return {
     method: req.method,
     // Accept `req.originalUrl` for expressjs usage.
     // https://expressjs.com/en/api.html#req.originalUrl
     url: req.originalUrl || req.url,
-    headers: { ...remainingHeaders },
+    headers: { ...loggedHeaders },
     remoteAddress: req.connection.remoteAddress,
     remotePort: req.connection.remotePort
   };
