@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 import { mapRequests } from '@extensionengine/vue-radio';
 import pluralize from 'pluralize';
 import { SelectElement } from '@tailor-cms/core-components';
@@ -82,6 +82,7 @@ export default {
   },
   methods: {
     ...mapRequests('app', ['showConfirmationModal']),
+    ...mapMutations('repository/contentElements', ['save']),
     removeAll() {
       let label = this.label.toLowerCase();
       label = this.multiple ? pluralize(label) : label;
@@ -92,6 +93,8 @@ export default {
       });
     },
     select(elements) {
+      this.save(elements); /* upon selection elements are added to the store so
+      element referencing them can easily access their data */
       const items = elements.map(it => {
         if (!it.activity) return it;
         const { id, activity, activityId: containerId } = it;

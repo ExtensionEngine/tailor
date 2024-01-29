@@ -96,7 +96,7 @@ export default {
     containerConfigs: vm => vm.$schemaService.getSupportedContainers(vm.activity.type)
   },
   methods: {
-    ...mapActions('repository/contentElements', { getContentElements: 'fetch' }),
+    ...mapActions('repository/contentElements', { getContentElements: 'fetchWithReferences' }),
     ...mapActions('repository/comments', { fetchComments: 'fetch' }),
     getContainerConfig(type) {
       return find(this.containerConfigs, { type });
