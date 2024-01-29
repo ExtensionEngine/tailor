@@ -78,7 +78,7 @@ export default {
   },
   methods: {
     ...mapRequests('app', ['showConfirmationModal']),
-    ...mapMutations('repository/contentElements', { save: 'fetch' }),
+    ...mapMutations('repository/contentElements', ['save']),
     removeAll() {
       let label = this.label.toLowerCase();
       label = this.multiple ? pluralize(label) : label;
