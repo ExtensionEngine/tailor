@@ -95,12 +95,27 @@ class User extends Model {
     };
   }
 
-  static associate({ ActivityStatus, Comment, Repository, RepositoryUser }) {
+  static associate({
+    ActivityStatus,
+    Comment,
+    Repository,
+    RepositoryUser,
+    Tag,
+    UserTag
+  }) {
     this.hasMany(Comment, {
       foreignKey: { name: 'authorId', field: 'author_id' }
     });
     this.belongsToMany(Repository, {
       through: RepositoryUser,
+      foreignKey: { name: 'userId', field: 'user_id' }
+    });
+    this.belongsToMany(Tag, {
+      through: UserTag,
+      foreignKey: { name: 'userId', field: 'user_id' }
+    });
+    this.hasMany(UserTag, {
+      as: 'userTags',
       foreignKey: { name: 'userId', field: 'user_id' }
     });
     this.hasMany(ActivityStatus, {
@@ -213,6 +228,10 @@ class User extends Model {
     const { secret } = authConfig.jwt;
     if (audience === Audience.Scope.Access) return secret;
     return [secret, this.password, this.createdAt.getTime()].join('');
+  }
+
+  isAssociatedWithSomeTag(tagIds) {
+    return this.userTags.some(({ tagId }) => tagIds.includes(tagId));
   }
 }
 

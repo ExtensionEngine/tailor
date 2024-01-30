@@ -18,7 +18,11 @@ import UserList from './UserList.vue';
 export default {
   name: 'repository-user-management',
   computed: {
+    isExternalAccessManagement: () => process.env.EXTERNAL_ACCESS_MANAGEMENT,
     roles: () => map(role.repository, value => ({ text: titleCase(value), value }))
+  },
+  created() {
+    if (this.isExternalAccessManagement) this.$router.go(-1);
   },
   components: {
     AddUserDialog,

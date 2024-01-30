@@ -2,19 +2,23 @@
   <div class="tags-container">
     <div class="tag-list d-flex align-center">
       <v-chip
-        v-for="{ id, name, truncatedName } in tags"
+        v-for="{ id, name, isAccessTag, truncatedName } in tags"
         :key="id"
         @click:close="showDeleteConfirmation(id, name)"
-        color="primary darken-1"
+        :close="!isAccessTag"
+        :color="isAccessTag ? 'secondary darken-1' : 'primary darken-1'"
         close-label="Remove tag"
-        label close small
+        label small
         class="mr-2 mb-1">
         <v-tooltip
           :disabled="name.length === truncatedName.length"
           open-delay="100"
           bottom>
           <template #activator="{ on }">
-            <span v-on="on">{{ truncatedName }}</span>
+            <span v-on="on" class="d-flex">
+              <v-icon size="18" class="pr-2">mdi-account-supervisor</v-icon>
+              {{ truncatedName }}
+            </span>
           </template>
           <span>{{ name }}</span>
         </v-tooltip>

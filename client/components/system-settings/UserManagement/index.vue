@@ -123,6 +123,7 @@ export default {
   },
   computed: {
     ...mapState({ user: state => state.auth.user }),
+    isExternalAccessManagement: () => process.env.EXTERNAL_ACCESS_MANAGEMENT,
     headers,
     defaultPage
   },
@@ -165,6 +166,9 @@ export default {
     showArchived() {
       this.fetch();
     }
+  },
+  created() {
+    if (this.isExternalAccessManagement) this.$router.go(-1);
   },
   components: { UserDialog }
 };

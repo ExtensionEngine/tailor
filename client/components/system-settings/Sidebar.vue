@@ -20,12 +20,15 @@
 export default {
   name: 'system-settings-sidebar',
   computed: {
+    isExternalAccessManagement: () => process.env.EXTERNAL_ACCESS_MANAGEMENT,
     routes() {
-      return [
+      const items = [
         { label: 'System Users', name: 'system-user-management', icon: 'account' },
         { label: 'Structure Types', name: 'installed-schemas', icon: 'file-tree' },
         { label: 'Installed Elements', name: 'installed-elements', icon: 'puzzle' }
       ];
+      if (this.isExternalAccessManagement) items.shift();
+      return items;
     }
   }
 };

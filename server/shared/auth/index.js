@@ -16,7 +16,9 @@ const options = {
 };
 
 auth.use(new LocalStrategy(options, (email, password, done) => {
-  return User.unscoped().findOne({ where: { email } })
+  return User
+    .unscoped()
+    .findOne({ where: { email } })
     .then(user => user && user.authenticate(password))
     .then(user => done(null, user || false))
     .error(err => done(err, false));
@@ -27,7 +29,8 @@ auth.use(new JwtStrategy({
   audience: Audience.Scope.Access,
   jwtFromRequest: ExtractJwt.fromExtractors([
     extractJwtFromCookie,
-    ExtractJwt.fromBodyField('token')
+    ExtractJwt.fromBodyField('token'),
+    ExtractJwt.fromHeader('access_token')
   ]),
   secretOrKey: config.jwt.secret
 }, verifyJWT));
@@ -50,7 +53,7 @@ auth.deserializeUser((user, done) => done(null, user));
 export default auth;
 
 function verifyJWT(payload, done) {
-  return User.unscoped().findByPk(payload.id)
+  return User.unscoped().findByPk(payload.id, { include: ['userTags'] })
     .then(user => done(null, user || false))
     .error(err => done(err, false));
 }

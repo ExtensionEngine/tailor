@@ -6,12 +6,14 @@ import * as store from './store.js';
 import * as tce from './tce.js';
 import isLocalhost from 'is-localhost';
 import parse from 'url-parse';
+import yn from 'yn';
 
 const hostname = resolveHostname();
 const protocol = resolveProtocol(hostname);
 const port = resolvePort();
 const origin = resolveOrigin(hostname, protocol, port);
 const previewUrl = process.env.PREVIEW_URL;
+const isExternalAccessManagement = yn(process.env.EXTERNAL_ACCESS_MANAGEMENT);
 
 // Legacy config support
 function resolveHostname() {
@@ -54,7 +56,8 @@ export {
   previewUrl,
   consumer,
   store,
-  tce
+  tce,
+  isExternalAccessManagement
 };
 
 export default {
@@ -68,5 +71,6 @@ export default {
   previewUrl,
   consumer,
   store,
-  tce
+  tce,
+  isExternalAccessManagement
 };

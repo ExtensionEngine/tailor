@@ -1,7 +1,8 @@
 import { Model } from 'sequelize';
+import { user as userRole } from '../../config/shared/role.js';
 
 class Tag extends Model {
-  static fields({ STRING, UUID, UUIDV4 }) {
+  static fields({ BOOLEAN, STRING, UUID, UUIDV4 }) {
     return {
       uid: {
         type: UUID,
@@ -14,15 +15,34 @@ class Tag extends Model {
         allowNull: false,
         unique: true,
         validate: { notEmpty: true, len: [2, 20] }
+      },
+      isAccessTag: {
+        type: BOOLEAN,
+        field: 'is_access_tag',
+        defaultValue: false
       }
     };
   }
 
-  static associate({ Repository, RepositoryTag }) {
+  static associate({ Repository, RepositoryTag, User, UserTag }) {
     this.belongsToMany(Repository, {
       through: RepositoryTag,
       foreignKey: { name: 'tagId', field: 'tag_id' }
     });
+    this.belongsToMany(User, {
+      through: UserTag,
+      foreignKey: { name: 'tagId', field: 'tag_id' }
+    });
+  }
+
+  static async fetchOrCreate({ user, name, isAccessTag = false, transaction }) {
+    if (isAccessTag && user.role !== userRole.INTEGRATION) {
+      throw new Error('Only integration user can create access tags');
+    }
+    const tag = await Tag.findOne({ where: { name }, transaction });
+    if (!tag) return this.create({ name, isAccessTag }, { transaction });
+    if (tag && tag.isAccessTag === isAccessTag) return tag;
+    throw new Error('Cannot change tag type');
   }
 
   static getAssociated(user) {
@@ -36,9 +56,15 @@ class Tag extends Model {
       required: true
     };
     if (user && !user.isAdmin()) {
-      includeRepository.include = [{ model: User, attributes: ['id'], where: { id: user.id } }];
+      includeRepository.include = [{
+        model: User,
+        attributes: ['id'],
+        where: { id: user.id }
+      }];
     }
-    return Tag.findAll({ include: [includeRepository] });
+    return Tag.findAll({
+      include: [includeRepository]
+    });
   }
 
   static options() {

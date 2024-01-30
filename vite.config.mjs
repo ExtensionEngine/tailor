@@ -16,6 +16,7 @@ const getDefine = env => ({
   'process.env.OIDC_ENABLED': yn(env.OIDC_ENABLED),
   'process.env.OIDC_LOGOUT_ENABLED': yn(env.OIDC_LOGOUT_ENABLED),
   'process.env.OIDC_LOGIN_TEXT': JSON.stringify(env.OIDC_LOGIN_TEXT),
+  'process.env.EXTERNAL_ACCESS_MANAGEMENT': yn(env.EXTERNAL_ACCESS_MANAGEMENT),
   'BRAND_CONFIG.TITLE': JSON.stringify(brandConfig.title),
   'BRAND_CONFIG.FAVICON': JSON.stringify(brandConfig.favicon),
   'BRAND_CONFIG.LOGO_COMPACT': JSON.stringify(brandConfig.logo.compact),
