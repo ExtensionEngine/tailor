@@ -1,9 +1,11 @@
 import { Model, Op } from 'sequelize';
 import calculatePosition from '../shared/util/calculatePosition.js';
 import { ContentElement as Events } from '../../common/sse.js';
+import forEach from 'lodash/forEach.js';
 import hooks from './hooks.js';
 import isNumber from 'lodash/isNumber.js';
 import pick from 'lodash/pick.js';
+import zipObject from 'lodash/zipObject.js';
 
 class ContentElement extends Model {
   static fields(DataTypes) {
@@ -80,9 +82,9 @@ class ContentElement extends Model {
   }
 
   static scopes() {
-    const notNull = { [Op.ne]: null };
+    const notEmpty = { [Op.ne]: {} };
     return {
-      withReferences: { where: { 'refs.objectiveId': notNull } },
+      withReferences: { where: { refs: notEmpty } },
       publish: {
         attributes: [
           'id', 'uid', 'type', 'contentId', 'contentSignature',
@@ -113,10 +115,10 @@ class ContentElement extends Model {
       : ContentElement.findAll(opt).map(hooks.applyFetchHooks);
   }
 
-  static cloneElements(src, container, options) {
+  static async cloneElements(src, container, options) {
     const { id: activityId, repositoryId } = container;
     const { context, transaction } = options;
-    return this.bulkCreate(src.map(it => {
+    const newElements = await this.bulkCreate(src.map(it => {
       return Object.assign(pick(it, [
         'type',
         'position',
@@ -127,6 +129,7 @@ class ContentElement extends Model {
         'meta'
       ]), { activityId, repositoryId });
     }), { returning: true, context, transaction });
+    return zipObject(src.map(it => it.id), newElements.map(it => it.id));
   }
 
   /**
@@ -137,9 +140,22 @@ class ContentElement extends Model {
    */
   mapClonedReferences(mappings, transaction) {
     const { refs } = this;
-    if (!refs.objectiveId) return Promise.resolve();
-    refs.objectiveId = mappings[refs.objectiveId];
-    return this.update({ refs }, { transaction });
+    // TODO: Refactor this and extract common logic so it can be reused.
+    // This logic is copied from transfer processor as import and clone logic
+    // should be the same.
+    forEach(refs, (values, name) => {
+      forEach(values, (ref, index) => {
+        const id = mappings.contentElement[ref.id];
+        const outlineId = mappings.activity[ref.outlineId];
+        const containerId = mappings.activity[ref.containerId];
+        if (!id || !outlineId || !containerId) {
+          throw new Error('Unable to resolve element refs');
+        }
+        refs[name][index] = { id, outlineId, containerId };
+      });
+    });
+    this.changed('refs', true);
+    return this.save({ transaction });
   }
 
   siblings(filter = {}) {

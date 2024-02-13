@@ -115,12 +115,16 @@ class Repository extends Model {
       ContentElement.scope('withReferences').findAll(opts)
     ]);
     return Promise.join(
-      Promise.map(activities, it => it.mapClonedReferences(mappings, relationships, transaction)),
+      Promise.map(activities, it => it.mapClonedReferences(mappings.activity, relationships, transaction)),
       Promise.map(elements, it => it.mapClonedReferences(mappings, transaction)),
       (activities, elements) => ({ activities, elements })
     );
   }
 
+  // TODO: Remove this method from the model as there is no value in having it
+  // here versus having it inside service method.
+  // Clone logic should be the same as import logic and should be extracted
+  // and reused in both places.
   clone(name, description, context) {
     const Repository = this.sequelize.model('Repository');
     const Activity = this.sequelize.model('Activity');
