@@ -6,6 +6,7 @@ import db from '../shared/database/index.js';
 import getVal from 'lodash/get.js';
 import map from 'lodash/map.js';
 import { Op } from 'sequelize';
+import { parseOptions } from '../shared/database/pagination.js';
 import pick from 'lodash/pick.js';
 import Promise from 'bluebird';
 import publishingService from '../shared/publishing/publishing.service.js';
@@ -136,11 +137,16 @@ function publishRepoInfo({ repository }, res) {
     .then(data => res.json({ data }));
 }
 
-function getUsers(req, res) {
-  return req.repository.getUsers()
-    .then(users => res.json({
-      data: map(users, it => ({ ...it.profile, repositoryRole: it.repositoryUser.role }))
-    }));
+async function getUsers(req, res) {
+  const { offset, limit } = parseOptions(req.query);
+  const [users, total] = await Promise.all([
+    req.repository.getUsers({ offset, limit }),
+    req.repository.countUsers()
+  ]);
+  const items = map(users, it => ({
+    ...it.profile, repositoryRole: it.repositoryUser.role
+  }));
+  return res.json({ data: { items, total } });
 }
 
 function upsertUser({ repository, body }, res) {

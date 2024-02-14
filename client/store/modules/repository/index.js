@@ -11,6 +11,7 @@ const state = {
   repositoryId: null,
   sseId: null,
   users: {},
+  userCount: 0,
   outline: { expanded: {} },
   $apiUrl: null
 };
