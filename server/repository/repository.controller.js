@@ -223,7 +223,7 @@ function importRepository({ body, file, user }, res) {
     .createImportJob(path, options)
     .toPromise()
     .finally(() => {
-      fs.unlink(path);
+      fsp.unlink(path);
       res.end();
     });
 }

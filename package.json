@@ -1,41 +1,40 @@
 {
   "name": "tailor",
   "version": "5.0.0-rc.5",
-  "codename": "twill",
+  "private": true,
   "description": "Content authoring platform",
   "author": "ExtensionEngine <info@extensionengine.com>",
-  "private": true,
+  "workspaces": [
+    "packages/**"
+  ],
   "scripts": {
-    "postinstall": "if [ $BUILD_ASSETS ]; then npm run build; fi",
-    "postshrinkwrap": "rewrite-lockfile package-lock.json",
-    "start": "node --import ./server/script/preflight.js ./server/index.js",
-    "dev:client": "vite serve",
+    "add:admin": "node --import ./server/script/preflight.js ./server/script/addAdmin.js",
     "build": "del-cli node_modules/.vite && vite build",
-    "packages:bootstrap": "lerna bootstrap",
-    "packages:build": "lerna run build --",
-    "packages:link": "npm link ./packages/*",
-    "packages:setup": "npm run packages:bootstrap && npm run packages:build && npm run packages:link",
-    "packages:publish": "lerna publish --",
+    "ci:e2e": "dotenv -- bash -c 'start-server-and-test start :${PORT} cy:run'",
     "clean": "del-cli dist/* !dist/.gitkeep",
-    "dev:server": "nodemon --import ./server/script/preflight.js ./server/index.js | bunyan-pretty",
-    "debug:server": "nodemon --inspect --import ./server/script/preflight.js ./server/index.js",
     "cy:open": "npx cypress open",
     "cy:run": "npx cypress run",
-    "ci:e2e": "dotenv -- bash -c 'start-server-and-test start :${PORT} cy:run'",
-    "lint:js": "eslint --ext .js,.vue .",
-    "lint:scss": "stylelint \"client/**/*.vue\" \"client/**/*.scss\"",
-    "lint": "npm run lint:js && npm run lint:scss",
     "db": "node --import ./server/script/preflight.js ./server/script/sequelize.js",
     "db:reset": "npm run db drop && npm run db create && npm run db migrate",
     "db:seed": "npm run db seed:all",
-    "add:admin": "node --import ./server/script/preflight.js ./server/script/addAdmin.js",
-    "invite:admin": "node --import ./server/script/preflight.js ./server/script/inviteAdmin.js",
+    "debug:server": "nodemon --inspect --import ./server/script/preflight.js ./server/index.js",
+    "detachDeletedRepos": "node --import ./server/script/preflight.js ./server/script/detachDeletedRepos.js",
+    "dev:client": "vite serve",
+    "dev:server": "nodemon --import ./server/script/preflight.js ./server/index.js | bunyan-pretty",
+    "fixRevisionUrls": "node --import ./server/script/preflight.js ./server/script/fixRevisionUrls.js",
+    "postinstall": "if [ $BUILD_ASSETS ]; then npm run build; fi",
     "integration:add": "node --import ./server/script/preflight.js ./server/script/addIntegration.js",
     "integration:token": "node --import ./server/script/preflight.js ./server/script/generateIntegrationToken.js",
-    "detachDeletedRepos": "node --import ./server/script/preflight.js ./server/script/detachDeletedRepos.js",
+    "invite:admin": "node --import ./server/script/preflight.js ./server/script/inviteAdmin.js",
+    "lint": "npm run lint:js && npm run lint:scss",
+    "lint:js": "eslint --ext .js,.vue .",
+    "lint:scss": "stylelint \"client/**/*.vue\" \"client/**/*.scss\"",
     "migrateAssessmentPools": "node --import ./server/script/preflight.js ./server/script/migrateAssessmentPools.js",
     "migrateAssetsLocation": "node --import ./server/script/preflight.js ./server/script/migrateAssetsLocation.js",
-    "fixRevisionUrls": "node --import ./server/script/preflight.js ./server/script/fixRevisionUrls.js"
+    "packages:build": "lerna run build",
+    "packages:publish": "lerna publish --",
+    "postshrinkwrap": "rewrite-lockfile package-lock.json",
+    "start": "node --import ./server/script/preflight.js ./server/index.js"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.370.0",
@@ -49,7 +48,7 @@
     "@mdi/font": "^7.2.96",
     "@paralleldrive/cuid2": "^2.2.1",
     "@tailor-cms/config": "1.0.0-beta.26",
-    "@tailor-cms/core-components": "1.0.0-beta.16",
+    "@tailor-cms/core-components": "^1.0.0-beta.16",
     "@tailor-cms/utils": "^1.0.0-beta.20",
     "@ungap/global-this": "^0.4.4",
     "auto-bind": "^5.0.1",
@@ -185,7 +184,7 @@
     "eslint-plugin-require-sort": "^1.3.0",
     "eslint-plugin-vue": "9.15.1",
     "eslint-plugin-vuetify": "^1.1.0",
-    "lerna": "^6.6.2",
+    "lerna": "^7.3.0",
     "nodemon": "^3.0.1",
     "rewrite-lockfile": "^1.0.1",
     "sass": "^1.63.6",
@@ -198,14 +197,15 @@
     "vite": "^4.4.4",
     "vue-template-compiler": "^2.7.14"
   },
-  "overrides": {
-    "eslint-config-semistandard": {
-      "eslint-plugin-n": "$eslint-plugin-n"
-    }
-  },
   "engines": {
     "node": ">= 20.3.1",
     "npm": ">= 9.6.0",
     "postgres": ">= 9.4"
+  },
+  "codename": "twill",
+  "overrides": {
+    "eslint-config-semistandard": {
+      "eslint-plugin-n": "$eslint-plugin-n"
+    }
   }
 }

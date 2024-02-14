@@ -43,6 +43,9 @@ jobs:
           name: Setup tailor config
           command: cp ./tailor.config.js.example ./tailor.config.js
       - run:
+          name: Build core packages
+          command: npm run packages:build
+      - run:
           name: Build client
           command: npm run build
       - run:
@@ -70,7 +73,7 @@ jobs:
 workflows:
   lint-and-test:
     jobs:
-      - lint
+      - lint 
       - shellcheck/check
       - e2e-test:
           <<: *dev-env-defaults
