@@ -31,7 +31,7 @@
     "lint:scss": "stylelint \"client/**/*.vue\" \"client/**/*.scss\"",
     "migrateAssessmentPools": "node --import ./server/script/preflight.js ./server/script/migrateAssessmentPools.js",
     "migrateAssetsLocation": "node --import ./server/script/preflight.js ./server/script/migrateAssetsLocation.js",
-    "packages:build": "npm run build --workspace=./packages/**",
+    "packages:build": "lerna run build",
     "packages:publish": "lerna publish --",
     "postshrinkwrap": "rewrite-lockfile package-lock.json",
     "start": "node --import ./server/script/preflight.js ./server/index.js"

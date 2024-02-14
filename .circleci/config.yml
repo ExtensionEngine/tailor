@@ -73,7 +73,7 @@ jobs:
 workflows:
   lint-and-test:
     jobs:
-      - lint
+      - lint 
       - shellcheck/check
       - e2e-test:
           <<: *dev-env-defaults
