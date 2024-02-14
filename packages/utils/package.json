@@ -6,10 +6,13 @@
   "type": "module",
   "version": "1.0.0-beta.20",
   "files": ["dist"],
+  "main": "./dist/utils.cjs",
+  "umd:main": "./dist/utils.umd.cjs",
   "module": "./dist/utils.js",
   "exports": {
     ".": {
-      "import": "./dist/utils.js"
+      "import": "./dist/utils.js",
+      "require": "./dist/utils.cjs"
     }
   },
   "keywords": [],
