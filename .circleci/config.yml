@@ -37,12 +37,16 @@ jobs:
           node-version: '20.3.1'
       - node/install-packages:
           override-ci-command: 'npm i'
+          with-cache: false
       - run:
           name: Echo node version
           command: node -v
       - run:
           name: Setup environment variables
           command: source ./.circleci/setup-env.sh
+      - run:
+          name: Lerna install
+          command: npx lerna exec npm install
       - run:
           name: Setup tailor config
           command: cp ./tailor.config.js.example ./tailor.config.js
