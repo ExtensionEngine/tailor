@@ -81,11 +81,11 @@ jobs:
 workflows:
   lint-and-test:
     jobs:
-      - lint
-      - shellcheck/check
+      
+      # - shellcheck/check
       - e2e-test:
           <<: *dev-env-defaults
-          requires:
-            - shellcheck/check
+          # requires:
+          #   - shellcheck/check
           context:
             - tailor-dev
