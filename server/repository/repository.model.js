@@ -115,7 +115,13 @@ class Repository extends Model {
       ContentElement.scope('withReferences').findAll(opts)
     ]);
     return Promise.join(
-      Promise.map(activities, it => it.mapClonedReferences(mappings.activity, relationships, transaction)),
+      Promise.map(activities, it => {
+        return it.mapClonedReferences(
+          mappings.activity,
+          relationships,
+          transaction
+        );
+      }),
       Promise.map(elements, it => it.mapClonedReferences(mappings, transaction)),
       (activities, elements) => ({ activities, elements })
     );
