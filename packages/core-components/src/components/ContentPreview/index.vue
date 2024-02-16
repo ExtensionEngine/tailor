@@ -24,7 +24,6 @@
 <script>
 import ContentElement from './Element.vue';
 import keyBy from 'lodash/keyBy';
-import intersectionBy from 'lodash/intersectionBy';
 
 export default {
   name: 'content-preview',
@@ -41,11 +40,12 @@ export default {
     },
     selectionMap: vm => keyBy(vm.selected, 'id'),
     processedContainers() {
-      const { contentContainers: containers, allowedTypes } = this;
+      const { contentContainers: containers } = this;
+      const allowedTypes = this.allowedTypes.map(it => it.type);
       if (!allowedTypes.length) return containers;
-      return containers.map(container => ({
-        ...container,
-        elements: intersectionBy(container.elements, allowedTypes, 'type')
+      return containers.map(container => ({ 
+        ...container, 
+        elements: container.elements?.filter(it => allowedTypes.includes(it.type))
       }));
     },
     elements() {
