@@ -43,8 +43,8 @@ export default {
       const { contentContainers: containers } = this;
       const allowedTypes = this.allowedTypes.map(it => it.type);
       if (!allowedTypes.length) return containers;
-      return containers.map(container => ({ 
-        ...container, 
+      return containers.map(container => ({
+        ...container,
         elements: container.elements?.filter(it => allowedTypes.includes(it.type))
       }));
     },
