@@ -40,12 +40,11 @@ export default {
     },
     selectionMap: vm => keyBy(vm.selected, 'id'),
     processedContainers() {
-      const { contentContainers: containers } = this;
-      const allowedTypes = this.allowedTypes.map(it => it.type);
+      const { contentContainers: containers, allowedTypes } = this;
       if (!allowedTypes.length) return containers;
       return containers.map(container => ({
         ...container,
-        elements: container.elements?.filter(it => allowedTypes.includes(it.type))
+        elements: container.elements?.filter(it => this.allowedTypes.includes(it.type))
       }));
     },
     elements() {

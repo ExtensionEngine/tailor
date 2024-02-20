@@ -37,7 +37,7 @@
       :selected="value"
       :heading="defaultPlaceholder"
       :multiple="multiple"
-      :allowed-types="filteredTypes"
+      :allowed-types="allowedTypes"
       header-icon="mdi-transit-connection-variant"
       only-current-repo />
   </v-list-item>

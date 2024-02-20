@@ -109,10 +109,9 @@ export default {
       return flatMap(containers, it => [it, ...this.getSubcontainers(it)]);
     },
     elements() {
-      const allowedTypes = this.allowedTypes.map(it => it.type);
       const elements = flatMap(this.items.contentContainers, 'elements');
       if (!this.allowedTypes.length) return elements;
-      return elements.filter(it => allowedTypes.includes(it.type));
+      return elements.filter(it => this.allowedTypes.includes(it.type));
     },
     toggleButton() {
       const { allElementsSelected, elements, multiple, selection } = this;
