@@ -115,12 +115,19 @@ class Repository extends Model {
       ContentElement.scope('withReferences').findAll(opts)
     ]);
     return Promise.join(
-      Promise.map(activities, it => it.mapClonedReferences(mappings, relationships, transaction)),
+      Promise.map(activities, it => {
+        return it.mapClonedReferences(
+          mappings.activity,
+          relationships,
+          transaction
+        );
+      }),
       Promise.map(elements, it => it.mapClonedReferences(mappings, transaction)),
       (activities, elements) => ({ activities, elements })
     );
   }
 
+  // TODO: Encapsulate the same import/clone logic into the service method.
   clone(name, description, context) {
     const Repository = this.sequelize.model('Repository');
     const Activity = this.sequelize.model('Activity');
