@@ -52,10 +52,13 @@ export const toggleActivities = ({ getters, commit }) => {
   commit('toggleActivities', outline);
 };
 
-export const getUsers = ({ rootState, commit }) => {
+export const getUsers = (
+  { rootState, commit },
+  params = { offset: 0, limit: 10 }
+) => {
   const { route: { params: { repositoryId } } } = rootState;
-  return api.getUsers(repositoryId)
-    .then(users => commit('setUsers', users));
+  return api.getUsers(repositoryId, params)
+    .then(({ items, total }) => commit('setUsers', { items, total }));
 };
 
 export const upsertUser = ({ commit }, { repositoryId, email, role }) => {

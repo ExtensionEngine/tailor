@@ -3,8 +3,10 @@
     v-if="!isLoading"
     :headers="headers"
     :items="users"
+    :options.sync="dataTable"
+    :server-items-length="userCount"
+    :footer-props="{ itemsPerPageOptions: [10, 20, 50, 100] }"
     no-data-text="No assigned users."
-    hide-default-footer
     class="grey lighten-4">
     <template #item="{ item }">
       <tr>
@@ -33,21 +35,29 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import debounce from 'lodash/debounce';
-import { loader } from '@tailor-cms/core-components';
 import { mapRequests } from '@extensionengine/vue-radio';
 
 const HEADERS = ['User', 'Email', 'Full Name', 'Role', ''];
+
+const defaultPage = () => ({
+  page: 1,
+  itemsPerPage: 10
+});
 
 export default {
   props: {
     roles: { type: Array, required: true }
   },
   data() {
-    return { isLoading: true };
+    return {
+      isLoading: false,
+      dataTable: defaultPage()
+    };
   },
   computed: {
+    ...mapState('repository', ['userCount']),
     ...mapGetters('repository', ['users']),
     headers() {
       return HEADERS.map(text => ({ text, sortable: false }));
@@ -60,6 +70,12 @@ export default {
       const { repositoryId } = this.$route.params;
       debounce(this.upsertUser, 500)({ repositoryId, email, role });
     },
+    fetch() {
+      return this.getUsers({
+        offset: (this.dataTable.page - 1) * this.dataTable.itemsPerPage,
+        limit: this.dataTable.itemsPerPage
+      });
+    },
     remove(user) {
       const { repositoryId } = this.$route.params;
       this.showConfirmationModal({
@@ -69,9 +85,13 @@ export default {
       });
     }
   },
-  created: loader(function () {
-    this.getUsers();
-  }, 'isLoading')
+  watch: {
+    dataTable: {
+      handler() {
+        return this.fetch();
+      }
+    }
+  }
 };
 </script>
 

@@ -21,5 +21,6 @@ function processPagination(Model) {
 }
 
 export {
+  parseOptions,
   processPagination
 };

@@ -28,9 +28,10 @@ export const upsertUser = (state, user) => Vue.set(state.users, user.id, user);
 
 export const removeUser = (state, id) => Vue.delete(state.users, id);
 
-export const setUsers = (state, users) => {
+export const setUsers = (state, { items, total }) => {
   state.users = {};
-  users.forEach(it => Vue.set(state.users, it.id, it));
+  items.forEach(it => Vue.set(state.users, it.id, it));
+  state.userCount = total;
 };
 
 export const setSseId = (state, sseId) => {
