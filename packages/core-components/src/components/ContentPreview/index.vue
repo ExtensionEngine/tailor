@@ -24,7 +24,6 @@
 <script>
 import ContentElement from './Element.vue';
 import keyBy from 'lodash/keyBy';
-import intersectionBy from 'lodash/intersectionBy';
 
 export default {
   name: 'content-preview',
@@ -45,7 +44,7 @@ export default {
       if (!allowedTypes.length) return containers;
       return containers.map(container => ({
         ...container,
-        elements: intersectionBy(container.elements, allowedTypes, 'type')
+        elements: container.elements?.filter(it => this.allowedTypes.includes(it.type))
       }));
     },
     elements() {
