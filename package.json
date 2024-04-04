@@ -193,8 +193,8 @@
     "start-server-and-test": "^2.0.0",
     "stylelint": "^15.10.1",
     "terser": "^5.19.0",
-    "umzug": "^3.2.1",
-    "vite": "^4.4.4",
+    "umzug": "^3.8.0",
+    "vite": "^4.5.3",
     "vue-template-compiler": "^2.7.14"
   },
   "engines": {
