@@ -9,6 +9,14 @@
       <span class="subtitle-2">{{ config.name }}</span>
     </v-toolbar>
     <slot :isEditing="isEditing"></slot>
+    <controls
+      v-if="!isDisabled"
+      @edit="edit"
+      @save="save"
+      @cancel="cancel"
+      :is-editing="isEditing"
+      :has-errors="hasErrors"
+      class="controls" />
     <question
       @update="update"
       :assessment="editedElement"
@@ -46,14 +54,6 @@
         class="mt-4">
         {{ alert.text }}
       </v-alert>
-      <controls
-        v-if="!isDisabled"
-        @edit="edit"
-        @save="save"
-        @cancel="cancel"
-        :is-editing="isEditing"
-        :has-errors="hasErrors"
-        class="controls" />
     </div>
   </v-card>
 </template>
@@ -197,7 +197,7 @@ const baseSchema = {
     overflow: hidden;
   }
 
-  .content {
+  .content, .controls {
     padding: 0.5rem 1.625rem;
 
     @media (max-width: 1263px) {
