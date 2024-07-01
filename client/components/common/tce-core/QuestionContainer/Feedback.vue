@@ -20,6 +20,7 @@
             <quill-editor
               v-if="isEditing"
               @change="updateFeedback($event, i)"
+              @ready="onQuillReady"
               :options="quillOptions"
               :content="feedback[i]"
               class="grey lighten-3" />
@@ -41,6 +42,7 @@ import { quillEditor as QuillEditor } from 'vue-quill-editor';
 import some from 'lodash/some';
 
 const QUILL_OPTIONS = {
+  readOnly: true,
   modules: {
     toolbar: [
       ['bold', 'italic', 'underline', 'strike'],
@@ -76,6 +78,9 @@ export default {
   methods: {
     updateFeedback({ html }, index) {
       this.$emit('update', { [index]: html });
+    },
+    onQuillReady(quill) {
+      quill.enable();
     },
     toggleExpand() {
       this.isExpanded = !this.isExpanded;
