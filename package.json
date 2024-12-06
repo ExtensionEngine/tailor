@@ -52,7 +52,7 @@
     "@tailor-cms/utils": "^1.0.0-beta.20",
     "@ungap/global-this": "^0.4.4",
     "auto-bind": "^5.0.1",
-    "axios": "^1.4.0",
+    "axios": "^1.7.8",
     "bcrypt": "^5.1.0",
     "blob-util": "^2.0.2",
     "bluebird": "^3.7.2",
@@ -173,7 +173,7 @@
     "cypress": "^12.17.1",
     "dargs": "^8.1.0",
     "del-cli": "^5.0.0",
-    "dotenv-cli": "^7.2.1",
+    "dotenv-cli": "^7.4.4",
     "eslint": "^8.44.0",
     "eslint-config-semistandard": "^17.0.0",
     "eslint-config-standard": "^17.1.0",
@@ -194,7 +194,7 @@
     "stylelint": "^15.10.1",
     "terser": "^5.19.0",
     "umzug": "^3.2.1",
-    "vite": "^4.4.4",
+    "vite": "^6.0.0",
     "vue-template-compiler": "^2.7.14"
   },
   "engines": {
